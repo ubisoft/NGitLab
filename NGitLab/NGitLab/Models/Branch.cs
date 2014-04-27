@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace NGitLab.Models
 {
@@ -6,10 +6,10 @@ namespace NGitLab.Models
     {
         public const string Url = "/repository/branches/";
 
-        [DataMember(Name = "name")]
+        [JsonProperty("name")]
         public string Name;
 
-        [DataMember(Name = "protected")]
+        [JsonProperty("protected")]
         public bool Protected;
     }
 }

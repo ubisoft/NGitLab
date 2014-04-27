@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace NGitLab.Models
 {
@@ -12,13 +12,13 @@ namespace NGitLab.Models
         public string Path;
         public string Description;
 
-        [DataMember(Name = "created_at")]
+        [JsonProperty("created_at")]
         public DateTime CreatedAt;
 
-        [DataMember(Name = "updated_at")]
+        [JsonProperty("updated_at")]
         public DateTime UpdatedAt;
 
-        [DataMember(Name = "owner_id")]
+        [JsonProperty("owner_id")]
         public int OwnerId;
     }
 }

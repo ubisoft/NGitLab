@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace NGitLab.Models
 {
@@ -15,16 +15,16 @@ namespace NGitLab.Models
         public User Author;
         public User Assignee;
 
-        [DataMember(Name = "target_branch")]
+        [JsonProperty("target_branch")]
         public string TargetBranch;
 
-        [DataMember(Name = "source_branch")]
+        [JsonProperty("source_branch")]
         public string SourceBranch;
 
-        [DataMember(Name = "project_id")]
+        [JsonProperty("project_id")]
         public int ProjectId;
 
-        [DataMember(Name = "source_project_id")]
+        [JsonProperty("source_project_id")]
         public int SourceProjectId;
     }
 }

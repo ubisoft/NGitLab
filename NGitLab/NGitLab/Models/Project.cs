@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace NGitLab.Models
 {
@@ -11,35 +11,35 @@ namespace NGitLab.Models
         public string Name;
         public string Description;
 
-        [DataMember(Name = "default_branch")]
+        [JsonProperty("default_branch")]
         public string DefaultBranch;
 
         public User Owner;
         public bool Public;
         public string Path;
 
-        [DataMember(Name = "path_with_namespace")]
+        [JsonProperty("path_with_namespace")]
         public string PathWithNamespace;
 
-        [DataMember(Name = "issues_enabled")]
+        [JsonProperty("issues_enabled")]
         public bool IssuesEnabled;
 
-        [DataMember(Name = "merge_requests_enabled")]
+        [JsonProperty("merge_requests_enabled")]
         public bool MergeRequestsEnabled;
 
-        [DataMember(Name = "wall_enabled")]
+        [JsonProperty("wall_enabled")]
         public bool WallEnabled;
 
-        [DataMember(Name = "wiki_enabled")]
+        [JsonProperty("wiki_enabled")]
         public bool WikiEnabled;
 
-        [DataMember(Name = "created_at")]
+        [JsonProperty("created_at")]
         public DateTime CreatedAt;
 
-        [DataMember(Name = "ssh_url_to_repo")]
+        [JsonProperty("ssh_url_to_repo")]
         public string SshUrl;
 
-        [DataMember(Name = "http_url_to_repo")]
+        [JsonProperty("http_url_to_repo")]
         public string HttpUrl;
 
         public Namespace Namespace;

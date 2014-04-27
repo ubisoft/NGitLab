@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace NGitLab.Models
 {
@@ -18,30 +18,30 @@ namespace NGitLab.Models
         public string State;
         public bool Blocked;
 
-        [DataMember(Name = "created_at")]
+        [JsonProperty("created_at")]
         public DateTime CreatedAt;
 
         public string Bio;
 
-        [DataMember(Name = "dark_scheme")]
+        [JsonProperty("dark_scheme")]
         public bool DarkScheme;
 
-        [DataMember(Name = "theme_id")]
+        [JsonProperty("theme_id")]
         public int ThemeId;
 
-        [DataMember(Name = "extern_uid")]
+        [JsonProperty("extern_uid")]
         public string ExternUid;
 
-        [DataMember(Name = "is_admin")]
+        [JsonProperty("is_admin")]
         public bool IsAdmin;
 
-        [DataMember(Name = "can_create_group")]
+        [JsonProperty("can_create_group")]
         public bool CanCreateGroup;
 
-        [DataMember(Name = "can_create_project")]
+        [JsonProperty("can_create_project")]
         public bool CanCreateProject;
 
-        [DataMember(Name = "can_create_team")]
+        [JsonProperty("can_create_team")]
         public bool CanCreateTeam;
     }
 }
