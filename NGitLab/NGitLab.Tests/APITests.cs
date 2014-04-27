@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
@@ -17,8 +18,28 @@ namespace NGitLab.Tests
             Assert.NotNull(session.Name);
             Assert.NotNull(session.PrivateToken);
             Assert.NotNull(session.PrivateToken);
-            
         }
+
+        [Test]
+        public void GetUsers()
+        {
+            var api = CreateAPI();
+
+            var users = api.GetUsers();
+
+            CollectionAssert.IsNotEmpty(users);
+        }
+
+        [Test]
+        public void GetProjects()
+        {
+            var api = CreateAPI();
+
+            var projects = api.GetProjects();
+
+            Assert.GreaterOrEqual(projects.Count(), 21);
+        }
+
 
         private static API CreateAPI()
         {

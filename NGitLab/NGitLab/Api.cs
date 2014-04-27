@@ -6,15 +6,15 @@ namespace NGitLab
 {
     public class API
     {
+        public readonly string APIToken;
         private readonly string _hostUrl;
-        private readonly string _apiToken;
         private const string APINamespace = "/api/v3";
 
         private API(string hostUrl, string apiToken)
         {
             IsIgnoreCertificateErrors = false;
             _hostUrl = hostUrl.EndsWith("/") ? hostUrl.Replace("/$", "") : hostUrl;
-            _apiToken = apiToken;
+            APIToken = apiToken;
         }
 
         public static Session Connect(string hostUrl, string username, string password)
@@ -50,9 +50,9 @@ namespace NGitLab
 
         public Uri GetAPIUrl(string tailAPIUrl)
         {
-            if (_apiToken != null)
+            if (APIToken != null)
             {
-                tailAPIUrl = tailAPIUrl + (tailAPIUrl.IndexOf('?') > 0 ? '&' : '?') + "private_token=" + _apiToken;
+                tailAPIUrl = tailAPIUrl + (tailAPIUrl.IndexOf('?') > 0 ? '&' : '?') + "private_token=" + APIToken;
             }
 
             if (!tailAPIUrl.StartsWith("/"))
@@ -80,6 +80,11 @@ namespace NGitLab
         public IEnumerable<Project> GetProjects()
         {
             return Retrieve().GetAll<Project>(Project.Url);
+        }
+
+        public IEnumerable<User> GetUsers()
+        {
+            return Retrieve().GetAll<User>(User.Url);
         }
 
         //    public List<MergeRequest> GetMergeRequests(int projectId, MergeRequestState? state=null) 

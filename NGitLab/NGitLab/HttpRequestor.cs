@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
-using System.Runtime.Serialization.Json;
 using Newtonsoft.Json;
 
 namespace NGitLab
@@ -77,165 +78,111 @@ namespace NGitLab
 
         public IEnumerable<T> GetAll<T>(string tailUrl)
         {
-            throw new NotImplementedException();
+            return new Enumerable<T>(_root.APIToken, _root.GetAPIUrl(tailUrl));
         }
 
-//        public List<T> GetAll<T>(string tailUrl)
-//        {
-//            var results = new List<T>();
-//            Iterator<T[]> iterator = asIterator(tailUrl, type);
+        private class Enumerable<T> : IEnumerable<T>
+        {
+            private readonly string _apiToken;
+            private readonly Uri _startUrl;
 
-//            while (iterator.hasNext())
-//            {
-//                T[] requests = iterator.next();
+            public Enumerable(string apiToken, Uri startUrl)
+            {
+                _apiToken = apiToken;
+                _startUrl = startUrl;
+            }
 
-//                if (requests.length > 0)
-//                {
-//                    results.addAll(Arrays.asList(requests));
-//                }
-//            }
-//            return results;
-//        }
+            public IEnumerator<T> GetEnumerator()
+            {
+                return new Enumerator<T>(_apiToken, _startUrl);
+            }
 
-//        public  <
-//        private T 
-//    >
-//        private Iterator<T> asIterator(final 
-//        private string tailApiUrl, final
-//        private Class<T> type 
-//    )
-//    {
-//        method("GET"); // Ensure we only use iterators for GET requests
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
 
-//        // Ensure that we don't submit any data and alert the user
-//        if (!_data.isEmpty())
-//        {
-//            throw new IllegalStateException();
-//        }
+            private class Enumerator<T> : IEnumerator<T>
+            {
+                private readonly string _apiToken;
+                private Uri _nextUrlToLoad;
+                private readonly List<T> _buffer = new List<T>();
 
-//        return new Iterator<T>()
-//        {
-//            T _next;
-//    URL _url;
+                private bool _finished;
 
-//{
-//    try {
-//    _url = _root.getAPIUrl(tailApiUrl);
-//        } catch
-//        (IOException
-//        e)
-//        {
-//            throw new Error(e);
-//        }
-//    }
+                public Enumerator(string apiToken, Uri startUrl)
+                {
+                    _apiToken = apiToken;
+                    _nextUrlToLoad = startUrl;
+                }
 
-//    public
-//        bool hasNext 
-//        ()
-//        {
-//            fetch();
-//            if (_next.getClass().isArray())
-//            {
-//                Object[] arr = (Object[]) _next;
-//                return arr.length != 0;
-//            }
-//            else
-//            {
-//                return _next != null;
-//            }
-//        }
+                public void Dispose()
+                {
+                }
 
-//    public
-//        T next 
-//        ()
-//        {
-//            fetch();
-//            T record = _next;
+                public bool MoveNext()
+                {
+                    if (_buffer.Count == 0)
+                    {
+                        if (_nextUrlToLoad == null)
+                        {
+                            return false;
+                        }
 
-//            if (record == null)
-//            {
-//                throw new NoSuchElementException();
-//            }
+                        var request = SetupConnection(_nextUrlToLoad, MethodType.Get);
+                        request.Headers["PRIVATE-TOKEN"] = _apiToken;
 
-//            _next = null;
-//            return record;
-//        }
+                        using (var response = request.GetResponse())
+                        {
+                            // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
+                            var nextLink = response.Headers["Link"].Split(',')
+                                .Select(l => l.Split(';'))
+                                .FirstOrDefault(pair => pair[1].Contains("next"));
 
-//    public
-//        void remove 
-//        ()
-//        {
-//            throw new UnsupportedOperationException();
-//        }
+                            if (nextLink != null)
+                            {
+                                _nextUrlToLoad = new Uri(nextLink[0].Trim('<', '>', ' '));
+                            }
+                            else
+                            {
+                                _nextUrlToLoad = null;
+                            }
 
-//    private
-//        void fetch 
-//        ()
-//        {
-//            if (_next != null)
-//            {
-//                return;
-//            }
+                            var stream = response.GetResponseStream();
+                            _buffer.AddRange(GetSerializer().Deserialize<T[]>(new JsonTextReader(new StreamReader(stream))));
+                        }
 
-//            if (_url == null)
-//            {
-//                return;
-//            }
+                        return _buffer.Count > 0;
+                    }
 
-//            try
-//            {
-//                HttpURLConnection connection = SetupConnection(_url);
-//                try
-//                {
-//                    _next = parse(connection, type, null);
-//                    assert
-//                    _next != null;
-//                    findNextUrl(connection);
-//                }
-//                catch (IOException e)
-//                {
-//                    handleAPIError(e, connection);
-//                }
-//            }
-//            catch (IOException e)
-//            {
-//                throw new Error(e);
-//            }
-//        }
+                    if (_buffer.Count > 0)
+                    {
+                        _buffer.RemoveAt(0);
+                        return true;
+                    }
 
-//    private
-//        void findNextUrl 
-//        (HttpURLConnection
-//        connection)
-//        throws
-//        MalformedURLException
-//        {
-//            string url = _url.tostring();
+                    return false;
+                }
 
-//            _url = null;
-//            /* Increment the page number for the url if a "page" property exists,
-//* otherwise, add the page property and increment it.
-//* The Gitlab API is not a compliant hypermedia REST api, so we use
-//* a naive implementation.
-//*/
-//            Pattern pattern = Pattern.compile("([&|?])page=(\\d+)");
-//            Matcher matcher = pattern.matcher(url);
+                public void Reset()
+                {
+                    throw new NotImplementedException();
+                }
 
-//            if (matcher.find())
-//            {
-//                int page = int.parseInt(matcher.group(2)) + 1;
-//                _url = new URL(matcher.replaceAll(matcher.group(1) + "page=" + page));
-//            }
-//            else
-//            {
-//                // Since the page query was not present, its safe to assume that we just
-//                // currently used the first page, so we can default to page 2
-//                _url = new URL(url + "&page=2");
-//            }
-//        }
-//    }
-//        ;
-//    }
+                public T Current
+                {
+                    get
+                    {
+                        return _buffer[0];
+                    }
+                }
+
+                object IEnumerator.Current
+                {
+                    get { return Current; }
+                }
+            }
+        }
 
         private void SubmitData(WebRequest request)
         {
@@ -254,22 +201,16 @@ namespace NGitLab
 
         private WebRequest SetupConnection(Uri url)
         {
-            if (_root.IsIgnoreCertificateErrors)
-            {
-                IgnoreCertificateErrors();
-            }
+            return SetupConnection(url, _method);
+        }
 
+        private static WebRequest SetupConnection(Uri url, MethodType methodType)
+        {
             var request = WebRequest.Create(url);
-            request.Method = _method.ToString().ToUpperInvariant();
+            request.Method = methodType.ToString().ToUpperInvariant();
             request.Headers.Add("Accept-Encoding", "gzip");
 
             return request;
-        }
-
-        private static void IgnoreCertificateErrors()
-        {
-            ServicePointManager.ServerCertificateValidationCallback =
-                (sender, certificate, chain, errors) => true;
         }
     }
 }
