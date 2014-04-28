@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab.Impl
 {
     public class API
     {
@@ -10,33 +10,13 @@ namespace NGitLab
         private readonly string _hostUrl;
         private const string APINamespace = "/api/v3";
 
-        private API(string hostUrl, string apiToken)
+        public API(string hostUrl, string apiToken)
         {
-            IsIgnoreCertificateErrors = false;
             _hostUrl = hostUrl.EndsWith("/") ? hostUrl.Replace("/$", "") : hostUrl;
             APIToken = apiToken;
         }
 
-        public static Session Connect(string hostUrl, string username, string password)
-        {
-            const string tailUrl = Session.Url;
-            var api = Connect(hostUrl, null);
-            return api.Dispatch().With("login", username).With("password", password)
-                .To<Session>(tailUrl);
-        }
-
-        public static API Connect(string hostUrl, string apiToken)
-        {
-            return new API(hostUrl, apiToken);
-        }
-
-        public API IgnoreCertificateErrors(bool ignoreCertificateErrors)
-        {
-            IsIgnoreCertificateErrors = ignoreCertificateErrors;
-            return this;
-        }
-
-        private HttpRequestor Retrieve()
+        public HttpRequestor Retrieve()
         {
             return new HttpRequestor(this);
         }
@@ -45,8 +25,6 @@ namespace NGitLab
         {
             return new HttpRequestor(this).Method(HttpRequestor.MethodType.Post);
         }
-
-        public bool IsIgnoreCertificateErrors { get; private set; }
 
         public Uri GetAPIUrl(string tailAPIUrl)
         {
@@ -275,10 +253,5 @@ namespace NGitLab
         //    string tailUrl = GitlabNamespace.URL + "/" + namespaceId + GitlabProjectMember.URL;
         //    return Arrays.asList(retrieve().to(tailUrl, GitlabProjectMember[].class));
         //    }
-
-        public Session GetCurrentSession()
-        {
-            return Retrieve().To<Session>("/user");
-        }
     }
 }

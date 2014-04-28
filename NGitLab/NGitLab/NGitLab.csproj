@@ -42,8 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api.cs" />
-    <Compile Include="HttpRequestor.cs" />
+    <Compile Include="GitLabClient.cs" />
+    <Compile Include="Impl\API.cs" />
+    <Compile Include="Impl\HttpRequestor.cs" />
+    <Compile Include="Impl\UserClient.cs" />
+    <Compile Include="IUserClient.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\Commit.cs" />
     <Compile Include="Models\MergeRequest.cs" />
@@ -58,6 +61,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -6,13 +6,13 @@ using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 
-namespace NGitLab
+namespace NGitLab.Impl
 {
     public class HttpRequestor
     {
         private readonly API _root;
         private MethodType _method = MethodType.Get; // Default to GET requests
-        private readonly Dictionary<string, Object> _data = new Dictionary<string, Object>();
+        private readonly Dictionary<string, object> _data = new Dictionary<string, object>();
 
         public enum MethodType
         {
