@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace NGitLab.Impl
 {
@@ -13,12 +14,14 @@ namespace NGitLab.Impl
             _hostUrl = hostUrl.EndsWith("/") ? hostUrl.Replace("/$", "") : hostUrl;
             APIToken = apiToken;
         }
-
+        
+        [DebuggerStepThrough]
         public HttpRequestor Retrieve()
         {
             return new HttpRequestor(this);
         }
 
+        [DebuggerStepThrough]
         public HttpRequestor Dispatch()
         {
             return new HttpRequestor(this).Method(MethodType.Post);

@@ -29,7 +29,7 @@ namespace NGitLab.Impl
             }
         }
 
-        public void Add(User user)
+        public void Add(UserUpsert user)
         {
             var values = JObject.FromObject(user).ToObject<Dictionary<string, object>>();
             values.Remove("id");
@@ -37,12 +37,9 @@ namespace NGitLab.Impl
             _api.Retrieve().Method(MethodType.Post).With(values).To<User>(User.Url);
         }
 
-        public void Update(User user)
+        public void Update(int id, UserUpsert user)
         {
             var values = JObject.FromObject(user).ToObject<Dictionary<string, object>>();
-            var id = values["id"];
-            values.Remove("id");
-
             _api.Retrieve().Method(MethodType.Put).With(values).To<User>(User.Url + "/" + id);
         }
 

@@ -184,7 +184,7 @@ namespace NGitLab.Impl
 
         private void SubmitData(WebRequest request)
         {
-            request.Headers.Add("Content-Type", "application/json");
+            request.ContentType = "application/json";
 
             using (var stream = request.GetRequestStream())
             {

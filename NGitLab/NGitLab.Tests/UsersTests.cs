@@ -41,5 +41,28 @@ namespace NGitLab.Tests
             Assert.AreEqual("user", user.Username);
             Assert.AreEqual(true, user.CanCreateGroup);
         }
+
+        [Test]
+        public void CreateUpdateDelete()
+        {
+            var u = new UserUpsert
+            {
+                Email = "test@test.pl",
+                Bio = "bio",
+                CanCreateGroup = true,
+                IsAdmin = true,
+                Linkedin = null,
+                Name = "name",
+                Password = "password",
+                ProjectsLimit = 1000,
+                Provider = "provider",
+                Skype = "skype",
+                Twitter = "twitter",
+                Username = "username",
+                WebsiteURL = "wp.pl"
+            };
+
+            _users.Add(u);
+        }
     }
 }

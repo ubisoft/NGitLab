@@ -32,6 +32,9 @@ namespace NGitLab.Models
         [JsonProperty("extern_uid")]
         public string ExternUid;
 
+        [JsonProperty("website_url")]
+        public string WebsiteURL;
+
         [JsonProperty("is_admin")]
         public bool IsAdmin;
 
@@ -40,8 +43,5 @@ namespace NGitLab.Models
 
         [JsonProperty("can_create_project")]
         public bool CanCreateProject;
-
-        [JsonProperty("can_create_team")]
-        public bool CanCreateTeam;
     }
 }
