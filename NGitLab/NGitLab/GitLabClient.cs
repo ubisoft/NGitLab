@@ -8,6 +8,7 @@ namespace NGitLab
         {
             var api = new API(hostUrl, apiToken);
             Users = new UserClient(api);
+            Projects = new ProjectClient(api);
         }
 
         public static GitLabClient Connect(string hostUrl, string apiToken)
@@ -16,5 +17,6 @@ namespace NGitLab
         }
 
         public readonly IUserClient Users;
+        public readonly IProjectClient Projects;
     }
 }

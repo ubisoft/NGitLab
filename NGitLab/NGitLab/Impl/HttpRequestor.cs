@@ -14,18 +14,6 @@ namespace NGitLab.Impl
         private MethodType _method = MethodType.Get; // Default to GET requests
         private readonly Dictionary<string, object> _data = new Dictionary<string, object>();
 
-        public enum MethodType
-        {
-            Get,
-            Put,
-            Post,
-            Patch,
-            Delete,
-            Head,
-            Options,
-            Trace
-        }
-
         public HttpRequestor(API root)
         {
             _root = root;
@@ -34,6 +22,16 @@ namespace NGitLab.Impl
         public HttpRequestor Method(MethodType method)
         {
             _method = method;
+            return this;
+        }
+
+        public HttpRequestor With(Dictionary<string, object> values)
+        {
+            foreach (var value in values)
+            {
+                With(value.Key, value.Value);
+            }
+
             return this;
         }
 

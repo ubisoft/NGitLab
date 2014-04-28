@@ -1,21 +1,22 @@
 ﻿using System;
+using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class UsersTests
     {
-        private readonly GitLabClient _client;
+        private readonly IUserClient _users;
 
         public UsersTests()
         {
-            _client = GitLabClient.Connect(Config.ServiceUrl, Config.Secret);
+            _users = GitLabClient.Connect(Config.ServiceUrl, Config.Secret).Users;
         }
 
         [Test]
         public void Current()
         {
-            var session = _client.Users.Current;
+            var session = _users.Current;
 
             Assert.AreNotEqual(default(DateTime), session.CreatedAt);
             Assert.NotNull(session.Email);
@@ -27,7 +28,7 @@ namespace NGitLab.Tests
         [Test]
         public void GetUsers()
         {
-            var users = _client.Users.All;
+            var users = _users.All;
 
             CollectionAssert.IsNotEmpty(users);
         }
@@ -35,7 +36,7 @@ namespace NGitLab.Tests
         [Test]
         public void GetUser()
         {
-            var user = _client.Users[1];
+            var user = _users[1];
 
             Assert.AreEqual("user", user.Username);
             Assert.AreEqual(true, user.CanCreateGroup);

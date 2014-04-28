@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -30,17 +31,24 @@ namespace NGitLab.Impl
 
         public void Add(User user)
         {
-            throw new System.NotImplementedException();
+            var values = JObject.FromObject(user).ToObject<Dictionary<string, object>>();
+            values.Remove("id");
+            
+            _api.Retrieve().Method(MethodType.Post).With(values).To<User>(User.Url);
         }
 
         public void Update(User user)
         {
-            throw new System.NotImplementedException();
+            var values = JObject.FromObject(user).ToObject<Dictionary<string, object>>();
+            var id = values["id"];
+            values.Remove("id");
+
+            _api.Retrieve().Method(MethodType.Put).With(values).To<User>(User.Url + "/" + id);
         }
 
         public void Delete(User user)
         {
-            throw new System.NotImplementedException();
+            _api.Retrieve().Method(MethodType.Delete).To<User>(User.Url + "/" + user.Id);
         }
 
         public Session Current

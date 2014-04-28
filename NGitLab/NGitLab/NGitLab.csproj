@@ -45,7 +45,10 @@
     <Compile Include="GitLabClient.cs" />
     <Compile Include="Impl\API.cs" />
     <Compile Include="Impl\HttpRequestor.cs" />
+    <Compile Include="Impl\MethodType.cs" />
+    <Compile Include="Impl\ProjectClient.cs" />
     <Compile Include="Impl\UserClient.cs" />
+    <Compile Include="IProjectClient.cs" />
     <Compile Include="IUserClient.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\Commit.cs" />
