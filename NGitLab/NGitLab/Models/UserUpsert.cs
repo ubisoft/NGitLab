@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
@@ -20,20 +20,20 @@ namespace NGitLab.Models
         public string Linkedin;
         public string Twitter;
 
-        [JsonProperty("website_url")]
+        [DataMember(Name="website_url")]
         public string WebsiteURL;
 
-        [JsonProperty("projects_limit")]
+        [DataMember(Name="projects_limit")]
         public int ProjectsLimit;
 
         public string Provider;
 
         public string Bio;
 
-        [JsonProperty("admin")]
+        [DataMember(Name="admin")]
         public bool IsAdmin;
 
-        [JsonProperty("can_create_group")]
+        [DataMember(Name="can_create_group")]
         public bool CanCreateGroup;
     }
 }

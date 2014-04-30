@@ -1,47 +1,68 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
+    [DataContract]
     public class User
     {
         public static string Url = "/users";
 
+        [DataMember(Name = "id")]
         public int Id;
+
+        [DataMember(Name = "username")]
         public string Username;
+
+        [DataMember(Name = "email")]
         public string Email;
+
+        [DataMember(Name = "name")]
         public string Name;
+
+        [DataMember(Name = "skype")]
         public string Skype;
+
+        [DataMember(Name = "linkedin")]
         public string Linkedin;
+
+        [DataMember(Name = "twitter")]
         public string Twitter;
+
+        [DataMember(Name = "provider")]
         public string Provider;
+
+        [DataMember(Name = "state")]
         public string State;
+
+        [DataMember(Name = "blocked")]
         public bool Blocked;
 
-        [JsonProperty("created_at")]
+        [DataMember(Name="created_at")]
         public DateTime CreatedAt;
 
+        [DataMember(Name = "bio")]
         public string Bio;
 
-        [JsonProperty("dark_scheme")]
+        [DataMember(Name="dark_scheme")]
         public bool DarkScheme;
 
-        [JsonProperty("theme_id")]
+        [DataMember(Name="theme_id")]
         public int ThemeId;
 
-        [JsonProperty("extern_uid")]
+        [DataMember(Name="extern_uid")]
         public string ExternUid;
 
-        [JsonProperty("website_url")]
+        [DataMember(Name="website_url")]
         public string WebsiteURL;
 
-        [JsonProperty("is_admin")]
+        [DataMember(Name="is_admin")]
         public bool IsAdmin;
 
-        [JsonProperty("can_create_group")]
+        [DataMember(Name="can_create_group")]
         public bool CanCreateGroup;
 
-        [JsonProperty("can_create_project")]
+        [DataMember(Name="can_create_project")]
         public bool CanCreateProject;
     }
 }

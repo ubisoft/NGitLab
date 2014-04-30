@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -31,16 +30,16 @@ namespace NGitLab.Impl
 
         public void Add(UserUpsert user)
         {
-            var values = JObject.FromObject(user).ToObject<Dictionary<string, object>>();
-            values.Remove("id");
+            //var values = JObject.FromObject(user).ToObject<Dictionary<string, object>>();
+            //values.Remove("id");
             
-            _api.Retrieve().Method(MethodType.Post).With(values).To<User>(User.Url);
+            //_api.Retrieve().Method(MethodType.Post).With(values).To<User>(User.Url);
         }
 
         public void Update(int id, UserUpsert user)
         {
-            var values = JObject.FromObject(user).ToObject<Dictionary<string, object>>();
-            _api.Retrieve().Method(MethodType.Put).With(values).To<User>(User.Url + "/" + id);
+            //var values = JObject.FromObject(user).ToObject<Dictionary<string, object>>();
+            //_api.Retrieve().Method(MethodType.Put).With(values).To<User>(User.Url + "/" + id);
         }
 
         public void Delete(User user)

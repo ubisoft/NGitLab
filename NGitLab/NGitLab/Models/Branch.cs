@@ -1,15 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
+    [DataContract]
     public class Branch
     {
         public const string Url = "/repository/branches/";
 
-        [JsonProperty("name")]
+        [DataMember(Name="name")]
         public string Name;
 
-        [JsonProperty("protected")]
+        [DataMember(Name="protected")]
         public bool Protected;
     }
 }

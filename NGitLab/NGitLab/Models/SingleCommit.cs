@@ -1,15 +1,15 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
     public class SingleCommit : Commit
     {
-        [JsonProperty("committed_date")]
+        [DataMember(Name = "committed_date")]
         public DateTime CommittedDate;
-        [JsonProperty("authored_date")]
+        [DataMember(Name = "authored_date")]
         public DateTime AuthoredDate;
-        [JsonProperty("parent_ids")]
+        [DataMember(Name = "parent_ids")]
         public string[] Parents;
     }
 }

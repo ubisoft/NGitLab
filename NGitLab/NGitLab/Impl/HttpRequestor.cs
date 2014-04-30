@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using Newtonsoft.Json;
 
 namespace NGitLab.Impl
 {
@@ -61,17 +60,9 @@ namespace NGitLab.Impl
             {
                 using (var stream = response.GetResponseStream())
                 {
-                    return GetSerializer().Deserialize<T>(new JsonTextReader(new StreamReader(stream)));
+                    return SimpleJson.DeserializeObject<T>(new StreamReader(stream).ReadToEnd());
                 }
             }
-        }
-
-        private static JsonSerializer GetSerializer()
-        {
-            return new JsonSerializer()
-            {
-                DateFormatHandling = DateFormatHandling.IsoDateFormat
-            };
         }
 
         public IEnumerable<T> GetAll<T>(string tailUrl)
@@ -147,7 +138,7 @@ namespace NGitLab.Impl
                             }
 
                             var stream = response.GetResponseStream();
-                            _buffer.AddRange(GetSerializer().Deserialize<T[]>(new JsonTextReader(new StreamReader(stream))));
+                            _buffer.AddRange(SimpleJson.DeserializeObject<T[]>(new StreamReader(stream).ReadToEnd()));
                         }
 
                         return _buffer.Count > 0;
@@ -188,7 +179,7 @@ namespace NGitLab.Impl
 
             using (var stream = request.GetRequestStream())
             {
-                GetSerializer().Serialize(new StreamWriter(stream), _data);
+                new StreamWriter(stream).Write(SimpleJson.SerializeObject(_data));
             }
         }
 
