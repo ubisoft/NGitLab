@@ -11,7 +11,7 @@ namespace NGitLab.Impl
     {
         private readonly API _root;
         private MethodType _method = MethodType.Get; // Default to GET requests
-        private readonly Dictionary<string, object> _data = new Dictionary<string, object>();
+        private object _data;
 
         public HttpRequestor(API root)
         {
@@ -24,22 +24,9 @@ namespace NGitLab.Impl
             return this;
         }
 
-        public HttpRequestor With(Dictionary<string, object> values)
+        public HttpRequestor With(object data)
         {
-            foreach (var value in values)
-            {
-                With(value.Key, value.Value);
-            }
-
-            return this;
-        }
-
-        public HttpRequestor With(string key, Object value)
-        {
-            if (value != null && key != null)
-            {
-                _data[key] = value;
-            }
+            _data = data;
             return this;
         }
 
@@ -185,7 +172,7 @@ namespace NGitLab.Impl
 
         private bool HasOutput()
         {
-            return _method == MethodType.Post || _method == MethodType.Put && _data.Count != 0;
+            return _method == MethodType.Post || _method == MethodType.Put && _data != null;
         }
 
         private WebRequest SetupConnection(Uri url)
