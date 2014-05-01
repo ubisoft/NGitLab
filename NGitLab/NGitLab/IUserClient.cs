@@ -7,9 +7,9 @@ namespace NGitLab
     {
         IEnumerable<User> All { get; }
         User this[int id] { get; }
-        void Add(UserUpsert user);
-        void Update(int id, UserUpsert user);
-        void Delete(User user);
+        User Add(UserUpsert user);
+        User Update(int id, UserUpsert user);
+        void Delete(int id);
 
         Session Current { get; }
     }

@@ -62,7 +62,16 @@ namespace NGitLab.Tests
                 WebsiteURL = "wp.pl"
             };
 
-            _users.Add(u);
+            var addedUser = _users.Add(u);
+            Assert.AreEqual(u.Bio, addedUser.Bio);
+
+            u.Bio = "Bio2";
+            u.Email = "test@test.pl";
+
+            var updatedUser = _users.Update(addedUser.Id, u);
+            Assert.AreEqual(u.Bio, updatedUser.Bio);
+
+            _users.Delete(addedUser.Id);
         }
     }
 }

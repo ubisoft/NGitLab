@@ -164,9 +164,11 @@ namespace NGitLab.Impl
         {
             request.ContentType = "application/json";
 
-            using (var stream = request.GetRequestStream())
+            using (var writer = new StreamWriter(request.GetRequestStream()))
             {
-                new StreamWriter(stream).Write(SimpleJson.SerializeObject(_data));
+                writer.Write(SimpleJson.SerializeObject(_data));
+                writer.Flush();
+                writer.Close();
             }
         }
 

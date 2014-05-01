@@ -28,19 +28,19 @@ namespace NGitLab.Impl
             }
         }
 
-        public void Add(UserUpsert user)
+        public User Add(UserUpsert user)
         {
-            _api.Retrieve().Method(MethodType.Post).With(user).To<User>(User.Url);
+            return _api.Retrieve().Method(MethodType.Post).With(user).To<User>(User.Url);
         }
 
-        public void Update(int id, UserUpsert user)
+        public User Update(int id, UserUpsert user)
         {
-            _api.Retrieve().Method(MethodType.Put).With(user).To<User>(User.Url + "/" + id);
+            return _api.Retrieve().Method(MethodType.Put).With(user).To<User>(User.Url + "/" + id);
         }
 
-        public void Delete(User user)
+        public void Delete(int userId)
         {
-            _api.Retrieve().Method(MethodType.Delete).To<User>(User.Url + "/" + user.Id);
+            _api.Retrieve().Method(MethodType.Delete).To<User>(User.Url + "/" + userId);
         }
 
         public Session Current
