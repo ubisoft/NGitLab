@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
+    [DataContract]
     public class ProjectCreate
     {
         [Required]
@@ -20,7 +21,7 @@ namespace NGitLab.Models
         public bool IssuesEnabled;
 
         [DataMember(Name = "wall_enabled")]
-        public string WallEnabled;
+        public bool WallEnabled;
 
         [DataMember(Name = "merge_requests_enabled")]
         public bool MergeRequestsEnabled;

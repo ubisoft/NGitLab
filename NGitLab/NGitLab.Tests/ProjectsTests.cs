@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
@@ -45,21 +46,31 @@ namespace NGitLab.Tests
             }
         }
 
-        //[Test]
-        //public void CreateUpdateDelete()
-        //{
-        //    new ProjectCreate
-        //    {
-        //        Description = "desc",
-        //        ImportUrl = null,
-        //        IssuesEnabled = true,
-        //        MergeRequestsEnabled= true,
-        //        Name = "test",
-        //        NamespaceId = 
+        [Test]
+        public void CreateDelete()
+        {
+            var p = new ProjectCreate
+            {
+                Description = "desc",
+                ImportUrl = null,
+                IssuesEnabled = true,
+                MergeRequestsEnabled = true,
+                Name = "test",
+                NamespaceId = null,
+                SnippetsEnabled = true,
+                VisibilityLevel = VisibilityLevel.Public,
+                WallEnabled = true,
+                WikiEnabled = true
+            };
 
-        //    }
+            var created = _projects.Create(p);
 
-        //    _projects.Create()
-        //}
+            Assert.AreEqual(p.Description, created.Description);
+            Assert.AreEqual(p.IssuesEnabled, created.IssuesEnabled);
+            Assert.AreEqual(p.MergeRequestsEnabled, created.MergeRequestsEnabled);
+            Assert.AreEqual(p.Name, created.Name);
+
+            _projects.Delete(created.Id);
+        }
     }
 }
