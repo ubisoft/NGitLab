@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
+    [DataContract]
     public class Project
     {
         public const string Url = "/projects";

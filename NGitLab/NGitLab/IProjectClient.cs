@@ -21,5 +21,9 @@ namespace NGitLab
         IEnumerable<Project> All { get; }
 
         Project this[int id] { get; }
+
+        Project Create(ProjectCreate project);
+        
+        void Delete(int id);
     }
 }

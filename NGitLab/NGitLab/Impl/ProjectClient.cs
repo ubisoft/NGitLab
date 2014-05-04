@@ -16,7 +16,7 @@ namespace NGitLab.Impl
         {
             get
             {
-                return _api.Retrieve().GetAll<Project>(Project.Url);
+                return _api.Get().GetAll<Project>(Project.Url);
             }
         }
 
@@ -24,7 +24,7 @@ namespace NGitLab.Impl
         {
             get
             {
-                return _api.Retrieve().GetAll<Project>(Project.Url + "/owned");
+                return _api.Get().GetAll<Project>(Project.Url + "/owned");
             }
         }
 
@@ -32,7 +32,7 @@ namespace NGitLab.Impl
         {
             get
             {
-                return _api.Retrieve().GetAll<Project>(Project.Url + "/all");
+                return _api.Get().GetAll<Project>(Project.Url + "/all");
             }
         }
 
@@ -40,8 +40,18 @@ namespace NGitLab.Impl
         {
             get
             {
-                return _api.Retrieve().To<Project>(Project.Url + "/" + id);
+                return _api.Get().To<Project>(Project.Url + "/" + id);
             }
+        }
+
+        public Project Create(ProjectCreate project)
+        {
+            return _api.Post().With(project).To<Project>(Project.Url);
+        }
+
+        public void Delete(int id)
+        {
+            _api.Delete().To<Project>(Project.Url + "/" + id);
         }
     }
 }

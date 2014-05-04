@@ -10,18 +10,13 @@ namespace NGitLab.Impl
     public class HttpRequestor
     {
         private readonly API _root;
-        private MethodType _method = MethodType.Get; // Default to GET requests
+        private readonly MethodType _method; // Default to GET requests
         private object _data;
 
-        public HttpRequestor(API root)
+        public HttpRequestor(API root, MethodType method)
         {
             _root = root;
-        }
-
-        public HttpRequestor Method(MethodType method)
-        {
             _method = method;
-            return this;
         }
 
         public HttpRequestor With(object data)
@@ -134,7 +129,7 @@ namespace NGitLab.Impl
                     if (_buffer.Count > 0)
                     {
                         _buffer.RemoveAt(0);
-                        return true;
+                        return _buffer.Count > 0;
                     }
 
                     return false;

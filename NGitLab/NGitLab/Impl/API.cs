@@ -3,6 +3,7 @@ using System.Diagnostics;
 
 namespace NGitLab.Impl
 {
+    [DebuggerStepThrough]
     public class API
     {
         public readonly string APIToken;
@@ -15,16 +16,24 @@ namespace NGitLab.Impl
             APIToken = apiToken;
         }
         
-        [DebuggerStepThrough]
-        public HttpRequestor Retrieve()
+        public HttpRequestor Get()
         {
-            return new HttpRequestor(this);
+            return new HttpRequestor(this, MethodType.Get);
         }
 
-        [DebuggerStepThrough]
-        public HttpRequestor Dispatch()
+        public HttpRequestor Post()
         {
-            return new HttpRequestor(this).Method(MethodType.Post);
+            return new HttpRequestor(this, MethodType.Post);
+        }
+
+        public HttpRequestor Put()
+        {
+            return new HttpRequestor(this, MethodType.Put);
+        }
+        
+        public HttpRequestor Delete()
+        {
+            return new HttpRequestor(this, MethodType.Delete);
         }
 
         public Uri GetAPIUrl(string tailAPIUrl)

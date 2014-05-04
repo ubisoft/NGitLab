@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -28,7 +29,7 @@ namespace NGitLab.Tests
         [Test]
         public void GetUsers()
         {
-            var users = _users.All;
+            var users = _users.All.ToArray();
 
             CollectionAssert.IsNotEmpty(users);
         }
@@ -62,7 +63,7 @@ namespace NGitLab.Tests
                 WebsiteURL = "wp.pl"
             };
 
-            var addedUser = _users.Add(u);
+            var addedUser = _users.Create(u);
             Assert.AreEqual(u.Bio, addedUser.Bio);
 
             u.Bio = "Bio2";
