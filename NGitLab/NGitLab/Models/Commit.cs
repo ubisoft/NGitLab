@@ -9,7 +9,7 @@ namespace NGitLab.Models
         public const string Url = "/commits";
 
         [DataMember(Name = "id")]
-        public string Id;
+        public Sha1 Id;
 
         [DataMember(Name = "title")]
         public string Title;

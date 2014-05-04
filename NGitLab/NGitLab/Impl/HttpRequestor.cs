@@ -25,7 +25,14 @@ namespace NGitLab.Impl
             return this;
         }
 
-        public T To<T>(string tailAPIUrl, T instance = default(T))
+        public T To<T>(string tailAPIUrl)
+        {
+            var result = default(T);
+            Stream(tailAPIUrl, s=> result = SimpleJson.DeserializeObject<T>(new StreamReader(s).ReadToEnd()));
+            return result;
+        }
+
+        public void Stream(string tailAPIUrl, Action<Stream> parser)
         {
             var req = SetupConnection(_root.GetAPIUrl(tailAPIUrl));
 
@@ -42,7 +49,7 @@ namespace NGitLab.Impl
             {
                 using (var stream = response.GetResponseStream())
                 {
-                    return SimpleJson.DeserializeObject<T>(new StreamReader(stream).ReadToEnd());
+                    parser(stream);
                 }
             }
         }

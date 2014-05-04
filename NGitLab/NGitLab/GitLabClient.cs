@@ -6,9 +6,9 @@ namespace NGitLab
     {
         private GitLabClient(string hostUrl, string apiToken)
         {
-            var api = new API(hostUrl, apiToken);
-            Users = new UserClient(api);
-            Projects = new ProjectClient(api);
+            _api = new API(hostUrl, apiToken);
+            Users = new UserClient(_api);
+            Projects = new ProjectClient(_api);
         }
 
         public static GitLabClient Connect(string hostUrl, string apiToken)
@@ -16,7 +16,14 @@ namespace NGitLab
             return new GitLabClient(hostUrl, apiToken);
         }
 
+        private readonly API _api;
+
         public readonly IUserClient Users;
         public readonly IProjectClient Projects;
+
+        public IRepositoryClient Get(int projectId)
+        {
+            return new RepositoryClient(_api, projectId);
+        }
     }
 }

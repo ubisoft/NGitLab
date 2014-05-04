@@ -1,16 +1,24 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
-    public class ProjectsTests
+    public class ProjectsTests : IDisposable
     {
         private readonly IProjectClient _projects;
+        private readonly Project _created;
 
         public ProjectsTests()
         {
             _projects = GitLabClient.Connect(Config.ServiceUrl, Config.Secret).Projects;
+            CreateProject(out _created, "default");
+        }
+
+        public void Dispose()
+        {
+            _projects.Delete(_created.Id);
         }
 
         [Test]
@@ -20,7 +28,7 @@ namespace NGitLab.Tests
 
             CollectionAssert.IsNotEmpty(projects);
         }
-        
+
         [Test]
         public void GetOwnedProjects()
         {
@@ -28,7 +36,7 @@ namespace NGitLab.Tests
 
             CollectionAssert.IsNotEmpty(projects);
         }
-        
+
         [Test]
         public void GetAccessibleProjects()
         {
@@ -37,33 +45,11 @@ namespace NGitLab.Tests
             CollectionAssert.IsNotEmpty(projects);
         }
 
-        [Explicit, Test]
-        public void DeleteAll()
-        {
-            foreach (var p in _projects.All.ToArray())
-            {
-                _projects.Delete(p.Id);
-            }
-        }
-
         [Test]
         public void CreateDelete()
         {
-            var p = new ProjectCreate
-            {
-                Description = "desc",
-                ImportUrl = null,
-                IssuesEnabled = true,
-                MergeRequestsEnabled = true,
-                Name = "test",
-                NamespaceId = null,
-                SnippetsEnabled = true,
-                VisibilityLevel = VisibilityLevel.Public,
-                WallEnabled = true,
-                WikiEnabled = true
-            };
-
-            var created = _projects.Create(p);
+            Project created;
+            var p = CreateProject(out created, "test");
 
             Assert.AreEqual(p.Description, created.Description);
             Assert.AreEqual(p.IssuesEnabled, created.IssuesEnabled);
@@ -71,6 +57,26 @@ namespace NGitLab.Tests
             Assert.AreEqual(p.Name, created.Name);
 
             _projects.Delete(created.Id);
+        }
+
+        private ProjectCreate CreateProject(out Project created, string name)
+        {
+            var p = new ProjectCreate
+            {
+                Description = "desc",
+                ImportUrl = null,
+                IssuesEnabled = true,
+                MergeRequestsEnabled = true,
+                Name = name,
+                NamespaceId = null,
+                SnippetsEnabled = true,
+                VisibilityLevel = VisibilityLevel.Public,
+                WallEnabled = true,
+                WikiEnabled = true
+            };
+
+            created = _projects.Create(p);
+            return p;
         }
     }
 }

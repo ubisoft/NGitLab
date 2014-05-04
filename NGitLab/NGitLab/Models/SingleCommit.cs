@@ -13,6 +13,6 @@ namespace NGitLab.Models
         public DateTime AuthoredDate;
 
         [DataMember(Name = "parent_ids")]
-        public string[] Parents;
+        public Sha1[] Parents;
     }
 }
