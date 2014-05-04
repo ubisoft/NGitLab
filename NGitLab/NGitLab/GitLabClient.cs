@@ -21,7 +21,7 @@ namespace NGitLab
         public readonly IUserClient Users;
         public readonly IProjectClient Projects;
 
-        public IRepositoryClient Get(int projectId)
+        public IRepositoryClient GetRepository(int projectId)
         {
             return new RepositoryClient(_api, projectId);
         }

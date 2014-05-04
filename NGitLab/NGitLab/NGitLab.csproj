@@ -40,7 +40,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GitLabClient.cs" />
+    <Compile Include="IBranchClient.cs" />
+    <Compile Include="IFilesClient.cs" />
     <Compile Include="Impl\API.cs" />
+    <Compile Include="Impl\BranchClient.cs" />
+    <Compile Include="Impl\FileClient.cs" />
     <Compile Include="Impl\HttpRequestor.cs" />
     <Compile Include="Impl\MethodType.cs" />
     <Compile Include="Impl\ProjectClient.cs" />

@@ -12,7 +12,7 @@ namespace NGitLab.Tests
 
         public ProjectsTests()
         {
-            _projects = GitLabClient.Connect(Config.ServiceUrl, Config.Secret).Projects;
+            _projects = Config.Connect().Projects;
             CreateProject(out _created, "default");
         }
 

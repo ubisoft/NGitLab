@@ -28,7 +28,7 @@ namespace NGitLab.Impl
         public T To<T>(string tailAPIUrl)
         {
             var result = default(T);
-            Stream(tailAPIUrl, s=> result = SimpleJson.DeserializeObject<T>(new StreamReader(s).ReadToEnd()));
+            Stream(tailAPIUrl, s => result = SimpleJson.DeserializeObject<T>(new StreamReader(s).ReadToEnd()));
             return result;
         }
 
@@ -113,7 +113,7 @@ namespace NGitLab.Impl
                         using (var response = request.GetResponse())
                         {
                             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
-                            var nextLink = response.Headers["Link"].Split(',')
+                            var nextLink = (response.Headers["Link"] ?? string.Empty).Split(',')
                                 .Select(l => l.Split(';'))
                                 .FirstOrDefault(pair => pair[1].Contains("next"));
 

@@ -11,7 +11,7 @@ namespace NGitLab.Tests
 
         public UsersTests()
         {
-            _users = GitLabClient.Connect(Config.ServiceUrl, Config.Secret).Users;
+            _users = Config.Connect().Users;
         }
 
         [Test]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -37,7 +38,7 @@ namespace NGitLab.Impl
             get { return _api.Get().GetAll<Commit>(_repoPath + "/commits"); }
         }
 
-        public SingleCommit GetCommit(string sha)
+        public SingleCommit GetCommit(Sha1 sha)
         {
             return _api.Get().To<SingleCommit>(_repoPath + "/commits/" + sha);
         }
@@ -47,49 +48,15 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
         }
 
-        public IEnumerable<FileData> Files
+        public IFilesClient Files
         {
-            get { return _api.Get().GetAll<FileData>(_repoPath + "/files"); }
+            get{return new FileClient(_api, _repoPath);}
         }
 
-        public void CreateFile(FileUpsert file)
-        {
-            _api.Post().With(file).Stream(_repoPath + "/files", s => { });
-        }
 
-        public void UpdateFile(FileUpsert file)
+        public IBranchClient Branches
         {
-            _api.Put().With(file).Stream(_repoPath + "/files", s => { });
-        }
-
-        public void DeleteFile(FileDelete file)
-        {
-            _api.Delete().With(file).Stream(_repoPath + "/files", s => { });
-        }
-
-        public IEnumerable<Branch> Branches
-        {
-            get { return _api.Get().GetAll<Branch>(_repoPath + "/branches"); }
-        }
-
-        public Branch GetBranch(string name)
-        {
-            return _api.Get().To<Branch>(_repoPath + "/branches/" + name);
-        }
-
-        public Branch ProtectBranch(string name)
-        {
-            return _api.Put().To<Branch>(_repoPath + "/branches/" + name + "/protect");
-        }
-
-        public Branch UnprotectBranch(string name)
-        {
-            return _api.Put().To<Branch>(_repoPath + "/branches/" + name + "/unprotect");
-        }
-
-        public Branch Create(BranchCreate branch)
-        {
-            return _api.Post().With(branch).To<Branch>(_repoPath + "/branches");
+            get { return new BranchClient(_api, _repoPath); }
         }
     }
 }
