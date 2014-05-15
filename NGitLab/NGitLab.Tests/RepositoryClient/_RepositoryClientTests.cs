@@ -1,4 +1,5 @@
-﻿using NGitLab.Models;
+﻿using System.Linq;
+using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Tests.RepositoryClient
@@ -14,20 +15,13 @@ namespace NGitLab.Tests.RepositoryClient
         [SetUp]
         public void SetUp()
         {
-            _project = Config.Connect().Projects.Create(
-                new ProjectCreate
-                {
-                    Name = "RepositoryClientTests"
-                }
-                );
-
+            _project = Config.Connect().Projects.Owned.Single();
             RepositoryClient = Config.Connect().GetRepository(_project.Id);
         }
 
         [TearDown]
         public void TearDown()
         {
-            Config.Connect().Projects.Delete(_project.Id);
         }
     }
 }

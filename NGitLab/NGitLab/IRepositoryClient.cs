@@ -13,10 +13,12 @@ namespace NGitLab
         
         IEnumerable<Commit> Commits { get; }
         SingleCommit GetCommit(Sha1 sha);
-        IEnumerable<Diff> GetCommitDiff(string sha);
+        IEnumerable<Diff> GetCommitDiff(Sha1 sha);
 
         IFilesClient Files { get; }
 
         IBranchClient Branches { get; }
+
+        IProjectHooksClient ProjectHooks { get; }
     }
 }

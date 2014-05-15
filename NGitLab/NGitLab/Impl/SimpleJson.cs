@@ -56,6 +56,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -1411,6 +1412,9 @@ namespace NGitLab.Impl
                             obj = value;
                         else
                         {
+                            if (type == typeof (Sha1))
+                                return new Sha1(jsonObject.Single().Value.ToString());
+
                             obj = ConstructorCache[type]();
                             foreach (KeyValuePair<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>> setter in SetCache[type])
                             {

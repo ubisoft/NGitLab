@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using NGitLab.Models;
+﻿using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
@@ -12,11 +11,6 @@ namespace NGitLab.Impl
         {
             _api = api;
             _repoPath = repoPath;
-        }
-
-        public IEnumerable<FileData> All
-        {
-            get { return _api.Get().GetAll<FileData>(_repoPath + "/files"); } 
         }
 
         public void Create(FileUpsert file)

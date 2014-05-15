@@ -113,7 +113,11 @@ namespace NGitLab.Impl
                         using (var response = request.GetResponse())
                         {
                             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
-                            var nextLink = (response.Headers["Link"] ?? string.Empty).Split(',')
+                            var link = response.Headers["Link"];
+                            
+                            string[] nextLink = null;
+                            if (string.IsNullOrEmpty(link) == false)
+                            nextLink = link.Split(',')
                                 .Select(l => l.Split(';'))
                                 .FirstOrDefault(pair => pair[1].Contains("next"));
 

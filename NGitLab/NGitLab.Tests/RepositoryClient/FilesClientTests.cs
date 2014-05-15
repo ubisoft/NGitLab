@@ -1,22 +1,15 @@
-﻿using System.Linq;
-using NGitLab.Models;
-using NUnit.Framework;
+﻿using NGitLab.Models;
 
 namespace NGitLab.Tests.RepositoryClient
 {
     public class FilesClientTests
     {
-        private readonly IBranchClient _client;
+        private readonly IFilesClient _client;
+        private FileData[] _files;
 
         public FilesClientTests()
         {
-            _client = _RepositoryClientTests.RepositoryClient.Branches;
-        }
-
-        [Test]
-        public void CreateUpdateDelete()
-        {
-            var branches = _client.All.ToArray();
+            _client = _RepositoryClientTests.RepositoryClient.Files;
         }
     }
 }

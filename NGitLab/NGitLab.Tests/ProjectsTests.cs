@@ -49,7 +49,7 @@ namespace NGitLab.Tests
         public void CreateDelete()
         {
             Project created;
-            var p = CreateProject(out created, "test");
+            var p = CreateProject(out created, "test2");
 
             Assert.AreEqual(p.Description, created.Description);
             Assert.AreEqual(p.IssuesEnabled, created.IssuesEnabled);

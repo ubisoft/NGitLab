@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -10,12 +9,14 @@ namespace NGitLab.Impl
     {
         private readonly API _api;
         private readonly string _repoPath;
+        private readonly string _projectPath;
 
         public RepositoryClient(API api, int projectId)
         {
             _api = api;
 
-            _repoPath = Project.Url + "/" + projectId + "/repository";
+            _projectPath = Project.Url + "/" + projectId;
+            _repoPath = _projectPath + "/repository";
         }
 
         public IEnumerable<Tag> Tags
@@ -43,20 +44,25 @@ namespace NGitLab.Impl
             return _api.Get().To<SingleCommit>(_repoPath + "/commits/" + sha);
         }
 
-        public IEnumerable<Diff> GetCommitDiff(string sha)
+        public IEnumerable<Diff> GetCommitDiff(Sha1 sha)
         {
             return _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
         }
 
         public IFilesClient Files
         {
-            get{return new FileClient(_api, _repoPath);}
+            get { return new FileClient(_api, _repoPath); }
         }
 
 
         public IBranchClient Branches
         {
             get { return new BranchClient(_api, _repoPath); }
+        }
+
+        public IProjectHooksClient ProjectHooks
+        {
+            get { return new ProjectHooksClient(_api, _projectPath); }
         }
     }
 }

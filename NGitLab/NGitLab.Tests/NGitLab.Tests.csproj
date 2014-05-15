@@ -41,7 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ProjectsTests.cs" />
+    <Compile Include="RepositoryClient\BranchClientTests.cs" />
     <Compile Include="RepositoryClient\FilesClientTests.cs" />
+    <Compile Include="RepositoryClient\ProjectHooksClientTests.cs" />
+    <Compile Include="RepositoryClient\RepositoryClientTests.cs" />
     <Compile Include="RepositoryClient\_RepositoryClientTests.cs" />
     <Compile Include="Sha1Tests.cs" />
     <Compile Include="UsersTests.cs" />
