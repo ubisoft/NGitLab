@@ -54,7 +54,6 @@ namespace NGitLab.Impl
             get { return new FileClient(_api, _repoPath); }
         }
 
-
         public IBranchClient Branches
         {
             get { return new BranchClient(_api, _repoPath); }
