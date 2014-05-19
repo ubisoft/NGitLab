@@ -27,6 +27,6 @@ namespace NGitLab.Models
         public DateTime UpdatedAt;
 
         [DataMember(Name="owner_id")]
-        public int OwnerId;
+        public int? OwnerId;
     }
 }
