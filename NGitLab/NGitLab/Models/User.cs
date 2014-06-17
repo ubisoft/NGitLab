@@ -44,7 +44,7 @@ namespace NGitLab.Models
         [DataMember(Name="avatar_url")]
         public string AvatarURL;
 
-		[DataMember(Name = "bio")]
+        [DataMember(Name = "bio")]
         public string Bio;
 
         [DataMember(Name="dark_scheme")]
