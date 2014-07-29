@@ -140,7 +140,7 @@ namespace NGitLab.Impl
                     if (_buffer.Count > 0)
                     {
                         _buffer.RemoveAt(0);
-                        return _buffer.Count > 0;
+                        return (_buffer.Count > 0) ? true : MoveNext();
                     }
 
                     return false;
