@@ -172,7 +172,8 @@ namespace NGitLab.Impl
 
             using (var writer = new StreamWriter(request.GetRequestStream()))
             {
-                writer.Write(SimpleJson.SerializeObject(_data));
+                var data = SimpleJson.SerializeObject(_data);
+                writer.Write(data);
                 writer.Flush();
                 writer.Close();
             }
