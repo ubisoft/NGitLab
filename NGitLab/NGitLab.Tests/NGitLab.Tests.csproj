@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MergeRequest\MergeRequestClientTests.cs" />
+    <Compile Include="MergeRequest\MergeRequestCommentsClientTests.cs" />
     <Compile Include="MergeRequest\_MergeRequestClientTests.cs" />
     <Compile Include="ProjectsTests.cs" />
     <Compile Include="RepositoryClient\BranchClientTests.cs" />

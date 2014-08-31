@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using NGitLab.Impl;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -14,6 +13,6 @@ namespace NGitLab
         MergeRequest Update(int mergeRequestId, MergeRequestUpdate mergeRequest);
         MergeRequest Accept(int mergeRequestId, MergeCommitMessage message);
 
-        IMergeRequestCommentClient Comments { get; }
+        IMergeRequestCommentClient Comments(int mergeRequestId);
     }
 }

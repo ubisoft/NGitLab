@@ -50,9 +50,9 @@ namespace NGitLab.Impl
                 .To<MergeRequest>(_projectPath + "/merge_request/" + mergeRequestId + "/merge");
         }
 
-        public IMergeRequestCommentClient Comments
+        public IMergeRequestCommentClient Comments(int mergeRequestId)
         {
-            get { return null; }
+            return new MergeRequestCommentClient(_api, _projectPath, mergeRequestId);
         }        
     }
 }
