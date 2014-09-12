@@ -25,5 +25,12 @@ namespace NGitLab.Tests.RepositoryClient
             Assert.IsNotNull(branch);
             Assert.IsNotNull(branch.Name);
         }
+
+        [Test]
+        public void DeleteByName()
+        {
+            var result = _branches.Delete("merge-me-to-master");
+            Assert.That(result.Succeed);
+        }
     }
 }

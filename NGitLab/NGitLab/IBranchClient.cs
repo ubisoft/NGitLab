@@ -10,5 +10,6 @@ namespace NGitLab
         Branch Protect(string name);
         Branch Unprotect(string name);
         Branch Create(BranchCreate branch);
+        BranchRemovalStatus Delete(string name);
     }
 }
