@@ -44,10 +44,12 @@
     <Compile Include="GitLabClient.cs" />
     <Compile Include="IBranchClient.cs" />
     <Compile Include="IFilesClient.cs" />
+    <Compile Include="IIssueClient.cs" />
     <Compile Include="IMergeRequestClient.cs" />
     <Compile Include="Impl\API.cs" />
     <Compile Include="Impl\BranchClient.cs" />
     <Compile Include="IMergeRequestCommentClient.cs" />
+    <Compile Include="Impl\IssueClient.cs" />
     <Compile Include="Impl\MergeRequestClient.cs" />
     <Compile Include="Impl\MergeRequestCommentClient.cs" />
     <Compile Include="Impl\ProjectHooksClient.cs" />
@@ -61,6 +63,8 @@
     <Compile Include="IProjectHooksClient.cs" />
     <Compile Include="IRepositoryClient.cs" />
     <Compile Include="IUserClient.cs" />
+    <Compile Include="Models\Assignee.cs" />
+    <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\BranchCreate.cs" />
     <Compile Include="Models\Comment.cs" />
@@ -70,12 +74,14 @@
     <Compile Include="Models\FileData.cs" />
     <Compile Include="Models\FileDelete.cs" />
     <Compile Include="Models\FileUpsert.cs" />
+    <Compile Include="Models\Issue.cs" />
     <Compile Include="Models\MergeCommitMessage.cs" />
     <Compile Include="Models\MergeRequest.cs" />
     <Compile Include="Models\MergeRequestComment.cs" />
     <Compile Include="Models\MergeRequestCreate.cs" />
     <Compile Include="Models\MergeRequestState.cs" />
     <Compile Include="Models\MergeRequestUpdate.cs" />
+    <Compile Include="Models\Milestone.cs" />
     <Compile Include="Models\Namespace.cs" />
     <Compile Include="Models\ObjectType.cs" />
     <Compile Include="Models\PersonInfo.cs" />
