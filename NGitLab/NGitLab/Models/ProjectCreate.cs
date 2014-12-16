@@ -17,7 +17,10 @@ namespace NGitLab.Models
         [DataMember(Name = "description")]
         public string Description;
 
-        [DataMember(Name = "issues_enabled")]
+		[DataMember(Name = "path")]
+		public string Path;
+
+		[DataMember(Name = "issues_enabled")]
         public bool IssuesEnabled;
 
         [DataMember(Name = "wall_enabled")]
