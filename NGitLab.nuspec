@@ -17,6 +17,6 @@
     </releaseNotes>
   </metadata>
   <files>
-    <file src=".\NGitLab\NGitLab\bin\Release\NGitLab.dll" target="lib\net45" />
+    <file src="NGitLab\NGitlab\bin\Release\NGitLab.dll" target="lib\net45" />
   </files>
 </package>
