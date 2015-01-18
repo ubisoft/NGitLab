@@ -67,6 +67,7 @@
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\BranchCreate.cs" />
+    <Compile Include="Models\BranchRemovalStatus.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Commit.cs" />
     <Compile Include="Models\CommitInfo.cs" />
