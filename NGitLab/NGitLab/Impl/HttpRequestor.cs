@@ -191,9 +191,10 @@ namespace NGitLab.Impl
 
         private static WebRequest SetupConnection(Uri url, MethodType methodType)
         {
-            var request = WebRequest.Create(url);
+            var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = methodType.ToString().ToUpperInvariant();
             request.Headers.Add("Accept-Encoding", "gzip");
+            request.AutomaticDecompression = DecompressionMethods.GZip;
 
             return request;
         }
