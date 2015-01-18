@@ -47,8 +47,8 @@ namespace NGitLab.Models
         [DataMember(Name = "bio")]
         public string Bio;
 
-        [DataMember(Name="dark_scheme")]
-        public bool DarkScheme;
+        [DataMember(Name = "color_scheme_id")]
+        public int ColorSchemeId;
 
         [DataMember(Name="theme_id")]
         public int ThemeId;
