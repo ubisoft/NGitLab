@@ -140,7 +140,7 @@ namespace NGitLab.Impl
                     if (_buffer.Count > 0)
                     {
                         _buffer.RemoveAt(0);
-                        return _buffer.Count > 0;
+                        return (_buffer.Count > 0) ? true : MoveNext();
                     }
 
                     return false;
@@ -172,7 +172,8 @@ namespace NGitLab.Impl
 
             using (var writer = new StreamWriter(request.GetRequestStream()))
             {
-                writer.Write(SimpleJson.SerializeObject(_data));
+                var data = SimpleJson.SerializeObject(_data);
+                writer.Write(data);
                 writer.Flush();
                 writer.Close();
             }
@@ -190,9 +191,10 @@ namespace NGitLab.Impl
 
         private static WebRequest SetupConnection(Uri url, MethodType methodType)
         {
-            var request = WebRequest.Create(url);
+            var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = methodType.ToString().ToUpperInvariant();
             request.Headers.Add("Accept-Encoding", "gzip");
+            request.AutomaticDecompression = DecompressionMethods.GZip;
 
             return request;
         }

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NGitLab.Tests</RootNamespace>
     <AssemblyName>NGitLab.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MergeRequest\MergeRequestClientTests.cs" />
+    <Compile Include="MergeRequest\MergeRequestCommentsClientTests.cs" />
+    <Compile Include="MergeRequest\_MergeRequestClientTests.cs" />
     <Compile Include="ProjectsTests.cs" />
     <Compile Include="RepositoryClient\BranchClientTests.cs" />
     <Compile Include="RepositoryClient\FilesClientTests.cs" />
