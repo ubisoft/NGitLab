@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
+    <ReleaseVersion>2.0</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -100,6 +101,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Impl\SimpleJson.cs" />
     <Compile Include="Sha1.cs" />
+    <Compile Include="INamespaceClient.cs" />
+    <Compile Include="Impl\NamespaceClient.cs" />
+    <Compile Include="Models\NamespaceCreate.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

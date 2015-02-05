@@ -6,7 +6,7 @@ namespace NGitLab.Models
     [DataContract]
     public class Namespace
     {
-        public const string URL = "/groups";
+        public const string Url = "/groups";
 
         [DataMember(Name = "id")]
         public int Id;
