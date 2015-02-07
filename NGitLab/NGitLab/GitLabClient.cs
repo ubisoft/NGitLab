@@ -10,6 +10,7 @@ namespace NGitLab
             Users = new UserClient(_api);
             Projects = new ProjectClient(_api);
             Issues = new IssueClient(_api);
+            Groups = new NamespaceClient(_api);
         }
 
         public static GitLabClient Connect(string hostUrl, string apiToken)
@@ -22,6 +23,7 @@ namespace NGitLab
         public readonly IUserClient Users;
         public readonly IProjectClient Projects;
         public readonly IIssueClient Issues;
+        public readonly INamespaceClient Groups;
 
         public IRepositoryClient GetRepository(int projectId)
         {
