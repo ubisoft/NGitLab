@@ -4,12 +4,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Impl
 {
+    [DataContract]
     internal class JsonError
     {
-        public string message;
+#pragma warning disable 649
+        [DataMember(Name = "message")]
+        public string Message;
+#pragma warning restore 649
     }
 
     public class HttpRequestor
@@ -69,8 +74,8 @@ namespace NGitLab.Impl
                         using (var reader = new StreamReader(errorResponse.GetResponseStream()))
                         {
                             string jsonString = reader.ReadToEnd();
-                            JsonError jsonError = SimpleJson.DeserializeObject<JsonError>(jsonString);
-                            throw new Exception(string.Format("The remote server returned an error ({0}): {1}", errorResponse.StatusCode, jsonError.message));
+                            var jsonError = SimpleJson.DeserializeObject<JsonError>(jsonString);
+                            throw new Exception(string.Format("The remote server returned an error ({0}): {1}", errorResponse.StatusCode, jsonError.Message));
                         }
                     }
                 }
@@ -98,7 +103,7 @@ namespace NGitLab.Impl
 
             public IEnumerator<T> GetEnumerator()
             {
-                return new Enumerator<T>(_apiToken, _startUrl);
+                return new Enumerator(_apiToken, _startUrl);
             }
 
             IEnumerator IEnumerable.GetEnumerator()
@@ -106,13 +111,11 @@ namespace NGitLab.Impl
                 return GetEnumerator();
             }
 
-            private class Enumerator<T> : IEnumerator<T>
+            private class Enumerator : IEnumerator<T>
             {
                 private readonly string _apiToken;
                 private Uri _nextUrlToLoad;
                 private readonly List<T> _buffer = new List<T>();
-
-                private bool _finished;
 
                 public Enumerator(string apiToken, Uri startUrl)
                 {
@@ -140,12 +143,12 @@ namespace NGitLab.Impl
                         {
                             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
                             var link = response.Headers["Link"];
-                            
+
                             string[] nextLink = null;
                             if (string.IsNullOrEmpty(link) == false)
-                            nextLink = link.Split(',')
-                                .Select(l => l.Split(';'))
-                                .FirstOrDefault(pair => pair[1].Contains("next"));
+                                nextLink = link.Split(',')
+                                    .Select(l => l.Split(';'))
+                                    .FirstOrDefault(pair => pair[1].Contains("next"));
 
                             if (nextLink != null)
                             {
