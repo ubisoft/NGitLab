@@ -7,6 +7,11 @@ using System.Net;
 
 namespace NGitLab.Impl
 {
+    internal class JsonError
+    {
+        public string message;
+    }
+
     public class HttpRequestor
     {
         private readonly API _root;
@@ -45,13 +50,34 @@ namespace NGitLab.Impl
                 req.Headers.Add("Content-Length", "0");
             }
 
-            using (var response = req.GetResponse())
+            try
             {
-                using (var stream = response.GetResponseStream())
+                using (var response = req.GetResponse())
                 {
-                    parser(stream);
+                    using (var stream = response.GetResponseStream())
+                    {
+                        parser(stream);
+                    }
                 }
             }
+            catch (WebException wex)
+            {
+                if (wex.Response != null)
+                {
+                    using (var errorResponse = (HttpWebResponse)wex.Response)
+                    {
+                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                        {
+                            string jsonString = reader.ReadToEnd();
+                            JsonError jsonError = SimpleJson.DeserializeObject<JsonError>(jsonString);
+                            throw new Exception(string.Format("The remote server returned an error ({0}): {1}", errorResponse.StatusCode, jsonError.message));
+                        }
+                    }
+                }
+                else
+                    throw wex;
+            }
+
         }
 
         public IEnumerable<T> GetAll<T>(string tailUrl)
