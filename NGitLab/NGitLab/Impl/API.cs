@@ -6,6 +6,18 @@ namespace NGitLab.Impl
     [DebuggerStepThrough]
     public class API
     {
+        // defined return codes for v3.
+        public const string OK = "200";
+        public const string CREATED = "201";
+        public const string BAD_REQUEST = "400";
+        public const string UNAUTHORIZED = "401";
+        public const string FORBIDDEN = "403";
+        public const string NOT_FOUND = "404";
+        public const string METHOD_NOT_ALLOWED = "405";
+        public const string CONFLICT = "409";
+        public const string UNPROCESSABLE = "422";
+        public const string SERVER_ERROR = "500";
+
         public readonly string APIToken;
         private readonly string _hostUrl;
         private const string APINamespace = "/api/v3";
