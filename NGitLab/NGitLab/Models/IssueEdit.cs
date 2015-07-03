@@ -14,8 +14,8 @@ namespace NGitLab.Models
             IssueId = issue.IssueId;
             Title = issue.Title;
             Description = issue.Description;
-            Assignee = issue.Assignee;
-            Milestone = issue.Milestone;
+            AssigneeId = issue.Assignee.Id;
+            MilestoneId = issue.Milestone.Id;
             Labels = issue.Labels;
             State = issue.State;
         }
@@ -35,10 +35,10 @@ namespace NGitLab.Models
         public string Description;
 
         [DataMember(Name = "assignee_id")]
-        public Assignee Assignee;
+        public int? AssigneeId;
 
         [DataMember(Name = "milestone_id")]
-        public Milestone Milestone;
+        public int? MilestoneId;
 
         [DataMember(Name = "labels")]
         public string[] Labels;

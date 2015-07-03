@@ -18,10 +18,10 @@ namespace NGitLab.Models
         public string Description;
 
         [DataMember(Name = "assignee_id")]
-        public Assignee Assignee;
+        public int? AssigneeId;
 
         [DataMember(Name = "milestone_id")]
-        public int MileStoneId;
+        public int? MileStoneId;
 
         [DataMember(Name = "labels")]
         public string[] Labels;
