@@ -77,6 +77,8 @@
     <Compile Include="Models\FileDelete.cs" />
     <Compile Include="Models\FileUpsert.cs" />
     <Compile Include="Models\Issue.cs" />
+    <Compile Include="Models\IssueCreate.cs" />
+    <Compile Include="Models\IssueEdit.cs" />
     <Compile Include="Models\MergeCommitMessage.cs" />
     <Compile Include="Models\MergeRequest.cs" />
     <Compile Include="Models\MergeRequestComment.cs" />
