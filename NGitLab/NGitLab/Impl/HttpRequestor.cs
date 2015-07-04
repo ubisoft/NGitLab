@@ -210,7 +210,7 @@ namespace NGitLab.Impl
 
         private bool HasOutput()
         {
-            return _method == MethodType.Post || _method == MethodType.Put && _data != null;
+            return (_method == MethodType.Delete || _method == MethodType.Post || _method == MethodType.Put) && _data != null;
         }
 
         private WebRequest SetupConnection(Uri url)

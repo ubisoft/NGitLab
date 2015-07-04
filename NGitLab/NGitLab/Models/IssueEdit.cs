@@ -10,7 +10,7 @@ namespace NGitLab.Models
 
         public IssueEdit(Issue issue)
         {
-            Id = issue.Id;
+            Id = issue.ProjectId;
             IssueId = issue.IssueId;
             Title = issue.Title;
             Description = issue.Description;

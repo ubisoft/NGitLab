@@ -1,6 +1,7 @@
 ﻿using NGitLab.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -37,10 +38,9 @@ namespace NGitLab.Impl
             return _api.Put().With(label).To<Label>(string.Format(ProjectLabelUrl, label.Id));
         }
 
-        public bool DeleteLabel(LabelDelete label, out string result)
+        public Label DeleteLabel(LabelDelete label)
         {
-            result = _api.Delete().With(label).To<string>(string.Format(ProjectLabelUrl, label.Id));
-            return API.OK.Equals(result.Trim());
+            return _api.Delete().With(label).To<Label>(string.Format(ProjectLabelUrl, label.Id));
         }
     }
 }

@@ -24,6 +24,6 @@ namespace NGitLab.Models
         public int? MileStoneId;
 
         [DataMember(Name = "labels")]
-        public string[] Labels;
+        public string Labels;
     }
 }

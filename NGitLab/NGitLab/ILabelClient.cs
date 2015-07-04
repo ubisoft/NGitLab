@@ -45,6 +45,6 @@ namespace NGitLab
         /// <param name="label"></param>
         /// <param name="result"></param>
         /// <returns>True if "200", the success code for delete, was returned from the service.</returns>
-        bool DeleteLabel(LabelDelete label, out string result);
+        Label DeleteLabel(LabelDelete label);
     }
 }
