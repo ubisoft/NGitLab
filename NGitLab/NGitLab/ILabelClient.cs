@@ -29,14 +29,14 @@ namespace NGitLab
         /// </summary>
         /// <param name="label"></param>
         /// <returns></returns>
-        Label NewLabel(LabelCreate label);
+        Label Create(LabelCreate label);
 
         /// <summary>
         /// Edit the contents of an existing label.
         /// </summary>
         /// <param name="label"></param>
         /// <returns></returns>
-        Label EditLabel(LabelEdit label);
+        Label Edit(LabelEdit label);
 
         /// <summary>
         /// Delete a label from the project.
@@ -45,6 +45,6 @@ namespace NGitLab
         /// <param name="label"></param>
         /// <param name="result"></param>
         /// <returns>True if "200", the success code for delete, was returned from the service.</returns>
-        Label DeleteLabel(LabelDelete label);
+        Label Delete(LabelDelete label);
     }
 }

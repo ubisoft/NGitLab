@@ -6,20 +6,6 @@ namespace NGitLab.Models
     [DataContract]
     public class IssueEdit
     {
-        public IssueEdit() { }
-
-        public IssueEdit(Issue issue)
-        {
-            Id = issue.ProjectId;
-            IssueId = issue.IssueId;
-            Title = issue.Title;
-            Description = issue.Description;
-            AssigneeId = issue.Assignee.Id;
-            MilestoneId = issue.Milestone.Id;
-            Labels = issue.Labels;
-            State = issue.State;
-        }
-
         [Required]
         [DataMember(Name = "id")]
         public int Id;
@@ -41,7 +27,7 @@ namespace NGitLab.Models
         public int? MilestoneId;
 
         [DataMember(Name = "labels")]
-        public string[] Labels;
+        public string Labels;
 
         [DataMember(Name = "state_event")]
         public string State;

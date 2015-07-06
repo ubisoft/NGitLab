@@ -1,11 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace NGitLab.Models
 {
     [DataContract]
     public class IssueCreate
     {
+
+
         [Required]
         [DataMember(Name = "id")]
         public int Id;

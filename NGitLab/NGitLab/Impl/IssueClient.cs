@@ -30,17 +30,17 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Issue>(string.Format(ProjectIssuesUrl, projectId));
         }
 
-        public Issue GetIssue(int projectId, int issueId)
+        public Issue Get(int projectId, int issueId)
         {
             return _api.Get().To<Issue>(string.Format(SingleIssueUrl, projectId, issueId));
         }
 
-        public Issue NewIssue(IssueCreate issueCreate)
+        public Issue Create(IssueCreate issueCreate)
         {
             return _api.Post().With(issueCreate).To<Issue>(string.Format(ProjectIssuesUrl, issueCreate.Id));
         }
         
-        public Issue EditIssue(IssueEdit issueEdit)
+        public Issue Edit(IssueEdit issueEdit)
         {
             return _api.Put().With(issueEdit).To<Issue>(string.Format(SingleIssueUrl, issueEdit.Id, issueEdit.IssueId));
         }

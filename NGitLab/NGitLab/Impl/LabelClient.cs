@@ -28,17 +28,17 @@ namespace NGitLab.Impl
             return ForProject(projectId).FirstOrDefault<Label>((x) => x.Name.Equals(Name));
         }
 
-        public Label NewLabel(LabelCreate label)
+        public Label Create(LabelCreate label)
         {
             return _api.Post().With(label).To<Label>(string.Format(ProjectLabelUrl, label.Id));
         }
 
-        public Label EditLabel(LabelEdit label)
+        public Label Edit(LabelEdit label)
         {
             return _api.Put().With(label).To<Label>(string.Format(ProjectLabelUrl, label.Id));
         }
 
-        public Label DeleteLabel(LabelDelete label)
+        public Label Delete(LabelDelete label)
         {
             return _api.Delete().With(label).To<Label>(string.Format(ProjectLabelUrl, label.Id));
         }

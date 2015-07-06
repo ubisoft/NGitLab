@@ -24,7 +24,7 @@ namespace NGitLab
         /// <param name="projectId"></param>
         /// <param name="issueId"></param>
         /// <returns></returns>
-        Issue GetIssue(int projectId, int issueId);
+        Issue Get(int projectId, int issueId);
 
         /// <summary>
         /// Add an issue witht he proposed title to the GitLab list for the selected proejct id.
@@ -36,7 +36,7 @@ namespace NGitLab
         /// <param name="milestoneId"></param>
         /// <param name="labels"></param>
         /// <returns>The issue if it was created.  Null if not.</returns>
-        Issue NewIssue(IssueCreate issueCreate);
+        Issue Create(IssueCreate issueCreate);
 
         /// <summary>
         /// Edit and save an issue.
@@ -50,6 +50,6 @@ namespace NGitLab
         /// <param name="labels"></param>
         /// <param name="stateEvent"></param>
         /// <returns>The issue if it's updated.  Null if not.</returns>
-        Issue EditIssue(IssueEdit issueEdit);
+        Issue Edit(IssueEdit issueEdit);
     }
 }
