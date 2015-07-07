@@ -74,7 +74,15 @@ namespace NGitLab.Impl
                         using (var reader = new StreamReader(errorResponse.GetResponseStream()))
                         {
                             string jsonString = reader.ReadToEnd();
-                            var jsonError = SimpleJson.DeserializeObject<JsonError>(jsonString);
+                            JsonError jsonError;
+                            try
+                            {
+                                jsonError = SimpleJson.DeserializeObject<JsonError>(jsonString);
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception(string.Format("The remote server returned an error ({0}) with an empty response", errorResponse.StatusCode));
+                            }
                             throw new Exception(string.Format("The remote server returned an error ({0}): {1}", errorResponse.StatusCode, jsonError.Message));
                         }
                     }
