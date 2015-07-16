@@ -56,7 +56,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(p.MergeRequestsEnabled, created.MergeRequestsEnabled);
             Assert.AreEqual(p.Name, created.Name);
 
-            _projects.Delete(created.Id);
+            Assert.AreEqual(_projects.Delete(created.Id),true);
         }
 
         private ProjectCreate CreateProject(out Project created, string name)
