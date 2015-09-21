@@ -54,12 +54,14 @@
     <Compile Include="IBranchClient.cs" />
     <Compile Include="IFilesClient.cs" />
     <Compile Include="IIssueClient.cs" />
+    <Compile Include="IMergeRequestChangesClient.cs" />
     <Compile Include="IMergeRequestClient.cs" />
     <Compile Include="IMergeRequestCommitClient.cs" />
     <Compile Include="Impl\API.cs" />
     <Compile Include="Impl\BranchClient.cs" />
     <Compile Include="IMergeRequestCommentClient.cs" />
     <Compile Include="Impl\IssueClient.cs" />
+    <Compile Include="Impl\MergeRequestChangesClient.cs" />
     <Compile Include="Impl\MergeRequestClient.cs" />
     <Compile Include="Impl\MergeRequestCommentClient.cs" />
     <Compile Include="Impl\MergeRequestCommitClient.cs" />
@@ -90,8 +92,10 @@
     <Compile Include="Models\Issue.cs" />
     <Compile Include="Models\MergeCommitMessage.cs" />
     <Compile Include="Models\MergeRequest.cs" />
+    <Compile Include="Models\MergeRequestChanges.cs" />
     <Compile Include="Models\MergeRequestComment.cs" />
     <Compile Include="Models\MergeRequestCreate.cs" />
+    <Compile Include="Models\MergeRequestFileData.cs" />
     <Compile Include="Models\MergeRequestState.cs" />
     <Compile Include="Models\MergeRequestUpdate.cs" />
     <Compile Include="Models\Milestone.cs" />
