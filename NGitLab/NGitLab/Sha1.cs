@@ -50,9 +50,9 @@ namespace NGitLab
 
         public override string ToString()
         {
-            return _p1.ToString("X") +
-                   _p2.ToString("X") +
-                   _p3.ToString("X");
+            return _p1.ToString("X16") +
+                   _p2.ToString("X16") +
+                   _p3.ToString("X8");
         }
 
         private static ulong GetLong(string value, ref int i)
