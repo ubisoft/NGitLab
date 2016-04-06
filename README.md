@@ -1,4 +1,4 @@
-Contact me if you want to be the new maintainer of this?
+Contact me if you want to be the new maintainer
 =============
 I can't maintain this project. Contact me if you want to have it keep it alive.
 
