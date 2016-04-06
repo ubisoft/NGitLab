@@ -1,3 +1,7 @@
+Contact me if you want to be the new maintainer of this?
+=============
+I can't maintain this project. Contact me if you want to have it keep it alive.
+
 What is NGitLab?
 =============
 
