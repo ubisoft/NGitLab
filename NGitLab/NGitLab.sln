@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 14.00
+# Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGitLab", "NGitLab\NGitLab.csproj", "{EB69C6AD-64A6-4FE5-880C-38607A2430FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGitLab.Tests", "NGitLab.Tests\NGitLab.Tests.csproj", "{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}"
