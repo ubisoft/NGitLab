@@ -4,7 +4,6 @@
   branches:
       only:
         - master
-        - develop
 
   assembly_info:
     patch: false
@@ -34,7 +33,6 @@
   branches:
     except:
       - master
-      - develop
 
   configuration: Release
 
