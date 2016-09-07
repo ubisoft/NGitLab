@@ -14,7 +14,6 @@ namespace NGitLab.Models
         [DataMember(Name = "iid")]
         public int Iid;
 
-
         [DataMember(Name = "state")]
         public string State;
 
@@ -61,6 +60,6 @@ namespace NGitLab.Models
         public bool? WorkInProgress;
 
         [DataMember(Name = "labels")]
-        public Collection<string> Labels;
+        public string[] Labels;
     }
 }
