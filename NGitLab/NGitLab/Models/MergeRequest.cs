@@ -40,7 +40,7 @@ namespace NGitLab.Models
         public int Upvotes;
 
         [DataMember(Name = "updated_at")]
-        public DateTime UpvotedAt;
+        public DateTime UpdatedAt;
 
         [DataMember(Name="target_branch")]
         public string TargetBranch;
