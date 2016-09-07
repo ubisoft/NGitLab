@@ -25,5 +25,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "created_at")]
         public DateTime CreatedAt;
+
+        [DataMember(Name = "message")]
+        public string Message;
     }
 }

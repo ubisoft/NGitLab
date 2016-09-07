@@ -53,6 +53,11 @@ namespace NGitLab.Impl
         public IMergeRequestCommentClient Comments(int mergeRequestId)
         {
             return new MergeRequestCommentClient(_api, _projectPath, mergeRequestId);
-        }        
+        }
+
+        public IMergeRequestCommitClient Commits(int mergeRequestId)
+        {
+            return new MergeRequestCommitClient(_api, _projectPath, mergeRequestId);
+        }
     }
 }
