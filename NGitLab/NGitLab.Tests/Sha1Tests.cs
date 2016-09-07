@@ -13,6 +13,13 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        public void WhenSha1WithLeadingZero_ThenParsedCorrectly()
+        {
+            const string value = "59529D73E3E6E2B7015F05D197E12C43B13BA033";
+            Assert.AreEqual(value.ToUpper(), new Sha1(value).ToString().ToUpper());
+        }        
+
+        [Test]
         public void WhenSha1WithUpperCase_ThenParsedCorrectly()
         {
             const string value = "2695EFFB5807A22FF3D138D593FD856244E155E7";
