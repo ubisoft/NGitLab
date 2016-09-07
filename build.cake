@@ -127,8 +127,6 @@ Task("Upload-AppVeyor-Artifacts")
   AppVeyor.UploadArtifact("build/NGitLab." + nugetVersion +".nupkg");
 });
 
-
-
 Task("Default")
   .IsDependentOn("Upload-AppVeyor-Artifacts");
 

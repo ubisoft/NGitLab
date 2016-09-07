@@ -50,12 +50,14 @@
     <Compile Include="IFilesClient.cs" />
     <Compile Include="IIssueClient.cs" />
     <Compile Include="IMergeRequestClient.cs" />
+    <Compile Include="IMergeRequestCommitClient.cs" />
     <Compile Include="Impl\API.cs" />
     <Compile Include="Impl\BranchClient.cs" />
     <Compile Include="IMergeRequestCommentClient.cs" />
     <Compile Include="Impl\IssueClient.cs" />
     <Compile Include="Impl\MergeRequestClient.cs" />
     <Compile Include="Impl\MergeRequestCommentClient.cs" />
+    <Compile Include="Impl\MergeRequestCommitClient.cs" />
     <Compile Include="Impl\ProjectHooksClient.cs" />
     <Compile Include="Impl\FileClient.cs" />
     <Compile Include="Impl\HttpRequestor.cs" />

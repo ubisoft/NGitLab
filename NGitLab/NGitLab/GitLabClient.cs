@@ -35,5 +35,6 @@ namespace NGitLab
         {
             return new MergeRequestClient(_api, projectId);
         }
+
     }
 }
