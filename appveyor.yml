@@ -40,7 +40,13 @@
     - ps: .\build.ps1
 
   test: off
-skip_tags: true
+  skip_tags: true
 
-cache:
-  - src\packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+  cache:
+    - src\packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+
+# "fall back" configuration for all other branches
+# no "branches" section defined
+# do not deploy at all
+-
+  configuration: Debug
