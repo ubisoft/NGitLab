@@ -1,6 +1,6 @@
 #tool "nuget:?package=NUnit.ConsoleRunner"
 #tool "nuget:?package=GitReleaseNotes"
-#tool "nuget:?package=GitVersion.CommandLine"
+#tool "nuget:?package=GitVersion.CommandLine&prerelease"
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
