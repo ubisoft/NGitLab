@@ -1,6 +1,6 @@
 mode: ContinuousDeployment
 branches:
-  devlop:
+  develop:
     tag: beta
 ignore:
   sha: []

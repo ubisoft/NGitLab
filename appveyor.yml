@@ -4,6 +4,7 @@
   branches:
       only:
         - master
+        - develop
 
   assembly_info:
     patch: false
@@ -23,7 +24,7 @@
 
   test: off
   skip_tags: true
-  
+
   cache:
   - src\packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 
@@ -33,6 +34,7 @@
   branches:
     except:
       - master
+      - develop
 
   configuration: Release
 
