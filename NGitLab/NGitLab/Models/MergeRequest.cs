@@ -56,5 +56,11 @@ namespace NGitLab.Models
 
         [DataMember(Name = "target_project_id")]
         public int TargetProjectId;
+
+        [DataMember(Name = "work_in_progress")]
+        public bool? WorkInProgress;
+
+        [DataMember(Name = "labels")]
+        public Collection<string> Labels;
     }
 }
