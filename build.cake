@@ -25,6 +25,8 @@ Task("Version")
         OutputType = GitVersionOutput.Json
     });
 
+    Information("New Version:" + assertedVersions.NuGetVersion);
+
     version = assertedVersions.MajorMinorPatch;
     nugetVersion = assertedVersions.NuGetVersion;
     preReleaseTag = assertedVersions.PreReleaseTag;
