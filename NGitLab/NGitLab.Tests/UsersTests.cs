@@ -15,6 +15,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [Category("Server_Required")]
         public void Current()
         {
             var session = _users.Current;
@@ -27,6 +28,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetUsers()
         {
             var users = _users.All.ToArray();
@@ -35,6 +37,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetUser()
         {
             var user = _users[1];
@@ -44,6 +47,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [Category("Server_Required")]
         public void CreateUpdateDelete()
         {
             var u = new UserUpsert

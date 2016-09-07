@@ -3,18 +3,15 @@
   <metadata>
     <id>NGitLab</id>
 	<title>NGitLab</title>
-    <version>1.0.1.0</version>
-    <authors>Scooletz</authors>
-    <owners>Scooletz</owners>
+    <version>$version$</version>
+    <authors>Franklin89</authors>
+    <owners>Franklin89</owners>
     <summary>Provides a .NET REST client implementation of GitLab API.</summary>
     <description>Provides a .NET REST client implementation of GitLab API with no external dependencies. Uses the private token authentication</description>
-    <projectUrl>https://github.com/Scooletz/NGitLab</projectUrl>
-    <licenseUrl>https://github.com/Scooletz/NGitLab/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Franklin89/NGitLab</projectUrl>
+    <licenseUrl>https://github.com/Franklin89/NGitLab/blob/master/LICENSE</licenseUrl>
+    <iconUrl>https://raw.githubusercontent.com/Franklin89/NGitLab/master/docs/img/package_icon.png</iconUrl>
     <tags>GitLab API NGitlab</tags>
-    <language>en-US</language>
-    <releaseNotes>
-      * 1.0.0.0 - initial, majority of methods work, tests based on the locally run VM
-    </releaseNotes>
   </metadata>
   <files>
     <file src="NGitLab\NGitlab\bin\Release\NGitLab.dll" target="lib\net45" />

@@ -2,8 +2,8 @@
 {
     public static class Config
     {
-        public const string ServiceUrl = "http://localhost:1081";
-        public const string Secret = "r8pHJ3khRNsNY5yCZ9zK";
+        public const string ServiceUrl = "https://gitlab.com/api/v3";
+        public const string Secret = "TOKEN";
 
         public static GitLabClient Connect()
         {

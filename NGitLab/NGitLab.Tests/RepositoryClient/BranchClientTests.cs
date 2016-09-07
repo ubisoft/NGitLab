@@ -13,12 +13,14 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetAll()
         {
             CollectionAssert.IsNotEmpty(_branches.All.ToArray());
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetByName()
         {
             var branch = _branches["master"];
@@ -27,6 +29,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [Category("Server_Required")]
         public void DeleteByName()
         {
             var result = _branches.Delete("merge-me-to-master");

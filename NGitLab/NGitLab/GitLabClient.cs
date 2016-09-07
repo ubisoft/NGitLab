@@ -4,6 +4,14 @@ namespace NGitLab
 {
     public class GitLabClient
     {
+
+        private readonly API _api;
+
+        public readonly IUserClient Users;
+        public readonly IProjectClient Projects;
+        public readonly IIssueClient Issues;
+        public readonly INamespaceClient Groups;
+
         private GitLabClient(string hostUrl, string apiToken)
         {
             _api = new API(hostUrl, apiToken);
@@ -17,13 +25,6 @@ namespace NGitLab
         {
             return new GitLabClient(hostUrl, apiToken);
         }
-
-        private readonly API _api;
-
-        public readonly IUserClient Users;
-        public readonly IProjectClient Projects;
-        public readonly IIssueClient Issues;
-        public readonly INamespaceClient Groups;
 
         public IRepositoryClient GetRepository(int projectId)
         {

@@ -14,6 +14,7 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetAllComments()
         {
             var comments = _mergeRequestComments.All.ToArray();
@@ -21,6 +22,7 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
+        [Category("Server_Required")]
         public void AddCommentToMergeRequest()
         {
             const string commentMessage = "note";

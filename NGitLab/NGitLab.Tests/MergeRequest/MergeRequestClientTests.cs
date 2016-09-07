@@ -14,6 +14,7 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetAllMergeRequests()
         {
             var mergeRequests = _mergeRequest.All.ToArray();
@@ -21,6 +22,7 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetAllMergeRequestsInCertainState()
         {
             var mergeRequests = _mergeRequest.AllInState(MergeRequestState.opened).ToArray();
@@ -28,6 +30,7 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetMergeRequestById()
         {
             const int mergeReqestId = 5;
@@ -35,6 +38,7 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
+        [Category("Server_Required")]
         public void CreateMergeRequest()
         {
             var mergeRequest = _mergeRequest.Create(new MergeRequestCreate
@@ -48,6 +52,7 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
+        [Category("Server_Required")]
         public void UpdateMergeRequest()
         {
             var mergeRequest = _mergeRequest.Update(5, new MergeRequestUpdate
@@ -62,6 +67,7 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
+        [Category("Server_Required")]
         public void AcceptMergeRequest()
         {
             var mergeRequest = _mergeRequest.Accept(

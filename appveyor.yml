@@ -1,0 +1,16 @@
+install:
+
+assembly_info:
+  patch: false
+
+configuration:
+  - Release
+
+build_script:
+  - ps: .\build.ps1 --githubToken=$env:GitHubToken
+
+test: off
+skip_tags: true
+
+cache:
+  - src\packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified

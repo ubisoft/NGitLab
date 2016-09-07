@@ -22,6 +22,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetAllProjects()
         {
             var projects = _projects.All.ToArray();
@@ -30,6 +31,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetOwnedProjects()
         {
             var projects = _projects.Owned.ToArray();
@@ -38,6 +40,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetAccessibleProjects()
         {
             var projects = _projects.Accessible.ToArray();
@@ -46,6 +49,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [Category("Server_Required")]
         public void CreateDelete()
         {
             Project created;

@@ -13,12 +13,14 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetAllCommits()
         {
             CollectionAssert.IsNotEmpty(_repo.Commits.ToArray());
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetCommitBySha1()
         {
             var sha1 = new Sha1("8c89dcaf09dfad151e182b81918e0530b9019ac4");
@@ -26,6 +28,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [Category("Server_Required")]
         public void GetCommitDiff()
         {
             CollectionAssert.IsNotEmpty(_repo.GetCommitDiff(_repo.Commits.First().Id).ToArray());

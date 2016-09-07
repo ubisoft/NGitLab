@@ -4,23 +4,17 @@ using NUnit.Framework;
 
 namespace NGitLab.Tests.MergeRequest
 {
-    // ReSharper disable once InconsistentNaming
     [SetUpFixture]
     public class _MergeRequestClientTests
     {
         public static IMergeRequestClient MergeRequestClient;
         public static Project Project;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             Project = Config.Connect().Projects.Owned.First(project => project.Name == "mergeme");
             MergeRequestClient = Config.Connect().GetMergeRequest(Project.Id);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
         }
     }
 }
