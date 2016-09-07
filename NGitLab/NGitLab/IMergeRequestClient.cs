@@ -14,5 +14,6 @@ namespace NGitLab
         MergeRequest Accept(int mergeRequestId, MergeCommitMessage message);
 
         IMergeRequestCommentClient Comments(int mergeRequestId);
+        IMergeRequestCommitClient Commits(int mergeRequestId);
     }
 }
