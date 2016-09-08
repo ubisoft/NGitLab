@@ -10,7 +10,8 @@ namespace NGitLab
         IEnumerable<Tag> Tags { get; }
         IEnumerable<TreeOrBlob> Tree { get; }
         void GetRawBlob(string sha, Action<Stream> parser);
-        
+        void GetArchive(Action<Stream> parser);
+
         IEnumerable<Commit> Commits { get; }
         SingleCommit GetCommit(Sha1 sha);
         IEnumerable<Diff> GetCommitDiff(Sha1 sha);

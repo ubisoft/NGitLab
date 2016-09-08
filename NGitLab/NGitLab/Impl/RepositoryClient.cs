@@ -34,6 +34,11 @@ namespace NGitLab.Impl
             _api.Get().Stream(_repoPath + "/raw_blobs/" + sha, parser);
         }
 
+        public void GetArchive(Action<Stream> parser)
+        {
+            _api.Get().Stream(_repoPath + "/archive", parser);
+        }
+
         public IEnumerable<Commit> Commits
         {
             get { return _api.Get().GetAll<Commit>(_repoPath + "/commits"); }
