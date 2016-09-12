@@ -123,7 +123,7 @@ Task("Create-Release-Notes")
       //if (string.IsNullOrEmpty(System.IO.File.ReadAllText("./build/releasenotes.md")))
           //System.IO.File.WriteAllText("./build/releasenotes.md", "No issues closed since last release");
 
-    if (releaseNotesExitCode != 0) throw new Exception("Failed to generate release notes");
+      //if (releaseNotesExitCode != 0) throw new Exception("Failed to generate release notes");
 });
 
 Task("Create-NuGet-Packages")
