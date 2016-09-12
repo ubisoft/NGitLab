@@ -4,6 +4,7 @@
   branches:
       only:
         - master
+        - develop
 
   assembly_info:
     patch: false
@@ -27,12 +28,13 @@
   cache:
   - src\packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 
-# configuration for all branches except master
+# configuration for all branches except master and develop
 # build in Release mode but not deployed
 -
   branches:
     except:
       - master
+      - develop
 
   configuration: Release
 
