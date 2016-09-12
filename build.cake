@@ -86,15 +86,17 @@ Task("Run-NUnit-Tests")
         ShadowCopy = false
     };
 
-	var testAssemblies = GetFiles("./**/bin/" + configuration + "/*.Tests.dll");
+  	var testAssemblies = GetFiles("./**/bin/" + configuration + "/*.Tests.dll");
 
-  OpenCover(tool => {
-    tool.NUnit3(testAssemblies, settings);
-    },
-    new FilePath("build/coverage.xml"),
-    new OpenCoverSettings()
-      .WithFilter("+[NGitLab]*")
-      .WithFilter("-[NGitLab.Tests]*"));
+    NUnit3(testAssemblies, settings);
+
+    OpenCover(tool => {
+      tool.NUnit3(testAssemblies, settings);
+      },
+      new FilePath("build/coverage.xml"),
+      new OpenCoverSettings()
+        .WithFilter("+[NGitLab]*")
+        .WithFilter("-[NGitLab.Tests]*"));
 
     if (AppVeyor.IsRunningOnAppVeyor)
     {
