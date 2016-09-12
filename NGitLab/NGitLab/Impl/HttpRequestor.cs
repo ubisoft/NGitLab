@@ -17,40 +17,72 @@ namespace NGitLab.Impl
 #pragma warning restore 649
     }
 
-    public class HttpRequestor
+    public class HttpRequestor : IHttpRequestor
     {
-        private readonly API _root;
-        private readonly MethodType _method; // Default to GET requests
+        private MethodType _methodType; // Default to GET requests
         private object _data;
 
-        public HttpRequestor(API root, MethodType method)
+        private readonly string _apiToken;
+        private readonly string _hostUrl;
+
+        public HttpRequestor(string hostUrl, string apiToken)
         {
-            _root = root;
-            _method = method;
+            _hostUrl = hostUrl.EndsWith("/") ? hostUrl.Replace("/$", "") : hostUrl;
+            _apiToken = apiToken;
         }
 
-        public HttpRequestor With(object data)
+        public IHttpRequestor With(object data)
         {
             _data = data;
             return this;
         }
 
-        public T To<T>(string tailAPIUrl)
+        public virtual T To<T>(string tailAPIUrl)
         {
             var result = default(T);
             Stream(tailAPIUrl, s => result = SimpleJson.DeserializeObject<T>(new StreamReader(s).ReadToEnd()));
             return result;
         }
 
-        public void Stream(string tailAPIUrl, Action<Stream> parser)
+        public IHttpRequestor SetMethodType(MethodType methodType)
         {
-            var req = SetupConnection(_root.GetAPIUrl(tailAPIUrl));
+            _methodType = methodType;
+            return this;
+        }
+
+        public Uri GetAPIUrl(string tailAPIUrl)
+        {
+            if (_apiToken != null)
+            {
+                tailAPIUrl = tailAPIUrl + (tailAPIUrl.IndexOf('?') > 0 ? '&' : '?') + "private_token=" + _apiToken;
+            }
+
+            if (!tailAPIUrl.StartsWith("/"))
+            {
+                tailAPIUrl = "/" + tailAPIUrl;
+            }
+            return new Uri(_hostUrl + tailAPIUrl);
+        }
+
+        public Uri GetUrl(string tailAPIUrl)
+        {
+            if (!tailAPIUrl.StartsWith("/"))
+            {
+                tailAPIUrl = "/" + tailAPIUrl;
+            }
+
+            return new Uri(_hostUrl + tailAPIUrl);
+        }
+
+        public virtual void Stream(string tailAPIUrl, Action<Stream> parser)
+        {
+            var req = SetupConnection(GetAPIUrl(tailAPIUrl));
 
             if (HasOutput())
             {
                 SubmitData(req);
             }
-            else if (_method == MethodType.Put)
+            else if (_methodType == MethodType.Put)
             {
                 req.Headers.Add("Content-Length", "0");
             }
@@ -81,7 +113,7 @@ namespace NGitLab.Impl
                             }
                             catch (Exception ex)
                             {
-                                throw new Exception(string.Format("The remote server returned an error ({0}) with an empty response", errorResponse.StatusCode));
+                                throw new Exception(string.Format("The remote server returned an error ({0}) with an empty response", errorResponse.StatusCode), ex);
                             }
                             throw new Exception(string.Format("The remote server returned an error ({0}): {1}", errorResponse.StatusCode, jsonError.Message));
                         }
@@ -90,12 +122,11 @@ namespace NGitLab.Impl
                 else
                     throw wex;
             }
-
         }
 
-        public IEnumerable<T> GetAll<T>(string tailUrl)
+        public virtual IEnumerable<T> GetAll<T>(string tailUrl)
         {
-            return new Enumerable<T>(_root.APIToken, _root.GetAPIUrl(tailUrl));
+            return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl));
         }
 
         private class Enumerable<T> : IEnumerable<T>
@@ -218,12 +249,12 @@ namespace NGitLab.Impl
 
         private bool HasOutput()
         {
-            return _method == MethodType.Post || _method == MethodType.Put && _data != null;
+            return _methodType == MethodType.Post || _methodType == MethodType.Put && _data != null;
         }
 
         private WebRequest SetupConnection(Uri url)
         {
-            return SetupConnection(url, _method);
+            return SetupConnection(url, _methodType);
         }
 
         private static WebRequest SetupConnection(Uri url, MethodType methodType)

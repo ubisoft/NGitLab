@@ -8,6 +8,7 @@
 *.suo
 *.user
 *.sln.docstates
+*/.vs/*
 
 # Build results
 [Dd]ebug/
@@ -26,6 +27,7 @@ bld/
 #NUNIT
 *.VisualState.xml
 TestResult.xml
+coverage.xml
 
 # Build Results of an ATL Project
 [Dd]ebugPS/
@@ -59,6 +61,9 @@ dlldata.c
 
 # Chutzpah Test files
 _Chutzpah*
+
+# Visuak Studio User Files
+/.vs/*
 
 # Visual C++ cache files
 ipch/

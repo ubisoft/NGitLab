@@ -19,15 +19,9 @@ namespace NGitLab.Impl
             _repoPath = _projectPath + "/repository";
         }
 
-        public IEnumerable<Tag> Tags
-        {
-            get { return _api.Get().GetAll<Tag>(_repoPath + "/tags"); }
-        }
+        public IEnumerable<Tag> Tags => _api.Get().GetAll<Tag>(_repoPath + "/tags");
 
-        public IEnumerable<TreeOrBlob> Tree
-        {
-            get { return _api.Get().GetAll<TreeOrBlob>(_repoPath + "/tree"); }
-        }
+        public IEnumerable<TreeOrBlob> Tree => _api.Get().GetAll<TreeOrBlob>(_repoPath + "/tree");
 
         public void GetRawBlob(string sha, Action<Stream> parser)
         {
@@ -39,34 +33,16 @@ namespace NGitLab.Impl
             _api.Get().Stream(_repoPath + "/archive", parser);
         }
 
-        public IEnumerable<Commit> Commits
-        {
-            get { return _api.Get().GetAll<Commit>(_repoPath + "/commits"); }
-        }
+        public IEnumerable<Commit> Commits => _api.Get().GetAll<Commit>(_repoPath + "/commits");
 
-        public SingleCommit GetCommit(Sha1 sha)
-        {
-            return _api.Get().To<SingleCommit>(_repoPath + "/commits/" + sha);
-        }
+        public SingleCommit GetCommit(Sha1 sha) => _api.Get().To<SingleCommit>(_repoPath + "/commits/" + sha);
 
-        public IEnumerable<Diff> GetCommitDiff(Sha1 sha)
-        {
-            return _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
-        }
+        public IEnumerable<Diff> GetCommitDiff(Sha1 sha) => _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
 
-        public IFilesClient Files
-        {
-            get { return new FileClient(_api, _repoPath); }
-        }
+        public IFilesClient Files => new FileClient(_api, _repoPath);
 
-        public IBranchClient Branches
-        {
-            get { return new BranchClient(_api, _repoPath); }
-        }
+        public IBranchClient Branches => new BranchClient(_api, _repoPath);
 
-        public IProjectHooksClient ProjectHooks
-        {
-            get { return new ProjectHooksClient(_api, _projectPath); }
-        }
+        public IProjectHooksClient ProjectHooks => new ProjectHooksClient(_api, _projectPath);
     }
 }

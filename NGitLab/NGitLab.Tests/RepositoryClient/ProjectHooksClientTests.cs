@@ -15,14 +15,13 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
-        [Category("Server_Required")]
         public void GetAll()
         {
-            CollectionAssert.IsEmpty(_hooks.All.ToArray());
+            CollectionAssert.IsNotEmpty(_hooks.All.ToArray());
         }
 
         [Test]
-        [Category("Server_Required")]
+        [Ignore(reason: "WIP")]
         public void CreateUpdateDelete()
         {
             var toCreate = new ProjectHookUpsert

@@ -4,7 +4,6 @@ namespace NGitLab
 {
     public class GitLabClient
     {
-
         private readonly API _api;
 
         public readonly IUserClient Users;
@@ -12,9 +11,11 @@ namespace NGitLab
         public readonly IIssueClient Issues;
         public readonly INamespaceClient Groups;
 
-        private GitLabClient(string hostUrl, string apiToken)
+        public static IHttpRequestor HttpRequestor { get; set; }
+        
+        private GitLabClient(IHttpRequestor httpRequestor)
         {
-            _api = new API(hostUrl, apiToken);
+            _api = new API(httpRequestor);
             Users = new UserClient(_api);
             Projects = new ProjectClient(_api);
             Issues = new IssueClient(_api);
@@ -23,7 +24,12 @@ namespace NGitLab
 
         public static GitLabClient Connect(string hostUrl, string apiToken)
         {
-            return new GitLabClient(hostUrl, apiToken);
+            if(HttpRequestor == null)
+            {
+                HttpRequestor = new HttpRequestor(hostUrl, apiToken);
+            }
+
+            return new GitLabClient(HttpRequestor);
         }
 
         public IRepositoryClient GetRepository(int projectId)
@@ -35,6 +41,5 @@ namespace NGitLab
         {
             return new MergeRequestClient(_api, projectId);
         }
-
     }
 }

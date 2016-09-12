@@ -48,6 +48,7 @@
     <Compile Include="GitLabClient.cs" />
     <Compile Include="IBranchClient.cs" />
     <Compile Include="IFilesClient.cs" />
+    <Compile Include="IHttpRequestor.cs" />
     <Compile Include="IIssueClient.cs" />
     <Compile Include="IMergeRequestClient.cs" />
     <Compile Include="IMergeRequestCommitClient.cs" />
@@ -74,7 +75,6 @@
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\BranchCreate.cs" />
     <Compile Include="Models\BranchRemovalStatus.cs" />
-    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Commit.cs" />
     <Compile Include="Models\CommitInfo.cs" />
     <Compile Include="Models\Diff.cs" />

@@ -14,14 +14,8 @@ namespace NGitLab.Impl
             _commentsPath = projectPath + "/merge_request/" + mergeRequestId + "/comments";
         }
 
-        public IEnumerable<Comment> All
-        {
-            get { return _api.Get().GetAll<Comment>(_commentsPath); }
-        }
+        public IEnumerable<MergeRequestComment> All => _api.Get().GetAll<MergeRequestComment>(_commentsPath);
 
-        public Comment Add(MergeRequestComment comment)
-        {
-            return _api.Post().With(comment).To<Comment>(_commentsPath);
-        }
+        public MergeRequestComment Add(MergeRequestComment comment) => _api.Post().With(comment).To<MergeRequestComment>(_commentsPath);
     }
 }

@@ -14,35 +14,16 @@ namespace NGitLab.Impl
             _repoPath = repoPath;
         }
 
-        public IEnumerable<Branch> All
-        {
-            get { return _api.Get().GetAll<Branch>(_repoPath + "/branches"); }
-        }
-            
-        public Branch this[string name]
-        {
-            get { return _api.Get().To<Branch>(_repoPath + "/branches/" + name); }
-        }
+        public IEnumerable<Branch> All => _api.Get().GetAll<Branch>(_repoPath + "/branches");
 
-        public Branch Protect(string name)
-        {
-            return _api.Put().To<Branch>(_repoPath + "/branches/" + name + "/protect");
-        }
+        public Branch this[string name] => _api.Get().To<Branch>(_repoPath + "/branches/" + name);
 
-        public Branch Unprotect(string name)
-        {
-            return _api.Put().To<Branch>(_repoPath + "/branches/" + name + "/unprotect");
-        }
+        public Branch Protect(string name) => _api.Put().To<Branch>(_repoPath + "/branches/" + name + "/protect");
 
-        public Branch Create(BranchCreate branch)
-        {
-            return _api.Post().With(branch).To<Branch>(_repoPath + "/branches");
-        }
+        public Branch Unprotect(string name) => _api.Put().To<Branch>(_repoPath + "/branches/" + name + "/unprotect");
 
-        public BranchRemovalStatus Delete(string name)
-        {
-            var errorMessage = _api.Delete().To<string>(_repoPath + "/branches/" + name);
-            return BranchRemovalStatus.FromReponseMessage(errorMessage);
-        }
+        public Branch Create(BranchCreate branch) => _api.Post().With(branch).To<Branch>(_repoPath + "/branches");
+
+        public BranchRemovalStatus Delete(string name) => BranchRemovalStatus.FromReponseMessage(_api.Delete().To<string>(_repoPath + "/branches/" + name));
     }
 }

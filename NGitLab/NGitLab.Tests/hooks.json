@@ -1,0 +1,17 @@
+﻿[
+  {
+    "id": 1,
+    "url": "http://example.com/hook",
+    "project_id": 4,
+    "push_events": true,
+    "issues_events": true,
+    "merge_requests_events": true,
+    "tag_push_events": true,
+    "note_events": true,
+    "build_events": true,
+    "pipeline_events": true,
+    "wiki_page_events": true,
+    "enable_ssl_verification": true,
+    "created_at": "2012-10-12T17:04:47Z"
+  },
+]

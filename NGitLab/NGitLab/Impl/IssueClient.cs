@@ -14,17 +14,8 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        public IEnumerable<Issue> Owned
-        {
-            get
-            {
-                return _api.Get().GetAll<Issue>(IssuesUrl);
-            }
-        }
+        public IEnumerable<Issue> Owned => _api.Get().GetAll<Issue>(IssuesUrl);
 
-        public IEnumerable<Issue> ForProject(int projectId)
-        {
-            return _api.Get().GetAll<Issue>(string.Format(ProjectIssuesUrl, projectId));
-        }
+        public IEnumerable<Issue> ForProject(int projectId) => _api.Get().GetAll<Issue>(string.Format(ProjectIssuesUrl, projectId));
     }
 }

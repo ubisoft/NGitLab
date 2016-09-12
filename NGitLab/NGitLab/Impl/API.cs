@@ -1,63 +1,20 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace NGitLab.Impl
+﻿namespace NGitLab.Impl
 {
-    [DebuggerStepThrough]
     public class API
     {
-        public readonly string APIToken;
-        private readonly string _hostUrl;
-        private const string APINamespace = "/api/v3";
+        private readonly IHttpRequestor _httpRequestor;
 
-        public API(string hostUrl, string apiToken)
+        public API(IHttpRequestor httpRequestor)
         {
-            _hostUrl = hostUrl.EndsWith("/") ? hostUrl.Replace("/$", "") : hostUrl;
-            APIToken = apiToken;
-        }
-        
-        public HttpRequestor Get()
-        {
-            return new HttpRequestor(this, MethodType.Get);
+            _httpRequestor = httpRequestor;
         }
 
-        public HttpRequestor Post()
-        {
-            return new HttpRequestor(this, MethodType.Post);
-        }
+        public IHttpRequestor Get() => _httpRequestor.SetMethodType(MethodType.Get);
 
-        public HttpRequestor Put()
-        {
-            return new HttpRequestor(this, MethodType.Put);
-        }
-        
-        public HttpRequestor Delete()
-        {
-            return new HttpRequestor(this, MethodType.Delete);
-        }
+        public IHttpRequestor Post() => _httpRequestor.SetMethodType(MethodType.Post);
 
-        public Uri GetAPIUrl(string tailAPIUrl)
-        {
-            if (APIToken != null)
-            {
-                tailAPIUrl = tailAPIUrl + (tailAPIUrl.IndexOf('?') > 0 ? '&' : '?') + "private_token=" + APIToken;
-            }
+        public IHttpRequestor Put() => _httpRequestor.SetMethodType(MethodType.Put);
 
-            if (!tailAPIUrl.StartsWith("/"))
-            {
-                tailAPIUrl = "/" + tailAPIUrl;
-            }
-            return new Uri(_hostUrl + APINamespace + tailAPIUrl);
-        }
-
-        public Uri GetUrl(string tailAPIUrl)
-        {
-            if (!tailAPIUrl.StartsWith("/"))
-            {
-                tailAPIUrl = "/" + tailAPIUrl;
-            }
-
-            return new Uri(_hostUrl + tailAPIUrl);
-        }
+        public IHttpRequestor Delete() => _httpRequestor.SetMethodType(MethodType.Delete);
     }
 }
