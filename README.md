@@ -26,6 +26,14 @@ It's a wrapper of REST api. Read the [GitLab docs](https://github.com/gitlabhq/g
 var client =  GitLabClient.Connect("https://mygitlab.example.com", "your_private_token");
 ```
 
+or
+
+```csharp
+var client =  GitLabClient.Connect("https://mygitlab.example.com", "username", "password");
+```
+
+_Username and Password authentication is disabled for users with two-factor authentication turned on [see GitLab Documentation](https://docs.gitlab.com/ce/api/session.html)._
+
 Then use its properties. You can obtain the private token in your account page. You may want to create a custom user for the API usage.
 
 ## Where can I get it?
