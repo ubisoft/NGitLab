@@ -249,7 +249,7 @@ namespace NGitLab.Impl
 
         private bool HasOutput()
         {
-            return _methodType == MethodType.Post || _methodType == MethodType.Put && _data != null;
+            return (_method == MethodType.Delete || _method == MethodType.Post || _method == MethodType.Put) && _data != null;
         }
 
         private WebRequest SetupConnection(Uri url)

@@ -21,6 +21,7 @@ namespace NGitLab
             Projects = new ProjectClient(_api);
             Issues = new IssueClient(_api);
             Groups = new NamespaceClient(_api);
+            Labels = new LabelClient(_api);
         }
 
         public static GitLabClient Connect(string hostUrl, string apiToken)
