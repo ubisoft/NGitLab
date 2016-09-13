@@ -11,6 +11,7 @@ namespace NGitLab
         public readonly IProjectClient Projects;
         public readonly IIssueClient Issues;
         public readonly INamespaceClient Groups;
+        public readonly ILabelClient Labels;
 
         public static IHttpRequestor HttpRequestor { get; set; }
         

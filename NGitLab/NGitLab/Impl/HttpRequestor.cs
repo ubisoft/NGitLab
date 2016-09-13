@@ -247,15 +247,9 @@ namespace NGitLab.Impl
             }
         }
 
-        private bool HasOutput()
-        {
-            return (_method == MethodType.Delete || _method == MethodType.Post || _method == MethodType.Put) && _data != null;
-        }
+        private bool HasOutput() => (_methodType == MethodType.Delete || _methodType == MethodType.Post || _methodType == MethodType.Put) && _data != null;
 
-        private WebRequest SetupConnection(Uri url)
-        {
-            return SetupConnection(url, _methodType);
-        }
+        private WebRequest SetupConnection(Uri url) => SetupConnection(url, _methodType);
 
         private static WebRequest SetupConnection(Uri url, MethodType methodType)
         {
