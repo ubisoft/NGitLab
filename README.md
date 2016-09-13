@@ -28,7 +28,7 @@ var client =  GitLabClient.Connect("https://mygitlab.example.com", "your_private
 
 or
 
-```csharp
+```cs
 var client =  GitLabClient.Connect("https://mygitlab.example.com", "username", "password");
 ```
 
@@ -41,6 +41,14 @@ Then use its properties. You can obtain the private token in your account page. 
 Get it from NuGet. You can simply install it with the Package Manager console:
 
     PM> Install-Package NGitLab
+    
+## Unit-Test
+
+Unit tests are running against a GitLab Server. The easiest way to host a GitLab Server quickly use docker:
+
+```
+docker run --detach --hostname gitlab.example.com --publish 443:443 --publish 80:80 --publish 2222:22 --name gitlab --restart always --volume /srv/gitlab/config:/etc/gitlab --volume /srv/gitlab/logs:/var/log/gitlab --volume /srv/gitlab/data:/var/opt/gitlab gitlab/gitlab-ce:latest
+```
 
 ## Maintainer
 
