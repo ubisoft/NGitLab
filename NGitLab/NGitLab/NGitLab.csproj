@@ -50,12 +50,14 @@
     <Compile Include="IFilesClient.cs" />
     <Compile Include="IHttpRequestor.cs" />
     <Compile Include="IIssueClient.cs" />
+    <Compile Include="ILabelClient.cs" />
     <Compile Include="IMergeRequestClient.cs" />
     <Compile Include="IMergeRequestCommitClient.cs" />
     <Compile Include="Impl\API.cs" />
     <Compile Include="Impl\BranchClient.cs" />
     <Compile Include="IMergeRequestCommentClient.cs" />
     <Compile Include="Impl\IssueClient.cs" />
+    <Compile Include="Impl\LabelClient.cs" />
     <Compile Include="Impl\MergeRequestClient.cs" />
     <Compile Include="Impl\MergeRequestCommentClient.cs" />
     <Compile Include="Impl\MergeRequestCommitClient.cs" />
@@ -75,6 +77,7 @@
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\BranchCreate.cs" />
     <Compile Include="Models\BranchRemovalStatus.cs" />
+    <Compile Include="Models\Label.cs" />
     <Compile Include="Models\Commit.cs" />
     <Compile Include="Models\CommitInfo.cs" />
     <Compile Include="Models\Diff.cs" />
@@ -82,6 +85,11 @@
     <Compile Include="Models\FileDelete.cs" />
     <Compile Include="Models\FileUpsert.cs" />
     <Compile Include="Models\Issue.cs" />
+    <Compile Include="Models\IssueCreate.cs" />
+    <Compile Include="Models\IssueEdit.cs" />
+    <Compile Include="Models\LabelCreate.cs" />
+    <Compile Include="Models\LabelDelete.cs" />
+    <Compile Include="Models\LabelEdit.cs" />
     <Compile Include="Models\MergeCommitMessage.cs" />
     <Compile Include="Models\MergeRequest.cs" />
     <Compile Include="Models\MergeRequestComment.cs" />
