@@ -61,20 +61,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Initialize.cs" />
-    <Compile Include="IntegrationTests.cs" />
     <Compile Include="MergeRequest\MergeRequestClientTests.cs" />
     <Compile Include="MergeRequest\MergeRequestCommentsClientTests.cs" />
-    <Compile Include="MergeRequest\_MergeRequestClientTests.cs" />
-    <Compile Include="MockHttpRequestor.cs" />
     <Compile Include="ProjectsTests.cs" />
     <Compile Include="RepositoryClient\BranchClientTests.cs" />
     <Compile Include="RepositoryClient\FilesClientTests.cs" />
     <Compile Include="RepositoryClient\ProjectHooksClientTests.cs" />
     <Compile Include="RepositoryClient\RepositoryClientTests.cs" />
-    <Compile Include="RepositoryClient\_RepositoryClientTests.cs" />
     <Compile Include="Sha1Tests.cs" />
     <Compile Include="UsersTests.cs" />
-    <Compile Include="Config.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -87,27 +82,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="hooks.json" />
-    <EmbeddedResource Include="branches.json" />
-    <EmbeddedResource Include="commits.json" />
-    <EmbeddedResource Include="merge_requests.json" />
-    <EmbeddedResource Include="merge_requests_opened.json" />
-    <EmbeddedResource Include="commit_sha.json" />
-    <EmbeddedResource Include="merge_request.json" />
-    <EmbeddedResource Include="merge_requests_comment.json" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="user.json" />
-    <EmbeddedResource Include="users.json" />
-    <EmbeddedResource Include="projects.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="merge_requests_comments.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="branch_master.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="commit_diff.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />

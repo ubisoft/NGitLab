@@ -22,6 +22,6 @@ namespace NGitLab.Impl
 
         public Project Create(ProjectCreate project) => _api.Post().With(project).To<Project>(Project.Url);
 
-        public bool Delete(int id) => _api.Delete().To<Project>(Project.Url + "/" + id) == null;
+        public bool Delete(int id) => _api.Delete().To<bool>(Project.Url + "/" + id);
     }
 }

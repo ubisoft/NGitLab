@@ -78,6 +78,7 @@ Task("Check-Build-Folder-Exists")
 
 Task("Run-NUnit-Tests")
     .IsDependentOn("Check-Build-Folder-Exists")
+    .WithCriteria(() => !AppVeyor.IsRunningOnAppVeyor) // Skip tests because no GitLab Server is available at the moment.
     .Does(() =>
     {
     var settings = new NUnit3Settings

@@ -11,7 +11,7 @@ namespace NGitLab.Tests
 
         public UsersTests()
         {
-            _users = Config.Connect().Users;
+            _users = Initialize.GitLabClient.Users;
         }
 
         [Test]
@@ -19,10 +19,10 @@ namespace NGitLab.Tests
         {
             var session = _users.Current;
             Assert.That(session, Is.Not.Null);
-            Assert.That(session.CreatedAt, Is.EqualTo(new DateTime(2012, 05, 23, 08, 0, 58)));
-            Assert.That(session.Email, Is.EqualTo("john@example.com"));
-            Assert.That(session.Name, Is.EqualTo("John Smith"));
-            Assert.That(session.PrivateToken, Is.Null);
+            Assert.That(session.CreatedAt.Date, Is.EqualTo(DateTime.Now.Date));
+            Assert.That(session.Email, Is.EqualTo("admin@example.com"));
+            Assert.That(session.Name, Is.EqualTo("Administrator"));
+            Assert.That(session.PrivateToken, Is.Not.Null);
         }
 
         [Test]
@@ -37,12 +37,11 @@ namespace NGitLab.Tests
         {
             var user = _users[1];
             Assert.IsNotNull(user);
-            Assert.That(user.Username, Is.EqualTo("john_smith"));
+            Assert.That(user.Username, Is.EqualTo("root"));
             Assert.That(user.CanCreateGroup, Is.True);
         }
 
         [Test]
-        [Ignore(reason: "WIP")]
         public void CreateUpdateDelete()
         {
             var userUpsert = new UserUpsert

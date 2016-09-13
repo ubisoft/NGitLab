@@ -1,12 +1,19 @@
-﻿namespace NGitLab.Tests.RepositoryClient
+﻿using NUnit.Framework;
+using System.Linq;
+
+namespace NGitLab.Tests.RepositoryClient
 {
     public class FilesClientTests
     {
         private readonly IFilesClient _client;
 
-        public FilesClientTests()
+        private IRepositoryClient RepositoryClient;
+
+        [SetUp]
+        public void Setup()
         {
-            _client = _RepositoryClientTests.RepositoryClient.Files;
+            var project = Initialize.GitLabClient.Projects.Owned.First();
+            RepositoryClient = Initialize.GitLabClient.GetRepository(project.Id);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NGitLab.Impl;
+using NGitLab.Models;
 
 namespace NGitLab
 {
@@ -27,6 +28,19 @@ namespace NGitLab
             if(HttpRequestor == null)
             {
                 HttpRequestor = new HttpRequestor(hostUrl, apiToken);
+            }
+
+            return new GitLabClient(HttpRequestor);
+        }
+
+        public static GitLabClient Connect(string hostUrl, string username, string password)
+        {
+            var api = new API(new HttpRequestor(hostUrl, null));
+            var session = api.Post().To<Session>($"/session?login={username}&password={password}");
+
+            if (HttpRequestor == null)
+            {
+                HttpRequestor = new HttpRequestor(hostUrl, session.PrivateToken);
             }
 
             return new GitLabClient(HttpRequestor);
