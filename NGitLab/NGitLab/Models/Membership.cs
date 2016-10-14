@@ -33,7 +33,10 @@ namespace NGitLab.Models
         [DataMember(Name = "created_at")]
         public DateTime CreatedAt;
 
+        /// <summary>
+        /// Should be a value within <see cref="Models.AccessLevel"/>
+        /// </summary>
         [DataMember(Name = "access_level")]
-        public AccessLevel AccessLevel;
+        public int AccessLevel;
     }
 }

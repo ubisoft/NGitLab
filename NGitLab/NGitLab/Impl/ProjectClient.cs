@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Policy;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -22,7 +23,7 @@ namespace NGitLab.Impl
 
         public Project Create(ProjectCreate project) => _api.Post().With(project).To<Project>(Project.Url);
 
-        public Project this[string fullName] => _api.Get().To<Project>(Project.Url + "/" + fullName);
+        public Project this[string fullName] => _api.Get().To<Project>(Project.Url + "/" + System.Web.HttpUtility.UrlEncode(fullName));
 
         public IMembersClient GetMembers(string projectId)
         {

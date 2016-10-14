@@ -16,12 +16,12 @@ namespace NGitLab.Impl
 
         public static MembersClient OfProject(API api, string projectId)
         {
-            return new MembersClient(api, Project.Url + "/" + projectId);
+            return new MembersClient(api, Project.Url + "/" + System.Web.HttpUtility.UrlEncode(projectId));
         }
 
         public static MembersClient OfNamespace(API api, string groupId)
         {
-            return new MembersClient(api, Namespace.Url + "/" + groupId);
+            return new MembersClient(api, Namespace.Url + "/" + System.Web.HttpUtility.UrlEncode(groupId));
         }
 
         public IEnumerable<Membership> All => _api.Get().GetAll<Membership>(_url + "/members");
