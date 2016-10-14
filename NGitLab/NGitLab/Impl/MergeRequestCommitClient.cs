@@ -14,9 +14,6 @@ namespace NGitLab.Impl
             _commitsPath = projectPath + "/merge_request/" + mergeRequestId + "/commits";
         }
 
-        public IEnumerable<Commit> All
-        {
-            get { return _api.Get().GetAll<Commit>(_commitsPath); }
-        }        
+        public IEnumerable<Commit> All => _api.Get().GetAll<Commit>(_commitsPath);
     }
 }

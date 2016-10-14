@@ -6,31 +6,35 @@ namespace NGitLab.Tests.MergeRequest
 {
     public class MergeRequestCommentsClientTests
     {
-        private readonly IMergeRequestCommentClient _mergeRequestComments;
+        private IMergeRequestCommentClient _mergeRequestComments;
+        public static IMergeRequestClient MergeRequestClient;
+        public static Project Project;
 
-        public MergeRequestCommentsClientTests()
+        [SetUp]
+        public void Setup()
         {
-            _mergeRequestComments = _MergeRequestClientTests.MergeRequestClient.Comments(5);
+            Project = Initialize.GitLabClient.Projects.Owned.First(project => project.Name == "Diaspora Client");
+            MergeRequestClient = Initialize.GitLabClient.GetMergeRequest(Project.Id);
         }
 
         [Test]
-        [Category("Server_Required")]
+        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
         public void GetAllComments()
         {
+            _mergeRequestComments = MergeRequestClient.Comments(5);
             var comments = _mergeRequestComments.All.ToArray();
             CollectionAssert.IsNotEmpty(comments);
         }
 
         [Test]
-        [Category("Server_Required")]
+        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
         public void AddCommentToMergeRequest()
         {
-            const string commentMessage = "note";
-            var newComment = new MergeRequestComment {Note = commentMessage};
-
-            var mergeRequest = _mergeRequestComments.Add(newComment);
-
-            Assert.That(mergeRequest.Note, Is.EqualTo(commentMessage));
+            _mergeRequestComments = MergeRequestClient.Comments(4);
+            const string commentMessage = "Comment for MR";
+            var newComment = new MergeRequestComment {Body = commentMessage};
+            var comment = _mergeRequestComments.Add(newComment);
+            Assert.That(comment.Body, Is.EqualTo(commentMessage));
         }
     }
 }

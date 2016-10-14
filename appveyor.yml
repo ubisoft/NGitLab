@@ -4,6 +4,7 @@
   branches:
       only:
         - master
+        - develop
 
   assembly_info:
     patch: false
@@ -11,7 +12,7 @@
   configuration: Release
 
   build_script:
-    - ps: .\build.ps1
+    - ps: .\build.ps1 --coverallsToken=$env:CoverallsToken
 
   deploy:
     provider: NuGet
@@ -27,17 +28,31 @@
   cache:
   - src\packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 
-# configuration for all branches except master
+# configuration for all branches except master and develop
 # build in Release mode but not deployed
 -
+# Docker (well VT-X) is not supported yet by AppVeyor. http://help.appveyor.com/discussions/questions/2485-docker-and-aws
+#  os: Windows Server 2016
+
   branches:
     except:
       - master
+      - develop
 
   configuration: Release
 
+#  install:
+#    - choco install -y mingw
+#    - choco install -y virtualbox
+#    - choco install -y docker-machine
+
+  before_build:
+#    - docker-machine.exe create -d virtualbox dev
+#    - https://github.com/StefanScherer/windows-docker-builder/blob/master/appveyor.yml
+#    - ps: docker run --detach --hostname gitlab.example.com --publish 443:443 --publish 80:80 --publish 2222:22 --name gitlab --restart always --volume /srv/gitlab/config:/etc/gitlab --volume /srv/gitlab/logs:/var/log/gitlab --volume /srv/gitlab/data:/var/opt/gitlab gitlab/gitlab-ce:latest
+
   build_script:
-    - ps: .\build.ps1
+    - ps: .\build.ps1 --coverallsToken=$env:CoverallsToken
 
   test: off
   skip_tags: true

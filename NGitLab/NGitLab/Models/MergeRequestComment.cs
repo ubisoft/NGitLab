@@ -5,7 +5,10 @@ namespace NGitLab.Models
     [DataContract]
     public class MergeRequestComment
     {
-        [DataMember(Name = "note")] 
-        public string Note;
+        [DataMember(Name = "body")] 
+        public string Body;
+
+        [DataMember(Name = "author")]
+        public User Author { get; set; }
     }
 }

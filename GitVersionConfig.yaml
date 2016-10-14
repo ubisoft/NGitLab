@@ -1,8 +1,8 @@
 assembly-versioning-scheme: MajorMinorPatch
 branches:
   master:
-    tag: beta
+    tag: rc-
   develop:
-    tag: alpha
+    tag: beta-
 ignore:
   sha: []

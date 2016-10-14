@@ -14,50 +14,26 @@ namespace NGitLab.Impl
             _projectPath = Project.Url + "/" + projectId;
         }
 
-        public IEnumerable<MergeRequest> All
-        {
-            get { return _api.Get().GetAll<MergeRequest>(_projectPath + "/merge_requests"); }
-        }
+        public IEnumerable<MergeRequest> All => _api.Get().GetAll<MergeRequest>(_projectPath + "/merge_requests");
 
-        public IEnumerable<MergeRequest> AllInState(MergeRequestState state)
-        {
-            return _api.Get().GetAll<MergeRequest>(_projectPath + "/merge_requests?state=" + state);
-        }
+        public IEnumerable<MergeRequest> AllInState(MergeRequestState state) => _api.Get().GetAll<MergeRequest>(_projectPath + "/merge_requests?state=" + state);
 
-        public MergeRequest this[int id]
-        {
-            get { return _api.Get().To<MergeRequest>(_projectPath + "/merge_request/" + id); }
-        }
+        public MergeRequest this[int id] => _api.Get().To<MergeRequest>(_projectPath + "/merge_request/" + id);
 
-        public MergeRequest Create(MergeRequestCreate mergeRequest)
-        {
-            return _api
-                .Post().With(mergeRequest)
-                .To<MergeRequest>(_projectPath + "/merge_requests");
-        }
+        public MergeRequest Create(MergeRequestCreate mergeRequest) => _api
+            .Post().With(mergeRequest)
+            .To<MergeRequest>(_projectPath + "/merge_requests");
 
-        public MergeRequest Update(int mergeRequestId, MergeRequestUpdate mergeRequest)
-        {
-            return _api
-                .Put().With(mergeRequest)
-                .To<MergeRequest>(_projectPath + "/merge_request/" + mergeRequestId);
-        }
+        public MergeRequest Update(int mergeRequestId, MergeRequestUpdate mergeRequest) => _api
+            .Put().With(mergeRequest)
+            .To<MergeRequest>(_projectPath + "/merge_request/" + mergeRequestId);
 
-        public MergeRequest Accept(int mergeRequestId, MergeCommitMessage message)
-        {
-            return _api
-                .Put().With(message)
-                .To<MergeRequest>(_projectPath + "/merge_request/" + mergeRequestId + "/merge");
-        }
+        public MergeRequest Accept(int mergeRequestId, MergeCommitMessage message) => _api
+            .Put().With(message)
+            .To<MergeRequest>(_projectPath + "/merge_request/" + mergeRequestId + "/merge");
 
-        public IMergeRequestCommentClient Comments(int mergeRequestId)
-        {
-            return new MergeRequestCommentClient(_api, _projectPath, mergeRequestId);
-        }
+        public IMergeRequestCommentClient Comments(int mergeRequestId) => new MergeRequestCommentClient(_api, _projectPath, mergeRequestId);
 
-        public IMergeRequestCommitClient Commits(int mergeRequestId)
-        {
-            return new MergeRequestCommitClient(_api, _projectPath, mergeRequestId);
-        }
+        public IMergeRequestCommitClient Commits(int mergeRequestId) => new MergeRequestCommitClient(_api, _projectPath, mergeRequestId);
     }
 }

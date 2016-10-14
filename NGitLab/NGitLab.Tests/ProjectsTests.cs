@@ -5,42 +5,30 @@ using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
-    public class ProjectsTests : IDisposable
+    public class ProjectsTests
     {
         private readonly IProjectClient _projects;
-        private readonly Project _created;
 
         public ProjectsTests()
         {
-            _projects = Config.Connect().Projects;
-            CreateProject(out _created, "default");
-        }
-
-        public void Dispose()
-        {
-            _projects.Delete(_created.Id);
+            _projects = Initialize.GitLabClient.Projects;
         }
 
         [Test]
-        [Category("Server_Required")]
         public void GetAllProjects()
         {
             var projects = _projects.All.ToArray();
-
             CollectionAssert.IsNotEmpty(projects);
         }
 
         [Test]
-        [Category("Server_Required")]
         public void GetOwnedProjects()
         {
             var projects = _projects.Owned.ToArray();
-
             CollectionAssert.IsNotEmpty(projects);
         }
 
         [Test]
-        [Category("Server_Required")]
         public void GetAccessibleProjects()
         {
             var projects = _projects.Accessible.ToArray();
@@ -49,29 +37,15 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        [Category("Server_Required")]
         public void CreateDelete()
         {
-            Project created;
-            var p = CreateProject(out created, "test2");
-
-            Assert.AreEqual(p.Description, created.Description);
-            Assert.AreEqual(p.IssuesEnabled, created.IssuesEnabled);
-            Assert.AreEqual(p.MergeRequestsEnabled, created.MergeRequestsEnabled);
-            Assert.AreEqual(p.Name, created.Name);
-
-            Assert.AreEqual(_projects.Delete(created.Id),true);
-        }
-
-        private ProjectCreate CreateProject(out Project created, string name)
-        {
-            var p = new ProjectCreate
+            var project = new ProjectCreate
             {
                 Description = "desc",
                 ImportUrl = null,
                 IssuesEnabled = true,
                 MergeRequestsEnabled = true,
-                Name = name,
+                Name = "test 2",
                 NamespaceId = null,
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Public,
@@ -79,8 +53,14 @@ namespace NGitLab.Tests
                 WikiEnabled = true
             };
 
-            created = _projects.Create(p);
-            return p;
+            var createdProject = _projects.Create(project);
+
+            Assert.AreEqual(project.Description, createdProject.Description);
+            Assert.AreEqual(project.IssuesEnabled, createdProject.IssuesEnabled);
+            Assert.AreEqual(project.MergeRequestsEnabled, createdProject.MergeRequestsEnabled);
+            Assert.AreEqual(project.Name, createdProject.Name);
+
+            Assert.AreEqual(_projects.Delete(createdProject.Id), true);
         }
     }
 }

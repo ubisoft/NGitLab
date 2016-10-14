@@ -7,22 +7,24 @@ namespace NGitLab.Tests.RepositoryClient
 {
     public class ProjectHooksClientTests
     {
-        private readonly IProjectHooksClient _hooks;
+        private IProjectHooksClient _hooks;
+        private IRepositoryClient _repositoryClient;
 
-        public ProjectHooksClientTests()
+        [SetUp]
+        public void Setup()
         {
-            _hooks = _RepositoryClientTests.RepositoryClient.ProjectHooks;
+            var project = Initialize.GitLabClient.Projects.Owned.First();
+            _repositoryClient = Initialize.GitLabClient.GetRepository(project.Id);
+            _hooks = _repositoryClient.ProjectHooks;
         }
 
         [Test]
-        [Category("Server_Required")]
         public void GetAll()
         {
-            CollectionAssert.IsEmpty(_hooks.All.ToArray());
+            CollectionAssert.IsNotEmpty(_hooks.All.ToArray());
         }
 
         [Test]
-        [Category("Server_Required")]
         public void CreateUpdateDelete()
         {
             var toCreate = new ProjectHookUpsert
@@ -33,7 +35,7 @@ namespace NGitLab.Tests.RepositoryClient
             };
 
             var created = _hooks.Create(toCreate);
-            ThereIsOneHook();
+            ThereAreTwoHooks();
 
             Assert.AreEqual(toCreate.MergeRequestsEvents, created.MergeRequestsEvents);
             Assert.AreEqual(toCreate.PushEvents, created.PushEvents);
@@ -48,7 +50,7 @@ namespace NGitLab.Tests.RepositoryClient
 
             var updated = _hooks.Update(created.Id, toUpdate);
 
-            ThereIsOneHook();
+            ThereAreTwoHooks();
 
             Assert.AreEqual(toUpdate.MergeRequestsEvents, updated.MergeRequestsEvents);
             Assert.AreEqual(toUpdate.PushEvents, updated.PushEvents);
@@ -56,17 +58,17 @@ namespace NGitLab.Tests.RepositoryClient
 
             _hooks.Delete(updated.Id);
 
-            ThereIsNoHook();
+            ThereIsOneHook();
+        }
+
+        private void ThereAreTwoHooks()
+        {
+            Assert.That(_hooks.All.ToArray().Length, Is.EqualTo(2));
         }
 
         private void ThereIsOneHook()
         {
-            Assert.AreEqual(1, _hooks.All.ToArray().Length);
-        }
-
-        private void ThereIsNoHook()
-        {
-            CollectionAssert.IsEmpty(_hooks.All.ToArray());
+            Assert.That(_hooks.All.ToArray().Length, Is.EqualTo(1));
         }
     }
 }

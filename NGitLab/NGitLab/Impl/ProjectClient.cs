@@ -12,37 +12,15 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        public IEnumerable<Project> Accessible
-        {
-            get
-            {
-                return _api.Get().GetAll<Project>(Project.Url);
-            }
-        }
+        public IEnumerable<Project> Accessible => _api.Get().GetAll<Project>(Project.Url);
 
-        public IEnumerable<Project> Owned
-        {
-            get
-            {
-                return _api.Get().GetAll<Project>(Project.Url + "/owned");
-            }
-        }
+        public IEnumerable<Project> Owned => _api.Get().GetAll<Project>(Project.Url + "/owned");
 
-        public IEnumerable<Project> All
-        {
-            get
-            {
-                return _api.Get().GetAll<Project>(Project.Url + "/all");
-            }
-        }
+        public IEnumerable<Project> All => _api.Get().GetAll<Project>(Project.Url + "/all");
 
-        public Project this[int id]
-        {
-            get
-            {
-                return _api.Get().To<Project>(Project.Url + "/" + id);
-            }
-        }
+        public Project this[int id] => _api.Get().To<Project>(Project.Url + "/" + id);
+
+        public Project Create(ProjectCreate project) => _api.Post().With(project).To<Project>(Project.Url);
 
         public Project this[string fullName] => _api.Get().To<Project>(Project.Url + "/" + fullName);
 
@@ -51,14 +29,6 @@ namespace NGitLab.Impl
             return MembersClient.OfProject(_api, projectId);
         }
 
-        public Project Create(ProjectCreate project)
-        {
-            return _api.Post().With(project).To<Project>(Project.Url);
-        }
-
-        public bool Delete(int id)
-        {
-            return _api.Delete().To<Project>(Project.Url + "/" + id) == null;
-        }
+        public bool Delete(int id) => _api.Delete().To<bool>(Project.Url + "/" + id);
     }
 }

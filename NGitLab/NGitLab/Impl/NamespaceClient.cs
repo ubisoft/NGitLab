@@ -12,26 +12,11 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        public IEnumerable<Namespace> Accessible
-        {
-            get
-            {
-                return _api.Get().GetAll<Namespace>(Namespace.Url);
-            }
-        }
+        public IEnumerable<Namespace> Accessible => _api.Get().GetAll<Namespace>(Namespace.Url);
 
-        public Namespace this[int id]
-        {
-            get
-            {
-                return _api.Get().To<Namespace>(Namespace.Url + "/" + id);
-            }
-        }
+        public Namespace this[int id] => _api.Get().To<Namespace>(Namespace.Url + "/" + id);
 
-        public Namespace Create(NamespaceCreate group)
-        {
-            return _api.Post().With(group).To<Namespace>(Namespace.Url);
-        }
+        public Namespace Create(NamespaceCreate group) => _api.Post().With(group).To<Namespace>(Namespace.Url);
 
         public void Delete(int id)
         {

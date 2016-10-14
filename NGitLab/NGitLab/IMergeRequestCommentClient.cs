@@ -5,8 +5,8 @@ namespace NGitLab
 {
     public interface IMergeRequestCommentClient
     {
-        IEnumerable<Comment> All { get; }
+        IEnumerable<MergeRequestComment> All { get; }
 
-        Comment Add(MergeRequestComment comment);
+        MergeRequestComment Add(MergeRequestComment comment);
     }
 }

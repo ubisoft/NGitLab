@@ -6,7 +6,7 @@ namespace NGitLab.Models
     [DataContract]
     public class User
     {
-        public static string Url = "/users";
+        public const string Url = "/users";
 
         [DataMember(Name = "id")]
         public int Id;

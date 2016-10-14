@@ -11,46 +11,40 @@ namespace NGitLab.Tests
 
         public UsersTests()
         {
-            _users = Config.Connect().Users;
+            _users = Initialize.GitLabClient.Users;
         }
 
         [Test]
-        [Category("Server_Required")]
         public void Current()
         {
             var session = _users.Current;
-
-            Assert.AreNotEqual(default(DateTime), session.CreatedAt);
-            Assert.NotNull(session.Email);
-            Assert.NotNull(session.Name);
-            Assert.NotNull(session.PrivateToken);
-            Assert.NotNull(session.PrivateToken);
+            Assert.That(session, Is.Not.Null);
+            Assert.That(session.CreatedAt.Date, Is.EqualTo(DateTime.Now.Date));
+            Assert.That(session.Email, Is.EqualTo("admin@example.com"));
+            Assert.That(session.Name, Is.EqualTo("Administrator"));
+            Assert.That(session.PrivateToken, Is.Not.Null);
         }
 
         [Test]
-        [Category("Server_Required")]
         public void GetUsers()
         {
             var users = _users.All.ToArray();
-
             CollectionAssert.IsNotEmpty(users);
         }
 
         [Test]
-        [Category("Server_Required")]
         public void GetUser()
         {
             var user = _users[1];
-
-            Assert.AreEqual("user", user.Username);
-            Assert.AreEqual(true, user.CanCreateGroup);
+            Assert.IsNotNull(user);
+            Assert.That(user.Username, Is.EqualTo("root"));
+            Assert.That(user.CanCreateGroup, Is.True);
         }
 
         [Test]
-        [Category("Server_Required")]
         public void CreateUpdateDelete()
         {
-            var u = new UserUpsert
+            var userUpsert = new UserUpsert
             {
                 Email = "test@test.pl",
                 Bio = "bio",
@@ -67,14 +61,14 @@ namespace NGitLab.Tests
                 WebsiteURL = "wp.pl"
             };
 
-            var addedUser = _users.Create(u);
-            Assert.AreEqual(u.Bio, addedUser.Bio);
+            var addedUser = _users.Create(userUpsert);
+            Assert.That(addedUser.Bio, Is.EqualTo(userUpsert.Bio));
 
-            u.Bio = "Bio2";
-            u.Email = "test@test.pl";
+            userUpsert.Bio = "Bio2";
+            userUpsert.Email = "test@test.pl";
 
-            var updatedUser = _users.Update(addedUser.Id, u);
-            Assert.AreEqual(u.Bio, updatedUser.Bio);
+            var updatedUser = _users.Update(addedUser.Id, userUpsert);
+            Assert.That(updatedUser.Bio, Is.EqualTo(userUpsert.Bio));
 
             _users.Delete(addedUser.Id);
         }

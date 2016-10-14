@@ -10,7 +10,6 @@ namespace NGitLab
         User Create(UserUpsert user);
         User Update(int id, UserUpsert user);
         void Delete(int id);
-
         Session Current { get; }
     }
 }
