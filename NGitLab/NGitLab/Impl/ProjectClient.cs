@@ -44,6 +44,8 @@ namespace NGitLab.Impl
             }
         }
 
+        public Project this[string fullName] => _api.Get().To<Project>(Project.Url + "/" + fullName);
+
         public Project Create(ProjectCreate project)
         {
             return _api.Post().With(project).To<Project>(Project.Url);

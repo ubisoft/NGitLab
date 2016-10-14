@@ -22,6 +22,12 @@ namespace NGitLab
 
         Project this[int id] { get; }
 
+        /// <summary>
+        /// Returns the project with the provided full name in the form Namespace/Name.
+        /// </summary>
+        /// <remarks>https://github.com/gitlabhq/gitlabhq/blob/master/doc/api/projects.md#get-single-project</remarks>
+        Project this[string fullName] { get; }
+        
         Project Create(ProjectCreate project);
         
         bool Delete(int id);
