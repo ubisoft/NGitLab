@@ -49,6 +49,7 @@
     <Compile Include="IBranchClient.cs" />
     <Compile Include="IFilesClient.cs" />
     <Compile Include="IIssueClient.cs" />
+    <Compile Include="IMembersClient.cs" />
     <Compile Include="IMergeRequestClient.cs" />
     <Compile Include="IMergeRequestCommitClient.cs" />
     <Compile Include="Impl\API.cs" />
@@ -69,6 +70,8 @@
     <Compile Include="IProjectHooksClient.cs" />
     <Compile Include="IRepositoryClient.cs" />
     <Compile Include="IUserClient.cs" />
+    <Compile Include="Impl\MembersClient.cs" />
+    <Compile Include="Models\AccessLevel.cs" />
     <Compile Include="Models\Assignee.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Branch.cs" />
@@ -82,6 +85,7 @@
     <Compile Include="Models\FileDelete.cs" />
     <Compile Include="Models\FileUpsert.cs" />
     <Compile Include="Models\Issue.cs" />
+    <Compile Include="Models\Membership.cs" />
     <Compile Include="Models\MergeCommitMessage.cs" />
     <Compile Include="Models\MergeRequest.cs" />
     <Compile Include="Models\MergeRequestComment.cs" />

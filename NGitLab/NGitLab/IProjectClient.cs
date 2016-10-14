@@ -27,7 +27,13 @@ namespace NGitLab
         /// </summary>
         /// <remarks>https://github.com/gitlabhq/gitlabhq/blob/master/doc/api/projects.md#get-single-project</remarks>
         Project this[string fullName] { get; }
-        
+
+        /// <summary>
+        /// Returns the members of a project.
+        /// </summary>
+        /// <param name="projectId">The id or fullname of the project.</param>
+        IMembersClient GetMembers(string projectId);
+
         Project Create(ProjectCreate project);
         
         bool Delete(int id);
