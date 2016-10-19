@@ -11,6 +11,9 @@ namespace NGitLab.Models
         [DataMember(Name = "id")]
         public int Id;
 
+        [DataMember(Name = "avatar_url")]
+        public string AvatarUrl;
+
         [DataMember(Name = "name")]
         public string Name;
 
@@ -55,5 +58,17 @@ namespace NGitLab.Models
 
         [DataMember(Name = "namespace")]
         public Namespace Namespace;
+
+        [DataMember(Name = "tag_list")]
+        public string[] TagList;
+
+        [DataMember(Name = "star_count")]
+        public int StarCount;
+
+        [DataMember(Name = "forks_count")]
+        public int ForksCount;
+
+        [DataMember(Name = "runners_token")]
+        public string RunnersToken;
     }
 }
