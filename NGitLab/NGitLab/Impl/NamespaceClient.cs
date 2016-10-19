@@ -18,6 +18,11 @@ namespace NGitLab.Impl
 
         public Namespace Create(NamespaceCreate group) => _api.Post().With(group).To<Namespace>(Namespace.Url);
 
+        public IMembersClient GetMembers(string namespaceId)
+        {
+            return MembersClient.OfNamespace(_api, namespaceId);
+        }
+
         public void Delete(int id)
         {
             _api.Delete().To<Namespace>(Namespace.Url + "/" + id);
