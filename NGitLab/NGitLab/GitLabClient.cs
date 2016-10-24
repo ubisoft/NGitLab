@@ -12,6 +12,7 @@ namespace NGitLab
         public readonly IIssueClient Issues;
         public readonly INamespaceClient Groups;
         public readonly ILabelClient Labels;
+        public readonly IRunnerClient Runners;
 
         public static IHttpRequestor HttpRequestor { get; set; }
         
@@ -20,6 +21,7 @@ namespace NGitLab
             _api = new API(httpRequestor);
             Users = new UserClient(_api);
             Projects = new ProjectClient(_api);
+            Runners = new RunnerClient(_api);
             Issues = new IssueClient(_api);
             Groups = new NamespaceClient(_api);
             Labels = new LabelClient(_api);
