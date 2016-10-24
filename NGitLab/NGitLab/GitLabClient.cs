@@ -1,4 +1,5 @@
-﻿using NGitLab.Impl;
+﻿using System.Security.Policy;
+using NGitLab.Impl;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -40,7 +41,7 @@ namespace NGitLab
         public static GitLabClient Connect(string hostUrl, string username, string password)
         {
             var api = new API(new HttpRequestor(hostUrl, null));
-            var session = api.Post().To<Session>($"/session?login={username}&password={password}");
+            var session = api.Post().To<Session>($"/session?login={System.Web.HttpUtility.UrlEncode(username)}&password={System.Web.HttpUtility.UrlEncode(password)}");
 
             if (HttpRequestor == null)
             {
