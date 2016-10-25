@@ -1,5 +1,3 @@
-![Icon](https://raw.githubusercontent.com/Franklin89/NGitLab/feature/UnitTests/docs/img/package_icon.png)
-
 # NGitLab
 
 ![License](https://img.shields.io/github/license/franklin89/NGitLab.svg)
@@ -52,4 +50,4 @@ docker run --detach --hostname gitlab.example.com --publish 443:443 --publish 80
 
 ## Maintainer
 
-Big thanks to @Scooletz to bringing this project to life. I am happy to continue his work.
+NGitLab is a fork of [github project](https://github.com/Franklin89/NGitLab) 
