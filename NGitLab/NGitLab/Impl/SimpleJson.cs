@@ -1326,8 +1326,15 @@ namespace NGitLab.Impl
                 return default(Guid);
 
             if (value == null)
+            {
+                if (type.IsValueType)
+                {
+                    return Activator.CreateInstance(type);
+                }
                 return null;
-            
+            }
+
+
             object obj = null;
 
             if (str != null)
