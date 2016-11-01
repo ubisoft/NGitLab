@@ -35,6 +35,16 @@ namespace NGitLab.Impl
 
         public IEnumerable<Commit> Commits => _api.Get().GetAll<Commit>(_repoPath + "/commits");
 
+        /// <summary>
+        /// Gets all the commits of the specified branch/tag.
+        /// </summary>
+        public IEnumerable<Commit> GetCommits(string refName, int maxResults) => _api.Get().GetAll<Commit>(_repoPath + $"/commits?ref_name={refName}&{GetPagination(maxResults)}");
+
+        private string GetPagination(int maxResults)
+        {
+            return maxResults == 0 ? "" : $"per_page={maxResults}";
+        }
+
         public SingleCommit GetCommit(Sha1 sha) => _api.Get().To<SingleCommit>(_repoPath + "/commits/" + sha);
 
         public IEnumerable<Diff> GetCommitDiff(Sha1 sha) => _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
