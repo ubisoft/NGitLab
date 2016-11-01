@@ -70,5 +70,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "runners_token")]
         public string RunnersToken;
+
+        [DataMember(Name = "forked_from_project")]
+        public Project ForkedFromProject;
     }
 }
