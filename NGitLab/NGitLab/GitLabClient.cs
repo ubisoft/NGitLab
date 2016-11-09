@@ -15,8 +15,6 @@ namespace NGitLab
         public readonly ILabelClient Labels;
         public readonly IRunnerClient Runners;
 
-        public static IHttpRequestor HttpRequestor { get; set; }
-        
         private GitLabClient(IHttpRequestor httpRequestor)
         {
             _api = new API(httpRequestor);
@@ -30,12 +28,8 @@ namespace NGitLab
 
         public static GitLabClient Connect(string hostUrl, string apiToken)
         {
-            if(HttpRequestor == null)
-            {
-                HttpRequestor = new HttpRequestor(hostUrl, apiToken);
-            }
-
-            return new GitLabClient(HttpRequestor);
+            var httpRequestor = new HttpRequestor(hostUrl, apiToken);
+            return new GitLabClient(httpRequestor);
         }
 
         public static GitLabClient Connect(string hostUrl, string username, string password)
@@ -43,12 +37,8 @@ namespace NGitLab
             var api = new API(new HttpRequestor(hostUrl, null));
             var session = api.Post().To<Session>($"/session?login={System.Web.HttpUtility.UrlEncode(username)}&password={System.Web.HttpUtility.UrlEncode(password)}");
 
-            if (HttpRequestor == null)
-            {
-                HttpRequestor = new HttpRequestor(hostUrl, session.PrivateToken);
-            }
-
-            return new GitLabClient(HttpRequestor);
+            var httpRequestor = new HttpRequestor(hostUrl, session.PrivateToken);
+            return new GitLabClient(httpRequestor);
         }
 
         public IRepositoryClient GetRepository(int projectId)
