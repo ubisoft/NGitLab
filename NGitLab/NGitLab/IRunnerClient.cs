@@ -22,5 +22,15 @@ namespace NGitLab
         /// Get details of a runner
         /// </summary>
         Runner this[int id] { get; }
+
+        /// <summary>
+        /// Deletes the specified runner.
+        /// </summary>
+        void Delete(Runner runner);
+
+        /// <summary>
+        /// Deletes the specified runner.
+        /// </summary>
+        void Delete(int runnerId);
     }
 }

@@ -17,5 +17,12 @@ namespace NGitLab.Impl
         public IEnumerable<Runner> All => _api.Get().GetAll<Runner>(Runner.Url + "/all");
 
         public Runner this[int id] => _api.Get().To<Runner>(Runner.Url + "/" + id);
+
+        public void Delete(Runner runner) => Delete(runner.Id);
+
+        public void Delete(int runnerId)
+        {
+            _api.Delete().To<Runner>(Runner.Url + "/" + runnerId);
+        }
     }
 }
