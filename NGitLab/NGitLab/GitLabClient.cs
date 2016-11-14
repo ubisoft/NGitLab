@@ -46,6 +46,11 @@ namespace NGitLab
             return new RepositoryClient(_api, projectId);
         }
 
+        public IBuildClient GetBuilds(int projectId)
+        {
+            return new BuildClient(_api, projectId);
+        }
+
         public IMergeRequestClient GetMergeRequest(int projectId)
         {
             return new MergeRequestClient(_api, projectId);

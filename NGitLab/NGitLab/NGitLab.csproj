@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="GitLabClient.cs" />
     <Compile Include="IBranchClient.cs" />
+    <Compile Include="IBuildClient.cs" />
     <Compile Include="IFilesClient.cs" />
     <Compile Include="IHttpRequestor.cs" />
     <Compile Include="IIssueClient.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Impl\HttpRequestor.cs" />
     <Compile Include="Impl\MethodType.cs" />
     <Compile Include="Impl\ProjectClient.cs" />
+    <Compile Include="Impl\BuildClient.cs" />
     <Compile Include="Impl\RepositoryClient.cs" />
     <Compile Include="Impl\RunnerClient.cs" />
     <Compile Include="Impl\UserClient.cs" />

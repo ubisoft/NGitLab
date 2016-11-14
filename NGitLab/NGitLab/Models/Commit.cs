@@ -28,5 +28,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "message")]
         public string Message;
+
+        [DataMember(Name = "status")]
+        public string Status;
     }
 }
