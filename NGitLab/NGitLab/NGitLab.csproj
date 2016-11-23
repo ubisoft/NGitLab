@@ -114,6 +114,7 @@
     <Compile Include="Models\ProjectHook.cs" />
     <Compile Include="Models\ProjectHookUpsert.cs" />
     <Compile Include="Models\RealeaseInfo.cs" />
+    <Compile Include="Models\RunnerUpdate.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\SingleCommit.cs" />
     <Compile Include="Models\Tag.cs" />

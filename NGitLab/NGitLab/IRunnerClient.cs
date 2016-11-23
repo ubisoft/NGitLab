@@ -32,5 +32,7 @@ namespace NGitLab
         /// Deletes the specified runner.
         /// </summary>
         void Delete(int runnerId);
+
+        Runner Update(int runnerId, RunnerUpdate runnerUpdate);
     }
 }

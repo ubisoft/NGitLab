@@ -24,5 +24,11 @@ namespace NGitLab.Impl
         {
             _api.Delete().To<Runner>(Runner.Url + "/" + runnerId);
         }
+
+        public Runner Update(int runnerId, RunnerUpdate runnerUpdate)
+        {
+            string url = $"{Runner.Url}/{runnerId}";
+            return _api.Put().With(runnerUpdate).To<Runner>(url);
+        }
     }
 }
