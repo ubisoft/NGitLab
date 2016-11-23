@@ -33,6 +33,10 @@ namespace NGitLab
         /// </summary>
         void Delete(int runnerId);
 
+        /// <summary>
+        /// Updates the tags, description, isActive
+        /// </summary>
+        /// <returns>The updated runner</returns>
         Runner Update(int runnerId, RunnerUpdate runnerUpdate);
     }
 }
