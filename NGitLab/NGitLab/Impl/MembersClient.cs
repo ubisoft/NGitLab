@@ -6,24 +6,22 @@ namespace NGitLab.Impl
     public class MembersClient : IMembersClient
     {
         private readonly API _api;
-        private readonly string _url;
 
-        public MembersClient(API api, string url)
+        public MembersClient(API api)
         {
             _api = api;
-            _url = url;
         }
 
-        public static MembersClient OfProject(API api, string projectId)
+        private IEnumerable<Membership> GetAll(string url) => _api.Get().GetAll<Membership>(url + "/members");
+
+        public IEnumerable<Membership> OfProject(string projectId)
         {
-            return new MembersClient(api, Project.Url + "/" + System.Web.HttpUtility.UrlEncode(projectId));
+            return GetAll(Project.Url + "/" + System.Web.HttpUtility.UrlEncode(projectId));
         }
 
-        public static MembersClient OfNamespace(API api, string groupId)
+        public IEnumerable<Membership> OfNamespace(string groupId)
         {
-            return new MembersClient(api, Namespace.Url + "/" + System.Web.HttpUtility.UrlEncode(groupId));
+            return GetAll(Namespace.Url + "/" + System.Web.HttpUtility.UrlEncode(groupId));
         }
-
-        public IEnumerable<Membership> All => _api.Get().GetAll<Membership>(_url + "/members");
     }
 }

@@ -14,12 +14,6 @@ namespace NGitLab
 
         Namespace Create(NamespaceCreate group);
 
-        /// <summary>
-        /// Returns the members of a namespace.
-        /// </summary>
-        /// <param name="namespaceId">The id or name of the namespace.</param>
-        IMembersClient GetMembers(string namespaceId);
-
         void Delete(int id);
     }
 }

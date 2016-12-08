@@ -1,20 +1,43 @@
-﻿namespace NGitLab.Impl
+﻿using NGitLab.Models;
+
+namespace NGitLab.Impl
 {
     public class API
     {
-        private readonly IHttpRequestor _httpRequestor;
+        private readonly GitLabCredentials _credentials;
 
-        public API(IHttpRequestor httpRequestor)
+        public string ConnectionToken { get; set; }
+
+        public API(GitLabCredentials credentials)
         {
-            _httpRequestor = httpRequestor;
+            _credentials = credentials;
         }
 
-        public IHttpRequestor Get() => _httpRequestor.SetMethodType(MethodType.Get);
+        public IHttpRequestor Get() => CreateRequestor(MethodType.Get);
 
-        public IHttpRequestor Post() => _httpRequestor.SetMethodType(MethodType.Post);
+        public IHttpRequestor Post() => CreateRequestor(MethodType.Post);
 
-        public IHttpRequestor Put() => _httpRequestor.SetMethodType(MethodType.Put);
+        public IHttpRequestor Put() => CreateRequestor(MethodType.Put);
 
-        public IHttpRequestor Delete() => _httpRequestor.SetMethodType(MethodType.Delete);
+        public IHttpRequestor Delete() => CreateRequestor(MethodType.Delete);
+
+        protected virtual IHttpRequestor CreateRequestor(MethodType methodType)
+        {
+            if (_credentials.ApiToken == null)
+            {
+                _credentials.ApiToken = OpenPrivateSession();
+            }
+            
+            return new HttpRequestor(_credentials.HostUrl, _credentials.ApiToken, methodType);
+        }
+
+        private string OpenPrivateSession()
+        {
+            var httpRequestor = new HttpRequestor(_credentials.HostUrl, "", MethodType.Post);
+            var url = $"/session?login={System.Web.HttpUtility.UrlEncode(_credentials.UserName)}&password={System.Web.HttpUtility.UrlEncode(_credentials.Password)}";
+            var session = httpRequestor.To<Session>(url);
+
+            return session.PrivateToken;
+        }
     }
 }

@@ -9,6 +9,8 @@ namespace NGitLab
     /// </summary>
     public interface IMembersClient
     {
-        IEnumerable<Membership> All { get; }
+        IEnumerable<Membership> OfProject(string projectId);
+
+        IEnumerable<Membership> OfNamespace(string groupId);
     }
 }

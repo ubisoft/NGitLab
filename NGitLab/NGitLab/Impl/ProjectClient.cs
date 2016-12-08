@@ -24,12 +24,7 @@ namespace NGitLab.Impl
         public Project Create(ProjectCreate project) => _api.Post().With(project).To<Project>(Project.Url);
 
         public Project this[string fullName] => _api.Get().To<Project>(Project.Url + "/" + System.Web.HttpUtility.UrlEncode(fullName));
-
-        public IMembersClient GetMembers(string projectId)
-        {
-            return MembersClient.OfProject(_api, projectId);
-        }
-
+        
         public bool Delete(int id) => _api.Delete().To<bool>(Project.Url + "/" + id);
     }
 }

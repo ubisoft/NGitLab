@@ -1,23 +1,32 @@
-﻿using System.Security.Policy;
+﻿using System;
 using NGitLab.Impl;
-using NGitLab.Models;
 
 namespace NGitLab
 {
-    public class GitLabClient
+    public class GitLabClient : IGitLabClient
     {
         private readonly API _api;
 
-        public readonly IUserClient Users;
-        public readonly IProjectClient Projects;
-        public readonly IIssueClient Issues;
-        public readonly INamespaceClient Groups;
-        public readonly ILabelClient Labels;
-        public readonly IRunnerClient Runners;
+        public IUserClient Users { get; }
+        public IProjectClient Projects { get; }
+        public IIssueClient Issues { get; }
+        public INamespaceClient Groups { get; }
+        public ILabelClient Labels { get; }
+        public IRunnerClient Runners { get; }
 
-        private GitLabClient(IHttpRequestor httpRequestor)
+        public GitLabClient(string hostUrl, string apiToken)
+            : this(new GitLabCredentials(hostUrl, apiToken))
         {
-            _api = new API(httpRequestor);
+        }
+
+        public GitLabClient(string hostUrl, string userName, string password)
+            : this(new GitLabCredentials(hostUrl, userName, password))
+        {
+        }
+
+        private GitLabClient(GitLabCredentials credentials)
+        {
+            _api = new API(credentials);
             Users = new UserClient(_api);
             Projects = new ProjectClient(_api);
             Runners = new RunnerClient(_api);
@@ -26,19 +35,16 @@ namespace NGitLab
             Labels = new LabelClient(_api);
         }
 
+        [Obsolete("Use gitlab client constructor instead")]
         public static GitLabClient Connect(string hostUrl, string apiToken)
         {
-            var httpRequestor = new HttpRequestor(hostUrl, apiToken);
-            return new GitLabClient(httpRequestor);
+            return new GitLabClient(hostUrl, apiToken);   
         }
 
+        [Obsolete("Use gitlab client constructor instead")]
         public static GitLabClient Connect(string hostUrl, string username, string password)
         {
-            var api = new API(new HttpRequestor(hostUrl, null));
-            var session = api.Post().To<Session>($"/session?login={System.Web.HttpUtility.UrlEncode(username)}&password={System.Web.HttpUtility.UrlEncode(password)}");
-
-            var httpRequestor = new HttpRequestor(hostUrl, session.PrivateToken);
-            return new GitLabClient(httpRequestor);
+            return new GitLabClient(hostUrl, username, password);
         }
 
         public IRepositoryClient GetRepository(int projectId)
@@ -55,5 +61,7 @@ namespace NGitLab
         {
             return new MergeRequestClient(_api, projectId);
         }
+
+        public IMembersClient Members => new MembersClient(_api);
     }
 }

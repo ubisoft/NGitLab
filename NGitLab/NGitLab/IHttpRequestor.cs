@@ -7,8 +7,6 @@ namespace NGitLab
 {
     public interface IHttpRequestor
     {
-        IHttpRequestor SetMethodType(MethodType methodType);
-
         IEnumerable<T> GetAll<T>(string tailUrl);
 
         void Stream(string tailAPIUrl, Action<Stream> parser);

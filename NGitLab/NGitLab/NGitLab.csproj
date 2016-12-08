@@ -47,9 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GitLabClient.cs" />
+    <Compile Include="Impl\GitLabCredentials.cs" />
     <Compile Include="IBranchClient.cs" />
     <Compile Include="IBuildClient.cs" />
     <Compile Include="IFilesClient.cs" />
+    <Compile Include="IGitLabClient.cs" />
     <Compile Include="IHttpRequestor.cs" />
     <Compile Include="IIssueClient.cs" />
     <Compile Include="IMembersClient.cs" />

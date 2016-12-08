@@ -17,18 +17,22 @@ namespace NGitLab.Impl
 #pragma warning restore 649
     }
 
+    /// <summary>
+    /// The requestor is typically used for a single call to gitlab.
+    /// </summary>
     public class HttpRequestor : IHttpRequestor
     {
-        private MethodType _methodType; // Default to GET requests
+        private readonly MethodType _methodType;
         private object _data;
 
         private readonly string _apiToken;
         private readonly string _hostUrl;
 
-        public HttpRequestor(string hostUrl, string apiToken)
+        public HttpRequestor(string hostUrl, string apiToken, MethodType methodType)
         {
             _hostUrl = hostUrl.EndsWith("/") ? hostUrl.Replace("/$", "") : hostUrl;
             _apiToken = apiToken;
+            _methodType = methodType;
         }
 
         public IHttpRequestor With(object data)
@@ -43,13 +47,7 @@ namespace NGitLab.Impl
             Stream(tailAPIUrl, s => result = SimpleJson.DeserializeObject<T>(new StreamReader(s).ReadToEnd()));
             return result;
         }
-
-        public IHttpRequestor SetMethodType(MethodType methodType)
-        {
-            _methodType = methodType;
-            return this;
-        }
-
+        
         public Uri GetAPIUrl(string tailAPIUrl)
         {
             if (_apiToken != null)
