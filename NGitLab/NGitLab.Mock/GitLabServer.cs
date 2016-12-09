@@ -20,8 +20,10 @@ namespace NGitLab.Mock
 
         private IProjectClient ProjectClient { get; } = Substitute.For<IProjectClient>();
 
+        private IMembersClient Members { get; } = Substitute.For<IMembersClient>();
+
         public List<MockProject> Projects { get; } = new List<MockProject>();
-        
+
         public GitLabServer()
         {
             Client.Projects.Returns(ProjectClient);
@@ -32,6 +34,10 @@ namespace NGitLab.Mock
             ProjectClient["anyName"].ReturnsForAnyArgs(call => GetProject((string)call[0]).ClientProject);
 
             Client.GetRepository(-1).ReturnsForAnyArgs(call => GetProject((int)call[0]).Repository);
+
+            Members.OfProject("dummy").ReturnsForAnyArgs(call => GetMembersOfProject((string)call[0]));
+            Members.OfNamespace("dummy").ReturnsForAnyArgs(call => new Membership[0]);
+            Client.Members.Returns(call => Members);
         }
 
         public MockProject GetProject(int projectId)
@@ -41,15 +47,39 @@ namespace NGitLab.Mock
 
         public MockProject GetProject(string fullName)
         {
+            int projectId;
+            if (int.TryParse(fullName, out projectId))
+            {
+                return GetProject(projectId);
+            }
+
             fullName = fullName.Replace('\\', '/');
-            return Projects.First(x => x.FullName == fullName);
+            var project = Projects.FirstOrDefault(x => x.FullName == fullName);
+
+            if (project == null)
+            {
+                throw new Exception($"Project {fullName} was not found");
+            }
+
+            return project;
         }
 
         public MockProject CreateProject()
         {
-            var project = new MockProject();
+            var project = new MockProject
+            {
+                Name = "DefaultName",
+                Namespace = "DefaultNamespace",
+            };
+
             Projects.Add(project);
             return project;
+        }
+
+        private IEnumerable<Membership> GetMembersOfProject(string projectName)
+        {
+            var project = GetProject(projectName);
+            return project.Members;
         }
     }
 
@@ -57,9 +87,10 @@ namespace NGitLab.Mock
     {
         public IRepositoryClient Repository { get; } = Substitute.For<IRepositoryClient>();
 
-        public IMembersClient MembersClient { get; } = Substitute.For<IMembersClient>();
-
-        public Project ClientProject { get; } = new Project();
+        public Project ClientProject { get; } = new Project
+        {
+            Id = ProjectIds.Next,
+        };
 
         public List<Tag> Tags { get; } = new List<Tag>();
 
@@ -67,27 +98,50 @@ namespace NGitLab.Mock
 
         public List<Membership> Members { get; } = new List<Membership>();
 
+        public string HttpUrl => $"https://mygitlabserver.org/{FullName}.git";
+
         public string FullName => $"{ClientProject.Namespace.Name}/{ClientProject.Name}";
 
         public string Name
         {
             get { return ClientProject.Name; }
-            set { ClientProject.Name = value; }
+            set
+            {
+                ClientProject.Name = value;
+                ClientProject.HttpUrl = HttpUrl;
+            }
         }
 
         public string Namespace
         {
             get { return ClientProject.Namespace.Name; }
-            set { ClientProject.Namespace.Name = value; }
+            set
+            {
+                ClientProject.Namespace.Name = value;
+                ClientProject.HttpUrl = HttpUrl;
+            }
         }
 
         public MockProject()
         {
-            ClientProject.Namespace = new Namespace {Name = "MockGroup"};
+            ClientProject.Namespace = new Namespace { Name = "MockGroup" };
             ClientProject.Name = "MockProject";
 
             Repository.Commits.Returns(Commits);
+            Repository.GetCommits("refname").ReturnsForAnyArgs(call => GetCommits((string)call[0]));
             Repository.Tags.Returns(Tags);
+        }
+
+        private IEnumerable<Commit> GetCommits(string refName)
+        {
+            var commit = Commits.FirstOrDefault(x => x.Id.ToString() == refName);
+            if (commit == null)
+            {
+                throw new Exception($"Cannot find the requested ref {refName}");
+            }
+
+            int index = Commits.IndexOf(commit);
+            return Commits.Take(index + 1).Reverse();
         }
 
         public Commit Commit(string author = "John Doe")
@@ -112,6 +166,7 @@ namespace NGitLab.Mock
 
             var tag = new Tag
             {
+                Name = tagName,
                 Commit = ToCommitInfo(commit)
             };
 
@@ -123,8 +178,11 @@ namespace NGitLab.Mock
         {
             Members.Add(new Membership
             {
+                Id = MemberIds.Next,
                 AccessLevel = (int)accessLevel,
                 UserName = userName,
+                Name = $"FullName of {userName}",
+                CreatedAt = DateTime.Now
             });
         }
 
@@ -140,13 +198,26 @@ namespace NGitLab.Mock
 
         private Sha1 RandomSha1()
         {
-            StringBuilder result = new StringBuilder();
+            var random = new Random();
+            var result = new StringBuilder();
             for (int i = 0; i < 40; i++)
             {
-                var @char = (char)new Random().Next('0', '9');
+                var @char = (char)random.Next('0', '9');
                 result.Append(@char);
             }
             return new Sha1(result.ToString());
         }
+    }
+
+    internal class ProjectIds
+    {
+        private static int _currentId;
+        public static int Next => ++_currentId;
+    }
+
+    internal class MemberIds
+    {
+        private static int _currentId;
+        public static int Next => ++_currentId;
     }
 }
