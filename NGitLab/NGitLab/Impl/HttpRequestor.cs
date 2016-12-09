@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace NGitLab.Impl
@@ -59,7 +60,7 @@ namespace NGitLab.Impl
             {
                 tailAPIUrl = "/" + tailAPIUrl;
             }
-            return new Uri(_hostUrl + tailAPIUrl);
+            return UriFix.Build(_hostUrl + tailAPIUrl);
         }
 
         public Uri GetUrl(string tailAPIUrl)
@@ -69,7 +70,7 @@ namespace NGitLab.Impl
                 tailAPIUrl = "/" + tailAPIUrl;
             }
 
-            return new Uri(_hostUrl + tailAPIUrl);
+            return UriFix.Build(_hostUrl + tailAPIUrl);
         }
 
         public virtual void Stream(string tailAPIUrl, Action<Stream> parser)
@@ -257,6 +258,50 @@ namespace NGitLab.Impl
             request.AutomaticDecompression = DecompressionMethods.GZip;
 
             return request;
+        }
+    }
+
+    /// <summary>
+    /// .Net framework has a bug which converts the escaped / into normal slashes
+    /// This is not equivalent and fails when retrieving a project with its full name for example.
+    /// There is an ugly workaround which involves reflection but it better than nothing.
+    /// </summary>
+    /// <remarks>
+    /// http://stackoverflow.com/questions/5774183/how-to-make-system-uri-not-to-unescape-2f-slash-in-path
+    /// </remarks>
+    internal static class UriFix
+    {
+        public static Uri Build(string asString)
+        {
+            var uri = new Uri(asString);
+            LeaveDotsAndSlashesEscaped(uri);
+            return uri;
+        }
+
+        // System.UriSyntaxFlags is internal, so let's duplicate the flag privately
+        private const int UnEscapeDotsAndSlashes = 0x2000000;
+        private const int SimpleUserSyntax = 0x20000;
+
+        private static void LeaveDotsAndSlashesEscaped(Uri uri)
+        {
+            if (uri == null)
+                throw new ArgumentNullException("uri");
+
+            FieldInfo fieldInfo = uri.GetType().GetField("m_Syntax", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (fieldInfo == null)
+                throw new MissingFieldException("'m_Syntax' field not found");
+
+            object uriParser = fieldInfo.GetValue(uri);
+            fieldInfo = typeof(UriParser).GetField("m_Flags", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (fieldInfo == null)
+                throw new MissingFieldException("'m_Flags' field not found");
+
+            object uriSyntaxFlags = fieldInfo.GetValue(uriParser);
+
+            // Clear the flag that we don't want
+            uriSyntaxFlags = (int)uriSyntaxFlags & ~UnEscapeDotsAndSlashes;
+            uriSyntaxFlags = (int)uriSyntaxFlags & ~SimpleUserSyntax;
+            fieldInfo.SetValue(uriParser, uriSyntaxFlags);
         }
     }
 }
