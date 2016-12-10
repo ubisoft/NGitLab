@@ -267,41 +267,39 @@ namespace NGitLab.Impl
     /// There is an ugly workaround which involves reflection but it better than nothing.
     /// </summary>
     /// <remarks>
-    /// http://stackoverflow.com/questions/5774183/how-to-make-system-uri-not-to-unescape-2f-slash-in-path
+    /// http://stackoverflow.com/questions/2320533/system-net-uri-with-urlencoded-characters/
     /// </remarks>
     internal static class UriFix
     {
-        public static Uri Build(string asString)
+        static UriFix()
         {
-            var uri = new Uri(asString);
-            LeaveDotsAndSlashesEscaped(uri);
-            return uri;
+            LeaveDotsAndSlashesEscaped();
         }
 
-        // System.UriSyntaxFlags is internal, so let's duplicate the flag privately
-        private const int UnEscapeDotsAndSlashes = 0x2000000;
-        private const int SimpleUserSyntax = 0x20000;
-
-        private static void LeaveDotsAndSlashesEscaped(Uri uri)
+        public static Uri Build(string asString)
         {
-            if (uri == null)
-                throw new ArgumentNullException("uri");
+            return new Uri(asString);
+        }
+        
+        public static void LeaveDotsAndSlashesEscaped()
+        {
+            var getSyntaxMethod =
+                typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
+            if (getSyntaxMethod == null)
+            {
+                throw new MissingMethodException("UriParser", "GetSyntax");
+            }
 
-            FieldInfo fieldInfo = uri.GetType().GetField("m_Syntax", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (fieldInfo == null)
-                throw new MissingFieldException("'m_Syntax' field not found");
+            var uriParser = getSyntaxMethod.Invoke(null, new object[] { "https" });
 
-            object uriParser = fieldInfo.GetValue(uri);
-            fieldInfo = typeof(UriParser).GetField("m_Flags", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (fieldInfo == null)
-                throw new MissingFieldException("'m_Flags' field not found");
+            var setUpdatableFlagsMethod =
+                uriParser.GetType().GetMethod("SetUpdatableFlags", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (setUpdatableFlagsMethod == null)
+            {
+                throw new MissingMethodException("UriParser", "SetUpdatableFlags");
+            }
 
-            object uriSyntaxFlags = fieldInfo.GetValue(uriParser);
-
-            // Clear the flag that we don't want
-            uriSyntaxFlags = (int)uriSyntaxFlags & ~UnEscapeDotsAndSlashes;
-            uriSyntaxFlags = (int)uriSyntaxFlags & ~SimpleUserSyntax;
-            fieldInfo.SetValue(uriParser, uriSyntaxFlags);
+            setUpdatableFlagsMethod.Invoke(uriParser, new object[] { 0 });
         }
     }
 }
