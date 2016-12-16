@@ -8,7 +8,7 @@ namespace NGitLab.Models
         /// <summary>
         /// (required) - The name of a tag
         /// </summary>
-        [DataMember(Name = "name")]
+        [DataMember(Name = "tag_name")]
         public string Name;
 
         /// <summary>
