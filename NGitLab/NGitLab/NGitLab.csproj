@@ -74,11 +74,13 @@
     <Compile Include="Impl\BuildClient.cs" />
     <Compile Include="Impl\RepositoryClient.cs" />
     <Compile Include="Impl\RunnerClient.cs" />
+    <Compile Include="Impl\TagClient.cs" />
     <Compile Include="Impl\UserClient.cs" />
     <Compile Include="IRunnerClient.cs" />
     <Compile Include="IProjectClient.cs" />
     <Compile Include="IProjectHooksClient.cs" />
     <Compile Include="IRepositoryClient.cs" />
+    <Compile Include="ITagClient.cs" />
     <Compile Include="IUserClient.cs" />
     <Compile Include="Impl\MembersClient.cs" />
     <Compile Include="Models\AccessLevel.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\SingleCommit.cs" />
     <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\TagUpsert.cs" />
     <Compile Include="Models\TreeOrBlob.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserUpsert.cs" />

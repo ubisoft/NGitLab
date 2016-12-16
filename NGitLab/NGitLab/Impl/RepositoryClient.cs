@@ -19,7 +19,7 @@ namespace NGitLab.Impl
             _repoPath = _projectPath + "/repository";
         }
 
-        public IEnumerable<Tag> Tags => _api.Get().GetAll<Tag>(_repoPath + "/tags");
+        public ITagClient Tags => new TagClient(_api, _repoPath);
 
         public IEnumerable<TreeOrBlob> Tree => _api.Get().GetAll<TreeOrBlob>(_repoPath + "/tree");
 

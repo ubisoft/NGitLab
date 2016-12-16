@@ -7,7 +7,7 @@ namespace NGitLab
 {
     public interface IRepositoryClient
     {
-        IEnumerable<Tag> Tags { get; }
+        ITagClient Tags { get; }
         IEnumerable<TreeOrBlob> Tree { get; }
         void GetRawBlob(string sha, Action<Stream> parser);
         void GetArchive(Action<Stream> parser);

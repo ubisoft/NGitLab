@@ -87,6 +87,8 @@ namespace NGitLab.Mock
     {
         public IRepositoryClient Repository { get; } = Substitute.For<IRepositoryClient>();
 
+        public ITagClient TagClient { get; } = Substitute.For<ITagClient>();
+
         public Project ClientProject { get; } = new Project
         {
             Id = ProjectIds.Next,
@@ -129,7 +131,9 @@ namespace NGitLab.Mock
 
             Repository.Commits.Returns(Commits);
             Repository.GetCommits("refname").ReturnsForAnyArgs(call => GetCommits((string)call[0]));
-            Repository.Tags.Returns(Tags);
+            Repository.Tags.Returns(TagClient);
+
+            TagClient.GetEnumerator().Returns(Tags.GetEnumerator());
         }
 
         private IEnumerable<Commit> GetCommits(string refName)
