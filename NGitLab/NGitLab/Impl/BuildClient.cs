@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -16,18 +16,21 @@ namespace NGitLab.Impl
             _repoPath = projectPath + "/repository";
         }
 
-        public string GetBuildStatus(string branchName)
+        public BuildStatus GetBuildStatus(string branchName)
         {
             var latestCommit = _api.Get().To<Commit>(_repoPath + $"/commits/{branchName}?per_page=1");
-            return latestCommit?.Status;
-        }
-    }
+            if (latestCommit == null)
+            {
+                return BuildStatus.Unknown;
+            }
+            
+            BuildStatus result;
+            if (!Enum.TryParse(latestCommit.Status, ignoreCase: true, result: out result))
+            {
+                throw new NotImplementedException($"Status {latestCommit.Status} is unrecognised");
+            }
 
-    public static class BuildStatuses
-    {
-        public const string Running = "running";
-        public const string Pending = "pending";
-        public const string Failed = "failed";
-        public const string Passed = "passed";
+            return result;
+        }
     }
 }

@@ -5,6 +5,18 @@
         /// <summary>
         /// Returns the status of a branch.
         /// </summary>
-        string GetBuildStatus(string branchName);
+        BuildStatus GetBuildStatus(string branchName);
+    }
+
+    public enum BuildStatus
+    {
+        Unknown,
+        Running,
+        Pending,
+        Failed,
+        Success,
+        Created,
+        Canceled,
+        Skipped,
     }
 }
