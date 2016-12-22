@@ -5,8 +5,7 @@ namespace NGitLab
 {
     public interface ITagClient : IEnumerable<Tag>
     {
-        Tag Create(TagUpsert tag);
-
+        Tag Create(TagCreate tag);
         void Delete(string name);
     }
 }

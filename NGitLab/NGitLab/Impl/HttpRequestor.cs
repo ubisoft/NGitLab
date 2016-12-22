@@ -45,7 +45,11 @@ namespace NGitLab.Impl
         public virtual T To<T>(string tailAPIUrl)
         {
             var result = default(T);
-            Stream(tailAPIUrl, s => result = SimpleJson.DeserializeObject<T>(new StreamReader(s).ReadToEnd()));
+            Stream(tailAPIUrl, s =>
+            {
+                var json = new StreamReader(s).ReadToEnd();
+                result = SimpleJson.DeserializeObject<T>(json);
+            });
             return result;
         }
         
@@ -240,6 +244,7 @@ namespace NGitLab.Impl
             using (var writer = new StreamWriter(request.GetRequestStream()))
             {
                 var data = SimpleJson.SerializeObject(_data);
+
                 writer.Write(data);
                 writer.Flush();
                 writer.Close();

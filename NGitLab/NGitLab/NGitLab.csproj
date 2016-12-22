@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\..\.nuget\packages\NGitLab\3.7.1\lib\net45\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -122,7 +122,7 @@
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\SingleCommit.cs" />
     <Compile Include="Models\Tag.cs" />
-    <Compile Include="Models\TagUpsert.cs" />
+    <Compile Include="Models\TagCreate.cs" />
     <Compile Include="Models\TreeOrBlob.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserUpsert.cs" />

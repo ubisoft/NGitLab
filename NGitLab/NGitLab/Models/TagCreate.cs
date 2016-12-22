@@ -1,19 +1,22 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
     [DataContract]
-    public class TagUpsert
+    public class TagCreate
     {
         /// <summary>
         /// (required) - The name of a tag
         /// </summary>
+        [Required]
         [DataMember(Name = "tag_name")]
         public string Name;
 
         /// <summary>
         /// (required) - Create tag using commit SHA, another tag name, or branch name.
         /// </summary>
+        [Required]
         [DataMember(Name = "ref")]
         public string Ref;
 

@@ -1,4 +1,5 @@
-﻿using NGitLab.Models;
+﻿using System.Web;
+using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
@@ -15,7 +16,7 @@ namespace NGitLab.Impl
 
         public void Create(FileUpsert file)
         {
-            _api.Post().With(file).Stream(_repoPath + "/files", s => { });
+            _api.Post().With(file).Stream(_repoPath + $"/files?file_path={HttpUtility.UrlEncode(file.Path)}&branch_name={file.Branch}", s => { });
         }
 
         public void Update(FileUpsert file)

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGitLab", "NGitLab\NGitLab.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGitLab.Mock", "NGitLab.Mock\NGitLab.Mock.csproj", "{5D2A9BF6-17FE-4032-B34B-777F25E602CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGitLab.Tests", "NGitLab.Tests\NGitLab.Tests.csproj", "{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5D2A9BF6-17FE-4032-B34B-777F25E602CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D2A9BF6-17FE-4032-B34B-777F25E602CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D2A9BF6-17FE-4032-B34B-777F25E602CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Web;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -15,19 +16,14 @@ namespace NGitLab.Impl
             _tagsPath = repoPath + "/tags";
         }
 
-        public Tag Create(TagUpsert tag)
+        public Tag Create(TagCreate tag)
         {
             return _api.Post().With(tag).To<Tag>(_tagsPath);
         }
 
-        public Tag Update(TagUpsert tag)
-        {
-            return _api.Put().With(tag).To<Tag>(_tagsPath);
-        }
-
         public void Delete(string name)
         {
-            _api.Delete().To<Tag>(_tagsPath);
+            _api.Delete().Stream($"{_tagsPath}/{HttpUtility.UrlEncode(name)}", x => {});
         }
 
         public IEnumerator<Tag> GetEnumerator()
