@@ -22,4 +22,12 @@ namespace NGitLab.Impl
             return latestCommit?.Status;
         }
     }
+
+    public static class BuildStatuses
+    {
+        public const string Running = "running";
+        public const string Pending = "pending";
+        public const string Failed = "failed";
+        public const string Passed = "passed";
+    }
 }
