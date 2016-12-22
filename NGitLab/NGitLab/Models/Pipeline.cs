@@ -11,6 +11,9 @@ namespace NGitLab.Models
         [DataMember(Name = "id")]
         public int Id;
 
+        [DataMember(Name = "status")]
+        public BuildStatus Status;
+
         [DataMember(Name = "ref")]
         public string Ref;
 

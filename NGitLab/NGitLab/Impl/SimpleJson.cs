@@ -1347,11 +1347,26 @@ namespace NGitLab.Impl
                     if (type == typeof(DateTime) || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type) == typeof(DateTime)))
                         return DateTime.ParseExact(str, Iso8601Format, CultureInfo.InvariantCulture,
                             DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+
                     if (type == typeof(DateTimeOffset) || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type) == typeof(DateTimeOffset)))
                         return DateTimeOffset.ParseExact(str, Iso8601Format, CultureInfo.InvariantCulture,
                             DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+
                     if (type == typeof(Guid) || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type) == typeof(Guid)))
                         return new Guid(str);
+
+                    if (type.IsEnum)
+                    {
+                        try
+                        {
+                            return Enum.Parse(type, str, ignoreCase: true);
+                        }
+                        catch (Exception)
+                        {
+                            throw new Exception($"{str} is not a valid value for enum {type.Name}");
+                        }
+                    }
+
                     if (type == typeof(Uri))
                     {
                         bool isValid = Uri.IsWellFormedUriString(str, UriKind.RelativeOrAbsolute);
