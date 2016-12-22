@@ -57,6 +57,11 @@ namespace NGitLab
             return new BuildClient(_api, projectId);
         }
 
+        public IPipelineClient GetPipelines(int projectId)
+        {
+            return new PipelineClient(_api, projectId);
+        }
+
         public IMergeRequestClient GetMergeRequest(int projectId)
         {
             return new MergeRequestClient(_api, projectId);

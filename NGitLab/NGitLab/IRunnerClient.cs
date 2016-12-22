@@ -38,5 +38,25 @@ namespace NGitLab
         /// </summary>
         /// <returns>The updated runner</returns>
         Runner Update(int runnerId, RunnerUpdate runnerUpdate);
+
+        /// <summary>
+        /// List all runners (specific and shared) available in the project. Shared runners are listed if at least one shared runner is defined and shared runners usage is enabled in the project's settings.
+        /// </summary>
+        /// <param name="projectId"></param>
+        IEnumerable<Runner> GetAvailableRunners(int projectId);
+
+        /// <summary>
+        /// Enable an available specific runner in the project.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="runnerId"></param>
+        Runner EnableRunner(int projectId, RunnerId runnerId);
+
+        /// <summary>
+        /// Disable a specific runner from the project. It works only if the project isn't the only project associated with the specified runner. If so, an error is returned. Use the Remove a runner call instead.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="runnerId"></param>
+        Runner DisableRunner(int projectId, RunnerId runnerId);
     }
 }

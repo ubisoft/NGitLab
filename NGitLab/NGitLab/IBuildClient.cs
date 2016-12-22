@@ -7,16 +7,4 @@
         /// </summary>
         BuildStatus GetBuildStatus(string branchName);
     }
-
-    public enum BuildStatus
-    {
-        Unknown,
-        Running,
-        Pending,
-        Failed,
-        Success,
-        Created,
-        Canceled,
-        Skipped,
-    }
 }

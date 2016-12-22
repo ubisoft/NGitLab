@@ -2,6 +2,7 @@ using NGitLab.Models;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using System.Threading;
 
 namespace NGitLab.Tests
 {
@@ -33,7 +34,12 @@ namespace NGitLab.Tests
             GitLabClient = new GitLabClient(host, apiToken: token);
 
             // Create a test project with merge request etc.
-            DeleteProject("Unit_Test", @try: true);
+            if (DeleteProject("Unit_Test", @try: true))
+            {
+                Console.WriteLine("Cleanup project from last unit test run. Waiting for the server to process.");
+                Thread.Sleep(TimeSpan.FromSeconds(10));
+            }
+
             UnitTestProject = CreateProject("Unit_Test");
         }
 
@@ -96,7 +102,7 @@ namespace NGitLab.Tests
             return createdProject;
         }
 
-        private void DeleteProject(string name, bool @try = false)
+        private bool DeleteProject(string name, bool @try = false)
         {
             var project = GitLabClient.Projects.Owned.FirstOrDefault(x => x.Name == name);
 
@@ -104,12 +110,13 @@ namespace NGitLab.Tests
             {
                 if (@try)
                 {
-                    return;
+                    return false;
                 }
                 Assert.Fail($"Cannot find project {name}");
             }
 
             GitLabClient.Projects.Delete(project.Id);
+            return true;
         }
     }
 }

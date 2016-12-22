@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Impl\PipelineClient.cs" />
+    <Compile Include="Models\BuildStatus.cs" />
     <Compile Include="GitLabClient.cs" />
     <Compile Include="Impl\GitLabCredentials.cs" />
     <Compile Include="IBranchClient.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="Impl\RunnerClient.cs" />
     <Compile Include="Impl\TagClient.cs" />
     <Compile Include="Impl\UserClient.cs" />
+    <Compile Include="IPipelineClient.cs" />
     <Compile Include="IRunnerClient.cs" />
     <Compile Include="IProjectClient.cs" />
     <Compile Include="IProjectHooksClient.cs" />
@@ -113,11 +116,13 @@
     <Compile Include="Models\Namespace.cs" />
     <Compile Include="Models\ObjectType.cs" />
     <Compile Include="Models\PersonInfo.cs" />
+    <Compile Include="Models\Pipeline.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\ProjectCreate.cs" />
     <Compile Include="Models\ProjectHook.cs" />
     <Compile Include="Models\ProjectHookUpsert.cs" />
     <Compile Include="Models\RealeaseInfo.cs" />
+    <Compile Include="Models\RunnerId.cs" />
     <Compile Include="Models\RunnerUpdate.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\SingleCommit.cs" />

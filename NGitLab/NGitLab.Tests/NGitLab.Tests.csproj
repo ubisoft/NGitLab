@@ -60,15 +60,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PipelineTests.cs" />
     <Compile Include="HttpTracing.cs" />
     <Compile Include="Initialize.cs" />
     <Compile Include="MergeRequest\MergeRequestClientTests.cs" />
     <Compile Include="MergeRequest\MergeRequestCommentsClientTests.cs" />
+    <Compile Include="BuildsTests.cs" />
     <Compile Include="ProjectsTests.cs" />
     <Compile Include="RepositoryClient\BranchClientTests.cs" />
     <Compile Include="RepositoryClient\FilesClientTests.cs" />
     <Compile Include="RepositoryClient\ProjectHooksClientTests.cs" />
     <Compile Include="RepositoryClient\RepositoryClientTests.cs" />
+    <Compile Include="RunnerTests.cs" />
     <Compile Include="Sha1Tests.cs" />
     <Compile Include="TagsTests.cs" />
     <Compile Include="UsersTests.cs" />
