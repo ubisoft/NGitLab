@@ -74,7 +74,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        [Ignore("Do not run automatically to not modify the current user.")")]
+        [Ignore("Do not run automatically to not modify the current user.")]
         public void Test_can_add_an_ssh_key_to_the_gitlab_profile()
         {
             var users = _users;
