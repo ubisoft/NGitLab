@@ -22,6 +22,10 @@ namespace NGitLab.Impl
 
         public Session Current => _api.Get().To<Session>("/user");
 
+        public ISshKeyClient CurrentUserSShKeys => new SshKeyClient(_api, userId: null);
+
+        public ISshKeyClient SShKeys(int userId) => new SshKeyClient(_api, userId);
+
         public void Delete(int userId)
         {
             _api.Delete().To<User>(User.Url + "/" + userId);

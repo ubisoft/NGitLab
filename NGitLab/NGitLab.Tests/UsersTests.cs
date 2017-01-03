@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -41,7 +41,7 @@ namespace NGitLab.Tests
             Assert.That(user.CanCreateGroup, Is.True);
         }
 
-        [Test]
+        [Test, Ignore("Needs admin rights")]
         public void CreateUpdateDelete()
         {
             var userUpsert = new UserUpsert
@@ -71,6 +71,27 @@ namespace NGitLab.Tests
             Assert.That(updatedUser.Bio, Is.EqualTo(userUpsert.Bio));
 
             _users.Delete(addedUser.Id);
+        }
+
+        [Test]
+        [Ignore("Do not run automatically to not modify the current user.")")]
+        public void Test_can_add_an_ssh_key_to_the_gitlab_profile()
+        {
+            var users = _users;
+            var keys = users.CurrentUserSShKeys;
+            var keysBefore = keys.All.ToArray();
+
+            var result = keys.Add(new SshKeyCreate
+            {
+                Key = "ssh-rsa dummy mytestkey@mycurrentpc",
+                Title = "test key",
+            });
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(keysBefore.Length + 1, keys.All.ToArray().Length);
+
+            keys.Remove(result.Id);
+            Assert.AreEqual(keysBefore.Length, keys.All.ToArray().Length);
         }
     }
 }

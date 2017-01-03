@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Impl\PipelineClient.cs" />
+    <Compile Include="Impl\SshKeyClient.cs" />
+    <Compile Include="ISshKeyClient.cs" />
     <Compile Include="Models\BuildStatus.cs" />
     <Compile Include="GitLabClient.cs" />
     <Compile Include="Impl\GitLabCredentials.cs" />
@@ -126,6 +128,8 @@
     <Compile Include="Models\RunnerUpdate.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\SingleCommit.cs" />
+    <Compile Include="Models\SshKey.cs" />
+    <Compile Include="Models\SshKeyCreate.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagCreate.cs" />
     <Compile Include="Models\TreeOrBlob.cs" />
