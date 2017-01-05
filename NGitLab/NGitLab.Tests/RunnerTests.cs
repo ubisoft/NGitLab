@@ -26,7 +26,11 @@ namespace NGitLab.Tests
             var allRunners = Initialize.GitLabClient.Runners.Accessible.ToArray();
             var runner = allRunners.FirstOrDefault(x => x.Active);
 
-            Assert.IsNotNull(runner, "Will not be able to test the builds as no runner is setup for this project");
+            if (runner == null)
+            {
+                Assert.Inconclusive("Will not be able to test the builds as no runner is setup for this project");
+            }
+
             return runner;
         }
     }

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GitLabException.cs" />
     <Compile Include="Impl\PipelineClient.cs" />
     <Compile Include="Impl\SshKeyClient.cs" />
     <Compile Include="ISshKeyClient.cs" />
@@ -108,7 +109,7 @@
     <Compile Include="Models\LabelCreate.cs" />
     <Compile Include="Models\LabelDelete.cs" />
     <Compile Include="Models\LabelEdit.cs" />
-    <Compile Include="Models\MergeCommitMessage.cs" />
+    <Compile Include="Models\MergeRequestAccept.cs" />
     <Compile Include="Models\MergeRequest.cs" />
     <Compile Include="Models\MergeRequestComment.cs" />
     <Compile Include="Models\MergeRequestCreate.cs" />

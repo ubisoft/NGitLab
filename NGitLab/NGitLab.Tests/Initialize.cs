@@ -13,25 +13,24 @@ namespace NGitLab.Tests
 
         public static Project UnitTestProject;
 
+        public static IRepositoryClient Repository => GitLabClient.GetRepository(UnitTestProject.Id);
+
+        public static string GitLabHost => "https://gitlab.example.com/api/v3";
+
+        public static string GitLabToken => "dummy";
+
+        public static bool IsAdmin => GitLabClient.Users.Current.IsAdmin;
+
         [OneTimeSetUp]
         public void Setup()
         {
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITLAB_TOKEN")))
-            {
-                SetEnvironmentVariable(gitlabToken: "");
-            }
+            if (string.IsNullOrEmpty(GitLabHost))
+                throw new ArgumentNullException(nameof(GitLabHost));
 
-            // Login using User name & Password
-            var host = Environment.GetEnvironmentVariable("GITLAB_HOST");
-            var token = Environment.GetEnvironmentVariable("GITLAB_TOKEN");
+            if (string.IsNullOrEmpty(GitLabToken))
+                throw new ArgumentNullException(nameof(GitLabToken));
 
-            if (string.IsNullOrEmpty(host))
-                throw new ArgumentNullException(nameof(host));
-
-            if (string.IsNullOrEmpty(token))
-                throw new ArgumentNullException(nameof(token));
-
-            GitLabClient = new GitLabClient(host, apiToken: token);
+            GitLabClient = new GitLabClient(GitLabHost, apiToken: GitLabToken);
 
             // Create a test project with merge request etc.
             if (DeleteProject("Unit_Test", @try: true))
@@ -41,16 +40,6 @@ namespace NGitLab.Tests
             }
 
             UnitTestProject = CreateProject("Unit_Test");
-        }
-
-        public void SetEnvironmentVariable(string gitlabToken)
-        {
-            Assert.IsNotEmpty(gitlabToken, "TODO enter a gitlab token once to enable the unit tests");
-
-            Environment.SetEnvironmentVariable("GITLAB_HOST", "https://gitlab.example.com/api/v3", EnvironmentVariableTarget.Process);
-            Environment.SetEnvironmentVariable("GITLAB_HOST", "https://gitlab.example.com/api/v3", EnvironmentVariableTarget.User);
-            Environment.SetEnvironmentVariable("GITLAB_TOKEN", gitlabToken, EnvironmentVariableTarget.Process);
-            Environment.SetEnvironmentVariable("GITLAB_TOKEN", gitlabToken, EnvironmentVariableTarget.User);
         }
 
         [OneTimeTearDown]

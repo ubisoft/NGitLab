@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpRequestorTests.cs" />
     <Compile Include="PipelineTests.cs" />
     <Compile Include="HttpTracing.cs" />
     <Compile Include="Initialize.cs" />
