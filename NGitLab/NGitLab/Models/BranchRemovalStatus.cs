@@ -1,29 +1,11 @@
-﻿namespace NGitLab.Models
+﻿using System.Runtime.Serialization;
+
+namespace NGitLab.Models
 {
+    [DataContract]
     public class BranchRemovalStatus
     {
-        public readonly bool Succeed;
-        public readonly string Message;
-
-        public static BranchRemovalStatus FromReponseMessage(string message)
-        {
-            return Success();
-        }
-
-        public static BranchRemovalStatus Success()
-        {
-            return new BranchRemovalStatus(true, string.Empty);
-        }
-
-        public static BranchRemovalStatus Failure(string message)
-        {
-            return new BranchRemovalStatus(false, message);
-        }
-
-        private BranchRemovalStatus(bool succeed, string message)
-        {
-            Succeed = succeed;
-            Message = message;
-        }
+        [DataMember(Name = "branch_name")]
+        public string Name;
     }
 }

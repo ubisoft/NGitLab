@@ -17,6 +17,11 @@ namespace NGitLab.Tests
         [Test]
         public void GetAllProjects()
         {
+            if (!Initialize.IsAdmin)
+            {
+                Assert.Inconclusive("Cannot test getting all projects since the current user is not admin");
+            }
+
             var projects = _projects.All.ToArray();
             CollectionAssert.IsNotEmpty(projects);
         }

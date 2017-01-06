@@ -52,7 +52,7 @@ namespace NGitLab.Impl
             });
             return result;
         }
-        
+
         public Uri GetAPIUrl(string tailAPIUrl)
         {
             if (_apiToken != null)
@@ -79,7 +79,8 @@ namespace NGitLab.Impl
 
         public virtual void Stream(string tailAPIUrl, Action<Stream> parser)
         {
-            var req = SetupConnection(GetAPIUrl(tailAPIUrl));
+            var fullUrl = GetAPIUrl(tailAPIUrl);
+            var req = SetupConnection(fullUrl);
 
             if (HasOutput())
             {
@@ -106,25 +107,64 @@ namespace NGitLab.Impl
                 {
                     using (var errorResponse = (HttpWebResponse)wex.Response)
                     {
+                        string jsonString;
                         using (var reader = new StreamReader(errorResponse.GetResponseStream()))
                         {
-                            string jsonString = reader.ReadToEnd();
-                            JsonError jsonError;
-                            try
-                            {
-                                jsonError = SimpleJson.DeserializeObject<JsonError>(jsonString);
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new Exception(string.Format("The remote server returned an error ({0}) with an empty response", errorResponse.StatusCode), ex);
-                            }
-                            throw new Exception(string.Format("The remote server returned an error ({0}): {1}", errorResponse.StatusCode, jsonError.Message));
+                            jsonString = reader.ReadToEnd();
                         }
+
+                        JsonObject parsedError;
+                        var errorMessage = ExtractErrorMessage(jsonString, out parsedError);
+                        throw new GitLabException($"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. Original call: {fullUrl}")
+                        {
+                            OriginalCall = fullUrl,
+                            ErrorObject = parsedError,
+                            StatusCode = errorResponse.StatusCode,
+                            ErrorMessage = errorMessage,
+                        };
                     }
                 }
                 else
                     throw wex;
             }
+        }
+
+        /// <summary>
+        /// Parse the error that GitLab returns. GitLab returns structured errors but has a lot of them
+        /// Here we try to be generic.
+        /// </summary>
+        /// <param name="json"></param>
+        /// <param name="parsedError"></param>
+        /// <returns></returns>
+        private static string ExtractErrorMessage(string json, out JsonObject parsedError)
+        {
+            if (string.IsNullOrEmpty(json))
+            {
+                parsedError = null;
+                return "Empty Response";
+            }
+
+            object errorObject;
+            SimpleJson.TryDeserializeObject(json, out errorObject);
+
+            parsedError = errorObject as JsonObject;
+            object messageObject = null;
+            if (parsedError?.TryGetValue("message", out messageObject) != true)
+            {
+                parsedError?.TryGetValue("error", out messageObject);
+            }
+
+            if (messageObject == null)
+            {
+                return $"Error message cannot be parsed ({json})";
+            }
+
+            if (messageObject is string)
+            {
+                return (string)messageObject;
+            }
+
+            return SimpleJson.SerializeObject(messageObject);
         }
 
         public virtual IEnumerable<T> GetAll<T>(string tailUrl)
@@ -285,7 +325,7 @@ namespace NGitLab.Impl
         {
             return new Uri(asString);
         }
-        
+
         public static void LeaveDotsAndSlashesEscaped()
         {
             var getSyntaxMethod =

@@ -14,16 +14,6 @@ namespace NGitLab.Tests
             _users = Initialize.GitLabClient.Users;
         }
 
-        [Test]
-        public void Current()
-        {
-            var session = _users.Current;
-            Assert.That(session, Is.Not.Null);
-            Assert.That(session.CreatedAt.Date, Is.EqualTo(DateTime.Now.Date));
-            Assert.That(session.Email, Is.EqualTo("admin@example.com"));
-            Assert.That(session.Name, Is.EqualTo("Administrator"));
-            Assert.That(session.PrivateToken, Is.Not.Null);
-        }
 
         [Test]
         public void GetUsers()
@@ -35,15 +25,19 @@ namespace NGitLab.Tests
         [Test]
         public void GetUser()
         {
-            var user = _users[1];
+            var user = _users[_users.Current.Id];
             Assert.IsNotNull(user);
-            Assert.That(user.Username, Is.EqualTo("root"));
-            Assert.That(user.CanCreateGroup, Is.True);
+            Assert.That(user.Username, Is.EqualTo(_users.Current.Username));
         }
 
-        [Test, Ignore("Needs admin rights")]
+        [Test]
         public void CreateUpdateDelete()
         {
+            if (!Initialize.IsAdmin)
+            {
+                Assert.Inconclusive("Cannot test the creation of users since the current user is not admin");
+            }
+
             var userUpsert = new UserUpsert
             {
                 Email = "test@test.pl",
@@ -71,10 +65,23 @@ namespace NGitLab.Tests
             Assert.That(updatedUser.Bio, Is.EqualTo(userUpsert.Bio));
 
             _users.Delete(addedUser.Id);
+
+            TestCurrent(userUpsert);
+        }
+
+        public void TestCurrent(UserUpsert user)
+        {
+            var client = new GitLabClient(Initialize.GitLabHost, user.Username, user.Password).Users;
+
+            var session = client.Current;
+            Assert.That(session, Is.Not.Null);
+            Assert.That(session.CreatedAt.Date, Is.EqualTo(DateTime.Now.Date));
+            Assert.That(session.Email, Is.EqualTo(user.Email));
+            Assert.That(session.Name, Is.EqualTo(user.Name));
+            Assert.That(session.PrivateToken, Is.Not.Null);
         }
 
         [Test]
-        [Ignore("Do not run automatically to not modify the current user.")]
         public void Test_can_add_an_ssh_key_to_the_gitlab_profile()
         {
             var users = _users;

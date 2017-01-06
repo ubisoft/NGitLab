@@ -1,29 +1,29 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net;
+using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Tests.RepositoryClient
 {
     public class BranchClientTests
     {
-        private readonly IBranchClient _branches;
-        private IRepositoryClient RepositoryClient;
+        private IBranchClient _branches;
 
         [SetUp]
         public void Setup()
         {
             var project = Initialize.GitLabClient.Projects.Owned.First();
-            RepositoryClient = Initialize.GitLabClient.GetRepository(project.Id);
+            _branches = Initialize.GitLabClient.GetRepository(project.Id).Branches;
         }
 
         [Test]
-        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
         public void GetAll()
         {
             CollectionAssert.IsNotEmpty(_branches.All.ToArray());
         }
 
         [Test]
-        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
         public void GetByName()
         {
             var branch = _branches["master"];
@@ -32,11 +32,35 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
-        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
-        public void DeleteByName()
+        public void AddDelete()
         {
-            var result = _branches.Delete("merge-me-to-master");
-            Assert.That(result.Succeed);
+            const string branchName = "merge-me-to-master";
+
+            _branches.Create(new BranchCreate
+            {
+                Name = branchName,
+                Ref = "master"
+            });
+
+            Assert.IsNotNull(_branches[branchName]);
+
+            var result = _branches.Delete(branchName);
+            Assert.AreEqual(branchName, result.Name);
+
+            AssertCannotFind(() => _branches[branchName]);
+        }
+
+        private static void AssertCannotFind<T>(Func<T> get)
+        {
+            try
+            {
+                var dummyResult = get();
+                Assert.Fail($"Not supposed to return {dummyResult}, should throw a 404 exception instead.");
+            }
+            catch (GitLabException ex)
+            {
+                Assert.IsTrue(ex.StatusCode == HttpStatusCode.NotFound);
+            }
         }
     }
 }

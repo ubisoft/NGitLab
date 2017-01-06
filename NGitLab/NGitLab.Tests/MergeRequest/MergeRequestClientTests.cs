@@ -6,51 +6,39 @@ namespace NGitLab.Tests.MergeRequest
 {
     public class MergeRequestClientTests
     {
-        private readonly IMergeRequestClient _mergeRequest;
-
-        public static IMergeRequestClient MergeRequestClient;
-        public static Project Project;
+        private IMergeRequestClient _mergeRequest;
 
         [SetUp]
         public void Setup()
         {
-            Project = Initialize.GitLabClient.Projects.Owned.First(project => project.Name == "Diaspora Client");
-            MergeRequestClient = Initialize.GitLabClient.GetMergeRequest(Project.Id);
+            _mergeRequest = Initialize.GitLabClient.GetMergeRequest(Initialize.UnitTestProject.Id);
         }
 
         [Test]
-        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
-        public void GetAllMergeRequests()
+        public void Test_merge_request_api()
         {
-            var mergeRequests = _mergeRequest.All.ToArray();
-            CollectionAssert.IsNotEmpty(mergeRequests);
+            var mergeRequest = CreateMergeRequest();
+            Assert.AreEqual(mergeRequest.Id, _mergeRequest[mergeRequest.Id].Id, "Test can get a merge request by Id");
+
+            ListMergeRequest(mergeRequest);
+            UpdateMergeRequest(mergeRequest);
+            AcceptMergeRequest(mergeRequest);
         }
 
-        [Test]
-        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
-        public void GetAllMergeRequestsInCertainState()
+        private void ListMergeRequest(Models.MergeRequest mergeRequest)
         {
-            var mergeRequests = _mergeRequest.AllInState(MergeRequestState.opened).ToArray();
-            CollectionAssert.IsNotEmpty(mergeRequests);
-            CollectionAssert.AreEqual(Enumerable.Repeat("opened", 2), mergeRequests.Select(x => x.State));
+            Assert.IsTrue(_mergeRequest.All.Any(x => x.Id == mergeRequest.Id), "Test all accessor returns the merge request");
+            Assert.IsTrue(_mergeRequest.AllInState(MergeRequestState.opened).Any(x => x.Id == mergeRequest.Id), "Can return all open request");
+            Assert.IsFalse(_mergeRequest.AllInState(MergeRequestState.merged).Any(x => x.Id == mergeRequest.Id), "Can return all closed request");
         }
 
-        [Test]
-        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
-        public void GetMergeRequestById()
+        private Models.MergeRequest CreateMergeRequest()
         {
-            const int mergeReqestId = 1;
-            Assert.AreEqual(mergeReqestId, _mergeRequest[mergeReqestId].Id);
-        }
-
-        [Test]
-        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
-        public void CreateMergeRequest()
-        {
+            var branch = CreateBranch();
             var mergeRequest = _mergeRequest.Create(new MergeRequestCreate
             {
                 Title = "Merge my-super-feature into master",
-                SourceBranch = "my-super-feature",
+                SourceBranch = branch.Name,
                 TargetBranch = "master"
             });
 
@@ -58,32 +46,69 @@ namespace NGitLab.Tests.MergeRequest
             Assert.That(mergeRequest.Title, Is.EqualTo("Merge my-super-feature into master"));
             Assert.That(mergeRequest.SourceBranch, Is.EqualTo("my-super-feature"));
             Assert.That(mergeRequest.TargetBranch, Is.EqualTo("master"));
+
+            return mergeRequest;
         }
 
-        [Test]
-        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
-        public void UpdateMergeRequest()
+        private static Branch CreateBranch()
         {
-            var mergeRequest = _mergeRequest.Update(5, new MergeRequestUpdate
+            var branch = Initialize.Repository.Branches.Create(new BranchCreate
             {
-                Title = "Merge my-super-feature into master",
-                TargetBranch = "my-super-feature",
-                SourceBranch = "master",
-                NewState = MergeRequestStateEvent.close.ToString()
+                Name = "my-super-feature",
+                Ref = "master"
             });
 
-            Assert.That(mergeRequest, Is.Not.Null);
+            Initialize.Repository.Files.Create(new FileUpsert
+            {
+                RawContent = "test content",
+                CommitMessage = "commit to merge",
+                Branch = branch.Name,
+                Path = "mysuperfeature.txt",
+            });
+
+            return branch;
+        }
+
+        public void UpdateMergeRequest(Models.MergeRequest request)
+        {
+            var mergeRequest = _mergeRequest.Update(request.Id, new MergeRequestUpdate
+            {
+                Title = "New title",
+                SourceBranch = "my-super-feature",
+                TargetBranch = "master",
+            });
+
+            Assert.AreEqual("New title", mergeRequest.Title);
+        }
+
+        public void AcceptMergeRequest(Models.MergeRequest request)
+        {
+            var mergeRequest = _mergeRequest.Accept(
+                mergeRequestId: request.Id,
+                message: new MergeRequestAccept
+                {
+                    MergeCommitMessage = "Merge my-super-feature into master",
+                    ShouldRemoveSourceBranch = true,
+                });
+
+            Assert.That(mergeRequest.State, Is.EqualTo(MergeRequestState.merged.ToString()));
+            Assert.IsNull(Initialize.Repository.Branches.All.FirstOrDefault(x => x.Name == request.SourceBranch));
         }
 
         [Test]
-        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
-        public void AcceptMergeRequest()
+        public void Test_gitlab_returns_an_error_when_trying_to_create_a_request_with_same_source_and_destination()
         {
-            var mergeRequest = _mergeRequest.Accept(
-                mergeRequestId: 4,
-                message: new MergeCommitMessage {Message = "Merge my-super-feature into master"});
+            var exception = Assert.Throws<GitLabException>(() =>
+            {
+                _mergeRequest.Create(new MergeRequestCreate
+                {
+                    Title = "ErrorRequest",
+                    SourceBranch = "master",
+                    TargetBranch = "master"
+                });
+            });
 
-            Assert.That(mergeRequest.State, Is.EqualTo(MergeRequestState.merged.ToString()));
+            Assert.AreEqual("[\"You can not use same project/branch for source and target\"]", exception.ErrorMessage);
         }
     }
 }

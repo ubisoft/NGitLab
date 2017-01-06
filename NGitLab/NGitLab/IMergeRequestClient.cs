@@ -11,7 +11,7 @@ namespace NGitLab
 
         MergeRequest Create(MergeRequestCreate mergeRequest);
         MergeRequest Update(int mergeRequestId, MergeRequestUpdate mergeRequest);
-        MergeRequest Accept(int mergeRequestId, MergeCommitMessage message);
+        MergeRequest Accept(int mergeRequestId, MergeRequestAccept message);
 
         IMergeRequestCommentClient Comments(int mergeRequestId);
         IMergeRequestCommitClient Commits(int mergeRequestId);

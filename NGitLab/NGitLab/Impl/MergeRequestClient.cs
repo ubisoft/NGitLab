@@ -28,7 +28,7 @@ namespace NGitLab.Impl
             .Put().With(mergeRequest)
             .To<MergeRequest>(_projectPath + "/merge_request/" + mergeRequestId);
 
-        public MergeRequest Accept(int mergeRequestId, MergeCommitMessage message) => _api
+        public MergeRequest Accept(int mergeRequestId, MergeRequestAccept message) => _api
             .Put().With(message)
             .To<MergeRequest>(_projectPath + "/merge_request/" + mergeRequestId + "/merge");
 

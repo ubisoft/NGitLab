@@ -6,35 +6,57 @@ namespace NGitLab.Tests.MergeRequest
 {
     public class MergeRequestCommentsClientTests
     {
-        private IMergeRequestCommentClient _mergeRequestComments;
-        public static IMergeRequestClient MergeRequestClient;
-        public static Project Project;
+        private IMergeRequestClient _mergeRequestClient;
+        private Project _project;
+
+        private Models.MergeRequest _mergeRequest;
+
+        private Models.MergeRequest MergeRequest
+        {
+            get
+            {
+                if (_mergeRequest == null)
+                {
+                    _mergeRequest = _mergeRequestClient.Create(new MergeRequestCreate
+                    {
+                        Title = "Test merge request comments",
+                        SourceBranch = "master",
+                        TargetBranch = "newbranch"
+                    });
+                }
+
+                return _mergeRequest;
+            }
+        }
 
         [SetUp]
         public void Setup()
         {
-            Project = Initialize.GitLabClient.Projects.Owned.First(project => project.Name == "Diaspora Client");
-            MergeRequestClient = Initialize.GitLabClient.GetMergeRequest(Project.Id);
+            _project = Initialize.UnitTestProject;
+            _mergeRequestClient = Initialize.GitLabClient.GetMergeRequest(_project.Id);
         }
 
         [Test]
-        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
-        public void GetAllComments()
-        {
-            _mergeRequestComments = MergeRequestClient.Comments(5);
-            var comments = _mergeRequestComments.All.ToArray();
-            CollectionAssert.IsNotEmpty(comments);
-        }
-
-        [Test]
-        [Ignore("GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!")]
+        [Order(1)]
         public void AddCommentToMergeRequest()
         {
-            _mergeRequestComments = MergeRequestClient.Comments(4);
+            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Id);
             const string commentMessage = "Comment for MR";
-            var newComment = new MergeRequestComment {Body = commentMessage};
-            var comment = _mergeRequestComments.Add(newComment);
-            Assert.That(comment.Body, Is.EqualTo(commentMessage));
+            var newComment = new MergeRequestComment
+            {
+                Note = commentMessage,
+            };
+            var comment = mergeRequestComments.Add(newComment);
+            Assert.That(comment.Note, Is.EqualTo(commentMessage));
+        }
+
+        [Test]
+        [Order(2)]
+        public void GetAllComments()
+        {
+            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Id);
+            var comments = mergeRequestComments.All.ToArray();
+            CollectionAssert.IsNotEmpty(comments);
         }
     }
 }

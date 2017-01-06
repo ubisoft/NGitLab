@@ -5,8 +5,8 @@ namespace NGitLab.Models
     [DataContract]
     public class MergeRequestComment
     {
-        [DataMember(Name = "body")] 
-        public string Body;
+        [DataMember(Name = "note")]
+        public string Note;
 
         [DataMember(Name = "author")]
         public User Author { get; set; }
