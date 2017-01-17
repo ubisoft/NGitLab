@@ -133,7 +133,7 @@ namespace NGitLab.Mock
             Repository.GetCommits("refname").ReturnsForAnyArgs(call => GetCommits((string)call[0]));
             Repository.Tags.Returns(TagClient);
 
-            TagClient.GetEnumerator().Returns(Tags.GetEnumerator());
+            TagClient.All.Returns(Tags);
         }
 
         private IEnumerable<Commit> GetCommits(string refName)

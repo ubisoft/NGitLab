@@ -17,10 +17,10 @@ namespace NGitLab.Tests
             });
 
             Assert.IsNotNull(result);
-            Assert.IsNotNull(Tags.FirstOrDefault(x => x.Name == "v0.5"));
+            Assert.IsNotNull(Tags.All.FirstOrDefault(x => x.Name == "v0.5"));
 
             Tags.Delete("v0.5");
-            Assert.IsNull(Tags.FirstOrDefault(x => x.Name == "v0.5"));
+            Assert.IsNull(Tags.All.FirstOrDefault(x => x.Name == "v0.5"));
         }
 
         private ITagClient Tags

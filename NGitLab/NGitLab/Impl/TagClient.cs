@@ -26,14 +26,6 @@ namespace NGitLab.Impl
             _api.Delete().Stream($"{_tagsPath}/{HttpUtility.UrlEncode(name)}", x => {});
         }
 
-        public IEnumerator<Tag> GetEnumerator()
-        {
-            return _api.Get().GetAll<Tag>(_tagsPath).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        public IEnumerable<Tag> All => _api.Get().GetAll<Tag>(_tagsPath);
     }
 }
