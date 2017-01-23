@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace NGitLab.Models
@@ -23,7 +24,7 @@ namespace NGitLab.Models
 		[DataMember(Name = "issues_enabled")]
         public bool IssuesEnabled;
 
-        [DataMember(Name = "wall_enabled")]
+        [Obsolete("Does not exist anymore in gitlab api")]
         public bool WallEnabled;
 
         [DataMember(Name = "merge_requests_enabled")]
@@ -36,7 +37,7 @@ namespace NGitLab.Models
         public bool WikiEnabled;
 
         [DataMember(Name = "import_url")]
-        public string ImportUrl;
+        public string ImportUrl = "";
 
         [DataMember(Name = "visibility_level")]
         public VisibilityLevel VisibilityLevel;

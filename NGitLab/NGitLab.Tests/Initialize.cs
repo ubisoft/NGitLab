@@ -54,14 +54,12 @@ namespace NGitLab.Tests
             var createdProject = GitLabClient.Projects.Create(new ProjectCreate
             {
                 Description = "desc",
-                ImportUrl = null,
                 IssuesEnabled = true,
                 MergeRequestsEnabled = true,
                 Name = name,
                 NamespaceId = null,
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Public,
-                WallEnabled = true,
                 WikiEnabled = true
             });
 

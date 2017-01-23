@@ -115,7 +115,16 @@ namespace NGitLab.Impl
 
                         JsonObject parsedError;
                         var errorMessage = ExtractErrorMessage(jsonString, out parsedError);
-                        throw new GitLabException($"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. Original call: {fullUrl}")
+                        var exceptionMessage =
+                            $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
+                            $"Original call: {_methodType} {fullUrl}";
+
+                        if (_data != null)
+                        {
+                            exceptionMessage += $". With data {SimpleJson.SerializeObject(_data)}";
+                        }
+
+                        throw new GitLabException(exceptionMessage)
                         {
                             OriginalCall = fullUrl,
                             ErrorObject = parsedError,

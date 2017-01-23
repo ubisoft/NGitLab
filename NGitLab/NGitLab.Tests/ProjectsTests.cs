@@ -47,14 +47,12 @@ namespace NGitLab.Tests
             var project = new ProjectCreate
             {
                 Description = "desc",
-                ImportUrl = null,
                 IssuesEnabled = true,
                 MergeRequestsEnabled = true,
                 Name = "test 2",
                 NamespaceId = null,
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Public,
-                WallEnabled = true,
                 WikiEnabled = true
             };
 
