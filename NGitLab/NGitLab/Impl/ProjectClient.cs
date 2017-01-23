@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Policy;
+using System.Web;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -28,5 +29,44 @@ namespace NGitLab.Impl
         public Project this[string fullName] => _api.Get().To<Project>(Project.Url + "/" + System.Web.HttpUtility.UrlEncode(fullName));
         
         public bool Delete(int id) => _api.Delete().To<bool>(Project.Url + "/" + id);
+
+        public IEnumerable<Project> Get(ProjectQuery query)
+        {
+            string url = Project.Url;
+            if (query.Scope != ProjectQueryScope.Accessible)
+            {
+                url += "/" + query.Scope.ToString().ToLower();
+            }
+
+            url = AddParameter(url, "archived", query.Archived);
+            url = AddParameter(url, "order_by", query.OrderBy);
+            url = AddParameter(url, "search", query.Search);
+            url = AddParameter(url, "simple", query.Simple);
+
+            if (query.Ascending == true)
+            {
+                url = AddParameter(url, "sort", "asc");
+            }
+
+            if (query.Visibility.HasValue)
+            {
+                url = AddParameter(url, "visibility", query.Visibility.ToString());
+            }
+
+            return _api.Get().GetAll<Project>(url);
+        }
+
+        private static string AddParameter<T>(string url, string parameterName, T value)
+        {
+            if (Equals(value, null))
+            {
+                return url;
+            }
+
+            string @operator = !url.Contains("?") ? "?" : "&";
+            var formattedValue = HttpUtility.UrlEncode(value.ToString());
+            var parameter = $"{@operator}{parameterName}={formattedValue}";
+            return url + parameter;
+        }
     }
 }

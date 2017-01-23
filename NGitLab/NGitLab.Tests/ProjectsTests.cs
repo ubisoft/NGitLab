@@ -49,6 +49,21 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        public void GetProjectsByQuery()
+        {
+            var query = new ProjectQuery
+            {
+                Simple = true,
+                Search = Initialize.UnitTestProject.Name
+            };
+
+            var projects = _projects.Get(query).ToArray();
+            Assert.AreEqual(1, projects.Length);
+
+            CollectionAssert.IsNotEmpty(projects);
+        }
+
+        [Test]
         public void CreateDelete()
         {
             var project = new ProjectCreate
