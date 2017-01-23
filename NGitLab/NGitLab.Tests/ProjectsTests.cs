@@ -34,6 +34,13 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        public void GetVisibleProjects()
+        {
+            var projects = _projects.Visible.ToArray();
+            CollectionAssert.IsNotEmpty(projects);
+        }
+
+        [Test]
         public void GetAccessibleProjects()
         {
             var projects = _projects.Accessible.ToArray();

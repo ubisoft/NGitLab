@@ -6,7 +6,7 @@ namespace NGitLab
     public interface IProjectClient
     {
         /// <summary>
-        /// Get a list of projects accessible by the authenticated user.
+        /// Get a list of projects for which the authenticated user is a member.
         /// </summary>
         IEnumerable<Project> Accessible { get; }
 
@@ -14,6 +14,11 @@ namespace NGitLab
         /// Get a list of projects owned by the authenticated user.
         /// </summary>
         IEnumerable<Project> Owned { get; }
+
+        /// <summary>
+        /// Get a list of projects which the authenticated user can see.
+        /// </summary>
+        IEnumerable<Project> Visible { get; }
 
         /// <summary>
         /// Get a list of all GitLab projects (admin only).

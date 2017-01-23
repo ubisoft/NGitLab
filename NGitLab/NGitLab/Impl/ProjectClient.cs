@@ -17,6 +17,8 @@ namespace NGitLab.Impl
 
         public IEnumerable<Project> Owned => _api.Get().GetAll<Project>(Project.Url + "/owned");
 
+        public IEnumerable<Project> Visible => _api.Get().GetAll<Project>(Project.Url + "/visible");
+
         public IEnumerable<Project> All => _api.Get().GetAll<Project>(Project.Url + "/all");
 
         public Project this[int id] => _api.Get().To<Project>(Project.Url + "/" + id);
