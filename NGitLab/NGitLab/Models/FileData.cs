@@ -21,5 +21,23 @@ namespace NGitLab.Models
         public string BlobId;
         [DataMember(Name = "commit_id")]
         public string CommitId;
+        [DataMember(Name = "last_commit_id")]
+        public string LastCommitId;
+
+        public string DecodedContent
+        {
+            get
+            {
+                if(Encoding == "base64")
+                    return Base64Decode(Content);
+                return Content;
+            }
+        }
+
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
     }
 }

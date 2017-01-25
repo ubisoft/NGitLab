@@ -72,7 +72,7 @@
     <Compile Include="Impl\MergeRequestCommentClient.cs" />
     <Compile Include="Impl\MergeRequestCommitClient.cs" />
     <Compile Include="Impl\ProjectHooksClient.cs" />
-    <Compile Include="Impl\FileClient.cs" />
+    <Compile Include="Impl\FilesClient.cs" />
     <Compile Include="Impl\HttpRequestor.cs" />
     <Compile Include="Impl\MethodType.cs" />
     <Compile Include="Impl\ProjectClient.cs" />
