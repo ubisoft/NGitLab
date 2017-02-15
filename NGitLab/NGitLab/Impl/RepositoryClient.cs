@@ -63,5 +63,18 @@ namespace NGitLab.Impl
         {
             get { return new ProjectHooksClient(_api, _projectPath); }
         }
-    }
+
+		public Tag CreateTag(TagCreate tag)
+		{
+			return _api
+				.Post().With(tag)
+				.To<Tag>(_repoPath + "/tags");
+		}
+
+		public bool DeleteTag(String tagName)
+		{
+			Tag tag = _api.Delete().To<Tag>(_repoPath + "/tags/" + tagName);
+			return (tag == null || tag.Commit == null);
+		}
+	}
 }

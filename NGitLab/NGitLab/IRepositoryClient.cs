@@ -20,5 +20,9 @@ namespace NGitLab
         IBranchClient Branches { get; }
 
         IProjectHooksClient ProjectHooks { get; }
-    }
+
+		Tag CreateTag(TagCreate tag);
+
+		bool DeleteTag(String tagName);
+	}
 }

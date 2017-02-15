@@ -33,5 +33,16 @@ namespace NGitLab.Tests.RepositoryClient
         {
             CollectionAssert.IsNotEmpty(_repo.GetCommitDiff(_repo.Commits.First().Id).ToArray());
         }
-    }
+
+		[Test]
+		[Category("Server_Required")]
+		public void CreateTag()
+		{
+			Models.TagCreate tagCreate = new Models.TagCreate();
+			tagCreate.Ref = "master";
+			tagCreate.TagName = "my_test_tag";
+
+			Assert.IsNotNull(_repo.CreateTag(tagCreate));
+		}
+	}
 }
