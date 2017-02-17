@@ -99,6 +99,7 @@
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\SingleCommit.cs" />
     <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\TagCreate.cs" />
     <Compile Include="Models\TreeOrBlob.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserUpsert.cs" />
