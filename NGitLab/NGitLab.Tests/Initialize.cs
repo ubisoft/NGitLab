@@ -59,7 +59,7 @@ namespace NGitLab.Tests
                 Name = name,
                 NamespaceId = null,
                 SnippetsEnabled = true,
-                VisibilityLevel = VisibilityLevel.Public,
+                VisibilityLevel = VisibilityLevel.Internal,
                 WikiEnabled = true
             });
 
