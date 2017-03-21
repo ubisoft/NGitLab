@@ -91,50 +91,55 @@ namespace NGitLab.Impl
                 req.Headers.Add("Content-Length", "0");
             }
 
+            using (var response = GetResponse(req, fullUrl, _data))
+            {
+                using (var stream = response.GetResponseStream())
+                {
+                    parser(stream);
+                }
+            }
+        }
+
+        private static WebResponse GetResponse(WebRequest req, Uri fullUrl, object data)
+        {
             try
             {
-                using (var response = req.GetResponse())
-                {
-                    using (var stream = response.GetResponseStream())
-                    {
-                        parser(stream);
-                    }
-                }
+                return req.GetResponse();
             }
             catch (WebException wex)
             {
-                if (wex.Response != null)
+                if (wex.Response == null)
                 {
-                    using (var errorResponse = (HttpWebResponse)wex.Response)
-                    {
-                        string jsonString;
-                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
-                        {
-                            jsonString = reader.ReadToEnd();
-                        }
-
-                        JsonObject parsedError;
-                        var errorMessage = ExtractErrorMessage(jsonString, out parsedError);
-                        var exceptionMessage =
-                            $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
-                            $"Original call: {_methodType} {fullUrl}";
-
-                        if (_data != null)
-                        {
-                            exceptionMessage += $". With data {SimpleJson.SerializeObject(_data)}";
-                        }
-
-                        throw new GitLabException(exceptionMessage)
-                        {
-                            OriginalCall = fullUrl,
-                            ErrorObject = parsedError,
-                            StatusCode = errorResponse.StatusCode,
-                            ErrorMessage = errorMessage,
-                        };
-                    }
+                    throw;
                 }
-                else
-                    throw wex;
+
+                using (var errorResponse = (HttpWebResponse)wex.Response)
+                {
+                    string jsonString;
+                    using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                    {
+                        jsonString = reader.ReadToEnd();
+                    }
+
+                    JsonObject parsedError;
+                    var errorMessage = ExtractErrorMessage(jsonString, out parsedError);
+                    var exceptionMessage =
+                        $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
+                        $"Original call: {req.Method} {fullUrl}";
+
+                    if (data != null)
+                    {
+                        exceptionMessage += $". With data {SimpleJson.SerializeObject(data)}";
+                    }
+
+                    throw new GitLabException(exceptionMessage)
+                    {
+                        OriginalCall = fullUrl,
+                        ErrorObject = parsedError,
+                        StatusCode = errorResponse.StatusCode,
+                        ErrorMessage = errorMessage,
+                    };
+                }
             }
         }
 
@@ -230,7 +235,7 @@ namespace NGitLab.Impl
                         var request = SetupConnection(_nextUrlToLoad, MethodType.Get);
                         request.Headers["PRIVATE-TOKEN"] = _apiToken;
 
-                        using (var response = request.GetResponse())
+                        using (var response = GetResponse(request, _nextUrlToLoad, null))
                         {
                             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
                             var link = response.Headers["Link"];
