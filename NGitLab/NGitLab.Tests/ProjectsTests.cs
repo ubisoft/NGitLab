@@ -71,10 +71,10 @@ namespace NGitLab.Tests
                 Description = "desc",
                 IssuesEnabled = true,
                 MergeRequestsEnabled = true,
-                Name = "test 2",
+                Name = "CreateDelete_Test_" + new Random().Next(),
                 NamespaceId = null,
                 SnippetsEnabled = true,
-                VisibilityLevel = VisibilityLevel.Public,
+                VisibilityLevel = VisibilityLevel.Internal,
                 WikiEnabled = true
             };
 

@@ -30,7 +30,7 @@ build:
 ";
 
                 var repository = Initialize.GitLabClient.GetRepository(projectId);
-                repository.Files.Update(new FileUpsert
+                repository.Files.Create(new FileUpsert
                 {
                     Path = ".gitlab-ci.yml",
                     Branch = "master",

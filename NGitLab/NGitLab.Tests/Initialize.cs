@@ -21,6 +21,8 @@ namespace NGitLab.Tests
 
         public static bool IsAdmin => GitLabClient.Users.Current.IsAdmin;
 
+        public static string ProjectName;
+
         [OneTimeSetUp]
         public void Setup()
         {
@@ -32,21 +34,19 @@ namespace NGitLab.Tests
 
             GitLabClient = new GitLabClient(GitLabHost, apiToken: GitLabToken);
 
-            // Create a test project with merge request etc.
-            if (DeleteProject("Unit_Test", @try: true))
-            {
-                Console.WriteLine("Cleanup project from last unit test run. Waiting for the server to process.");
-                Thread.Sleep(TimeSpan.FromSeconds(10));
-            }
+            // Delete project is really slow now, creating a new project name at each run
+            // => https://gitlab.com/gitlab-com/support-forum/issues/1569
+            ProjectName = "Unit_Test_" + new Random().Next();
 
-            UnitTestProject = CreateProject("Unit_Test");
+            // Create a test project with merge request etc.
+            UnitTestProject = CreateProject(ProjectName);
         }
 
         [OneTimeTearDown]
         public void Teardown()
         {
             // Remove the test project again
-            DeleteProject("Unit_Test");
+            DeleteProject(ProjectName);
         }
 
         private Project CreateProject(string name)
