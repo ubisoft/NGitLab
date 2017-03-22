@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GitLabException.cs" />
+    <Compile Include="Impl\NamespacesClient.cs" />
+    <Compile Include="INamespacesClient.cs" />
     <Compile Include="Impl\PipelineClient.cs" />
     <Compile Include="Impl\SshKeyClient.cs" />
     <Compile Include="ISshKeyClient.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\BranchCreate.cs" />
     <Compile Include="Models\BranchRemovalStatus.cs" />
+    <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Label.cs" />
     <Compile Include="Models\Commit.cs" />
     <Compile Include="Models\CommitInfo.cs" />
@@ -142,9 +145,9 @@
     <Compile Include="Impl\SimpleJson.cs" />
     <Compile Include="Models\Runner.cs" />
     <Compile Include="Sha1.cs" />
-    <Compile Include="INamespaceClient.cs" />
-    <Compile Include="Impl\NamespaceClient.cs" />
-    <Compile Include="Models\NamespaceCreate.cs" />
+    <Compile Include="IGroupsClient.cs" />
+    <Compile Include="Impl\GroupsClient.cs" />
+    <Compile Include="Models\GroupCreate.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
