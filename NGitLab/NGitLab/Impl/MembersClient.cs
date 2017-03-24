@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NGitLab.Models;
 
@@ -19,9 +20,15 @@ namespace NGitLab.Impl
             return GetAll(Project.Url + "/" + System.Web.HttpUtility.UrlEncode(projectId));
         }
 
+        [Obsolete("Use OfGroup")]
         public IEnumerable<Membership> OfNamespace(string groupId)
         {
-            return GetAll(Namespace.Url + "/" + System.Web.HttpUtility.UrlEncode(groupId));
+            return OfGroup(groupId);
+        }
+
+        public IEnumerable<Membership> OfGroup(string groupId)
+        {
+            return GetAll(GroupsClient.Url + "/" + System.Web.HttpUtility.UrlEncode(groupId));
         }
     }
 }

@@ -5,7 +5,7 @@
         IUserClient Users { get; }
         IProjectClient Projects { get; }
         IIssueClient Issues { get; }
-        INamespaceClient Groups { get; }
+        IGroupsClient Groups { get; }
         ILabelClient Labels { get; }
         IRunnerClient Runners { get; }
         IRepositoryClient GetRepository(int projectId);

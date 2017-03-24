@@ -10,7 +10,8 @@ namespace NGitLab
         public IUserClient Users { get; }
         public IProjectClient Projects { get; }
         public IIssueClient Issues { get; }
-        public INamespaceClient Groups { get; }
+        public IGroupsClient Groups { get; }
+        public INamespacesClient Namespaces { get; }
         public ILabelClient Labels { get; }
         public IRunnerClient Runners { get; }
 
@@ -31,7 +32,8 @@ namespace NGitLab
             Projects = new ProjectClient(_api);
             Runners = new RunnerClient(_api);
             Issues = new IssueClient(_api);
-            Groups = new NamespaceClient(_api);
+            Groups = new GroupsClient(_api);
+            Namespaces = new NamespacesClient(_api);
             Labels = new LabelClient(_api);
         }
 

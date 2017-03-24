@@ -6,8 +6,6 @@ namespace NGitLab.Models
     [DataContract]
     public class Namespace
     {
-        public const string Url = "/groups";
-
         [DataMember(Name = "id")]
         public int Id;
 
@@ -19,5 +17,16 @@ namespace NGitLab.Models
 
         [DataMember(Name = "kind")]
         public string Kind;
+
+        public enum Type
+        {
+            Group,
+            User
+        }
+
+        public Type GetKind()
+        {
+            return (Type) Enum.Parse(typeof(Type), Kind, true);
+        }
     }
 }
