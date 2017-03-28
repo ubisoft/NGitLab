@@ -35,6 +35,9 @@ namespace NGitLab.Tests
 
             Assert.IsNotNull(thisTagPipeline);
             Assert.AreEqual(_pipelines[thisTagPipeline.Id].Ref, "NewTagForBuild");
+
+            var jobs = _pipelines.GetJobs(thisTagPipeline.Id);
+            Assert.That(jobs.Length > 0);
         }
     }
 }

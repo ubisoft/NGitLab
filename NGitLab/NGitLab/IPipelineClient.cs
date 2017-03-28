@@ -16,5 +16,10 @@ namespace NGitLab
         /// <param name="id"></param>
         /// <returns></returns>
         Pipeline this[int id] { get; }
+
+        /// <summary>
+        /// Returns the jobs of a pipeline.
+        /// </summary>
+        Job[] GetJobs(int pipelineId);
     }
 }

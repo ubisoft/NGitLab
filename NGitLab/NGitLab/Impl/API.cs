@@ -2,6 +2,9 @@
 
 namespace NGitLab.Impl
 {
+    /// <summary>
+    /// View api documentation at: https://docs.gitlab.com/ce/api/README.html
+    /// </summary>
     public class API
     {
         private readonly GitLabCredentials _credentials;
