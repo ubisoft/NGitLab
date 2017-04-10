@@ -37,7 +37,7 @@ namespace NGitLab.Models
         public JobArtifact Artifacts;
 
         [DataMember(Name = "runner")]
-        public string Runner;
+        public JobRunner Runner;
 
         [DataMember(Name = "status")]
         public BuildStatus Status;
@@ -47,6 +47,25 @@ namespace NGitLab.Models
 
         [DataMember(Name = "user")]
         public User User;
+
+        [DataContract]
+        public class JobRunner
+        {
+            [DataMember(Name = "id")]
+            public int Id;
+
+            [DataMember(Name = "name")]
+            public string Name;
+
+            [DataMember(Name = "active")]
+            public bool Active;
+
+            [DataMember(Name = "description")]
+            public string Description;
+
+            [DataMember(Name = "is_shared")]
+            public bool IsShared;
+        }
 
         [DataContract]
         public class JobPipeline
