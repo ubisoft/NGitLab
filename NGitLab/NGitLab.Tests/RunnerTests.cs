@@ -13,12 +13,23 @@ namespace NGitLab.Tests
             var projectId = Initialize.UnitTestProject.Id;
 
             var runnerToEnable = GetDefaultRunner();
+            var runners = Initialize.GitLabClient.Runners;
 
-            Initialize.GitLabClient.Runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
-            Assert.IsTrue(Initialize.GitLabClient.Runners[runnerToEnable.Id].Projects.Any(x => x.Id == projectId));
+            if (IsEnabled(runnerToEnable, projectId))
+            {
+                runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
+            }
 
-            Initialize.GitLabClient.Runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
-            Assert.IsFalse(Initialize.GitLabClient.Runners[runnerToEnable.Id].Projects.Any(x => x.Id == projectId));
+            runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
+            Assert.IsTrue(IsEnabled(runnerToEnable, projectId));
+
+            runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
+            Assert.IsFalse(IsEnabled(runnerToEnable, projectId));
+        }
+
+        private static bool IsEnabled(Runner runner, int projectId)
+        {
+            return Initialize.GitLabClient.Runners[runner.Id].Projects.Any(x => x.Id == projectId);
         }
 
         public static Runner GetDefaultRunner()
