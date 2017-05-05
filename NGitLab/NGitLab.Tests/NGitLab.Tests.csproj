@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FilesTests.cs" />
+    <Compile Include="APITests.cs" />
     <Compile Include="HttpRequestorTests.cs" />
     <Compile Include="GroupsTests.cs" />
     <Compile Include="NamespacesTests.cs" />

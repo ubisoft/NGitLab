@@ -1,4 +1,5 @@
-﻿using NGitLab.Models;
+﻿using System;
+using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
@@ -30,17 +31,34 @@ namespace NGitLab.Impl
             {
                 _credentials.ApiToken = OpenPrivateSession();
             }
-            
+
             return new HttpRequestor(_credentials.HostUrl, _credentials.ApiToken, methodType);
         }
 
         private string OpenPrivateSession()
         {
             var httpRequestor = new HttpRequestor(_credentials.HostUrl, "", MethodType.Post);
-            var url = $"/session?login={System.Web.HttpUtility.UrlEncode(_credentials.UserName)}&password={System.Web.HttpUtility.UrlEncode(_credentials.Password)}";
-            var session = httpRequestor.To<Session>(url);
+            var url =
+                $"/session?login={System.Web.HttpUtility.UrlEncode(_credentials.UserName)}&password={System.Web.HttpUtility.UrlEncode(_credentials.Password)}";
 
-            return session.PrivateToken;
+            try
+            {
+                var session = httpRequestor.To<Session>(url);
+                return session.PrivateToken;
+            }
+            catch (GitLabException ex)
+            {
+                const string hiddenPassword = "*****";
+
+                var securedException = new GitLabException(ex.Message.Replace(_credentials.Password, hiddenPassword))
+                {
+                    OriginalCall = new Uri(ex.OriginalCall.OriginalString.Replace(_credentials.Password, hiddenPassword)),
+                    StatusCode = ex.StatusCode,
+                    ErrorObject = ex.ErrorObject
+                };
+
+                throw securedException;
+            }
         }
     }
 }

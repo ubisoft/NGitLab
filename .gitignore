@@ -187,3 +187,4 @@ UpgradeLog*.htm
 FakesAssemblies/
 *.nupkg
 project.lock.json
+*.targets
