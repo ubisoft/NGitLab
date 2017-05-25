@@ -21,7 +21,11 @@ namespace NGitLab.Impl
 
         public Job[] GetJobs(int pipelineId)
         {
-            return _api.Get().GetAll<Job>($"{_pipelinesPath}/{pipelineId}/jobs").ToArray();
+            // For a reason gitlab returns the jobs in the reverse order as
+            // they appear in their UI. Here we reverse them!
+            
+            var jobs = _api.Get().GetAll<Job>($"{_pipelinesPath}/{pipelineId}/jobs").Reverse().ToArray();
+            return jobs;
         }
     }
 }
