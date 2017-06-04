@@ -5,6 +5,6 @@ namespace NGitLab
 {
     public interface IMergeRequestCommitClient
     {
-        IEnumerable<Commit> All { get; }
+        IEnumerable<Commit> All();
     }
 }

@@ -8,7 +8,7 @@ namespace NGitLab.Impl
     {
         public readonly string APIToken;
         private readonly string _hostUrl;
-        private const string APINamespace = "/api/v3";
+        private const string APINamespace = "/api/v4";
 
         public API(string hostUrl, string apiToken)
         {

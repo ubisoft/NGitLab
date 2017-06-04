@@ -14,9 +14,9 @@ namespace NGitLab.Impl
             _projectPath = Project.Url + "/" + projectId;
         }
 
-        public IEnumerable<MergeRequest> All
+        public IEnumerable<MergeRequest> All()
         {
-            get { return _api.Get().GetAll<MergeRequest>(_projectPath + "/merge_requests"); }
+            return _api.Get().GetAll<MergeRequest>(_projectPath + "/merge_requests");
         }
 
         public IEnumerable<MergeRequest> AllInState(MergeRequestState state)
@@ -24,9 +24,9 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<MergeRequest>(_projectPath + "/merge_requests?state=" + state);
         }
 
-        public MergeRequest this[int id]
+        public MergeRequest Get(int id)
         {
-            get { return _api.Get().To<MergeRequest>(_projectPath + "/merge_request/" + id); }
+            return _api.Get().To<MergeRequest>(_projectPath + "/merge_request/" + id);
         }
 
         public MergeRequest Create(MergeRequestCreate mergeRequest)

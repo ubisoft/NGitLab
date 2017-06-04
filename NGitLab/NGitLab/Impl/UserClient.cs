@@ -12,20 +12,14 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        public IEnumerable<User> All
+        public IEnumerable<User> All()
         {
-            get
-            {
-                return _api.Get().GetAll<User>(User.Url);
-            }
+            return _api.Get().GetAll<User>(User.Url);
         }
 
-        public User this[int id]
+        public User Get(int id)
         {
-            get
-            {
-                return _api.Get().To<User>(User.Url + "/" + id);
-            }
+            return _api.Get().To<User>(User.Url + "/" + id);
         }
 
         public User Create(UserUpsert user)
@@ -43,12 +37,9 @@ namespace NGitLab.Impl
             _api.Delete().To<User>(User.Url + "/" + userId);
         }
 
-        public Session Current
+        public Session Current()
         {
-            get
-            {
-                return _api.Get().To<Session>("/user");
-            }
+            return _api.Get().To<Session>("/user");
         }
     }
 }

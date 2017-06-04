@@ -13,7 +13,7 @@ namespace NGitLab.Tests.RepositoryClient
         [OneTimeSetUp]
         public void SetUp()
         {
-            _project = Config.Connect().Projects.Owned.Single();
+            _project = Config.Connect().Projects.Owned().Single();
             RepositoryClient = Config.Connect().GetRepository(_project.Id);
         }
     }

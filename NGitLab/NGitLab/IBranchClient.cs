@@ -5,8 +5,8 @@ namespace NGitLab
 {
     public interface IBranchClient
     {
-        IEnumerable<Branch> All { get; }
-        Branch this[string name] { get; }
+        IEnumerable<Branch> All();
+        Branch Get(string name);
         Branch Protect(string name);
         Branch Unprotect(string name);
         Branch Create(BranchCreate branch);

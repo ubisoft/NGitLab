@@ -14,14 +14,14 @@ namespace NGitLab.Impl
             _repoPath = repoPath;
         }
 
-        public IEnumerable<Branch> All
+        public IEnumerable<Branch> All()
         {
-            get { return _api.Get().GetAll<Branch>(_repoPath + "/branches"); }
+            return _api.Get().GetAll<Branch>(_repoPath + "/branches");
         }
-            
-        public Branch this[string name]
+
+        public Branch Get(string name)
         {
-            get { return _api.Get().To<Branch>(_repoPath + "/branches/" + name); }
+            return _api.Get().To<Branch>(_repoPath + "/branches/" + name);
         }
 
         public Branch Protect(string name)

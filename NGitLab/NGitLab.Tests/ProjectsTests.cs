@@ -25,7 +25,7 @@ namespace NGitLab.Tests
         [Category("Server_Required")]
         public void GetAllProjects()
         {
-            var projects = _projects.All.ToArray();
+            var projects = _projects.All().ToArray();
 
             CollectionAssert.IsNotEmpty(projects);
         }
@@ -34,7 +34,7 @@ namespace NGitLab.Tests
         [Category("Server_Required")]
         public void GetOwnedProjects()
         {
-            var projects = _projects.Owned.ToArray();
+            var projects = _projects.Owned().ToArray();
 
             CollectionAssert.IsNotEmpty(projects);
         }
@@ -43,7 +43,7 @@ namespace NGitLab.Tests
         [Category("Server_Required")]
         public void GetAccessibleProjects()
         {
-            var projects = _projects.Accessible.ToArray();
+            var projects = _projects.Accessible().ToArray();
 
             CollectionAssert.IsNotEmpty(projects);
         }
@@ -60,7 +60,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(p.MergeRequestsEnabled, created.MergeRequestsEnabled);
             Assert.AreEqual(p.Name, created.Name);
 
-            Assert.AreEqual(_projects.Delete(created.Id),true);
+            Assert.AreEqual(_projects.Delete(created.Id), true);
         }
 
         private ProjectCreate CreateProject(out Project created, string name)

@@ -18,7 +18,7 @@ namespace NGitLab.Tests
         [Category("Server_Required")]
         public void Current()
         {
-            var session = _users.Current;
+            var session = _users.Current();
 
             Assert.AreNotEqual(default(DateTime), session.CreatedAt);
             Assert.NotNull(session.Email);
@@ -31,7 +31,7 @@ namespace NGitLab.Tests
         [Category("Server_Required")]
         public void GetUsers()
         {
-            var users = _users.All.ToArray();
+            var users = _users.All().ToArray();
 
             CollectionAssert.IsNotEmpty(users);
         }
@@ -40,9 +40,9 @@ namespace NGitLab.Tests
         [Category("Server_Required")]
         public void GetUser()
         {
-            var user = _users[1];
+            var user = _users.Get(1);
 
-            Assert.AreEqual("user", user.Username);
+            Assert.AreNotEqual(string.Empty, user.Username);
             Assert.AreEqual(true, user.CanCreateGroup);
         }
 

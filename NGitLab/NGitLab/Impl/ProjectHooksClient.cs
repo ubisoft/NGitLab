@@ -14,14 +14,14 @@ namespace NGitLab.Impl
             _path = projectPath + "/hooks";
         }
 
-        public IEnumerable<ProjectHook> All
+        public IEnumerable<ProjectHook> All()
         {
-            get { return _api.Get().GetAll<ProjectHook>(_path); }
+            return _api.Get().GetAll<ProjectHook>(_path);
         }
 
-        public ProjectHook this[int hookId]
+        public ProjectHook Get(int hookId)
         {
-            get { return _api.Get().To<ProjectHook>(_path + "/" + hookId); }
+            return _api.Get().To<ProjectHook>(_path + "/" + hookId);
         }
 
         public ProjectHook Create(ProjectHookUpsert hook)

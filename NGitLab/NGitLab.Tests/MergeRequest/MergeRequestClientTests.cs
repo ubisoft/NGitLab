@@ -17,7 +17,7 @@ namespace NGitLab.Tests.MergeRequest
         [Category("Server_Required")]
         public void GetAllMergeRequests()
         {
-            var mergeRequests = _mergeRequest.All.ToArray();
+            var mergeRequests = _mergeRequest.All().ToArray();
             CollectionAssert.IsNotEmpty(mergeRequests);
         }
 
@@ -34,7 +34,7 @@ namespace NGitLab.Tests.MergeRequest
         public void GetMergeRequestById()
         {
             const int mergeReqestId = 5;
-            Assert.AreEqual(mergeReqestId, _mergeRequest[mergeReqestId].Id);
+            Assert.AreEqual(mergeReqestId, _mergeRequest.Get(mergeReqestId).Id);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace NGitLab.Tests.MergeRequest
         {
             var mergeRequest = _mergeRequest.Accept(
                 mergeRequestId: 6,
-                message: new MergeCommitMessage {Message = "Merge my-super-feature into master"});
+                message: new MergeCommitMessage { Message = "Merge my-super-feature into master" });
 
             Assert.That(mergeRequest.State, Is.EqualTo(MergeRequestState.merged.ToString()));
         }

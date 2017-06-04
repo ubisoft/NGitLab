@@ -8,7 +8,7 @@ namespace NGitLab
         /// <summary>
         /// Get a list of all project issues
         /// </summary>
-        IEnumerable<Issue> Owned { get; }
+        IEnumerable<Issue> Owned();
 
         /// <summary>
         /// Get a list of issues for the specified project.

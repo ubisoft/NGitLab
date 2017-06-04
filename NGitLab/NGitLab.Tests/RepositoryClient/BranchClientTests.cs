@@ -16,14 +16,14 @@ namespace NGitLab.Tests.RepositoryClient
         [Category("Server_Required")]
         public void GetAll()
         {
-            CollectionAssert.IsNotEmpty(_branches.All.ToArray());
+            CollectionAssert.IsNotEmpty(_branches.All().ToArray());
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetByName()
         {
-            var branch = _branches["master"];
+            var branch = _branches.Get("master");
             Assert.IsNotNull(branch);
             Assert.IsNotNull(branch.Name);
         }

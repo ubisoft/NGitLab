@@ -8,12 +8,12 @@ namespace NGitLab
         /// <summary>
         /// Get a list of projects accessible by the authenticated user.
         /// </summary>
-        IEnumerable<Namespace> Accessible { get; }
+        IEnumerable<Namespace> Accessible();
 
-        Namespace this[int id] { get; }
+        Namespace Get(int id);
 
         Namespace Create(NamespaceCreate group);
-        
+
         void Delete(int id);
     }
 }

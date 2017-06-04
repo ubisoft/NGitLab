@@ -17,7 +17,7 @@ namespace NGitLab.Tests.MergeRequest
         [Category("Server_Required")]
         public void GetAllComments()
         {
-            var comments = _mergeRequestComments.All.ToArray();
+            var comments = _mergeRequestComments.All().ToArray();
             CollectionAssert.IsNotEmpty(comments);
         }
 

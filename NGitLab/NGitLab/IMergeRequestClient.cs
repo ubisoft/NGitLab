@@ -5,9 +5,9 @@ namespace NGitLab
 {
     public interface IMergeRequestClient
     {
-        IEnumerable<MergeRequest> All { get; }
+        IEnumerable<MergeRequest> All();
         IEnumerable<MergeRequest> AllInState(MergeRequestState state);
-        MergeRequest this[int id] { get; }
+        MergeRequest Get(int id);
 
         MergeRequest Create(MergeRequestCreate mergeRequest);
         MergeRequest Update(int mergeRequestId, MergeRequestUpdate mergeRequest);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -12,20 +13,14 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        public IEnumerable<Namespace> Accessible
+        public IEnumerable<Namespace> Accessible()
         {
-            get
-            {
-                return _api.Get().GetAll<Namespace>(Namespace.Url);
-            }
+            return _api.Get().GetAll<Namespace>(Namespace.Url);
         }
 
-        public Namespace this[int id]
+        public Namespace Get(int id)
         {
-            get
-            {
-                return _api.Get().To<Namespace>(Namespace.Url + "/" + id);
-            }
+            return _api.Get().To<Namespace>(Namespace.Url + "/" + id);
         }
 
         public Namespace Create(NamespaceCreate group)

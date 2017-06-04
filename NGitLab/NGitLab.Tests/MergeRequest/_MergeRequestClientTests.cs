@@ -13,7 +13,7 @@ namespace NGitLab.Tests.MergeRequest
         [OneTimeSetUp]
         public void SetUp()
         {
-            Project = Config.Connect().Projects.Owned.First(project => project.Name == "mergeme");
+            Project = Config.Connect().Projects.Owned().First(project => project.Name == "mergeme");
             MergeRequestClient = Config.Connect().GetMergeRequest(Project.Id);
         }
     }

@@ -18,7 +18,7 @@ namespace NGitLab.Tests.RepositoryClient
         [Category("Server_Required")]
         public void GetAll()
         {
-            CollectionAssert.IsEmpty(_hooks.All.ToArray());
+            CollectionAssert.IsEmpty(_hooks.All().ToArray());
         }
 
         [Test]
@@ -61,12 +61,12 @@ namespace NGitLab.Tests.RepositoryClient
 
         private void ThereIsOneHook()
         {
-            Assert.AreEqual(1, _hooks.All.ToArray().Length);
+            Assert.AreEqual(1, _hooks.All().ToArray().Length);
         }
 
         private void ThereIsNoHook()
         {
-            CollectionAssert.IsEmpty(_hooks.All.ToArray());
+            CollectionAssert.IsEmpty(_hooks.All().ToArray());
         }
     }
 }

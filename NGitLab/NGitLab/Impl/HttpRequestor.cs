@@ -155,7 +155,7 @@ namespace NGitLab.Impl
                         var request = SetupConnection(_nextUrlToLoad, MethodType.Get);
                         request.Headers["PRIVATE-TOKEN"] = _apiToken;
 
-                        using (var response = request.GetResponse())
+                        using (var response = request.GetResponseAsync().Result)
                         {
                             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
                             var link = response.Headers["Link"];
@@ -239,6 +239,14 @@ namespace NGitLab.Impl
             request.Method = methodType.ToString().ToUpperInvariant();
             request.Headers.Add("Accept-Encoding", "gzip");
             request.AutomaticDecompression = DecompressionMethods.GZip;
+
+#if DEBUG
+            ServicePointManager.ServerCertificateValidationCallback = new
+                RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
+#endif
 
             return request;
         }

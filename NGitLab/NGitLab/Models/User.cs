@@ -38,10 +38,10 @@ namespace NGitLab.Models
         [DataMember(Name = "blocked")]
         public bool Blocked;
 
-        [DataMember(Name="created_at")]
+        [DataMember(Name = "created_at")]
         public DateTime CreatedAt;
 
-        [DataMember(Name="avatar_url")]
+        [DataMember(Name = "avatar_url")]
         public string AvatarURL;
 
         [DataMember(Name = "bio")]
@@ -50,22 +50,25 @@ namespace NGitLab.Models
         [DataMember(Name = "color_scheme_id")]
         public int ColorSchemeId;
 
-        [DataMember(Name="theme_id")]
+        [DataMember(Name = "theme_id")]
         public int ThemeId;
 
-        [DataMember(Name="extern_uid")]
+        [DataMember(Name = "extern_uid")]
         public string ExternUid;
 
-        [DataMember(Name="website_url")]
+        [DataMember(Name = "website_url")]
         public string WebsiteURL;
 
-        [DataMember(Name="is_admin")]
+        [DataMember(Name = "is_admin")]
         public bool IsAdmin;
 
-        [DataMember(Name="can_create_group")]
+        [DataMember(Name = "can_create_group")]
         public bool CanCreateGroup;
 
-        [DataMember(Name="can_create_project")]
+        [DataMember(Name = "can_create_project")]
         public bool CanCreateProject;
+
+        [DataMember(Name = "two_factor_enabled")]
+        public bool TwoFactorEnabled { get; set; }
     }
 }

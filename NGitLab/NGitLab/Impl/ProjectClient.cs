@@ -12,36 +12,24 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        public IEnumerable<Project> Accessible
+        public IEnumerable<Project> Accessible()
         {
-            get
-            {
-                return _api.Get().GetAll<Project>(Project.Url);
-            }
+            return _api.Get().GetAll<Project>(Project.Url);
         }
 
-        public IEnumerable<Project> Owned
+        public IEnumerable<Project> Owned()
         {
-            get
-            {
-                return _api.Get().GetAll<Project>(Project.Url + "/owned");
-            }
+            return _api.Get().GetAll<Project>(Project.Url + "/owned");
         }
 
-        public IEnumerable<Project> All
+        public IEnumerable<Project> All()
         {
-            get
-            {
-                return _api.Get().GetAll<Project>(Project.Url + "/all");
-            }
+            return _api.Get().GetAll<Project>(Project.Url + "/all");
         }
 
-        public Project this[int id]
+        public Project Get(int id)
         {
-            get
-            {
-                return _api.Get().To<Project>(Project.Url + "/" + id);
-            }
+            return _api.Get().To<Project>(Project.Url + "/" + id);
         }
 
         public Project Create(ProjectCreate project)
