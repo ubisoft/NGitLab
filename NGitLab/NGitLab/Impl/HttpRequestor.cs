@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace NGitLab.Impl
 {
@@ -38,7 +40,13 @@ namespace NGitLab.Impl
         public T To<T>(string tailAPIUrl)
         {
             var result = default(T);
-            Stream(tailAPIUrl, s => result = SimpleJson.DeserializeObject<T>(new StreamReader(s).ReadToEnd()));
+            string json = null;
+            Stream(tailAPIUrl, s =>
+            {
+                string data = new StreamReader(s).ReadToEnd();
+                result = JsonConvert.DeserializeObject<T>(data);
+                json = data;
+            });
             return result;
         }
 
@@ -77,7 +85,7 @@ namespace NGitLab.Impl
                             JsonError jsonError;
                             try
                             {
-                                jsonError = SimpleJson.DeserializeObject<JsonError>(jsonString);
+                                jsonError = JsonConvert.DeserializeObject<JsonError>(jsonString);
                             }
                             catch (Exception ex)
                             {
@@ -168,7 +176,7 @@ namespace NGitLab.Impl
                             }
 
                             var stream = response.GetResponseStream();
-                            _buffer.AddRange(SimpleJson.DeserializeObject<T[]>(new StreamReader(stream).ReadToEnd()));
+                            _buffer.AddRange(JsonConvert.DeserializeObject<T[]>(new StreamReader(stream).ReadToEnd()));
                         }
 
                         return _buffer.Count > 0;
@@ -209,10 +217,9 @@ namespace NGitLab.Impl
 
             using (var writer = new StreamWriter(request.GetRequestStream()))
             {
-                var data = SimpleJson.SerializeObject(_data);
+                var data = JsonConvert.SerializeObject(_data);
                 writer.Write(data);
                 writer.Flush();
-                writer.Close();
             }
         }
 
