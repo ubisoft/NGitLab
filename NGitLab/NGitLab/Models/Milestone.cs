@@ -7,24 +7,24 @@ namespace NGitLab.Models
     public class Milestone
     {
         [DataMember(Name = "id")]
-        public int Id;
+        public int Id { get; set; }
 
         [DataMember(Name = "title")]
-        public string Title;
+        public string Title { get; set; }
 
         [DataMember(Name = "description")]
-        public string Description;
+        public string Description { get; set; }
 
         [DataMember(Name = "due_date")]
-        public string DueDate;
+        public string DueDate { get; set; }
 
         [DataMember(Name = "state")]
-        public string State;
+        public string State { get; set; }
 
         [DataMember(Name = "created_at")]
-        public DateTime CreatedAt;
+        public DateTime CreatedAt { get; set; }
 
         [DataMember(Name = "updated_at")]
-        public DateTime UpdatedAt;
+        public DateTime UpdatedAt { get; set; }
     }
 }

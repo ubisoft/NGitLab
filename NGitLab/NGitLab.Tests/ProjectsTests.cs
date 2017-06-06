@@ -13,7 +13,7 @@ namespace NGitLab.Tests
         public ProjectsTests()
         {
             _projects = Config.Connect().Projects;
-            CreateProject(out _created, "default");
+            CreateProject(out _created, "default-project-tests", false);
         }
 
         public void Dispose()
@@ -25,7 +25,20 @@ namespace NGitLab.Tests
         [Category("Server_Required")]
         public void GetStarredProjects()
         {
-            _projects.Starred().ShouldNotBeEmpty();
+            Project _starcreated = null;
+            try
+            {
+
+                CreateProject(out _starcreated, "default-project-starred", true);
+                _projects.Starred().ShouldNotBeEmpty();
+            }
+            finally
+            {
+                if (_starcreated != null)
+                {
+                    _projects.Delete(_starcreated.Id);
+                }
+            }
         }
 
         [Test]
@@ -46,18 +59,28 @@ namespace NGitLab.Tests
         [Category("Server_Required")]
         public void CreateDelete()
         {
-            Project created;
-            var p = CreateProject(out created, "test2");
+            Project created2 = null;
 
-            created.Description.ShouldBe(p.Description);
-            created.IssuesEnabled.ShouldBe(p.IssuesEnabled);
-            created.MergeRequestsEnabled.ShouldBe(p.MergeRequestsEnabled);
-            created.Name.ShouldBe(p.Name);
+            try
+            {
+                var p = CreateProject(out created2, "test2", false);
 
-            _projects.Delete(created.Id).ShouldBeTrue();
+                created2.Description.ShouldBe(p.Description);
+                created2.IssuesEnabled.ShouldBe(p.IssuesEnabled);
+                created2.MergeRequestsEnabled.ShouldBe(p.MergeRequestsEnabled);
+                created2.Name.ShouldBe(p.Name);
+                _projects.Delete(created2.Id).ShouldBeTrue();
+            }
+            catch (Exception ex)
+            {
+                if (created2 != null)
+                {
+                    _projects.Delete(created2.Id);
+                }
+            }
         }
 
-        private ProjectCreate CreateProject(out Project created, string name)
+        private ProjectCreate CreateProject(out Project created, string name, bool star)
         {
             var p = new ProjectCreate
             {
@@ -74,6 +97,13 @@ namespace NGitLab.Tests
             };
 
             created = _projects.Create(p);
+
+            // star is applicable
+            if (star)
+            {
+                created = _projects.Star(created.Id);
+            }
+
             return p;
         }
     }

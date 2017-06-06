@@ -6,6 +6,6 @@ namespace NGitLab.Models
     public class MergeCommitMessage
     {
         [DataMember(Name = "merge_commit_message")]
-        public string Message;
+        public string Message { get; set; }
     }
 }

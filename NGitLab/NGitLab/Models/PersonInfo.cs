@@ -6,9 +6,9 @@ namespace NGitLab.Models
     public class PersonInfo
     {
         [DataMember(Name = "name")]
-        public string Name;
+        public string Name { get; set; }
 
         [DataMember(Name = "email")]
-        public string Email;
+        public string Email { get; set; }
     }
 }

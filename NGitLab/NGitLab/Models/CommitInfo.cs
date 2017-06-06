@@ -7,27 +7,27 @@ namespace NGitLab.Models
     public class CommitInfo
     {
         [DataMember(Name = "id")]
-        public Sha1 Id;
+        public Sha1 Id { get; set; }
 
         [DataMember(Name = "parents")]
-        public Sha1[] Parents;
+        public Sha1[] Parents { get; set; }
 
         [DataMember(Name = "tree")]
-        public Sha1 Tree;
-            
+        public Sha1 Tree { get; set; }
+
         [DataMember(Name = "message")]
-        public string Message;
-            
+        public string Message { get; set; }
+
         [DataMember(Name = "author")]
-        public PersonInfo Author;
+        public PersonInfo Author { get; set; }
 
         [DataMember(Name = "committer")]
-        public PersonInfo Committer;
+        public PersonInfo Committer { get; set; }
 
         [DataMember(Name = "authored_date")]
-        public DateTime AuthoredDate;
+        public DateTime AuthoredDate { get; set; }
 
         [DataMember(Name = "committed_date")]
-        public DateTime CommittedDate;
+        public DateTime CommittedDate { get; set; }
     }
 }

@@ -9,24 +9,24 @@ namespace NGitLab.Models
         public const string Url = "/groups";
 
         [DataMember(Name = "id")]
-        public int Id;
+        public int Id { get; set; }
 
         [DataMember(Name = "name")]
-        public string Name;
+        public string Name { get; set; }
 
         [DataMember(Name = "path")]
-        public string Path;
+        public string Path { get; set; }
 
         [DataMember(Name = "description")]
-        public string Description;
+        public string Description { get; set; }
 
-        [DataMember(Name="created_at")]
-        public DateTime CreatedAt;
+        [DataMember(Name = "created_at")]
+        public DateTime CreatedAt { get; set; }
 
-        [DataMember(Name="updated_at")]
-        public DateTime UpdatedAt;
+        [DataMember(Name = "updated_at")]
+        public DateTime UpdatedAt { get; set; }
 
-        [DataMember(Name="owner_id")]
-        public int? OwnerId;
+        [DataMember(Name = "owner_id")]
+        public int? OwnerId { get; set; }
     }
 }

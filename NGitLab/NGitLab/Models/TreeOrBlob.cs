@@ -6,15 +6,15 @@ namespace NGitLab.Models
     public class TreeOrBlob
     {
         [DataMember(Name = "id")]
-        public Sha1 Id;
+        public Sha1 Id { get; set; }
 
         [DataMember(Name = "assets")]
-        public string Name;
-        
+        public string Name { get; set; }
+
         [DataMember(Name = "type")]
-        public ObjectType Type;
-        
+        public ObjectType Type { get; set; }
+
         [DataMember(Name = "mode")]
-        public string Mode;
+        public string Mode { get; set; }
     }
 }

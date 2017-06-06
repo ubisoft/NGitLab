@@ -9,24 +9,24 @@ namespace NGitLab.Models
         public const string Url = "/commits";
 
         [DataMember(Name = "id")]
-        public Sha1 Id;
+        public Sha1 Id { get; set; }
 
         [DataMember(Name = "title")]
-        public string Title;
+        public string Title { get; set; }
 
         [DataMember(Name = "short_id")]
-        public string ShortId;
+        public string ShortId { get; set; }
 
         [DataMember(Name = "author_name")]
-        public string AuthorName;
+        public string AuthorName { get; set; }
 
         [DataMember(Name = "author_email")]
-        public string AuthorEmail;
+        public string AuthorEmail { get; set; }
 
         [DataMember(Name = "created_at")]
-        public DateTime CreatedAt;
+        public DateTime CreatedAt { get; set; }
 
         [DataMember(Name = "message")]
-        public string Message;
+        public string Message { get; set; }
     }
 }

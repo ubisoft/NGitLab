@@ -7,12 +7,12 @@ namespace NGitLab.Models
     public class SingleCommit : Commit
     {
         [DataMember(Name = "committed_date")]
-        public DateTime CommittedDate;
+        public DateTime CommittedDate { get; set; }
 
         [DataMember(Name = "authored_date")]
-        public DateTime AuthoredDate;
+        public DateTime AuthoredDate { get; set; }
 
         [DataMember(Name = "parent_ids")]
-        public Sha1[] Parents;
+        public Sha1[] Parents { get; set; }
     }
 }

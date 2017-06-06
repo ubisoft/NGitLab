@@ -38,10 +38,10 @@ namespace NGitLab.Impl
 
         public Uri GetAPIUrl(string tailAPIUrl)
         {
-            if (APIToken != null)
-            {
-                tailAPIUrl = tailAPIUrl + (tailAPIUrl.IndexOf('?') > 0 ? '&' : '?') + "private_token=" + APIToken;
-            }
+            //if (APIToken != null)
+            //{
+            //    tailAPIUrl = tailAPIUrl + (tailAPIUrl.IndexOf('?') > 0 ? '&' : '?') + "private_token=" + APIToken;
+            //}
 
             if (!tailAPIUrl.StartsWith("/"))
             {

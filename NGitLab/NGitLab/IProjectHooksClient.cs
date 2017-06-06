@@ -7,8 +7,8 @@ namespace NGitLab
     {
         IEnumerable<ProjectHook> All();
         ProjectHook Get(int hookId);
-        ProjectHook Create(ProjectHookUpsert hook);
-        ProjectHook Update(int hookId, ProjectHookUpsert hook);
+        ProjectHook Create(ProjectHookInsert hook);
+        ProjectHook Update(ProjectHookUpdate hook);
         void Delete(int hookId);
     }
 }

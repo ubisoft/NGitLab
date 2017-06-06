@@ -6,27 +6,27 @@ namespace NGitLab.Models
     public class Diff
     {
         [DataMember(Name = "diff")]
-        public string Difference;
+        public string Difference { get; set; }
 
         [DataMember(Name = "new_path")]
-        public string NewPath;
+        public string NewPath { get; set; }
 
         [DataMember(Name = "old_path")]
-        public string OldPath;
+        public string OldPath { get; set; }
 
         [DataMember(Name = "a_mode")]
-        public string AMode;
+        public string AMode { get; set; }
 
         [DataMember(Name = "b_mode")]
-        public string BMode;
+        public string BMode { get; set; }
 
         [DataMember(Name = "new_file")]
-        public bool IsNewFile;
+        public bool IsNewFile { get; set; }
 
         [DataMember(Name = "renamed_file")]
-        public bool IsRenamedFile;
+        public bool IsRenamedFile { get; set; }
 
         [DataMember(Name = "deleted_file")]
-        public bool IsDeletedFile;
+        public bool IsDeletedFile { get; set; }
     }
 }

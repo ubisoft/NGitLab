@@ -6,9 +6,9 @@ namespace NGitLab.Models
     public class BranchCreate
     {
         [DataMember(Name = "branch_name")]
-        public string Name;
+        public string Name { get; set; }
 
         [DataMember(Name = "ref")]
-        public string Ref;
+        public string Ref { get; set; }
     }
 }

@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\NGitLab.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -72,6 +73,7 @@
     <Compile Include="IProjectHooksClient.cs" />
     <Compile Include="IRepositoryClient.cs" />
     <Compile Include="IUserClient.cs" />
+    <Compile Include="Json\Sha1Converter.cs" />
     <Compile Include="Models\Assignee.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Branch.cs" />
@@ -98,7 +100,8 @@
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\ProjectCreate.cs" />
     <Compile Include="Models\ProjectHook.cs" />
-    <Compile Include="Models\ProjectHookUpsert.cs" />
+    <Compile Include="Models\ProjectHookUpdate.cs" />
+    <Compile Include="Models\ProjectHookInsert.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\SingleCommit.cs" />
     <Compile Include="Models\Tag.cs" />

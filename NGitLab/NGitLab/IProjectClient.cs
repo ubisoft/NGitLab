@@ -25,5 +25,7 @@ namespace NGitLab
         Project Create(ProjectCreate project);
 
         bool Delete(int id);
+
+        Project Star(int id);
     }
 }

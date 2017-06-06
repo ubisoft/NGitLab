@@ -9,64 +9,64 @@ namespace NGitLab.Models
         public static string Url = "/users";
 
         [DataMember(Name = "id")]
-        public int Id;
+        public int Id { get; set; }
 
         [DataMember(Name = "username")]
-        public string Username;
+        public string Username { get; set; }
 
         [DataMember(Name = "email")]
-        public string Email;
+        public string Email { get; set; }
 
         [DataMember(Name = "name")]
-        public string Name;
+        public string Name { get; set; }
 
         [DataMember(Name = "skype")]
-        public string Skype;
+        public string Skype { get; set; }
 
         [DataMember(Name = "linkedin")]
-        public string Linkedin;
+        public string Linkedin { get; set; }
 
         [DataMember(Name = "twitter")]
-        public string Twitter;
+        public string Twitter { get; set; }
 
         [DataMember(Name = "provider")]
-        public string Provider;
+        public string Provider { get; set; }
 
         [DataMember(Name = "state")]
-        public string State;
+        public string State { get; set; }
 
         [DataMember(Name = "blocked")]
-        public bool Blocked;
+        public bool Blocked { get; set; }
 
         [DataMember(Name = "created_at")]
-        public DateTime CreatedAt;
+        public DateTime CreatedAt { get; set; }
 
         [DataMember(Name = "avatar_url")]
-        public string AvatarURL;
+        public string AvatarURL { get; set; }
 
         [DataMember(Name = "bio")]
-        public string Bio;
+        public string Bio { get; set; }
 
         [DataMember(Name = "color_scheme_id")]
-        public int ColorSchemeId;
+        public int ColorSchemeId { get; set; }
 
         [DataMember(Name = "theme_id")]
-        public int ThemeId;
+        public int ThemeId { get; set; }
 
         [DataMember(Name = "extern_uid")]
-        public string ExternUid;
+        public string ExternUid { get; set; }
 
         [DataMember(Name = "website_url")]
-        public string WebsiteURL;
+        public string WebsiteURL { get; set; }
 
         [DataMember(Name = "is_admin")]
-        public bool IsAdmin;
+        public bool IsAdmin { get; set; }
 
         [DataMember(Name = "can_create_group")]
-        public bool CanCreateGroup;
+        public bool CanCreateGroup { get; set; }
 
         [DataMember(Name = "can_create_project")]
-        public bool CanCreateProject;
+        public bool CanCreateProject { get; set; }
 
         [DataMember(Name = "two_factor_enabled")]
         public bool TwoFactorEnabled { get; set; }

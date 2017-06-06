@@ -9,51 +9,51 @@ namespace NGitLab.Models
         public const string Url = "/projects";
 
         [DataMember(Name = "id")]
-        public int Id;
+        public int Id { get; set; }
 
         [DataMember(Name = "name")]
-        public string Name;
+        public string Name { get; set; }
 
         [DataMember(Name = "description")]
-        public string Description;
+        public string Description { get; set; }
 
         [DataMember(Name = "default_branch")]
-        public string DefaultBranch;
+        public string DefaultBranch { get; set; }
 
         [DataMember(Name = "owner")]
-        public User Owner;
+        public User Owner { get; set; }
 
         [DataMember(Name = "public")]
-        public bool Public;
+        public bool Public { get; set; }
 
         [DataMember(Name = "path")]
-        public string Path;
+        public string Path { get; set; }
 
         [DataMember(Name = "path_with_namespace")]
-        public string PathWithNamespace;
+        public string PathWithNamespace { get; set; }
 
         [DataMember(Name = "issues_enabled")]
-        public bool IssuesEnabled;
+        public bool IssuesEnabled { get; set; }
 
         [DataMember(Name = "merge_requests_enabled")]
-        public bool MergeRequestsEnabled;
+        public bool MergeRequestsEnabled { get; set; }
 
         [DataMember(Name = "wall_enabled")]
-        public bool WallEnabled;
+        public bool WallEnabled { get; set; }
 
         [DataMember(Name = "wiki_enabled")]
-        public bool WikiEnabled;
+        public bool WikiEnabled { get; set; }
 
         [DataMember(Name = "created_at")]
-        public DateTime CreatedAt;
+        public DateTime CreatedAt { get; set; }
 
         [DataMember(Name = "ssh_url_to_repo")]
-        public string SshUrl;
+        public string SshUrl { get; set; }
 
         [DataMember(Name = "http_url_to_repo")]
-        public string HttpUrl;
+        public string HttpUrl { get; set; }
 
         [DataMember(Name = "namespace")]
-        public Namespace Namespace;
+        public Namespace Namespace { get; set; }
     }
 }

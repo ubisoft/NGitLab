@@ -8,13 +8,13 @@ namespace NGitLab.Models
     {
         [Required]
         [DataMember(Name = "name")]
-        public string Name;
+        public string Name { get; set; }
 
         [Required]
 		[DataMember(Name = "path")]
-		public string Path;
+		public string Path { get; set; }
 
         [DataMember(Name = "description")]
-        public string Description;
+        public string Description { get; set; }
     }
 }

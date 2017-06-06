@@ -24,14 +24,14 @@ namespace NGitLab.Impl
             return _api.Get().To<ProjectHook>(_path + "/" + hookId);
         }
 
-        public ProjectHook Create(ProjectHookUpsert hook)
+        public ProjectHook Create(ProjectHookInsert hook)
         {
             return _api.Post().With(hook).To<ProjectHook>(_path);
         }
 
-        public ProjectHook Update(int hookId, ProjectHookUpsert hook)
+        public ProjectHook Update(ProjectHookUpdate hook)
         {
-            return _api.Put().With(hook).To<ProjectHook>(_path + "/" + hookId);
+            return _api.Put().With(hook).To<ProjectHook>(_path + "/" + hook.HookId);
         }
 
         public void Delete(int hookId)

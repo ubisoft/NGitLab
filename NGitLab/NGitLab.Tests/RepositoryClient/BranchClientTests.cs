@@ -33,8 +33,13 @@ namespace NGitLab.Tests.RepositoryClient
         [Category("Server_Required")]
         public void DeleteByName()
         {
+            _branches.Create(new Models.BranchCreate()
+            {
+                Name = "merge-me-to-master",
+                Ref = "master"
+            });
             var result = _branches.Delete("merge-me-to-master");
-            Assert.That(result.Succeed);
+            result.Succeed.ShouldBeTrue();
         }
     }
 }

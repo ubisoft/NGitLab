@@ -1,16 +1,20 @@
 ﻿using System;
+using Newtonsoft.Json;
+using NGitLab.Json;
 
 namespace NGitLab
 {
     /// <summary>
     /// Sha1 hash value representation.
     /// </summary>
+    [JsonConverter(typeof(Sha1Converter))]
     public struct Sha1
     {
         private readonly ulong _p1; // 8
         private readonly ulong _p2; // 16
         private readonly uint _p3; // 20
 
+        [JsonConstructor]
         public Sha1(string value)
         {
             if (string.IsNullOrEmpty(value))

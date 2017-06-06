@@ -152,7 +152,7 @@ namespace NGitLab.Impl
                             return false;
                         }
 
-                        var request = SetupConnection(_nextUrlToLoad, MethodType.Get);
+                        var request = SetupConnection(_nextUrlToLoad, MethodType.Get, _apiToken);
                         request.Headers["PRIVATE-TOKEN"] = _apiToken;
 
                         using (var response = request.GetResponseAsync().Result)
@@ -176,7 +176,8 @@ namespace NGitLab.Impl
                             }
 
                             var stream = response.GetResponseStream();
-                            _buffer.AddRange(JsonConvert.DeserializeObject<T[]>(new StreamReader(stream).ReadToEnd()));
+                            var data = new StreamReader(stream).ReadToEnd();
+                            _buffer.AddRange(JsonConvert.DeserializeObject<T[]>(data));
                         }
 
                         return _buffer.Count > 0;
@@ -233,17 +234,19 @@ namespace NGitLab.Impl
 
         private WebRequest SetupConnection(Uri url)
         {
-            return SetupConnection(url, _method);
+            return SetupConnection(url, _method, _root.APIToken);
         }
 
-        private static WebRequest SetupConnection(Uri url, MethodType methodType)
+        private static WebRequest SetupConnection(Uri url, MethodType methodType, string privateToken)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = methodType.ToString().ToUpperInvariant();
             request.Headers.Add("Accept-Encoding", "gzip");
             request.AutomaticDecompression = DecompressionMethods.GZip;
-
+            request.Headers["PRIVATE-TOKEN"] = privateToken;
 #if DEBUG
+            request.Proxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
+
             ServicePointManager.ServerCertificateValidationCallback = new
                 RemoteCertificateValidationCallback
 (

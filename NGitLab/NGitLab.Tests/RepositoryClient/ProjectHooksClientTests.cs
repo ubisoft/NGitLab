@@ -8,66 +8,89 @@ namespace NGitLab.Tests.RepositoryClient
 {
     public class ProjectHooksClientTests
     {
-        private readonly IProjectHooksClient _hooks;
+        private readonly IProjectClient _projects;
 
         public ProjectHooksClientTests()
         {
-            _hooks = _RepositoryClientTests.RepositoryClient.ProjectHooks;
-        }
-
-        [Test]
-        [Category("Server_Required")]
-        public void GetAll()
-        {
-            _hooks.All().ShouldNotBeEmpty();
+            _projects = Config.Connect().Projects;
         }
 
         [Test]
         [Category("Server_Required")]
         public void CreateUpdateDelete()
         {
-            var toCreate = new ProjectHookUpsert
+            Project proj = null;
+            try
             {
-                MergeRequestsEvents = true,
-                PushEvents = true,
-                Url = new Uri("http://scooletz.com"),
-            };
+                CreateProject(out proj, "Test Create Hook");
 
-            var created = _hooks.Create(toCreate);
-            ThereIsOneHook();
+                var hooks = Config.Connect().GetRepository(proj.Id).ProjectHooks;
 
-            Assert.AreEqual(toCreate.MergeRequestsEvents, created.MergeRequestsEvents);
-            Assert.AreEqual(toCreate.PushEvents, created.PushEvents);
-            Assert.AreEqual(toCreate.Url, created.Url);
+                var toCreate = new ProjectHookInsert
+                {
+                    MergeRequestsEvents = true,
+                    PushEvents = true,
+                    Url = new Uri("http://scooletz.com"),
+                    Id = proj.Id
+                };
 
-            var toUpdate = new ProjectHookUpsert
+                var createdHook = hooks.Create(toCreate);
+                hooks.All().Count().ShouldBe(1);
+
+                createdHook.MergeRequestsEvents.ShouldBe(toCreate.MergeRequestsEvents);
+                createdHook.PushEvents.ShouldBe(toCreate.PushEvents);
+                createdHook.Url.ShouldBe(toCreate.Url);
+
+                var toUpdate = new ProjectHookUpdate
+                {
+                    MergeRequestsEvents = true,
+                    PushEvents = true,
+                    TagPushEvents = true,
+                    Url = new Uri("http://scooletz.com"),
+                    Id = proj.Id,
+                    HookId = createdHook.Id
+                };
+
+                var updated = hooks.Update(toUpdate);
+
+                hooks.All().Count().ShouldBe(1);
+
+                Assert.AreEqual(toUpdate.MergeRequestsEvents, updated.MergeRequestsEvents);
+                Assert.AreEqual(toUpdate.PushEvents, updated.PushEvents);
+                Assert.AreEqual(toUpdate.Url, updated.Url);
+
+                hooks.Delete(updated.Id);
+
+                hooks.All().ShouldBeEmpty();
+            }
+            finally
             {
-                MergeRequestsEvents = false,
-                PushEvents = false,
-                Url = new Uri("http://git.scooletz.com"),
-            };
-
-            var updated = _hooks.Update(created.Id, toUpdate);
-
-            ThereIsOneHook();
-
-            Assert.AreEqual(toUpdate.MergeRequestsEvents, updated.MergeRequestsEvents);
-            Assert.AreEqual(toUpdate.PushEvents, updated.PushEvents);
-            Assert.AreEqual(toUpdate.Url, updated.Url);
-
-            _hooks.Delete(updated.Id);
-
-            ThereIsNoHook();
+                if (proj != null)
+                {
+                    _projects.Delete(proj.Id);
+                }
+            }
         }
 
-        private void ThereIsOneHook()
+        private ProjectCreate CreateProject(out Project created, string name)
         {
-            _hooks.All().Count().ShouldBe(1);
-        }
+            var p = new ProjectCreate
+            {
+                Description = "desc",
+                ImportUrl = null,
+                IssuesEnabled = true,
+                MergeRequestsEnabled = true,
+                Name = name,
+                NamespaceId = null,
+                SnippetsEnabled = true,
+                VisibilityLevel = VisibilityLevel.Public,
+                WallEnabled = true,
+                WikiEnabled = true,
+            };
 
-        private void ThereIsNoHook()
-        {
-            _hooks.All().ShouldNotBeEmpty();
+            created = _projects.Create(p);
+
+            return p;
         }
     }
 }
