@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
+using Shouldly;
 
 namespace NGitLab.Tests
 {
@@ -25,27 +25,21 @@ namespace NGitLab.Tests
         [Category("Server_Required")]
         public void GetAllProjects()
         {
-            var projects = _projects.All().ToArray();
-
-            CollectionAssert.IsNotEmpty(projects);
+            _projects.All().ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetOwnedProjects()
         {
-            var projects = _projects.Owned().ToArray();
-
-            CollectionAssert.IsNotEmpty(projects);
+            _projects.Owned().ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetAccessibleProjects()
         {
-            var projects = _projects.Accessible().ToArray();
-
-            CollectionAssert.IsNotEmpty(projects);
+            _projects.Accessible().ShouldNotBeEmpty();
         }
 
         [Test]
@@ -55,12 +49,12 @@ namespace NGitLab.Tests
             Project created;
             var p = CreateProject(out created, "test2");
 
-            Assert.AreEqual(p.Description, created.Description);
-            Assert.AreEqual(p.IssuesEnabled, created.IssuesEnabled);
-            Assert.AreEqual(p.MergeRequestsEnabled, created.MergeRequestsEnabled);
-            Assert.AreEqual(p.Name, created.Name);
+            created.Description.ShouldBe(p.Description);
+            created.IssuesEnabled.ShouldBe(p.IssuesEnabled);
+            created.MergeRequestsEnabled.ShouldBe(p.MergeRequestsEnabled);
+            created.Name.ShouldBe(p.Name);
 
-            Assert.AreEqual(_projects.Delete(created.Id), true);
+            _projects.Delete(created.Id).ShouldBeTrue();
         }
 
         private ProjectCreate CreateProject(out Project created, string name)

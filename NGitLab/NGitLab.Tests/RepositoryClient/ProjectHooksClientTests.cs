@@ -2,6 +2,7 @@
 using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
+using Shouldly;
 
 namespace NGitLab.Tests.RepositoryClient
 {
@@ -18,7 +19,7 @@ namespace NGitLab.Tests.RepositoryClient
         [Category("Server_Required")]
         public void GetAll()
         {
-            CollectionAssert.IsEmpty(_hooks.All().ToArray());
+            _hooks.All().ShouldNotBeEmpty();
         }
 
         [Test]
@@ -61,12 +62,12 @@ namespace NGitLab.Tests.RepositoryClient
 
         private void ThereIsOneHook()
         {
-            Assert.AreEqual(1, _hooks.All().ToArray().Length);
+            _hooks.All().Count().ShouldBe(1);
         }
 
         private void ThereIsNoHook()
         {
-            CollectionAssert.IsEmpty(_hooks.All().ToArray());
+            _hooks.All().ShouldNotBeEmpty();
         }
     }
 }

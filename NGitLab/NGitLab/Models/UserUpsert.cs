@@ -8,45 +8,57 @@ namespace NGitLab.Models
     {
         [Required]
         [DataMember(Name = "email")]
-        public string Email;
+        public string Email { get; set; }
 
         [Required]
         [DataMember(Name = "password")]
-        public string Password;
+        public string Password { get; set; }
 
         [Required]
         [DataMember(Name = "username")]
-        public string Username;
+        public string Username { get; set; }
 
         [Required]
         [DataMember(Name = "name")]
-        public string Name;
+        public string Name { get; set; }
 
         [DataMember(Name = "skype")]
-        public string Skype;
+        public string Skype { get; set; }
 
         [DataMember(Name = "linkedin")]
-        public string Linkedin;
+        public string Linkedin { get; set; }
 
         [DataMember(Name = "twitter")]
-        public string Twitter;
+        public string Twitter { get; set; }
 
         [DataMember(Name = "website_url")]
-        public string WebsiteURL;
+        public string WebsiteURL { get; set; }
 
         [DataMember(Name = "projects_limit")]
-        public int ProjectsLimit;
+        public int ProjectsLimit { get; set; }
 
         [DataMember(Name = "provider")]
-        public string Provider;
+        public string Provider { get; set; }
 
         [DataMember(Name = "bio")]
-        public string Bio;
+        public string Bio { get; set; }
 
         [DataMember(Name = "admin")]
-        public bool IsAdmin;
+        public bool IsAdmin { get; set; }
 
         [DataMember(Name = "can_create_group")]
-        public bool CanCreateGroup;
+        public bool CanCreateGroup { get; set; }
+
+        [DataMember(Name = "reset_password")]
+        public bool ResetPassword { get; set; }
+
+        [DataMember(Name = "extern_uid")]
+        public string Extern_Uid { get; set; }
+
+        [DataMember(Name = "confirm")]
+        public bool Confirm { get; set; }
+
+        [DataMember(Name = "external")]
+        public bool External { get; set; }
     }
 }

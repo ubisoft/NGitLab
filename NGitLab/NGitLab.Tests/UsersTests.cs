@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
+using Shouldly;
 
 namespace NGitLab.Tests
 {
@@ -20,20 +20,17 @@ namespace NGitLab.Tests
         {
             var session = _users.Current();
 
-            Assert.AreNotEqual(default(DateTime), session.CreatedAt);
-            Assert.NotNull(session.Email);
-            Assert.NotNull(session.Name);
-            Assert.NotNull(session.PrivateToken);
-            Assert.NotNull(session.PrivateToken);
+            session.CreatedAt.ShouldNotBe(default(DateTime));
+            session.Email.ShouldNotBeNull();
+            session.Name.ShouldNotBeNull();
+
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetUsers()
         {
-            var users = _users.All().ToArray();
-
-            CollectionAssert.IsNotEmpty(users);
+            _users.All().ShouldNotBeEmpty();
         }
 
         [Test]
@@ -56,11 +53,9 @@ namespace NGitLab.Tests
                 Bio = "bio",
                 CanCreateGroup = true,
                 IsAdmin = true,
-                Linkedin = null,
                 Name = "sadfasdf",
                 Password = "!@#$QWDRQW@",
                 ProjectsLimit = 1000,
-                Provider = "provider",
                 Skype = "skype",
                 Twitter = "twitter",
                 Username = "username",

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
+using Shouldly;
 
 namespace NGitLab.Tests.MergeRequest
 {
@@ -17,8 +18,7 @@ namespace NGitLab.Tests.MergeRequest
         [Category("Server_Required")]
         public void GetAllComments()
         {
-            var comments = _mergeRequestComments.All().ToArray();
-            CollectionAssert.IsNotEmpty(comments);
+            _mergeRequestComments.All().ShouldNotBeEmpty();
         }
 
         [Test]

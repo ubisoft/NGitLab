@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 
 namespace NGitLab.Tests.RepositoryClient
 {
@@ -16,7 +17,7 @@ namespace NGitLab.Tests.RepositoryClient
         [Category("Server_Required")]
         public void GetAllCommits()
         {
-            CollectionAssert.IsNotEmpty(_repo.Commits.ToArray());
+            _repo.Commits.ShouldNotBeEmpty();
         }
 
         [Test]
@@ -31,7 +32,7 @@ namespace NGitLab.Tests.RepositoryClient
         [Category("Server_Required")]
         public void GetCommitDiff()
         {
-            CollectionAssert.IsNotEmpty(_repo.GetCommitDiff(_repo.Commits.First().Id).ToArray());
+            _repo.GetCommitDiff(_repo.Commits.First().Id).ShouldNotBeEmpty();
         }
 
 		[Test]

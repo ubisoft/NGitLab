@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using Shouldly;
 
 namespace NGitLab.Tests.RepositoryClient
 {
@@ -16,7 +17,7 @@ namespace NGitLab.Tests.RepositoryClient
         [Category("Server_Required")]
         public void GetAll()
         {
-            CollectionAssert.IsNotEmpty(_branches.All().ToArray());
+            _branches.All().ShouldNotBeEmpty();
         }
 
         [Test]

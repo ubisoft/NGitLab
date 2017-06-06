@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
+using Shouldly;
 
 namespace NGitLab.Tests.MergeRequest
 {
@@ -17,16 +18,14 @@ namespace NGitLab.Tests.MergeRequest
         [Category("Server_Required")]
         public void GetAllMergeRequests()
         {
-            var mergeRequests = _mergeRequest.All().ToArray();
-            CollectionAssert.IsNotEmpty(mergeRequests);
+            _mergeRequest.All().ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetAllMergeRequestsInCertainState()
         {
-            var mergeRequests = _mergeRequest.AllInState(MergeRequestState.opened).ToArray();
-            CollectionAssert.IsNotEmpty(mergeRequests);
+            _mergeRequest.AllInState(MergeRequestState.opened).ShouldNotBeEmpty();
         }
 
         [Test]
