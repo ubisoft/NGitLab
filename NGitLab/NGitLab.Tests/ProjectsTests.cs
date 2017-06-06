@@ -23,9 +23,9 @@ namespace NGitLab.Tests
 
         [Test]
         [Category("Server_Required")]
-        public void GetAllProjects()
+        public void GetStarredProjects()
         {
-            _projects.All().ShouldNotBeEmpty();
+            _projects.Starred().ShouldNotBeEmpty();
         }
 
         [Test]

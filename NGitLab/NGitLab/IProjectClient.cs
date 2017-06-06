@@ -16,9 +16,9 @@ namespace NGitLab
         IEnumerable<Project> Owned();
 
         /// <summary>
-        /// Get a list of all GitLab projects (admin only).
+        /// Gets a list of starred projects.
         /// </summary>
-        IEnumerable<Project> All();
+        IEnumerable<Project> Starred();
 
         Project Get(int id);
 

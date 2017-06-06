@@ -19,12 +19,12 @@ namespace NGitLab.Impl
 
         public IEnumerable<Project> Owned()
         {
-            return _api.Get().GetAll<Project>(Project.Url + "/owned");
+            return _api.Get().GetAll<Project>(Project.Url + "/?owned=true");
         }
 
-        public IEnumerable<Project> All()
+        public IEnumerable<Project> Starred()
         {
-            return _api.Get().GetAll<Project>(Project.Url + "/all");
+            return _api.Get().GetAll<Project>(Project.Url + "/?starred=true");
         }
 
         public Project Get(int id)
