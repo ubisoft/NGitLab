@@ -70,7 +70,7 @@ namespace NGitLab.Tests
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Public,
                 WallEnabled = true,
-                WikiEnabled = true
+                WikiEnabled = true,
             };
 
             created = _projects.Create(p);
