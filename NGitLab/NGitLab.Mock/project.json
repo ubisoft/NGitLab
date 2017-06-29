@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "NSubstitute": "1.10.0",
+    "NSubstitute": "2.0.2",
     "NUnit": "3.5.0",
     "NUnit.Console": "3.5.0"
   },
