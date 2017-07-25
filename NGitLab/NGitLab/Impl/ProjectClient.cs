@@ -50,7 +50,7 @@ namespace NGitLab.Impl
 
             if (query.Visibility.HasValue)
             {
-                url = AddParameter(url, "visibility", query.Visibility.ToString());
+                url = AddParameter(url, "visibility", query.Visibility.ToString().ToLower());
             }
 
             return _api.Get().GetAll<Project>(url);
