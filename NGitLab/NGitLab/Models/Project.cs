@@ -73,5 +73,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "forked_from_project")]
         public Project ForkedFromProject;
+
+        [DataMember(Name = "visibility_level")]
+        public VisibilityLevel VisibilityLevel;
     }
 }

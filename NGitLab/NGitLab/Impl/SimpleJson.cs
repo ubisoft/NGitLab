@@ -1340,6 +1340,18 @@ namespace NGitLab.Impl
 
             object obj = null;
 
+            if (type.IsEnum)
+            {
+                try
+                {
+                    return Enum.Parse(type, value.ToString(), ignoreCase: true);
+                }
+                catch (Exception)
+                {
+                    throw new Exception($"{str} is not a valid value for enum {type.Name}");
+                }
+            }
+
             if (str != null)
             {
                 if (str.Length != 0) // We know it can't be null now.
@@ -1354,18 +1366,6 @@ namespace NGitLab.Impl
 
                     if (type == typeof(Guid) || (ReflectionUtils.IsNullableType(type) && Nullable.GetUnderlyingType(type) == typeof(Guid)))
                         return new Guid(str);
-
-                    if (type.IsEnum)
-                    {
-                        try
-                        {
-                            return Enum.Parse(type, str, ignoreCase: true);
-                        }
-                        catch (Exception)
-                        {
-                            throw new Exception($"{str} is not a valid value for enum {type.Name}");
-                        }
-                    }
 
                     if (type == typeof(Uri))
                     {

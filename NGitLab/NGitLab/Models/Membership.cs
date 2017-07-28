@@ -23,6 +23,9 @@ namespace NGitLab.Models
         /// </summary>
         [DataMember(Name = "name")]
         public string Name;
+        
+        [DataMember(Name = "avatar_url")]
+        public string AvatarURL;
 
         /// <summary>
         /// Example active
