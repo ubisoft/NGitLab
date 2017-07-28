@@ -876,8 +876,6 @@ namespace NGitLab.Impl
             return s.ToString();
         }
 
-
-
         private static string ConvertFromUtf32(int utf32)
         {
             // http://www.java2s.com/Open-Source/CSharp/2.6.4-mono-.net-core/System/System/Char.cs.htm
