@@ -63,6 +63,21 @@ namespace NGitLab.Tests
             CollectionAssert.IsNotEmpty(projects);
         }
 
+
+        [Test]
+        public void GetProjectsByQuery_VisibilityInternal()
+        {
+            var query = new ProjectQuery
+            {
+                Simple = true,
+                Visibility = VisibilityLevel.Internal
+            };
+
+            var projects = _projects.Get(query).ToArray();
+
+            CollectionAssert.IsNotEmpty(projects);
+        }
+
         [Test]
         public void CreateDelete()
         {
