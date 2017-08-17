@@ -18,6 +18,9 @@ namespace NGitLab.Models
         [DataMember(Name = "kind")]
         public string Kind;
 
+        [DataMember(Name = "full_path")]
+        public string FullPath;
+
         public enum Type
         {
             Group,
