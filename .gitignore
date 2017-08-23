@@ -178,3 +178,6 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 *.nupkg
+
+# Rider
+.idea/
