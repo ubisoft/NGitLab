@@ -45,25 +45,42 @@ namespace NGitLab.Tests.MergeRequest {
 
         [Test]
         [Category("Server_Required")]
+        [Order(2)]
         public void UpdateMergeRequest() {
-            var mergeRequest = mergeRequestClient.Update(5, new MergeRequestUpdate {
-                Title = "Merge my-super-feature into master",
-                TargetBranch = "my-super-feature",
-                SourceBranch = "master",
-                NewState = MergeRequestStateEvent.reopen
+            var mergeRequest = mergeRequestClient.AllInState(MergeRequestState.opened).FirstOrDefault(x => x.Title == "Merge my-super-feature into master");
+            
+            var updatedMergeRequest = mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate {
+                Title = "Merge my-super-feature into master updated",
             });
 
-            Assert.That(mergeRequest, Is.Not.Null);
+            Assert.That(updatedMergeRequest, Is.Not.Null);
+            updatedMergeRequest.Iid.ShouldBe(mergeRequest.Iid);
+            updatedMergeRequest.Title.ShouldBe("Merge my-super-feature into master updated");
+            updatedMergeRequest.State.ShouldBe(MergeRequestState.opened);
         }
-
         [Test]
         [Category("Server_Required")]
+        [Order(3)]
+        public void CloseMergeRequest() {
+            var mergeRequest = mergeRequestClient.AllInState(MergeRequestState.opened).FirstOrDefault(x => x.Title == "Merge my-super-feature into master");
+            
+            var updatedMergeRequest = mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate {
+                NewState = MergeRequestUpdateState.close,
+            });
+            Assert.That(updatedMergeRequest, Is.Not.Null);
+            updatedMergeRequest.Iid.ShouldBe(mergeRequest.Iid);
+            updatedMergeRequest.State.ShouldBe(MergeRequestState.closed);
+        }
+        [Test]
+        [Category("Server_Required")]
+        [Order(3)]
         public void AcceptMergeRequest() {
-            var mergeRequest = mergeRequestClient.Accept(
-                6,
+            var mergeRequest = mergeRequestClient.AllInState(MergeRequestState.opened).FirstOrDefault(x => x.Title == "Merge my-super-feature into master updated");
+            var updatedMergeRequest = mergeRequestClient.Accept(
+                mergeRequest.Iid,
                 new MergeCommitMessage {Message = "Merge my-super-feature into master"});
 
-            Assert.That(mergeRequest.State, Is.EqualTo(MergeRequestState.merged.ToString()));
+            updatedMergeRequest.State.ShouldBe(MergeRequestState.merged);
         }
     }
 }

@@ -32,13 +32,13 @@ namespace NGitLab.Impl {
         public MergeRequest Update(int mergeRequestId, MergeRequestUpdate mergeRequest) {
             return api
                 .Put().With(mergeRequest)
-                .To<MergeRequest>(projectPath + "/merge_request/" + mergeRequestId);
+                .To<MergeRequest>(projectPath + "/merge_requests/" + mergeRequestId);
         }
 
         public MergeRequest Accept(int mergeRequestId, MergeCommitMessage message) {
             return api
                 .Put().With(message)
-                .To<MergeRequest>(projectPath + "/merge_request/" + mergeRequestId + "/merge");
+                .To<MergeRequest>(projectPath + "/merge_requests/" + mergeRequestId + "/merge");
         }
 
         public IMergeRequestCommentClient Comments(int mergeRequestId) {

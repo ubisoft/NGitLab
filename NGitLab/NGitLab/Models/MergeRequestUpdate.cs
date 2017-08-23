@@ -19,13 +19,13 @@ namespace NGitLab.Models {
 
         [DataMember(Name = "state_event")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public MergeRequestStateEvent NewState { get; set; }
+        public MergeRequestUpdateState? NewState { get; set; }
     }
 
     // ReSharper disable InconsistentNaming
-    public enum MergeRequestStateEvent {
+    public enum MergeRequestUpdateState {
         close,
         reopen,
-        merge
+        merge,
     }
 }
