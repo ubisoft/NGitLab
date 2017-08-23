@@ -3,40 +3,33 @@ using NGitLab.Models;
 using NUnit.Framework;
 using Shouldly;
 
-namespace NGitLab.Tests
-{
-    public class UsersTests
-    {
-        private readonly IUserClient _users;
+namespace NGitLab.Tests {
+    public class UsersTests {
+        readonly IUserClient _users;
 
-        public UsersTests()
-        {
+        public UsersTests() {
             _users = Config.Connect().Users;
         }
 
         [Test]
         [Category("Server_Required")]
-        public void Current()
-        {
+        public void Current() {
             var session = _users.Current();
 
             session.CreatedAt.ShouldNotBe(default(DateTime));
             session.Email.ShouldNotBeNull();
             session.Name.ShouldNotBeNull();
-
         }
 
         [Test]
         [Category("Server_Required")]
-        public void GetUsers()
-        {
+        public void GetUsers() {
             _users.All().ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
-        public void GetUser()
-        {
+        public void GetUser() {
             var user = _users.Get(1);
 
             Assert.AreNotEqual(string.Empty, user.Username);
@@ -45,10 +38,8 @@ namespace NGitLab.Tests
 
         [Test]
         [Category("Server_Required")]
-        public void CreateUpdateDelete()
-        {
-            var u = new UserUpsert
-            {
+        public void CreateUpdateDelete() {
+            var u = new UserUpsert {
                 Email = "test@test.pl",
                 Bio = "bio",
                 CanCreateGroup = true,

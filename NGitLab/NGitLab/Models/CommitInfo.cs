@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class CommitInfo
-    {
+    public class CommitInfo {
         [DataMember(Name = "id")]
         public Sha1 Id { get; set; }
 

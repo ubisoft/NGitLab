@@ -1,30 +1,28 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     /// <summary>
-    /// Creates a new project owned by the authenticated user.
+    ///     Creates a new project owned by the authenticated user.
     /// </summary>
     [DataContract]
-    public class ProjectCreate
-    {
+    public class ProjectCreate {
         /// <summary>
-        /// Gets or sets the name of the project.
+        ///     Gets or sets the name of the project.
         /// </summary>
         [Required]
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the namespace for the project.
+        ///     Gets or sets the namespace for the project.
         /// </summary>
         [Required]
         [DataMember(Name = "namespace_id")]
         public string NamespaceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the short project description.
+        ///     Gets or sets the short project description.
         /// </summary>
         [DataMember(Name = "description")]
         public string Description { get; set; }

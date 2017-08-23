@@ -1,13 +1,11 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     /// <summary>
-    /// Class for updating a project hook.
+    ///     Class for updating a project hook.
     /// </summary>
     [DataContract]
-    public class ProjectHookUpdate : ProjectHookInsert
-    {
+    public class ProjectHookUpdate : ProjectHookInsert {
         [DataMember(Name = "hook_id")]
         public int HookId { get; set; }
     }

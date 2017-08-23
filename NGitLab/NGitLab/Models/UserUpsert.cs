@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class UserUpsert
-    {
+    public class UserUpsert {
         [Required]
         [DataMember(Name = "email")]
         public string Email { get; set; }

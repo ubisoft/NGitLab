@@ -1,30 +1,24 @@
-﻿using System.Linq;
-using NGitLab.Models;
+﻿using NGitLab.Models;
 using NUnit.Framework;
 using Shouldly;
 
-namespace NGitLab.Tests.MergeRequest
-{
-    public class MergeRequestCommentsClientTests
-    {
-        private readonly IMergeRequestCommentClient _mergeRequestComments;
+namespace NGitLab.Tests.MergeRequest {
+    public class MergeRequestCommentsClientTests {
+        readonly IMergeRequestCommentClient _mergeRequestComments;
 
-        public MergeRequestCommentsClientTests()
-        {
+        public MergeRequestCommentsClientTests() {
             _mergeRequestComments = _MergeRequestClientTests.MergeRequestClient.Comments(5);
         }
 
         [Test]
         [Category("Server_Required")]
-        public void GetAllComments()
-        {
+        public void GetAllComments() {
             _mergeRequestComments.All().ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
-        public void AddCommentToMergeRequest()
-        {
+        public void AddCommentToMergeRequest() {
             const string commentMessage = "note";
             var newComment = new MergeRequestComment {Note = commentMessage};
 

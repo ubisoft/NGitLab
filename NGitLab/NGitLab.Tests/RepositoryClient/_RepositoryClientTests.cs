@@ -2,17 +2,14 @@
 using NGitLab.Models;
 using NUnit.Framework;
 
-namespace NGitLab.Tests.RepositoryClient
-{
+namespace NGitLab.Tests.RepositoryClient {
     [SetUpFixture]
-    public class _RepositoryClientTests
-    {
+    public class _RepositoryClientTests {
         public static IRepositoryClient RepositoryClient;
-        private Project _project;
+        Project _project;
 
         [OneTimeSetUp]
-        public void SetUp()
-        {
+        public void SetUp() {
             _project = Config.Connect().Projects.Owned().FirstOrDefault();
             RepositoryClient = Config.Connect().GetRepository(_project.Id);
         }

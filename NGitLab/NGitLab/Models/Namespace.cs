@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class Namespace
-    {
+    public class Namespace {
         public const string Url = "/groups";
 
         [DataMember(Name = "id")]

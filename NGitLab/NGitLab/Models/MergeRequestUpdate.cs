@@ -1,10 +1,8 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class MergeRequestUpdate
-    {        
+    public class MergeRequestUpdate {
         [DataMember(Name = "source_branch")]
         public string SourceBranch { get; set; }
 
@@ -22,8 +20,7 @@ namespace NGitLab.Models
     }
 
     // ReSharper disable InconsistentNaming
-    public enum MergeRequestStateEvent
-    {
+    public enum MergeRequestStateEvent {
         close,
         reopen,
         merge

@@ -1,7 +1,5 @@
-﻿namespace NGitLab.Impl
-{
-    public enum MethodType
-    {
+﻿namespace NGitLab.Impl {
+    public enum MethodType {
         Get,
         Put,
         Post,

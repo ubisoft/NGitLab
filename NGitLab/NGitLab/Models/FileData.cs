@@ -1,10 +1,8 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class FileData
-    {
+    public class FileData {
         [DataMember(Name = "file_name")]
         public string Name { get; set; }
 

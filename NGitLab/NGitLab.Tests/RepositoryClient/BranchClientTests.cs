@@ -1,29 +1,24 @@
-﻿using System.Linq;
+﻿using NGitLab.Models;
 using NUnit.Framework;
 using Shouldly;
 
-namespace NGitLab.Tests.RepositoryClient
-{
-    public class BranchClientTests
-    {
-        private readonly IBranchClient _branches;
+namespace NGitLab.Tests.RepositoryClient {
+    public class BranchClientTests {
+        readonly IBranchClient _branches;
 
-        public BranchClientTests()
-        {
+        public BranchClientTests() {
             _branches = _RepositoryClientTests.RepositoryClient.Branches;
         }
 
         [Test]
         [Category("Server_Required")]
-        public void GetAll()
-        {
+        public void GetAll() {
             _branches.All().ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
-        public void GetByName()
-        {
+        public void GetByName() {
             var branch = _branches.Get("master");
             Assert.IsNotNull(branch);
             Assert.IsNotNull(branch.Name);
@@ -31,10 +26,8 @@ namespace NGitLab.Tests.RepositoryClient
 
         [Test]
         [Category("Server_Required")]
-        public void DeleteByName()
-        {
-            _branches.Create(new Models.BranchCreate()
-            {
+        public void DeleteByName() {
+            _branches.Create(new BranchCreate {
                 Name = "merge-me-to-master",
                 Ref = "master"
             });

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class SingleCommit : Commit
-    {
+    public class SingleCommit : Commit {
         [DataMember(Name = "committed_date")]
         public DateTime CommittedDate { get; set; }
 

@@ -4,30 +4,24 @@ using NGitLab.Models;
 using NUnit.Framework;
 using Shouldly;
 
-namespace NGitLab.Tests.RepositoryClient
-{
-    public class ProjectHooksClientTests
-    {
-        private readonly IProjectClient _projects;
+namespace NGitLab.Tests.RepositoryClient {
+    public class ProjectHooksClientTests {
+        readonly IProjectClient _projects;
 
-        public ProjectHooksClientTests()
-        {
+        public ProjectHooksClientTests() {
             _projects = Config.Connect().Projects;
         }
 
         [Test]
         [Category("Server_Required")]
-        public void CreateUpdateDelete()
-        {
+        public void CreateUpdateDelete() {
             Project proj = null;
-            try
-            {
+            try {
                 CreateProject(out proj, "Test Create Hook");
 
                 var hooks = Config.Connect().GetRepository(proj.Id).ProjectHooks;
 
-                var toCreate = new ProjectHookInsert
-                {
+                var toCreate = new ProjectHookInsert {
                     MergeRequestsEvents = true,
                     PushEvents = true,
                     Url = new Uri("http://scooletz.com"),
@@ -41,8 +35,7 @@ namespace NGitLab.Tests.RepositoryClient
                 createdHook.PushEvents.ShouldBe(toCreate.PushEvents);
                 createdHook.Url.ShouldBe(toCreate.Url);
 
-                var toUpdate = new ProjectHookUpdate
-                {
+                var toUpdate = new ProjectHookUpdate {
                     MergeRequestsEvents = true,
                     PushEvents = true,
                     TagPushEvents = true,
@@ -63,19 +56,14 @@ namespace NGitLab.Tests.RepositoryClient
 
                 hooks.All().ShouldBeEmpty();
             }
-            finally
-            {
+            finally {
                 if (proj != null)
-                {
                     _projects.Delete(proj.Id);
-                }
             }
         }
 
-        private ProjectCreate CreateProject(out Project created, string name)
-        {
-            var p = new ProjectCreate
-            {
+        ProjectCreate CreateProject(out Project created, string name) {
+            var p = new ProjectCreate {
                 Description = "desc",
                 ImportUrl = null,
                 IssuesEnabled = true,
@@ -85,7 +73,7 @@ namespace NGitLab.Tests.RepositoryClient
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Public,
                 WallEnabled = true,
-                WikiEnabled = true,
+                WikiEnabled = true
             };
 
             created = _projects.Create(p);

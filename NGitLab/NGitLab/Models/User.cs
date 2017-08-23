@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class User
-    {
+    public class User {
         public static string Url = "/users";
 
         [DataMember(Name = "id")]

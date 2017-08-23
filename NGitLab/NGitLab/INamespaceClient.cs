@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
-{
-    public interface INamespaceClient
-    {
+namespace NGitLab {
+    public interface INamespaceClient {
         /// <summary>
-        /// Get a list of projects accessible by the authenticated user.
+        ///     Get a list of projects accessible by the authenticated user.
         /// </summary>
         IEnumerable<Namespace> Accessible();
 

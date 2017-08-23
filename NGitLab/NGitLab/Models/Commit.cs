@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class Commit
-    {
+    public class Commit {
         public const string Url = "/commits";
 
         [DataMember(Name = "id")]

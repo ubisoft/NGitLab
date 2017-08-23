@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class Assignee
-    {
+    public class Assignee {
         [DataMember(Name = "id")]
         public int Id { get; set; }
 

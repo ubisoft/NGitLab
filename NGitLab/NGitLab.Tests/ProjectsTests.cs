@@ -3,66 +3,52 @@ using NGitLab.Models;
 using NUnit.Framework;
 using Shouldly;
 
-namespace NGitLab.Tests
-{
-    public class ProjectsTests : IDisposable
-    {
-        private readonly IProjectClient _projects;
-        private readonly Project _created;
+namespace NGitLab.Tests {
+    public class ProjectsTests : IDisposable {
+        readonly Project _created;
+        readonly IProjectClient _projects;
 
-        public ProjectsTests()
-        {
+        public ProjectsTests() {
             _projects = Config.Connect().Projects;
             CreateProject(out _created, "default-project-tests", false);
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             _projects.Delete(_created.Id);
         }
 
         [Test]
         [Category("Server_Required")]
-        public void GetStarredProjects()
-        {
+        public void GetStarredProjects() {
             Project _starcreated = null;
-            try
-            {
-
+            try {
                 CreateProject(out _starcreated, "default-project-starred", true);
                 _projects.Starred().ShouldNotBeEmpty();
             }
-            finally
-            {
+            finally {
                 if (_starcreated != null)
-                {
                     _projects.Delete(_starcreated.Id);
-                }
             }
         }
 
         [Test]
         [Category("Server_Required")]
-        public void GetOwnedProjects()
-        {
+        public void GetOwnedProjects() {
             _projects.Owned().ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
-        public void GetAccessibleProjects()
-        {
+        public void GetAccessibleProjects() {
             _projects.Accessible().ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
-        public void CreateDelete()
-        {
+        public void CreateDelete() {
             Project created2 = null;
 
-            try
-            {
+            try {
                 var p = CreateProject(out created2, "test2", false);
 
                 created2.Description.ShouldBe(p.Description);
@@ -71,19 +57,14 @@ namespace NGitLab.Tests
                 created2.Name.ShouldBe(p.Name);
                 _projects.Delete(created2.Id).ShouldBeTrue();
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 if (created2 != null)
-                {
                     _projects.Delete(created2.Id);
-                }
             }
         }
 
-        private ProjectCreate CreateProject(out Project created, string name, bool star)
-        {
-            var p = new ProjectCreate
-            {
+        ProjectCreate CreateProject(out Project created, string name, bool star) {
+            var p = new ProjectCreate {
                 Description = "desc",
                 ImportUrl = null,
                 IssuesEnabled = true,
@@ -93,16 +74,14 @@ namespace NGitLab.Tests
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Public,
                 WallEnabled = true,
-                WikiEnabled = true,
+                WikiEnabled = true
             };
 
             created = _projects.Create(p);
 
             // star is applicable
             if (star)
-            {
                 created = _projects.Star(created.Id);
-            }
 
             return p;
         }

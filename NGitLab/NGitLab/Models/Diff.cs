@@ -1,10 +1,8 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class Diff
-    {
+    public class Diff {
         [DataMember(Name = "diff")]
         public string Difference { get; set; }
 

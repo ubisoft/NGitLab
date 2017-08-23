@@ -1,22 +1,20 @@
 ﻿using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
-{
-    public interface IProjectClient
-    {
+namespace NGitLab {
+    public interface IProjectClient {
         /// <summary>
-        /// Get a list of projects accessible by the authenticated user.
+        ///     Get a list of projects accessible by the authenticated user.
         /// </summary>
         IEnumerable<Project> Accessible();
 
         /// <summary>
-        /// Get a list of projects owned by the authenticated user.
+        ///     Get a list of projects owned by the authenticated user.
         /// </summary>
         IEnumerable<Project> Owned();
 
         /// <summary>
-        /// Gets a list of starred projects.
+        ///     Gets a list of starred projects.
         /// </summary>
         IEnumerable<Project> Starred();
 

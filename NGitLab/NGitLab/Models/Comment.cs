@@ -1,10 +1,8 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class Comment
-    {
+    public class Comment {
         [DataMember(Name = "note")]
         public string Note { get; set; }
 

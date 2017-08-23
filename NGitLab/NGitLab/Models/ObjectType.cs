@@ -1,9 +1,8 @@
-﻿namespace NGitLab.Models
-{
-    public enum ObjectType
-    {
+﻿namespace NGitLab.Models {
+    public enum ObjectType {
 // ReSharper disable InconsistentNaming
-        blob,tree
+        blob,
+        tree
 // ReSharper restore InconsistentNaming
     }
 }

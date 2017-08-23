@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class MergeRequest
-    {
+    public class MergeRequest {
         public const string Url = "/merge_requests";
 
         [DataMember(Name = "id")]
@@ -41,16 +39,16 @@ namespace NGitLab.Models
         [DataMember(Name = "updated_at")]
         public DateTime UpdatedAt { get; set; }
 
-        [DataMember(Name="target_branch")]
+        [DataMember(Name = "target_branch")]
         public string TargetBranch { get; set; }
 
-        [DataMember(Name="source_branch")]
+        [DataMember(Name = "source_branch")]
         public string SourceBranch { get; set; }
 
-        [DataMember(Name="project_id")]
+        [DataMember(Name = "project_id")]
         public int ProjectId { get; set; }
 
-        [DataMember(Name="source_project_id")]
+        [DataMember(Name = "source_project_id")]
         public int SourceProjectId { get; set; }
 
         [DataMember(Name = "target_project_id")]

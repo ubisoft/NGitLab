@@ -1,10 +1,8 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NGitLab.Models
-{
+namespace NGitLab.Models {
     [DataContract]
-    public class BranchCreate
-    {
+    public class BranchCreate {
         [DataMember(Name = "branch_name")]
         public string Name { get; set; }
 

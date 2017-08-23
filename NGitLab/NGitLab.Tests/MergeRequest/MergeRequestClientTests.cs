@@ -1,47 +1,38 @@
-﻿using System.Linq;
-using NGitLab.Models;
+﻿using NGitLab.Models;
 using NUnit.Framework;
 using Shouldly;
 
-namespace NGitLab.Tests.MergeRequest
-{
-    public class MergeRequestClientTests
-    {
-        private readonly IMergeRequestClient _mergeRequest;
+namespace NGitLab.Tests.MergeRequest {
+    public class MergeRequestClientTests {
+        readonly IMergeRequestClient _mergeRequest;
 
-        public MergeRequestClientTests()
-        {
+        public MergeRequestClientTests() {
             _mergeRequest = _MergeRequestClientTests.MergeRequestClient;
         }
 
         [Test]
         [Category("Server_Required")]
-        public void GetAllMergeRequests()
-        {
+        public void GetAllMergeRequests() {
             _mergeRequest.All().ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
-        public void GetAllMergeRequestsInCertainState()
-        {
+        public void GetAllMergeRequestsInCertainState() {
             _mergeRequest.AllInState(MergeRequestState.opened).ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
-        public void GetMergeRequestById()
-        {
+        public void GetMergeRequestById() {
             const int mergeReqestId = 5;
             Assert.AreEqual(mergeReqestId, _mergeRequest.Get(mergeReqestId).Id);
         }
 
         [Test]
         [Category("Server_Required")]
-        public void CreateMergeRequest()
-        {
-            var mergeRequest = _mergeRequest.Create(new MergeRequestCreate
-            {
+        public void CreateMergeRequest() {
+            var mergeRequest = _mergeRequest.Create(new MergeRequestCreate {
                 Title = "Merge my-super-feature into master",
                 SourceBranch = "my-super-feature",
                 TargetBranch = "master"
@@ -52,10 +43,8 @@ namespace NGitLab.Tests.MergeRequest
 
         [Test]
         [Category("Server_Required")]
-        public void UpdateMergeRequest()
-        {
-            var mergeRequest = _mergeRequest.Update(5, new MergeRequestUpdate
-            {
+        public void UpdateMergeRequest() {
+            var mergeRequest = _mergeRequest.Update(5, new MergeRequestUpdate {
                 Title = "Merge my-super-feature into master",
                 TargetBranch = "my-super-feature",
                 SourceBranch = "master",
@@ -67,11 +56,10 @@ namespace NGitLab.Tests.MergeRequest
 
         [Test]
         [Category("Server_Required")]
-        public void AcceptMergeRequest()
-        {
+        public void AcceptMergeRequest() {
             var mergeRequest = _mergeRequest.Accept(
-                mergeRequestId: 6,
-                message: new MergeCommitMessage { Message = "Merge my-super-feature into master" });
+                6,
+                new MergeCommitMessage {Message = "Merge my-super-feature into master"});
 
             Assert.That(mergeRequest.State, Is.EqualTo(MergeRequestState.merged.ToString()));
         }
