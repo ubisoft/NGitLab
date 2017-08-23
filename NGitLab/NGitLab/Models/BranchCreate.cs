@@ -3,7 +3,7 @@
 namespace NGitLab.Models {
     [DataContract]
     public class BranchCreate {
-        [DataMember(Name = "branch_name")]
+        [DataMember(Name = "branch")]
         public string Name { get; set; }
 
         [DataMember(Name = "ref")]
