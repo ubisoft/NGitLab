@@ -1,4 +1,6 @@
 ﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace NGitLab.Models {
     [DataContract]
@@ -16,7 +18,8 @@ namespace NGitLab.Models {
         public string Title { get; set; }
 
         [DataMember(Name = "state_event")]
-        public string NewState { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public MergeRequestStateEvent NewState { get; set; }
     }
 
     // ReSharper disable InconsistentNaming

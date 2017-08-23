@@ -20,7 +20,7 @@ namespace NGitLab.Impl {
         }
 
         public MergeRequest Get(int id) {
-            return api.Get().To<MergeRequest>(projectPath + "/merge_request/" + id);
+            return api.Get().To<MergeRequest>(projectPath + "/merge_requests/" + id);
         }
 
         public MergeRequest Create(MergeRequestCreate mergeRequest) {
