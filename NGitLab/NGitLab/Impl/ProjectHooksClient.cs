@@ -3,32 +3,32 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl {
     public class ProjectHooksClient : IProjectHooksClient {
-        readonly API _api;
-        readonly string _path;
+        readonly Api api;
+        readonly string path;
 
-        public ProjectHooksClient(API api, string projectPath) {
-            _api = api;
-            _path = projectPath + "/hooks";
+        public ProjectHooksClient(Api api, string projectPath) {
+            this.api = api;
+            path = projectPath + "/hooks";
         }
 
         public IEnumerable<ProjectHook> All() {
-            return _api.Get().GetAll<ProjectHook>(_path);
+            return api.Get().GetAll<ProjectHook>(path);
         }
 
         public ProjectHook Get(int hookId) {
-            return _api.Get().To<ProjectHook>(_path + "/" + hookId);
+            return api.Get().To<ProjectHook>(path + "/" + hookId);
         }
 
         public ProjectHook Create(ProjectHookInsert hook) {
-            return _api.Post().With(hook).To<ProjectHook>(_path);
+            return api.Post().With(hook).To<ProjectHook>(path);
         }
 
         public ProjectHook Update(ProjectHookUpdate hook) {
-            return _api.Put().With(hook).To<ProjectHook>(_path + "/" + hook.HookId);
+            return api.Put().With(hook).To<ProjectHook>(path + "/" + hook.HookId);
         }
 
         public void Delete(int hookId) {
-            _api.Delete().To<ProjectHook>(_path + "/" + hookId);
+            api.Delete().To<ProjectHook>(path + "/" + hookId);
         }
     }
 }

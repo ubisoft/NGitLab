@@ -5,49 +5,49 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl {
     public class RepositoryClient : IRepositoryClient {
-        readonly API _api;
-        readonly string _projectPath;
-        readonly string _repoPath;
+        readonly Api api;
+        readonly string projectPath;
+        readonly string repoPath;
 
-        public RepositoryClient(API api, int projectId) {
-            _api = api;
+        public RepositoryClient(Api api, int projectId) {
+            this.api = api;
 
-            _projectPath = Project.Url + "/" + projectId;
-            _repoPath = _projectPath + "/repository";
+            projectPath = Project.Url + "/" + projectId;
+            repoPath = projectPath + "/repository";
         }
 
-        public IEnumerable<Tag> Tags => _api.Get().GetAll<Tag>(_repoPath + "/tags");
+        public IEnumerable<Tag> Tags => api.Get().GetAll<Tag>(repoPath + "/tags");
 
-        public IEnumerable<TreeOrBlob> Tree => _api.Get().GetAll<TreeOrBlob>(_repoPath + "/tree");
+        public IEnumerable<TreeOrBlob> Tree => api.Get().GetAll<TreeOrBlob>(repoPath + "/tree");
 
         public void GetRawBlob(string sha, Action<Stream> parser) {
-            _api.Get().Stream(_repoPath + "/raw_blobs/" + sha, parser);
+            api.Get().Stream(repoPath + "/raw_blobs/" + sha, parser);
         }
 
-        public IEnumerable<Commit> Commits => _api.Get().GetAll<Commit>(_repoPath + "/commits");
+        public IEnumerable<Commit> Commits => api.Get().GetAll<Commit>(repoPath + "/commits");
 
         public SingleCommit GetCommit(Sha1 sha) {
-            return _api.Get().To<SingleCommit>(_repoPath + "/commits/" + sha);
+            return api.Get().To<SingleCommit>(repoPath + "/commits/" + sha);
         }
 
         public IEnumerable<Diff> GetCommitDiff(Sha1 sha) {
-            return _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
+            return api.Get().GetAll<Diff>(repoPath + "/commits/" + sha + "/diff");
         }
 
-        public IFilesClient Files => new FileClient(_api, _repoPath);
+        public IFilesClient Files => new FileClient(api, repoPath);
 
-        public IBranchClient Branches => new BranchClient(_api, _repoPath);
+        public IBranchClient Branches => new BranchClient(api, repoPath);
 
-        public IProjectHooksClient ProjectHooks => new ProjectHooksClient(_api, _projectPath);
+        public IProjectHooksClient ProjectHooks => new ProjectHooksClient(api, projectPath);
 
         public Tag CreateTag(TagCreate tag) {
-            return _api
+            return api
                 .Post().With(tag)
-                .To<Tag>(_repoPath + "/tags");
+                .To<Tag>(repoPath + "/tags");
         }
 
         public bool DeleteTag(string tagName) {
-            var tag = _api.Delete().To<Tag>(_repoPath + "/tags/" + tagName);
+            var tag = api.Delete().To<Tag>(repoPath + "/tags/" + tagName);
             return tag == null || tag.Commit == null;
         }
     }

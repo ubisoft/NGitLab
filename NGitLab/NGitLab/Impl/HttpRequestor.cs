@@ -17,13 +17,13 @@ namespace NGitLab.Impl {
     }
 
     public class HttpRequestor {
-        readonly MethodType _method; // Default to GET requests
-        readonly API _root;
+        readonly MethodType method; // Default to GET requests
+        readonly Api root;
         object _data;
 
-        public HttpRequestor(API root, MethodType method) {
-            _root = root;
-            _method = method;
+        public HttpRequestor(Api root, MethodType method) {
+            this.root = root;
+            this.method = method;
         }
 
         public HttpRequestor With(object data) {
@@ -31,10 +31,10 @@ namespace NGitLab.Impl {
             return this;
         }
 
-        public T To<T>(string tailAPIUrl) {
+        public T To<T>(string tailApiUrl) {
             var result = default(T);
             string json = null;
-            Stream(tailAPIUrl, s => {
+            Stream(tailApiUrl, s => {
                 var data = new StreamReader(s).ReadToEnd();
                 result = JsonConvert.DeserializeObject<T>(data);
                 json = data;
@@ -42,12 +42,12 @@ namespace NGitLab.Impl {
             return result;
         }
 
-        public void Stream(string tailAPIUrl, Action<Stream> parser) {
-            var req = SetupConnection(_root.GetAPIUrl(tailAPIUrl));
+        public void Stream(string tailApiUrl, Action<Stream> parser) {
+            var req = SetupConnection(root.GetApiUrl(tailApiUrl));
 
             if (HasOutput())
                 SubmitData(req);
-            else if (_method == MethodType.Put)
+            else if (method == MethodType.Put)
                 req.Headers.Add("Content-Length", "0");
 
             try {
@@ -77,7 +77,7 @@ namespace NGitLab.Impl {
         }
 
         public IEnumerable<T> GetAll<T>(string tailUrl) {
-            return new Enumerable<T>(_root.APIToken, _root.GetAPIUrl(tailUrl));
+            return new Enumerable<T>(root.ApiToken, root.GetApiUrl(tailUrl));
         }
 
         void SubmitData(WebRequest request) {
@@ -93,11 +93,11 @@ namespace NGitLab.Impl {
         }
 
         bool HasOutput() {
-            return _method == MethodType.Post || _method == MethodType.Put && _data != null;
+            return method == MethodType.Post || method == MethodType.Put && _data != null;
         }
 
         WebRequest SetupConnection(Uri url) {
-            return SetupConnection(url, _method, _root.APIToken);
+            return SetupConnection(url, method, root.ApiToken);
         }
 
         static WebRequest SetupConnection(Uri url, MethodType methodType, string privateToken) {
@@ -116,16 +116,16 @@ namespace NGitLab.Impl {
         }
 
         class Enumerable<T> : IEnumerable<T> {
-            readonly string _apiToken;
-            readonly Uri _startUrl;
+            readonly string apiToken;
+            readonly Uri startUrl;
 
             public Enumerable(string apiToken, Uri startUrl) {
-                _apiToken = apiToken;
-                _startUrl = startUrl;
+                this.apiToken = apiToken;
+                this.startUrl = startUrl;
             }
 
             public IEnumerator<T> GetEnumerator() {
-                return new Enumerator(_apiToken, _startUrl);
+                return new Enumerator(apiToken, startUrl);
             }
 
             IEnumerator IEnumerable.GetEnumerator() {
@@ -133,25 +133,25 @@ namespace NGitLab.Impl {
             }
 
             class Enumerator : IEnumerator<T> {
-                readonly string _apiToken;
-                readonly List<T> _buffer = new List<T>();
-                Uri _nextUrlToLoad;
+                readonly string apiToken;
+                readonly List<T> buffer = new List<T>();
+                Uri nextUrlToLoad;
 
                 public Enumerator(string apiToken, Uri startUrl) {
-                    _apiToken = apiToken;
-                    _nextUrlToLoad = startUrl;
+                    this.apiToken = apiToken;
+                    nextUrlToLoad = startUrl;
                 }
 
                 public void Dispose() {
                 }
 
                 public bool MoveNext() {
-                    if (_buffer.Count == 0) {
-                        if (_nextUrlToLoad == null)
+                    if (buffer.Count == 0) {
+                        if (nextUrlToLoad == null)
                             return false;
 
-                        var request = SetupConnection(_nextUrlToLoad, MethodType.Get, _apiToken);
-                        request.Headers["PRIVATE-TOKEN"] = _apiToken;
+                        var request = SetupConnection(nextUrlToLoad, MethodType.Get, apiToken);
+                        request.Headers["PRIVATE-TOKEN"] = apiToken;
 
                         using (var response = request.GetResponseAsync().Result) {
                             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
@@ -164,21 +164,21 @@ namespace NGitLab.Impl {
                                     .FirstOrDefault(pair => pair[1].Contains("next"));
 
                             if (nextLink != null)
-                                _nextUrlToLoad = new Uri(nextLink[0].Trim('<', '>', ' '));
+                                nextUrlToLoad = new Uri(nextLink[0].Trim('<', '>', ' '));
                             else
-                                _nextUrlToLoad = null;
+                                nextUrlToLoad = null;
 
                             var stream = response.GetResponseStream();
                             var data = new StreamReader(stream).ReadToEnd();
-                            _buffer.AddRange(JsonConvert.DeserializeObject<T[]>(data));
+                            buffer.AddRange(JsonConvert.DeserializeObject<T[]>(data));
                         }
 
-                        return _buffer.Count > 0;
+                        return buffer.Count > 0;
                     }
 
-                    if (_buffer.Count > 0) {
-                        _buffer.RemoveAt(0);
-                        return _buffer.Count > 0 ? true : MoveNext();
+                    if (buffer.Count > 0) {
+                        buffer.RemoveAt(0);
+                        return buffer.Count > 0 ? true : MoveNext();
                     }
 
                     return false;
@@ -188,7 +188,7 @@ namespace NGitLab.Impl {
                     throw new NotImplementedException();
                 }
 
-                public T Current => _buffer[0];
+                public T Current => buffer[0];
 
                 object IEnumerator.Current => Current;
             }

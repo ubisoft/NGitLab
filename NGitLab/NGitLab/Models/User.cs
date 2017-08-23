@@ -40,7 +40,7 @@ namespace NGitLab.Models {
         public DateTime CreatedAt { get; set; }
 
         [DataMember(Name = "avatar_url")]
-        public string AvatarURL { get; set; }
+        public string AvatarUrl { get; set; }
 
         [DataMember(Name = "bio")]
         public string Bio { get; set; }
@@ -55,7 +55,7 @@ namespace NGitLab.Models {
         public string ExternUid { get; set; }
 
         [DataMember(Name = "website_url")]
-        public string WebsiteURL { get; set; }
+        public string WebsiteUrl { get; set; }
 
         [DataMember(Name = "is_admin")]
         public bool IsAdmin { get; set; }

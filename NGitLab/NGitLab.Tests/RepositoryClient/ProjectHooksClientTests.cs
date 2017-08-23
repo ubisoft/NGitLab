@@ -6,10 +6,10 @@ using Shouldly;
 
 namespace NGitLab.Tests.RepositoryClient {
     public class ProjectHooksClientTests {
-        readonly IProjectClient _projects;
+        readonly IProjectClient projects;
 
         public ProjectHooksClientTests() {
-            _projects = Config.Connect().Projects;
+            projects = Config.Connect().Projects;
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace NGitLab.Tests.RepositoryClient {
             }
             finally {
                 if (proj != null)
-                    _projects.Delete(proj.Id);
+                    projects.Delete(proj.Id);
             }
         }
 
@@ -76,7 +76,7 @@ namespace NGitLab.Tests.RepositoryClient {
                 WikiEnabled = true
             };
 
-            created = _projects.Create(p);
+            created = projects.Create(p);
 
             return p;
         }

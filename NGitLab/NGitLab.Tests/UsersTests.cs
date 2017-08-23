@@ -5,16 +5,16 @@ using Shouldly;
 
 namespace NGitLab.Tests {
     public class UsersTests {
-        readonly IUserClient _users;
+        readonly IUserClient users;
 
         public UsersTests() {
-            _users = Config.Connect().Users;
+            users = Config.Connect().Users;
         }
 
         [Test]
         [Category("Server_Required")]
         public void Current() {
-            var session = _users.Current();
+            var session = users.Current();
 
             session.CreatedAt.ShouldNotBe(default(DateTime));
             session.Email.ShouldNotBeNull();
@@ -24,13 +24,13 @@ namespace NGitLab.Tests {
         [Test]
         [Category("Server_Required")]
         public void GetUsers() {
-            _users.All().ShouldNotBeEmpty();
+            users.All().ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetUser() {
-            var user = _users.Get(1);
+            var user = users.Get(1);
 
             Assert.AreNotEqual(string.Empty, user.Username);
             Assert.AreEqual(true, user.CanCreateGroup);
@@ -50,19 +50,19 @@ namespace NGitLab.Tests {
                 Skype = "skype",
                 Twitter = "twitter",
                 Username = "username",
-                WebsiteURL = "wp.pl"
+                WebsiteUrl = "wp.pl"
             };
 
-            var addedUser = _users.Create(u);
+            var addedUser = users.Create(u);
             Assert.AreEqual(u.Bio, addedUser.Bio);
 
             u.Bio = "Bio2";
             u.Email = "test@test.pl";
 
-            var updatedUser = _users.Update(addedUser.Id, u);
+            var updatedUser = users.Update(addedUser.Id, u);
             Assert.AreEqual(u.Bio, updatedUser.Bio);
 
-            _users.Delete(addedUser.Id);
+            users.Delete(addedUser.Id);
         }
     }
 }

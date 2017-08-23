@@ -5,18 +5,18 @@ namespace NGitLab.Impl {
     public class IssueClient : IIssueClient {
         const string IssuesUrl = "/issues";
         const string ProjectIssuesUrl = "/projects/{0}/issues";
-        readonly API _api;
+        readonly Api api;
 
-        public IssueClient(API api) {
-            _api = api;
+        public IssueClient(Api api) {
+            this.api = api;
         }
 
         public IEnumerable<Issue> Owned() {
-            return _api.Get().GetAll<Issue>(IssuesUrl);
+            return api.Get().GetAll<Issue>(IssuesUrl);
         }
 
         public IEnumerable<Issue> ForProject(int projectId) {
-            return _api.Get().GetAll<Issue>(string.Format(ProjectIssuesUrl, projectId));
+            return api.Get().GetAll<Issue>(string.Format(ProjectIssuesUrl, projectId));
         }
     }
 }

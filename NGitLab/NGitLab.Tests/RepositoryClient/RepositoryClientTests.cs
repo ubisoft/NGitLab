@@ -5,29 +5,29 @@ using Shouldly;
 
 namespace NGitLab.Tests.RepositoryClient {
     public class RepositoryClientTests {
-        readonly IRepositoryClient _repo;
+        readonly IRepositoryClient repo;
 
         public RepositoryClientTests() {
-            _repo = _RepositoryClientTests.RepositoryClient;
+            repo = _RepositoryClientTests.RepositoryClient;
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetAllCommits() {
-            _repo.Commits.ShouldNotBeEmpty();
+            repo.Commits.ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetCommitBySha1() {
-            var commits = _repo.Commits.First().Id;
-            _repo.GetCommit(commits).Id.ShouldNotBeNull();
+            var commits = repo.Commits.First().Id;
+            repo.GetCommit(commits).Id.ShouldNotBeNull();
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetCommitDiff() {
-            _repo.GetCommitDiff(_repo.Commits.First().Id).ShouldNotBeEmpty();
+            repo.GetCommitDiff(repo.Commits.First().Id).ShouldNotBeEmpty();
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace NGitLab.Tests.RepositoryClient {
             tagCreate.Ref = "master";
             tagCreate.TagName = "my_test_tag";
 
-            Assert.IsNotNull(_repo.CreateTag(tagCreate));
+            Assert.IsNotNull(repo.CreateTag(tagCreate));
         }
     }
 }

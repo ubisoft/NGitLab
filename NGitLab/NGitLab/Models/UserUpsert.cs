@@ -30,7 +30,7 @@ namespace NGitLab.Models {
         public string Twitter { get; set; }
 
         [DataMember(Name = "website_url")]
-        public string WebsiteURL { get; set; }
+        public string WebsiteUrl { get; set; }
 
         [DataMember(Name = "projects_limit")]
         public int ProjectsLimit { get; set; }
@@ -51,7 +51,7 @@ namespace NGitLab.Models {
         public bool ResetPassword { get; set; }
 
         [DataMember(Name = "extern_uid")]
-        public string Extern_Uid { get; set; }
+        public string ExternUid { get; set; }
 
         [DataMember(Name = "confirm")]
         public bool Confirm { get; set; }

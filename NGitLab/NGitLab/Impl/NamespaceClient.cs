@@ -3,26 +3,26 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl {
     public class NamespaceClient : INamespaceClient {
-        readonly API _api;
+        readonly Api api;
 
-        public NamespaceClient(API api) {
-            _api = api;
+        public NamespaceClient(Api api) {
+            this.api = api;
         }
 
         public IEnumerable<Namespace> Accessible() {
-            return _api.Get().GetAll<Namespace>(Namespace.Url);
+            return api.Get().GetAll<Namespace>(Namespace.Url);
         }
 
         public Namespace Get(int id) {
-            return _api.Get().To<Namespace>(Namespace.Url + "/" + id);
+            return api.Get().To<Namespace>(Namespace.Url + "/" + id);
         }
 
         public Namespace Create(NamespaceCreate group) {
-            return _api.Post().With(group).To<Namespace>(Namespace.Url);
+            return api.Post().With(group).To<Namespace>(Namespace.Url);
         }
 
         public void Delete(int id) {
-            _api.Delete().To<Namespace>(Namespace.Url + "/" + id);
+            api.Delete().To<Namespace>(Namespace.Url + "/" + id);
         }
     }
 }

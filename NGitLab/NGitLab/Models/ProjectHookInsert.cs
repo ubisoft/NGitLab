@@ -74,7 +74,7 @@ namespace NGitLab.Models {
         ///     Gets or sets a value indicating whether or not to do SSL verification when triggering the hook.
         /// </summary>
         [DataMember(Name = "enable_ssl_verification")]
-        public bool EnableSSLVerification { get; set; }
+        public bool EnableSslVerification { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether or not to trigger hook on confidential issues events.

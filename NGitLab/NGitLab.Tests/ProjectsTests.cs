@@ -5,42 +5,42 @@ using Shouldly;
 
 namespace NGitLab.Tests {
     public class ProjectsTests : IDisposable {
-        readonly Project _created;
-        readonly IProjectClient _projects;
+        readonly Project created;
+        readonly IProjectClient projects;
 
         public ProjectsTests() {
-            _projects = Config.Connect().Projects;
-            CreateProject(out _created, "default-project-tests", false);
+            projects = Config.Connect().Projects;
+            CreateProject(out created, "default-project-tests", false);
         }
 
         public void Dispose() {
-            _projects.Delete(_created.Id);
+            projects.Delete(created.Id);
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetStarredProjects() {
-            Project _starcreated = null;
+            Project starcreated = null;
             try {
-                CreateProject(out _starcreated, "default-project-starred", true);
-                _projects.Starred().ShouldNotBeEmpty();
+                CreateProject(out starcreated, "default-project-starred", true);
+                projects.Starred().ShouldNotBeEmpty();
             }
             finally {
-                if (_starcreated != null)
-                    _projects.Delete(_starcreated.Id);
+                if (starcreated != null)
+                    projects.Delete(starcreated.Id);
             }
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetOwnedProjects() {
-            _projects.Owned().ShouldNotBeEmpty();
+            projects.Owned().ShouldNotBeEmpty();
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetAccessibleProjects() {
-            _projects.Accessible().ShouldNotBeEmpty();
+            projects.Accessible().ShouldNotBeEmpty();
         }
 
         [Test]
@@ -55,11 +55,11 @@ namespace NGitLab.Tests {
                 created2.IssuesEnabled.ShouldBe(p.IssuesEnabled);
                 created2.MergeRequestsEnabled.ShouldBe(p.MergeRequestsEnabled);
                 created2.Name.ShouldBe(p.Name);
-                _projects.Delete(created2.Id).ShouldBeTrue();
+                projects.Delete(created2.Id).ShouldBeTrue();
             }
             catch (Exception ex) {
                 if (created2 != null)
-                    _projects.Delete(created2.Id);
+                    projects.Delete(created2.Id);
             }
         }
 
@@ -77,11 +77,11 @@ namespace NGitLab.Tests {
                 WikiEnabled = true
             };
 
-            created = _projects.Create(p);
+            created = projects.Create(p);
 
             // star is applicable
             if (star)
-                created = _projects.Star(created.Id);
+                created = projects.Star(created.Id);
 
             return p;
         }

@@ -2,24 +2,24 @@
 
 namespace NGitLab.Impl {
     public class FileClient : IFilesClient {
-        readonly API _api;
-        readonly string _repoPath;
+        readonly Api api;
+        readonly string repoPath;
 
-        public FileClient(API api, string repoPath) {
-            _api = api;
-            _repoPath = repoPath;
+        public FileClient(Api api, string repoPath) {
+            this.api = api;
+            this.repoPath = repoPath;
         }
 
         public void Create(FileUpsert file) {
-            _api.Post().With(file).Stream(_repoPath + "/files", s => { });
+            api.Post().With(file).Stream(repoPath + "/files", s => { });
         }
 
         public void Update(FileUpsert file) {
-            _api.Put().With(file).Stream(_repoPath + "/files", s => { });
+            api.Put().With(file).Stream(repoPath + "/files", s => { });
         }
 
         public void Delete(FileDelete file) {
-            _api.Delete().With(file).Stream(_repoPath + "/files", s => { });
+            api.Delete().With(file).Stream(repoPath + "/files", s => { });
         }
     }
 }

@@ -3,36 +3,36 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl {
     public class BranchClient : IBranchClient {
-        readonly API _api;
-        readonly string _repoPath;
+        readonly Api api;
+        readonly string repoPath;
 
-        public BranchClient(API api, string repoPath) {
-            _api = api;
-            _repoPath = repoPath;
+        public BranchClient(Api api, string repoPath) {
+            this.api = api;
+            this.repoPath = repoPath;
         }
 
         public IEnumerable<Branch> All() {
-            return _api.Get().GetAll<Branch>(_repoPath + "/branches");
+            return api.Get().GetAll<Branch>(repoPath + "/branches");
         }
 
         public Branch Get(string name) {
-            return _api.Get().To<Branch>(_repoPath + "/branches/" + name);
+            return api.Get().To<Branch>(repoPath + "/branches/" + name);
         }
 
         public Branch Protect(string name) {
-            return _api.Put().To<Branch>(_repoPath + "/branches/" + name + "/protect");
+            return api.Put().To<Branch>(repoPath + "/branches/" + name + "/protect");
         }
 
         public Branch Unprotect(string name) {
-            return _api.Put().To<Branch>(_repoPath + "/branches/" + name + "/unprotect");
+            return api.Put().To<Branch>(repoPath + "/branches/" + name + "/unprotect");
         }
 
         public Branch Create(BranchCreate branch) {
-            return _api.Post().With(branch).To<Branch>(_repoPath + "/branches");
+            return api.Post().With(branch).To<Branch>(repoPath + "/branches");
         }
 
         public BranchRemovalStatus Delete(string name) {
-            var errorMessage = _api.Delete().To<string>(_repoPath + "/branches/" + name);
+            var errorMessage = api.Delete().To<string>(repoPath + "/branches/" + name);
             return BranchRemovalStatus.FromReponseMessage(errorMessage);
         }
     }

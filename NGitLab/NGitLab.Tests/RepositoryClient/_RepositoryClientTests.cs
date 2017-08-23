@@ -6,12 +6,12 @@ namespace NGitLab.Tests.RepositoryClient {
     [SetUpFixture]
     public class _RepositoryClientTests {
         public static IRepositoryClient RepositoryClient;
-        Project _project;
+        Project project;
 
         [OneTimeSetUp]
         public void SetUp() {
-            _project = Config.Connect().Projects.Owned().FirstOrDefault();
-            RepositoryClient = Config.Connect().GetRepository(_project.Id);
+            project = Config.Connect().Projects.Owned().FirstOrDefault();
+            RepositoryClient = Config.Connect().GetRepository(project.Id);
         }
     }
 }

@@ -20,25 +20,25 @@ namespace NGitLab.Models {
         public bool MergeRequestsEvents { get; set; }
 
         [DataMember(Name = "issues_events")]
-        public bool issues_events { get; set; }
+        public bool IssuesEvents { get; set; }
 
         [DataMember(Name = "tag_push_events")]
-        public bool tag_push_events { get; set; }
+        public bool TagPushEvents { get; set; }
 
         [DataMember(Name = "note_events")]
-        public bool note_events { get; set; }
+        public bool NoteEvents { get; set; }
 
         [DataMember(Name = "job_events")]
-        public bool job_events { get; set; }
+        public bool JobEvents { get; set; }
 
         [DataMember(Name = "pipeline_events")]
-        public bool pipeline_events { get; set; }
+        public bool PipelineEvents { get; set; }
 
         [DataMember(Name = "wiki_page_events")]
-        public bool wiki_page_events { get; set; }
+        public bool WikiPageEvents { get; set; }
 
         [DataMember(Name = "enable_ssl_verification")]
-        public bool enable_ssl_verification { get; set; }
+        public bool EnableSslVerification { get; set; }
 
         [DataMember(Name = "created_at")]
         public DateTime CreatedAt { get; set; }

@@ -8,9 +8,9 @@ namespace NGitLab {
     /// </summary>
     [JsonConverter(typeof(Sha1Converter))]
     public struct Sha1 {
-        readonly ulong _p1; // 8
-        readonly ulong _p2; // 16
-        readonly uint _p3; // 20
+        readonly ulong p1; // 8
+        readonly ulong p2; // 16
+        readonly uint p3; // 20
 
         [JsonConstructor]
         public Sha1(string value) {
@@ -22,13 +22,13 @@ namespace NGitLab {
 
             var index = 0;
 
-            _p1 = GetLong(value, ref index);
-            _p2 = GetLong(value, ref index);
-            _p3 = GetInt(value, ref index);
+            p1 = GetLong(value, ref index);
+            p2 = GetLong(value, ref index);
+            p3 = GetInt(value, ref index);
         }
 
         public bool Equals(Sha1 other) {
-            return _p1 == other._p1 && _p2 == other._p2 && _p3 == other._p3;
+            return p1 == other.p1 && p2 == other.p2 && p3 == other.p3;
         }
 
         public override bool Equals(object obj) {
@@ -39,17 +39,17 @@ namespace NGitLab {
 
         public override int GetHashCode() {
             unchecked {
-                var hashCode = _p1.GetHashCode();
-                hashCode = (hashCode * 397) ^ _p2.GetHashCode();
-                hashCode = (hashCode * 397) ^ _p3.GetHashCode();
+                var hashCode = p1.GetHashCode();
+                hashCode = (hashCode * 397) ^ p2.GetHashCode();
+                hashCode = (hashCode * 397) ^ p3.GetHashCode();
                 return hashCode;
             }
         }
 
         public override string ToString() {
-            return _p1.ToString("X16") +
-                   _p2.ToString("X16") +
-                   _p3.ToString("X8");
+            return p1.ToString("X16") +
+                   p2.ToString("X16") +
+                   p3.ToString("X8");
         }
 
         static ulong GetLong(string value, ref int i) {

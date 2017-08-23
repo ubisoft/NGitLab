@@ -3,20 +3,20 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl {
     public class MergeRequestCommentClient : IMergeRequestCommentClient {
-        readonly API _api;
-        readonly string _commentsPath;
+        readonly Api api;
+        readonly string commentsPath;
 
-        public MergeRequestCommentClient(API api, string projectPath, int mergeRequestId) {
-            _api = api;
-            _commentsPath = projectPath + "/merge_request/" + mergeRequestId + "/comments";
+        public MergeRequestCommentClient(Api api, string projectPath, int mergeRequestId) {
+            this.api = api;
+            commentsPath = projectPath + "/merge_request/" + mergeRequestId + "/comments";
         }
 
         public IEnumerable<Comment> All() {
-            return _api.Get().GetAll<Comment>(_commentsPath);
+            return api.Get().GetAll<Comment>(commentsPath);
         }
 
         public Comment Add(MergeRequestComment comment) {
-            return _api.Post().With(comment).To<Comment>(_commentsPath);
+            return api.Post().With(comment).To<Comment>(commentsPath);
         }
     }
 }

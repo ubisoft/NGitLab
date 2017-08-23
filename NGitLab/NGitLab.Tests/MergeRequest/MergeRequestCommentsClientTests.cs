@@ -4,16 +4,16 @@ using Shouldly;
 
 namespace NGitLab.Tests.MergeRequest {
     public class MergeRequestCommentsClientTests {
-        readonly IMergeRequestCommentClient _mergeRequestComments;
+        readonly IMergeRequestCommentClient mergeRequestComments;
 
         public MergeRequestCommentsClientTests() {
-            _mergeRequestComments = _MergeRequestClientTests.MergeRequestClient.Comments(5);
+            mergeRequestComments = _MergeRequestClientTests.MergeRequestClient.Comments(5);
         }
 
         [Test]
         [Category("Server_Required")]
         public void GetAllComments() {
-            _mergeRequestComments.All().ShouldNotBeEmpty();
+            mergeRequestComments.All().ShouldNotBeEmpty();
         }
 
         [Test]
@@ -22,7 +22,7 @@ namespace NGitLab.Tests.MergeRequest {
             const string commentMessage = "note";
             var newComment = new MergeRequestComment {Note = commentMessage};
 
-            var mergeRequest = _mergeRequestComments.Add(newComment);
+            var mergeRequest = mergeRequestComments.Add(newComment);
 
             Assert.That(mergeRequest.Note, Is.EqualTo(commentMessage));
         }
