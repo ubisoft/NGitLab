@@ -5,10 +5,9 @@ namespace NGitLab.Impl {
     public class MergeRequestCommentClient : IMergeRequestCommentClient {
         readonly Api api;
         readonly string commentsPath;
-
         public MergeRequestCommentClient(Api api, string projectPath, int mergeRequestId) {
             this.api = api;
-            commentsPath = projectPath + "/merge_request/" + mergeRequestId + "/comments";
+            commentsPath = projectPath + "/merge_requests/" + mergeRequestId + "/notes";
         }
 
         public IEnumerable<Comment> All() {

@@ -3,7 +3,7 @@
 namespace NGitLab.Models {
     [DataContract]
     public class Comment {
-        [DataMember(Name = "note")]
+        [DataMember(Name = "body")]
         public string Note { get; set; }
 
         [DataMember(Name = "author")]

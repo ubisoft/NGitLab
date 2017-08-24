@@ -1,4 +1,5 @@
-﻿using NGitLab.Models;
+﻿using System.Linq;
+using NGitLab.Models;
 using NUnit.Framework;
 using Shouldly;
 
@@ -7,7 +8,9 @@ namespace NGitLab.Tests.MergeRequest {
         readonly IMergeRequestCommentClient mergeRequestComments;
 
         public MergeRequestCommentsClientTests() {
-            mergeRequestComments = _MergeRequestClientTests.MergeRequestClient.Comments(5);
+            var mergeRequestClient = _MergeRequestClientTests.MergeRequestClient;
+            var mergeRequest = mergeRequestClient.AllInState(MergeRequestState.opened).FirstOrDefault(x => x.Title == "mergeme");
+            mergeRequestComments = _MergeRequestClientTests.MergeRequestClient.Comments(mergeRequest.Iid);
         }
 
         [Test]
