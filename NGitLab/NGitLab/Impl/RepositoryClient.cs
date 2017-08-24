@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Impl {
@@ -49,6 +50,10 @@ namespace NGitLab.Impl {
         public bool DeleteTag(string tagName) {
             var tag = api.Delete().To<Tag>(repoPath + "/tags/" + tagName);
             return tag == null || tag.Commit == null;
+        }
+
+        public CommitStatus GetCommitStatus(Sha1 sha) {
+            return api.Get().GetAll<CommitStatus>(repoPath + "/commits/" + sha + "/statuses").FirstOrDefault();
         }
     }
 }

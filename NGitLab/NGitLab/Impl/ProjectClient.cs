@@ -12,7 +12,7 @@ namespace NGitLab.Impl {
         public IEnumerable<Project> Accessible() {
             return api.Get().GetAll<Project>(Project.Url);
         }
-
+        
         public IEnumerable<Project> Owned() {
             return api.Get().GetAll<Project>(Project.Url + "/?owned=true");
         }

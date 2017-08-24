@@ -3,7 +3,8 @@
 // ReSharper disable InconsistentNaming
         opened,
         closed,
-        merged
+        merged,
+        reopened,
 // ReSharper restore InconsistentNaming
     }
 }

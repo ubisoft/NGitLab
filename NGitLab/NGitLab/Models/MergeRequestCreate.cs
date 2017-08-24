@@ -14,6 +14,9 @@ namespace NGitLab.Models {
 
         [DataMember(Name = "title")]
         public string Title { get; set; }
+        
+        [DataMember(Name = "description")]
+        public string Description { get; set; }
 
         [DataMember(Name = "target_project_id")]
         public int? TargetProjectId { get; set; }

@@ -8,7 +8,7 @@ namespace NGitLab.Impl {
 
         public MergeRequestCommitClient(Api api, string projectPath, int mergeRequestId) {
             this.api = api;
-            commitsPath = projectPath + "/merge_request/" + mergeRequestId + "/commits";
+            commitsPath = projectPath + "/merge_requests/" + mergeRequestId + "/commits";
         }
 
         public IEnumerable<Commit> All() {

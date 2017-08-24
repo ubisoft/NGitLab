@@ -85,6 +85,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Commit.cs" />
     <Compile Include="Models\CommitInfo.cs" />
+    <Compile Include="Models\CommitStatus.cs" />
     <Compile Include="Models\Diff.cs" />
     <Compile Include="Models\FileData.cs" />
     <Compile Include="Models\FileDelete.cs" />

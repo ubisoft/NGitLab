@@ -53,5 +53,8 @@ namespace NGitLab.Models {
 
         [DataMember(Name = "namespace")]
         public Namespace Namespace { get; set; }
+
+        [DataMember(Name = "tag_list")]
+        public string[] Tags { get; set; }
     }
 }
