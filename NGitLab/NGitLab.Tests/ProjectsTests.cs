@@ -57,7 +57,7 @@ namespace NGitLab.Tests {
                 created2.Name.ShouldBe(p.Name);
                 projects.Delete(created2.Id).ShouldBeTrue();
             }
-            catch (Exception ex) {
+            catch (Exception) {
                 if (created2 != null)
                     projects.Delete(created2.Id);
             }

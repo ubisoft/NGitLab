@@ -16,7 +16,7 @@ namespace NGitLab.Tests.MergeRequest {
         [Test]
         [Category("Server_Required")]
         public void GetAllComments() {
-            mergeRequestComments.All().ShouldNotBeEmpty();
+            mergeRequestComments.All.ShouldNotBeEmpty();
         }
 
         [Test]

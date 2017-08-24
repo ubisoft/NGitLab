@@ -10,9 +10,8 @@ namespace NGitLab.Impl {
             commentsPath = projectPath + "/merge_requests/" + mergeRequestId + "/notes";
         }
 
-        public IEnumerable<Comment> All() {
-            return api.Get().GetAll<Comment>(commentsPath);
-        }
+        public IEnumerable<Comment> All => api.Get().GetAll<Comment>(commentsPath);
+
 
         public Comment Add(MergeRequestComment comment) {
             return api.Post().With(comment).To<Comment>(commentsPath);

@@ -29,7 +29,7 @@ namespace NGitLab.Tests.RepositoryClient {
                 };
 
                 var createdHook = hooks.Create(toCreate);
-                hooks.All().Count().ShouldBe(1);
+                hooks.All.Count().ShouldBe(1);
 
                 createdHook.MergeRequestsEvents.ShouldBe(toCreate.MergeRequestsEvents);
                 createdHook.PushEvents.ShouldBe(toCreate.PushEvents);
@@ -46,7 +46,7 @@ namespace NGitLab.Tests.RepositoryClient {
 
                 var updated = hooks.Update(toUpdate);
 
-                hooks.All().Count().ShouldBe(1);
+                hooks.All.Count().ShouldBe(1);
 
                 Assert.AreEqual(toUpdate.MergeRequestsEvents, updated.MergeRequestsEvents);
                 Assert.AreEqual(toUpdate.PushEvents, updated.PushEvents);
@@ -54,7 +54,7 @@ namespace NGitLab.Tests.RepositoryClient {
 
                 hooks.Delete(updated.Id);
 
-                hooks.All().ShouldBeEmpty();
+                hooks.All.ShouldBeEmpty();
             }
             finally {
                 if (proj != null)

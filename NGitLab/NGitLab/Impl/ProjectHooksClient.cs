@@ -11,9 +11,8 @@ namespace NGitLab.Impl {
             path = projectPath + "/hooks";
         }
 
-        public IEnumerable<ProjectHook> All() {
-            return api.Get().GetAll<ProjectHook>(path);
-        }
+        public IEnumerable<ProjectHook> All => api.Get().GetAll<ProjectHook>(path);
+        
 
         public ProjectHook Get(int hookId) {
             return api.Get().To<ProjectHook>(path + "/" + hookId);

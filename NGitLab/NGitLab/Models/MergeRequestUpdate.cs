@@ -17,6 +17,9 @@ namespace NGitLab.Models {
         [DataMember(Name = "title")]
         public string Title { get; set; }
 
+        [DataMember(Name = "description")]
+        public string Description;
+        
         [DataMember(Name = "state_event")]
         [JsonConverter(typeof(StringEnumConverter))]
         public MergeRequestUpdateState? NewState { get; set; }
