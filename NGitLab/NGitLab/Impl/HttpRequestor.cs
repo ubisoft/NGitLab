@@ -66,10 +66,10 @@ namespace NGitLab.Impl {
                             try {
                                 jsonError = JsonConvert.DeserializeObject<JsonError>(jsonString);
                             }
-                            catch (Exception ex) {
-                                throw new Exception(string.Format("The remote server returned an error ({0}) with an empty response", errorResponse.StatusCode));
+                            catch (Exception) {
+                                throw new Exception($"The remote server returned an error ({errorResponse.StatusCode}) with an empty response");
                             }
-                            throw new Exception(string.Format("The remote server returned an error ({0}): {1}", errorResponse.StatusCode, jsonError.Message));
+                            throw new Exception($"The remote server returned an error ({errorResponse.StatusCode}): {jsonError.Message}");
                         }
                     }
                 throw wex;

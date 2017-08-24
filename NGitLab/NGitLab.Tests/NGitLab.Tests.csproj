@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MergeRequest\MergeRequestChangesClientTests.cs" />
     <Compile Include="MergeRequest\MergeRequestClientTests.cs" />
     <Compile Include="MergeRequest\MergeRequestCommentsClientTests.cs" />
     <Compile Include="MergeRequest\_MergeRequestClientTests.cs" />

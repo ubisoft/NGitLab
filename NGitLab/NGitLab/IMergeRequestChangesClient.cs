@@ -3,6 +3,6 @@ using NGitLab.Models;
 
 namespace NGitLab {
     public interface IMergeRequestChangesClient {
-        IEnumerable<MergeRequestFileData> All { get; }
+        MergeRequestChanges Changes { get; }
     }
 }

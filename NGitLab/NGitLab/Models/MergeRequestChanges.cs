@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace NGitLab.Models {
+    [DataContract]
     public class MergeRequestChanges {
         public const string Url = "/changes";
 
@@ -19,9 +21,9 @@ namespace NGitLab.Models {
 
         [DataMember(Name = "description")]
         public string Description;
-
+        //null or 0 since 8.6.1
         [DataMember(Name = "work_in_progress")]
-        public bool WorkInProgress;
+        public bool? WorkInProgress;
 
         [DataMember(Name = "state")]
         public string State;
@@ -56,32 +58,7 @@ namespace NGitLab.Models {
         [DataMember(Name = "target_project_id")]
         public int TargetProjectId;
 
-        [DataMember(Name = "files")]
+        [DataMember(Name = "changes")]
         public MergeRequestFileData[] Files;
-
-        //"labels": [ ],
-        //"milestone": {
-        //  "id": 5,
-        //  "iid": 1,
-        //  "project_id": 4,
-        //  "title": "v2.0",
-        //  "description": "Assumenda aut placeat expedita exercitationem labore sunt enim earum.",
-        //  "state": "closed",
-        //  "created_at": "2015-02-02T19:49:26.013Z",
-        //  "updated_at": "2015-02-02T19:49:26.013Z",
-        //  "due_date": null
-        //},
-        //"files": [
-        //  {
-        //  "old_path": "VERSION",
-        //  "new_path": "VERSION",
-        //  "a_mode": "100644",
-        //  "b_mode": "100644",
-        //  "diff": "--- a/VERSION\ +++ b/VERSION\ @@ -1 +1 @@\ -1.9.7\ +1.9.8",
-        //  "new_file": false,
-        //  "renamed_file": false,
-        //  "deleted_file": false
-        //  }
-        //]
     }
 }

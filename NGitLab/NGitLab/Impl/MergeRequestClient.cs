@@ -50,7 +50,7 @@ namespace NGitLab.Impl {
         }
 
         public IMergeRequestChangesClient Changes(int mergeRequestId) {
-            return new MergeRequestChangesClient(_api, _projectPath, mergeRequestId);
+            return new MergeRequestChangesClient(api, projectPath, mergeRequestId);
         }
     }
 }

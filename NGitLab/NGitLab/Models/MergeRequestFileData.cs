@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization;
 
 namespace NGitLab.Models {
+    [DataContract]
     public class MergeRequestFileData {
         [DataMember(Name = "old_path")]
         public string OldPath;
