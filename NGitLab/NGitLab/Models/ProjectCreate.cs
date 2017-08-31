@@ -39,7 +39,7 @@ namespace NGitLab.Models
         [DataMember(Name = "import_url")]
         public string ImportUrl = "";
 
-        [DataMember(Name = "visibility_level")]
+        [DataMember(Name = "visibility")]
         public VisibilityLevel VisibilityLevel;
     }
 }

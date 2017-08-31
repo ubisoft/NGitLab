@@ -17,16 +17,36 @@ namespace NGitLab.Tests.MergeRequest
             {
                 if (_mergeRequest == null)
                 {
+                    var branch = CreateBranch();
                     _mergeRequest = _mergeRequestClient.Create(new MergeRequestCreate
                     {
                         Title = "Test merge request comments",
-                        SourceBranch = "master",
-                        TargetBranch = "newbranch"
+                        SourceBranch = branch.Name,
+                        TargetBranch = "master"
                     });
                 }
 
                 return _mergeRequest;
             }
+        }
+
+        private static Branch CreateBranch()
+        {
+            var branch = Initialize.Repository.Branches.Create(new BranchCreate
+            {
+                Name = "mr-comments-test",
+                Ref = "master"
+            });
+
+            Initialize.Repository.Files.Create(new FileUpsert
+            {
+                RawContent = "test content",
+                CommitMessage = "commit to merge",
+                Branch = branch.Name,
+                Path = "mr-comments-test.md",
+            });
+
+            return branch;
         }
 
         [SetUp]
@@ -40,21 +60,21 @@ namespace NGitLab.Tests.MergeRequest
         [Order(1)]
         public void AddCommentToMergeRequest()
         {
-            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Id);
+            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
             const string commentMessage = "Comment for MR";
             var newComment = new MergeRequestComment
             {
-                Note = commentMessage,
+                Body = commentMessage,
             };
             var comment = mergeRequestComments.Add(newComment);
-            Assert.That(comment.Note, Is.EqualTo(commentMessage));
+            Assert.That(comment.Body, Is.EqualTo(commentMessage));
         }
 
         [Test]
         [Order(2)]
         public void GetAllComments()
         {
-            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Id);
+            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
             var comments = mergeRequestComments.All.ToArray();
             CollectionAssert.IsNotEmpty(comments);
         }

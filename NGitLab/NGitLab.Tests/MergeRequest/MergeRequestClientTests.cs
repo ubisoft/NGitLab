@@ -18,7 +18,7 @@ namespace NGitLab.Tests.MergeRequest
         public void Test_merge_request_api()
         {
             var mergeRequest = CreateMergeRequest();
-            Assert.AreEqual(mergeRequest.Id, _mergeRequest[mergeRequest.Id].Id, "Test can get a merge request by Id");
+            Assert.AreEqual(mergeRequest.Id, _mergeRequest[mergeRequest.Iid].Id, "Test can get a merge request by IId");
 
             ListMergeRequest(mergeRequest);
             UpdateMergeRequest(mergeRequest);
@@ -71,7 +71,7 @@ namespace NGitLab.Tests.MergeRequest
 
         public void UpdateMergeRequest(Models.MergeRequest request)
         {
-            var mergeRequest = _mergeRequest.Update(request.Id, new MergeRequestUpdate
+            var mergeRequest = _mergeRequest.Update(request.Iid, new MergeRequestUpdate
             {
                 Title = "New title",
                 SourceBranch = "my-super-feature",
@@ -84,7 +84,7 @@ namespace NGitLab.Tests.MergeRequest
         public void AcceptMergeRequest(Models.MergeRequest request)
         {
             var mergeRequest = _mergeRequest.Accept(
-                mergeRequestId: request.Id,
+                mergeRequestIid: request.Iid,
                 message: new MergeRequestAccept
                 {
                     MergeCommitMessage = "Merge my-super-feature into master",

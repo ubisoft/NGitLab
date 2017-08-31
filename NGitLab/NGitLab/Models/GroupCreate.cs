@@ -19,7 +19,7 @@ namespace NGitLab.Models
 
         [DataMember(Name = "visibility")]
         public VisibilityLevel Visibility;
-
+        
         [DataMember(Name = "lfs_enabled")]
         public bool LfsEnabled;
 

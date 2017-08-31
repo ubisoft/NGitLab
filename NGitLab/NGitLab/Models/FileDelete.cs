@@ -7,11 +7,10 @@ namespace NGitLab.Models
     public class FileDelete
     {
         [Required]
-        [DataMember(Name = "file_path")]
         public string Path;
         
         [Required]
-        [DataMember(Name = "branch_name")]
+        [DataMember(Name = "branch")]
         public string Branch;
         
         [Required]

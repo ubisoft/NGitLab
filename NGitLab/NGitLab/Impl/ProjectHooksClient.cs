@@ -24,7 +24,7 @@ namespace NGitLab.Impl
 
         public void Delete(int hookId)
         {
-            _api.Delete().To<ProjectHook>(_path + "/" + hookId);
+            _api.Delete().Execute(_path + "/" + hookId);
         }
     }
 }

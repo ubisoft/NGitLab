@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -44,10 +43,10 @@ namespace NGitLab.Impl
             return _api.Post().With(runnerId).To<Runner>(url);
         }
 
-        public Runner DisableRunner(int projectId, RunnerId runnerId)
+        public void DisableRunner(int projectId, RunnerId runnerId)
         {
             string url = $"{Project.Url}/{projectId}/runners/{runnerId.Id}";
-            return _api.Delete().To<Runner>(url);
+            _api.Delete().Execute(url);
         }
     }
 }

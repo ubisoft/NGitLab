@@ -14,6 +14,7 @@ namespace NGitLab
         public INamespacesClient Namespaces { get; }
         public ILabelClient Labels { get; }
         public IRunnerClient Runners { get; }
+        public IVersionClient Version { get; }
 
         public GitLabClient(string hostUrl, string apiToken)
             : this(new GitLabCredentials(hostUrl, apiToken))
@@ -35,12 +36,13 @@ namespace NGitLab
             Groups = new GroupsClient(_api);
             Namespaces = new NamespacesClient(_api);
             Labels = new LabelClient(_api);
+            Version = new VersionClient(_api);
         }
 
         [Obsolete("Use gitlab client constructor instead")]
         public static GitLabClient Connect(string hostUrl, string apiToken)
         {
-            return new GitLabClient(hostUrl, apiToken);   
+            return new GitLabClient(hostUrl, apiToken);
         }
 
         [Obsolete("Use gitlab client constructor instead")]
@@ -54,11 +56,11 @@ namespace NGitLab
             return new RepositoryClient(_api, projectId);
         }
 
-        public IBuildClient GetBuilds(int projectId)
+        public ICommitClient GetCommits(int projectId)
         {
-            return new BuildClient(_api, projectId);
+            return new CommitClient(_api, projectId);
         }
-
+        
         public IPipelineClient GetPipelines(int projectId)
         {
             return new PipelineClient(_api, projectId);

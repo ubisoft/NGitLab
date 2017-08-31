@@ -1,6 +1,4 @@
 ﻿using System;
-using NGitLab.Impl;
-using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
@@ -26,7 +24,9 @@ namespace NGitLab.Impl
             if (string.IsNullOrEmpty(hostUrl)) throw new ArgumentException("HostUrl is mandatory", nameof(hostUrl));
             if (string.IsNullOrEmpty(apiToken)) throw new ArgumentException("Token is mandatory", nameof(apiToken));
 
-            HostUrl = hostUrl;
+            ValidateHostUrl(hostUrl);
+
+            HostUrl = GetApiUrl(hostUrl);
             _apiToken = apiToken;
         }
 
@@ -36,7 +36,9 @@ namespace NGitLab.Impl
             if (string.IsNullOrEmpty(userName)) throw new ArgumentException("UserName is mandatory", nameof(userName));
             if (string.IsNullOrEmpty(password)) throw new ArgumentException("Password is mandatory", nameof(password));
 
-            HostUrl = hostUrl;
+            ValidateHostUrl(hostUrl);
+
+            HostUrl = GetApiUrl(hostUrl);
             UserName = userName;
             Password = password;
         }
@@ -57,6 +59,22 @@ namespace NGitLab.Impl
                 UserName = null;
                 Password = null;
             }
+        }
+
+        private void ValidateHostUrl(string url)
+        {
+            if (url.EndsWith("/api/v3", StringComparison.OrdinalIgnoreCase) ||
+                url.EndsWith("/api/v3/", StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("API v3 endpoint is not supported.");
+        }
+
+        private string GetApiUrl(string url)
+        {
+            url = url.TrimEnd('/');
+            if (url.EndsWith("/api/v4", StringComparison.OrdinalIgnoreCase))
+                return url;
+
+            return url + "/api/v4";
         }
     }
 }

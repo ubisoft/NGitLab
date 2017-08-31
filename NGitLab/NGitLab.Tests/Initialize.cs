@@ -15,7 +15,7 @@ namespace NGitLab.Tests
 
         public static IRepositoryClient Repository => GitLabClient.GetRepository(UnitTestProject.Id);
 
-        public static string GitLabHost => "https://gitlab.example.com/api/v3";
+        public static string GitLabHost => "https://gitlab.example.com/";
 
         public static string GitLabToken => "dummy";
 
@@ -47,6 +47,18 @@ namespace NGitLab.Tests
         {
             // Remove the test project again
             DeleteProject(ProjectName);
+        }
+
+        private void RemoveTestProjects()
+        {
+            var projects = GitLabClient.Projects.Owned;
+            foreach (var p in projects)
+            {
+                if (p.Name.StartsWith("Unit_Test_"))
+                {
+                    GitLabClient.Projects.Delete(p.Id);
+                }
+            }
         }
 
         private Project CreateProject(string name)
@@ -85,7 +97,7 @@ namespace NGitLab.Tests
                 PushEvents = true,
                 Url = new Uri("http://unit.test.scooletz.com"),
             });
-
+            
             return createdProject;
         }
 

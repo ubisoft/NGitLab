@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Security.Policy;
 using System.Web;
 using NGitLab.Models;
 
@@ -14,21 +13,19 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        public IEnumerable<Project> Accessible => _api.Get().GetAll<Project>(Project.Url);
+        public IEnumerable<Project> Accessible => _api.Get().GetAll<Project>(Project.Url + "?membership=true");
 
-        public IEnumerable<Project> Owned => _api.Get().GetAll<Project>(Project.Url + "/owned");
+        public IEnumerable<Project> Owned => _api.Get().GetAll<Project>(Project.Url + "?owned=true");
 
-        public IEnumerable<Project> Visible => _api.Get().GetAll<Project>(Project.Url + "/visible");
-
-        public IEnumerable<Project> All => _api.Get().GetAll<Project>(Project.Url + "/all");
+        public IEnumerable<Project> Visible => _api.Get().GetAll<Project>(Project.Url);
 
         public Project this[int id] => _api.Get().To<Project>(Project.Url + "/" + id);
 
         public Project Create(ProjectCreate project) => _api.Post().With(project).To<Project>(Project.Url);
 
         public Project this[string fullName] => _api.Get().To<Project>(Project.Url + "/" + System.Web.HttpUtility.UrlEncode(fullName));
-        
-        public bool Delete(int id) => _api.Delete().To<bool>(Project.Url + "/" + id);
+
+        public void Delete(int id) => _api.Delete().Execute(Project.Url + "/" + id);
 
         public IEnumerable<Project> Get(ProjectQuery query)
         {

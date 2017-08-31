@@ -57,6 +57,6 @@ namespace NGitLab
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="runnerId"></param>
-        Runner DisableRunner(int projectId, RunnerId runnerId);
+        void DisableRunner(int projectId, RunnerId runnerId);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace NGitLab
 {
-    public enum BuildStatus
+    public enum JobStatus
     {
         Unknown,
         Running,

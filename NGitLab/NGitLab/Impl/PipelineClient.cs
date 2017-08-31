@@ -7,15 +7,17 @@ namespace NGitLab.Impl
     public class PipelineClient : IPipelineClient
     {
         private readonly API _api;
+        private readonly string _projectPath;
         private readonly string _pipelinesPath;
 
         public PipelineClient(API api, int projectId)
         {
             _api = api;
+            _projectPath = $"{Project.Url}/{projectId}";
             _pipelinesPath = $"{Project.Url}/{projectId}/pipelines";
         }
 
-        public IEnumerable<Pipeline> All => _api.Get().GetAll<Pipeline>($"{_pipelinesPath}");
+        public IEnumerable<PipelineBasic> All => _api.Get().GetAll<PipelineBasic>($"{_pipelinesPath}");
 
         public Pipeline this[int id] => _api.Get().To<Pipeline>($"{_pipelinesPath}/{id}");
 

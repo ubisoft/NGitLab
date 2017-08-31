@@ -8,11 +8,10 @@ namespace NGitLab.Models
     public class FileUpsert
     {
         [Required]
-        [DataMember(Name="file_path")]
         public string Path; 
         
         [Required]
-        [DataMember(Name="branch_name")]
+        [DataMember(Name="branch")]
         public string Branch;
 
         [DataMember(Name="encoding")]
@@ -37,7 +36,6 @@ namespace NGitLab.Models
         [Required]
         [DataMember(Name="commit_message")]
         public string CommitMessage;
-
 
         public static string Base64Encode(string plainText)
         {

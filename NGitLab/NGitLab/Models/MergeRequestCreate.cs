@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
@@ -17,7 +18,13 @@ namespace NGitLab.Models
         [DataMember(Name="title")]
         public string Title;
 
+        [DataMember(Name = "description")]
+        public string Description;
+
         [DataMember(Name="target_project_id")]
-        public int? TargetProjectId;        
+        public int? TargetProjectId;
+
+        [DataMember(Name = "remove_source_branch")]
+        public bool RemoveSourceBranch;
     }
 }
