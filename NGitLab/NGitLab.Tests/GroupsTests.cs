@@ -28,15 +28,18 @@ namespace NGitLab.Tests
             {
                 Name = "NewGroup",
                 Path = "NewGroupPath",
+                Visibility = VisibilityLevel.Internal
             });
             Assert.IsNotNull(group);
             Assert.AreEqual("NewGroup", group.Name);
             Assert.AreEqual("NewGroupPath", group.Path);
+            Assert.AreEqual(VisibilityLevel.Internal, group.Visibility);
 
             // Search
             group = Groups.Search("NewGroup").FirstOrDefault();
             Assert.AreEqual("NewGroup", group.Name);
             Assert.AreEqual("NewGroupPath", group.Path);
+            Assert.AreEqual(VisibilityLevel.Internal, group.Visibility);
 
             // Delete
             Groups.Delete(group.Id);
