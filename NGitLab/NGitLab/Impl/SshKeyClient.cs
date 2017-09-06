@@ -24,9 +24,9 @@ namespace NGitLab.Impl
             return _api.Post().With(key).To<SshKey>(_url);
         }
 
-        public SshKey Remove(int keyId)
+        public void Remove(int keyId)
         {
-            return _api.Delete().To<SshKey>($"{_url}/{keyId}");
+            _api.Delete().Execute($"{_url}/{keyId}");
         }
     }
 }

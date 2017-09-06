@@ -30,7 +30,7 @@ namespace NGitLab.Impl
 
         public void Delete(int id)
         {
-            _api.Delete().To<Namespace>(Url + "/" + id);
+            _api.Delete().Execute(Url + "/" + id);
         }
     }
 }

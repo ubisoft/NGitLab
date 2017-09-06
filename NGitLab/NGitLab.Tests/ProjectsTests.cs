@@ -13,19 +13,7 @@ namespace NGitLab.Tests
         {
             _projects = Initialize.GitLabClient.Projects;
         }
-
-        [Test]
-        public void GetAllProjects()
-        {
-            if (!Initialize.IsAdmin)
-            {
-                Assert.Inconclusive("Cannot test getting all projects since the current user is not admin");
-            }
-
-            var projects = _projects.All.ToArray();
-            CollectionAssert.IsNotEmpty(projects);
-        }
-
+        
         [Test]
         public void GetOwnedProjects()
         {
@@ -100,7 +88,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(project.MergeRequestsEnabled, createdProject.MergeRequestsEnabled);
             Assert.AreEqual(project.Name, createdProject.Name);
 
-            Assert.AreEqual(_projects.Delete(createdProject.Id), true);
+            _projects.Delete(createdProject.Id);
         }
     }
 }

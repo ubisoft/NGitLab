@@ -3,12 +3,12 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
-    public class BuildClient : IBuildClient
+    public class CommitClient : ICommitClient
     {
         private readonly API _api;
         private readonly string _repoPath;
 
-        public BuildClient(API api, int projectId)
+        public CommitClient(API api, int projectId)
         {
             _api = api;
 
@@ -16,15 +16,15 @@ namespace NGitLab.Impl
             _repoPath = projectPath + "/repository";
         }
 
-        public BuildStatus GetBuildStatus(string branchName)
+        public JobStatus GetJobStatus(string branchName)
         {
             var latestCommit = _api.Get().To<Commit>(_repoPath + $"/commits/{branchName}?per_page=1");
             if (latestCommit == null)
             {
-                return BuildStatus.Unknown;
+                return JobStatus.Unknown;
             }
-            
-            BuildStatus result;
+
+            JobStatus result;
             if (!Enum.TryParse(latestCommit.Status, ignoreCase: true, result: out result))
             {
                 throw new NotImplementedException($"Status {latestCommit.Status} is unrecognised");
@@ -32,5 +32,7 @@ namespace NGitLab.Impl
 
             return result;
         }
+
+        public Commit Create(CommitCreate commit) => _api.Post().With(commit).To<Commit>(_repoPath + "/commits");
     }
 }

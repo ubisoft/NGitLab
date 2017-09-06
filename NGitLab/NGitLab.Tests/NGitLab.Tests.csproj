@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="FilesTests.cs" />
     <Compile Include="APITests.cs" />
+    <Compile Include="GitlabCredentialsTests.cs" />
     <Compile Include="HttpRequestorTests.cs" />
     <Compile Include="GroupsTests.cs" />
     <Compile Include="NamespacesTests.cs" />
@@ -54,7 +55,7 @@
     <Compile Include="Initialize.cs" />
     <Compile Include="MergeRequest\MergeRequestClientTests.cs" />
     <Compile Include="MergeRequest\MergeRequestCommentsClientTests.cs" />
-    <Compile Include="BuildsTests.cs" />
+    <Compile Include="CommitsTests.cs" />
     <Compile Include="ProjectsTests.cs" />
     <Compile Include="RepositoryClient\BranchClientTests.cs" />
     <Compile Include="RepositoryClient\FilesClientTests.cs" />

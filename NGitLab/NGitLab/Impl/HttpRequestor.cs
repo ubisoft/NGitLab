@@ -42,6 +42,12 @@ namespace NGitLab.Impl
             return this;
         }
 
+        public virtual void Execute(string tailAPIUrl)
+        {
+            Stream(tailAPIUrl, null);
+        }
+
+
         public virtual T To<T>(string tailAPIUrl)
         {
             var result = default(T);
@@ -89,13 +95,16 @@ namespace NGitLab.Impl
             else if (_methodType == MethodType.Put)
             {
                 req.Headers.Add("Content-Length", "0");
-            }
+            }            
 
             using (var response = GetResponse(req, fullUrl, _data))
             {
-                using (var stream = response.GetResponseStream())
+                if (parser != null)
                 {
-                    parser(stream);
+                    using (var stream = response.GetResponseStream())
+                    {
+                        parser(stream);
+                    }
                 }
             }
         }
@@ -313,6 +322,7 @@ namespace NGitLab.Impl
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = methodType.ToString().ToUpperInvariant();
+            request.Accept = "application/json";
             request.Headers.Add("Accept-Encoding", "gzip");
             request.AutomaticDecompression = DecompressionMethods.GZip;
 
@@ -342,8 +352,7 @@ namespace NGitLab.Impl
 
         public static void LeaveDotsAndSlashesEscaped()
         {
-            var getSyntaxMethod =
-                typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
+            var getSyntaxMethod = typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
             if (getSyntaxMethod == null)
             {
                 throw new MissingMethodException("UriParser", "GetSyntax");

@@ -20,7 +20,7 @@ namespace NGitLab.Models
         /// <summary>
         /// (optional) - if true the MR is merged when the build succeeds
         /// </summary>
-        [DataMember(Name = "merge_when_build_succeeds")]
+        [DataMember(Name = "merge_when_pipeline_succeeds")]
         public bool MergeWhenBuildSucceeds;
 
         /// <summary>

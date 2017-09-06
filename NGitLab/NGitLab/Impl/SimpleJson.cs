@@ -65,9 +65,9 @@ using System.Text;
 
 namespace NGitLab.Impl
 {
-// ReSharper disable LoopCanBeConvertedToQuery
-// ReSharper disable RedundantExplicitArrayCreation
-// ReSharper disable SuggestUseVarKeywordEvident
+    // ReSharper disable LoopCanBeConvertedToQuery
+    // ReSharper disable RedundantExplicitArrayCreation
+    // ReSharper disable SuggestUseVarKeywordEvident
     /// <summary>
     /// Represents the json array.
     /// </summary>
@@ -162,7 +162,8 @@ namespace NGitLab.Impl
                 throw new ArgumentOutOfRangeException("index");
             int i = 0;
             foreach (KeyValuePair<string, object> o in obj)
-                if (i++ == index) return o.Value;
+                if (i++ == index)
+                    return o.Value;
             return null;
         }
 
@@ -273,7 +274,8 @@ namespace NGitLab.Impl
         /// <param name="arrayIndex">Index of the array.</param>
         public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
         {
-            if (array == null) throw new ArgumentNullException("array");
+            if (array == null)
+                throw new ArgumentNullException("array");
             int num = Count;
             foreach (KeyValuePair<string, object> kvp in this)
             {
@@ -512,7 +514,7 @@ namespace NGitLab.Impl
         private const int BUILDER_CAPACITY = 2000;
 
         private static readonly char[] EscapeTable;
-        private static readonly char[] EscapeCharacters = new char[] {'"', '\\', '\b', '\f', '\n', '\r', '\t'};
+        private static readonly char[] EscapeCharacters = new char[] { '"', '\\', '\b', '\f', '\n', '\r', '\t' };
         private static readonly string EscapeCharactersString = new string(EscapeCharacters);
 
         static SimpleJson()
@@ -583,12 +585,12 @@ namespace NGitLab.Impl
 
         public static T DeserializeObject<T>(string json, IJsonSerializerStrategy jsonSerializerStrategy)
         {
-            return (T) DeserializeObject(json, typeof(T), jsonSerializerStrategy);
+            return (T)DeserializeObject(json, typeof(T), jsonSerializerStrategy);
         }
 
         public static T DeserializeObject<T>(string json)
         {
-            return (T) DeserializeObject(json, typeof(T), null);
+            return (T)DeserializeObject(json, typeof(T), null);
         }
 
         /// <summary>
@@ -847,8 +849,8 @@ namespace NGitLab.Impl
                                     {
                                         if (0xDC00 <= lowCodePoint && lowCodePoint <= 0xDFFF) // if low surrogate
                                         {
-                                            s.Append((char) codePoint);
-                                            s.Append((char) lowCodePoint);
+                                            s.Append((char)codePoint);
+                                            s.Append((char)lowCodePoint);
                                             index += 6; // skip 6 chars
                                             continue;
                                         }
@@ -857,7 +859,7 @@ namespace NGitLab.Impl
                                 success = false; // invalid surrogate pair
                                 return "";
                             }
-                            s.Append(ConvertFromUtf32((int) codePoint));
+                            s.Append(ConvertFromUtf32((int)codePoint));
                             // skip 4 chars
                             index += 4;
                         }
@@ -884,9 +886,9 @@ namespace NGitLab.Impl
             if (0xD800 <= utf32 && utf32 <= 0xDFFF)
                 throw new ArgumentOutOfRangeException("utf32", "The argument must not be in surrogate pair range.");
             if (utf32 < 0x10000)
-                return new string((char) utf32, 1);
+                return new string((char)utf32, 1);
             utf32 -= 0x10000;
-            return new string(new char[] {(char) ((utf32 >> 10) + 0xD800), (char) (utf32%0x0400 + 0xDC00)});
+            return new string(new char[] { (char)((utf32 >> 10) + 0xD800), (char)(utf32 % 0x0400 + 0xDC00) });
         }
 
         static object ParseNumber(char[] json, ref int index, ref bool success)
@@ -916,14 +918,16 @@ namespace NGitLab.Impl
         {
             int lastIndex;
             for (lastIndex = index; lastIndex < json.Length; lastIndex++)
-                if ("0123456789+-.eE".IndexOf(json[lastIndex]) == -1) break;
+                if ("0123456789+-.eE".IndexOf(json[lastIndex]) == -1)
+                    break;
             return lastIndex - 1;
         }
 
         static void EatWhitespace(char[] json, ref int index)
         {
             for (; index < json.Length; index++)
-                if (" \t\n\r\b\f".IndexOf(json[index]) == -1) break;
+                if (" \t\n\r\b\f".IndexOf(json[index]) == -1)
+                    break;
         }
 
         static int LookAhead(char[] json, int index)
@@ -1029,7 +1033,7 @@ namespace NGitLab.Impl
                         else if (IsNumeric(value))
                             success = SerializeNumber(value, builder);
                         else if (value is bool)
-                            builder.Append((bool) value ? "true" : "false");
+                            builder.Append((bool)value ? "true" : "false");
                         else if (value == null)
                             builder.Append("null");
                         else
@@ -1060,7 +1064,8 @@ namespace NGitLab.Impl
                 string stringKey = key as string;
                 if (stringKey != null)
                     SerializeString(stringKey, builder);
-                else if (!SerializeValue(jsonSerializerStrategy, value, builder)) return false;
+                else if (!SerializeValue(jsonSerializerStrategy, value, builder))
+                    return false;
                 builder.Append(":");
                 if (!SerializeValue(jsonSerializerStrategy, value, builder))
                     return false;
@@ -1138,17 +1143,17 @@ namespace NGitLab.Impl
         static bool SerializeNumber(object number, StringBuilder builder)
         {
             if (number is long)
-                builder.Append(((long) number).ToString(CultureInfo.InvariantCulture));
+                builder.Append(((long)number).ToString(CultureInfo.InvariantCulture));
             else if (number is ulong)
-                builder.Append(((ulong) number).ToString(CultureInfo.InvariantCulture));
+                builder.Append(((ulong)number).ToString(CultureInfo.InvariantCulture));
             else if (number is int)
-                builder.Append(((int) number).ToString(CultureInfo.InvariantCulture));
+                builder.Append(((int)number).ToString(CultureInfo.InvariantCulture));
             else if (number is uint)
-                builder.Append(((uint) number).ToString(CultureInfo.InvariantCulture));
+                builder.Append(((uint)number).ToString(CultureInfo.InvariantCulture));
             else if (number is decimal)
-                builder.Append(((decimal) number).ToString(CultureInfo.InvariantCulture));
+                builder.Append(((decimal)number).ToString(CultureInfo.InvariantCulture));
             else if (number is float)
-                builder.Append(((float) number).ToString(CultureInfo.InvariantCulture));
+                builder.Append(((float)number).ToString(CultureInfo.InvariantCulture));
             else
                 builder.Append(Convert.ToDouble(number, CultureInfo.InvariantCulture).ToString("r", CultureInfo.InvariantCulture));
             return true;
@@ -1160,17 +1165,28 @@ namespace NGitLab.Impl
         /// </summary>
         static bool IsNumeric(object value)
         {
-            if (value is sbyte) return true;
-            if (value is byte) return true;
-            if (value is short) return true;
-            if (value is ushort) return true;
-            if (value is int) return true;
-            if (value is uint) return true;
-            if (value is long) return true;
-            if (value is ulong) return true;
-            if (value is float) return true;
-            if (value is double) return true;
-            if (value is decimal) return true;
+            if (value is sbyte)
+                return true;
+            if (value is byte)
+                return true;
+            if (value is short)
+                return true;
+            if (value is ushort)
+                return true;
+            if (value is int)
+                return true;
+            if (value is uint)
+                return true;
+            if (value is long)
+                return true;
+            if (value is ulong)
+                return true;
+            if (value is float)
+                return true;
+            if (value is double)
+                return true;
+            if (value is decimal)
+                return true;
             return false;
         }
 
@@ -1240,7 +1256,7 @@ namespace NGitLab.Impl
         internal IDictionary<Type, IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>> SetCache;
 
         internal static readonly Type[] EmptyTypes = new Type[0];
-        internal static readonly Type[] ArrayConstructorParameterTypes = new Type[] {typeof(int)};
+        internal static readonly Type[] ArrayConstructorParameterTypes = new Type[] { typeof(int) };
 
         private static readonly string[] Iso8601Format = new string[]
         {
@@ -1322,7 +1338,8 @@ namespace NGitLab.Impl
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public virtual object DeserializeObject(object value, Type type)
         {
-            if (type == null) throw new ArgumentNullException("type");
+            if (type == null)
+                throw new ArgumentNullException("type");
             string str = value as string;
 
             if (type == typeof(Guid) && string.IsNullOrEmpty(str))
@@ -1428,7 +1445,7 @@ namespace NGitLab.Impl
 
                         Type genericType = typeof(Dictionary<,>).MakeGenericType(keyType, valueType);
 
-                        IDictionary dict = (IDictionary) ConstructorCache[genericType]();
+                        IDictionary dict = (IDictionary)ConstructorCache[genericType]();
 
                         foreach (KeyValuePair<string, object> kvp in jsonObject)
                             dict.Add(kvp.Key, DeserializeObject(kvp.Value, valueType));
@@ -1467,7 +1484,7 @@ namespace NGitLab.Impl
 
                         if (type.IsArray)
                         {
-                            list = (IList) ConstructorCache[type](jsonObject.Count);
+                            list = (IList)ConstructorCache[type](jsonObject.Count);
                             int i = 0;
                             foreach (object o in jsonObject)
                                 list[i++] = DeserializeObject(o, type.GetElementType());
@@ -1475,7 +1492,7 @@ namespace NGitLab.Impl
                         else if (ReflectionUtils.IsTypeGenericeCollectionInterface(type) || ReflectionUtils.IsAssignableFrom(typeof(IList), type))
                         {
                             Type innerType = ReflectionUtils.GetGenericListElementType(type);
-                            list = (IList) (ConstructorCache[type] ?? ConstructorCache[typeof(List<>).MakeGenericType(innerType)])(jsonObject.Count);
+                            list = (IList)(ConstructorCache[type] ?? ConstructorCache[typeof(List<>).MakeGenericType(innerType)])(jsonObject.Count);
                             foreach (object o in jsonObject)
                                 list.Add(DeserializeObject(o, innerType));
                         }
@@ -1491,7 +1508,21 @@ namespace NGitLab.Impl
 
         protected virtual object SerializeEnum(Enum p)
         {
+            var attribute = GetAttributeOfType<EnumMemberAttribute>(p);
+            if (attribute != null && attribute.Value != null)
+            {
+                return attribute.Value;
+            }
+
             return Convert.ToDouble(p, CultureInfo.InvariantCulture);
+        }
+
+        private static T GetAttributeOfType<T>(Enum enumVal) where T : System.Attribute
+        {
+            var type = enumVal.GetType();
+            var memInfo = type.GetMember(enumVal.ToString());
+            var attributes = memInfo[0].GetCustomAttributes(typeof(T), false);
+            return (attributes.Length > 0) ? (T)attributes[0] : null;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate", Justification = "Need to support .NET 2")]
@@ -1499,11 +1530,11 @@ namespace NGitLab.Impl
         {
             bool returnValue = true;
             if (input is DateTime)
-                output = ((DateTime) input).ToUniversalTime().ToString(Iso8601Format[0], CultureInfo.InvariantCulture);
+                output = ((DateTime)input).ToUniversalTime().ToString(Iso8601Format[0], CultureInfo.InvariantCulture);
             else if (input is DateTimeOffset)
-                output = ((DateTimeOffset) input).ToUniversalTime().ToString(Iso8601Format[0], CultureInfo.InvariantCulture);
+                output = ((DateTimeOffset)input).ToUniversalTime().ToString(Iso8601Format[0], CultureInfo.InvariantCulture);
             else if (input is Guid)
-                output = ((Guid) input).ToString("D");
+                output = ((Guid)input).ToString("D");
             else if (input is Uri)
                 output = input.ToString();
             else
@@ -1523,7 +1554,8 @@ namespace NGitLab.Impl
         [SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate", Justification = "Need to support .NET 2")]
         protected virtual bool TrySerializeUnknownTypes(object input, out object output)
         {
-            if (input == null) throw new ArgumentNullException("input");
+            if (input == null)
+                throw new ArgumentNullException("input");
             output = null;
             Type type = input.GetType();
             if (type.FullName == null)
@@ -1611,7 +1643,7 @@ namespace NGitLab.Impl
             jsonKey = null;
             if (ReflectionUtils.GetAttribute(info, typeof(IgnoreDataMemberAttribute)) != null)
                 return false;
-            DataMemberAttribute dataMemberAttribute = (DataMemberAttribute) ReflectionUtils.GetAttribute(info, typeof(DataMemberAttribute));
+            DataMemberAttribute dataMemberAttribute = (DataMemberAttribute)ReflectionUtils.GetAttribute(info, typeof(DataMemberAttribute));
             if (dataMemberAttribute == null)
                 return false;
             jsonKey = string.IsNullOrEmpty(dataMemberAttribute.Name) ? info.Name : dataMemberAttribute.Name;
@@ -1621,8 +1653,8 @@ namespace NGitLab.Impl
 
 #endif
 
-// This class is meant to be copied into other libraries. So we want to exclude it from Code Analysis rules
-// that might be in place in the target project.
+    // This class is meant to be copied into other libraries. So we want to exclude it from Code Analysis rules
+    // that might be in place in the target project.
     [GeneratedCode("reflection-utils", "1.0.0")]
 #if SIMPLE_JSON_REFLECTION_UTILS_PUBLIC
         public
@@ -1631,7 +1663,7 @@ namespace NGitLab.Impl
 #endif
         class ReflectionUtils
     {
-        private static readonly object[] EmptyObjects = new object[] {};
+        private static readonly object[] EmptyObjects = new object[] { };
 
         public delegate object GetDelegate(object source);
 
@@ -1860,7 +1892,8 @@ namespace NGitLab.Impl
 
         public static ConstructorDelegate GetConstructorByReflection(ConstructorInfo constructorInfo)
         {
-            return delegate(object[] args) { return constructorInfo.Invoke(args); };
+            return delegate (object[] args)
+            { return constructorInfo.Invoke(args); };
         }
 
         public static ConstructorDelegate GetConstructorByReflection(Type type, params Type[] argsType)
@@ -1887,7 +1920,8 @@ namespace NGitLab.Impl
             NewExpression newExp = Expression.New(constructorInfo, argsExp);
             Expression<Func<object[], object>> lambda = Expression.Lambda<Func<object[], object>>(newExp, param);
             Func<object[], object> compiledLambda = lambda.Compile();
-            return delegate(object[] args) { return compiledLambda(args); };
+            return delegate (object[] args)
+            { return compiledLambda(args); };
         }
 
         public static ConstructorDelegate GetConstructorByExpression(Type type, params Type[] argsType)
@@ -1919,12 +1953,14 @@ namespace NGitLab.Impl
         public static GetDelegate GetGetMethodByReflection(PropertyInfo propertyInfo)
         {
             MethodInfo methodInfo = GetGetterMethodInfo(propertyInfo);
-            return delegate(object source) { return methodInfo.Invoke(source, EmptyObjects); };
+            return delegate (object source)
+            { return methodInfo.Invoke(source, EmptyObjects); };
         }
 
         public static GetDelegate GetGetMethodByReflection(FieldInfo fieldInfo)
         {
-            return delegate(object source) { return fieldInfo.GetValue(source); };
+            return delegate (object source)
+            { return fieldInfo.GetValue(source); };
         }
 
 #if !SIMPLE_JSON_NO_LINQ_EXPRESSION
@@ -1938,7 +1974,8 @@ namespace NGitLab.Impl
                 : Expression.Convert(instance, propertyInfo.DeclaringType);
             Func<object, object> compiled =
                 Expression.Lambda<Func<object, object>>(Expression.TypeAs(Expression.Call(instanceCast, getMethodInfo), typeof(object)), instance).Compile();
-            return delegate(object source) { return compiled(source); };
+            return delegate (object source)
+            { return compiled(source); };
         }
 
         public static GetDelegate GetGetMethodByExpression(FieldInfo fieldInfo)
@@ -1946,7 +1983,8 @@ namespace NGitLab.Impl
             ParameterExpression instance = Expression.Parameter(typeof(object), "instance");
             MemberExpression member = Expression.Field(Expression.Convert(instance, fieldInfo.DeclaringType), fieldInfo);
             GetDelegate compiled = Expression.Lambda<GetDelegate>(Expression.Convert(member, typeof(object)), instance).Compile();
-            return delegate(object source) { return compiled(source); };
+            return delegate (object source)
+            { return compiled(source); };
         }
 
 #endif
@@ -1972,12 +2010,14 @@ namespace NGitLab.Impl
         public static SetDelegate GetSetMethodByReflection(PropertyInfo propertyInfo)
         {
             MethodInfo methodInfo = GetSetterMethodInfo(propertyInfo);
-            return delegate(object source, object value) { methodInfo.Invoke(source, new object[] {value}); };
+            return delegate (object source, object value)
+            { methodInfo.Invoke(source, new object[] { value }); };
         }
 
         public static SetDelegate GetSetMethodByReflection(FieldInfo fieldInfo)
         {
-            return delegate(object source, object value) { fieldInfo.SetValue(source, value); };
+            return delegate (object source, object value)
+            { fieldInfo.SetValue(source, value); };
         }
 
 #if !SIMPLE_JSON_NO_LINQ_EXPRESSION
@@ -1994,9 +2034,10 @@ namespace NGitLab.Impl
                 ? Expression.TypeAs(value, propertyInfo.PropertyType)
                 : Expression.Convert(value, propertyInfo.PropertyType);
             Action<object, object> compiled =
-                Expression.Lambda<Action<object, object>>(Expression.Call(instanceCast, setMethodInfo, valueCast), new ParameterExpression[] {instance, value})
+                Expression.Lambda<Action<object, object>>(Expression.Call(instanceCast, setMethodInfo, valueCast), new ParameterExpression[] { instance, value })
                     .Compile();
-            return delegate(object source, object val) { compiled(source, val); };
+            return delegate (object source, object val)
+            { compiled(source, val); };
         }
 
         public static SetDelegate GetSetMethodByExpression(FieldInfo fieldInfo)
@@ -2006,7 +2047,7 @@ namespace NGitLab.Impl
             Action<object, object> compiled = Expression.Lambda<Action<object, object>>(
                 Assign(Expression.Field(Expression.Convert(instance, fieldInfo.DeclaringType), fieldInfo), Expression.Convert(value, fieldInfo.FieldType)),
                 instance, value).Compile();
-            return delegate(object source, object val)
+            return delegate (object source, object val)
             {
                 try
                 {
@@ -2169,7 +2210,7 @@ namespace NGitLab.Impl
 
     }
 
-// ReSharper restore LoopCanBeConvertedToQuery
-// ReSharper restore RedundantExplicitArrayCreation
-// ReSharper restore SuggestUseVarKeywordEvident
+    // ReSharper restore LoopCanBeConvertedToQuery
+    // ReSharper restore RedundantExplicitArrayCreation
+    // ReSharper restore SuggestUseVarKeywordEvident
 }

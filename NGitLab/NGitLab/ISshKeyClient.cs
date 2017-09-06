@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -12,6 +11,6 @@ namespace NGitLab
 
         SshKey Add(SshKeyCreate key);
 
-        SshKey Remove(int keyId);
+        void Remove(int keyId);
     }
 }

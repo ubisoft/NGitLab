@@ -40,7 +40,7 @@ namespace NGitLab.Models
         public JobRunner Runner;
 
         [DataMember(Name = "status")]
-        public BuildStatus Status;
+        public JobStatus Status;
 
         [DataMember(Name = "tag")]
         public bool Tag;
@@ -80,7 +80,7 @@ namespace NGitLab.Models
             public Sha1 Sha;
 
             [DataMember(Name = "status")]
-            public BuildStatus Status;
+            public JobStatus Status;
         }
 
         [DataContract]

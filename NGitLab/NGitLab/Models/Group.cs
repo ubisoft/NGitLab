@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
@@ -18,8 +17,8 @@ namespace NGitLab.Models
         [DataMember(Name = "description")]
         public string Description;
 
-        [DataMember(Name = "visibility_level")]
-        public int VisibilityLevel;
+        [DataMember(Name = "visibility")]
+        public VisibilityLevel Visibility;
 
         [DataMember(Name = "lfs_enabled")]
         public bool LfsEnabled;
@@ -41,7 +40,5 @@ namespace NGitLab.Models
 
         [DataMember(Name = "projects")]
         public Project[] Projects;
-
-        public VisibilityLevel Visibility => (VisibilityLevel) VisibilityLevel;
     }
 }

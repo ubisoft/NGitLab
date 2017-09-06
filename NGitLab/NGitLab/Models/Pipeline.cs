@@ -12,7 +12,7 @@ namespace NGitLab.Models
         public int Id;
 
         [DataMember(Name = "status")]
-        public BuildStatus Status;
+        public JobStatus Status;
 
         [DataMember(Name = "ref")]
         public string Ref;

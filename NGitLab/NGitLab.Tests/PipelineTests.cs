@@ -15,7 +15,7 @@ namespace NGitLab.Tests
         public void FixtureSetup()
         {
             _pipelines = Initialize.GitLabClient.GetPipelines(Initialize.UnitTestProject.Id);
-            BuildsTests.EnableCiOnTestProject();
+            CommitsTests.EnableCiOnTestProject();
         }
 
         [Test]

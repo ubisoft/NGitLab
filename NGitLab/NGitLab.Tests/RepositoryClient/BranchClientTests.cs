@@ -44,8 +44,7 @@ namespace NGitLab.Tests.RepositoryClient
 
             Assert.IsNotNull(_branches[branchName]);
 
-            var result = _branches.Delete(branchName);
-            Assert.AreEqual(branchName, result.Name);
+            _branches.Delete(branchName);
 
             AssertCannotFind(() => _branches[branchName]);
         }

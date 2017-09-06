@@ -29,7 +29,7 @@ namespace NGitLab.Mock
             Client.Projects.Returns(ProjectClient);
             ProjectClient.Accessible.Returns(call => Projects.Select(x => x.ClientProject));
             ProjectClient.Owned.Returns(call => Projects.Select(x => x.ClientProject));
-            ProjectClient.All.Returns(call => Projects.Select(x => x.ClientProject));
+            ProjectClient.Visible.Returns(call => Projects.Select(x => x.ClientProject));
             ProjectClient[-1].ReturnsForAnyArgs(call => GetProject((int)call[0]).ClientProject);
             ProjectClient["anyName"].ReturnsForAnyArgs(call => GetProject((string)call[0]).ClientProject);
 

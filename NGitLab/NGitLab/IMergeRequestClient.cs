@@ -7,13 +7,13 @@ namespace NGitLab
     {
         IEnumerable<MergeRequest> All { get; }
         IEnumerable<MergeRequest> AllInState(MergeRequestState state);
-        MergeRequest this[int id] { get; }
+        MergeRequest this[int iid] { get; }
 
         MergeRequest Create(MergeRequestCreate mergeRequest);
-        MergeRequest Update(int mergeRequestId, MergeRequestUpdate mergeRequest);
-        MergeRequest Accept(int mergeRequestId, MergeRequestAccept message);
+        MergeRequest Update(int mergeRequestIid, MergeRequestUpdate mergeRequest);
+        MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message);
 
-        IMergeRequestCommentClient Comments(int mergeRequestId);
-        IMergeRequestCommitClient Commits(int mergeRequestId);
+        IMergeRequestCommentClient Comments(int mergeRequestIid);
+        IMergeRequestCommitClient Commits(int mergeRequestIid);
     }
 }

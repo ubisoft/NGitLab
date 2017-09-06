@@ -1,21 +1,20 @@
-﻿using System.Security.Permissions;
-using NGitLab.Models;
+﻿using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
-    public class BuildsTests
+    public class CommitsTests
     {
         private static bool _ciEnabled;
-        private IBuildClient _builds;
+        private ICommitClient _commits;
 
         [OneTimeSetUp]
         public void FixtureSetup()
         {
-            _builds = Initialize.GitLabClient.GetBuilds(Initialize.UnitTestProject.Id);
+            _commits = Initialize.GitLabClient.GetCommits(Initialize.UnitTestProject.Id);
             EnableCiOnTestProject();
         }
-
+        
         public static void EnableCiOnTestProject()
         {
             var projectId = Initialize.UnitTestProject.Id;
@@ -38,10 +37,9 @@ build:
                     RawContent = yml
                 });
 
-                _ciEnabled = true;
-            }
-
-            Initialize.GitLabClient.Runners.EnableRunner(projectId, new RunnerId(RunnerTests.GetDefaultRunner().Id));
+                Initialize.GitLabClient.Runners.EnableRunner(projectId, new RunnerId(RunnerTests.GetDefaultRunner().Id));
+                _ciEnabled = true;                
+            }            
         }
     }
 }

@@ -23,11 +23,6 @@ namespace NGitLab
         /// <summary>
         /// Get a list of all GitLab projects (admin only).
         /// </summary>
-        IEnumerable<Project> All { get; }
-
-        /// <summary>
-        /// Get a list of all GitLab projects (admin only).
-        /// </summary>
         IEnumerable<Project> Get(ProjectQuery query);
 
         Project this[int id] { get; }
@@ -40,6 +35,6 @@ namespace NGitLab
 
         Project Create(ProjectCreate project);
         
-        bool Delete(int id);
+        void Delete(int id);
     }
 }

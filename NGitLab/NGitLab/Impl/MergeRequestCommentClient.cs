@@ -6,16 +6,16 @@ namespace NGitLab.Impl
     public class MergeRequestCommentClient : IMergeRequestCommentClient
     {
         private readonly API _api;
-        private readonly string _commentsPath;
+        private readonly string _notesPath;
 
-        public MergeRequestCommentClient(API api, string projectPath, int mergeRequestId)
+        public MergeRequestCommentClient(API api, string projectPath, int mergeRequestIid)
         {
             _api = api;
-            _commentsPath = projectPath + "/merge_request/" + mergeRequestId + "/comments";
+            _notesPath = projectPath + "/merge_requests/" + mergeRequestIid + "/notes";
         }
 
-        public IEnumerable<MergeRequestComment> All => _api.Get().GetAll<MergeRequestComment>(_commentsPath);
+        public IEnumerable<MergeRequestComment> All => _api.Get().GetAll<MergeRequestComment>(_notesPath);
 
-        public MergeRequestComment Add(MergeRequestComment comment) => _api.Post().With(comment).To<MergeRequestComment>(_commentsPath);
+        public MergeRequestComment Add(MergeRequestComment comment) => _api.Post().With(comment).To<MergeRequestComment>(_notesPath);
     }
 }

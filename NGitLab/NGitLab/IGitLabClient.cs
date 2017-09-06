@@ -1,4 +1,6 @@
-﻿namespace NGitLab
+﻿using System;
+
+namespace NGitLab
 {
     public interface IGitLabClient
     {
@@ -9,9 +11,10 @@
         ILabelClient Labels { get; }
         IRunnerClient Runners { get; }
         IRepositoryClient GetRepository(int projectId);
-        IBuildClient GetBuilds(int projectId);
+        ICommitClient GetCommits(int projectId);
         IPipelineClient GetPipelines(int projectId);
         IMergeRequestClient GetMergeRequest(int projectId);
         IMembersClient Members { get; }
+        IVersionClient Version { get; }
     }
 }

@@ -24,6 +24,6 @@ namespace NGitLab.Impl
 
         public Branch Create(BranchCreate branch) => _api.Post().With(branch).To<Branch>(_repoPath + "/branches");
 
-        public BranchRemovalStatus Delete(string name) => _api.Delete().To<BranchRemovalStatus>(_repoPath + "/branches/" + name);
+        public void Delete(string name) => _api.Delete().Execute(_repoPath + "/branches/" + name);
     }
 }
