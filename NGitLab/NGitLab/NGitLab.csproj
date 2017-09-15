@@ -48,10 +48,12 @@
   <ItemGroup>
     <Compile Include="GitLabException.cs" />
     <Compile Include="Impl\NamespacesClient.cs" />
+    <Compile Include="Impl\SnippetClient.cs" />
     <Compile Include="Impl\VersionClient.cs" />
     <Compile Include="INamespacesClient.cs" />
     <Compile Include="Impl\PipelineClient.cs" />
     <Compile Include="Impl\SshKeyClient.cs" />
+    <Compile Include="ISnippetClient.cs" />
     <Compile Include="ISshKeyClient.cs" />
     <Compile Include="IVersionClient.cs" />
     <Compile Include="Models\BuildStatus.cs" />
@@ -138,6 +140,7 @@
     <Compile Include="Models\RunnerUpdate.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\SingleCommit.cs" />
+    <Compile Include="Models\Snippet.cs" />
     <Compile Include="Models\SshKey.cs" />
     <Compile Include="Models\SshKeyCreate.cs" />
     <Compile Include="Models\Tag.cs" />
