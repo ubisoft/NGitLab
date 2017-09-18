@@ -29,5 +29,14 @@ namespace NGitLab
         /// <param name="snippetId"></param>
         /// <returns></returns>
         Snippet Get(int projectId, int snippetId);
+
+        /// <summary>
+        /// Return all snippets of the authenticated user
+        /// 
+        /// url like GET /snippets
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Snippet> All { get; }
     }
 }

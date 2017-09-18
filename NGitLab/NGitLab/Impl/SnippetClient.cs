@@ -10,6 +10,7 @@ namespace NGitLab.Impl
     public class SnippetClient : ISnippetClient
     {
         private const string ProjectUrl = "/projects";
+        private const string SnippetUrl = "/snippets";
         private const string ProjectSnippetsUrl = ProjectUrl + "/{0}/snippets";
         private const string SingleSnippetUrl = ProjectUrl + "/{0}/snippets/{1}";
 
@@ -19,6 +20,8 @@ namespace NGitLab.Impl
         {
             _api = api;
         }
+
+        public IEnumerable<Snippet> All => _api.Get().GetAll<Snippet>(SnippetUrl); // all snippet of the user
 
         public IEnumerable<Snippet> ForProject(int projectId)
         {
