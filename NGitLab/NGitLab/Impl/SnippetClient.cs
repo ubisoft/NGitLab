@@ -32,5 +32,19 @@ namespace NGitLab.Impl
         {
             return _api.Get().To<Snippet>(string.Format(SingleSnippetUrl, projectId, snippetId));
         }
+
+        public void Create(SnippetCreate snippet)
+        {
+            _api.Post().With(snippet).To<SnippetCreate>(SnippetUrl);
+        }
+
+        public void Create(SnippetProjectCreate snippet)
+        {
+            _api.Post().With(snippet).To<SnippetProjectCreate>(string.Format(ProjectSnippetsUrl, snippet.Id));
+        }
+
+        public void Delete(int snippetId) => _api.Delete().Execute(string.Concat(SnippetUrl, "/", snippetId));
+
+        public void Delete(int projectId, int snippetId) => _api.Delete().Execute(string.Format(SingleSnippetUrl, projectId, snippetId));
     }
 }

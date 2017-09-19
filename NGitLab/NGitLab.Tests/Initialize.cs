@@ -34,6 +34,8 @@ namespace NGitLab.Tests
 
             GitLabClient = new GitLabClient(GitLabHost, apiToken: GitLabToken);
 
+            RemoveTestProjects();
+
             // Delete project is really slow now, creating a new project name at each run
             // => https://gitlab.com/gitlab-com/support-forum/issues/1569
             ProjectName = "Unit_Test_" + new Random().Next();

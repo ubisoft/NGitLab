@@ -141,6 +141,8 @@
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\SingleCommit.cs" />
     <Compile Include="Models\Snippet.cs" />
+    <Compile Include="Models\SnippetCreate.cs" />
+    <Compile Include="Models\SnippetProjectCreate.cs" />
     <Compile Include="Models\SshKey.cs" />
     <Compile Include="Models\SshKeyCreate.cs" />
     <Compile Include="Models\Tag.cs" />

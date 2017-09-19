@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -8,30 +9,29 @@ using System.Threading.Tasks;
 namespace NGitLab.Models
 {
     [DataContract]
-    public class Snippet
+    public class SnippetProjectCreate
     {
+        [Required]
         [DataMember(Name = "id")]
         public int Id;
 
+        [Required]
         [DataMember(Name = "title")]
         public string Title;
 
+        [Required]
         [DataMember(Name = "file_name")]
         public string FileName;
 
         [DataMember(Name = "description")]
         public string Description;
 
-        [DataMember(Name = "author")]
-        public Author Author;
+        [Required]
+        [DataMember(Name = "code")]
+        public string Code;
 
-        [DataMember(Name = "updated_at")]
-        public string UpdatedAt;
-
-        [DataMember(Name = "created_at")]
-        public DateTime CreatedAt;
-
-        [DataMember(Name = "web_url")]
-        public string WebUrl;
+        [Required]
+        [DataMember(Name = "visibility")]
+        public VisibilityLevel Visibility;
     }
 }
