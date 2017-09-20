@@ -11,7 +11,6 @@ namespace NGitLab.Tests
 {
     public class SnippetsTest
     {
-
         [Test]
         public void Test_snippet()
         {
