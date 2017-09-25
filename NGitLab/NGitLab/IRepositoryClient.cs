@@ -11,6 +11,7 @@ namespace NGitLab {
         IFilesClient Files { get; }
         IBranchClient Branches { get; }
         IPipelinesClient Pipelines { get; }
+        IJobsClient Jobs { get; }
         IProjectHooksClient ProjectHooks { get; }
         void GetRawBlob(string sha, Action<Stream> parser);
         SingleCommit GetCommit(Sha1 sha);

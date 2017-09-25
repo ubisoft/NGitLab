@@ -61,6 +61,7 @@
     <Compile Include="Impl\BranchClient.cs" />
     <Compile Include="IMergeRequestCommentClient.cs" />
     <Compile Include="Impl\IssueClient.cs" />
+    <Compile Include="Impl\JobsClient.cs" />
     <Compile Include="Impl\MergeRequestChangesClient.cs" />
     <Compile Include="Impl\MergeRequestClient.cs" />
     <Compile Include="Impl\MergeRequestCommentClient.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Models\FileData.cs" />
     <Compile Include="Models\FileDelete.cs" />
     <Compile Include="Models\FileUpsert.cs" />
+    <Compile Include="IJobsClient.cs" />
     <Compile Include="Models\Issue.cs" />
     <Compile Include="Models\Job.cs" />
     <Compile Include="Models\MergeCommitMessage.cs" />

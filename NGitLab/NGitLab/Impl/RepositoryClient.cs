@@ -41,6 +41,8 @@ namespace NGitLab.Impl {
 
         public IPipelinesClient Pipelines => new PipelinesClient(api, projectPath);
 
+        public IJobsClient Jobs => new JobsClient(api, projectPath);
+        
         public IProjectHooksClient ProjectHooks => new ProjectHooksClient(api, projectPath);
 
         public Tag CreateTag(TagCreate tag) {

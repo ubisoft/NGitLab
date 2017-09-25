@@ -55,6 +55,7 @@
     <Compile Include="ProjectsTests.cs" />
     <Compile Include="RepositoryClient\BranchClientTests.cs" />
     <Compile Include="RepositoryClient\FilesClientTests.cs" />
+    <Compile Include="RepositoryClient\JobsClientTests.cs" />
     <Compile Include="RepositoryClient\PipelinesClientTests.cs" />
     <Compile Include="RepositoryClient\ProjectHooksClientTests.cs" />
     <Compile Include="RepositoryClient\RepositoryClientTests.cs" />

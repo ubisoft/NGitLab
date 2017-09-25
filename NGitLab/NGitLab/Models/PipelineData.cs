@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace NGitLab.Models {
     public enum PipelineStatus {
-        pending,
-        building,
-        failed,
-        success,
         undefined,
+        pending,
+        success,
+        failed,
+        aborted,
+        running,
+        canceled
     }
+
 
     [DataContract]
     public class PipelineData {
