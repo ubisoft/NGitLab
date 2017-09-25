@@ -45,5 +45,26 @@ namespace NGitLab.Tests.RepositoryClient {
             pipeline.Status.ShouldBe(PipelineStatus.success);
             pipeline.User.ShouldNotBeNull();
         }
+        [Test]
+        [Category("Server_Required")]
+        public void PipelinesGetJobs() {
+            var pipelines = repo.Pipelines.All();
+            var data = pipelines.First();
+            var jobs = repo.Pipelines.GetJobs(data.Id);
+            jobs.ShouldNotBeEmpty();
+        }
+        [Test]
+        [Category("Server_Required")]
+        public void PipelinesJobCheckProperties() {
+            var pipelines = repo.Pipelines.All();
+            var data = pipelines.First();
+            var job = repo.Pipelines.GetJobs(data.Id).First();
+            job.Name.ShouldNotBeNull();
+            job.Commit.ShouldNotBeNull();
+            job.CreatedAt.ShouldNotBeNull();
+            job.FinishedAt.ShouldNotBeNull();
+            job.Id.ShouldBeGreaterThan(0);
+            job.Pipeline.ShouldNotBeNull();
+        }
     }
 }

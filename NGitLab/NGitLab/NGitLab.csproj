@@ -79,6 +79,7 @@
     <Compile Include="IRepositoryClient.cs" />
     <Compile Include="IUserClient.cs" />
     <Compile Include="Json\Sha1Converter.cs" />
+    <Compile Include="Models\ArtifactsFile.cs" />
     <Compile Include="Models\Assignee.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Branch.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Models\FileDelete.cs" />
     <Compile Include="Models\FileUpsert.cs" />
     <Compile Include="Models\Issue.cs" />
+    <Compile Include="Models\Job.cs" />
     <Compile Include="Models\MergeCommitMessage.cs" />
     <Compile Include="Models\MergeRequest.cs" />
     <Compile Include="Models\MergeRequestChanges.cs" />
