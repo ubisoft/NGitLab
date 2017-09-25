@@ -39,6 +39,8 @@ namespace NGitLab.Impl {
 
         public IBranchClient Branches => new BranchClient(api, repoPath);
 
+        public IPipelinesClient Pipelines => new PipelinesClient(api, projectPath);
+
         public IProjectHooksClient ProjectHooks => new ProjectHooksClient(api, projectPath);
 
         public Tag CreateTag(TagCreate tag) {
