@@ -49,7 +49,7 @@ namespace NGitLab.Models {
         public int ColorSchemeId { get; set; }
 
         [DataMember(Name = "theme_id")]
-        public int ThemeId { get; set; }
+        public int? ThemeId { get; set; }
 
         [DataMember(Name = "extern_uid")]
         public string ExternUid { get; set; }

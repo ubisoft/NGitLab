@@ -181,3 +181,6 @@ FakesAssemblies/
 
 # Rider
 .idea/
+
+# VS17
+.vs/
