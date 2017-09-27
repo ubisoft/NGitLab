@@ -30,9 +30,15 @@ namespace NGitLab.Impl
         public IEnumerable<Project> Get(ProjectQuery query)
         {
             string url = Project.Url;
-            if (query.Scope != ProjectQueryScope.Accessible)
+
+            switch (query.Scope)
             {
-                url += "/" + query.Scope.ToString().ToLower();
+                case ProjectQueryScope.Accessible:
+                    url = AddParameter(url, "membership", true);
+                    break;
+                case ProjectQueryScope.Owned:
+                    url = AddParameter(url, "owned", true);
+                    break;
             }
 
             url = AddParameter(url, "archived", query.Archived);

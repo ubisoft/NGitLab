@@ -11,9 +11,7 @@ namespace NGitLab.Impl
     {
         private const string ProjectUrl = "/projects";
         private const string SnippetUrl = "/snippets";
-        private const string ProjectSnippetsUrl = ProjectUrl + "/{0}/snippets";
-        private const string SingleSnippetUrl = ProjectUrl + "/{0}/snippets/{1}";
-
+        
         private readonly API _api;
 
         public SnippetClient(API api)
@@ -25,12 +23,12 @@ namespace NGitLab.Impl
 
         public IEnumerable<Snippet> ForProject(int projectId)
         {
-            return _api.Get().GetAll<Snippet>(string.Format(ProjectSnippetsUrl, projectId));
+            return _api.Get().GetAll<Snippet>($"{ProjectUrl}/{projectId}/snippets");
         }
 
         public Snippet Get(int projectId, int snippetId)
         {
-            return _api.Get().To<Snippet>(string.Format(SingleSnippetUrl, projectId, snippetId));
+            return _api.Get().To<Snippet>($"{ProjectUrl}/{projectId}/snippets/{snippetId}");
         }
 
         public void Create(SnippetCreate snippet)
@@ -40,11 +38,11 @@ namespace NGitLab.Impl
 
         public void Create(SnippetProjectCreate snippet)
         {
-            _api.Post().With(snippet).To<SnippetProjectCreate>(string.Format(ProjectSnippetsUrl, snippet.Id));
+            _api.Post().With(snippet).To<SnippetProjectCreate>($"{ProjectUrl}/{snippet.Id}/snippets");
         }
 
-        public void Delete(int snippetId) => _api.Delete().Execute(string.Concat(SnippetUrl, "/", snippetId));
+        public void Delete(int snippetId) => _api.Delete().Execute($"{SnippetUrl}/{snippetId}");
 
-        public void Delete(int projectId, int snippetId) => _api.Delete().Execute(string.Format(SingleSnippetUrl, projectId, snippetId));
+        public void Delete(int projectId, int snippetId) => _api.Delete().Execute($"{ProjectUrl}/{projectId}/snippets/{snippetId}");
     }
 }

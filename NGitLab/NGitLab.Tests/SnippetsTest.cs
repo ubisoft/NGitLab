@@ -11,6 +11,8 @@ namespace NGitLab.Tests
 {
     public class SnippetsTest
     {
+        private ISnippetClient SnippetClient => Initialize.GitLabClient.Snippets;
+
         [Test]
         public void Test_snippet()
         {
@@ -22,34 +24,33 @@ namespace NGitLab.Tests
                 FileName = "testFileName.cs"
             };
 
-            var randomProjectId = Initialize.GitLabClient.Projects.Accessible.First().Id;
+            var testProjectId = Initialize.GitLabClient.Projects.Accessible.First(p => p.Name == Initialize.ProjectName).Id;
 
             var newSnippet2 = new SnippetProjectCreate
             {
                 Title = "testSnipInProject",
                 Code = "var test = 43;",
                 FileName = "testFileName1.cs",
-                Id = randomProjectId,
+                Id = testProjectId,
                 Visibility = VisibilityLevel.Public
             };
 
             //act - assert
-            snippet.Create(newSnippet1);
-            Assert.True(snippet.All.Any(s => s.Title == newSnippet1.Title));
+            SnippetClient.Create(newSnippet1);
+            Assert.True(SnippetClient.All.Any(s => s.Title == newSnippet1.Title));
 
-            snippet.Create(newSnippet2);
-            Assert.True(snippet.All.Any(s => s.Title == newSnippet2.Title));
+            SnippetClient.Create(newSnippet2);
+            Assert.True(SnippetClient.All.Any(s => s.Title == newSnippet2.Title));
 
-            Assert.NotNull(snippet.Get(randomProjectId, snippet.All.First(s => s.Title == newSnippet2.Title).Id));
+            Assert.NotNull(SnippetClient.Get(testProjectId, SnippetClient.All.First(s => s.Title == newSnippet2.Title).Id));
 
-            var snippetUserId = snippet.All.OrderBy(s => s.Id).First().Id;
+            var snippetProjectId = SnippetClient.All.OrderBy(s => s.Id).Last().Id;
 
-            snippet.Delete(snippetUserId);
-            snippet.Delete(randomProjectId, snippet.All.First().Id);
+            SnippetClient.Delete(testProjectId, snippetProjectId);
 
-            Assert.IsEmpty(snippet.All);
+            SnippetClient.All.ForEach(s => SnippetClient.Delete(s.Id));
+
+            Assert.IsEmpty(SnippetClient.All);
         }
-
-        private ISnippetClient snippet => Initialize.GitLabClient.Snippets;
     }
 }
