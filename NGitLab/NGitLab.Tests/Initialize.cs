@@ -26,8 +26,6 @@ namespace NGitLab.Tests
 
         public static string GroupName;
 
-        public static string ProjectInGroupName;
-
         [OneTimeSetUp]
         public void Setup()
         {
@@ -45,11 +43,10 @@ namespace NGitLab.Tests
             // => https://gitlab.com/gitlab-com/support-forum/issues/1569
             ProjectName = "Unit_Test_" + randomGenerator.Next();
             GroupName = "Unit_Test_" + randomGenerator.Next();
-            ProjectInGroupName = "Unit_Test_" + randomGenerator.Next();
 
             // Create a test project with merge request etc.
-            UnitTestProject = CreateProject(ProjectName);
-            UnitTestGroup = CreateGroup(GroupName, ProjectInGroupName);
+            UnitTestGroup = CreateGroup(GroupName);
+            UnitTestProject = CreateProject(ProjectName, UnitTestGroup.Id);
         }
 
         [OneTimeTearDown]
@@ -57,8 +54,8 @@ namespace NGitLab.Tests
         {
             // Remove the test project again
             DeleteProject(ProjectName);
-            //remove group with the project inside
-            DeleteGroup(GroupName, ProjectInGroupName);
+            //remove group
+            DeleteGroup(GroupName);
         }
 
         private void RemoveTestProjects()
@@ -73,7 +70,7 @@ namespace NGitLab.Tests
             }
         }
 
-        private Group CreateGroup(string groupName, string projectName)
+        private Group CreateGroup(string groupName)
         {
             var group = GitLabClient.Groups.Create(new GroupCreate()
             {
@@ -82,40 +79,20 @@ namespace NGitLab.Tests
                 Visibility = VisibilityLevel.Internal
             });
 
-            GitLabClient.Projects.Create(new ProjectCreate
-            {
-                Description = "desc",
-                IssuesEnabled = true,
-                MergeRequestsEnabled = true,
-                Name = projectName,
-                NamespaceId = group.Id.ToString(),
-                SnippetsEnabled = true,
-                VisibilityLevel = VisibilityLevel.Internal,
-                WikiEnabled = true
-            });
-
             return group;
         }
 
-        private void DeleteGroup(string groupName, string projectName)
+        private void DeleteGroup(string groupName)
         {
-            var project = GitLabClient.Projects.Owned.FirstOrDefault(x => x.Name == projectName);
-
-            if (project == null)
-                Assert.Fail($"Cannot find project {projectName}");
-
-            GitLabClient.Projects.Delete(project.Id);
-
             var group = GitLabClient.Groups.Accessible.FirstOrDefault(x => x.Name == groupName);
 
             if (group == null)
                 Assert.Fail($"Cannot find group {groupName}");
 
             GitLabClient.Groups.Delete(group.Id);
-
         }
 
-        private Project CreateProject(string name)
+        private Project CreateProject(string name, int? groupId = null)
         {
             var createdProject = GitLabClient.Projects.Create(new ProjectCreate
             {
@@ -123,7 +100,7 @@ namespace NGitLab.Tests
                 IssuesEnabled = true,
                 MergeRequestsEnabled = true,
                 Name = name,
-                NamespaceId = null,
+                NamespaceId = groupId?.ToString(),
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Internal,
                 WikiEnabled = true
