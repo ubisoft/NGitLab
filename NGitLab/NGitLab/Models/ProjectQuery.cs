@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
@@ -54,9 +55,10 @@ namespace NGitLab.Models
         /// <summary>
         /// Get a list of projects which the authenticated user can see.
         /// </summary>
+        [Obsolete("Use All instead which is the same behavior.")]
         Visible,
         /// <summary>
-        /// Get a list of all GitLab projects (admin only).
+        /// Get a list of all GitLab projects.
         /// </summary>
         All
     }

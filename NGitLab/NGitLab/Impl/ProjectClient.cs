@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web;
 using NGitLab.Models;
 
@@ -39,6 +40,14 @@ namespace NGitLab.Impl
                 case ProjectQueryScope.Owned:
                     url = AddParameter(url, "owned", true);
                     break;
+#pragma warning disable 618 // Obsolete
+                case ProjectQueryScope.Visible:
+#pragma warning restore 618
+                case ProjectQueryScope.All:
+                    // This is the default, it returns all visible projects.
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             url = AddParameter(url, "archived", query.Archived);
