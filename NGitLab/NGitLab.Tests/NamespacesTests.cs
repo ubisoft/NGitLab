@@ -10,7 +10,7 @@ namespace NGitLab.Tests
         [Test]
         public void Test_namespaces_contains_a_group()
         {
-            var group = Namespaces.Accessible.FirstOrDefault(g => g.Path.Equals("TestGroup", StringComparison.OrdinalIgnoreCase));
+            var group = Namespaces.Accessible.FirstOrDefault(g => g.Path.Equals(Initialize.UnitTestGroup.Path, StringComparison.OrdinalIgnoreCase));
             Assert.IsNotNull(group);
             Assert.AreEqual(Namespace.Type.Group, group.GetKind());
         }

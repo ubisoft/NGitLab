@@ -15,6 +15,7 @@ namespace NGitLab
         public ILabelClient Labels { get; }
         public IRunnerClient Runners { get; }
         public IVersionClient Version { get; }
+        public ISnippetClient Snippets { get; }
 
         public GitLabClient(string hostUrl, string apiToken)
             : this(new GitLabCredentials(hostUrl, apiToken))
@@ -37,6 +38,7 @@ namespace NGitLab
             Namespaces = new NamespacesClient(_api);
             Labels = new LabelClient(_api);
             Version = new VersionClient(_api);
+            Snippets = new SnippetClient(_api);
         }
 
         [Obsolete("Use gitlab client constructor instead")]

@@ -13,7 +13,7 @@ namespace NGitLab.Tests.RepositoryClient
         [SetUp]
         public void Setup()
         {
-            var project = Initialize.GitLabClient.Projects.Owned.First();
+            var project = Initialize.UnitTestProject;
             _repositoryClient = Initialize.GitLabClient.GetRepository(project.Id);
             _hooks = _repositoryClient.ProjectHooks;
         }
