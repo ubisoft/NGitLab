@@ -15,7 +15,7 @@ namespace NGitLab.Tests
         [Test]
         public void Test_projects_are_set_in_a_group()
         {
-            var group = Groups[23];
+            var group = Groups[Initialize.UnitTestGroup.Id];
             Assert.IsNotNull(group);
             Assert.IsNotEmpty(group.Projects);
         }

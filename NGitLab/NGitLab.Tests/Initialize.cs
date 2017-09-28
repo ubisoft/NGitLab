@@ -2,7 +2,6 @@ using NGitLab.Models;
 using NUnit.Framework;
 using System;
 using System.Linq;
-using System.Threading;
 
 namespace NGitLab.Tests
 {
@@ -13,6 +12,8 @@ namespace NGitLab.Tests
 
         public static Project UnitTestProject;
 
+        public static Group UnitTestGroup;
+
         public static IRepositoryClient Repository => GitLabClient.GetRepository(UnitTestProject.Id);
 
         public static string GitLabHost => "https://gitlab.example.com/";
@@ -22,6 +23,10 @@ namespace NGitLab.Tests
         public static bool IsAdmin => GitLabClient.Users.Current.IsAdmin;
 
         public static string ProjectName;
+
+        public static string GroupName;
+
+        public static string ProjectInGroupName;
 
         [OneTimeSetUp]
         public void Setup()
@@ -34,12 +39,17 @@ namespace NGitLab.Tests
 
             GitLabClient = new GitLabClient(GitLabHost, apiToken: GitLabToken);
 
+            var randomGenerator = new Random();
+
             // Delete project is really slow now, creating a new project name at each run
             // => https://gitlab.com/gitlab-com/support-forum/issues/1569
-            ProjectName = "Unit_Test_" + new Random().Next();
+            ProjectName = "Unit_Test_" + randomGenerator.Next();
+            GroupName = "Unit_Test_" + randomGenerator.Next();
+            ProjectInGroupName = "Unit_Test_" + randomGenerator.Next();
 
             // Create a test project with merge request etc.
             UnitTestProject = CreateProject(ProjectName);
+            UnitTestGroup = CreateGroup(GroupName, ProjectInGroupName);
         }
 
         [OneTimeTearDown]
@@ -47,6 +57,8 @@ namespace NGitLab.Tests
         {
             // Remove the test project again
             DeleteProject(ProjectName);
+            //remove group with the project inside
+            DeleteGroup(GroupName, ProjectInGroupName);
         }
 
         private void RemoveTestProjects()
@@ -59,6 +71,48 @@ namespace NGitLab.Tests
                     GitLabClient.Projects.Delete(p.Id);
                 }
             }
+        }
+
+        private Group CreateGroup(string groupName, string projectName)
+        {
+            var group = GitLabClient.Groups.Create(new GroupCreate()
+            {
+                Name = groupName,
+                Path = $"{groupName}Path",
+                Visibility = VisibilityLevel.Internal
+            });
+
+            GitLabClient.Projects.Create(new ProjectCreate
+            {
+                Description = "desc",
+                IssuesEnabled = true,
+                MergeRequestsEnabled = true,
+                Name = projectName,
+                NamespaceId = group.Id.ToString(),
+                SnippetsEnabled = true,
+                VisibilityLevel = VisibilityLevel.Internal,
+                WikiEnabled = true
+            });
+
+            return group;
+        }
+
+        private void DeleteGroup(string groupName, string projectName)
+        {
+            var project = GitLabClient.Projects.Owned.FirstOrDefault(x => x.Name == projectName);
+
+            if (project == null)
+                Assert.Fail($"Cannot find project {projectName}");
+
+            GitLabClient.Projects.Delete(project.Id);
+
+            var group = GitLabClient.Groups.Accessible.FirstOrDefault(x => x.Name == groupName);
+
+            if (group == null)
+                Assert.Fail($"Cannot find group {groupName}");
+
+            GitLabClient.Groups.Delete(group.Id);
+
         }
 
         private Project CreateProject(string name)
@@ -97,7 +151,7 @@ namespace NGitLab.Tests
                 PushEvents = true,
                 Url = new Uri("http://unit.test.scooletz.com"),
             });
-            
+
             return createdProject;
         }
 
