@@ -13,7 +13,7 @@ namespace NGitLab.Models
     {
         [Required]
         [DataMember(Name = "id")]
-        public int Id;
+        public int ProjectId;
 
         [Required]
         [DataMember(Name = "title")]

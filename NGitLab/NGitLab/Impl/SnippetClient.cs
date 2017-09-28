@@ -38,7 +38,7 @@ namespace NGitLab.Impl
 
         public void Create(SnippetProjectCreate snippet)
         {
-            _api.Post().With(snippet).To<SnippetProjectCreate>($"{ProjectUrl}/{snippet.Id}/snippets");
+            _api.Post().With(snippet).To<SnippetProjectCreate>($"{ProjectUrl}/{snippet.ProjectId}/snippets");
         }
 
         public void Delete(int snippetId) => _api.Delete().Execute($"{SnippetUrl}/{snippetId}");

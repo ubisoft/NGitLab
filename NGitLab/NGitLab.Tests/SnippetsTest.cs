@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
+using NGitLab.Impl;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -24,33 +25,31 @@ namespace NGitLab.Tests
                 FileName = "testFileName.cs"
             };
 
-            var testProjectId = Initialize.GitLabClient.Projects.Accessible.First(p => p.Name == Initialize.ProjectName).Id;
+            var testProjectId = Initialize.UnitTestProject.Id;
 
             var newSnippet2 = new SnippetProjectCreate
             {
                 Title = "testSnipInProject",
                 Code = "var test = 43;",
                 FileName = "testFileName1.cs",
-                Id = testProjectId,
+                ProjectId = testProjectId,
                 Visibility = VisibilityLevel.Public
             };
 
             //act - assert
             SnippetClient.Create(newSnippet1);
-            Assert.True(SnippetClient.All.Any(s => s.Title == newSnippet1.Title));
+            Assert.That(SnippetClient.All.Select(x => x.Title), Contains.Item("testSnip"));
 
             SnippetClient.Create(newSnippet2);
-            Assert.True(SnippetClient.All.Any(s => s.Title == newSnippet2.Title));
+            Assert.That(SnippetClient.All.Select(x => x.Title), Contains.Item("testSnipInProject"));
 
-            Assert.NotNull(SnippetClient.Get(testProjectId, SnippetClient.All.First(s => s.Title == newSnippet2.Title).Id));
+            var returnedUserSnippet = SnippetClient.All.First(s => s.Title == "testSnip");
+            var returnedProjectSnippet = SnippetClient.All.First(s => s.Title == "testSnipInProject");
 
-            var snippetProjectId = SnippetClient.All.OrderBy(s => s.Id).Last().Id;
+            Assert.That(SnippetClient.Get(newSnippet2.ProjectId, returnedProjectSnippet.Id), Is.Not.Null);
 
-            SnippetClient.Delete(testProjectId, snippetProjectId);
-
-            SnippetClient.All.ForEach(s => SnippetClient.Delete(s.Id));
-
-            Assert.IsEmpty(SnippetClient.All);
+            SnippetClient.Delete(returnedUserSnippet.Id);
+            SnippetClient.Delete(newSnippet2.ProjectId, returnedProjectSnippet.Id);
         }
     }
 }
