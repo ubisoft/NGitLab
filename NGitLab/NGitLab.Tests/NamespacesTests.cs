@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -18,7 +18,7 @@ namespace NGitLab.Tests
         [Test]
         public void Test_namespaces_contains_a_user()
         {
-            var user = Namespaces.Accessible.FirstOrDefault(g => g.Path.Equals("robot", StringComparison.OrdinalIgnoreCase));
+            var user = Namespaces.Accessible.FirstOrDefault(g => g.Path.Equals("svc_toolsquarerobot", StringComparison.OrdinalIgnoreCase));
             Assert.IsNotNull(user);
             Assert.AreEqual(Namespace.Type.User, user.GetKind());
         }
@@ -26,7 +26,7 @@ namespace NGitLab.Tests
         [Test]
         public void Test_namespaces_search_for_user()
         {
-            var user = Namespaces.Search("robot");
+            var user = Namespaces.Search("svc_toolsquarerobot");
             Assert.IsNotNull(user);
         }
 

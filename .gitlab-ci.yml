@@ -1,0 +1,31 @@
+build:
+  stage: build
+  script:
+  - TeaBox.com Build
+  artifacts:
+    expire_in: 2d
+    untracked: true
+  
+# TODO: enable the unit tests once we have a dummy gitlab server to run tests onto.
+test:
+  stage: test
+  script:
+  - TeaBox.com GitLabMacros.RunTests
+
+# launch_analysis:  
+#   stage: test
+#   script:
+#   - TeaBox.com AnalyseCode
+#   artifacts:
+#     name: SonarQube
+#     paths:
+#     - .SonarQube/out/summary.md
+
+deploy:
+  stage: deploy
+  environment: production
+  script: 
+  - TeaBox.com PublishNugetPackage -nuspecFile="NGitLab/NGitLab/NGitLab.nuspec"
+  - TeaBox.com PublishNugetPackage -nuspecFile="NGitLab/NGitLab.Mock/NGitLab.Mock.nuspec"
+  only:
+  - tags

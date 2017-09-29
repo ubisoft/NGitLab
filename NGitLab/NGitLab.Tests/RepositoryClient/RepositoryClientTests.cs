@@ -39,6 +39,12 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        public void GetCommitByBranch()
+        {
+            Assert.AreEqual(Initialize.Repository.Commits.OrderByDescending(c => c.CreatedAt).FirstOrDefault()?.Id, Initialize.Repository.GetCommit("master").Id);
+        }
+
+        [Test]
         public void GetCommitDiff()
         {
             CollectionAssert.IsNotEmpty(Initialize.Repository.GetCommitDiff(Initialize.Repository.Commits.First().Id).ToArray());

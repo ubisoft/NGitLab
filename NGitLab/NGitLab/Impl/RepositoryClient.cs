@@ -47,6 +47,8 @@ namespace NGitLab.Impl
 
         public SingleCommit GetCommit(Sha1 sha) => _api.Get().To<SingleCommit>(_repoPath + "/commits/" + sha);
 
+        public SingleCommit GetCommit(string param) => _api.Get().To<SingleCommit>(_repoPath + "/commits/" + param);
+
         public IEnumerable<Diff> GetCommitDiff(Sha1 sha) => _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
 
         public IFilesClient Files => new FilesClient(_api, _repoPath);

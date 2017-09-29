@@ -20,6 +20,9 @@ namespace NGitLab
         IEnumerable<Commit> GetCommits(string refName, int maxResults = 0);
 
         SingleCommit GetCommit(Sha1 sha);
+
+        SingleCommit GetCommit(string param);
+
         IEnumerable<Diff> GetCommitDiff(Sha1 sha);
 
         IFilesClient Files { get; }
