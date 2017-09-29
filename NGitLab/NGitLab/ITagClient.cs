@@ -9,5 +9,7 @@ namespace NGitLab
         void Delete(string name);
 
         IEnumerable<Tag> All { get; }
+
+        Tag this[string name] { get; }
     }
 }

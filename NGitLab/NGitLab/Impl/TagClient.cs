@@ -26,5 +26,7 @@ namespace NGitLab.Impl
         }
 
         public IEnumerable<Tag> All => _api.Get().GetAll<Tag>(_tagsPath);
+
+        public Tag this[string name] => _api.Get().To<Tag>($"{_tagsPath}/{name}");
     }
 }
