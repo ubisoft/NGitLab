@@ -19,7 +19,9 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        public IEnumerable<Snippet> All => _api.Get().GetAll<Snippet>(SnippetUrl); // all snippet of the user
+        public IEnumerable<Snippet> User => _api.Get().GetAll<Snippet>(SnippetUrl); // all snippet of the user
+
+        public IEnumerable<Snippet> All => _api.Get().GetAll<Snippet>(SnippetUrl + "/public"); // all public snippets
 
         public IEnumerable<Snippet> ForProject(int projectId)
         {

@@ -22,7 +22,8 @@ namespace NGitLab.Tests
             {
                 Title = "testSnip",
                 Content = "var test = 42;",
-                FileName = "testFileName.cs"
+                FileName = "testFileName.cs",
+                Visibility = VisibilityLevel.Public,
             };
 
             var testProjectId = Initialize.UnitTestProject.Id;
@@ -38,6 +39,7 @@ namespace NGitLab.Tests
 
             //act - assert
             SnippetClient.Create(newSnippet1);
+            Assert.That(SnippetClient.User.Select(x => x.Title), Contains.Item("testSnip"));
             Assert.That(SnippetClient.All.Select(x => x.Title), Contains.Item("testSnip"));
 
             SnippetClient.Create(newSnippet2);
