@@ -56,5 +56,12 @@ namespace NGitLab.Models {
 
         [DataMember(Name = "tag_list")]
         public string[] Tags { get; set; }
+        [DataMember(Name = "fork?")]
+        public bool Fork { get; set; }
+       
+        [DataMember(Name = "builds_enabled")]
+        public bool BuildsEnabled { get; set; }
+        [DataMember(Name = "snippets_enabled")]
+        public bool SnippetsEnabled { get; set; }
     }
 }

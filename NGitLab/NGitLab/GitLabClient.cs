@@ -1,4 +1,5 @@
 ﻿using NGitLab.Impl;
+using NGitLab.Models;
 
 namespace NGitLab {
     public class GitLabClient {
@@ -17,6 +18,12 @@ namespace NGitLab {
             Groups = new NamespaceClient(api);
         }
 
+        public static GitLabClient Connect(string hostUrl, string username, string password)
+        {
+            var api = new Api(hostUrl, "");
+            var session = api.Post().To<Session>($"/session?login={username}&password={password}");
+            return Connect(hostUrl, session.PrivateToken);
+        }
         public static GitLabClient Connect(string hostUrl, string apiToken) {
             return new GitLabClient(hostUrl, apiToken);
         }
