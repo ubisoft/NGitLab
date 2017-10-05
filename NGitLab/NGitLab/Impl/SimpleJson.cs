@@ -1361,6 +1361,14 @@ namespace NGitLab.Impl
             {
                 try
                 {
+                    var member = Enum.GetValues(type)
+                        .Cast<Enum>()
+                        .Where(v => string.Equals(GetAttributeOfType<EnumMemberAttribute>(v)?.Value, value.ToString(), StringComparison.OrdinalIgnoreCase))
+                        .FirstOrDefault();
+
+                    if (member != null)
+                        return member;
+
                     return Enum.Parse(type, value.ToString(), ignoreCase: true);
                 }
                 catch (Exception)

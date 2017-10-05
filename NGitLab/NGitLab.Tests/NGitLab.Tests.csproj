@@ -41,6 +41,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +50,7 @@
     <Compile Include="GitlabCredentialsTests.cs" />
     <Compile Include="HttpRequestorTests.cs" />
     <Compile Include="GroupsTests.cs" />
+    <Compile Include="JsonTests.cs" />
     <Compile Include="NamespacesTests.cs" />
     <Compile Include="PipelineTests.cs" />
     <Compile Include="HttpTracing.cs" />
