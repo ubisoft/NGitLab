@@ -67,6 +67,7 @@
     <Compile Include="Impl\MergeRequestCommentClient.cs" />
     <Compile Include="Impl\MergeRequestCommitClient.cs" />
     <Compile Include="Impl\PipelinesClient.cs" />
+    <Compile Include="Impl\ProjectSnippetsClient.cs" />
     <Compile Include="Impl\ProjectHooksClient.cs" />
     <Compile Include="Impl\FileClient.cs" />
     <Compile Include="Impl\HttpRequestor.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Impl\UserClient.cs" />
     <Compile Include="IPipelinesClient.cs" />
     <Compile Include="IProjectClient.cs" />
+    <Compile Include="IProjectSnippetsClient.cs" />
     <Compile Include="IProjectHooksClient.cs" />
     <Compile Include="IRepositoryClient.cs" />
     <Compile Include="IUserClient.cs" />
@@ -113,6 +115,9 @@
     <Compile Include="Models\PipelineData.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\ProjectCreate.cs" />
+    <Compile Include="Models\ProjectSnippetUpdate.cs" />
+    <Compile Include="Models\ProjectSnippetInsert.cs" />
+    <Compile Include="Models\ProjectSnippet.cs" />
     <Compile Include="Models\ProjectHook.cs" />
     <Compile Include="Models\ProjectHookUpdate.cs" />
     <Compile Include="Models\ProjectHookInsert.cs" />

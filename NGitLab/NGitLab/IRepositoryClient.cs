@@ -13,6 +13,7 @@ namespace NGitLab {
         IPipelinesClient Pipelines { get; }
         IJobsClient Jobs { get; }
         IProjectHooksClient ProjectHooks { get; }
+        IProjectSnippetsClient ProjectSnippets { get; }
         void GetRawBlob(string sha, Action<Stream> parser);
         SingleCommit GetCommit(Sha1 sha);
         IEnumerable<Diff> GetCommitDiff(Sha1 sha);

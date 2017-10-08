@@ -29,7 +29,8 @@ namespace NGitLab.Models {
 
         [DataMember(Name = "path_with_namespace")]
         public string PathWithNamespace { get; set; }
-
+        [DataMember(Name = "name_with_namespace")]
+        public string NameWithNamespace { get; set; }
         [DataMember(Name = "issues_enabled")]
         public bool IssuesEnabled { get; set; }
 
@@ -51,6 +52,8 @@ namespace NGitLab.Models {
         [DataMember(Name = "http_url_to_repo")]
         public string HttpUrl { get; set; }
 
+        [DataMember(Name = "web_url")]
+        public string WebUrl { get; set; }
         [DataMember(Name = "namespace")]
         public Namespace Namespace { get; set; }
 
@@ -63,5 +66,16 @@ namespace NGitLab.Models {
         public bool BuildsEnabled { get; set; }
         [DataMember(Name = "snippets_enabled")]
         public bool SnippetsEnabled { get; set; }
+
+        [DataMember(Name = "jobs_enabled")]
+        public bool JobsEnabled { get; set; }
+
+        [DataMember(Name = "lfs_enabled")]
+        public bool LFSEnabled { get; set; }
+        [DataMember(Name = "creator_id")]
+        public int  CreatorID { get; set; }
+ 
+        
+
     }
 }

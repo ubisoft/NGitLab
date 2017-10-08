@@ -45,6 +45,7 @@ namespace NGitLab.Impl {
         
         public IProjectHooksClient ProjectHooks => new ProjectHooksClient(api, projectPath);
 
+        public IProjectSnippetsClient ProjectSnippets => new  ProjectSnippetsClient (api, projectPath);
         public Tag CreateTag(TagCreate tag) {
             return api
                 .Post().With(tag)
