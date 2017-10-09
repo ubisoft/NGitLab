@@ -12,7 +12,10 @@ namespace NGitLab.Impl {
         public IEnumerable<Namespace> Accessible() {
             return api.Get().GetAll<Namespace>(Namespace.Url);
         }
-
+        public IEnumerable<Namespaces> GetNamespaces()
+        {
+            return api.Get().GetAll<Namespaces>(Namespaces.Url);
+        }
         public Namespace Get(int id) {
             return api.Get().To<Namespace>(Namespace.Url + "/" + id);
         }
@@ -24,5 +27,7 @@ namespace NGitLab.Impl {
         public void Delete(int id) {
             api.Delete().To<Namespace>(Namespace.Url + "/" + id);
         }
+
+       
     }
 }

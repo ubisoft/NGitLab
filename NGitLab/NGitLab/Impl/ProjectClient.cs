@@ -29,6 +29,13 @@ namespace NGitLab.Impl {
             return api.Get().To<Project>(Project.Url + "/" + id);
         }
 
+
+        public Project Get(string namespacedpath)
+        {
+            return api.Get().To<Project>(Project.Url + "/" +  namespacedpath.Replace("/", "%2F"));
+        }
+
+
         public Project Create(ProjectCreate project) {
             return api.Post().With(project).To<Project>(Project.Url);
         }
