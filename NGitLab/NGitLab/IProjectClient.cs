@@ -8,6 +8,7 @@ namespace NGitLab {
         IEnumerable<Project> Membership();
         IEnumerable<Project> Starred();
         Project Get(int id);
+        Project Get(string namespacedpath);
         Project Create(ProjectCreate project);
         bool Delete(int id);
         Project Star(int id);

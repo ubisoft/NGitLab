@@ -11,7 +11,8 @@ namespace NGitLab.Models {
 
         [DataMember(Name = "name")]
         public string Name { get; set; }
-
+        [DataMember(Name = "full_path")]
+        public string FullPath { get; set; }
         [DataMember(Name = "path")]
         public string Path { get; set; }
 

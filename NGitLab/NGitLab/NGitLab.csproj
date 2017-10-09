@@ -108,6 +108,7 @@
     <Compile Include="Models\MergeRequestState.cs" />
     <Compile Include="Models\MergeRequestUpdate.cs" />
     <Compile Include="Models\Milestone.cs" />
+    <Compile Include="Models\Namespaces.cs" />
     <Compile Include="Models\Namespace.cs" />
     <Compile Include="Models\ObjectType.cs" />
     <Compile Include="Models\PersonInfo.cs" />
