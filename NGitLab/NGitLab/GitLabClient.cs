@@ -9,13 +9,14 @@ namespace NGitLab {
         public readonly IProjectClient Projects;
 
         public readonly IUserClient Users;
-
+        public   string ApiToken => api.ApiToken;
         GitLabClient(string hostUrl, string apiToken) {
             api = new Api(hostUrl, apiToken);
             Users = new UserClient(api);
             Projects = new ProjectClient(api);
             Issues = new IssueClient(api);
             Groups = new NamespaceClient(api);
+            
         }
 
         public static GitLabClient Connect(string hostUrl, string username, string password)
