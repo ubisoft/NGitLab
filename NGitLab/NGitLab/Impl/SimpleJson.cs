@@ -484,6 +484,20 @@ namespace NGitLab.Impl
 #endif
     }
 
+    internal class EnumMember
+    {
+        public EnumMember(Enum value, string name, string serializationName)
+        {
+            Value = value;
+            Name = name;
+            SerializationName = serializationName;
+        }
+
+        public Enum Value { get; }
+        public string Name { get; }
+        public string SerializationName { get; }
+    }
+
     /// <summary>
     /// This class encodes and decodes JSON strings.
     /// Spec. details, see http://www.json.org/
@@ -516,7 +530,7 @@ namespace NGitLab.Impl
         private static readonly char[] EscapeTable;
         private static readonly char[] EscapeCharacters = new char[] { '"', '\\', '\b', '\f', '\n', '\r', '\t' };
         private static readonly string EscapeCharactersString = new string(EscapeCharacters);
-
+        
         static SimpleJson()
         {
             EscapeTable = new char[93];
@@ -1251,10 +1265,12 @@ namespace NGitLab.Impl
 #endif
         class PocoJsonSerializerStrategy : IJsonSerializerStrategy
     {
+        private static readonly Dictionary<Type, List<EnumMember>> _enumMembers = new Dictionary<Type, List<EnumMember>>();
+
         internal IDictionary<Type, ReflectionUtils.ConstructorDelegate> ConstructorCache;
         internal IDictionary<Type, IDictionary<string, ReflectionUtils.GetDelegate>> GetCache;
         internal IDictionary<Type, IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>> SetCache;
-
+        
         internal static readonly Type[] EmptyTypes = new Type[0];
         internal static readonly Type[] ArrayConstructorParameterTypes = new Type[] { typeof(int) };
 
@@ -1335,6 +1351,27 @@ namespace NGitLab.Impl
             return TrySerializeKnownTypes(input, out output) || TrySerializeUnknownTypes(input, out output);
         }
 
+        private static List<EnumMember> GetMembers(Type type)
+        {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
+            if (!type.IsEnum)
+                throw new ArgumentException("Type must be an enumeration", nameof(type));
+
+            List<EnumMember> result;
+            if (_enumMembers.TryGetValue(type, out result))
+                return result;
+
+            result = Enum.GetValues(type)
+                        .Cast<Enum>()
+                        .Select(v => new EnumMember(v, v.ToString(), GetAttributeOfType<EnumMemberAttribute>(v)?.Value))
+                        .ToList();
+
+            _enumMembers[type] = result;
+            return result;
+        }
+
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public virtual object DeserializeObject(object value, Type type)
         {
@@ -1361,7 +1398,15 @@ namespace NGitLab.Impl
             {
                 try
                 {
-                    return Enum.Parse(type, value.ToString(), ignoreCase: true);
+                    var valueAsString = value.ToString();
+                    var member = GetMembers(type)
+                        .Where(v => string.Equals(v.SerializationName, valueAsString, StringComparison.OrdinalIgnoreCase))
+                        .FirstOrDefault();
+
+                    if (member != null)
+                        return member.Value;
+
+                    return Enum.Parse(type, valueAsString, ignoreCase: true);
                 }
                 catch (Exception)
                 {
