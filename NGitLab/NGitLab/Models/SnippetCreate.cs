@@ -27,6 +27,6 @@ namespace NGitLab.Models
         public string Description;
 
         [DataMember(Name = "visibility")]
-        public string Visibility;
+        public VisibilityLevel Visibility;
     }
 }

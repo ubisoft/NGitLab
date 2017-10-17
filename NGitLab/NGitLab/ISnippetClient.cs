@@ -24,6 +24,8 @@ namespace NGitLab
         /// </summary>
         IEnumerable<Snippet> All { get; }
 
+        IEnumerable<Snippet> User { get; }
+
         /// <summary>
         /// Create a new user's snippet 
         /// </summary>
