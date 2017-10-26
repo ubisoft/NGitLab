@@ -4,10 +4,18 @@ using System.Diagnostics;
 namespace NGitLab.Impl {
     [DebuggerStepThrough]
     public class Api {
-        const string ApiNamespace = "/api/v4";
+        public enum ApiVersion
+        {
+            V3,
+            V4
+        }
         readonly string hostUrl;
         public readonly string ApiToken;
-
+         internal     ApiVersion _ApiVersion { get; set; } = ApiVersion.V4;
+        public Api(string hostUrl, string apiToken, ApiVersion apiVersion):this(hostUrl,apiToken)
+        {
+            _ApiVersion = apiVersion;
+        }
         public Api(string hostUrl, string apiToken) {
             this.hostUrl = hostUrl.EndsWith("/") ? hostUrl.Replace("/$", "") : hostUrl;
             ApiToken = apiToken;
@@ -30,14 +38,9 @@ namespace NGitLab.Impl {
         }
 
         public Uri GetApiUrl(string tailApiUrl) {
-            //if (APIToken != null)
-            //{
-            //    tailAPIUrl = tailAPIUrl + (tailAPIUrl.IndexOf('?') > 0 ? '&' : '?') + "private_token=" + APIToken;
-            //}
-
             if (!tailApiUrl.StartsWith("/"))
                 tailApiUrl = "/" + tailApiUrl;
-            return new Uri(hostUrl + ApiNamespace + tailApiUrl);
+            return new Uri($"{hostUrl}/api/{(_ApiVersion== ApiVersion.V3?"v3":"v4")}{tailApiUrl}");
         }
 
         public Uri GetUrl(string tailApiUrl) {
