@@ -26,5 +26,9 @@ namespace NGitLab.Models {
 
         [DataMember(Name = "message")]
         public string Message { get; set; }
+
+        [DataMember(Name = "parent_ids")]
+        public Sha1[] Parents { get; set; }
+
     }
 }
