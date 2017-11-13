@@ -57,5 +57,20 @@ namespace NGitLab.Tests
             jobs = _pipelines.GetJobsInProject(Job.Scope.Pending);
             Assert.IsNotEmpty(jobs);
         }
+
+        [Test]
+        public void Test_can_list_all_jobs_from_project()
+        {
+            Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
+            {
+                Name = "NewTagForBuildScope",
+                Ref = "master"
+            });
+
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+
+            var jobs = _pipelines.AllJobs;
+            Assert.IsNotEmpty(jobs);
+        }
     }
 }

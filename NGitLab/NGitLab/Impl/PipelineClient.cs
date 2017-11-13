@@ -20,7 +20,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<PipelineBasic> All => _api.Get().GetAll<PipelineBasic>($"{_pipelinesPath}");
 
-        public IEnumerable<Job> GetAllJobsInProject => _api.Get().GetAll<Job>($"{_projectPath}/jobs");
+        public IEnumerable<Job> AllJobs => _api.Get().GetAll<Job>($"{_projectPath}/jobs");
 
         public IEnumerable<Job> GetJobsInProject(Job.Scope scope)
         {

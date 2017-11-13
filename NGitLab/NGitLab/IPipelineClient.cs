@@ -20,7 +20,7 @@ namespace NGitLab
         /// <summary>
         /// Get all jobs in a project
         /// </summary>
-        IEnumerable<Job> GetAllJobsInProject { get; }
+        IEnumerable<Job> AllJobs { get; }
 
         /// <summary>
         /// Get jobs in a project meeting the scope

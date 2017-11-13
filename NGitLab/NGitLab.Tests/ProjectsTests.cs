@@ -55,12 +55,7 @@ namespace NGitLab.Tests
         [Test]
         public void GetProjectsStatistics()
         {
-            var query = new ProjectQuery
-            {
-                Statistics = true
-            };
-
-            var projects = _projects.Get(query);
+            var projects = _projects.Get(new ProjectQuery{Statistics = true});
 
             if(!projects.Any())
                 Assert.Fail("No projects found.");
