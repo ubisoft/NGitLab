@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web;
 using NGitLab.Models;
 
 namespace NGitLab.Impl

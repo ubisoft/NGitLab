@@ -6,18 +6,6 @@ namespace NGitLab.Models
     [DataContract]
     public class Job
     {
-        public enum Scope
-        {
-            All,
-            Created,
-            Pending,
-            Running,
-            Failed,
-            Success,
-            Canceled,
-            Skipped,
-            Manual
-        }
 
         [DataMember(Name = "name")]
         public string Name;

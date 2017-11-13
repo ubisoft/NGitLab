@@ -18,7 +18,7 @@ namespace NGitLab.Tests
             CommitsTests.EnableCiOnTestProject();
         }
 
-        [Test]
+        [Test, Timeout(5000)]
         public void Test_can_list_the_pipeline_of_the_current_tag()
         {
             Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
@@ -40,25 +40,39 @@ namespace NGitLab.Tests
             Assert.That(jobs.Length > 0);
         }
 
-        [Test]
-        public void Test_can_list_pipelines_with_scope()
+        [Test, Timeout(5000)]
+        public void Test_can_list_pipelines_with_scope_all()
         {
             Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
             {
-                Name = "NewTagForBuildScope",
+                Name = "NewTagForBuildScopeAll",
                 Ref = "master"
             });
-            
-            Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            var jobs = _pipelines.GetJobsInProject(Job.Scope.All);
-            Assert.IsNotEmpty(jobs);
-
-            jobs = _pipelines.GetJobsInProject(Job.Scope.Pending);
-            Assert.IsNotEmpty(jobs);
+            while (true)
+            {
+                if (_pipelines.GetJobsInProject(JobScope.All).Any())
+                    return;
+            }
         }
 
-        [Test]
+        [Test, Timeout(5000)]
+        public void Test_can_list_pipelines_with_scope_pending()
+        {
+            Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
+            {
+                Name = "NewTagForBuildScopePending",
+                Ref = "master"
+            });
+
+            while (true)
+            {
+                if (_pipelines.GetJobsInProject(JobScope.Pending).Any())
+                    return;
+            }
+        }
+
+        [Test, Timeout(5000)]
         public void Test_can_list_all_jobs_from_project()
         {
             Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
@@ -67,10 +81,11 @@ namespace NGitLab.Tests
                 Ref = "master"
             });
 
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-
-            var jobs = _pipelines.AllJobs;
-            Assert.IsNotEmpty(jobs);
+            while (true)
+            {
+                if (_pipelines.AllJobs.Any())
+                    return;
+            }
         }
     }
 }

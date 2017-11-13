@@ -7,7 +7,7 @@ using System.Web;
 
 namespace NGitLab.Impl
 {
-    public static class Utils
+    internal static class Utils
     {
         public static string AddParameter<T>(string url, string parameterName, T value)
         {

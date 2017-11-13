@@ -22,41 +22,13 @@ namespace NGitLab.Impl
 
         public IEnumerable<Job> AllJobs => _api.Get().GetAll<Job>($"{_projectPath}/jobs");
 
-        public IEnumerable<Job> GetJobsInProject(Job.Scope scope)
+        public IEnumerable<Job> GetJobsInProject(JobScope scope)
         {
             string url = $"{_projectPath}/jobs";
 
-            switch (scope)
+            if (scope != JobScope.All)
             {
-                case Job.Scope.Canceled:
-                    url = Utils.AddParameter(url, "scope", "canceled");
-                    break;
-                case Job.Scope.Created:
-                    url = Utils.AddParameter(url, "scope", "created");
-                    break;
-                case Job.Scope.Failed:
-                    url = Utils.AddParameter(url, "scope", "failed");
-                    break;
-                case Job.Scope.Manual:
-                    url = Utils.AddParameter(url, "scope", "manual");
-                    break;
-                case Job.Scope.Pending:
-                    url = Utils.AddParameter(url, "scope", "pending");
-                    break;
-                case Job.Scope.Running:
-                    url = Utils.AddParameter(url, "scope", "running");
-                    break;
-                case Job.Scope.Skipped:
-                    url = Utils.AddParameter(url, "scope", "skipped");
-                    break;
-                case Job.Scope.Success:
-                    url = Utils.AddParameter(url, "scope", "success");
-                    break;
-                case Job.Scope.All:
-                    //not providing a scope will show all jobs
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                url = Utils.AddParameter(url, "scope", scope.ToString().ToLowerInvariant());
             }
 
             return _api.Get().GetAll<Job>(url);
@@ -68,7 +40,7 @@ namespace NGitLab.Impl
         {
             // For a reason gitlab returns the jobs in the reverse order as
             // they appear in their UI. Here we reverse them!
-            
+
             var jobs = _api.Get().GetAll<Job>($"{_pipelinesPath}/{pipelineId}/jobs").Reverse().ToArray();
             return jobs;
         }

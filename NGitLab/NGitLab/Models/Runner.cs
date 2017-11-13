@@ -6,15 +6,6 @@ namespace NGitLab.Models
     [DataContract]
     public class Runner
     {
-        public enum Scope
-        {
-            Specific,
-            Shared,
-            Active,
-            Paused,
-            Online
-        }
-
         public const string Url = "/runners";
 
         [DataMember(Name = "id")]

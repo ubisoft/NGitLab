@@ -26,7 +26,7 @@ namespace NGitLab
         /// Get jobs in a project meeting the scope
         /// </summary>
         /// <param name="scope"></param>
-        IEnumerable<Job> GetJobsInProject(Job.Scope scope);
+        IEnumerable<Job> GetJobsInProject(JobScope scope);
 
         /// <summary>
         /// Returns the jobs of a pipeline.

@@ -50,7 +50,7 @@ namespace NGitLab
         /// Admin privileges required
         /// </summary>
         /// <param name="scope"></param>
-        IEnumerable<Runner> GetAllRunnersWithScope(Runner.Scope scope);
+        IEnumerable<Runner> GetAllRunnersWithScope(RunnerScope scope);
 
         /// <summary>
         /// Enable an available specific runner in the project.
