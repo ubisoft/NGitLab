@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Castle.Core.Internal;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -51,6 +52,32 @@ namespace NGitLab.Tests
             CollectionAssert.IsNotEmpty(projects);
         }
 
+        [Test]
+        public void GetProjectsStatistics()
+        {
+            var query = new ProjectQuery
+            {
+                Statistics = true
+            };
+
+            var projects = _projects.Get(query);
+
+            if(!projects.Any())
+                Assert.Fail("No projects found.");
+
+            projects.ForEach(p => Assert.IsNotNull(p.Statistics)); ;
+        }
+
+        [Test]
+        public void GetProjectsLinks()
+        {
+            var projects = _projects.Get(new ProjectQuery());
+
+            if (!projects.Any())
+                Assert.Fail("No projects found.");
+
+            projects.ForEach(p => Assert.IsNotNull(p.Links)); 
+        }
 
         [Test]
         public void GetProjectsByQuery_VisibilityInternal()

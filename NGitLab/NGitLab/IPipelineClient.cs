@@ -18,6 +18,17 @@ namespace NGitLab
         Pipeline this[int id] { get; }
 
         /// <summary>
+        /// Get all jobs in a project
+        /// </summary>
+        IEnumerable<Job> GetAllJobsInProject { get; }
+
+        /// <summary>
+        /// Get jobs in a project meeting the scope
+        /// </summary>
+        /// <param name="scope"></param>
+        IEnumerable<Job> GetJobsInProject(Job.Scope scope);
+
+        /// <summary>
         /// Returns the jobs of a pipeline.
         /// </summary>
         Job[] GetJobs(int pipelineId);

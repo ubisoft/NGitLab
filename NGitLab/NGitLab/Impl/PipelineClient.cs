@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
@@ -18,6 +19,48 @@ namespace NGitLab.Impl
         }
 
         public IEnumerable<PipelineBasic> All => _api.Get().GetAll<PipelineBasic>($"{_pipelinesPath}");
+
+        public IEnumerable<Job> GetAllJobsInProject => _api.Get().GetAll<Job>($"{_projectPath}/jobs");
+
+        public IEnumerable<Job> GetJobsInProject(Job.Scope scope)
+        {
+            string url = $"{_projectPath}/jobs";
+
+            switch (scope)
+            {
+                case Job.Scope.Canceled:
+                    url = Utils.AddParameter(url, "scope", "canceled");
+                    break;
+                case Job.Scope.Created:
+                    url = Utils.AddParameter(url, "scope", "created");
+                    break;
+                case Job.Scope.Failed:
+                    url = Utils.AddParameter(url, "scope", "failed");
+                    break;
+                case Job.Scope.Manual:
+                    url = Utils.AddParameter(url, "scope", "manual");
+                    break;
+                case Job.Scope.Pending:
+                    url = Utils.AddParameter(url, "scope", "pending");
+                    break;
+                case Job.Scope.Running:
+                    url = Utils.AddParameter(url, "scope", "running");
+                    break;
+                case Job.Scope.Skipped:
+                    url = Utils.AddParameter(url, "scope", "skipped");
+                    break;
+                case Job.Scope.Success:
+                    url = Utils.AddParameter(url, "scope", "success");
+                    break;
+                case Job.Scope.All:
+                    //not providing a scope will show all jobs
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return _api.Get().GetAll<Job>(url);
+        }
 
         public Pipeline this[int id] => _api.Get().To<Pipeline>($"{_pipelinesPath}/{id}");
 

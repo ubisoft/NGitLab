@@ -40,6 +40,11 @@ namespace NGitLab.Models
         /// Return only the ID, URL, name, and path of each project
         /// </summary>
         public bool? Simple;
+
+        /// <summary>
+        /// Include project statistics
+        /// </summary>
+        public bool? Statistics;
     }
 
     public enum ProjectQueryScope

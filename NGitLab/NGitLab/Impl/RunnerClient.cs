@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -17,6 +19,34 @@ namespace NGitLab.Impl
         public IEnumerable<Runner> All => _api.Get().GetAll<Runner>(Runner.Url + "/all");
 
         public Runner this[int id] => _api.Get().To<Runner>(Runner.Url + "/" + id);
+
+        public IEnumerable<Runner> GetAllRunnersWithScope(Runner.Scope scope)
+        {
+            string url = Runner.Url + "/all";
+
+            switch (scope)
+            {
+                case Runner.Scope.Active:
+                    url = Utils.AddParameter(url, "scope", "active");
+                    break;
+                case Runner.Scope.Online:
+                    url = Utils.AddParameter(url, "scope", "online");
+                    break;
+                case Runner.Scope.Paused:
+                    url = Utils.AddParameter(url, "scope", "paused");
+                    break;
+                case Runner.Scope.Shared:
+                    url = Utils.AddParameter(url, "scope", "shared");
+                    break;
+                case Runner.Scope.Specific:
+                    url = Utils.AddParameter(url, "scope", "specific");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return _api.Get().GetAll<Runner>(url);
+        }
 
         public void Delete(Runner runner) => Delete(runner.Id);
 

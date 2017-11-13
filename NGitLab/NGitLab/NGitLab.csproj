@@ -49,6 +49,7 @@
     <Compile Include="GitLabException.cs" />
     <Compile Include="Impl\NamespacesClient.cs" />
     <Compile Include="Impl\SnippetClient.cs" />
+    <Compile Include="Impl\Utils.cs" />
     <Compile Include="Impl\VersionClient.cs" />
     <Compile Include="INamespacesClient.cs" />
     <Compile Include="Impl\PipelineClient.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Models\ProjectCreate.cs" />
     <Compile Include="Models\ProjectHook.cs" />
     <Compile Include="Models\ProjectHookUpsert.cs" />
+    <Compile Include="Models\ProjectLinks.cs" />
     <Compile Include="Models\ProjectMemberCreate.cs" />
     <Compile Include="Models\ProjectQuery.cs" />
     <Compile Include="Models\RealeaseInfo.cs" />
@@ -145,6 +147,7 @@
     <Compile Include="Models\SnippetProjectCreate.cs" />
     <Compile Include="Models\SshKey.cs" />
     <Compile Include="Models\SshKeyCreate.cs" />
+    <Compile Include="Models\ProjectStatistics.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagCreate.cs" />
     <Compile Include="Models\TreeOrBlob.cs" />
