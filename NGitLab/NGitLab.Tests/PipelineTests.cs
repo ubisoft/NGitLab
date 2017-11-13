@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Security.Permissions;
-using System.Threading;
+﻿using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -27,17 +24,26 @@ namespace NGitLab.Tests
                 Ref = "master"
             });
 
-            // Let the server process the tag.
-            Thread.Sleep(TimeSpan.FromSeconds(2));
+            PipelineBasic thisTagPipeline;
 
-            var pipelines = _pipelines.All.ToArray();
-            var thisTagPipeline = pipelines.FirstOrDefault(x => x.Ref == "NewTagForBuild");
+            while (true)
+            {
+                var pipelines = _pipelines.All.ToArray();
+                thisTagPipeline = pipelines.FirstOrDefault(x => x.Ref == "NewTagForBuild");
 
-            Assert.IsNotNull(thisTagPipeline);
-            Assert.AreEqual(_pipelines[thisTagPipeline.Id].Ref, "NewTagForBuild");
+                if (thisTagPipeline != null && _pipelines[thisTagPipeline.Id].Ref == "NewTagForBuild")
+                {
+                    break;
+                }
+            }
 
-            var jobs = _pipelines.GetJobs(thisTagPipeline.Id);
-            Assert.That(jobs.Length > 0);
+            while (true)
+            {
+                var jobs = _pipelines.GetJobs(thisTagPipeline.Id);
+
+                if (jobs.Length > 0)
+                    return;
+            }
         }
 
         [Test, Timeout(5000)]

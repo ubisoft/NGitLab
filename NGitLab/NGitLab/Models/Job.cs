@@ -6,7 +6,6 @@ namespace NGitLab.Models
     [DataContract]
     public class Job
     {
-
         [DataMember(Name = "name")]
         public string Name;
 
