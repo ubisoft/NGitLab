@@ -18,6 +18,13 @@ namespace NGitLab.Impl
 
         public Runner this[int id] => _api.Get().To<Runner>(Runner.Url + "/" + id);
 
+        public IEnumerable<Runner> GetAllRunnersWithScope(RunnerScope scope)
+        {
+            string url = Runner.Url + "/all";
+            url = Utils.AddParameter(url, "scope", scope.ToString().ToLowerInvariant());
+            return _api.Get().GetAll<Runner>(url);
+        }
+
         public void Delete(Runner runner) => Delete(runner.Id);
 
         public void Delete(int runnerId)

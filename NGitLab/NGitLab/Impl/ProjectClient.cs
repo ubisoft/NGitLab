@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -35,10 +34,10 @@ namespace NGitLab.Impl
             switch (query.Scope)
             {
                 case ProjectQueryScope.Accessible:
-                    url = AddParameter(url, "membership", true);
+                    url = Utils.AddParameter(url, "membership", true);
                     break;
                 case ProjectQueryScope.Owned:
-                    url = AddParameter(url, "owned", true);
+                    url = Utils.AddParameter(url, "owned", true);
                     break;
 #pragma warning disable 618 // Obsolete
                 case ProjectQueryScope.Visible:
@@ -50,35 +49,23 @@ namespace NGitLab.Impl
                     throw new ArgumentOutOfRangeException();
             }
 
-            url = AddParameter(url, "archived", query.Archived);
-            url = AddParameter(url, "order_by", query.OrderBy);
-            url = AddParameter(url, "search", query.Search);
-            url = AddParameter(url, "simple", query.Simple);
+            url = Utils.AddParameter(url, "archived", query.Archived);
+            url = Utils.AddParameter(url, "order_by", query.OrderBy);
+            url = Utils.AddParameter(url, "search", query.Search);
+            url = Utils.AddParameter(url, "simple", query.Simple);
+            url = Utils.AddParameter(url, "statistics", query.Statistics);
 
             if (query.Ascending == true)
             {
-                url = AddParameter(url, "sort", "asc");
+                url = Utils.AddParameter(url, "sort", "asc");
             }
 
             if (query.Visibility.HasValue)
             {
-                url = AddParameter(url, "visibility", query.Visibility.ToString().ToLower());
+                url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLower());
             }
 
             return _api.Get().GetAll<Project>(url);
-        }
-
-        private static string AddParameter<T>(string url, string parameterName, T value)
-        {
-            if (Equals(value, null))
-            {
-                return url;
-            }
-
-            string @operator = !url.Contains("?") ? "?" : "&";
-            var formattedValue = HttpUtility.UrlEncode(value.ToString());
-            var parameter = $"{@operator}{parameterName}={formattedValue}";
-            return url + parameter;
         }
     }
 }

@@ -46,6 +46,13 @@ namespace NGitLab
         IEnumerable<Runner> GetAvailableRunners(int projectId);
 
         /// <summary>
+        /// List all runners in the GitLab instance that meet the specified scope
+        /// Admin privileges required
+        /// </summary>
+        /// <param name="scope"></param>
+        IEnumerable<Runner> GetAllRunnersWithScope(RunnerScope scope);
+
+        /// <summary>
         /// Enable an available specific runner in the project.
         /// </summary>
         /// <param name="projectId"></param>

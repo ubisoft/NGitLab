@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
@@ -19,13 +20,27 @@ namespace NGitLab.Impl
 
         public IEnumerable<PipelineBasic> All => _api.Get().GetAll<PipelineBasic>($"{_pipelinesPath}");
 
+        public IEnumerable<Job> AllJobs => _api.Get().GetAll<Job>($"{_projectPath}/jobs");
+
+        public IEnumerable<Job> GetJobsInProject(JobScope scope)
+        {
+            string url = $"{_projectPath}/jobs";
+
+            if (scope != JobScope.All)
+            {
+                url = Utils.AddParameter(url, "scope", scope.ToString().ToLowerInvariant());
+            }
+
+            return _api.Get().GetAll<Job>(url);
+        }
+
         public Pipeline this[int id] => _api.Get().To<Pipeline>($"{_pipelinesPath}/{id}");
 
         public Job[] GetJobs(int pipelineId)
         {
             // For a reason gitlab returns the jobs in the reverse order as
             // they appear in their UI. Here we reverse them!
-            
+
             var jobs = _api.Get().GetAll<Job>($"{_pipelinesPath}/{pipelineId}/jobs").Reverse().ToArray();
             return jobs;
         }
