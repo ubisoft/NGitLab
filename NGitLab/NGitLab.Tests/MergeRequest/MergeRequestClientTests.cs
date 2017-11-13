@@ -74,11 +74,15 @@ namespace NGitLab.Tests.MergeRequest
             var mergeRequest = _mergeRequest.Update(request.Iid, new MergeRequestUpdate
             {
                 Title = "New title",
+                Description = "New description",
+                Labels = "a,b",
                 SourceBranch = "my-super-feature",
                 TargetBranch = "master",
             });
 
             Assert.AreEqual("New title", mergeRequest.Title);
+            Assert.AreEqual("New description", mergeRequest.Description);
+            CollectionAssert.AreEqual(new[] { "a", "b" }, mergeRequest.Labels);
         }
 
         public void AcceptMergeRequest(Models.MergeRequest request)

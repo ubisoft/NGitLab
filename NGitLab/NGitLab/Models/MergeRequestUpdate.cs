@@ -4,7 +4,7 @@ namespace NGitLab.Models
 {
     [DataContract]
     public class MergeRequestUpdate
-    {        
+    {
         [DataMember(Name = "source_branch")]
         public string SourceBranch;
 
@@ -17,8 +17,14 @@ namespace NGitLab.Models
         [DataMember(Name = "title")]
         public string Title;
 
+        [DataMember(Name = "description")]
+        public string Description;
+
         [DataMember(Name = "state_event")]
-        public string NewState; 
+        public string NewState;
+
+        [DataMember(Name = "labels")]
+        public string Labels;
     }
 
     // ReSharper disable InconsistentNaming
