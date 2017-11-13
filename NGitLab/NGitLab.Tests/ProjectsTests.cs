@@ -60,7 +60,7 @@ namespace NGitLab.Tests
             if(!projects.Any())
                 Assert.Fail("No projects found.");
 
-            projects.ForEach(p => Assert.IsNotNull(p.Statistics)); ;
+            projects.ForEach(p => Assert.IsNotNull(p.Statistics));
         }
 
         [Test]

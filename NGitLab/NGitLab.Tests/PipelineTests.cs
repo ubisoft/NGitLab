@@ -63,7 +63,7 @@ namespace NGitLab.Tests
         {
             Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
             {
-                Name = "NewTagForBuildScope",
+                Name = "NewTagForBuildAllJobs",
                 Ref = "master"
             });
 
