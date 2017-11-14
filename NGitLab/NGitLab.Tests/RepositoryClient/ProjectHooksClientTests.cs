@@ -31,6 +31,13 @@ namespace NGitLab.Tests.RepositoryClient
             {
                 MergeRequestsEvents = true,
                 PushEvents = true,
+                IssuesEvents = true,
+                JobEvents = true,
+                NoteEvents = true,
+                PipelineEvents = true,
+                TagPushEvents = true,
+                Token = "sample",
+                EnableSslVerification = true,
                 Url = new Uri("http://scooletz.com"),
             };
 
@@ -39,13 +46,26 @@ namespace NGitLab.Tests.RepositoryClient
 
             Assert.AreEqual(toCreate.MergeRequestsEvents, created.MergeRequestsEvents);
             Assert.AreEqual(toCreate.PushEvents, created.PushEvents);
+            Assert.AreEqual(toCreate.IssuesEvents, created.IssuesEvents);
+            Assert.AreEqual(toCreate.JobEvents, created.JobEvents);
+            Assert.AreEqual(toCreate.NoteEvents, created.NoteEvents);
+            Assert.AreEqual(toCreate.PipelineEvents, created.PipelineEvents);
+            Assert.AreEqual(toCreate.TagPushEvents, created.TagPushEvents);
+            Assert.AreEqual(toCreate.EnableSslVerification, created.EnableSslVerification);
             Assert.AreEqual(toCreate.Url, created.Url);
 
             var toUpdate = new ProjectHookUpsert
             {
                 MergeRequestsEvents = false,
                 PushEvents = false,
-                Url = new Uri("http://git.scooletz.com"),
+                IssuesEvents = false,
+                JobEvents = false,
+                NoteEvents = false,
+                PipelineEvents = false,
+                TagPushEvents = false,
+                Token = "sampleEdited",
+                EnableSslVerification = false,
+                Url = new Uri("http://scooletz.com"),
             };
 
             var updated = _hooks.Update(created.Id, toUpdate);
@@ -54,6 +74,12 @@ namespace NGitLab.Tests.RepositoryClient
 
             Assert.AreEqual(toUpdate.MergeRequestsEvents, updated.MergeRequestsEvents);
             Assert.AreEqual(toUpdate.PushEvents, updated.PushEvents);
+            Assert.AreEqual(toUpdate.IssuesEvents, updated.IssuesEvents);
+            Assert.AreEqual(toUpdate.JobEvents, updated.JobEvents);
+            Assert.AreEqual(toUpdate.NoteEvents, updated.NoteEvents);
+            Assert.AreEqual(toUpdate.PipelineEvents, updated.PipelineEvents);
+            Assert.AreEqual(toUpdate.TagPushEvents, updated.TagPushEvents);
+            Assert.AreEqual(toUpdate.EnableSslVerification, updated.EnableSslVerification);
             Assert.AreEqual(toUpdate.Url, updated.Url);
 
             _hooks.Delete(updated.Id);
