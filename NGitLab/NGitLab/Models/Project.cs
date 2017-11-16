@@ -30,7 +30,7 @@ namespace NGitLab.Models
         public bool SnippetsEnabled;
 
         [DataMember(Name = "resolve_outdated_diff_discussions")]
-        public string ResolveOutdatedDiffDiscussions;
+        public bool ResolveOutdatedDiffDiscussions;
 
         [DataMember(Name = "container_registry_enabled")]
         public bool ContainerRegistryEnabled;
