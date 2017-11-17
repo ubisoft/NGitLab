@@ -3,6 +3,7 @@ using System.Linq;
 using Castle.Core.Internal;
 using NGitLab.Models;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace NGitLab.Tests
 {
@@ -14,7 +15,7 @@ namespace NGitLab.Tests
         {
             _projects = Initialize.GitLabClient.Projects;
         }
-        
+
         [Test]
         public void GetOwnedProjects()
         {
@@ -55,9 +56,9 @@ namespace NGitLab.Tests
         [Test]
         public void GetProjectsStatistics()
         {
-            var projects = _projects.Get(new ProjectQuery{Statistics = true});
+            var projects = _projects.Get(new ProjectQuery { Statistics = true });
 
-            if(!projects.Any())
+            if (!projects.Any())
                 Assert.Fail("No projects found.");
 
             projects.ForEach(p => Assert.IsNotNull(p.Statistics));
@@ -71,7 +72,7 @@ namespace NGitLab.Tests
             if (!projects.Any())
                 Assert.Fail("No projects found.");
 
-            projects.ForEach(p => Assert.IsNotNull(p.Links)); 
+            projects.ForEach(p => Assert.IsNotNull(p.Links));
         }
 
         [Test]
@@ -100,7 +101,8 @@ namespace NGitLab.Tests
                 NamespaceId = null,
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Internal,
-                WikiEnabled = true
+                WikiEnabled = true,
+                Tags = new List<string> { "Tag-1", "Tag-2" }
             };
 
             var createdProject = _projects.Create(project);
@@ -109,6 +111,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(project.IssuesEnabled, createdProject.IssuesEnabled);
             Assert.AreEqual(project.MergeRequestsEnabled, createdProject.MergeRequestsEnabled);
             Assert.AreEqual(project.Name, createdProject.Name);
+            Assert.AreEqual(project.Tags.Count, createdProject.TagList.Count());
 
             _projects.Delete(createdProject.Id);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
@@ -18,10 +19,10 @@ namespace NGitLab.Models
         [DataMember(Name = "description")]
         public string Description;
 
-		[DataMember(Name = "path")]
-		public string Path;
+        [DataMember(Name = "path")]
+        public string Path;
 
-		[DataMember(Name = "issues_enabled")]
+        [DataMember(Name = "issues_enabled")]
         public bool IssuesEnabled;
 
         [Obsolete("Does not exist anymore in gitlab api")]
@@ -41,5 +42,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "visibility")]
         public VisibilityLevel VisibilityLevel;
+
+        [DataMember(Name = "tag_list")]
+        public List<string> Tags;
     }
 }
