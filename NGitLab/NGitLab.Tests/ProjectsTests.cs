@@ -111,7 +111,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(project.IssuesEnabled, createdProject.IssuesEnabled);
             Assert.AreEqual(project.MergeRequestsEnabled, createdProject.MergeRequestsEnabled);
             Assert.AreEqual(project.Name, createdProject.Name);
-            Assert.AreEqual(project.Tags.Count, createdProject.TagList.Count());
+            CollectionAssert.AreEquivalent(project.Tags, createdProject.TagList);
 
             _projects.Delete(createdProject.Id);
         }
