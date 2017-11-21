@@ -154,6 +154,8 @@
     <Compile Include="Models\TagCreate.cs" />
     <Compile Include="Models\TreeOrBlob.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserToken.cs" />
+    <Compile Include="Models\UserTokenCreate.cs" />
     <Compile Include="Models\UserUpsert.cs" />
     <Compile Include="Models\Version.cs" />
     <Compile Include="Models\VisibilityLevel.cs" />

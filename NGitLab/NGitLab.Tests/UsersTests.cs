@@ -100,5 +100,27 @@ namespace NGitLab.Tests
             keys.Remove(result.Id);
             Assert.AreEqual(keysBefore.Length, keys.All.ToArray().Length);
         }
+
+        [Test]
+        public void CreateTokenAsAdmin_ReturnsUserToken()
+        {
+            if (!Initialize.IsAdmin)
+            {
+                Assert.Inconclusive("Cannot test the creation of users since the current user is not admin");
+            }
+
+            var tokenRequest = new UserTokenCreate
+            {
+                UserId = _users.Current.Id,
+                Name = $"Test_Create_{DateTime.Now.ToString("yyyyMMddHHmmss")}",
+                ExpiresAt = DateTime.Now.AddDays(1),
+                Scopes = new[] { "api", "read_user" }
+            };
+
+            var tokenResult = _users.CreateToken(tokenRequest);
+
+            Assert.IsNotEmpty(tokenResult.Token);
+            Assert.AreEqual(tokenRequest.Name, tokenResult.Name);
+        }
     }
 }

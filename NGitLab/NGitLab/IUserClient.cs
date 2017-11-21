@@ -9,6 +9,14 @@ namespace NGitLab
         User this[int id] { get; }
         User Create(UserUpsert user);
         User Update(int id, UserUpsert user);
+
+        /// <summary>
+        /// Request a token for user impersonation.
+        /// Admin account/token is required for impersonation
+        /// </summary>
+        /// <param name="tokenRequest">info required to create the token</param>
+        /// <returns></returns>
+        UserToken CreateToken(UserTokenCreate tokenRequest);
         void Delete(int id);
         Session Current { get; }
 
