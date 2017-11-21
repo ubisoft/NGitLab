@@ -23,6 +23,18 @@ namespace NGitLab.Models
         [DataMember(Name = "created_at")]
         public DateTime CreatedAt { get; set; }
         [DataMember(Name = "expires_at")]
-        public string ExpiresAt { get; set; }
+        private string ExpiresAtStr { get; set; }
+        public DateTime? ExpiresAt
+        {
+            get
+            {
+                DateTime expiresAt;
+                if (!string.IsNullOrEmpty(ExpiresAtStr) && DateTime.TryParseExact(ExpiresAtStr, "yyyy-MM-dd",
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out expiresAt))
+                    return expiresAt;
+                return null;
+            }
+            set { ExpiresAtStr = value != null ? value.Value.ToString("yyyy-MM-dd") : null; }
+        }
     }
 }
