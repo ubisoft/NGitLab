@@ -29,13 +29,13 @@ namespace NGitLab.Models
         {
             get
             {
-                DateTime expiresAt;
-                if (!string.IsNullOrEmpty(ExpiresAtStr) && DateTime.TryParseExact(ExpiresAtStr, "yyyy-MM-dd",
-                    CultureInfo.InvariantCulture, DateTimeStyles.None, out expiresAt))
-                    return expiresAt;
+                if (!string.IsNullOrEmpty(ExpiresAtStr))
+                {
+                    return DateTime.Parse(ExpiresAtStr);
+                }
                 return null;
             }
-            set { ExpiresAtStr = value != null ? value.Value.ToString("yyyy-MM-dd") : null; }
+            set { ExpiresAtStr = value.HasValue ? value.Value.ToString("yyyy-MM-dd") : null; }
         }
     }
 }

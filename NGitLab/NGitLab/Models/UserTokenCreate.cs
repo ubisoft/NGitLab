@@ -15,10 +15,17 @@ namespace NGitLab.Models
         [DataMember(Name = "expires_at")]
         private string ExpiresAtStr { get; set; }
 
-        public DateTime ExpiresAt
+        public DateTime? ExpiresAt
         {
-            get { return !string.IsNullOrEmpty(ExpiresAtStr) ? DateTime.Parse(ExpiresAtStr) : DateTime.MinValue; }
-            set { ExpiresAtStr = value.ToString("yyyy-MM-dd"); }
+            get
+            {
+                if (!string.IsNullOrEmpty(ExpiresAtStr))
+                {
+                    return DateTime.Parse(ExpiresAtStr);
+                }
+                return null;
+            }
+            set { ExpiresAtStr = value.HasValue ? value.Value.ToString("yyyy-MM-dd") : null; }
         }
 
         [DataMember(Name = "scopes")]
