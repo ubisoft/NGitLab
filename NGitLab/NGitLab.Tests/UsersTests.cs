@@ -113,7 +113,7 @@ namespace NGitLab.Tests
             {
                 UserId = _users.Current.Id,
                 Name = $"Test_Create_{DateTime.Now.ToString("yyyyMMddHHmmss")}",
-                ExpiresAt = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd"),
+                ExpiresAt = DateTime.Now.AddDays(1),
                 Scopes = new[] { "api", "read_user" }
             };
 
