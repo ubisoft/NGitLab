@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
@@ -11,11 +12,14 @@ namespace NGitLab.Models
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
-        /// <summary>
-        /// format: yyyy-MM-dd
-        /// </summary>
         [DataMember(Name = "expires_at")]
-        public string ExpiresAt { get; set; }
+        private string ExpiresAtStr { get; set; }
+
+        public DateTime ExpiresAt
+        {
+            get { return !string.IsNullOrEmpty(ExpiresAtStr) ? DateTime.Parse(ExpiresAtStr) : DateTime.MinValue; }
+            set { ExpiresAtStr = value.ToString("yyyy-MM-dd"); }
+        }
 
         [DataMember(Name = "scopes")]
         public string[] Scopes { get; set; }
