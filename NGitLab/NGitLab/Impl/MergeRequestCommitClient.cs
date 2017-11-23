@@ -8,10 +8,10 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _commitsPath;
 
-        public MergeRequestCommitClient(API api, string projectPath, int mergeRequestId)
+        public MergeRequestCommitClient(API api, string projectPath, int mergeRequestIid)
         {
             _api = api;
-            _commitsPath = projectPath + "/merge_request/" + mergeRequestId + "/commits";
+            _commitsPath = projectPath + "/merge_requests/" + mergeRequestIid + "/commits";
         }
 
         public IEnumerable<Commit> All => _api.Get().GetAll<Commit>(_commitsPath);
