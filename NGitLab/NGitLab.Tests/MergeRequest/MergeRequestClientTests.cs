@@ -23,6 +23,8 @@ namespace NGitLab.Tests.MergeRequest
             ListMergeRequest(mergeRequest);
             UpdateMergeRequest(mergeRequest);
             AcceptMergeRequest(mergeRequest);
+            var commits = _mergeRequest.Commits(mergeRequest.Iid).All;
+            Assert.IsTrue(commits.Any(), "Can return the commits");
         }
 
         private void ListMergeRequest(Models.MergeRequest mergeRequest)
