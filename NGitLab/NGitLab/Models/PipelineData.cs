@@ -5,6 +5,7 @@ namespace NGitLab.Models {
         undefined,
         pending,
         success,
+        created,
         failed,
         aborted,
         running,

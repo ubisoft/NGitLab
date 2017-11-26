@@ -9,8 +9,5 @@ namespace NGitLab.Models {
 
         [DataMember(Name = "authored_date")]
         public DateTime AuthoredDate { get; set; }
-
-        [DataMember(Name = "parent_ids")]
-        public Sha1[] Parents { get; set; }
     }
 }
