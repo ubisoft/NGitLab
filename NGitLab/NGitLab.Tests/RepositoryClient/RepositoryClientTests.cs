@@ -29,19 +29,19 @@ namespace NGitLab.Tests.RepositoryClient
         public void GetAllCommits()
         {
             var commits = Initialize.Repository.Commits.ToArray();
-            Assert.AreEqual(2, commits.Length);
-            Assert.AreEqual(_commit.Message, commits[0].Message);
-            Assert.AreEqual("add readme", commits[1].Message);
+            CollectionAssert.IsNotEmpty(commits);
+            Assert.AreEqual(_commit.Message, commits.First().Message);
+            Assert.AreEqual("add readme", commits.Last().Message);
         }
 
         [Test]
         public void GetCommitByBranchName()
         {
-            Assert.AreEqual(2, Initialize.Repository.GetCommits("master").Count());
-            Assert.AreEqual(2, Initialize.Repository.GetCommits("master", -1).Count());
+            CollectionAssert.IsNotEmpty(Initialize.Repository.GetCommits("master"));
+            CollectionAssert.IsNotEmpty(Initialize.Repository.GetCommits("master", -1));
 
             var commits = Initialize.Repository.GetCommits("master", 1).ToArray();
-            Assert.AreEqual(1, commits.Count());
+            Assert.AreEqual(1, commits.Length);
             Assert.AreEqual(_commit.Message, commits[0].Message);
         }
 
