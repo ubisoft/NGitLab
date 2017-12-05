@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -38,11 +39,13 @@ namespace NGitLab.Impl
         /// <summary>
         /// Gets all the commits of the specified branch/tag.
         /// </summary>
-        public IEnumerable<Commit> GetCommits(string refName, int maxResults) => _api.Get().GetAll<Commit>(_repoPath + $"/commits?ref_name={refName}&{GetPagination(maxResults)}");
-
-        private string GetPagination(int maxResults)
+        public IEnumerable<Commit> GetCommits(string refName, int maxResults)
         {
-            return maxResults == 0 ? "" : $"per_page={maxResults}";
+            var allCommits = _api.Get().GetAll<Commit>(_repoPath + $"/commits?ref_name={refName}");
+            if (maxResults <= 0)
+                return allCommits;
+
+            return allCommits.Take(maxResults);
         }
 
         public SingleCommit GetCommit(Sha1 sha) => _api.Get().To<SingleCommit>(_repoPath + "/commits/" + sha);
