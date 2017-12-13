@@ -16,6 +16,8 @@ namespace NGitLab
 
         Group Create(GroupCreate group);
 
+        IEnumerable<Project> SearchProjects(int groupId, string search);
+
         void Delete(int id);
 
     }
