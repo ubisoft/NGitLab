@@ -67,26 +67,34 @@ namespace NGitLab.Impl {
                             var jsonString = reader.ReadToEnd();
                             JObject jsonerr = JsonConvert.DeserializeObject<JObject>(jsonString);
                             var messaage = jsonerr.GetValue("message");
-                            if (messaage.Type == JTokenType.String && !messaage.Children().Any())
+                            if (messaage != null)
                             {
-                                throw new Exception($"{errorResponse.StatusCode} {messaage}");
-                            }
-                            else if (messaage.Type == JTokenType.Object)
-                            {
-                                string errs = "";
-                                foreach (var item in messaage.Children())
+                                if ( messaage.Type == JTokenType.String && !messaage.Children().Any())
                                 {
-                                    if (item.Type == JTokenType.Property)
-                                    {
-                                        JProperty jProperty = item as JProperty;
-                                        errs += $" {jProperty.Name } {jProperty.Value}";
-                                    }
+                                    throw new Exception($"{errorResponse.StatusCode} {messaage}");
                                 }
-                                throw new Exception($"{errorResponse.StatusCode} {errs}");
+                                else if (messaage.Type == JTokenType.Object)
+                                {
+                                    string errs = "";
+                                    foreach (var item in messaage.Children())
+                                    {
+                                        if (item.Type == JTokenType.Property)
+                                        {
+                                            JProperty jProperty = item as JProperty;
+                                            errs += $" {jProperty.Name } {jProperty.Value}";
+                                        }
+                                    }
+                                    throw new Exception($"{errorResponse.StatusCode} {errs}");
+                                }
+                                else
+                                {
+                                    throw new Exception($"{errorResponse.StatusCode} {jsonString}");
+                                }
                             }
                             else
-                            {
-                                throw new Exception($"{errorResponse.StatusCode} {jsonString}");
+                            { 
+                                var error = jsonerr.GetValue("error")  ;
+                                throw new Exception(error+" "+jsonerr.GetValue("error_description"));
                             }
 
                         }

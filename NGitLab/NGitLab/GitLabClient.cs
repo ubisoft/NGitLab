@@ -43,7 +43,7 @@ namespace NGitLab {
                 case Api.ApiVersion.V3_Oauth:
                 case Api.ApiVersion.V4_Oauth:
                     //https://docs.gitlab.com/ee/api/oauth2.html#resource-owner-password-credentials
-                    var token    = api.Post().With(new oauth() { UserName = HttpUtility.UrlEncode(username), Password = HttpUtility.UrlEncode(password), GrantType = "password" }).To<token>(oauth.Url);
+                    var token    = api.Post().With(new oauth() { UserName =username, Password = password, GrantType = "password" }).To<token>(oauth.Url);
                     PrivateToken = token.AccessToken;
                     break;
                 default:
