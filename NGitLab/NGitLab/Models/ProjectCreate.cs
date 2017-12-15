@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace NGitLab.Models {
@@ -17,9 +18,9 @@ namespace NGitLab.Models {
         /// <summary>
         ///     Gets or sets the namespace for the project.
         /// </summary>
-        [Required]
-        [DataMember(Name = "namespace_id")]
-        public string NamespaceId { get; set; }
+        [DefaultValue(0)]
+        [DataMember(Name = "namespace_id",EmitDefaultValue =false,IsRequired =false)]
+        public int NamespaceId { get; set; }
 
         /// <summary>
         ///     Gets or sets the short project description.
