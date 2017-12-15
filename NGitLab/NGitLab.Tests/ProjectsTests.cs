@@ -62,7 +62,52 @@ namespace NGitLab.Tests {
                     projects.Delete(created2.Id);
             }
         }
+        [Test]
+        [Category("Server_Required")]
+        public void CreateError()
+        {
+            Project created2 = null;
 
+            try
+            {
+                var p = CreateProject1(out created2, "test2", false);
+
+                created2.Description.ShouldBe(p.Description);
+                created2.IssuesEnabled.ShouldBe(p.IssuesEnabled);
+                created2.MergeRequestsEnabled.ShouldBe(p.MergeRequestsEnabled);
+                created2.Name.ShouldBe(p.Name);
+                projects.Delete(created2.Id).ShouldBeTrue();
+            }
+            catch (Exception)
+            {
+                if (created2 != null)
+                    projects.Delete(created2.Id);
+            }
+        }
+        ProjectCreate CreateProject1(out Project created, string name, bool star)
+        {
+            var p = new ProjectCreate
+            {
+                Description = "desc",
+                ImportUrl = null,
+                IssuesEnabled = true,
+                MergeRequestsEnabled = true,
+                Name = name,
+                NamespaceId = -1,
+                SnippetsEnabled = true,
+                VisibilityLevel = VisibilityLevel.Public,
+                WallEnabled = true,
+                WikiEnabled = true
+            };
+
+            created = projects.Create(p);
+
+            // star is applicable
+            if (star)
+                created = projects.Star(created.Id);
+
+            return p;
+        }
         ProjectCreate CreateProject(out Project created, string name, bool star) {
             var p = new ProjectCreate {
                 Description = "desc",
@@ -70,7 +115,7 @@ namespace NGitLab.Tests {
                 IssuesEnabled = true,
                 MergeRequestsEnabled = true,
                 Name = name,
-                NamespaceId = null,
+                NamespaceId = 0,
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Public,
                 WallEnabled = true,

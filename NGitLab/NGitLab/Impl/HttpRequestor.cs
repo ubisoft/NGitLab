@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace NGitLab.Impl {
     [DataContract]
@@ -59,17 +60,35 @@ namespace NGitLab.Impl {
             }
             catch (WebException wex) {
                 if (wex.Response != null)
-                    using (var errorResponse = (HttpWebResponse)wex.Response) {
-                        using (var reader = new StreamReader(errorResponse.GetResponseStream())) {
+                    using (var errorResponse = (HttpWebResponse)wex.Response)
+                    {
+                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                        {
                             var jsonString = reader.ReadToEnd();
-                            JsonError jsonError;
-                            try {
-                                jsonError = JsonConvert.DeserializeObject<JsonError>(jsonString);
+                            JObject jsonerr = JsonConvert.DeserializeObject<JObject>(jsonString);
+                            var messaage = jsonerr.GetValue("message");
+                            if (messaage.Type == JTokenType.String && !messaage.Children().Any())
+                            {
+                                throw new Exception($"{errorResponse.StatusCode} {messaage}");
                             }
-                            catch (Exception) {
-                                throw new Exception($"The remote server returned an error ({errorResponse.StatusCode}) with an empty response");
+                            else if (messaage.Type == JTokenType.Object)
+                            {
+                                string errs = "";
+                                foreach (var item in messaage.Children())
+                                {
+                                    if (item.Type == JTokenType.Property)
+                                    {
+                                        JProperty jProperty = item as JProperty;
+                                        errs += $" {jProperty.Name } {jProperty.Value}";
+                                    }
+                                }
+                                throw new Exception($"{errorResponse.StatusCode} {errs}");
                             }
-                            throw new Exception($"The remote server returned an error ({errorResponse.StatusCode}): {jsonError.Message}");
+                            else
+                            {
+                                throw new Exception($"{errorResponse.StatusCode} {jsonString}");
+                            }
+
                         }
                     }
                 throw wex;

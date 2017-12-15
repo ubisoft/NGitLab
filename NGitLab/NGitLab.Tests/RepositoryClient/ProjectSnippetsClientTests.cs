@@ -72,7 +72,7 @@ namespace NGitLab.Tests.RepositoryClient {
                 IssuesEnabled = true,
                 MergeRequestsEnabled = true,
                 Name = name,
-                NamespaceId = null,
+                NamespaceId = 0,
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Public,
                 WallEnabled = true,
