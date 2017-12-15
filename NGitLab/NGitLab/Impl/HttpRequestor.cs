@@ -77,7 +77,7 @@ namespace NGitLab.Impl {
         }
 
         public IEnumerable<T> GetAll<T>(string tailUrl) {
-            return new Enumerable<T>(root.ApiToken, root.GetApiUrl(tailUrl));
+            return new Enumerable<T>(root.ApiToken, root.GetApiUrl(tailUrl), root._ApiVersion);
         }
 
         void SubmitData(WebRequest request) {
@@ -97,15 +97,25 @@ namespace NGitLab.Impl {
         }
 
         WebRequest SetupConnection(Uri url) {
-            return SetupConnection(url, method, root.ApiToken);
+            return SetupConnection(url, method, root.ApiToken,root._ApiVersion);
         }
 
-        static WebRequest SetupConnection(Uri url, MethodType methodType, string privateToken) {
+      
+       
+        static WebRequest SetupConnection(Uri url, MethodType methodType, string privateToken, Api.ApiVersion apiVersion) {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = methodType.ToString().ToUpperInvariant();
             request.Headers.Add("Accept-Encoding", "gzip");
             request.AutomaticDecompression = DecompressionMethods.GZip;
-            request.Headers["PRIVATE-TOKEN"] = privateToken;
+            if (apiVersion == Api.ApiVersion.V3_Oauth || apiVersion == Api.ApiVersion.V4_Oauth)
+            {
+                request.Headers["Authorization"] = "Bearer " + privateToken;
+            }
+            else
+            {
+                request.Headers["PRIVATE-TOKEN"] = privateToken;
+            }
+          
 #if DEBUG
             request.Proxy.Credentials = CredentialCache.DefaultCredentials;
 
@@ -118,14 +128,15 @@ namespace NGitLab.Impl {
         class Enumerable<T> : IEnumerable<T> {
             readonly string apiToken;
             readonly Uri startUrl;
-
-            public Enumerable(string apiToken, Uri startUrl) {
+           readonly Api.ApiVersion _apiVersion;
+            public Enumerable(string apiToken, Uri startUrl, Api.ApiVersion _ApiVersion) {
                 this.apiToken = apiToken;
                 this.startUrl = startUrl;
+                _apiVersion = _ApiVersion;
             }
 
             public IEnumerator<T> GetEnumerator() {
-                return new Enumerator(apiToken, startUrl);
+                return new Enumerator(apiToken, startUrl, _apiVersion);
             }
 
             IEnumerator IEnumerable.GetEnumerator() {
@@ -134,12 +145,14 @@ namespace NGitLab.Impl {
 
             class Enumerator : IEnumerator<T> {
                 readonly string apiToken;
+                readonly Api.ApiVersion _apiVersion;
                 readonly List<T> buffer = new List<T>();
                 Uri nextUrlToLoad;
 
-                public Enumerator(string apiToken, Uri startUrl) {
+                public Enumerator(string apiToken, Uri startUrl, Api.ApiVersion _ApiVersion) {
                     this.apiToken = apiToken;
                     nextUrlToLoad = startUrl;
+                    _apiVersion = _ApiVersion;
                 }
 
                 public void Dispose() {
@@ -150,8 +163,15 @@ namespace NGitLab.Impl {
                         if (nextUrlToLoad == null)
                             return false;
 
-                        var request = SetupConnection(nextUrlToLoad, MethodType.Get, apiToken);
-                        request.Headers["PRIVATE-TOKEN"] = apiToken;
+                        var request = SetupConnection(nextUrlToLoad, MethodType.Get, apiToken, _apiVersion);
+                        if (_apiVersion == Api.ApiVersion.V3_Oauth || _apiVersion == Api.ApiVersion.V4_Oauth)
+                        {
+                            request.Headers["Authorization"] = "Bearer " + apiToken;
+                        }
+                        else
+                        {
+                            request.Headers["PRIVATE-TOKEN"] = apiToken;
+                        }
 
                         using (var response = request.GetResponseAsync().Result) {
                             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"

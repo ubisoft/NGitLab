@@ -7,11 +7,13 @@ namespace NGitLab.Impl {
         public enum ApiVersion
         {
             V3,
-            V4
+            V4,
+            V3_Oauth,
+            V4_Oauth
         }
         readonly string hostUrl;
         public readonly string ApiToken;
-         internal     ApiVersion _ApiVersion { get; set; } = ApiVersion.V4;
+         internal     ApiVersion _ApiVersion { get; set; } = ApiVersion.V4_Oauth;
         public Api(string hostUrl, string apiToken, ApiVersion apiVersion):this(hostUrl,apiToken)
         {
             _ApiVersion = apiVersion;
