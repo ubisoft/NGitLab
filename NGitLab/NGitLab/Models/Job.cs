@@ -31,7 +31,7 @@ namespace NGitLab.Models
         public string Stage;
 
         [DataMember(Name = "coverage")]
-        public string Coverage;
+        public double? Coverage;
 
         [DataMember(Name = "artifacts_file")]
         public JobArtifact Artifacts;
