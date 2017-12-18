@@ -13,6 +13,8 @@ namespace NGitLab
 
         IEnumerable<Membership> OfNamespace(string groupId);
 
+        Membership GetMemberOfGroup(string groupId, string userId);
+
         Membership AddMemberToProject(string projectId, ProjectMemberCreate user);
     }
 }

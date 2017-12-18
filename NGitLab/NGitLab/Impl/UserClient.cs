@@ -14,6 +14,8 @@ namespace NGitLab.Impl
 
         public IEnumerable<User> All => _api.Get().GetAll<User>(User.Url);
 
+        public IEnumerable<User> Search(string username) => _api.Get().GetAll<User>(User.Url + $"?search={username}");
+
         public User this[int id] => _api.Get().To<User>(User.Url + "/" + id);
 
         public User Create(UserUpsert user) => _api.Post().With(user).To<User>(User.Url);
