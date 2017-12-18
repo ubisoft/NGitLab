@@ -6,7 +6,7 @@ namespace NGitLab
     public interface IUserClient
     {
         IEnumerable<User> All { get; }
-        IEnumerable<User> Search(string username);
+        IEnumerable<User> Search(string query);
         User this[int id] { get; }
         User Create(UserUpsert user);
         User Update(int id, UserUpsert user);
