@@ -31,5 +31,10 @@ namespace NGitLab
         /// Allows to manipulate the ssh keys of a given user, needs gitlab admin rights.
         /// </summary>
         ISshKeyClient SShKeys(int userId);
+
+        /// <summary>
+        /// Get users that match the username
+        /// </summary>
+        IEnumerable<User> Get(string username);
     }
 }

@@ -18,6 +18,8 @@ namespace NGitLab.Impl
 
         public User this[int id] => _api.Get().To<User>(User.Url + "/" + id);
 
+        public IEnumerable<User> Get(string username) => _api.Get().GetAll<User>(User.Url + "?username=" + username);
+
         public User Create(UserUpsert user) => _api.Post().With(user).To<User>(User.Url);
 
         public UserToken CreateToken(UserTokenCreate tokenRequest) => _api.Post().With(tokenRequest).To<UserToken>(User.Url + "/" + tokenRequest.UserId + "/impersonation_tokens");
