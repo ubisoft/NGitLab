@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -25,6 +26,11 @@ namespace NGitLab.Impl
         }
 
         public Group this[int id] => _api.Get().To<Group>(Url + "/" + id);
+
+        public IEnumerable<Project> SearchProjects(int groupId, string search)
+        {
+            return _api.Get().GetAll<Project>(Url + "/" + groupId + $"/projects?search={search}");
+        }
 
         public Group Create(GroupCreate group) => _api.Post().With(group).To<Group>(Url);
 
