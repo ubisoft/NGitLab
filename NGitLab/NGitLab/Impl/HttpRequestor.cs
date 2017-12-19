@@ -32,7 +32,7 @@ namespace NGitLab.Impl
         static HttpRequestor()
         {
             // By default only Sssl and Tls 1.0 is enabled with .NET 4.5 
-            // We add Tls 1.2 and Tls 1.2 without affecting the other calues in case new protocols are added in the future
+            // We add Tls 1.2 and Tls 1.2 without affecting the other values in case new protocols are added in the future
             // (see https://stackoverflow.com/questions/28286086/default-securityprotocol-in-net-4-5)
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
