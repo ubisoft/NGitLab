@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NGitLab
+﻿namespace NGitLab
 {
     public interface IGitLabClient
     {
