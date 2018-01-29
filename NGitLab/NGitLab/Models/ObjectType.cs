@@ -2,8 +2,10 @@
 {
     public enum ObjectType
     {
-// ReSharper disable InconsistentNaming
-        blob,tree
-// ReSharper restore InconsistentNaming
+        // ReSharper disable InconsistentNaming
+        blob,
+        tree,
+        commit
+        // ReSharper restore InconsistentNaming
     }
 }
