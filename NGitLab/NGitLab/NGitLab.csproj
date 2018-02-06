@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IContributorClient.cs" />
+    <Compile Include="Impl\ContributorClient.cs" />
+    <Compile Include="Models\Contributor.cs" />
     <Compile Include="GitLabException.cs" />
     <Compile Include="Impl\NamespacesClient.cs" />
     <Compile Include="Impl\SnippetClient.cs" />
