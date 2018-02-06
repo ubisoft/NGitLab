@@ -27,6 +27,6 @@ namespace NGitLab.Models
         public bool RequestAccessEnabled;
 
         [DataMember(Name = "parent_id")]
-        public int ParentId;
+        public int? ParentId;
     }
 }

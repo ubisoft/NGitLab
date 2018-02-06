@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NGitLab
+﻿namespace NGitLab
 {
     public interface IGitLabClient
     {
@@ -16,5 +14,6 @@ namespace NGitLab
         IMergeRequestClient GetMergeRequest(int projectId);
         IMembersClient Members { get; }
         IVersionClient Version { get; }
+        INamespacesClient Namespaces { get; }
     }
 }

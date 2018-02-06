@@ -39,6 +39,9 @@ namespace NGitLab.Models
         [DataMember(Name = "runner")]
         public JobRunner Runner;
 
+        [DataMember(Name = "pipeline")]
+        public JobPipeline Pipeline;
+
         [DataMember(Name = "status")]
         public JobStatus Status;
 
