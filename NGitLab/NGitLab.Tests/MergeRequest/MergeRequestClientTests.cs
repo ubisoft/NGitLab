@@ -41,7 +41,8 @@ namespace NGitLab.Tests.MergeRequest
             {
                 Title = "Merge my-super-feature into master",
                 SourceBranch = branch.Name,
-                TargetBranch = "master"
+                TargetBranch = "master",
+                RemoveSourceBranch = true
             });
 
             Assert.That(mergeRequest, Is.Not.Null);

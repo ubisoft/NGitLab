@@ -76,7 +76,8 @@ namespace NGitLab.Tests
             {
                 Name = groupName,
                 Path = $"{groupName}Path",
-                Visibility = VisibilityLevel.Internal
+                Visibility = VisibilityLevel.Internal,
+                ParentId = null
             });
 
             return group;
