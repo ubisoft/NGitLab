@@ -22,6 +22,8 @@ namespace NGitLab.Impl
 
         public ITagClient Tags => new TagClient(_api, _repoPath);
 
+        public IContributorClient Contributors => new ContributorClient(_api, _repoPath);
+
         public IEnumerable<TreeOrBlob> Tree => _api.Get().GetAll<TreeOrBlob>(_repoPath + "/tree");
 
         public void GetRawBlob(string sha, Action<Stream> parser)

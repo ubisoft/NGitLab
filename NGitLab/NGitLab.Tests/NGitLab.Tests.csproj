@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContributorsTests.cs" />
     <Compile Include="FilesTests.cs" />
     <Compile Include="APITests.cs" />
     <Compile Include="GitlabCredentialsTests.cs" />

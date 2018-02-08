@@ -13,7 +13,7 @@ namespace NGitLab
         void GetArchive(Action<Stream> parser);
 
         IEnumerable<Commit> Commits { get; }
-
+        IContributorClient Contributors { get; }
         /// <summary>
         /// Gets all the commits of the specified branch/tag.
         /// </summary>
