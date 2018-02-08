@@ -13,6 +13,7 @@ namespace NGitLab.Impl
             _api = api;
             _contributorPath = repoPath + Contributor.Url;
         }
+        
         public IEnumerable<Contributor> All => _api.Get().GetAll<Contributor>(_contributorPath);
     }
 }
