@@ -104,6 +104,7 @@
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\BranchCreate.cs" />
+    <Compile Include="Models\ForkProject.cs" />
     <Compile Include="Models\RunnerScope.cs" />
     <Compile Include="Models\JobScope.cs" />
     <Compile Include="Models\CommitCreate.cs" />

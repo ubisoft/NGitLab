@@ -34,7 +34,9 @@ namespace NGitLab
         Project this[string fullName] { get; }
 
         Project Create(ProjectCreate project);
-        
+
         void Delete(int id);
+
+        Project Fork(string id, ForkProject forkProject);
     }
 }

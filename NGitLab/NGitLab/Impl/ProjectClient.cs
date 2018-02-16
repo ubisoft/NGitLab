@@ -67,5 +67,10 @@ namespace NGitLab.Impl
 
             return _api.Get().GetAll<Project>(url);
         }
+
+        public Project Fork(string id, ForkProject forkProject)
+        {
+            return _api.Post().With(forkProject).To<Project>(Project.Url + "/" + id + "/fork");
+        }
     }
 }
