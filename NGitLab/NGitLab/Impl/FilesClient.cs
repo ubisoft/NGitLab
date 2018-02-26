@@ -41,7 +41,7 @@ namespace NGitLab.Impl
 
         private static string EncodeFilePath(string path)
         {
-            return Uri.EscapeUriString(path).Replace(".", "%2e").Replace("%252F", "%2F");
+            return Uri.EscapeDataString(path);
         }
 
         private static string SerializeUrlEncoded(object obj)
@@ -49,7 +49,7 @@ namespace NGitLab.Impl
             if (obj == null)
                 return null;
 
-            IDictionary<string, object> dict = new Dictionary<string, object>();
+            var dict = new Dictionary<string, object>();
             var fields = obj.GetType().GetFields();
             foreach (var field in fields)
             {
