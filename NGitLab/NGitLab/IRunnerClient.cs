@@ -40,6 +40,11 @@ namespace NGitLab
         Runner Update(int runnerId, RunnerUpdate runnerUpdate);
 
         /// <summary>
+        /// List all jobs of the given runner that meet the specified scope
+        /// </summary>
+        IEnumerable<Job> GetJobs(int runnerId, JobScope jobScope);
+
+        /// <summary>
         /// List all runners (specific and shared) available in the project. Shared runners are listed if at least one shared runner is defined and shared runners usage is enabled in the project's settings.
         /// </summary>
         /// <param name="projectId"></param>
