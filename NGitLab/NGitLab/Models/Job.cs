@@ -42,6 +42,9 @@ namespace NGitLab.Models
         [DataMember(Name = "pipeline")]
         public JobPipeline Pipeline;
 
+        [DataMember(Name = "project")]
+        public JobProject Project;
+
         [DataMember(Name = "status")]
         public JobStatus Status;
 
@@ -94,6 +97,19 @@ namespace NGitLab.Models
 
             [DataMember(Name = "size")]
             public long Size;
+        }
+
+        [DataContract]
+        public class JobProject
+        {
+            [DataMember(Name = "id")]
+            public int Id;
+
+            [DataMember(Name = "name")]
+            public string Name;
+
+            [DataMember(Name = "path_with_namespace")]
+            public string PathWithNamespace;
         }
     }
 }

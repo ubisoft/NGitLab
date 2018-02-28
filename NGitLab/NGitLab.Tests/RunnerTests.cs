@@ -8,6 +8,18 @@ namespace NGitLab.Tests
     public class RunnerTests
     {
         [Test]
+        public void Test()
+        {
+            var runnerToEnable = GetDefaultRunner();
+            var runners = Initialize.GitLabClient.Runners;
+
+            var jobs = runners.GetJobs(runnerToEnable.Id, JobScope.All)
+                .Take(1);
+
+            Assert.That(jobs, Is.Not.Empty);
+        }
+
+        [Test]
         public void Test_can_enable_and_disable_a_runner_on_a_project()
         {
             var projectId = Initialize.UnitTestProject.Id;

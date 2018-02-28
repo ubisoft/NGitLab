@@ -38,6 +38,18 @@ namespace NGitLab.Impl
             return _api.Put().With(runnerUpdate).To<Runner>(url);
         }
 
+        public IEnumerable<Job> GetJobs(int runnerId, JobScope scope)
+        {
+            var url = $"{Runner.Url}/{runnerId}/jobs";
+
+            if (scope != JobScope.All)
+            {
+                url = Utils.AddParameter(url, "status", scope.ToString().ToLowerInvariant());
+            }
+
+            return _api.Get().GetAll<Job>(url);
+        }
+
         IEnumerable<Runner> IRunnerClient.GetAvailableRunners(int projectId)
         {
             string url = $"{Project.Url}/{projectId}/runners";
