@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="IContributorClient.cs" />
     <Compile Include="Impl\ContributorClient.cs" />
+    <Compile Include="Models\Blob.cs" />
     <Compile Include="Models\Contributor.cs" />
     <Compile Include="GitLabException.cs" />
     <Compile Include="Impl\NamespacesClient.cs" />
@@ -156,7 +157,7 @@
     <Compile Include="Models\ProjectStatistics.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagCreate.cs" />
-    <Compile Include="Models\TreeOrBlob.cs" />
+    <Compile Include="Models\Tree.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserToken.cs" />
     <Compile Include="Models\UserTokenCreate.cs" />

@@ -3,12 +3,12 @@
 namespace NGitLab.Models
 {
     [DataContract]
-    public class TreeOrBlob
+    public class Tree
     {
         [DataMember(Name = "id")]
         public Sha1 Id;
 
-        [DataMember(Name = "assets")]
+        [DataMember(Name = "name")]
         public string Name;
         
         [DataMember(Name = "type")]
@@ -16,5 +16,8 @@ namespace NGitLab.Models
         
         [DataMember(Name = "mode")]
         public string Mode;
+
+        [DataMember(Name = "path")]
+        public string Path;
     }
 }
