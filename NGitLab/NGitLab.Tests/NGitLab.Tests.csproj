@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContributorsTests.cs" />
+    <Compile Include="Extensions\FunctionRetryExtensionsTests.cs" />
     <Compile Include="FilesTests.cs" />
     <Compile Include="APITests.cs" />
     <Compile Include="GitlabCredentialsTests.cs" />

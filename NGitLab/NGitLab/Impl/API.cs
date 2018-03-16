@@ -1,4 +1,5 @@
 ﻿using System;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -12,9 +13,17 @@ namespace NGitLab.Impl
 
         public string ConnectionToken { get; set; }
 
-        public API(GitLabCredentials credentials)
+        public RequestOptions RequestOptions { get; set; }
+
+        public API(GitLabCredentials credentials) : 
+            this(credentials, RequestOptions.Default)
+        {
+        }
+
+        public API(GitLabCredentials credentials, RequestOptions options)
         {
             _credentials = credentials;
+            RequestOptions = options;
         }
 
         public IHttpRequestor Get() => CreateRequestor(MethodType.Get);
@@ -32,15 +41,14 @@ namespace NGitLab.Impl
                 _credentials.ApiToken = OpenPrivateSession();
             }
 
-            return new HttpRequestor(_credentials.HostUrl, _credentials.ApiToken, methodType);
+            return new HttpRequestor(_credentials.HostUrl, _credentials.ApiToken, methodType, RequestOptions);
         }
 
         private string OpenPrivateSession()
         {
-            var httpRequestor = new HttpRequestor(_credentials.HostUrl, "", MethodType.Post);
+            var httpRequestor = new HttpRequestor(_credentials.HostUrl, "", MethodType.Post, RequestOptions);
             var url =
                 $"/session?login={System.Web.HttpUtility.UrlEncode(_credentials.UserName)}&password={System.Web.HttpUtility.UrlEncode(_credentials.Password)}";
-
             try
             {
                 var session = httpRequestor.To<Session>(url);
