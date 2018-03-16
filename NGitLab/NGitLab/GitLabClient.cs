@@ -17,19 +17,35 @@ namespace NGitLab
         public IVersionClient Version { get; }
         public ISnippetClient Snippets { get; }
 
+        public RequestOptions options
+        {
+            get { return _api.RequestOptions; }
+            set { _api.RequestOptions = value; }
+        }
+
         public GitLabClient(string hostUrl, string apiToken)
-            : this(new GitLabCredentials(hostUrl, apiToken))
+            : this(hostUrl, apiToken, RequestOptions.Default)
         {
         }
 
         public GitLabClient(string hostUrl, string userName, string password)
-            : this(new GitLabCredentials(hostUrl, userName, password))
+            : this(hostUrl, userName, password, RequestOptions.Default)
         {
         }
 
-        private GitLabClient(GitLabCredentials credentials)
+        public GitLabClient(string hostUrl, string apiToken, RequestOptions options)
+            : this(new GitLabCredentials(hostUrl, apiToken), options)
         {
-            _api = new API(credentials);
+        }
+
+        public GitLabClient(string hostUrl, string userName, string password, RequestOptions options)
+            : this(new GitLabCredentials(hostUrl, userName, password), options)
+        {
+        }
+
+        private GitLabClient(GitLabCredentials credentials, RequestOptions options)
+        {
+            _api = new API(credentials, options);
             Users = new UserClient(_api);
             Projects = new ProjectClient(_api);
             Runners = new RunnerClient(_api);
@@ -62,7 +78,7 @@ namespace NGitLab
         {
             return new CommitClient(_api, projectId);
         }
-        
+
         public IPipelineClient GetPipelines(int projectId)
         {
             return new PipelineClient(_api, projectId);

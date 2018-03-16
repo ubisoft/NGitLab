@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
+using NGitLab.Extensions;
 
 namespace NGitLab.Impl
 {
@@ -23,6 +24,7 @@ namespace NGitLab.Impl
     /// </summary>
     public class HttpRequestor : IHttpRequestor
     {
+        private readonly RequestOptions _options;
         private readonly MethodType _methodType;
         private object _data;
 
@@ -37,11 +39,17 @@ namespace NGitLab.Impl
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
-        public HttpRequestor(string hostUrl, string apiToken, MethodType methodType)
+        public HttpRequestor(string hostUrl, string apiToken, MethodType methodType):
+            this(hostUrl, apiToken, methodType, RequestOptions.Default)
+        {
+        }
+
+        public HttpRequestor(string hostUrl, string apiToken, MethodType methodType, RequestOptions options)
         {
             _hostUrl = hostUrl.EndsWith("/") ? hostUrl.Replace("/$", "") : hostUrl;
             _apiToken = apiToken;
             _methodType = methodType;
+            _options = options;
         }
 
         public IHttpRequestor With(object data)
@@ -103,9 +111,9 @@ namespace NGitLab.Impl
             else if (_methodType == MethodType.Put)
             {
                 req.Headers.Add("Content-Length", "0");
-            }            
+            }
 
-            using (var response = GetResponse(req, fullUrl, _data))
+            using (var response = GetResponse(req, fullUrl, _data, _options))
             {
                 if (parser != null)
                 {
@@ -117,11 +125,11 @@ namespace NGitLab.Impl
             }
         }
 
-        private static WebResponse GetResponse(WebRequest req, Uri fullUrl, object data)
+        private static WebResponse GetResponse(WebRequest req, Uri fullUrl, object data, RequestOptions options)
         {
             try
             {
-                return req.GetResponse();
+                return ((Func<WebResponse>)req.GetResponse).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount);
             }
             catch (WebException wex)
             {
@@ -200,23 +208,25 @@ namespace NGitLab.Impl
 
         public virtual IEnumerable<T> GetAll<T>(string tailUrl)
         {
-            return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl));
+            return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options);
         }
 
         private class Enumerable<T> : IEnumerable<T>
         {
             private readonly string _apiToken;
+            private readonly RequestOptions _options;
             private readonly Uri _startUrl;
 
-            public Enumerable(string apiToken, Uri startUrl)
+            public Enumerable(string apiToken, Uri startUrl, RequestOptions options)
             {
                 _apiToken = apiToken;
                 _startUrl = startUrl;
+                _options = options;
             }
 
             public IEnumerator<T> GetEnumerator()
             {
-                return new Enumerator(_apiToken, _startUrl);
+                return new Enumerator(_apiToken, _startUrl, _options);
             }
 
             IEnumerator IEnumerable.GetEnumerator()
@@ -227,13 +237,15 @@ namespace NGitLab.Impl
             private class Enumerator : IEnumerator<T>
             {
                 private readonly string _apiToken;
+                private readonly RequestOptions _options;
                 private Uri _nextUrlToLoad;
                 private readonly List<T> _buffer = new List<T>();
 
-                public Enumerator(string apiToken, Uri startUrl)
+                public Enumerator(string apiToken, Uri startUrl, RequestOptions options)
                 {
                     _apiToken = apiToken;
                     _nextUrlToLoad = startUrl;
+                    _options = options;
                 }
 
                 public void Dispose()
@@ -252,7 +264,7 @@ namespace NGitLab.Impl
                         var request = SetupConnection(_nextUrlToLoad, MethodType.Get);
                         request.Headers["PRIVATE-TOKEN"] = _apiToken;
 
-                        using (var response = GetResponse(request, _nextUrlToLoad, null))
+                        using (var response = GetResponse(request, _nextUrlToLoad, null, _options))
                         {
                             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
                             var link = response.Headers["Link"];
