@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Net;
-using System.Web.Security;
 
-namespace NGitLab.Impl
+namespace NGitLab
 
 {
     public class RequestOptions

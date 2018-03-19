@@ -49,7 +49,7 @@
     <Compile Include="Extensions\FunctionRetryExtensions.cs" />
     <Compile Include="IContributorClient.cs" />
     <Compile Include="Impl\ContributorClient.cs" />
-    <Compile Include="Impl\RequestOptions.cs" />
+    <Compile Include="RequestOptions.cs" />
     <Compile Include="Models\Blob.cs" />
     <Compile Include="Models\Contributor.cs" />
     <Compile Include="GitLabException.cs" />

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using NGitLab.Impl;
 
 namespace NGitLab.Extensions
 {
