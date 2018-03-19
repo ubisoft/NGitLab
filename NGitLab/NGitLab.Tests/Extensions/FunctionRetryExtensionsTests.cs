@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using NGitLab.Extensions;
 using NGitLab.Impl;
 using NSubstitute;
@@ -15,10 +16,10 @@ namespace NGitLab.Tests.Extensions
             RequestOptions options = new RequestOptions(2, TimeSpan.FromMilliseconds(50));
 
             var mockClass = Substitute.For<ICustomTestClass>();
-            mockClass.TestRetryMethod(Arg.Any<bool>()).Throws(new Exception());
+            mockClass.TestRetryMethod(Arg.Any<bool>()).Throws(new WebException());
 
             //act
-            Assert.Throws<Exception>(() => ((Func<string>) (() => mockClass.TestRetryMethod(true))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount));
+            Assert.Throws<WebException>(() => ((Func<string>) (() => mockClass.TestRetryMethod(true))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental));
 
             //assert
             mockClass.ReceivedWithAnyArgs(options.RetryCount + 1).TestRetryMethod(Arg.Any<bool>());
@@ -32,7 +33,7 @@ namespace NGitLab.Tests.Extensions
             mockClass.TestRetryMethod(Arg.Any<bool>()).Returns(string.Empty);
 
             // act
-            ((Func<string>)(() => mockClass.TestRetryMethod(false))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount);
+            ((Func<string>)(() => mockClass.TestRetryMethod(false))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental);
 
             // assert
             mockClass.ReceivedWithAnyArgs(1).TestRetryMethod(Arg.Any<bool>());

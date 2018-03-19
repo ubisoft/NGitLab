@@ -129,7 +129,7 @@ namespace NGitLab.Impl
         {
             try
             {
-                return ((Func<WebResponse>)req.GetResponse).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount);
+                return ((Func<WebResponse>)req.GetResponse).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental);
             }
             catch (WebException wex)
             {
