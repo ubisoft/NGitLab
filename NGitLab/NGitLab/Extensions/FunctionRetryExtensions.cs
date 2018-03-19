@@ -12,7 +12,7 @@ namespace NGitLab.Extensions
         /// <summary>
         /// Do a retry a number of time on the received action if it fails
         /// </summary>
-        public static T Retry<T>(this Func<T> action, Func<Exception, int, bool> retryWhen, TimeSpan interval, int retryNumber)
+        public static T Retry<T>(this Func<T> action, Func<Exception, int, bool> retryWhen, TimeSpan interval, int retryNumber, bool isIncremental)
         {
             try
             {
@@ -21,7 +21,9 @@ namespace NGitLab.Extensions
             catch (Exception ex) when (retryWhen(ex, retryNumber))
             {
                 Thread.Sleep(interval);
-                return Retry(action, retryWhen, interval, --retryNumber);
+
+                var nextInterval = isIncremental ? interval.Add(interval) : interval;
+                return Retry(action, retryWhen, nextInterval, --retryNumber, isIncremental);
             }
         }
     }
