@@ -26,6 +26,7 @@ namespace NGitLab
         /// Get jobs in a project meeting the scope
         /// </summary>
         /// <param name="scope"></param>
+        [System.Obsolete("Use JobClient.GetJobs() instead")]
         IEnumerable<Job> GetJobsInProject(JobScope scope);
 
         /// <summary>

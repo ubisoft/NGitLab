@@ -14,9 +14,12 @@ namespace NGitLab.Tests
             var runnerToEnable = GetDefaultRunner();
             var runners = Initialize.GitLabClient.Runners;
 
-            var jobs = runners.GetJobs(runnerToEnable.Id, JobScope.All)
-                .Take(1);
+#pragma warning disable 618 // Obsolete
+            var jobsOld = runners.GetJobs(runnerToEnable.Id, JobScope.All).Take(1);
+#pragma warning restore 618
+            var jobs = runners.GetJobs(runnerToEnable.Id).Take(1);
 
+            Assert.That(jobsOld, Is.Not.Empty);
             Assert.That(jobs, Is.Not.Empty);
         }
 

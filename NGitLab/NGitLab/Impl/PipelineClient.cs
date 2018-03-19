@@ -22,6 +22,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<Job> AllJobs => _api.Get().GetAll<Job>($"{_projectPath}/jobs");
 
+        [Obsolete("Use JobClient.GetJobs() instead")]
         public IEnumerable<Job> GetJobsInProject(JobScope scope)
         {
             string url = $"{_projectPath}/jobs";

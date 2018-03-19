@@ -48,7 +48,9 @@
   <ItemGroup>
     <Compile Include="Extensions\FunctionRetryExtensions.cs" />
     <Compile Include="IContributorClient.cs" />
+    <Compile Include="IJobClient.cs" />
     <Compile Include="Impl\ContributorClient.cs" />
+    <Compile Include="Impl\JobClient.cs" />
     <Compile Include="RequestOptions.cs" />
     <Compile Include="Models\Blob.cs" />
     <Compile Include="Models\Contributor.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\BranchCreate.cs" />
     <Compile Include="Models\ForkProject.cs" />
+    <Compile Include="Models\JobAction.cs" />
     <Compile Include="Models\RunnerScope.cs" />
     <Compile Include="Models\JobScope.cs" />
     <Compile Include="Models\CommitCreate.cs" />
