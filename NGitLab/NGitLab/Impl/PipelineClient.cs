@@ -10,12 +10,14 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _projectPath;
         private readonly string _pipelinesPath;
+        private readonly int _projectId;
 
         public PipelineClient(API api, int projectId)
         {
             _api = api;
             _projectPath = $"{Project.Url}/{projectId}";
             _pipelinesPath = $"{Project.Url}/{projectId}/pipelines";
+            _projectId = projectId;
         }
 
         public IEnumerable<PipelineBasic> All => _api.Get().GetAll<PipelineBasic>($"{_pipelinesPath}");
@@ -47,7 +49,7 @@ namespace NGitLab.Impl
 
         public Pipeline Create(string @ref)
         {
-            return _api.Post().To<Pipeline>($"{_pipelinesPath}/?ref={@ref}");
+            return _api.Post().To<Pipeline>($"{Project.Url}/{_projectId}/pipeline?ref={@ref}");
         }
     }
 }
