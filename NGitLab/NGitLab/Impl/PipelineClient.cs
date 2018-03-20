@@ -44,5 +44,10 @@ namespace NGitLab.Impl
             var jobs = _api.Get().GetAll<Job>($"{_pipelinesPath}/{pipelineId}/jobs").Reverse().ToArray();
             return jobs;
         }
+
+        public Pipeline Create(string @ref)
+        {
+            return _api.Post().To<Pipeline>($"{_pipelinesPath}/?ref={@ref}");
+        }
     }
 }

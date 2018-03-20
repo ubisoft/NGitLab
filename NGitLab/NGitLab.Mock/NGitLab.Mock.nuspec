@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NGitLab.Mock</id>
+    <title>NGitLab.Mock</title>
+    <version>3.6.1</version>
+    <projectUrl>https://gitlab-ncsa.ubisoft.org/ToolSquare/NGitLab</projectUrl>
+    <authors>Ubisoft, Jonathan T-Delorme,  Julien Richard</authors>
+    <owners>Julien Richard, Jonathan T-Delorme</owners>
+    <description>.NET client for GitLab</description>
+    <iconUrl>https://gitlab-ncsa.ubisoft.org/uploads/project/avatar/3511/ngitlab.png</iconUrl>
+    <tags>rest, GitLab, api</tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\NGitLab.Mock.dll" target="lib/net452" />
+    <file src="bin\Release\NGitLab.Mock.pdb" target="lib/net452" />
+  </files>
+</package>
