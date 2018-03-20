@@ -40,6 +40,12 @@ namespace NGitLab
         Runner Update(int runnerId, RunnerUpdate runnerUpdate);
 
         /// <summary>
+        /// get the list of runners associated with the project
+        /// </summary>
+        /// <returns>the list of runners associated with the project</returns>
+        IEnumerable<Runner> OfProject(int projectId);
+
+        /// <summary>
         /// List all jobs of the given runner that meet the specified scope
         /// </summary>
         IEnumerable<Job> GetJobs(int runnerId, JobScope jobScope);
