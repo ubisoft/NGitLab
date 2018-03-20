@@ -25,6 +25,11 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Runner>(url);
         }
 
+        public IEnumerable<Runner> OfProject(int projectId)
+        {
+            return _api.Get().GetAll<Runner>(Project.Url + $"/{projectId}" + Runner.Url);
+        }
+
         public void Delete(Runner runner) => Delete(runner.Id);
 
         public void Delete(int runnerId)
