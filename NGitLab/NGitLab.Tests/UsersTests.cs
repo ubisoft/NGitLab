@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -90,7 +90,7 @@ namespace NGitLab.Tests
 
             var result = keys.Add(new SshKeyCreate
             {
-                Key = "ssh-rsa dummy mytestkey@mycurrentpc",
+                Key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1fJRwjlIxSrsx3jlcw5fQxMGBRdmYM7Bu815Ry3Dg/Tj2I+dQFpWE27x+lN30Qh2kbknXt6u1xAIXuGcHNXjZ+sglWdkU9TAoiHzsTs6BFX4Enlsek2bjoKemSdO/sGXR+QHtu3niaV1+f/sx5bYyAtqRh3z5d3ZzLiqAnMaWqh2bbgviUiiwEeo2JYnVU2tSTiKrra6aS2+M3egyfkCb9Ursp9VUjztds0tcCUXJ3nLs2ILNrQUoRBpxp9YyKtARuY9SMxT/KVL0t3VI72aJY8PnA7/ivNs1CZfGKwOm8vdExbku2rsNm9RqTuZGjW5ZSELiFm/InXuUR3rm43/v mytestkey@mycurrentpc",
                 Title = "test key",
             });
 

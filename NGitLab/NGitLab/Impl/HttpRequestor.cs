@@ -39,7 +39,7 @@ namespace NGitLab.Impl
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
-        public HttpRequestor(string hostUrl, string apiToken, MethodType methodType):
+        public HttpRequestor(string hostUrl, string apiToken, MethodType methodType) :
             this(hostUrl, apiToken, methodType, RequestOptions.Default)
         {
         }
@@ -62,7 +62,6 @@ namespace NGitLab.Impl
         {
             Stream(tailAPIUrl, null);
         }
-
 
         public virtual T To<T>(string tailAPIUrl)
         {
