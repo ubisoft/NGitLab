@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -37,6 +38,22 @@ namespace NGitLab.Tests
 
             runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
             Assert.IsFalse(IsEnabled(runnerToEnable, projectId));
+        }
+
+        [Test]
+        public void Test_can_find_a_runner_on_a_project()
+        {
+            var projectId = Initialize.UnitTestProject.Id;
+            var runnerToEnable = GetDefaultRunner();
+            var runners = Initialize.GitLabClient.Runners;
+            runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
+
+            var result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
+            Assert.IsTrue(result[0].Id == runnerToEnable.Id);
+
+            runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
+            result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
+            Assert.IsEmpty(result);
         }
 
         private static bool IsEnabled(Runner runner, int projectId)
