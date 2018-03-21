@@ -26,6 +26,11 @@ namespace NGitLab.Tests
 build:
   script: 
   - echo OK
+
+manual:
+  when: manual
+  script: 
+  - echo manual OK
 ";
 
                 var repository = Initialize.GitLabClient.GetRepository(projectId);

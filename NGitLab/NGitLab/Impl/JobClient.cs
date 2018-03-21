@@ -31,7 +31,7 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Job>(url);
         }
 
-        public Job RunAction(int jobId, JobAction action) => _api.Post().To<Job>($"{_jobsPath}/{jobId}/{action.ToString().ToLower()}");
+        public Job RunAction(int jobId, JobAction action) => _api.Post().To<Job>($"{_jobsPath}/{jobId}/{action.ToString().ToLowerInvariant()}");
         public Job Get(int jobId) => _api.Get().To<Job>($"{_jobsPath}/{jobId}");
 
         public string GetTrace(int jobId)
