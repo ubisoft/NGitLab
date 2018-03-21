@@ -34,7 +34,7 @@ namespace NGitLab.Impl
 
         public void Delete(int runnerId)
         {
-            _api.Delete().To<Runner>(Runner.Url + "/" + runnerId);
+            _api.Delete().Execute(Runner.Url + "/" + runnerId);
         }
 
         public Runner Update(int runnerId, RunnerUpdate runnerUpdate)
