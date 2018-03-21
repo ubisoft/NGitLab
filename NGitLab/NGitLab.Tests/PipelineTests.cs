@@ -57,8 +57,10 @@ namespace NGitLab.Tests
 
             while (true)
             {
+#pragma warning disable 618 // Obsolete
                 if (_pipelines.GetJobsInProject(JobScope.All).Any())
                     return;
+#pragma warning restore 618
             }
         }
 
@@ -73,8 +75,10 @@ namespace NGitLab.Tests
 
             while (true)
             {
+#pragma warning disable 618 // Obsolete
                 if (_pipelines.GetJobsInProject(JobScope.Pending).Any())
                     return;
+#pragma warning restore 618
             }
         }
 

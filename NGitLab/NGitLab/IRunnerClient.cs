@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -48,7 +49,13 @@ namespace NGitLab
         /// <summary>
         /// List all jobs of the given runner that meet the specified scope
         /// </summary>
+        [Obsolete("Use GetJobs(int, JobStatus?) instead")]
         IEnumerable<Job> GetJobs(int runnerId, JobScope jobScope);
+
+        /// <summary>
+        /// List all jobs of the given runner that meet the specified status
+        /// </summary>
+        IEnumerable<Job> GetJobs(int runnerId, JobStatus? status = null);
 
         /// <summary>
         /// List all runners (specific and shared) available in the project. Shared runners are listed if at least one shared runner is defined and shared runners usage is enabled in the project's settings.

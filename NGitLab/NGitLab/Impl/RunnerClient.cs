@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -43,6 +44,7 @@ namespace NGitLab.Impl
             return _api.Put().With(runnerUpdate).To<Runner>(url);
         }
 
+        [Obsolete("Use GetJobs(int, JobStatus?) instead")]
         public IEnumerable<Job> GetJobs(int runnerId, JobScope scope)
         {
             var url = $"{Runner.Url}/{runnerId}/jobs";
@@ -50,6 +52,18 @@ namespace NGitLab.Impl
             if (scope != JobScope.All)
             {
                 url = Utils.AddParameter(url, "status", scope.ToString().ToLowerInvariant());
+            }
+
+            return _api.Get().GetAll<Job>(url);
+        }
+
+        public IEnumerable<Job> GetJobs(int runnerId, JobStatus? status = null)
+        {
+            var url = $"{Runner.Url}/{runnerId}/jobs";
+
+            if (status != null)
+            {
+                url = Utils.AddParameter(url, "status", status.Value.ToString().ToLowerInvariant());
             }
 
             return _api.Get().GetAll<Job>(url);

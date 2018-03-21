@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using NGitLab.Models;
@@ -14,9 +14,12 @@ namespace NGitLab.Tests
             var runnerToEnable = GetDefaultRunner();
             var runners = Initialize.GitLabClient.Runners;
 
-            var jobs = runners.GetJobs(runnerToEnable.Id, JobScope.All)
-                .Take(1);
+#pragma warning disable 618 // Obsolete
+            var jobsOld = runners.GetJobs(runnerToEnable.Id, JobScope.All).Take(1);
+#pragma warning restore 618
+            var jobs = runners.GetJobs(runnerToEnable.Id).Take(1);
 
+            Assert.That(jobsOld, Is.Not.Empty);
             Assert.That(jobs, Is.Not.Empty);
         }
 
@@ -64,7 +67,7 @@ namespace NGitLab.Tests
         public static Runner GetDefaultRunner()
         {
             var allRunners = Initialize.GitLabClient.Runners.Accessible.ToArray();
-            var runner = allRunners.FirstOrDefault(x => x.Active);
+            var runner = allRunners.FirstOrDefault(x => x.Active && x.Description.Equals("example"));
 
             if (runner == null)
             {

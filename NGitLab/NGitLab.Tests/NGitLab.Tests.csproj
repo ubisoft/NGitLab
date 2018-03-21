@@ -52,6 +52,7 @@
     <Compile Include="GitlabCredentialsTests.cs" />
     <Compile Include="HttpRequestorTests.cs" />
     <Compile Include="GroupsTests.cs" />
+    <Compile Include="JobTests.cs" />
     <Compile Include="JsonTests.cs" />
     <Compile Include="NamespacesTests.cs" />
     <Compile Include="PipelineTests.cs" />

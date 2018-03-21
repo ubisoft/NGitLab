@@ -16,6 +16,7 @@ namespace NGitLab
         public IRunnerClient Runners { get; }
         public IVersionClient Version { get; }
         public ISnippetClient Snippets { get; }
+        public IMembersClient Members { get; }
 
         public RequestOptions options
         {
@@ -55,6 +56,7 @@ namespace NGitLab
             Labels = new LabelClient(_api);
             Version = new VersionClient(_api);
             Snippets = new SnippetClient(_api);
+            Members = new MembersClient(_api);
         }
 
         [Obsolete("Use gitlab client constructor instead")]
@@ -84,11 +86,14 @@ namespace NGitLab
             return new PipelineClient(_api, projectId);
         }
 
+        public IJobClient GetJobs(int projectId)
+        {
+            return new JobClient(_api, projectId);
+        }
+
         public IMergeRequestClient GetMergeRequest(int projectId)
         {
             return new MergeRequestClient(_api, projectId);
         }
-
-        public IMembersClient Members => new MembersClient(_api);
     }
 }

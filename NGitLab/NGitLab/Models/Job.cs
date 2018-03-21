@@ -10,7 +10,7 @@ namespace NGitLab.Models
         public string Name;
 
         [DataMember(Name = "id")]
-        public long Id;
+        public int Id;
 
         [DataMember(Name = "ref")]
         public string Ref;
