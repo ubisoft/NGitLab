@@ -18,7 +18,7 @@ namespace NGitLab
         public ISnippetClient Snippets { get; }
         public IMembersClient Members { get; }
 
-        public RequestOptions options
+        public RequestOptions Options
         {
             get { return _api.RequestOptions; }
             set { _api.RequestOptions = value; }
