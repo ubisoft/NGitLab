@@ -7,13 +7,18 @@ namespace NGitLab.Impl
     {
         private readonly API _api;
         private readonly string _contributorPath;
+        private readonly int _projectId;
 
-        public ContributorClient(API api, string repoPath)
+        public ContributorClient(API api, string repoPath, int projectId)
         {
             _api = api;
             _contributorPath = repoPath + Contributor.Url;
+            _projectId = projectId;
         }
-        
-        public IEnumerable<Contributor> All => _api.Get().GetAll<Contributor>(_contributorPath);
+
+        /// <remarks>
+        /// HACK: We force the order_by and sort due to a pagination bug from GitLab
+        /// </remarks>
+        public IEnumerable<Contributor> All => _api.Get().GetAll<Contributor>(_contributorPath + $"?id={_projectId}&order_by=commits&sort=desc");
     }
 }
