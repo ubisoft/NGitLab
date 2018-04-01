@@ -1,152 +1,42 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EB69C6AD-64A6-4FE5-880C-38607A2430FB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NGitLab</RootNamespace>
-    <AssemblyName>NGitLab</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ReleaseVersion>2.0</ReleaseVersion>
-    <TargetFrameworkProfile />
+    <TargetFrameworks>net40;net45; netstandard2.0
+    </TargetFrameworks>
+    
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Provides a .NET REST client implementation of GitLab API.Support Version : V3、V4 and OAuth!</Description>
+    <Authors>Scooletz, Franklin89,krac,Xarlot,Mysticboy</Authors>
+    <Version>2.0.0</Version>
+    <PackageId>NGitLab.Plus</PackageId>
+    <PackageProjectUrl>https://github.com/maikebing/NGitLab</PackageProjectUrl>
+    <RepositoryUrl></RepositoryUrl>
+    <PackageTags>GitLab, API, NGitlab</PackageTags>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/maikebing/NGitLab/v4api/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GitLabClient.cs" />
-    <Compile Include="IBranchClient.cs" />
-    <Compile Include="IFilesClient.cs" />
-    <Compile Include="IIssueClient.cs" />
-    <Compile Include="IMergeRequestChangesClient.cs" />
-    <Compile Include="IMergeRequestClient.cs" />
-    <Compile Include="IMergeRequestCommitClient.cs" />
-    <Compile Include="Impl\API.cs" />
-    <Compile Include="Impl\BranchClient.cs" />
-    <Compile Include="IMergeRequestCommentClient.cs" />
-    <Compile Include="Impl\IssueClient.cs" />
-    <Compile Include="Impl\JobsClient.cs" />
-    <Compile Include="Impl\MergeRequestChangesClient.cs" />
-    <Compile Include="Impl\MergeRequestClient.cs" />
-    <Compile Include="Impl\MergeRequestCommentClient.cs" />
-    <Compile Include="Impl\MergeRequestCommitClient.cs" />
-    <Compile Include="Impl\PipelinesClient.cs" />
-    <Compile Include="Impl\ProjectSnippetsClient.cs" />
-    <Compile Include="Impl\ProjectHooksClient.cs" />
-    <Compile Include="Impl\FileClient.cs" />
-    <Compile Include="Impl\HttpRequestor.cs" />
-    <Compile Include="Impl\MethodType.cs" />
-    <Compile Include="Impl\ProjectClient.cs" />
-    <Compile Include="Impl\RepositoryClient.cs" />
-    <Compile Include="Impl\UserClient.cs" />
-    <Compile Include="IPipelinesClient.cs" />
-    <Compile Include="IProjectClient.cs" />
-    <Compile Include="IProjectSnippetsClient.cs" />
-    <Compile Include="IProjectHooksClient.cs" />
-    <Compile Include="IRepositoryClient.cs" />
-    <Compile Include="IUserClient.cs" />
-    <Compile Include="Json\Sha1Converter.cs" />
-    <Compile Include="Models\ArtifactsFile.cs" />
-    <Compile Include="Models\Assignee.cs" />
-    <Compile Include="Models\Author.cs" />
-    <Compile Include="Models\Branch.cs" />
-    <Compile Include="Models\BranchCreate.cs" />
-    <Compile Include="Models\BranchRemovalStatus.cs" />
-    <Compile Include="Models\Comment.cs" />
-    <Compile Include="Models\Commit.cs" />
-    <Compile Include="Models\CommitInfo.cs" />
-    <Compile Include="Models\CommitStatus.cs" />
-    <Compile Include="Models\CompareInfo.cs" />
-    <Compile Include="Models\Diff.cs" />
-    <Compile Include="Models\FileData.cs" />
-    <Compile Include="Models\FileDelete.cs" />
-    <Compile Include="Models\FileUpsert.cs" />
-    <Compile Include="IJobsClient.cs" />
-    <Compile Include="Models\Issue.cs" />
-    <Compile Include="Models\Job.cs" />
-    <Compile Include="Models\MergeCommitMessage.cs" />
-    <Compile Include="Models\MergeRequest.cs" />
-    <Compile Include="Models\MergeRequestChanges.cs" />
-    <Compile Include="Models\MergeRequestComment.cs" />
-    <Compile Include="Models\MergeRequestCreate.cs" />
-    <Compile Include="Models\MergeRequestFileData.cs" />
-    <Compile Include="Models\MergeRequestState.cs" />
-    <Compile Include="Models\MergeRequestUpdate.cs" />
-    <Compile Include="Models\Milestone.cs" />
-    <Compile Include="Models\Namespaces.cs" />
-    <Compile Include="Models\Namespace.cs" />
-    <Compile Include="Models\ObjectType.cs" />
-    <Compile Include="Models\PersonInfo.cs" />
-    <Compile Include="Models\Pipeline.cs" />
-    <Compile Include="Models\PipelineData.cs" />
-    <Compile Include="Models\Project.cs" />
-    <Compile Include="Models\ProjectCreate.cs" />
-    <Compile Include="Models\ProjectSnippetUpdate.cs" />
-    <Compile Include="Models\ProjectSnippetInsert.cs" />
-    <Compile Include="Models\ProjectSnippet.cs" />
-    <Compile Include="Models\ProjectHook.cs" />
-    <Compile Include="Models\ProjectHookUpdate.cs" />
-    <Compile Include="Models\ProjectHookInsert.cs" />
-    <Compile Include="Models\Session.cs" />
-    <Compile Include="Models\SingleCommit.cs" />
-    <Compile Include="Models\Tag.cs" />
-    <Compile Include="Models\TagCreate.cs" />
-    <Compile Include="Models\TreeOrBlob.cs" />
-    <Compile Include="Models\User.cs" />
-    <Compile Include="Models\UserUpsert.cs" />
-    <Compile Include="Models\VisibilityLevel.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sha1.cs" />
-    <Compile Include="INamespaceClient.cs" />
-    <Compile Include="Impl\NamespaceClient.cs" />
-    <Compile Include="Models\NamespaceCreate.cs" />
+    <Folder Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

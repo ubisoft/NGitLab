@@ -1,9 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 14.00
-# Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGitLab", "NGitLab\NGitLab.csproj", "{EB69C6AD-64A6-4FE5-880C-38607A2430FB}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGitLab.Tests", "NGitLab.Tests\NGitLab.Tests.csproj", "{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NGitLab", "NGitLab\NGitLab.csproj", "{58C220CB-0083-40FC-BC9F-BDBD85026202}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,16 +13,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EB69C6AD-64A6-4FE5-880C-38607A2430FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EB69C6AD-64A6-4FE5-880C-38607A2430FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EB69C6AD-64A6-4FE5-880C-38607A2430FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EB69C6AD-64A6-4FE5-880C-38607A2430FB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58C220CB-0083-40FC-BC9F-BDBD85026202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58C220CB-0083-40FC-BC9F-BDBD85026202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58C220CB-0083-40FC-BC9F-BDBD85026202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58C220CB-0083-40FC-BC9F-BDBD85026202}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A744666A-9ACD-4570-BFB5-BDBD5EBF3898}
 	EndGlobalSection
 EndGlobal

@@ -200,7 +200,7 @@ namespace NGitLab.Impl {
                             request.Headers["PRIVATE-TOKEN"] = apiToken;
                         }
 
-                        using (var response = request.GetResponseAsync().Result) {
+                        using (var response = request.GetResponse()) {
                             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
                             var link = response.Headers["Link"];
 
