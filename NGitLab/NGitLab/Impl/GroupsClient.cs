@@ -27,6 +27,8 @@ namespace NGitLab.Impl
 
         public Group this[int id] => _api.Get().To<Group>(Url + "/" + id);
 
+        public Group this[string fullPath] => _api.Get().To<Group>(Url + "/" + System.Web.HttpUtility.UrlEncode(fullPath));
+
         public IEnumerable<Project> SearchProjects(int groupId, string search)
         {
             return _api.Get().GetAll<Project>(Url + "/" + groupId + $"/projects?search={search}");

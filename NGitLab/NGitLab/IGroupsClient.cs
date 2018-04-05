@@ -14,6 +14,12 @@ namespace NGitLab
 
         Group this[int id] { get; }
 
+        /// <summary>
+        /// Returns the project with the provided full path in the form Namespace/Name.
+        /// </summary>
+        /// <remarks>https://github.com/gitlabhq/gitlabhq/blob/master/doc/api/groups.md#details-of-a-group</remarks>
+        Group this[string fullPath] { get; }
+
         Group Create(GroupCreate group);
 
         IEnumerable<Project> SearchProjects(int groupId, string search);
