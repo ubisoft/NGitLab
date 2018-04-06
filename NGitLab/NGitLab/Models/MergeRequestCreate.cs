@@ -5,8 +5,8 @@ namespace NGitLab.Models
 {
     [DataContract]
     public class MergeRequestCreate
-    {        
-        [DataMember(Name="source_branch")]
+    {
+        [DataMember(Name = "source_branch")]
         public string SourceBranch;
 
         [DataMember(Name="target_branch")]
@@ -26,5 +26,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "remove_source_branch")]
         public bool RemoveSourceBranch;
+
+        [DataMember(Name = "labels")]
+        public string Labels;
     }
 }

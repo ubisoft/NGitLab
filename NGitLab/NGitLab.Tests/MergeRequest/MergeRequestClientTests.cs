@@ -42,11 +42,13 @@ namespace NGitLab.Tests.MergeRequest
                 Title = "Merge my-super-feature into master",
                 SourceBranch = branch.Name,
                 TargetBranch = "master",
+                Labels = "a,b",
                 RemoveSourceBranch = true
             });
 
             Assert.That(mergeRequest, Is.Not.Null);
             Assert.That(mergeRequest.Title, Is.EqualTo("Merge my-super-feature into master"));
+            CollectionAssert.AreEqual(new[] { "a", "b" }, mergeRequest.Labels);
             Assert.That(mergeRequest.SourceBranch, Is.EqualTo("my-super-feature"));
             Assert.That(mergeRequest.TargetBranch, Is.EqualTo("master"));
 
