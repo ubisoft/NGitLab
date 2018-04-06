@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -49,6 +50,17 @@ namespace NGitLab.Impl
         public Pipeline Create(string @ref)
         {
             return _api.Post().To<Pipeline>($"{_projectPath}/pipeline?ref={@ref}");
+        }
+
+        public Pipeline CreatePipelineWithTrigger(string token, string @ref, Dictionary<string, string> variables)
+        {
+            var variablesToAdd = new StringBuilder();
+            foreach (var variable in variables)
+            {
+                variablesToAdd.Append($"&variables[{variable.Key}]={variable.Value}");
+            }
+
+            return _api.Post().To<Pipeline>($"{_projectPath}/trigger/pipeline?token={token}&ref={@ref}{variablesToAdd}");
         }
     }
 }
