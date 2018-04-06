@@ -51,6 +51,9 @@
     <Compile Include="IJobClient.cs" />
     <Compile Include="Impl\ContributorClient.cs" />
     <Compile Include="Impl\JobClient.cs" />
+    <Compile Include="Impl\TriggerClient.cs" />
+    <Compile Include="ITriggerClient.cs" />
+    <Compile Include="Models\Trigger.cs" />
     <Compile Include="RequestOptions.cs" />
     <Compile Include="Models\Blob.cs" />
     <Compile Include="Models\Contributor.cs" />
