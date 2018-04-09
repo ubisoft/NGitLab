@@ -70,6 +70,7 @@
     <Compile Include="Sha1Tests.cs" />
     <Compile Include="SnippetsTest.cs" />
     <Compile Include="TagsTests.cs" />
+    <Compile Include="TriggerTests.cs" />
     <Compile Include="UsersTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

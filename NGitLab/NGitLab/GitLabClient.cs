@@ -86,6 +86,11 @@ namespace NGitLab
             return new PipelineClient(_api, projectId);
         }
 
+        public ITriggerClient GetTriggers(int projectId)
+        {
+            return new TriggerClient(_api, projectId);
+        }
+
         public IJobClient GetJobs(int projectId)
         {
             return new JobClient(_api, projectId);

@@ -14,6 +14,8 @@ namespace NGitLab.Tests
 
         public static Group UnitTestGroup;
 
+        public static Trigger UnitTestTrigger;
+
         public static IRepositoryClient Repository => GitLabClient.GetRepository(UnitTestProject.Id);
 
         public static string GitLabHost => "https://gitlab.example.com/";
@@ -47,6 +49,7 @@ namespace NGitLab.Tests
             // Create a test project with merge request etc.
             UnitTestGroup = CreateGroup(GroupName);
             UnitTestProject = CreateProject(ProjectName, UnitTestGroup.Id);
+            UnitTestTrigger = CreateTrigger(UnitTestProject.Id);
         }
 
         [OneTimeTearDown]
@@ -81,6 +84,11 @@ namespace NGitLab.Tests
             });
 
             return group;
+        }
+
+        private Trigger CreateTrigger(int projectId)
+        {
+            return GitLabClient.GetTriggers(projectId).Create("Unit_Test_Description");
         }
 
         private void DeleteGroup(string groupName)
