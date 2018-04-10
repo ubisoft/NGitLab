@@ -12,6 +12,7 @@
         ICommitClient GetCommits(int projectId);
         IPipelineClient GetPipelines(int projectId);
         ITriggerClient GetTriggers(int projectId);
+        IJobClient GetJobs(int projectId);
         IMergeRequestClient GetMergeRequest(int projectId);
         IMembersClient Members { get; }
         IVersionClient Version { get; }
