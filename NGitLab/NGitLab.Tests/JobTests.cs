@@ -90,5 +90,16 @@ namespace NGitLab.Tests
             Assert.IsTrue(trace.Contains("Running with gitlab-ci-multi-runner"));
             Assert.IsTrue(trace.Contains("Job succeeded"));
         }
+
+        [Test, Timeout(5000 * 60)] // The job must be took by the runner and completed, sometime it takes multiples minutes
+        public void Test_get_job_artifacts()
+        {
+            // Rely on test timeout if no job are found
+            Job job = GetTestJob(JobScopeMask.Success);
+
+            byte[] artifacts = _jobs.GetJobArtifacts(job.Id);
+
+            Assert.IsNotEmpty(artifacts);
+        }
     }
 }

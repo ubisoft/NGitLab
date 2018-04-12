@@ -26,6 +26,9 @@ namespace NGitLab.Tests
 build:
   script: 
   - echo OK
+  artifacts:
+    untracked: true
+    expire_in: 1h
 
 manual:
   when: manual
