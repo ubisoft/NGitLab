@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -47,7 +48,7 @@ namespace NGitLab.Impl
         {
             var httpRequestor = new HttpRequestor(_credentials.HostUrl, "", MethodType.Post, RequestOptions);
             var url =
-                $"/session?login={System.Web.HttpUtility.UrlEncode(_credentials.UserName)}&password={System.Web.HttpUtility.UrlEncode(_credentials.Password)}";
+                $"/session?login={WebUtility.UrlEncode(_credentials.UserName)}&password={WebUtility.UrlEncode(_credentials.Password)}";
             try
             {
                 var session = httpRequestor.To<Session>(url);

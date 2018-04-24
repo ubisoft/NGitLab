@@ -371,6 +371,7 @@ namespace NGitLab.Impl
 
         public static void LeaveDotsAndSlashesEscaped()
         {
+#if NET45
             var getSyntaxMethod = typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
             if (getSyntaxMethod == null)
             {
@@ -387,6 +388,7 @@ namespace NGitLab.Impl
             }
 
             setUpdatableFlagsMethod.Invoke(uriParser, new object[] { 0 });
+#endif
         }
     }
 }

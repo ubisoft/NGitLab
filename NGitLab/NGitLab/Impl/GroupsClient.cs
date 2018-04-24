@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using NGitLab.Models;
+﻿using NGitLab.Models;
+using System.Collections.Generic;
+using System.Net;
 
 namespace NGitLab.Impl
 {
@@ -27,7 +27,7 @@ namespace NGitLab.Impl
 
         public Group this[int id] => _api.Get().To<Group>(Url + "/" + id);
 
-        public Group this[string fullPath] => _api.Get().To<Group>(Url + "/" + System.Web.HttpUtility.UrlEncode(fullPath));
+        public Group this[string fullPath] => _api.Get().To<Group>(Url + "/" + WebUtility.UrlEncode(fullPath));
 
         public IEnumerable<Project> SearchProjects(int groupId, string search)
         {

@@ -1,6 +1,7 @@
+using NGitLab.Models;
 using System;
 using System.Collections.Generic;
-using NGitLab.Models;
+using System.Net;
 
 namespace NGitLab.Impl
 {
@@ -17,7 +18,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<Membership> OfProject(string projectId)
         {
-            return GetAll(Project.Url + "/" + System.Web.HttpUtility.UrlEncode(projectId));
+            return GetAll(Project.Url + "/" + WebUtility.UrlEncode(projectId));
         }
 
         [Obsolete("Use OfGroup")]
@@ -28,17 +29,17 @@ namespace NGitLab.Impl
 
         public IEnumerable<Membership> OfGroup(string groupId)
         {
-            return GetAll(GroupsClient.Url + "/" + System.Web.HttpUtility.UrlEncode(groupId));
+            return GetAll(GroupsClient.Url + "/" + WebUtility.UrlEncode(groupId));
         }
 
         public Membership GetMemberOfGroup(string groupId, string userId)
         {
-            return _api.Get().To<Membership>(GroupsClient.Url + "/" + System.Web.HttpUtility.UrlEncode(groupId) + "/members/" + System.Web.HttpUtility.UrlEncode(userId));
+            return _api.Get().To<Membership>(GroupsClient.Url + "/" + WebUtility.UrlEncode(groupId) + "/members/" + WebUtility.UrlEncode(userId));
         }
 
         public Membership AddMemberToProject(string projectId, ProjectMemberCreate user)
         {
-            return _api.Post().With(user).To<Membership>(Project.Url + "/" + System.Web.HttpUtility.UrlEncode(projectId) + "/members");
+            return _api.Post().With(user).To<Membership>(Project.Url + "/" + WebUtility.UrlEncode(projectId) + "/members");
         }
     }
 }
