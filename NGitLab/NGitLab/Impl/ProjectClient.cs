@@ -1,6 +1,7 @@
-﻿using System;
+﻿using NGitLab.Models;
+using System;
 using System.Collections.Generic;
-using NGitLab.Models;
+using System.Net;
 
 namespace NGitLab.Impl
 {
@@ -23,7 +24,7 @@ namespace NGitLab.Impl
 
         public Project Create(ProjectCreate project) => _api.Post().With(project).To<Project>(Project.Url);
 
-        public Project this[string fullName] => _api.Get().To<Project>(Project.Url + "/" + System.Web.HttpUtility.UrlEncode(fullName));
+        public Project this[string fullName] => _api.Get().To<Project>(Project.Url + "/" + WebUtility.UrlEncode(fullName));
 
         public void Delete(int id) => _api.Delete().Execute(Project.Url + "/" + id);
 

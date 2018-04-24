@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Web;
-using NGitLab.Models;
+﻿using NGitLab.Models;
+using System.Collections.Generic;
+using System.Net;
 
 namespace NGitLab.Impl
 {
@@ -22,7 +22,7 @@ namespace NGitLab.Impl
 
         public void Delete(string name)
         {
-            _api.Delete().Stream($"{_tagsPath}/{HttpUtility.UrlEncode(name)}", x => {});
+            _api.Delete().Stream($"{_tagsPath}/{WebUtility.UrlEncode(name)}", x => {});
         }
 
         public IEnumerable<Tag> All => _api.Get().GetAll<Tag>(_tagsPath);

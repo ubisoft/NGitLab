@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Net;
 
 namespace NGitLab.Impl
 {
@@ -17,7 +12,7 @@ namespace NGitLab.Impl
             }
 
             string @operator = !url.Contains("?") ? "?" : "&";
-            var formattedValue = HttpUtility.UrlEncode(value.ToString());
+            var formattedValue = WebUtility.UrlEncode(value.ToString());
             var parameter = $"{@operator}{parameterName}={formattedValue}";
             return url + parameter;
         }
