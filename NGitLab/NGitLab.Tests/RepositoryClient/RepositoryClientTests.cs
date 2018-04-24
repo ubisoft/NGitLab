@@ -59,5 +59,19 @@ namespace NGitLab.Tests.RepositoryClient
         {
             CollectionAssert.IsNotEmpty(Initialize.Repository.GetCommitDiff(Initialize.Repository.Commits.First().Id).ToArray());
         }
+
+        [Test]
+        public void GetAllTreeInPath()
+        {
+            var tree = Initialize.Repository.GetTree("");
+            Assert.IsNotEmpty(tree);
+        }
+
+        [Test]
+        public void GetAllTreeInNotGoodPath()
+        {
+            var tree = Initialize.Repository.GetTree("Fakepath");
+            Assert.IsEmpty(tree);
+        }
     }
 }

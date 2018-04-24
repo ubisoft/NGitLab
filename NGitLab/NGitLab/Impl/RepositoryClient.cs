@@ -27,6 +27,8 @@ namespace NGitLab.Impl
 
         public IEnumerable<Tree> Tree => _api.Get().GetAll<Tree>(_repoPath + "/tree");
 
+        public IEnumerable<Tree> GetTree(string path) => _api.Get().GetAll<Tree>(_repoPath + $"/tree?path={path}");
+
         public void GetRawBlob(string sha, Action<Stream> parser)
         {
             _api.Get().Stream(_repoPath + "/raw_blobs/" + sha, parser);
