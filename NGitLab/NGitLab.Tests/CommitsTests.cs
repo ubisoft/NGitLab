@@ -45,7 +45,13 @@ manual:
                     RawContent = yml
                 });
 
-                Initialize.GitLabClient.Runners.EnableRunner(projectId, new RunnerId(RunnerTests.GetDefaultRunner().Id));
+                var defaultRunner = RunnerTests.GetDefaultRunner();
+                if (!defaultRunner.Online)
+                {
+                    Assert.Inconclusive($"Cannot run the test since the test runner {defaultRunner.Id} is offline.");
+                }
+
+                Initialize.GitLabClient.Runners.EnableRunner(projectId, new RunnerId(defaultRunner.Id));
                 _ciEnabled = true;                
             }            
         }

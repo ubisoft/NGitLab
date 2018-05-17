@@ -17,6 +17,9 @@ namespace NGitLab.Models
         [DataMember(Name = "active")]
         public bool Active;
 
+        [DataMember(Name = "online")]
+        public bool Online;
+
         [DataMember(Name = "description")]
         public string Description;
 
