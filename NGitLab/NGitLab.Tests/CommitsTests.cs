@@ -21,6 +21,12 @@ namespace NGitLab.Tests
 
             if (!_ciEnabled)
             {
+                var defaultRunner = RunnerTests.GetDefaultRunner();
+                if (!defaultRunner.Online)
+                {
+                    Assert.Inconclusive($"Cannot run the test since the test runner {defaultRunner.Id} is offline.");
+                }
+
                 const string yml =
                     @"
 build:
@@ -44,12 +50,6 @@ manual:
                     CommitMessage = "Enable ci",
                     RawContent = yml
                 });
-
-                var defaultRunner = RunnerTests.GetDefaultRunner();
-                if (!defaultRunner.Online)
-                {
-                    Assert.Inconclusive($"Cannot run the test since the test runner {defaultRunner.Id} is offline.");
-                }
 
                 Initialize.GitLabClient.Runners.EnableRunner(projectId, new RunnerId(defaultRunner.Id));
                 _ciEnabled = true;                
