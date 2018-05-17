@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using NGitLab.Models;
 using NSubstitute;
@@ -148,11 +149,11 @@ namespace NGitLab.Mock
             return Commits.Take(index + 1).Reverse();
         }
 
-        public Commit Commit(string author = "John Doe")
+        public Commit Commit(string author = "John Doe", string message = null)
         {
             var commit = new Commit
             {
-                Id = RandomSha1(),
+                Id = HashStrings(Commits.LastOrDefault()?.Id.ToString(), author, message),
                 AuthorName = author,
                 CreatedAt = DateTime.Now
             };
@@ -200,16 +201,29 @@ namespace NGitLab.Mock
             };
         }
 
-        private Sha1 RandomSha1()
+        private Sha1 HashStrings(params string[] values)
         {
-            var random = new Random();
-            var result = new StringBuilder();
-            for (int i = 0; i < 40; i++)
+            var sha1 = SHA1.Create();
+            var content = string.Join(",", values);
+
+            var hashBytes = sha1.ComputeHash(Encoding.Default.GetBytes(content));
+            return new Sha1(HexStringFromBytes(hashBytes));
+        }
+        
+        /// <summary>
+        /// Convert an array of bytes to a string of hex digits
+        /// </summary>
+        /// <param name="bytes">array of bytes</param>
+        /// <returns>String of hex digits</returns>
+        private static string HexStringFromBytes(byte[] bytes)
+        {
+            var sb = new StringBuilder();
+            foreach (byte b in bytes)
             {
-                var @char = (char)random.Next('0', '9');
-                result.Append(@char);
+                var hex = b.ToString("x2");
+                sb.Append(hex);
             }
-            return new Sha1(result.ToString());
+            return sb.ToString();
         }
     }
 
