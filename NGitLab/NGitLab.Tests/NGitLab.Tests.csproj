@@ -61,6 +61,7 @@
     <Compile Include="MergeRequest\MergeRequestClientTests.cs" />
     <Compile Include="MergeRequest\MergeRequestCommentsClientTests.cs" />
     <Compile Include="CommitsTests.cs" />
+    <Compile Include="ProjectIssueNoteTests.cs" />
     <Compile Include="ProjectsTests.cs" />
     <Compile Include="RepositoryClient\BranchClientTests.cs" />
     <Compile Include="RepositoryClient\FilesClientTests.cs" />

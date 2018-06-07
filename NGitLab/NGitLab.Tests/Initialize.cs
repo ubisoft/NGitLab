@@ -16,6 +16,8 @@ namespace NGitLab.Tests
 
         public static Trigger UnitTestTrigger;
 
+        public static Issue UnitTestIssue;
+
         public static IRepositoryClient Repository => GitLabClient.GetRepository(UnitTestProject.Id);
 
         public static string GitLabHost => "https://gitlab.example.com/";
@@ -27,6 +29,8 @@ namespace NGitLab.Tests
         public static string ProjectName;
 
         public static string GroupName;
+
+        public static string IssueTitle;
 
         [OneTimeSetUp]
         public void Setup()
@@ -45,10 +49,12 @@ namespace NGitLab.Tests
             // => https://gitlab.com/gitlab-com/support-forum/issues/1569
             ProjectName = "Unit_Test_" + randomGenerator.Next();
             GroupName = "Unit_Test_" + randomGenerator.Next();
+            IssueTitle = "Unit_Test_" + randomGenerator.Next();
 
             // Create a test project with merge request etc.
             UnitTestGroup = CreateGroup(GroupName);
             UnitTestProject = CreateProject(ProjectName, UnitTestGroup.Id);
+            UnitTestIssue = CreateIssue(IssueTitle);
             UnitTestTrigger = CreateTrigger(UnitTestProject.Id);
         }
 
@@ -156,6 +162,18 @@ namespace NGitLab.Tests
 
             GitLabClient.Projects.Delete(project.Id);
             return true;
+        }
+
+        private Issue CreateIssue(string title)
+        {
+            var createIssue = GitLabClient.Issues.Create(new IssueCreate()
+            {
+                Id = UnitTestProject.Id,
+                Title = title,
+                Description = "desc",
+            });
+            
+            return createIssue;
         }
     }
 }
