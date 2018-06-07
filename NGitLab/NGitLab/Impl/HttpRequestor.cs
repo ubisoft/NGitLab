@@ -14,15 +14,14 @@ namespace NGitLab.Impl
     internal class JsonError
     {
 #pragma warning disable 649
-        [DataMember(Name = "message")]
-        public string Message;
+        [DataMember(Name = "message")] public string Message;
 #pragma warning restore 649
     }
 
     /// <summary>
     /// The requestor is typically used for a single call to gitlab.
     /// </summary>
-    public class HttpRequestor : IHttpRequestor
+    public partial class HttpRequestor : IHttpRequestor
     {
         private readonly RequestOptions _options;
         private readonly MethodType _methodType;
@@ -85,6 +84,7 @@ namespace NGitLab.Impl
             {
                 tailAPIUrl = "/" + tailAPIUrl;
             }
+
             return UriFix.Build(_hostUrl + tailAPIUrl);
         }
 
@@ -100,19 +100,9 @@ namespace NGitLab.Impl
 
         public virtual void Stream(string tailAPIUrl, Action<Stream> parser)
         {
-            var fullUrl = GetAPIUrl(tailAPIUrl);
-            var req = SetupConnection(fullUrl);
+            var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data);
 
-            if (HasOutput())
-            {
-                SubmitData(req);
-            }
-            else if (_methodType == MethodType.Put)
-            {
-                req.Headers.Add("Content-Length", "0");
-            }
-
-            using (var response = GetResponse(req, fullUrl, _data, _options))
+            using (var response = request.GetResponse(_options))
             {
                 if (parser != null)
                 {
@@ -122,87 +112,6 @@ namespace NGitLab.Impl
                     }
                 }
             }
-        }
-
-        private static WebResponse GetResponse(WebRequest req, Uri fullUrl, object data, RequestOptions options)
-        {
-            try
-            {
-                return ((Func<WebResponse>)req.GetResponse).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental);
-            }
-            catch (WebException wex)
-            {
-                if (wex.Response == null)
-                {
-                    throw;
-                }
-
-                using (var errorResponse = (HttpWebResponse)wex.Response)
-                {
-                    string jsonString;
-                    using (var reader = new StreamReader(errorResponse.GetResponseStream()))
-                    {
-                        jsonString = reader.ReadToEnd();
-                    }
-
-                    JsonObject parsedError;
-                    var errorMessage = ExtractErrorMessage(jsonString, out parsedError);
-                    var exceptionMessage =
-                        $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
-                        $"Original call: {req.Method} {fullUrl}";
-
-                    if (data != null)
-                    {
-                        exceptionMessage += $". With data {SimpleJson.SerializeObject(data)}";
-                    }
-
-                    throw new GitLabException(exceptionMessage)
-                    {
-                        OriginalCall = fullUrl,
-                        ErrorObject = parsedError,
-                        StatusCode = errorResponse.StatusCode,
-                        ErrorMessage = errorMessage,
-                    };
-                }
-            }
-        }
-
-        /// <summary>
-        /// Parse the error that GitLab returns. GitLab returns structured errors but has a lot of them
-        /// Here we try to be generic.
-        /// </summary>
-        /// <param name="json"></param>
-        /// <param name="parsedError"></param>
-        /// <returns></returns>
-        private static string ExtractErrorMessage(string json, out JsonObject parsedError)
-        {
-            if (string.IsNullOrEmpty(json))
-            {
-                parsedError = null;
-                return "Empty Response";
-            }
-
-            object errorObject;
-            SimpleJson.TryDeserializeObject(json, out errorObject);
-
-            parsedError = errorObject as JsonObject;
-            object messageObject = null;
-            if (parsedError?.TryGetValue("message", out messageObject) != true)
-            {
-                parsedError?.TryGetValue("error", out messageObject);
-            }
-
-            if (messageObject == null)
-            {
-                return $"Error message cannot be parsed ({json})";
-            }
-
-            if (messageObject is string)
-            {
-                return (string)messageObject;
-            }
-
-            return SimpleJson.SerializeObject(messageObject);
         }
 
         public virtual IEnumerable<T> GetAll<T>(string tailUrl)
@@ -260,10 +169,10 @@ namespace NGitLab.Impl
                             return false;
                         }
 
-                        var request = SetupConnection(_nextUrlToLoad, MethodType.Get);
+                        var request = new GitLabRequest(_nextUrlToLoad, MethodType.Get, data: null);
                         request.Headers["PRIVATE-TOKEN"] = _apiToken;
 
-                        using (var response = GetResponse(request, _nextUrlToLoad, null, _options))
+                        using (var response = request.GetResponse(_options))
                         {
                             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
                             var link = response.Headers["Link"];
@@ -306,10 +215,7 @@ namespace NGitLab.Impl
 
                 public T Current
                 {
-                    get
-                    {
-                        return _buffer[0];
-                    }
+                    get { return _buffer[0]; }
                 }
 
                 object IEnumerator.Current
@@ -317,35 +223,6 @@ namespace NGitLab.Impl
                     get { return Current; }
                 }
             }
-        }
-
-        private void SubmitData(WebRequest request)
-        {
-            request.ContentType = "application/json";
-
-            using (var writer = new StreamWriter(request.GetRequestStream()))
-            {
-                var data = SimpleJson.SerializeObject(_data);
-
-                writer.Write(data);
-                writer.Flush();
-                writer.Close();
-            }
-        }
-
-        private bool HasOutput() => (_methodType == MethodType.Delete || _methodType == MethodType.Post || _methodType == MethodType.Put) && _data != null;
-
-        private WebRequest SetupConnection(Uri url) => SetupConnection(url, _methodType);
-
-        private static WebRequest SetupConnection(Uri url, MethodType methodType)
-        {
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = methodType.ToString().ToUpperInvariant();
-            request.Accept = "application/json";
-            request.Headers.Add("Accept-Encoding", "gzip");
-            request.AutomaticDecompression = DecompressionMethods.GZip;
-
-            return request;
         }
     }
 
@@ -372,7 +249,8 @@ namespace NGitLab.Impl
         public static void LeaveDotsAndSlashesEscaped()
         {
 #if NET45
-            var getSyntaxMethod = typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
+            var getSyntaxMethod =
+                typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
             if (getSyntaxMethod == null)
             {
                 throw new MissingMethodException("UriParser", "GetSyntax");
