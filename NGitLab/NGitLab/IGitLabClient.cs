@@ -17,5 +17,6 @@
         IMembersClient Members { get; }
         IVersionClient Version { get; }
         INamespacesClient Namespaces { get; }
+        IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId);
     }
 }

@@ -100,5 +100,10 @@ namespace NGitLab
         {
             return new MergeRequestClient(_api, projectId);
         }
+
+        public IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId)
+        {
+            return new ProjectIssueNoteClient(_api, projectId);
+        }
     }
 }
