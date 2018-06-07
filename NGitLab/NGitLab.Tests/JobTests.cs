@@ -23,7 +23,6 @@ namespace NGitLab.Tests
                 if (job != null)
                     return job;
             }
-            return null;
         }
 
         [Test, Timeout(5000)]
