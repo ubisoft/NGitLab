@@ -16,10 +16,10 @@ namespace NGitLab.Tests.Extensions
             RequestOptions options = new RequestOptions(2, TimeSpan.FromMilliseconds(50));
 
             var mockClass = Substitute.For<ICustomTestClass>();
-            mockClass.TestRetryMethod(Arg.Any<bool>()).Throws(new WebException());
+            mockClass.TestRetryMethod(Arg.Any<bool>()).Throws(new GitLabException());
 
             //act
-            Assert.Throws<WebException>(() => ((Func<string>) (() => mockClass.TestRetryMethod(true))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental));
+            Assert.Throws<GitLabException>(() => ((Func<string>) (() => mockClass.TestRetryMethod(true))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental));
 
             //assert
             mockClass.ReceivedWithAnyArgs(options.RetryCount + 1).TestRetryMethod(Arg.Any<bool>());
