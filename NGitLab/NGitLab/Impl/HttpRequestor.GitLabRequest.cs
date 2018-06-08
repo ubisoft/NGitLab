@@ -40,7 +40,7 @@ namespace NGitLab.Impl
 
             public WebResponse GetResponse(RequestOptions options)
             {
-                Func<WebResponse> getResponseImpl = GetResponse;
+                Func<WebResponse> getResponseImpl = () => GetResponseImpl(options);
 
                 return getResponseImpl.Retry(options.ShouldRetry,
                     options.RetryInterval,
@@ -48,12 +48,12 @@ namespace NGitLab.Impl
                     options.IsIncremental);
             }
 
-            private WebResponse GetResponse()
+            private WebResponse GetResponseImpl(RequestOptions options)
             {
                 try
                 {
                     var request = CreateRequest();
-                    return request.GetResponse();
+                    return options.GetResponse(request);
                 }
                 catch (WebException wex)
                 {
@@ -91,7 +91,7 @@ namespace NGitLab.Impl
                 }
             }
 
-            private WebRequest CreateRequest()
+            private HttpWebRequest CreateRequest()
             {
                 var request = (HttpWebRequest)WebRequest.Create(Url);
                 request.Method = Method.ToString().ToUpperInvariant();
