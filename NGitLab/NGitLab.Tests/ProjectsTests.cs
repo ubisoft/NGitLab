@@ -19,21 +19,21 @@ namespace NGitLab.Tests
         [Test]
         public void GetOwnedProjects()
         {
-            var projects = _projects.Owned.ToArray();
+            var projects = _projects.Owned.Take(10).ToArray();
             CollectionAssert.IsNotEmpty(projects);
         }
 
         [Test]
         public void GetVisibleProjects()
         {
-            var projects = _projects.Visible.ToArray();
+            var projects = _projects.Visible.Take(10).ToArray();
             CollectionAssert.IsNotEmpty(projects);
         }
 
         [Test]
         public void GetAccessibleProjects()
         {
-            var projects = _projects.Accessible.ToArray();
+            var projects = _projects.Accessible.Take(10).ToArray();
 
             CollectionAssert.IsNotEmpty(projects);
         }
@@ -47,7 +47,7 @@ namespace NGitLab.Tests
                 Search = Initialize.UnitTestProject.Name
             };
 
-            var projects = _projects.Get(query).ToArray();
+            var projects = GetProjects(query);
             Assert.AreEqual(1, projects.Length);
 
             CollectionAssert.IsNotEmpty(projects);
@@ -56,7 +56,7 @@ namespace NGitLab.Tests
         [Test]
         public void GetProjectsStatistics()
         {
-            var projects = _projects.Get(new ProjectQuery { Statistics = true });
+            var projects = GetProjects(new ProjectQuery { Statistics = true });
 
             if (!projects.Any())
                 Assert.Fail("No projects found.");
@@ -67,7 +67,7 @@ namespace NGitLab.Tests
         [Test]
         public void GetProjectsLinks()
         {
-            var projects = _projects.Get(new ProjectQuery());
+            var projects = GetProjects(new ProjectQuery());
 
             if (!projects.Any())
                 Assert.Fail("No projects found.");
@@ -84,9 +84,30 @@ namespace NGitLab.Tests
                 Visibility = VisibilityLevel.Internal
             };
 
-            var projects = _projects.Get(query).ToArray();
+            var projects = GetProjects(query);
 
             CollectionAssert.IsNotEmpty(projects);
+        }
+
+        [Test]
+        public void GetProjectsCanSpecifyTheProjectPerPageCount()
+        {
+            var query = new ProjectQuery
+            {
+                Simple = true,
+                Visibility = VisibilityLevel.Internal,
+                PerPage = 5,
+            };
+
+            var projects = GetProjects(query);
+
+            CollectionAssert.IsNotEmpty(projects);
+            Assert.That(Initialize.LastRequest.RequestUri.ToString(), Contains.Substring("per_page=5"));
+        }
+
+        private Project[] GetProjects(ProjectQuery query, int takeCount = 10)
+        {
+            return _projects.Get(query).Take(takeCount).ToArray();
         }
 
         [Test]

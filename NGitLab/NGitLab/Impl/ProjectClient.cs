@@ -55,6 +55,7 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "search", query.Search);
             url = Utils.AddParameter(url, "simple", query.Simple);
             url = Utils.AddParameter(url, "statistics", query.Statistics);
+            url = Utils.AddParameter(url, "per_page", query.PerPage);
 
             if (query.Ascending == true)
             {

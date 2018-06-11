@@ -1,7 +1,9 @@
 using NGitLab.Models;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace NGitLab.Tests
 {
@@ -32,6 +34,13 @@ namespace NGitLab.Tests
 
         public static string IssueTitle;
 
+        /// <summary>
+        /// The last request executed against gitlab.
+        /// </summary>
+        public static WebRequest LastRequest => _requests[_requests.Count - 1];
+
+        private static List<WebRequest> _requests = new List<WebRequest>();
+
         [OneTimeSetUp]
         public void Setup()
         {
@@ -41,7 +50,7 @@ namespace NGitLab.Tests
             if (string.IsNullOrEmpty(GitLabToken))
                 throw new ArgumentNullException(nameof(GitLabToken));
 
-            GitLabClient = new GitLabClient(GitLabHost, apiToken: GitLabToken);
+            GitLabClient = new GitLabClient(GitLabHost, apiToken: GitLabToken, options: new CustomRequestOptions(_requests));
 
             var randomGenerator = new Random();
 
@@ -174,6 +183,26 @@ namespace NGitLab.Tests
             });
             
             return createIssue;
+        }
+
+        /// <summary>
+        /// Stores all the web requests in a list.
+        /// </summary>
+        private class CustomRequestOptions : RequestOptions
+        {
+            private readonly List<WebRequest> _allRequests;
+
+            public CustomRequestOptions(List<WebRequest> allRequests) 
+                : base(retryCount: 0, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
+            {
+                _allRequests = allRequests;
+            }
+
+            public override WebResponse GetResponse(HttpWebRequest request)
+            {
+                _allRequests.Add(request);
+                return base.GetResponse(request);
+            }
         }
     }
 }
