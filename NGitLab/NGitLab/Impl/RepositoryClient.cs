@@ -53,7 +53,7 @@ namespace NGitLab.Impl
             return allCommits.Take(maxResults);
         }
 
-        public SingleCommit GetCommit(Sha1 sha) => _api.Get().To<SingleCommit>(_repoPath + "/commits/" + sha);
+        public Commit GetCommit(Sha1 sha) => _api.Get().To<Commit>(_repoPath + "/commits/" + sha);
 
         public IEnumerable<Diff> GetCommitDiff(Sha1 sha) => _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
 
