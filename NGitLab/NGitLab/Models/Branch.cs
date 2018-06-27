@@ -8,10 +8,22 @@ namespace NGitLab.Models
         [DataMember(Name = "name")]
         public string Name;
 
-        [DataMember(Name = "commit")]
-        public CommitInfo Commit;
+        [DataMember(Name = "merged")]
+        public bool Merged;
 
         [DataMember(Name = "protected")]
         public bool Protected;
+
+        [DataMember(Name = "developers_can_push")]
+        public bool DevelopersCanPush;
+
+        [DataMember(Name = "developers_can_merge")]
+        public bool DevelopersCanMerge;
+
+        [DataMember(Name = "can_push")]
+        public bool CanPush;
+
+        [DataMember(Name = "commit")]
+        public CommitInfo Commit;
     }
 }
