@@ -105,10 +105,5 @@ namespace NGitLab
         {
             return new ProjectIssueNoteClient(_api, projectId);
         }
-
-        public IWebhookClient GetWebhook(int projectId)
-        {
-            return new WebhookClient(_api, projectId);
-        }
     }
 }
