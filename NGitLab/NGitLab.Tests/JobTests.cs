@@ -86,7 +86,7 @@ namespace NGitLab.Tests
 
             string trace = _jobs.GetTrace(job.Id);
 
-            Assert.IsTrue(trace.Contains("Running with gitlab-ci-multi-runner"));
+            Assert.IsTrue(trace.Contains("Running with gitlab-runner"));
             Assert.IsTrue(trace.Contains("Job succeeded"));
         }
 
