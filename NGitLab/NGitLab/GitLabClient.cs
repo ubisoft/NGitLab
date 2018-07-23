@@ -9,6 +9,7 @@ namespace NGitLab
 
         public IUserClient Users { get; }
         public IProjectClient Projects { get; }
+        public IMergeRequestClient MergeRequests { get; }
         public IIssueClient Issues { get; }
         public IGroupsClient Groups { get; }
         public INamespacesClient Namespaces { get; }
@@ -49,6 +50,7 @@ namespace NGitLab
             _api = new API(credentials, options);
             Users = new UserClient(_api);
             Projects = new ProjectClient(_api);
+            MergeRequests = new MergeRequestClient(_api);
             Runners = new RunnerClient(_api);
             Issues = new IssueClient(_api);
             Groups = new GroupsClient(_api);

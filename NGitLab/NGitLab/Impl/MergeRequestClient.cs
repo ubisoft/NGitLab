@@ -16,9 +16,39 @@ namespace NGitLab.Impl
             _projectPath = Project.Url + "/" + projectId;
         }
 
-        public IEnumerable<MergeRequest> All => _api.Get().GetAll<MergeRequest>(_projectPath + "/merge_requests");
+        public MergeRequestClient(API api)
+        {
+            _api = api;
+            _projectPath = "";
+        }
 
-        public IEnumerable<MergeRequest> AllInState(MergeRequestState state) => _api.Get().GetAll<MergeRequest>(_projectPath + "/merge_requests?state=" + state);
+        public IEnumerable<MergeRequest> All => Get(new MergeRequestQuery());
+
+        public IEnumerable<MergeRequest> AllInState(MergeRequestState state) => Get(new MergeRequestQuery { State = state });
+
+        public IEnumerable<MergeRequest> Get(MergeRequestQuery query)
+        {
+            var url = _projectPath + MergeRequest.Url;
+
+            url = Utils.AddParameter(url, "state", query.State);
+            url = Utils.AddParameter(url, "order_by", query.OrderBy);
+            url = Utils.AddParameter(url, "sort", query.Sort);
+            url = Utils.AddParameter(url, "milestone", query.Milestone);
+            url = Utils.AddParameter(url, "view", query.View);
+            url = Utils.AddParameter(url, "labels", query.Labels);
+            url = Utils.AddParameter(url, "created_after", query.CreatedAfter);
+            url = Utils.AddParameter(url, "created_before", query.CreatedBefore);
+            url = Utils.AddParameter(url, "updated_after", query.UpdatedAfter);
+            url = Utils.AddParameter(url, "updated_before", query.UpdatedBefore);
+            url = Utils.AddParameter(url, "scope", query.Scope);
+            url = Utils.AddParameter(url, "author_id", query.AuthorId);
+            url = Utils.AddParameter(url, "assignee_id", query.AssigneeId);
+            url = Utils.AddParameter(url, "source_branch", query.SourceBranch);
+            url = Utils.AddParameter(url, "target_branch", query.TargetBranch);
+            url = Utils.AddParameter(url, "search", query.Search);
+
+            return _api.Get().GetAll<MergeRequest>(url);
+        }
 
         public MergeRequest this[int iid] => _api.Get().To<MergeRequest>(_projectPath + "/merge_requests/" + iid);
 

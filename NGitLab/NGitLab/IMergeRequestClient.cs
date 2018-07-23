@@ -7,6 +7,8 @@ namespace NGitLab
     {
         IEnumerable<MergeRequest> All { get; }
         IEnumerable<MergeRequest> AllInState(MergeRequestState state);
+        IEnumerable<MergeRequest> Get(MergeRequestQuery query);
+
         MergeRequest this[int iid] { get; }
 
         MergeRequest Create(MergeRequestCreate mergeRequest);
