@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -31,28 +33,42 @@ namespace NGitLab.Tests
         [Test]
         public void Test_create_delete_group()
         {
+            var randomNumber = new Random().Next();
+            var name = "NewGroup" + randomNumber;
+            var path = "NewGroupPath" + randomNumber;
             // Create
             var group = Groups.Create(new GroupCreate()
             {
-                Name = "NewGroup",
-                Path = "NewGroupPath",
+                Name = name,
+                Path = path,
                 Visibility = VisibilityLevel.Internal
             });
             Assert.IsNotNull(group);
-            Assert.AreEqual("NewGroup", group.Name);
-            Assert.AreEqual("NewGroupPath", group.Path);
+            Assert.AreEqual(name, group.Name);
+            Assert.AreEqual(path, group.Path);
             Assert.AreEqual(VisibilityLevel.Internal, group.Visibility);
 
             // Search
-            group = Groups.Search("NewGroup").FirstOrDefault();
-            Assert.AreEqual("NewGroup", group.Name);
-            Assert.AreEqual("NewGroupPath", group.Path);
+            group = Groups.Search(name).Single();
+            Assert.AreEqual(name, group.Name);
+            Assert.AreEqual(path, group.Path);
             Assert.AreEqual(VisibilityLevel.Internal, group.Visibility);
 
-            // Delete
+            // Delete (operation is asynchronous so we have to retry until the project is deleted)
             Groups.Delete(group.Id);
-            group = Groups.Search("NewGroup").FirstOrDefault();
-            Assert.IsNull(group);
+            var sw = new Stopwatch();
+            sw.Start();
+            while (true)
+            {
+                var groups = Groups.Search(name).ToList();
+                if (groups.Count == 0)
+                    return;
+
+                if (sw.Elapsed > TimeSpan.FromSeconds(10))
+                {
+                    CollectionAssert.IsEmpty(groups);
+                }
+            }
         }
 
         private IGroupsClient Groups => Initialize.GitLabClient.Groups;

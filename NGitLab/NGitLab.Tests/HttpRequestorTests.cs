@@ -40,7 +40,7 @@ namespace NGitLab.Tests
             public override WebResponse GetResponse(HttpWebRequest request)
             {
                 HandledRequests.Add(request);
-                return base.GetResponse(request);
+                throw new GitLabException() { StatusCode = HttpStatusCode.InternalServerError };
             }
         }
     }

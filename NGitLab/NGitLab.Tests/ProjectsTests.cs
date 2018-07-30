@@ -56,7 +56,7 @@ namespace NGitLab.Tests
         [Test]
         public void GetProjectsStatistics()
         {
-            var projects = GetProjects(new ProjectQuery { Statistics = true });
+            var projects = GetProjects(new ProjectQuery { Statistics = true }).ToList();
 
             if (!projects.Any())
                 Assert.Fail("No projects found.");
@@ -67,7 +67,7 @@ namespace NGitLab.Tests
         [Test]
         public void GetProjectsLinks()
         {
-            var projects = GetProjects(new ProjectQuery());
+            var projects = GetProjects(new ProjectQuery()).ToList();
 
             if (!projects.Any())
                 Assert.Fail("No projects found.");
