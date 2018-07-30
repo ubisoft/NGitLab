@@ -27,7 +27,7 @@ namespace NGitLab
         /// </summary>
         public virtual bool ShouldRetry(Exception ex, int retryNumber)
         {
-            return retryNumber > 0 && ex is GitLabException;
+            return retryNumber > 0 && (ex is GitLabException gitLabException && (int)gitLabException.StatusCode >= 500);
         }
 
         public static RequestOptions Default => new RequestOptions(0, TimeSpan.FromMilliseconds(0));

@@ -1,101 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NGitLab.Tests</RootNamespace>
-    <AssemblyName>NGitLab.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <TargetFrameworks>net45</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ContributorsTests.cs" />
-    <Compile Include="Extensions\FunctionRetryExtensionsTests.cs" />
-    <Compile Include="FilesTests.cs" />
-    <Compile Include="APITests.cs" />
-    <Compile Include="GitlabCredentialsTests.cs" />
-    <Compile Include="HttpRequestorTests.cs" />
-    <Compile Include="GroupsTests.cs" />
-    <Compile Include="JobTests.cs" />
-    <Compile Include="JsonTests.cs" />
-    <Compile Include="NamespacesTests.cs" />
-    <Compile Include="PipelineTests.cs" />
-    <Compile Include="HttpTracing.cs" />
-    <Compile Include="Initialize.cs" />
-    <Compile Include="MergeRequest\MergeRequestClientTests.cs" />
-    <Compile Include="MergeRequest\MergeRequestCommentsClientTests.cs" />
-    <Compile Include="CommitsTests.cs" />
-    <Compile Include="ProjectIssueNoteTests.cs" />
-    <Compile Include="ProjectsTests.cs" />
-    <Compile Include="RepositoryClient\BranchClientTests.cs" />
-    <Compile Include="RepositoryClient\FilesClientTests.cs" />
-    <Compile Include="RepositoryClient\ProjectHooksClientTests.cs" />
-    <Compile Include="RepositoryClient\RepositoryClientTests.cs" />
-    <Compile Include="RunnerTests.cs" />
-    <Compile Include="Sha1Tests.cs" />
-    <Compile Include="SnippetsTest.cs" />
-    <Compile Include="TagsTests.cs" />
-    <Compile Include="TriggerTests.cs" />
-    <Compile Include="UsersTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NGitLab\NGitLab.csproj">
-      <Project>{EB69C6AD-64A6-4FE5-880C-38607A2430FB}</Project>
-      <Name>NGitLab</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="project.json" />
+    <ProjectReference Include="..\NGitLab\NGitLab.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
+  </ItemGroup>
 </Project>
