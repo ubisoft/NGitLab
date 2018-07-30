@@ -17,7 +17,8 @@ namespace NGitLab.Tests.MergeRequest
         [Test]
         public void Test_merge_request_api()
         {
-            var mergeRequest = CreateMergeRequest();
+            var branch = CreateBranch("my-super-feature");
+            var mergeRequest = CreateMergeRequest(branch.Name, "master");
             Assert.AreEqual(mergeRequest.Id, _mergeRequest[mergeRequest.Iid].Id, "Test can get a merge request by IId");
 
             ListMergeRequest(mergeRequest);
@@ -34,14 +35,13 @@ namespace NGitLab.Tests.MergeRequest
             Assert.IsFalse(_mergeRequest.AllInState(MergeRequestState.merged).Any(x => x.Id == mergeRequest.Id), "Can return all closed request");
         }
 
-        private Models.MergeRequest CreateMergeRequest()
+        private Models.MergeRequest CreateMergeRequest(string from, string to)
         {
-            var branch = CreateBranch();
             var mergeRequest = _mergeRequest.Create(new MergeRequestCreate
             {
                 Title = "Merge my-super-feature into master",
-                SourceBranch = branch.Name,
-                TargetBranch = "master",
+                SourceBranch = from,
+                TargetBranch = to,
                 Labels = "a,b",
                 RemoveSourceBranch = true
             });
@@ -49,17 +49,17 @@ namespace NGitLab.Tests.MergeRequest
             Assert.That(mergeRequest, Is.Not.Null);
             Assert.That(mergeRequest.Title, Is.EqualTo("Merge my-super-feature into master"));
             CollectionAssert.AreEqual(new[] { "a", "b" }, mergeRequest.Labels);
-            Assert.That(mergeRequest.SourceBranch, Is.EqualTo("my-super-feature"));
-            Assert.That(mergeRequest.TargetBranch, Is.EqualTo("master"));
+            Assert.That(mergeRequest.SourceBranch, Is.EqualTo(from));
+            Assert.That(mergeRequest.TargetBranch, Is.EqualTo(to));
 
             return mergeRequest;
         }
 
-        private static Branch CreateBranch()
+        private static Branch CreateBranch(string branchName)
         {
             var branch = Initialize.Repository.Branches.Create(new BranchCreate
             {
-                Name = "my-super-feature",
+                Name = branchName,
                 Ref = "master"
             });
 
@@ -68,7 +68,7 @@ namespace NGitLab.Tests.MergeRequest
                 RawContent = "test content",
                 CommitMessage = "commit to merge",
                 Branch = branch.Name,
-                Path = "mysuperfeature.txt",
+                Path = $"mysuperfeature_from_{branchName}.txt",
             });
 
             return branch;
@@ -118,6 +118,17 @@ namespace NGitLab.Tests.MergeRequest
             });
 
             Assert.AreEqual("[\"You can not use same project/branch for source and target\"]", exception.ErrorMessage);
+        }
+
+        [Test]
+        public void Test_merge_request_delete()
+        {
+            var branch = CreateBranch("tmp-branch-to-test-mr-deletion");
+            var mergeRequest = CreateMergeRequest(branch.Name, "master");
+            Assert.AreEqual(mergeRequest.Id, _mergeRequest[mergeRequest.Iid].Id, "Test can get a merge request by IId");
+            _mergeRequest.Delete(mergeRequest.Iid);
+
+            CollectionAssert.IsEmpty(_mergeRequest.All);
         }
     }
 }
