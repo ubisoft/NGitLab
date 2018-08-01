@@ -61,5 +61,29 @@ namespace NGitLab.Models
 
         [DataMember(Name = "labels")]
         public string[] Labels;
+
+        [DataMember(Name = "merge_when_pipeline_succeeds")]
+        public bool MergeWhenPipelineSucceeds;
+
+        [DataMember(Name = "merge_status")]
+        public string MergeStatus;
+
+        [DataMember(Name = "sha")]
+        public string Sha;
+
+        [DataMember(Name = "merge_commit_sha")]
+        public string MergeCommitSha;
+
+        [DataMember(Name = "should_remove_source_branch")]
+        public bool? ShouldRemoveSourceBranch;
+
+        [DataMember(Name = "force_remove_source_branch")]
+        public bool ForceRemoveSourceBranch;
+
+        [DataMember(Name = "squash")]
+        public bool Squash;
+
+        [DataMember(Name = "web_url")]
+        public string WebUrl;
     }
 }
