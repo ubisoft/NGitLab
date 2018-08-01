@@ -12,7 +12,7 @@ namespace NGitLab.Models
         /// <summary>
         /// Return all merge requests or just those that are opened, closed, locked, or merged
         /// </summary>
-        public MergeRequestState State { get; set; }
+        public MergeRequestState? State { get; set; }
 
         /// <summary>
         /// Return requests ordered by created_at or updated_at fields. Default is created_at
