@@ -29,5 +29,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "labels")]
         public string Labels;
+
+        [DataMember(Name = "squash")]
+        public bool Squash;
     }
 }
