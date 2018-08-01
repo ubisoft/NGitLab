@@ -51,6 +51,11 @@ namespace NGitLab.Tests.MergeRequest
             CollectionAssert.AreEqual(new[] { "a", "b" }, mergeRequest.Labels);
             Assert.That(mergeRequest.SourceBranch, Is.EqualTo(from));
             Assert.That(mergeRequest.TargetBranch, Is.EqualTo(to));
+            Assert.AreEqual(null, mergeRequest.ShouldRemoveSourceBranch);
+            Assert.AreEqual(mergeRequest.Squash, false);
+            Assert.NotNull(mergeRequest.Sha);
+            StringAssert.StartsWith(Initialize.GitLabHost, mergeRequest.WebUrl);
+            Assert.AreEqual("can_be_merged", mergeRequest.MergeStatus);
 
             return mergeRequest;
         }
@@ -87,6 +92,7 @@ namespace NGitLab.Tests.MergeRequest
 
             Assert.AreEqual("New title", mergeRequest.Title);
             Assert.AreEqual("New description", mergeRequest.Description);
+            Assert.IsFalse(mergeRequest.MergeWhenPipelineSucceeds);
             CollectionAssert.AreEqual(new[] { "a", "b" }, mergeRequest.Labels);
         }
 
