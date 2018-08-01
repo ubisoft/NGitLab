@@ -126,9 +126,18 @@ namespace NGitLab.Tests.MergeRequest
             var branch = CreateBranch("tmp-branch-to-test-mr-deletion");
             var mergeRequest = CreateMergeRequest(branch.Name, "master");
             Assert.AreEqual(mergeRequest.Id, _mergeRequest[mergeRequest.Iid].Id, "Test can get a merge request by IId");
+
+            Assert.DoesNotThrow(() =>
+            {
+                var mr = _mergeRequest[mergeRequest.Iid];
+            });
+
             _mergeRequest.Delete(mergeRequest.Iid);
 
-            CollectionAssert.IsEmpty(_mergeRequest.All);
+            Assert.Throws<GitLabException>(() =>
+            {
+                var mr = _mergeRequest[mergeRequest.Iid];
+            });
         }
     }
 }
