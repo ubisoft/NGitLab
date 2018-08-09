@@ -40,5 +40,14 @@ namespace NGitLab.Models
 
         [DataMember(Name = "string")]
         public string Version;
+
+        [DataMember(Name = "ip_address")]
+        public string IpAddress;
+
+        [DataMember(Name = "locked")]
+        public bool Locked;
+
+        [DataMember(Name = "run_untagged")]
+        public bool RunUntagged;
     }
 }
