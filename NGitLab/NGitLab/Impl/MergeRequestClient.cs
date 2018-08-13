@@ -42,7 +42,14 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "updated_before", query.UpdatedBefore);
             url = Utils.AddParameter(url, "scope", query.Scope);
             url = Utils.AddParameter(url, "author_id", query.AuthorId);
-            url = Utils.AddParameter(url, "assignee_id", query.AssigneeId);
+            if (query.AssigneeId == 0) // unassigned. In the next version of GitLab, 0 or empty mean unassigned, but in the current version we must use an empty value.
+            {
+                url = Utils.AddParameter(url, "assignee_id", "");
+            }
+            else
+            {
+                url = Utils.AddParameter(url, "assignee_id", query.AssigneeId);
+            }
             url = Utils.AddParameter(url, "source_branch", query.SourceBranch);
             url = Utils.AddParameter(url, "target_branch", query.TargetBranch);
             url = Utils.AddParameter(url, "search", query.Search);
