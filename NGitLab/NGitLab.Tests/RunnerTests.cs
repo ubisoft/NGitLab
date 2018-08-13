@@ -59,6 +59,29 @@ namespace NGitLab.Tests
             Assert.IsEmpty(result);
         }
 
+        [Test]
+        public void Test_some_runner_fields_are_not_null()
+        {
+            var projectId = Initialize.UnitTestProject.Id;
+            var runnerToEnable = GetDefaultRunner();
+            var runners = Initialize.GitLabClient.Runners;
+            runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
+
+            var result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
+            var runnerId = result[0].Id;
+            var runnerDetails = runners[runnerId];
+
+            Assert.IsNotNull(runnerDetails.Id);
+            Assert.IsNotNull(runnerDetails.Active);
+            Assert.IsNotNull(runnerDetails.Locked);
+            Assert.IsNotNull(runnerDetails.RunUntagged);
+            Assert.IsNotNull(runnerDetails.IpAddress);
+
+            runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
+            result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
+            Assert.IsEmpty(result);
+        }
+
         private static bool IsEnabled(Runner runner, int projectId)
         {
             return Initialize.GitLabClient.Runners[runner.Id].Projects.Any(x => x.Id == projectId);
