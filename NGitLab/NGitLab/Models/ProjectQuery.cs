@@ -50,6 +50,11 @@ namespace NGitLab.Models
         /// Specifies how many record per paging (Gitlab supports a maximum of 100 projects and defaults to 20).
         /// </summary>
         public int? PerPage;
+
+        /// <summary>
+        /// Project visible by user
+        /// </summary>
+        public int? UserId;
     }
 
     public enum ProjectQueryScope

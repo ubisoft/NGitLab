@@ -32,6 +32,11 @@ namespace NGitLab.Impl
         {
             string url = Project.Url;
 
+            if (query.UserId.HasValue)
+            {
+                url = $"/users/{query.UserId.Value}/projects";
+            }
+
             switch (query.Scope)
             {
                 case ProjectQueryScope.Accessible:
