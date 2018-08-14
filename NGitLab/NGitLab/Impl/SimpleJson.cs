@@ -53,6 +53,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -1265,7 +1266,7 @@ namespace NGitLab.Impl
 #endif
         class PocoJsonSerializerStrategy : IJsonSerializerStrategy
     {
-        private static readonly Dictionary<Type, List<EnumMember>> _enumMembers = new Dictionary<Type, List<EnumMember>>();
+        private static readonly ConcurrentDictionary<Type, List<EnumMember>> _enumMembers = new ConcurrentDictionary<Type, List<EnumMember>>();
 
         internal IDictionary<Type, ReflectionUtils.ConstructorDelegate> ConstructorCache;
         internal IDictionary<Type, IDictionary<string, ReflectionUtils.GetDelegate>> GetCache;
@@ -1368,8 +1369,7 @@ namespace NGitLab.Impl
                         .Select(v => new EnumMember(v, v.ToString(), GetAttributeOfType<EnumMemberAttribute>(v)?.Value))
                         .ToList();
 
-            _enumMembers[type] = result;
-            return result;
+            return _enumMembers.GetOrAdd(type, result);
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
