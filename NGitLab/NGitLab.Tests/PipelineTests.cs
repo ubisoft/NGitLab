@@ -82,7 +82,7 @@ namespace NGitLab.Tests
             }
         }
 
-        [Test, Timeout(5000)]
+        [Test, Timeout(10000)]
         public void Test_can_list_all_jobs_from_project()
         {
             Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
