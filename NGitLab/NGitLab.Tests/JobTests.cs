@@ -25,21 +25,21 @@ namespace NGitLab.Tests
             }
         }
 
-        [Test, Timeout(5000)]
+        [Test, Timeout(10000)]
         public void Test_getjobs_all()
         {
             // Rely on test timeout if no job are found
             GetTestJob(JobScopeMask.All);
         }
 
-        [Test, Timeout(5000)]
+        [Test, Timeout(10000)]
         public void Test_getjobs_scope()
         {
             // Rely on test timeout if no job are found
             GetTestJob(JobScopeMask.Manual);
         }
 
-        [Test, Timeout(5000)]
+        [Test, Timeout(10000)]
         public void Test_run_action_play()
         {
             // Rely on test timeout if no job are found
@@ -52,7 +52,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(job2.Commit.Id, job.Commit.Id); // Same Commit
         }
 
-        [Test, Timeout(5000)]
+        [Test, Timeout(10000)]
         public void Test_run_action_retry()
         {
             // Rely on test timeout if no job are found

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NGitLab.Impl
 {
-    class ContributorClient: IContributorClient
+    internal class ContributorClient : IContributorClient
     {
         private readonly API _api;
         private readonly string _contributorPath;

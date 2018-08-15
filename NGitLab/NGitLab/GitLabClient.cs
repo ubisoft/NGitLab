@@ -83,6 +83,11 @@ namespace NGitLab
             return new CommitClient(_api, projectId);
         }
 
+        public ICommitStatusClient GetCommitStatus(int projectId)
+        {
+            return new CommitStatusClient(_api, projectId);
+        }
+
         public IPipelineClient GetPipelines(int projectId)
         {
             return new PipelineClient(_api, projectId);

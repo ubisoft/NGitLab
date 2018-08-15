@@ -10,6 +10,7 @@
         IRunnerClient Runners { get; }
         IRepositoryClient GetRepository(int projectId);
         ICommitClient GetCommits(int projectId);
+        ICommitStatusClient GetCommitStatus(int projectId);
         IPipelineClient GetPipelines(int projectId);
         ITriggerClient GetTriggers(int projectId);
         IJobClient GetJobs(int projectId);
