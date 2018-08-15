@@ -64,7 +64,7 @@ namespace NGitLab.Tests
                 if (groups.Count == 0)
                     return;
 
-                if (sw.Elapsed > TimeSpan.FromSeconds(10))
+                if (sw.Elapsed > TimeSpan.FromSeconds(15))
                 {
                     CollectionAssert.IsEmpty(groups);
                 }

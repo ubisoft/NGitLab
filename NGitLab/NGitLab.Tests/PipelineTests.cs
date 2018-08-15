@@ -15,7 +15,7 @@ namespace NGitLab.Tests
             CommitsTests.EnableCiOnTestProject();
         }
 
-        [Test, Timeout(5000)]
+        [Test, Timeout(10000)]
         public void Test_can_list_the_pipeline_of_the_current_tag()
         {
             Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
@@ -46,7 +46,7 @@ namespace NGitLab.Tests
             }
         }
 
-        [Test, Timeout(5000)]
+        [Test, Timeout(10000)]
         public void Test_can_list_pipelines_with_scope_all()
         {
             Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
@@ -64,7 +64,7 @@ namespace NGitLab.Tests
             }
         }
 
-        [Test, Timeout(5000)]
+        [Test, Timeout(10000)]
         public void Test_can_list_pipelines_with_scope_pending()
         {
             Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
