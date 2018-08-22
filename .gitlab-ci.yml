@@ -1,0 +1,35 @@
+variables:
+  TEABOX_PLUGIN: "-plugins=TeaBox.ContinuousDeliveryTelemetry@0.3.0"
+
+build:
+  stage: build
+  script:
+  - TeaBox.com %TEABOX_PLUGIN% Build
+  artifacts:
+    expire_in: 1 week
+    untracked: true
+  
+test:
+  stage: test
+  script:
+  - TeaBox.com %TEABOX_PLUGIN% GitLabMacros.RunTests
+
+# launch_analysis:  
+#   stage: test
+#   variables:
+#     CICD_DASHBOARD_STAGE_NAME: "Static Analysis"
+#   script:
+#   - TeaBox.com %TEABOX_PLUGIN% AnalyseCode
+#   artifacts:
+#     name: SonarQube
+#     paths:
+#     - .SonarQube/out/summary.md
+
+deploy:
+  stage: deploy
+  environment: production
+  script: 
+  - TeaBox.com %TEABOX_PLUGIN% PublishNugetPackage -nuspecFile="NGitLab/NGitLab/NGitLab.nuspec"
+  - TeaBox.com %TEABOX_PLUGIN% PublishNugetPackage -nuspecFile="NGitLab/NGitLab.Mock/NGitLab.Mock.nuspec"
+  only:
+  - tags
