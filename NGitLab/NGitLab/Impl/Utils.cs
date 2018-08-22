@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 
 namespace NGitLab.Impl
 {
@@ -6,13 +7,18 @@ namespace NGitLab.Impl
     {
         public static string AddParameter<T>(string url, string parameterName, T value)
         {
-            if (Equals(value, null))
-            {
-                return url;
-            }
+            return Equals(value, null) ? url : AddParameterInternal(url, parameterName, value.ToString());
+        }
 
-            string @operator = !url.Contains("?") ? "?" : "&";
-            var formattedValue = WebUtility.UrlEncode(value.ToString());
+        public static string AddParameter(string url, string parameterName, DateTime? date)
+        {
+            return Equals(date, null) ? url : AddParameterInternal(url, parameterName, date.Value.ToString("o"));
+        }
+
+        private static string AddParameterInternal(string url, string parameterName, string stringValue)
+        {
+            var @operator = !url.Contains("?") ? "?" : "&";
+            var formattedValue = WebUtility.UrlEncode(stringValue);
             var parameter = $"{@operator}{parameterName}={formattedValue}";
             return url + parameter;
         }
