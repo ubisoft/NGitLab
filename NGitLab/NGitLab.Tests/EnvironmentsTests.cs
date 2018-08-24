@@ -30,7 +30,7 @@ namespace NGitLab.Tests
             Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameNoUrl || e.Name == newEnvNameWithUrl));
 
             // Create  and check return value
-            Models.Environment env = envClient.Create(newEnvNameNoUrl, null);
+            Models.EnvironmentInfo env = envClient.Create(newEnvNameNoUrl, null);
             StringAssert.AreEqualIgnoringCase(newEnvNameNoUrl, env.Name);
             StringAssert.StartsWith(newEnvSlugNameNoUrlStart, env.Slug);
             Assert.NotZero(env.Id);
@@ -70,7 +70,7 @@ namespace NGitLab.Tests
             Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToEdit || e.Name == newEnvNameUpdated));
 
             // Create newEnvNameToEdit
-            Models.Environment env = envClient.Create(newEnvNameToEdit, null);
+            Models.EnvironmentInfo env = envClient.Create(newEnvNameToEdit, null);
             int initialEnvId = env.Id;
 
             // Validate newEnvNameToEdit is present
@@ -101,7 +101,7 @@ namespace NGitLab.Tests
             Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToDelete));
 
             // Create newEnvNameToDelete
-            Models.Environment env = envClient.Create(newEnvNameToDelete, null);
+            Models.EnvironmentInfo env = envClient.Create(newEnvNameToDelete, null);
             int initialEnvId = env.Id;
 
             // Validate newEnvNameToDelete is present
@@ -125,7 +125,7 @@ namespace NGitLab.Tests
             Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToStop));
 
             // Create newEnvNameToStop
-            Models.Environment env = envClient.Create(newEnvNameToStop, null);
+            Models.EnvironmentInfo env = envClient.Create(newEnvNameToStop, null);
             int initialEnvId = env.Id;
 
             // Validate newEnvNameToStop is present
