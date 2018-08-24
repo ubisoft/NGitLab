@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace NGitLab.Models
 {
     [DataContract]
-    public class Environment
+    public class EnvironmentInfo
     {
         [DataMember(Name = "id")]
         public int Id;

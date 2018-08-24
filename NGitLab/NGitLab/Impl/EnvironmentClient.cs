@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NGitLab.Models;
-using Environment = NGitLab.Models.Environment;
 
 namespace NGitLab.Impl
 {
@@ -16,9 +15,9 @@ namespace NGitLab.Impl
             _environmentsPath = $"{Project.Url}/{projectId}/environments";
         }
 
-        public IEnumerable<Environment> All => _api.Get().GetAll<Environment>(_environmentsPath);
+        public IEnumerable<EnvironmentInfo> All => _api.Get().GetAll<EnvironmentInfo>(_environmentsPath);
 
-        public Environment Create(string name, string externalUrl)
+        public EnvironmentInfo Create(string name, string externalUrl)
         {
 
             if (string.IsNullOrEmpty(name))
@@ -29,10 +28,10 @@ namespace NGitLab.Impl
             if (!string.IsNullOrEmpty(externalUrl))
                 url = Utils.AddParameter(url, "external_url", externalUrl);
 
-            return _api.Post().To<Environment>(url);
+            return _api.Post().To<EnvironmentInfo>(url);
         }
 
-        public Environment Edit(int environmentId, string name, string externalUrl)
+        public EnvironmentInfo Edit(int environmentId, string name, string externalUrl)
         {
             string url = $"{_environmentsPath}/{environmentId}";
 
@@ -42,14 +41,14 @@ namespace NGitLab.Impl
             if (!string.IsNullOrEmpty(externalUrl))
                 url = Utils.AddParameter(url, "external_url", externalUrl);
 
-            return _api.Put().To<Environment>(url);
+            return _api.Put().To<EnvironmentInfo>(url);
         }
 
         public void Delete(int environmentId) => _api.Delete().Execute($"{_environmentsPath}/{environmentId}");
 
-        public Environment Stop(int environmentId)
+        public EnvironmentInfo Stop(int environmentId)
         {
-            return _api.Post().To<Environment>($"{_environmentsPath}/{environmentId}/stop");
+            return _api.Post().To<EnvironmentInfo>($"{_environmentsPath}/{environmentId}/stop");
         }
     }
 }

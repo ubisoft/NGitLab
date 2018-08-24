@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NGitLab.Models;
-using Environment = NGitLab.Models.Environment;
 
 namespace NGitLab
 {
@@ -10,7 +9,7 @@ namespace NGitLab
         /// <summary>
         /// All the environment of the project
         /// </summary>
-        IEnumerable<Environment> All { get; }
+        IEnumerable<EnvironmentInfo> All { get; }
 
         /// <summary>
         /// Create a new environment in the project
@@ -18,7 +17,7 @@ namespace NGitLab
         /// <param name="name">Name of the new environment</param>
         /// <param name="externalUrl">Place to link to for this environment (can be null)</param>
         /// <returns>The newly created environment</returns>
-        Environment Create(string name, string externalUrl);
+        EnvironmentInfo Create(string name, string externalUrl);
 
         /// <summary>
         /// Updates an existing environment's name and/or external_url.
@@ -27,7 +26,7 @@ namespace NGitLab
         /// <param name="name">The new name of the environment</param>
         /// <param name="externalUrl">The new external url</param>
         /// <returns>The updated environment</returns>
-        Environment Edit(int environmentId, string name, string externalUrl);
+        EnvironmentInfo Edit(int environmentId, string name, string externalUrl);
 
         /// <summary>
         /// Delete an environment.
@@ -40,6 +39,6 @@ namespace NGitLab
         /// </summary>
         /// <param name="environmentId">The ID of the environment</param>
         /// <returns>The stopped environment</returns>
-        Environment Stop(int environmentId);
+        EnvironmentInfo Stop(int environmentId);
     }
 }
