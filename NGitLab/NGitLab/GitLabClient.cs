@@ -112,5 +112,10 @@ namespace NGitLab
         {
             return new ProjectIssueNoteClient(_api, projectId);
         }
+
+        public IEnvironmentClient GetEnvironmentClient(int projectId)
+        {
+            return new EnvironmentClient(_api, projectId);
+        }
     }
 }
