@@ -71,23 +71,11 @@ namespace NGitLab.Tests
         public void Teardown()
         {
             // Remove the test project again
-            DeleteProject(ProjectName);
+            DeleteTestProject();
             //remove group
-            DeleteGroup(GroupName);
+            DeleteTestGroup();
         }
-
-        private void RemoveTestProjects()
-        {
-            var projects = GitLabClient.Projects.Owned;
-            foreach (var p in projects)
-            {
-                if (p.Name.StartsWith("Unit_Test_"))
-                {
-                    GitLabClient.Projects.Delete(p.Id);
-                }
-            }
-        }
-
+        
         private Group CreateGroup(string groupName)
         {
             var group = GitLabClient.Groups.Create(new GroupCreate()
@@ -106,12 +94,12 @@ namespace NGitLab.Tests
             return GitLabClient.GetTriggers(projectId).Create("Unit_Test_Description");
         }
 
-        private void DeleteGroup(string groupName)
+        private void DeleteTestGroup()
         {
-            var group = GitLabClient.Groups.Accessible.FirstOrDefault(x => x.Name == groupName);
+            var group = GitLabClient.Groups[UnitTestGroup.Id];
 
             if (group == null)
-                Assert.Fail($"Cannot find group {groupName}");
+                Assert.Fail($"Cannot find group {UnitTestGroup.Id}");
 
             GitLabClient.Groups.Delete(group.Id);
         }
@@ -156,21 +144,16 @@ namespace NGitLab.Tests
             return createdProject;
         }
 
-        private bool DeleteProject(string name, bool @try = false)
+        private void DeleteTestProject()
         {
-            var project = GitLabClient.Projects.Owned.FirstOrDefault(x => x.Name == name);
+            var project = GitLabClient.Projects[UnitTestProject.Id];
 
             if (project == null)
             {
-                if (@try)
-                {
-                    return false;
-                }
-                Assert.Fail($"Cannot find project {name}");
+                Assert.Fail($"Cannot find project {UnitTestProject.Id}");
             }
 
             GitLabClient.Projects.Delete(project.Id);
-            return true;
         }
 
         private Issue CreateIssue(string title)
