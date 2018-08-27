@@ -86,8 +86,8 @@ namespace NGitLab.Tests
 
             string trace = _jobs.GetTrace(job.Id);
 
-            Assert.IsTrue(trace.Contains("Running with gitlab-runner"));
-            Assert.IsTrue(trace.Contains("Job succeeded"));
+            Assert.That(trace, Does.Contain("Running with gitlab-runner"));
+            Assert.That(trace, Does.Contain("Job succeeded"));
         }
 
         [Test, Timeout(5000 * 60)] // The job must be took by the runner and completed, sometime it takes multiples minutes
