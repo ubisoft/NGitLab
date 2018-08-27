@@ -52,7 +52,7 @@ namespace NGitLab.Impl
             {
                 try
                 {
-                    var request = CreateRequest();
+                    var request = CreateRequest(options.HttpClientTimeout);
                     return options.GetResponse(request);
                 }
                 catch (WebException wex)
@@ -91,13 +91,15 @@ namespace NGitLab.Impl
                 }
             }
 
-            private HttpWebRequest CreateRequest()
+            private HttpWebRequest CreateRequest(TimeSpan httpClientTimeout)
             {
                 var request = (HttpWebRequest)WebRequest.Create(Url);
                 request.Method = Method.ToString().ToUpperInvariant();
                 request.Accept = "application/json";
                 request.Headers = Headers;
                 request.AutomaticDecompression = DecompressionMethods.GZip;
+                request.Timeout = (int)httpClientTimeout.TotalMilliseconds;
+                request.ReadWriteTimeout = (int)httpClientTimeout.TotalMilliseconds;
 
                 if (HasOutput)
                 {

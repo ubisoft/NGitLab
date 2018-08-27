@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 
 namespace NGitLab
@@ -14,6 +14,13 @@ namespace NGitLab
         public TimeSpan RetryInterval { get; set; }
 
         public bool IsIncremental { get; set; }
+
+        /// <summary>
+        /// Configure the default client side timeout when calling GitLab.
+        /// GitLab exposes some end points which are really slow so
+        /// the default we use is larger than the default 100 seconds of .net
+        /// </summary>
+        public TimeSpan HttpClientTimeout { get; set; } = TimeSpan.FromMinutes(5);
 
         public RequestOptions(int retryCount, TimeSpan retryInterval, bool isIncremental = true)
         {
