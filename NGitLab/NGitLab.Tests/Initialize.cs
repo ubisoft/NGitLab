@@ -1,4 +1,4 @@
-using NGitLab.Models;
+﻿using NGitLab.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -22,9 +22,9 @@ namespace NGitLab.Tests
 
         public static IRepositoryClient Repository => GitLabClient.GetRepository(UnitTestProject.Id);
 
-        public static string GitLabHost => "https://gitlab.example.com/";
+        public static string GitLabHost => "https://pdc-tst-gitlab01.ubisoft.org/";
 
-        public static string GitLabToken => "dummy";
+        public static string GitLabToken => "Vubdx-Up-V_ozFgbbx2E";
 
         public static bool IsAdmin => GitLabClient.Users.Current.IsAdmin;
 
