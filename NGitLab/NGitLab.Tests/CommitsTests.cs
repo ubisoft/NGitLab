@@ -14,7 +14,7 @@ namespace NGitLab.Tests
             _commits = Initialize.GitLabClient.GetCommits(Initialize.UnitTestProject.Id);
             EnableCiOnTestProject();
         }
-        
+
         public static void EnableCiOnTestProject()
         {
             var projectId = Initialize.UnitTestProject.Id;
@@ -52,8 +52,16 @@ manual:
                 });
 
                 Initialize.GitLabClient.Runners.EnableRunner(projectId, new RunnerId(defaultRunner.Id));
-                _ciEnabled = true;                
-            }            
+                _ciEnabled = true;
+            }
+        }
+
+        [Test]
+        public void Test_can_get_commit()
+        {
+            var commit = _commits.GetCommit("master");
+            Assert.IsNotNull(commit.Message);
+            Assert.IsNotNull(commit.ShortId);
         }
     }
 }
