@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
-    class GroupsTests
+    internal class GroupsTests
     {
         [Test]
         public void Test_groups_is_not_empty()

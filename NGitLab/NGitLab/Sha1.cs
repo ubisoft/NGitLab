@@ -33,8 +33,12 @@ namespace NGitLab
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is Sha1 && Equals((Sha1)obj);
+            if (obj is null)
+            {
+                return false;
+            }
+
+            return obj is Sha1 sha1 && Equals(sha1);
         }
 
         public override int GetHashCode()
@@ -87,7 +91,7 @@ namespace NGitLab
             var val = (int)hex;
 
             //lower or upper
-            return (uint) (val - (val < 58 ? 48 : (val < 97 ? 55 : 87)));
+            return (uint)(val - (val < 58 ? 48 : (val < 97 ? 55 : 87)));
         }
     }
 }

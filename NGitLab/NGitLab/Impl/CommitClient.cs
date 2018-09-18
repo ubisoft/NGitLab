@@ -29,8 +29,7 @@ namespace NGitLab.Impl
                 return JobStatus.Unknown;
             }
 
-            JobStatus result;
-            if (!Enum.TryParse(latestCommit.Status, ignoreCase: true, result: out result))
+            if (!Enum.TryParse(latestCommit.Status, ignoreCase: true, result: out JobStatus result))
             {
                 throw new NotSupportedException($"Status {latestCommit.Status} is unrecognised");
             }

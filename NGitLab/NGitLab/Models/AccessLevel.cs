@@ -7,9 +7,10 @@
     public enum AccessLevel
     {
         Guest = 10,
-        Reporter = 20, 
+        Reporter = 20,
         Developer = 30,
-        Master = 40, 
+        Master = 40,
+
         /// <summary>
         /// Only valid for groups.
         /// </summary>

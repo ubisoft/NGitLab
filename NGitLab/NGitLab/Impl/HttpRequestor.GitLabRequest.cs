@@ -154,9 +154,9 @@ namespace NGitLab.Impl
                     return $"Error message cannot be parsed ({json})";
                 }
 
-                if (messageObject is string)
+                if (messageObject is string str)
                 {
-                    return (string)messageObject;
+                    return str;
                 }
 
                 return SimpleJson.SerializeObject(messageObject);

@@ -59,7 +59,9 @@ namespace NGitLab.Tests
             var projects = GetProjects(new ProjectQuery { Statistics = true }).ToList();
 
             if (!projects.Any())
+            {
                 Assert.Fail("No projects found.");
+            }
 
             projects.ForEach(p => Assert.IsNotNull(p.Statistics));
         }

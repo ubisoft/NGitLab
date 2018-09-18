@@ -19,14 +19,15 @@ namespace NGitLab.Impl
 
         public EnvironmentInfo Create(string name, string externalUrl)
         {
-
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException();
 
             string url = Utils.AddParameter(_environmentsPath, "name", name);
 
             if (!string.IsNullOrEmpty(externalUrl))
+            {
                 url = Utils.AddParameter(url, "external_url", externalUrl);
+            }
 
             return _api.Post().To<EnvironmentInfo>(url);
         }
@@ -36,10 +37,14 @@ namespace NGitLab.Impl
             string url = $"{_environmentsPath}/{environmentId}";
 
             if (!string.IsNullOrEmpty(name))
+            {
                 url = Utils.AddParameter(url, "name", name);
+            }
 
             if (!string.IsNullOrEmpty(externalUrl))
+            {
                 url = Utils.AddParameter(url, "external_url", externalUrl);
+            }
 
             return _api.Put().To<EnvironmentInfo>(url);
         }

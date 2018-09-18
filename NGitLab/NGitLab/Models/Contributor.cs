@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace NGitLab.Models
 {
-    
     [DataContract]
     public class Contributor
     {

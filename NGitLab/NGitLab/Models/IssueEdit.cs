@@ -31,6 +31,5 @@ namespace NGitLab.Models
 
         [DataMember(Name = "state_event")]
         public string State;
-
     }
 }

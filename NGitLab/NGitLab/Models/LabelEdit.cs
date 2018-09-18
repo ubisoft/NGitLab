@@ -1,16 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
-
 namespace NGitLab.Models
 {
-    
-
     [DataContract]
     public class LabelEdit
     {
         public LabelEdit() { }
-        
+
         public LabelEdit(int projectId, Label label)
         {
             Id = projectId;
@@ -30,6 +27,5 @@ namespace NGitLab.Models
 
         [DataMember(Name = "color")]
         public string Color;
-
     }
 }

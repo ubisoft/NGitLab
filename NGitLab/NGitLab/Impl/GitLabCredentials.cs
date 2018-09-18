@@ -45,15 +45,10 @@ namespace NGitLab.Impl
 
         public string ApiToken
         {
-            get
-            {
-                return _apiToken;
-            }
+            get => _apiToken;
             set
             {
-                if (value == null) throw new ArgumentException();
-
-                _apiToken = value;
+                _apiToken = value ?? throw new ArgumentException(nameof(value));
 
                 // Passwords and user names and not useful anymore.
                 UserName = null;
@@ -65,7 +60,9 @@ namespace NGitLab.Impl
         {
             if (url.EndsWith("/api/v3", StringComparison.OrdinalIgnoreCase) ||
                 url.EndsWith("/api/v3/", StringComparison.OrdinalIgnoreCase))
+            {
                 throw new ArgumentException("API v3 endpoint is not supported.");
+            }
         }
 
         private string GetApiUrl(string url)

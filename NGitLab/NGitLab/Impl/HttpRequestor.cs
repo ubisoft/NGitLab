@@ -178,10 +178,12 @@ namespace NGitLab.Impl
                             var link = response.Headers["Link"];
 
                             string[] nextLink = null;
-                            if (string.IsNullOrEmpty(link) == false)
+                            if (!string.IsNullOrEmpty(link))
+                            {
                                 nextLink = link.Split(',')
-                                    .Select(l => l.Split(';'))
-                                    .FirstOrDefault(pair => pair[1].Contains("next"));
+                                   .Select(l => l.Split(';'))
+                                   .FirstOrDefault(pair => pair[1].Contains("next"));
+                            }
 
                             if (nextLink != null)
                             {
@@ -210,18 +212,12 @@ namespace NGitLab.Impl
 
                 public void Reset()
                 {
-                    throw new NotImplementedException();
+                    throw new NotSupportedException();
                 }
 
-                public T Current
-                {
-                    get { return _buffer[0]; }
-                }
+                public T Current => _buffer[0];
 
-                object IEnumerator.Current
-                {
-                    get { return Current; }
-                }
+                object IEnumerator.Current => Current;
             }
         }
     }
