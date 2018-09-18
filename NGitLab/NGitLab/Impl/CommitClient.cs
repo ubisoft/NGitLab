@@ -16,6 +16,11 @@ namespace NGitLab.Impl
             _repoPath = projectPath + "/repository";
         }
 
+        public Commit GetCommit(string @ref)
+        {
+            return _api.Get().To<Commit>(_repoPath + $"/commits/{@ref}");
+        }
+
         public JobStatus GetJobStatus(string branchName)
         {
             var latestCommit = _api.Get().To<Commit>(_repoPath + $"/commits/{branchName}?per_page=1");
@@ -27,7 +32,7 @@ namespace NGitLab.Impl
             JobStatus result;
             if (!Enum.TryParse(latestCommit.Status, ignoreCase: true, result: out result))
             {
-                throw new NotImplementedException($"Status {latestCommit.Status} is unrecognised");
+                throw new NotSupportedException($"Status {latestCommit.Status} is unrecognised");
             }
 
             return result;
