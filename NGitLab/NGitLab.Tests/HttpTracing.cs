@@ -59,14 +59,14 @@ namespace NGitLab.Tests
 
             public static bool IsEnabled
             {
-                get { return (bool)EnabledField.GetValue(null); }
-                set { EnabledField.SetValue(null, value); }
+                get => (bool)EnabledField.GetValue(null);
+                set => EnabledField.SetValue(null, value);
             }
 
             public static bool Initialized
             {
-                get { return (bool)InitializedField.GetValue(null); }
-                set { InitializedField.SetValue(null, value); }
+                get => (bool)InitializedField.GetValue(null);
+                set => InitializedField.SetValue(null, value);
             }
 
             public static TraceSource WebTraceSource => GetTraceSource("s_WebTraceSource");

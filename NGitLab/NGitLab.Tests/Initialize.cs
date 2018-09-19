@@ -1,9 +1,8 @@
-using NGitLab.Models;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
+using NGitLab.Models;
+using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
@@ -39,7 +38,7 @@ namespace NGitLab.Tests
         /// </summary>
         public static WebRequest LastRequest => _requests[_requests.Count - 1];
 
-        private static List<WebRequest> _requests = new List<WebRequest>();
+        private static readonly List<WebRequest> _requests = new List<WebRequest>();
 
         [OneTimeSetUp]
         public void Setup()
@@ -75,7 +74,7 @@ namespace NGitLab.Tests
             //remove group
             DeleteTestGroup();
         }
-        
+
         private Group CreateGroup(string groupName)
         {
             var group = GitLabClient.Groups.Create(new GroupCreate()
@@ -164,7 +163,7 @@ namespace NGitLab.Tests
                 Title = title,
                 Description = "desc",
             });
-            
+
             return createIssue;
         }
 
@@ -175,7 +174,7 @@ namespace NGitLab.Tests
         {
             private readonly List<WebRequest> _allRequests;
 
-            public CustomRequestOptions(List<WebRequest> allRequests) 
+            public CustomRequestOptions(List<WebRequest> allRequests)
                 : base(retryCount: 0, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
             {
                 _allRequests = allRequests;

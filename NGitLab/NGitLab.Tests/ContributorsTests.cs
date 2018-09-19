@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
-    class ContributorsTests
+    internal class ContributorsTests
     {
         private ICommitClient _commitClient;
         private IUserClient _users;
@@ -26,7 +26,6 @@ namespace NGitLab.Tests
                 CommitMessage = "test",
             });
         }
-
 
         [Test]
         public void Test_can_get_contributors()
@@ -70,7 +69,6 @@ namespace NGitLab.Tests
                 StartBranch = "master",
                 ProjectId = Initialize.UnitTestProject.Id,
                 CommitMessage = "test",
-
             });
 
             var contributor = Contributors.All;

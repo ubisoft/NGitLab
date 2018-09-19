@@ -11,6 +11,7 @@ namespace NGitLab.Tests
         {
             [EnumMember(Value = "v1")]
             Value1,
+
             [EnumMember(Value = "v2")]
             Value2
         }

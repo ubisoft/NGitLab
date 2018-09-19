@@ -24,8 +24,12 @@ namespace NGitLab.Impl
             if (scope != JobScopeMask.All)
             {
                 foreach (Enum value in Enum.GetValues(scope.GetType()))
+                {
                     if (scope.HasFlag(value))
+                    {
                         url = Utils.AddParameter(url, "scope", value.ToString().ToLowerInvariant());
+                    }
+                }
             }
 
             return _api.Get().GetAll<Job>(url);

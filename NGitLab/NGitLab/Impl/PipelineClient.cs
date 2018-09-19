@@ -19,7 +19,7 @@ namespace NGitLab.Impl
             _pipelinesPath = $"{Project.Url}/{projectId}/pipelines";
         }
 
-        public IEnumerable<PipelineBasic> All => _api.Get().GetAll<PipelineBasic>($"{_pipelinesPath}");
+        public IEnumerable<PipelineBasic> All => _api.Get().GetAll<PipelineBasic>(_pipelinesPath);
 
         public IEnumerable<Job> AllJobs => _api.Get().GetAll<Job>($"{_projectPath}/jobs");
 

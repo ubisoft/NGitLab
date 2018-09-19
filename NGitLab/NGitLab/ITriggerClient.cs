@@ -5,7 +5,6 @@ namespace NGitLab
 {
     public interface ITriggerClient
     {
-
         /// <summary>
         /// Returns the detail of a single trigger.
         /// </summary>

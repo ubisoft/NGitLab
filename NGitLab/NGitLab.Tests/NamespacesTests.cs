@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
-    class NamespacesTests
+    internal class NamespacesTests
     {
         [Test]
         public void Test_namespaces_contains_a_group()

@@ -17,7 +17,7 @@ namespace NGitLab.Tests
         {
             const string value = "59529D73E3E6E2B7015F05D197E12C43B13BA033";
             Assert.AreEqual(value.ToUpper(), new Sha1(value).ToString().ToUpper());
-        }        
+        }
 
         [Test]
         public void WhenSha1WithUpperCase_ThenParsedCorrectly()
@@ -30,14 +30,14 @@ namespace NGitLab.Tests
         public void WhenNotEnoughtChars_ThenErrorThrown()
         {
             const string value = "2695EFFB5807A22FF3D138D593FD856244";
-            Assert.Throws<ArgumentException>(() => { new Sha1(value); });
-        } 
-        
+            Assert.Throws<ArgumentException>(() => new Sha1(value));
+        }
+
         [Test]
         public void WhenToManyChars_ThenErrorThrown()
         {
             const string value = "2695EFFB5807A22FF3D138D593FD856244234234234324";
-            Assert.Throws<ArgumentException>(() => { new Sha1(value); });
+            Assert.Throws<ArgumentException>(() => new Sha1(value));
         }
     }
 }

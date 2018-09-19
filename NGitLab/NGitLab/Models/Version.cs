@@ -9,6 +9,7 @@ namespace NGitLab.Models
     {
         [DataMember(Name = "version")]
         public string Version { get; set; }
+
         [DataMember(Name = "revision")]
         public string Revision { get; set; }
     }

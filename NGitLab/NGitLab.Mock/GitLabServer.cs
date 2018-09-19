@@ -48,8 +48,7 @@ namespace NGitLab.Mock
 
         public MockProject GetProject(string fullName)
         {
-            int projectId;
-            if (int.TryParse(fullName, out projectId))
+            if (int.TryParse(fullName, out var projectId))
             {
                 return GetProject(projectId);
             }
@@ -107,7 +106,7 @@ namespace NGitLab.Mock
 
         public string Name
         {
-            get { return ClientProject.Name; }
+            get => ClientProject.Name;
             set
             {
                 ClientProject.Name = value;
@@ -117,7 +116,7 @@ namespace NGitLab.Mock
 
         public string Namespace
         {
-            get { return ClientProject.Namespace.Name; }
+            get => ClientProject.Namespace.Name;
             set
             {
                 ClientProject.Namespace.Name = value;
@@ -209,7 +208,7 @@ namespace NGitLab.Mock
             var hashBytes = sha1.ComputeHash(Encoding.Default.GetBytes(content));
             return new Sha1(HexStringFromBytes(hashBytes));
         }
-        
+
         /// <summary>
         /// Convert an array of bytes to a string of hex digits
         /// </summary>

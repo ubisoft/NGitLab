@@ -27,10 +27,13 @@ namespace NGitLab.Models
                 DateTime expiresAt;
                 if (!string.IsNullOrEmpty(ExpiresAtStr) && DateTime.TryParseExact(ExpiresAtStr, "yyyy-MM-dd",
                     CultureInfo.InvariantCulture, DateTimeStyles.None, out expiresAt))
+                {
                     return expiresAt;
+                }
+
                 return null;
             }
-            set { ExpiresAtStr = value.HasValue ? value.Value.ToString("yyyy-MM-dd") : null; }
+            set => ExpiresAtStr = value.HasValue ? value.Value.ToString("yyyy-MM-dd") : null;
         }
 
         [DataMember(Name = "scopes")]

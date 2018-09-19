@@ -8,7 +8,7 @@ namespace NGitLab.Impl
         private const string IssuesUrl = "/issues";
         private const string IssuesNoteUrl = "/projects/{0}/issues/{1}/notes";
         private const string SingleNoteIssueUrl = "/projects/{0}/issues/{1}/notes/{2}";
-        
+
         private readonly API _api;
         private readonly int _projectId;
 
@@ -27,16 +27,15 @@ namespace NGitLab.Impl
         {
             return _api.Get().To<ProjectIssueNote>(string.Format(SingleNoteIssueUrl, _projectId, issueId, noteId));
         }
-        
+
         public ProjectIssueNote Create(ProjectIssueNoteCreate create)
         {
             return _api.Post().With(create).To<ProjectIssueNote>(string.Format(IssuesNoteUrl, _projectId, create.IssueId));
         }
+
         public ProjectIssueNote Edit(ProjectIssueNoteEdit edit)
         {
             return _api.Put().With(edit).To<ProjectIssueNote>(string.Format(SingleNoteIssueUrl, _projectId, edit.IssueId, edit.NoteId));
         }
-
-        
     }
 }

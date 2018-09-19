@@ -21,8 +21,8 @@ namespace NGitLab
 
         public RequestOptions Options
         {
-            get { return _api.RequestOptions; }
-            set { _api.RequestOptions = value; }
+            get => _api.RequestOptions;
+            set => _api.RequestOptions = value;
         }
 
         public GitLabClient(string hostUrl, string apiToken)

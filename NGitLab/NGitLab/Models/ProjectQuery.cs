@@ -63,15 +63,18 @@ namespace NGitLab.Models
         /// Get a list of projects for which the authenticated user is a member.
         /// </summary>
         Accessible,
+
         /// <summary>
         /// Get a list of projects owned by the authenticated user.
         /// </summary>
         Owned,
+
         /// <summary>
         /// Get a list of projects which the authenticated user can see.
         /// </summary>
         [Obsolete("Use All instead which is the same behavior.")]
         Visible,
+
         /// <summary>
         /// Get a list of all GitLab projects.
         /// </summary>

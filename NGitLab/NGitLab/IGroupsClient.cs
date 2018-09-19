@@ -25,6 +25,5 @@ namespace NGitLab
         IEnumerable<Project> SearchProjects(int groupId, string search);
 
         void Delete(int id);
-
     }
 }
