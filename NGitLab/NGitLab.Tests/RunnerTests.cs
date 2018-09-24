@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using NGitLab.Models;
@@ -90,7 +90,7 @@ namespace NGitLab.Tests
         public static Runner GetDefaultRunner()
         {
             var allRunners = Initialize.GitLabClient.Runners.Accessible.ToArray();
-            var runner = allRunners.FirstOrDefault(x => x.Active && x.Description.Equals("example"));
+            var runner = allRunners.FirstOrDefault(x => x.Active && x.Description.Equals("ToolSquare_Test"));
 
             if (runner == null)
             {
