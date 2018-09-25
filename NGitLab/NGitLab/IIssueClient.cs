@@ -23,8 +23,18 @@ namespace NGitLab
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="issueId"></param>
-        /// <returns></returns>
+        /// <returns>The issue that corresponds to the project id and issue id</returns>
         Issue Get(int projectId, int issueId);
+
+        /// <summary>
+        /// Return issues for a given query.
+        /// 
+        /// url like GET /issues?<parameter_name>=<value>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns>the query's related issues</returns>
+        IEnumerable<Issue> Get(IssueQuery query);
 
         /// <summary>
         /// Add an issue witht he proposed title to the GitLab list for the selected proejct id.
