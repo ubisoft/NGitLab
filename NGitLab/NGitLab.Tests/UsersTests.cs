@@ -87,18 +87,27 @@ namespace NGitLab.Tests
             var users = _users;
             var keys = users.CurrentUserSShKeys;
             var keysBefore = keys.All.ToArray();
+            var keyNumber = keysBefore.Length;
+            var newKey = "ssh-rsa dummy mytestkey@mycurrentpc";
+
+            var currentKey = keysBefore.FirstOrDefault(k => k.Key.Equals(newKey));
+            if (currentKey != null)
+            {
+                keys.Remove(currentKey.Id);
+                keyNumber -= 1;
+            }
 
             var result = keys.Add(new SshKeyCreate
             {
-                Key = "ssh-rsa dummy mytestkey@mycurrentpc",
+                Key = newKey,
                 Title = "test key",
             });
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(keysBefore.Length + 1, keys.All.ToArray().Length);
+            Assert.AreEqual(keyNumber + 1, keys.All.ToArray().Length);
 
             keys.Remove(result.Id);
-            Assert.AreEqual(keysBefore.Length, keys.All.ToArray().Length);
+            Assert.AreEqual(keyNumber, keys.All.ToArray().Length);
         }
 
         [Test]
