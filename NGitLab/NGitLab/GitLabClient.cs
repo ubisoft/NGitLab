@@ -117,5 +117,10 @@ namespace NGitLab
         {
             return new EnvironmentClient(_api, projectId);
         }
+
+        public IWikiClient GetWikiClient(int projectId)
+        {
+            return new WikiClient(_api, projectId);
+        }
     }
 }
