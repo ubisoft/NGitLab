@@ -20,5 +20,6 @@
         INamespacesClient Namespaces { get; }
         IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId);
         IEnvironmentClient GetEnvironmentClient(int projectId);
+        IWikiClient GetWikiClient(int projectId);
     }
 }
