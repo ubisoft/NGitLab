@@ -6,12 +6,12 @@ namespace NGitLab.Tests.MergeRequest
 {
     public class MergeRequestClientTests
     {
-        private IMergeRequestClient _mergeRequest;
+        private IMergeRequestClient _mergeRequestClient;
 
         [SetUp]
         public void Setup()
         {
-            _mergeRequest = Initialize.GitLabClient.GetMergeRequest(Initialize.UnitTestProject.Id);
+            _mergeRequestClient = Initialize.GitLabClient.GetMergeRequest(Initialize.UnitTestProject.Id);
         }
 
         [Test]
@@ -19,25 +19,25 @@ namespace NGitLab.Tests.MergeRequest
         {
             var branch = CreateBranch("my-super-feature");
             var mergeRequest = CreateMergeRequest(branch.Name, "master");
-            Assert.AreEqual(mergeRequest.Id, _mergeRequest[mergeRequest.Iid].Id, "Test can get a merge request by IId");
+            Assert.AreEqual(mergeRequest.Id, _mergeRequestClient[mergeRequest.Iid].Id, "Test we can get a merge request by IId");
 
             ListMergeRequest(mergeRequest);
             UpdateMergeRequest(mergeRequest);
             AcceptMergeRequest(mergeRequest);
-            var commits = _mergeRequest.Commits(mergeRequest.Iid).All;
+            var commits = _mergeRequestClient.Commits(mergeRequest.Iid).All;
             Assert.IsTrue(commits.Any(), "Can return the commits");
         }
 
         private void ListMergeRequest(Models.MergeRequest mergeRequest)
         {
-            Assert.IsTrue(_mergeRequest.All.Any(x => x.Id == mergeRequest.Id), "Test all accessor returns the merge request");
-            Assert.IsTrue(_mergeRequest.AllInState(MergeRequestState.opened).Any(x => x.Id == mergeRequest.Id), "Can return all open request");
-            Assert.IsFalse(_mergeRequest.AllInState(MergeRequestState.merged).Any(x => x.Id == mergeRequest.Id), "Can return all closed request");
+            Assert.IsTrue(_mergeRequestClient.All.Any(x => x.Id == mergeRequest.Id), "Test 'All' accessor returns the merge request");
+            Assert.IsTrue(_mergeRequestClient.AllInState(MergeRequestState.opened).Any(x => x.Id == mergeRequest.Id), "Can return all open requests");
+            Assert.IsFalse(_mergeRequestClient.AllInState(MergeRequestState.merged).Any(x => x.Id == mergeRequest.Id), "Can return all closed requests");
         }
 
         private Models.MergeRequest CreateMergeRequest(string from, string to)
         {
-            var mergeRequest = _mergeRequest.Create(new MergeRequestCreate
+            var mergeRequest = _mergeRequestClient.Create(new MergeRequestCreate
             {
                 Title = "Merge my-super-feature into master",
                 SourceBranch = from,
@@ -81,7 +81,7 @@ namespace NGitLab.Tests.MergeRequest
 
         public void UpdateMergeRequest(Models.MergeRequest request)
         {
-            var mergeRequest = _mergeRequest.Update(request.Iid, new MergeRequestUpdate
+            var mergeRequest = _mergeRequestClient.Update(request.Iid, new MergeRequestUpdate
             {
                 Title = "New title",
                 Description = "New description",
@@ -98,7 +98,7 @@ namespace NGitLab.Tests.MergeRequest
 
         public void AcceptMergeRequest(Models.MergeRequest request)
         {
-            var mergeRequest = _mergeRequest.Accept(
+            var mergeRequest = _mergeRequestClient.Accept(
                 mergeRequestIid: request.Iid,
                 message: new MergeRequestAccept
                 {
@@ -115,7 +115,7 @@ namespace NGitLab.Tests.MergeRequest
         {
             var exception = Assert.Throws<GitLabException>(() =>
             {
-                _mergeRequest.Create(new MergeRequestCreate
+                _mergeRequestClient.Create(new MergeRequestCreate
                 {
                     Title = "ErrorRequest",
                     SourceBranch = "master",
@@ -131,19 +131,47 @@ namespace NGitLab.Tests.MergeRequest
         {
             var branch = CreateBranch("tmp-branch-to-test-mr-deletion");
             var mergeRequest = CreateMergeRequest(branch.Name, "master");
-            Assert.AreEqual(mergeRequest.Id, _mergeRequest[mergeRequest.Iid].Id, "Test can get a merge request by IId");
+            Assert.AreEqual(mergeRequest.Id, _mergeRequestClient[mergeRequest.Iid].Id, "Test can get a merge request by IId");
 
             Assert.DoesNotThrow(() =>
             {
-                var mr = _mergeRequest[mergeRequest.Iid];
+                var mr = _mergeRequestClient[mergeRequest.Iid];
             });
 
-            _mergeRequest.Delete(mergeRequest.Iid);
+            _mergeRequestClient.Delete(mergeRequest.Iid);
 
             Assert.Throws<GitLabException>(() =>
             {
-                var mr = _mergeRequest[mergeRequest.Iid];
+                var mr = _mergeRequestClient[mergeRequest.Iid];
             });
+        }
+
+        [Test]
+        public void Test_merge_request_approvers()
+        {
+            var branch = CreateBranch("tmp-branch-to-test-mr-approvers");
+            var mergeRequest = CreateMergeRequest(branch.Name, "master");
+
+            var approvalClient = _mergeRequestClient.ApprovalClient(mergeRequest.Iid);
+            var approvers = approvalClient.Approvals.Approvers;
+
+            Assert.AreEqual(0, approvers.Length, "Initially no approver defined");
+
+            // --- Add the "current user" as approver for this MR ---
+
+            var users = Initialize.GitLabClient.Users;            
+
+            var approversChange = new MergeRequestApproversChange()
+            {
+                Approvers = new[] { users.Current.Id }
+            };
+
+            approvalClient.ChangeApprovers(approversChange);
+
+            approvers = approvalClient.Approvals.Approvers;
+
+            Assert.AreEqual(1, approvers.Length, "A single approver defined");
+            Assert.AreEqual(users.Current.Id, approvers[0].User.Id, "The approver is the current user");
         }
     }
 }
