@@ -18,5 +18,6 @@ namespace NGitLab
         IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid);
         IMergeRequestCommentClient Comments(int mergeRequestIid);
         IMergeRequestCommitClient Commits(int mergeRequestIid);
+        IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid);
     }
 }
