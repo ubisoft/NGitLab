@@ -60,6 +60,23 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        public void Test_post_commit_status_with_no_coverage()
+        {
+            var commitStatus = SetupCommitStatus(state: "success", coverage: null);
+
+            var createdCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
+            _sha = createdCommitStatus.CommitSha;
+
+            Assert.AreEqual(commitStatus.Ref, createdCommitStatus.Ref);
+            Assert.AreEqual(commitStatus.Coverage, createdCommitStatus.Coverage);
+            Assert.AreEqual(commitStatus.Description, createdCommitStatus.Description);
+            Assert.AreEqual(commitStatus.State, createdCommitStatus.Status);
+            Assert.AreEqual(commitStatus.Name, createdCommitStatus.Name);
+            Assert.AreEqual(commitStatus.TargetUrl, createdCommitStatus.TargetUrl);
+            Assert.IsTrue(string.Equals(commitStatus.CommitSha, createdCommitStatus.CommitSha, StringComparison.OrdinalIgnoreCase));
+        }
+
+        [Test]
         public void Test_post_commit_status_and_update_it_from_pending_to_running_to_success()
         {
             var commitStatus = SetupCommitStatus(state: "pending");
@@ -98,7 +115,6 @@ namespace NGitLab.Tests
             createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
             Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
         }
-
 
         [Test]
         public void Test_post_commit_status_and_update_it_from_success_to_pending()
@@ -240,7 +256,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
         }
 
-        private CommitStatusCreate SetupCommitStatus(string state)
+        private CommitStatusCreate SetupCommitStatus(string state, int? coverage = 100)
         {
             return new CommitStatusCreate
             {
@@ -250,7 +266,7 @@ namespace NGitLab.Tests
                 State = state,
                 ProjectId = _project.Id,
                 Description = "desc",
-                Coverage = 100,
+                Coverage = coverage,
                 TargetUrl = "https://google.ca/"
             };
         }
