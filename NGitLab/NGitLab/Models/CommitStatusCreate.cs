@@ -30,6 +30,6 @@ namespace NGitLab.Models
         public string Description;
 
         [DataMember(Name = "coverage")]
-        public int Coverage;
+        public int? Coverage;
     }
 }
