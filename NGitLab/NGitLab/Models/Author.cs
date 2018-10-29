@@ -23,5 +23,11 @@ namespace NGitLab.Models
 
         [DataMember(Name = "created_at")]
         public DateTime CreatedAt;
+
+        [DataMember(Name = "avatar_url")]
+        public string AvatarUrl;
+
+        [DataMember(Name = "web_url")]
+        public string WebUrl;
     }
 }
