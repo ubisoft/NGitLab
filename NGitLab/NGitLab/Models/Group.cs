@@ -5,6 +5,8 @@ namespace NGitLab.Models
     [DataContract]
     public class Group
     {
+        public const string Url = "/groups";
+
         [DataMember(Name = "id")]
         public int Id;
 
