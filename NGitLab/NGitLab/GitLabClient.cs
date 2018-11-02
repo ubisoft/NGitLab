@@ -122,5 +122,15 @@ namespace NGitLab
         {
             return new WikiClient(_api, projectId);
         }
+
+        public IProjectBadgeClient GetProjectBadgeClient(int projectId)
+        {
+            return new ProjectBadgeClient(_api, projectId);
+        }
+
+        public IGroupBadgeClient GetGroupBadgeClient(int groupId)
+        {
+            return new GroupBadgeClient(_api, groupId);
+        }
     }
 }

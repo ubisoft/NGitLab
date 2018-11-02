@@ -21,5 +21,7 @@
         IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId);
         IEnvironmentClient GetEnvironmentClient(int projectId);
         IWikiClient GetWikiClient(int projectId);
+        IProjectBadgeClient GetProjectBadgeClient(int projectId);
+        IGroupBadgeClient GetGroupBadgeClient(int groupId);
     }
 }
