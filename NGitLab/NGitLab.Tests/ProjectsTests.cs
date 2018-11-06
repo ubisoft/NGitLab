@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Castle.Core.Internal;
 using NGitLab.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
+using NGitLab.Tests.Extensions;
 
 namespace NGitLab.Tests
 {
@@ -26,7 +26,8 @@ namespace NGitLab.Tests
         [Test]
         public void GetVisibleProjects()
         {
-            var projects = _projects.Visible.Take(10).ToArray();
+            var projects = this.ExecuteWithFallbacks(client => client.Projects.Visible.Take(10).ToArray());
+
             CollectionAssert.IsNotEmpty(projects);
         }
 
