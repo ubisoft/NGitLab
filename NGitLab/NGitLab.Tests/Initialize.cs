@@ -10,6 +10,8 @@ namespace NGitLab.Tests
     public class Initialize
     {
         public static GitLabClient GitLabClient;
+        public static GitLabClient GitLabClientFront1;
+        public static GitLabClient GitLabClientFront2;
 
         public static Project UnitTestProject;
 
@@ -22,6 +24,8 @@ namespace NGitLab.Tests
         public static IRepositoryClient Repository => GitLabClient.GetRepository(UnitTestProject.Id);
 
         public static string GitLabHost => "https://gitlab.example.com/";
+        public static string GitLabHostFront1 => "https://pdc-dev-gitfront01/";
+        public static string GitLabHostFront2 => " https://pdc-dev-gitfront02/";
 
         public static string GitLabToken => "dummy";
 
@@ -50,6 +54,8 @@ namespace NGitLab.Tests
                 throw new ArgumentNullException(nameof(GitLabToken));
 
             GitLabClient = new GitLabClient(GitLabHost, apiToken: GitLabToken, options: new CustomRequestOptions(_requests));
+            GitLabClientFront1 = new GitLabClient(GitLabHostFront1, apiToken: GitLabToken, options: new CustomRequestOptions(_requests));
+            GitLabClientFront2 = new GitLabClient(GitLabHostFront2, apiToken: GitLabToken, options: new CustomRequestOptions(_requests));
 
             var randomGenerator = new Random();
 
