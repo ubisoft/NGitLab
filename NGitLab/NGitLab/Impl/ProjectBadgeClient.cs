@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -10,5 +11,8 @@ namespace NGitLab.Impl
             : base(api, Project.Url + $"/{projectId}")
         {
         }
+
+        /// <inheritdoc/>
+        public IEnumerable<Badge> ProjectsOnly => All.Where(b => b.Kind == BadgeKind.Project);
     }
 }

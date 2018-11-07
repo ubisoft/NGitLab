@@ -20,8 +20,9 @@ namespace NGitLab.Tests
             // Clear badges
             var badges = _groupBadgeClient.All.ToList();
             badges.ForEach(b => _groupBadgeClient.Delete(b.Id));
+
             badges = _groupBadgeClient.All.ToList();
-            Assert.AreEqual(0, badges.Count);
+            Assert.IsEmpty(badges);
 
             // Create
             var badge = _groupBadgeClient.Create(new BadgeCreate

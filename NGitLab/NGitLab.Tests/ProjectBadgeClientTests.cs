@@ -18,10 +18,11 @@ namespace NGitLab.Tests
         public void Test_project_badges()
         {
             // Clear badges
-            var badges = _projectBadgeClient.All.ToList();
+            var badges = _projectBadgeClient.ProjectsOnly.ToList();
             badges.ForEach(b => _projectBadgeClient.Delete(b.Id));
-            badges = _projectBadgeClient.All.ToList();
-            Assert.AreEqual(0, badges.Count);
+
+            badges = _projectBadgeClient.ProjectsOnly.ToList();
+            Assert.IsEmpty(badges);
 
             // Create
             var badge = _projectBadgeClient.Create(new BadgeCreate
@@ -48,14 +49,14 @@ namespace NGitLab.Tests
             // Delete
             _projectBadgeClient.Delete(badge.Id);
 
-            badges = _projectBadgeClient.All.ToList();
+            badges = _projectBadgeClient.ProjectsOnly.ToList();
             Assert.IsEmpty(badges);
 
             // All
             _projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image1.png", LinkUrl = "http://dummy/image1.html", });
             _projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image2.png", LinkUrl = "http://dummy/image2.html", });
             _projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image3.png", LinkUrl = "http://dummy/image3.html", });
-            badges = _projectBadgeClient.All.ToList();
+            badges = _projectBadgeClient.ProjectsOnly.ToList();
             Assert.AreEqual(3, badges.Count);
         }
     }
