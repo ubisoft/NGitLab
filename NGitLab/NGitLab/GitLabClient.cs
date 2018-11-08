@@ -132,5 +132,15 @@ namespace NGitLab
         {
             return new GroupBadgeClient(_api, groupId);
         }
+
+        public IProjectVariableClient GetProjectVariableClient(int projectId)
+        {
+            return new ProjectVariableClient(_api, projectId);
+        }
+
+        public IGroupVariableClient GetGroupVariableClient(int groupId)
+        {
+            return new GroupVariableClient(_api, groupId);
+        }
     }
 }

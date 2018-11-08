@@ -17,4 +17,22 @@ namespace NGitLab
         Badge Update(int id, BadgeUpdate badge);
         void Delete(int id);
     }
+
+    public interface IProjectVariableClient
+    {
+        IEnumerable<Variable> All { get; }
+        Variable this[string key] { get; }
+        Variable Create(VariableCreate model);
+        Variable Update(string key, VariableUpdate model);
+        void Delete(string key);
+    }
+
+    public interface IGroupVariableClient
+    {
+        IEnumerable<Variable> All { get; }
+        Variable this[string key] { get; }
+        Variable Create(VariableCreate model);
+        Variable Update(string key, VariableUpdate model);
+        void Delete(string key);
+    }
 }
