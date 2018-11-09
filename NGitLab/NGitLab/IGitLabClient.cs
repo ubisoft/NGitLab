@@ -23,5 +23,7 @@
         IWikiClient GetWikiClient(int projectId);
         IProjectBadgeClient GetProjectBadgeClient(int projectId);
         IGroupBadgeClient GetGroupBadgeClient(int groupId);
+        IProjectVariableClient GetProjectVariableClient(int projectId);
+        IGroupVariableClient GetGroupVariableClient(int groupId);
     }
 }

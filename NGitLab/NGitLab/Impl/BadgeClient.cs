@@ -8,7 +8,7 @@ namespace NGitLab.Impl
         private readonly string _urlPrefix;
         private readonly API _api;
 
-        public BadgeClient(API api, string urlPrefix)
+        protected BadgeClient(API api, string urlPrefix)
         {
             _urlPrefix = urlPrefix;
             _api = api;
