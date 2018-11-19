@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using NGitLab.Models;
@@ -34,7 +35,7 @@ namespace NGitLab.Tests.RepositoryClient
         [Test]
         public void AddDelete()
         {
-            const string branchName = "merge-me-to-master";
+            var branchName = $"merge-me-to-master_{Path.GetRandomFileName()}";
 
             _branches.Create(new BranchCreate
             {
