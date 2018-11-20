@@ -15,5 +15,10 @@
         /// Manual status means that the job is pending until a user requests it to start.
         /// </summary>
         Manual,
+
+        /// <summary>
+        /// NoBuild means that there were no build created
+        /// </summary>
+        NoBuild
     }
 }
