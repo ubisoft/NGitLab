@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Castle.Core.Internal;
-using NGitLab.Impl;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -17,10 +12,15 @@ namespace NGitLab.Tests
         [Test]
         public void Test_snippet()
         {
+            var guid = Guid.NewGuid().ToString("N");
+
+            var snippetName = "testSnip" + guid;
+            var projectSnippetName = "testSnipInProject" + guid;
+
             //arrange
             var newSnippet1 = new SnippetCreate
             {
-                Title = "testSnip",
+                Title = snippetName,
                 Content = "var test = 42;",
                 FileName = "testFileName.cs",
                 Visibility = VisibilityLevel.Public,
@@ -30,7 +30,7 @@ namespace NGitLab.Tests
 
             var newSnippet2 = new SnippetProjectCreate
             {
-                Title = "testSnipInProject",
+                Title = projectSnippetName,
                 Code = "var test = 43;",
                 FileName = "testFileName1.cs",
                 ProjectId = testProjectId,
@@ -39,14 +39,14 @@ namespace NGitLab.Tests
 
             //act - assert
             SnippetClient.Create(newSnippet1);
-            Assert.That(SnippetClient.User.Select(x => x.Title), Contains.Item("testSnip"));
-            Assert.That(SnippetClient.All.Select(x => x.Title), Contains.Item("testSnip"));
+            Assert.That(SnippetClient.User.Select(x => x.Title), Contains.Item(snippetName));
+            Assert.That(SnippetClient.All.Select(x => x.Title), Contains.Item(snippetName));
 
             SnippetClient.Create(newSnippet2);
-            Assert.That(SnippetClient.All.Select(x => x.Title), Contains.Item("testSnipInProject"));
+            Assert.That(SnippetClient.All.Select(x => x.Title), Contains.Item(projectSnippetName));
 
-            var returnedUserSnippet = SnippetClient.All.First(s => s.Title == "testSnip");
-            var returnedProjectSnippet = SnippetClient.All.First(s => s.Title == "testSnipInProject");
+            var returnedUserSnippet = SnippetClient.All.First(s => s.Title == snippetName);
+            var returnedProjectSnippet = SnippetClient.All.First(s => s.Title == projectSnippetName);
 
             Assert.That(SnippetClient.Get(newSnippet2.ProjectId, returnedProjectSnippet.Id), Is.Not.Null);
 
