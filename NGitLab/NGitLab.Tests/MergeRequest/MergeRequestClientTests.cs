@@ -22,7 +22,8 @@ namespace NGitLab.Tests.MergeRequest
             Assert.AreEqual(mergeRequest.Id, _mergeRequestClient[mergeRequest.Iid].Id, "Test we can get a merge request by IId");
 
             ListMergeRequest(mergeRequest);
-            UpdateMergeRequest(mergeRequest);
+            mergeRequest = UpdateMergeRequest(mergeRequest);
+            Test_can_update_a_subset_of_merge_request_fields(mergeRequest);
             AcceptMergeRequest(mergeRequest);
             var commits = _mergeRequestClient.Commits(mergeRequest.Iid).All;
             Assert.IsTrue(commits.Any(), "Can return the commits");
@@ -79,9 +80,9 @@ namespace NGitLab.Tests.MergeRequest
             return branch;
         }
 
-        public void UpdateMergeRequest(Models.MergeRequest request)
+        public Models.MergeRequest UpdateMergeRequest(Models.MergeRequest request)
         {
-            var mergeRequest = _mergeRequestClient.Update(request.Iid, new MergeRequestUpdate
+            var updatedMergeRequest = _mergeRequestClient.Update(request.Iid, new MergeRequestUpdate
             {
                 Title = "New title",
                 Description = "New description",
@@ -90,10 +91,23 @@ namespace NGitLab.Tests.MergeRequest
                 TargetBranch = "master",
             });
 
-            Assert.AreEqual("New title", mergeRequest.Title);
-            Assert.AreEqual("New description", mergeRequest.Description);
-            Assert.IsFalse(mergeRequest.MergeWhenPipelineSucceeds);
-            CollectionAssert.AreEqual(new[] { "a", "b" }, mergeRequest.Labels);
+            Assert.AreEqual("New title", updatedMergeRequest.Title);
+            Assert.AreEqual("New description", updatedMergeRequest.Description);
+            Assert.IsFalse(updatedMergeRequest.MergeWhenPipelineSucceeds);
+            CollectionAssert.AreEqual(new[] { "a", "b" }, updatedMergeRequest.Labels);
+
+            return updatedMergeRequest;
+        }
+
+        private void Test_can_update_a_subset_of_merge_request_fields(Models.MergeRequest mergeRequest)
+        {
+            var updated = _mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate
+            {
+                Title = "Second update",
+            });
+
+            Assert.AreEqual("Second update", updated.Title);
+            Assert.AreEqual(mergeRequest.Description, updated.Description);
         }
 
         public void AcceptMergeRequest(Models.MergeRequest request)

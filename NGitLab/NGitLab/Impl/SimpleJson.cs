@@ -63,6 +63,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
+using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
@@ -1267,6 +1268,7 @@ namespace NGitLab.Impl
         class PocoJsonSerializerStrategy : IJsonSerializerStrategy
     {
         private static readonly ConcurrentDictionary<Type, List<EnumMember>> _enumMembers = new ConcurrentDictionary<Type, List<EnumMember>>();
+        internal static IDictionary<Type, bool> SkipNullFieldsCache = new ReflectionUtils.ThreadSafeDictionary<Type, bool>(SkipNullFieldsFactory);
 
         internal IDictionary<Type, ReflectionUtils.ConstructorDelegate> ConstructorCache;
         internal IDictionary<Type, IDictionary<string, ReflectionUtils.GetDelegate>> GetCache;
@@ -1293,6 +1295,11 @@ namespace NGitLab.Impl
         protected virtual string MapClrMemberNameToJsonFieldName(string clrPropertyName)
         {
             return clrPropertyName;
+        }
+
+        private static bool SkipNullFieldsFactory(Type key)
+        {
+            return key.GetCustomAttribute<SkipNullFieldsAttribute>()?.SkipNullFields != false;
         }
 
         internal virtual ReflectionUtils.ConstructorDelegate ContructorDelegateFactory(Type key)
@@ -1605,12 +1612,25 @@ namespace NGitLab.Impl
             Type type = input.GetType();
             if (type.FullName == null)
                 return false;
+
+            bool skipNullValues = SkipNullFieldsCache[type];
+
             IDictionary<string, object> obj = new JsonObject();
             IDictionary<string, ReflectionUtils.GetDelegate> getters = GetCache[type];
             foreach (KeyValuePair<string, ReflectionUtils.GetDelegate> getter in getters)
             {
                 if (getter.Value != null)
-                    obj.Add(MapClrMemberNameToJsonFieldName(getter.Key), getter.Value(input));
+                {
+                    var fieldName = MapClrMemberNameToJsonFieldName(getter.Key);
+                    var fieldValue = getter.Value(input);
+
+                    if (fieldValue == null && skipNullValues)
+                    {
+                        continue;
+                    }
+
+                    obj.Add(fieldName, fieldValue);
+                }
             }
             output = obj;
             return true;
