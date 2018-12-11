@@ -20,11 +20,14 @@ namespace NGitLab.Models
         [DataMember(Name = "description")]
         public string Description;
 
+        [DataMember(Name = "state_event")]
+        public string NewState;
+
         [DataMember(Name = "labels")]
         public string Labels;
 
         [DataMember(Name = "milestone_id")]
-        public int MilestoneId;
+        public int? MilestoneId;
     }
 
     [DataContract]
