@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
@@ -26,20 +25,6 @@ namespace NGitLab.Models
 
         [DataMember(Name = "milestone_id")]
         public int MilestoneId;
-
-        public static MergeRequestUpdate FromMergeRequest(MergeRequest mergeRequest)
-        {
-            return new MergeRequestUpdate
-            {
-                SourceBranch = mergeRequest.SourceBranch,
-                TargetBranch = mergeRequest.TargetBranch,
-                AssigneeId = mergeRequest.Assignee?.Id ?? 0,
-                Title = mergeRequest.Title,
-                Description = mergeRequest.Description,
-                Labels = string.Join(",", mergeRequest.Labels),
-                MilestoneId = mergeRequest.Milestone?.Id ?? 0
-            };
-        }
     }
 
     [DataContract]
