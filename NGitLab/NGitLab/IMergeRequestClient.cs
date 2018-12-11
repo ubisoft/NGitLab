@@ -13,6 +13,8 @@ namespace NGitLab
 
         MergeRequest Create(MergeRequestCreate mergeRequest);
         MergeRequest Update(int mergeRequestIid, MergeRequestUpdate mergeRequest);
+        MergeRequest Close(int mergeRequestIid);
+        MergeRequest Reopen(int mergeRequestIid);
         void Delete(int mergeRequestIid);
         MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message);
         IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid);

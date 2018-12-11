@@ -25,6 +25,16 @@ namespace NGitLab.Models
 
         [DataMember(Name = "labels")]
         public string Labels;
+
+        [DataMember(Name = "milestone_id")]
+        public int? MilestoneId;
+    }
+
+    [DataContract]
+    public class MergeRequestUpdateState
+    {
+        [DataMember(Name = "state_event")]
+        public string NewState;
     }
 
     // ReSharper disable InconsistentNaming
