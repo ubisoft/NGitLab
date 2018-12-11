@@ -28,7 +28,7 @@ namespace NGitLab.Models
         public string AuthorName;
         
         [DataMember(Name = "actions")]
-        public IList<CreateCommitAction> Actions;
+        public IList<CreateCommitAction> Actions = new List<CreateCommitAction>();
     }
 
     [DataContract]
