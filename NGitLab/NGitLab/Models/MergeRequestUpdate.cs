@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Linq;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
@@ -20,11 +21,32 @@ namespace NGitLab.Models
         [DataMember(Name = "description")]
         public string Description;
 
-        [DataMember(Name = "state_event")]
-        public string NewState;
-
         [DataMember(Name = "labels")]
         public string Labels;
+
+        [DataMember(Name = "milestone_id")]
+        public int MilestoneId;
+
+        public static MergeRequestUpdate FromMergeRequest(MergeRequest mergeRequest)
+        {
+            return new MergeRequestUpdate
+            {
+                SourceBranch = mergeRequest.SourceBranch,
+                TargetBranch = mergeRequest.TargetBranch,
+                AssigneeId = mergeRequest.Assignee?.Id ?? 0,
+                Title = mergeRequest.Title,
+                Description = mergeRequest.Description,
+                Labels = string.Join(",", mergeRequest.Labels),
+                MilestoneId = mergeRequest.Milestone?.Id ?? 0
+            };
+        }
+    }
+
+    [DataContract]
+    public class MergeRequestUpdateState
+    {
+        [DataMember(Name = "state_event")]
+        public string NewState;
     }
 
     // ReSharper disable InconsistentNaming

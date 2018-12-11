@@ -59,6 +59,9 @@ namespace NGitLab.Models
         [DataMember(Name = "work_in_progress")]
         public bool? WorkInProgress;
 
+        [DataMember(Name = "milestone")]
+        public Milestone Milestone;
+
         [DataMember(Name = "labels")]
         public string[] Labels;
 
