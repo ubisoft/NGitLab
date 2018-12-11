@@ -86,7 +86,6 @@ namespace NGitLab.Impl
             .Put().With(new MergeRequestUpdateState { NewState = MergeRequestStateEvent.reopen.ToString() })
             .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid);
 
-
         public void Delete(int mergeRequestIid) => _api
             .Delete()
             .Execute(_projectPath + "/merge_requests/" + mergeRequestIid);
