@@ -18,6 +18,9 @@ namespace NGitLab.Models
         [DataMember(Name = "due_date")]
         public string DueDate;
 
+        [DataMember(Name = "start_date")]
+        public string StartDate;
+
         [DataMember(Name = "state")]
         public string State;
 
@@ -27,4 +30,11 @@ namespace NGitLab.Models
         [DataMember(Name = "updated_at")]
         public DateTime UpdatedAt;
     }
+
+    public enum MilestoneState
+    {
+        active,
+        closed
+    }
+
 }

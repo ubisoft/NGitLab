@@ -15,6 +15,7 @@
         ITriggerClient GetTriggers(int projectId);
         IJobClient GetJobs(int projectId);
         IMergeRequestClient GetMergeRequest(int projectId);
+        IMilestoneClient GetMilestone(int projectId);
         IMembersClient Members { get; }
         IVersionClient Version { get; }
         INamespacesClient Namespaces { get; }
