@@ -108,6 +108,11 @@ namespace NGitLab
             return new MergeRequestClient(_api, projectId);
         }
 
+        public IMilestoneClient GetMilestone(int projectId)
+        {
+            return new MilestoneClient(_api, projectId);
+        }
+
         public IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId)
         {
             return new ProjectIssueNoteClient(_api, projectId);
