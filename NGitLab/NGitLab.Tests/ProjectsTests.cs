@@ -93,6 +93,20 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        public void GetProjectByIdByQuery_Statistics()
+        {
+            var query = new SingleProjectQuery()
+            {
+                Statistics = true
+            };
+
+            var project = _projects.GetById(Initialize.UnitTestProject.Id, query);
+
+            Assert.IsNotNull(project);
+            Assert.IsNotNull(project.Statistics);
+        }
+
+        [Test]
         public void GetProjectsCanSpecifyTheProjectPerPageCount()
         {
             var query = new ProjectQuery

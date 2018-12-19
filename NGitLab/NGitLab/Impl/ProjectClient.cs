@@ -20,7 +20,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<Project> Visible => _api.Get().GetAll<Project>(Project.Url);
 
-        public Project this[int id] => _api.Get().To<Project>(Project.Url + "/" + id);
+        public Project this[int id] => GetById(id, new SingleProjectQuery());
 
         public Project Create(ProjectCreate project) => _api.Post().With(project).To<Project>(Project.Url);
 
@@ -73,6 +73,14 @@ namespace NGitLab.Impl
             }
 
             return _api.Get().GetAll<Project>(url);
+        }
+
+        public Project GetById(int id, SingleProjectQuery query)
+        {
+            var url = Project.Url + "/" + id;
+            url = Utils.AddParameter(url, "statistics", query.Statistics);
+
+            return _api.Get().To<Project>(url);
         }
 
         public Project Fork(string id, ForkProject forkProject)

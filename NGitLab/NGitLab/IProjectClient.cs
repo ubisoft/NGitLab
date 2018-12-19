@@ -37,6 +37,8 @@ namespace NGitLab
 
         void Delete(int id);
 
+        Project GetById(int id, SingleProjectQuery query);
+
         Project Fork(string id, ForkProject forkProject);
     }
 }
