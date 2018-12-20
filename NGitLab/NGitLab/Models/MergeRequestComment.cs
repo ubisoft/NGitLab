@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
@@ -9,6 +10,6 @@ namespace NGitLab.Models
         public string Body;
 
         [DataMember(Name = "author")]
-        public User Author { get; set; }
+        public Author Author { get; set; }
     }
 }
