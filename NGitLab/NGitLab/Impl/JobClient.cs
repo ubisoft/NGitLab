@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -19,7 +18,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<Job> GetJobs(JobScopeMask scope)
         {
-            string url = _jobsPath;
+            var url = _jobsPath;
 
             if (scope != JobScopeMask.All)
             {
@@ -54,7 +53,7 @@ namespace NGitLab.Impl
 
         public string GetTrace(int jobId)
         {
-            string result = "";
+            var result = "";
             _api.Get().Stream($"{_jobsPath}/{jobId}/trace", s =>
             {
                 result = new StreamReader(s).ReadToEnd();

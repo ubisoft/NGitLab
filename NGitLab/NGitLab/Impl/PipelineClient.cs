@@ -26,7 +26,7 @@ namespace NGitLab.Impl
         [Obsolete("Use JobClient.GetJobs() instead")]
         public IEnumerable<Job> GetJobsInProject(JobScope scope)
         {
-            string url = $"{_projectPath}/jobs";
+            var url = $"{_projectPath}/jobs";
 
             if (scope != JobScope.All)
             {
@@ -57,7 +57,7 @@ namespace NGitLab.Impl
             var variablesToAdd = new StringBuilder();
             foreach (var variable in variables)
             {
-                variablesToAdd.Append($"&variables[{variable.Key}]={variable.Value}");
+                variablesToAdd.Append("&variables[").Append(variable.Key).Append("]=").Append(variable.Value);
             }
 
             return _api.Post().To<Pipeline>($"{_projectPath}/trigger/pipeline?token={token}&ref={@ref}{variablesToAdd}");

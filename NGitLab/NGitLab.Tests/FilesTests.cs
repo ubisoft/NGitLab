@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using NGitLab.Models;
+﻿using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Tests

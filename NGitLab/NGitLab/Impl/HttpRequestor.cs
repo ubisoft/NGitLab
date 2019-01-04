@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
-using NGitLab.Extensions;
 
 namespace NGitLab.Impl
 {
@@ -45,7 +44,7 @@ namespace NGitLab.Impl
 
         public HttpRequestor(string hostUrl, string apiToken, MethodType methodType, RequestOptions options)
         {
-            _hostUrl = hostUrl.EndsWith("/") ? hostUrl.Replace("/$", "") : hostUrl;
+            _hostUrl = hostUrl.EndsWith("/", StringComparison.Ordinal) ? hostUrl.Replace("/$", "") : hostUrl;
             _apiToken = apiToken;
             _methodType = methodType;
             _options = options;
@@ -59,7 +58,7 @@ namespace NGitLab.Impl
 
         public virtual void Execute(string tailAPIUrl)
         {
-            Stream(tailAPIUrl, null);
+            Stream(tailAPIUrl, parser: null);
         }
 
         public virtual T To<T>(string tailAPIUrl)
@@ -80,7 +79,7 @@ namespace NGitLab.Impl
                 tailAPIUrl = tailAPIUrl + (tailAPIUrl.IndexOf('?') > 0 ? '&' : '?') + "private_token=" + _apiToken;
             }
 
-            if (!tailAPIUrl.StartsWith("/"))
+            if (!tailAPIUrl.StartsWith("/", StringComparison.Ordinal))
             {
                 tailAPIUrl = "/" + tailAPIUrl;
             }
@@ -90,7 +89,7 @@ namespace NGitLab.Impl
 
         public Uri GetUrl(string tailAPIUrl)
         {
-            if (!tailAPIUrl.StartsWith("/"))
+            if (!tailAPIUrl.StartsWith("/", StringComparison.Ordinal))
             {
                 tailAPIUrl = "/" + tailAPIUrl;
             }

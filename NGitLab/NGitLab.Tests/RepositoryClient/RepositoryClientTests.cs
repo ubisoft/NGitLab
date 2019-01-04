@@ -30,7 +30,7 @@ namespace NGitLab.Tests.RepositoryClient
         {
             var commits = Initialize.Repository.Commits.ToArray();
             CollectionAssert.IsNotEmpty(commits);
-            Assert.AreEqual(_commit.Message, commits.First().Message);
+            Assert.AreEqual(_commit.Message, commits[0].Message);
             Assert.AreEqual("add readme", commits.Last().Message);
         }
 

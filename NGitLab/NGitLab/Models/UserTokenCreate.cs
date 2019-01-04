@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NGitLab.Models
 {
@@ -24,16 +20,15 @@ namespace NGitLab.Models
         {
             get
             {
-                DateTime expiresAt;
-                if (!string.IsNullOrEmpty(ExpiresAtStr) && DateTime.TryParseExact(ExpiresAtStr, "yyyy-MM-dd",
-                    CultureInfo.InvariantCulture, DateTimeStyles.None, out expiresAt))
+                if (!string.IsNullOrEmpty(ExpiresAtStr) &&
+                    DateTime.TryParseExact(ExpiresAtStr, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var expiresAt))
                 {
                     return expiresAt;
                 }
 
                 return null;
             }
-            set => ExpiresAtStr = value.HasValue ? value.Value.ToString("yyyy-MM-dd") : null;
+            set => ExpiresAtStr = value?.ToString("yyyy-MM-dd");
         }
 
         [DataMember(Name = "scopes")]

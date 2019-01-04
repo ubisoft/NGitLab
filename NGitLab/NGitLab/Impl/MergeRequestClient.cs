@@ -79,11 +79,11 @@ namespace NGitLab.Impl
             .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid);
 
         public MergeRequest Close(int mergeRequestIid) => _api
-            .Put().With(new MergeRequestUpdateState {NewState = MergeRequestStateEvent.close.ToString()})
+            .Put().With(new MergeRequestUpdateState {NewState = nameof(MergeRequestStateEvent.close) })
             .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid);
 
         public MergeRequest Reopen(int mergeRequestIid) => _api
-            .Put().With(new MergeRequestUpdateState { NewState = MergeRequestStateEvent.reopen.ToString() })
+            .Put().With(new MergeRequestUpdateState { NewState = nameof(MergeRequestStateEvent.reopen) })
             .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid);
 
         public void Delete(int mergeRequestIid) => _api

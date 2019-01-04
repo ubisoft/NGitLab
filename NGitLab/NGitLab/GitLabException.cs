@@ -15,12 +15,12 @@ namespace NGitLab
         {
         }
 
-        public GitLabException(string message) 
+        public GitLabException(string message)
             : base(message)
         {
         }
 
-        public GitLabException(string message, Exception inner) 
+        public GitLabException(string message, Exception inner)
             : base(message, inner)
         {
         }

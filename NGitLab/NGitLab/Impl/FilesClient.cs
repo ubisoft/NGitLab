@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Web;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -49,11 +48,11 @@ namespace NGitLab.Impl
             if (obj == null)
                 return null;
 
-            var dict = new Dictionary<string, object>();
+            var dict = new Dictionary<string, object>(StringComparer.Ordinal);
             var fields = obj.GetType().GetFields();
             foreach (var field in fields)
             {
-                var attribute = field.GetCustomAttributes(typeof(DataMemberAttribute), true).OfType<DataMemberAttribute>().FirstOrDefault();
+                var attribute = field.GetCustomAttributes(typeof(DataMemberAttribute), inherit: true).OfType<DataMemberAttribute>().FirstOrDefault();
                 if (attribute == null)
                     continue;
 

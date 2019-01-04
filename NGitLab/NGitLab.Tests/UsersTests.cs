@@ -16,7 +16,6 @@ namespace NGitLab.Tests
             _users = Initialize.GitLabClient.Users;
         }
 
-
         [Test]
         public void GetUsers()
         {
@@ -177,17 +176,17 @@ namespace NGitLab.Tests
                 {
                     writer.Write(new byte[] { 0x00, 0x00, 0x00 });
                     writer.Write(KeyType);
-                    WritePrefixed(writer, keyParameters.Exponent, true);
-                    WritePrefixed(writer, keyParameters.Modulus, true);
+                    WritePrefixed(writer, keyParameters.Exponent, addLeadingNull: true);
+                    WritePrefixed(writer, keyParameters.Modulus, addLeadingNull: true);
                 }
 
                 var privateBuffer = new byte[PaddedPrefixSize + keyParameters.D.Length + PaddedPrefixSize + keyParameters.P.Length + PaddedPrefixSize + keyParameters.Q.Length + PaddedPrefixSize + keyParameters.InverseQ.Length];
                 using (var writer = new BinaryWriter(new MemoryStream(privateBuffer)))
                 {
-                    WritePrefixed(writer, keyParameters.D, true);
-                    WritePrefixed(writer, keyParameters.P, true);
-                    WritePrefixed(writer, keyParameters.Q, true);
-                    WritePrefixed(writer, keyParameters.InverseQ, true);
+                    WritePrefixed(writer, keyParameters.D, addLeadingNull: true);
+                    WritePrefixed(writer, keyParameters.P, addLeadingNull: true);
+                    WritePrefixed(writer, keyParameters.Q, addLeadingNull: true);
+                    WritePrefixed(writer, keyParameters.InverseQ, addLeadingNull: true);
                 }
 
                 var publicBlob = KeyType + " " + Convert.ToBase64String(publicBuffer);

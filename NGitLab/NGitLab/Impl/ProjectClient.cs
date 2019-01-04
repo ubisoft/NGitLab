@@ -30,7 +30,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<Project> Get(ProjectQuery query)
         {
-            string url = Project.Url;
+            var url = Project.Url;
 
             if (query.UserId.HasValue)
             {
@@ -40,10 +40,10 @@ namespace NGitLab.Impl
             switch (query.Scope)
             {
                 case ProjectQueryScope.Accessible:
-                    url = Utils.AddParameter(url, "membership", true);
+                    url = Utils.AddParameter(url, "membership", value: true);
                     break;
                 case ProjectQueryScope.Owned:
-                    url = Utils.AddParameter(url, "owned", true);
+                    url = Utils.AddParameter(url, "owned", value: true);
                     break;
 #pragma warning disable 618 // Obsolete
                 case ProjectQueryScope.Visible:

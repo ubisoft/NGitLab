@@ -22,7 +22,7 @@ namespace NGitLab.Impl
 
         public void Delete(string name)
         {
-            _api.Delete().Stream($"{_tagsPath}/{WebUtility.UrlEncode(name)}", x => { });
+            _api.Delete().Stream($"{_tagsPath}/{WebUtility.UrlEncode(name)}", _ => { });
         }
 
         public RealeaseInfo CreateRelease(string name, ReleaseCreate data)

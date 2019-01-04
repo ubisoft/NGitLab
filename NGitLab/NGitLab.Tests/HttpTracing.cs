@@ -10,7 +10,7 @@ namespace NGitLab.Tests
     /// Allows to trace the http calls using the hack described on stackoverflow:
     /// http://stackoverflow.com/questions/1049442/system-net-httpwebrequest-tracing-without-using-files-or-app-config
     /// </summary>
-    public class HttpTracing
+    public static class HttpTracing
     {
         public static void Enable()
         {
@@ -35,7 +35,7 @@ namespace NGitLab.Tests
             if (!Logging.Initialized)
             {
                 HttpWebRequest.Create("http://localhost");
-                Thread waitForInitializationThread = new Thread(() =>
+                var waitForInitializationThread = new Thread(() =>
                 {
                     while (!Logging.Initialized)
                     {

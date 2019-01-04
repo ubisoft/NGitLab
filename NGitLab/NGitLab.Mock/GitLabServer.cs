@@ -28,17 +28,17 @@ namespace NGitLab.Mock
         public GitLabServer()
         {
             Client.Projects.Returns(ProjectClient);
-            ProjectClient.Accessible.Returns(call => Projects.Select(x => x.ClientProject));
-            ProjectClient.Owned.Returns(call => Projects.Select(x => x.ClientProject));
-            ProjectClient.Visible.Returns(call => Projects.Select(x => x.ClientProject));
+            ProjectClient.Accessible.Returns(_ => Projects.Select(x => x.ClientProject));
+            ProjectClient.Owned.Returns(_ => Projects.Select(x => x.ClientProject));
+            ProjectClient.Visible.Returns(_ => Projects.Select(x => x.ClientProject));
             ProjectClient[-1].ReturnsForAnyArgs(call => GetProject((int)call[0]).ClientProject);
             ProjectClient["anyName"].ReturnsForAnyArgs(call => GetProject((string)call[0]).ClientProject);
 
             Client.GetRepository(-1).ReturnsForAnyArgs(call => GetProject((int)call[0]).Repository);
 
             Members.OfProject("dummy").ReturnsForAnyArgs(call => GetMembersOfProject((string)call[0]));
-            Members.OfNamespace("dummy").ReturnsForAnyArgs(call => new Membership[0]);
-            Client.Members.Returns(call => Members);
+            Members.OfNamespace("dummy").ReturnsForAnyArgs(_ => new Membership[0]);
+            Client.Members.Returns(_ => Members);
         }
 
         public MockProject GetProject(int projectId)
@@ -54,7 +54,7 @@ namespace NGitLab.Mock
             }
 
             fullName = fullName.Replace('\\', '/');
-            var project = Projects.FirstOrDefault(x => x.FullName == fullName);
+            var project = Projects.Find(x => x.FullName == fullName);
 
             if (project == null)
             {
@@ -138,13 +138,13 @@ namespace NGitLab.Mock
 
         private IEnumerable<Commit> GetCommits(string refName)
         {
-            var commit = Commits.FirstOrDefault(x => x.Id.ToString() == refName);
+            var commit = Commits.Find(x => x.Id.ToString() == refName);
             if (commit == null)
             {
                 throw new Exception($"Cannot find the requested ref {refName}");
             }
 
-            int index = Commits.IndexOf(commit);
+            var index = Commits.IndexOf(commit);
             return Commits.Take(index + 1).Reverse();
         }
 
@@ -217,7 +217,7 @@ namespace NGitLab.Mock
         private static string HexStringFromBytes(byte[] bytes)
         {
             var sb = new StringBuilder();
-            foreach (byte b in bytes)
+            foreach (var b in bytes)
             {
                 var hex = b.ToString("x2");
                 sb.Append(hex);
@@ -226,13 +226,13 @@ namespace NGitLab.Mock
         }
     }
 
-    internal class ProjectIds
+    internal static class ProjectIds
     {
         private static int _currentId;
         public static int Next => ++_currentId;
     }
 
-    internal class MemberIds
+    internal static class MemberIds
     {
         private static int _currentId;
         public static int Next => ++_currentId;

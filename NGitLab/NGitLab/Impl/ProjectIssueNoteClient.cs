@@ -5,7 +5,6 @@ namespace NGitLab.Impl
 {
     public class ProjectIssueNoteClient : IProjectIssueNoteClient
     {
-        private const string IssuesUrl = "/issues";
         private const string IssuesNoteUrl = "/projects/{0}/issues/{1}/notes";
         private const string SingleNoteIssueUrl = "/projects/{0}/issues/{1}/notes/{2}";
 

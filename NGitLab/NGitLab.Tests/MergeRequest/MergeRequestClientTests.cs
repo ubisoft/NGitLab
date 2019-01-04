@@ -120,7 +120,7 @@ namespace NGitLab.Tests.MergeRequest
                     ShouldRemoveSourceBranch = true,
                 });
 
-            Assert.That(mergeRequest.State, Is.EqualTo(MergeRequestState.merged.ToString()));
+            Assert.That(mergeRequest.State, Is.EqualTo(nameof(MergeRequestState.merged)));
             Assert.IsNull(Initialize.Repository.Branches.All.FirstOrDefault(x => x.Name == request.SourceBranch));
         }
 
@@ -137,7 +137,7 @@ namespace NGitLab.Tests.MergeRequest
                 });
             });
 
-            Assert.AreEqual("[\"You can not use same project/branch for source and target\"]", exception.ErrorMessage);
+            Assert.AreEqual("[\"You can't use same project/branch for source and target\"]", exception.ErrorMessage);
         }
 
         [Test]
@@ -173,7 +173,7 @@ namespace NGitLab.Tests.MergeRequest
 
             // --- Add the "current user" as approver for this MR ---
 
-            var users = Initialize.GitLabClient.Users;            
+            var users = Initialize.GitLabClient.Users;
 
             var approversChange = new MergeRequestApproversChange()
             {

@@ -1,8 +1,8 @@
 ﻿{
   "dependencies": {
-    "NSubstitute": "2.0.2",
-    "NUnit": "3.5.0",
-    "NUnit.Console": "3.5.0"
+    "NSubstitute": "3.1.0",
+    "NUnit": "3.11.0",
+    "NUnit.Console": "3.9.0"
   },
   "frameworks": {
     "net452": {}

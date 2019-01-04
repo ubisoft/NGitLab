@@ -17,9 +17,9 @@ namespace NGitLab
         /// 
         /// </summary>
         /// <param name="projectId"></param>
-        /// <param name="Name"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        Label GetLabel(int projectId, string Name);
+        Label GetLabel(int projectId, string name);
 
         /// <summary>
         /// Create a new label for a project.

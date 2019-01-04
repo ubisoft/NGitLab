@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -90,7 +89,7 @@ namespace NGitLab.Tests
         public static Runner GetDefaultRunner()
         {
             var allRunners = Initialize.GitLabClient.Runners.Accessible.ToArray();
-            var runner = allRunners.FirstOrDefault(x => x.Active && x.Description.Equals("example"));
+            var runner = Array.Find(allRunners, x => x.Active && string.Equals(x.Description, "example", StringComparison.Ordinal));
 
             if (runner == null)
             {

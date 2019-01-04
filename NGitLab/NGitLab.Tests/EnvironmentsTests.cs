@@ -1,9 +1,5 @@
-﻿using System;
-using System.Linq;
-using Castle.Core.Internal;
-using NGitLab.Models;
+﻿using System.Linq;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace NGitLab.Tests
 {
@@ -20,17 +16,17 @@ namespace NGitLab.Tests
         public void CreateAndGetAll()
         {
             var envClient = Initialize.GitLabClient.GetEnvironmentClient(Initialize.UnitTestProject.Id);
-            string newEnvNameNoUrl = "env_test_name_no_url";
-            string newEnvSlugNameNoUrlStart = GetSlugNameStart(newEnvNameNoUrl);
-            string newEnvNameWithUrl = "env_test_name_with_url";
-            string newEnvSlugNameWithUrlStart = GetSlugNameStart(newEnvNameWithUrl);
-            string newEnvNameExternalUrl = "http://somewhere";
+            var newEnvNameNoUrl = "env_test_name_no_url";
+            var newEnvSlugNameNoUrlStart = GetSlugNameStart(newEnvNameNoUrl);
+            var newEnvNameWithUrl = "env_test_name_with_url";
+            var newEnvSlugNameWithUrlStart = GetSlugNameStart(newEnvNameWithUrl);
+            var newEnvNameExternalUrl = "http://somewhere";
 
             // Validate environments doesn't exist yet
             Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameNoUrl || e.Name == newEnvNameWithUrl));
 
             // Create  and check return value
-            Models.EnvironmentInfo env = envClient.Create(newEnvNameNoUrl, null);
+            Models.EnvironmentInfo env = envClient.Create(newEnvNameNoUrl, externalUrl: null);
             StringAssert.AreEqualIgnoringCase(newEnvNameNoUrl, env.Name);
             StringAssert.StartsWith(newEnvSlugNameNoUrlStart, env.Slug);
             Assert.NotZero(env.Id);
@@ -70,7 +66,7 @@ namespace NGitLab.Tests
             Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToEdit || e.Name == newEnvNameUpdated));
 
             // Create newEnvNameToEdit
-            Models.EnvironmentInfo env = envClient.Create(newEnvNameToEdit, null);
+            Models.EnvironmentInfo env = envClient.Create(newEnvNameToEdit, externalUrl: null);
             int initialEnvId = env.Id;
 
             // Validate newEnvNameToEdit is present
@@ -101,7 +97,7 @@ namespace NGitLab.Tests
             Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToDelete));
 
             // Create newEnvNameToDelete
-            Models.EnvironmentInfo env = envClient.Create(newEnvNameToDelete, null);
+            Models.EnvironmentInfo env = envClient.Create(newEnvNameToDelete, externalUrl: null);
             int initialEnvId = env.Id;
 
             // Validate newEnvNameToDelete is present
@@ -118,14 +114,14 @@ namespace NGitLab.Tests
         public void Stop()
         {
             var envClient = Initialize.GitLabClient.GetEnvironmentClient(Initialize.UnitTestProject.Id);
-            string newEnvNameToStop = "env_test_name_to_stop";
-            string newEnvSlugNameToStopStart = GetSlugNameStart(newEnvNameToStop);
+            var newEnvNameToStop = "env_test_name_to_stop";
+            var newEnvSlugNameToStopStart = GetSlugNameStart(newEnvNameToStop);
 
             // Validate environment doesn't exist yet
             Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToStop));
 
             // Create newEnvNameToStop
-            Models.EnvironmentInfo env = envClient.Create(newEnvNameToStop, null);
+            Models.EnvironmentInfo env = envClient.Create(newEnvNameToStop, externalUrl: null);
             int initialEnvId = env.Id;
 
             // Validate newEnvNameToStop is present

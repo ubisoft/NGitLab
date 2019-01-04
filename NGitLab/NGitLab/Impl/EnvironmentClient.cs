@@ -22,7 +22,7 @@ namespace NGitLab.Impl
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException();
 
-            string url = Utils.AddParameter(_environmentsPath, "name", name);
+            var url = Utils.AddParameter(_environmentsPath, "name", name);
 
             if (!string.IsNullOrEmpty(externalUrl))
             {
@@ -34,7 +34,7 @@ namespace NGitLab.Impl
 
         public EnvironmentInfo Edit(int environmentId, string name, string externalUrl)
         {
-            string url = $"{_environmentsPath}/{environmentId}";
+            var url = $"{_environmentsPath}/{environmentId}";
 
             if (!string.IsNullOrEmpty(name))
             {

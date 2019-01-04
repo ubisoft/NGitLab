@@ -21,7 +21,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<Runner> GetAllRunnersWithScope(RunnerScope scope)
         {
-            string url = Runner.Url + "/all";
+            var url = Runner.Url + "/all";
             url = Utils.AddParameter(url, "scope", scope.ToString().ToLowerInvariant());
             return _api.Get().GetAll<Runner>(url);
         }
@@ -40,7 +40,7 @@ namespace NGitLab.Impl
 
         public Runner Update(int runnerId, RunnerUpdate runnerUpdate)
         {
-            string url = $"{Runner.Url}/{runnerId}";
+            var url = $"{Runner.Url}/{runnerId}";
             return _api.Put().With(runnerUpdate).To<Runner>(url);
         }
 
@@ -71,19 +71,19 @@ namespace NGitLab.Impl
 
         IEnumerable<Runner> IRunnerClient.GetAvailableRunners(int projectId)
         {
-            string url = $"{Project.Url}/{projectId}/runners";
+            var url = $"{Project.Url}/{projectId}/runners";
             return _api.Get().GetAll<Runner>(url);
         }
 
         public Runner EnableRunner(int projectId, RunnerId runnerId)
         {
-            string url = $"{Project.Url}/{projectId}/runners";
+            var url = $"{Project.Url}/{projectId}/runners";
             return _api.Post().With(runnerId).To<Runner>(url);
         }
 
         public void DisableRunner(int projectId, RunnerId runnerId)
         {
-            string url = $"{Project.Url}/{projectId}/runners/{runnerId.Id}";
+            var url = $"{Project.Url}/{projectId}/runners/{runnerId.Id}";
             _api.Delete().Execute(url);
         }
     }
