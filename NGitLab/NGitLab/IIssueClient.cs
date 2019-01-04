@@ -16,10 +16,8 @@ namespace NGitLab
         IEnumerable<Issue> ForProject(int projectId);
 
         /// <summary>
-        /// Return a single issue for a project given project.
-        /// 
-        /// url like GET /projects/:id/issues/:issue_id
-        /// 
+        ///     <para>Return a single issue for a project given project.</para>
+        ///     <para>url like GET /projects/:id/issues/:issue_id</para>
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="issueId"></param>

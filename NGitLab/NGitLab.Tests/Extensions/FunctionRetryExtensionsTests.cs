@@ -18,7 +18,7 @@ namespace NGitLab.Tests.Extensions
             mockClass.TestRetryMethod(Arg.Any<bool>()).Throws(new GitLabException() { StatusCode = HttpStatusCode.InternalServerError });
 
             //act
-            Assert.Throws<GitLabException>(() => ((Func<string>)(() => mockClass.TestRetryMethod(true))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental));
+            Assert.Throws<GitLabException>(() => ((Func<string>)(() => mockClass.TestRetryMethod(isFailed: true))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental));
 
             //assert
             mockClass.ReceivedWithAnyArgs(options.RetryCount + 1).TestRetryMethod(Arg.Any<bool>());
@@ -32,7 +32,7 @@ namespace NGitLab.Tests.Extensions
             mockClass.TestRetryMethod(Arg.Any<bool>()).Returns(string.Empty);
 
             // act
-            ((Func<string>)(() => mockClass.TestRetryMethod(false))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental);
+            ((Func<string>)(() => mockClass.TestRetryMethod(isFailed: false))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental);
 
             // assert
             mockClass.ReceivedWithAnyArgs(1).TestRetryMethod(Arg.Any<bool>());

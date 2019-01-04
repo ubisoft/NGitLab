@@ -20,9 +20,9 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Label>(string.Format(ProjectLabelUrl, projectId));
         }
 
-        public Label GetLabel(int projectId, string Name)
+        public Label GetLabel(int projectId, string name)
         {
-            return ForProject(projectId).FirstOrDefault<Label>((x) => x.Name.Equals(Name));
+            return ForProject(projectId).FirstOrDefault<Label>((x) => string.Equals(x.Name, name, System.StringComparison.Ordinal));
         }
 
         public Label Create(LabelCreate label)

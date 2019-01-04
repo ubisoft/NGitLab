@@ -36,5 +36,4 @@ namespace NGitLab.Models
         active,
         closed
     }
-
 }

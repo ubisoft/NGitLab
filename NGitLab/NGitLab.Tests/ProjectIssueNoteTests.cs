@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using Castle.Core.Internal;
+﻿using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace NGitLab.Tests
 {
@@ -15,7 +12,7 @@ namespace NGitLab.Tests
         {
             _client = Initialize.GitLabClient.GetProjectIssueNoteClient(Initialize.UnitTestProject.Id);
         }
-        
+
         [Test]
         public void CreateNote()
         {
@@ -55,7 +52,7 @@ namespace NGitLab.Tests
             // boolean set to true.
             // We validate that there is only two issues that don't have the 'system' flag.
             Assert.That(listedNote.Where(x => !x.System).Count, Is.EqualTo(2));
-            Assert.That(listedNote.First().Body, Is.EqualTo(noteCreate.Body));
+            Assert.That(listedNote[0].Body, Is.EqualTo(noteCreate.Body));
         }
 
         [Test]

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
-using NUnit.Framework;
-using System.Collections.Generic;
 using NGitLab.Tests.Extensions;
+using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
@@ -59,7 +59,7 @@ namespace NGitLab.Tests
         {
             var projects = GetProjects(new ProjectQuery { Statistics = true }).ToList();
 
-            if (!projects.Any())
+            if (projects.Count == 0)
             {
                 Assert.Fail("No projects found.");
             }
@@ -72,8 +72,10 @@ namespace NGitLab.Tests
         {
             var projects = GetProjects(new ProjectQuery()).ToList();
 
-            if (!projects.Any())
+            if (projects.Count == 0)
+            {
                 Assert.Fail("No projects found.");
+            }
 
             projects.ForEach(p => Assert.IsNotNull(p.Links));
         }

@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------
 // <copyright file="SimpleJson.cs" company="The Outercurve Foundation">
 //    Copyright (c) 2011, The Outercurve Foundation.
 //
@@ -135,7 +135,7 @@ namespace NGitLab.Impl
         /// </summary>
         public JsonObject()
         {
-            _members = new Dictionary<string, object>();
+            _members = new Dictionary<string, object>(StringComparer.Ordinal);
         }
 
         /// <summary>
@@ -596,7 +596,7 @@ namespace NGitLab.Impl
 
         public static object DeserializeObject(string json, Type type)
         {
-            return DeserializeObject(json, type, null);
+            return DeserializeObject(json, type, jsonSerializerStrategy: null);
         }
 
         public static T DeserializeObject<T>(string json, IJsonSerializerStrategy jsonSerializerStrategy)
@@ -606,7 +606,7 @@ namespace NGitLab.Impl
 
         public static T DeserializeObject<T>(string json)
         {
-            return (T)DeserializeObject(json, typeof(T), null);
+            return (T)DeserializeObject(json, typeof(T), jsonSerializerStrategy: null);
         }
 
         /// <summary>
@@ -1573,7 +1573,7 @@ namespace NGitLab.Impl
         {
             var type = enumVal.GetType();
             var memInfo = type.GetMember(enumVal.ToString());
-            var attributes = memInfo[0].GetCustomAttributes(typeof(T), false);
+            var attributes = memInfo[0].GetCustomAttributes(typeof(T), inherit: false);
             return (attributes.Length > 0) ? (T)attributes[0] : null;
         }
 
@@ -1924,7 +1924,7 @@ namespace NGitLab.Impl
 #if SIMPLE_JSON_TYPEINFO
                 return propertyInfo.GetMethod;
 #else
-            return propertyInfo.GetGetMethod(true);
+            return propertyInfo.GetGetMethod(nonPublic: true);
 #endif
         }
 
@@ -1933,7 +1933,7 @@ namespace NGitLab.Impl
 #if SIMPLE_JSON_TYPEINFO
                 return propertyInfo.SetMethod;
 #else
-            return propertyInfo.GetSetMethod(true);
+            return propertyInfo.GetSetMethod(nonPublic: true);
 #endif
         }
 

@@ -2,7 +2,6 @@
 
 namespace NGitLab.Models
 {
-
     [DataContract]
     public class VariableUpdate
     {

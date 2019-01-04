@@ -5,7 +5,7 @@ namespace NGitLab
     /// <summary>
     /// Sha1 hash value representation.
     /// </summary>
-    public struct Sha1
+    public readonly struct Sha1
     {
         private readonly ulong _p1; // 8
         private readonly ulong _p2; // 16
@@ -14,12 +14,12 @@ namespace NGitLab
         public Sha1(string value)
         {
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentException("Cannot be null or empty", "value");
+                throw new ArgumentException("Cannot be null or empty", nameof(value));
 
             if (value.Length != 40)
                 throw new ArgumentException("Sha1 is 20 bytes long, which is 40 chars");
 
-            int index = 0;
+            var index = 0;
 
             _p1 = GetLong(value, ref index);
             _p2 = GetLong(value, ref index);

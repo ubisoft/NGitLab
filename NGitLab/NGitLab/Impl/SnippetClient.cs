@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -11,7 +7,7 @@ namespace NGitLab.Impl
     {
         private const string ProjectUrl = "/projects";
         private const string SnippetUrl = "/snippets";
-        
+
         private readonly API _api;
 
         public SnippetClient(API api)

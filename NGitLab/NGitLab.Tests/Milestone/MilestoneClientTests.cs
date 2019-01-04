@@ -96,7 +96,7 @@ namespace NGitLab.Tests.Milestone
         {
             var closedMilestone = _milestoneClient.Activate(milestone.Id);
 
-            Assert.That(closedMilestone.State, Is.EqualTo(MilestoneState.active.ToString()));
+            Assert.That(closedMilestone.State, Is.EqualTo(nameof(MilestoneState.active)));
             Assert.That(closedMilestone.Title, Is.EqualTo(milestone.Title));
             Assert.That(closedMilestone.Description, Is.EqualTo(milestone.Description));
             Assert.That(closedMilestone.StartDate, Is.EqualTo(milestone.StartDate));
@@ -109,7 +109,7 @@ namespace NGitLab.Tests.Milestone
         {
             var closedMilestone = _milestoneClient.Close(milestone.Id);
 
-            Assert.That(closedMilestone.State, Is.EqualTo(MilestoneState.closed.ToString()));
+            Assert.That(closedMilestone.State, Is.EqualTo(nameof(MilestoneState.closed)));
             Assert.That(closedMilestone.Title, Is.EqualTo(milestone.Title));
             Assert.That(closedMilestone.Description, Is.EqualTo(milestone.Description));
             Assert.That(closedMilestone.StartDate, Is.EqualTo(milestone.StartDate));

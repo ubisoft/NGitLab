@@ -12,7 +12,7 @@ namespace NGitLab.Models
     [DataContract]
     public class MergeRequestApproversChange
     {
-        private static int[] EmptyIntArray = new int[0];
+        private static readonly int[] EmptyIntArray = new int[0];
 
         [DataMember(Name = "approver_ids")]
         public int[] Approvers = EmptyIntArray;

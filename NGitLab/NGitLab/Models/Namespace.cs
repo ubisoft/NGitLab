@@ -29,7 +29,7 @@ namespace NGitLab.Models
 
         public Type GetKind()
         {
-            return (Type) Enum.Parse(typeof(Type), Kind, true);
+            return (Type) Enum.Parse(typeof(Type), Kind, ignoreCase: true);
         }
     }
 }

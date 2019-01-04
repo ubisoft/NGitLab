@@ -39,11 +39,11 @@ namespace NGitLab.Impl
             .To<Milestone>($"{_milestonePath}/{milestoneId}");
 
         public Milestone Close(int milestoneId) => _api
-            .Put().With(new MilestoneUpdateState { NewState = MilestoneStateEvent.close.ToString()})
+            .Put().With(new MilestoneUpdateState { NewState = nameof(MilestoneStateEvent.close) })
             .To<Milestone>($"{_milestonePath}/{milestoneId}");
 
         public Milestone Activate(int milestoneId) => _api
-            .Put().With(new MilestoneUpdateState { NewState = MilestoneStateEvent.activate.ToString() })
+            .Put().With(new MilestoneUpdateState { NewState = nameof(MilestoneStateEvent.activate) })
             .To<Milestone>($"{_milestonePath}/{milestoneId}");
 
         public void Delete(int milestoneId) => _api
