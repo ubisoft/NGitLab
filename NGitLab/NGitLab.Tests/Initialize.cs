@@ -181,7 +181,7 @@ namespace NGitLab.Tests
             private readonly List<WebRequest> _allRequests;
 
             public CustomRequestOptions(List<WebRequest> allRequests)
-                : base(retryCount: 0, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
+                : base(retryCount: 3, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
             {
                 _allRequests = allRequests;
             }
