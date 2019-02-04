@@ -42,14 +42,11 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "updated_before", query.UpdatedBefore);
             url = Utils.AddParameter(url, "scope", query.Scope);
             url = Utils.AddParameter(url, "author_id", query.AuthorId);
-            if (query.AssigneeId == 0) // unassigned. In the next version of GitLab, 0 or empty mean unassigned, but in the current version we must use an empty value.
-            {
-                url = Utils.AddParameter(url, "assignee_id", "");
-            }
-            else
-            {
-                url = Utils.AddParameter(url, "assignee_id", query.AssigneeId);
-            }
+
+            url = (query.AssigneeId == 0) ?                                 // In NGitLab, 0 still means 'unassigned'
+                Utils.AddParameter(url, "assignee_id", "None") :            // but in GitLab API, we need to pass "None"
+                Utils.AddParameter(url, "assignee_id", query.AssigneeId);
+
             url = Utils.AddParameter(url, "source_branch", query.SourceBranch);
             url = Utils.AddParameter(url, "target_branch", query.TargetBranch);
             url = Utils.AddParameter(url, "search", query.Search);
@@ -64,7 +61,7 @@ namespace NGitLab.Impl
             if (mergeRequest == null)
                 throw new System.ArgumentNullException(nameof(mergeRequest));
 
-            if(mergeRequest.TargetProjectId == null)
+            if (mergeRequest.TargetProjectId == null)
             {
                 mergeRequest.TargetProjectId = _projectId;
             }
@@ -79,7 +76,7 @@ namespace NGitLab.Impl
             .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid);
 
         public MergeRequest Close(int mergeRequestIid) => _api
-            .Put().With(new MergeRequestUpdateState {NewState = nameof(MergeRequestStateEvent.close) })
+            .Put().With(new MergeRequestUpdateState { NewState = nameof(MergeRequestStateEvent.close) })
             .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid);
 
         public MergeRequest Reopen(int mergeRequestIid) => _api
