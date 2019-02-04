@@ -7,11 +7,13 @@ namespace NGitLab.Tests.MergeRequest
     public class MergeRequestClientTests
     {
         private IMergeRequestClient _mergeRequestClient;
+        private User _currentUser;
 
         [SetUp]
         public void Setup()
         {
             _mergeRequestClient = Initialize.GitLabClient.GetMergeRequest(Initialize.UnitTestProject.Id);
+            _currentUser = Initialize.GitLabClient.Users.Current;
         }
 
         [Test]
@@ -29,6 +31,110 @@ namespace NGitLab.Tests.MergeRequest
             Assert.IsTrue(commits.Any(), "Can return the commits");
         }
 
+        [Test]
+        public void Test_gitlab_returns_an_error_when_trying_to_create_a_request_with_same_source_and_destination()
+        {
+            var exception = Assert.Throws<GitLabException>(() =>
+            {
+                _mergeRequestClient.Create(new MergeRequestCreate
+                {
+                    Title = "ErrorRequest",
+                    SourceBranch = "master",
+                    TargetBranch = "master"
+                });
+            });
+
+            Assert.AreEqual("[\"You can't use same project/branch for source and target\"]", exception.ErrorMessage);
+        }
+
+        [Test]
+        public void Test_merge_request_delete()
+        {
+            var branch = CreateBranch("tmp-branch-to-test-mr-deletion");
+            var mergeRequest = CreateMergeRequest(branch.Name, "master");
+            Assert.AreEqual(mergeRequest.Id, _mergeRequestClient[mergeRequest.Iid].Id, "Test can get a merge request by IId");
+
+            Assert.DoesNotThrow(() =>
+            {
+                var mr = _mergeRequestClient[mergeRequest.Iid];
+            });
+
+            _mergeRequestClient.Delete(mergeRequest.Iid);
+
+            Assert.Throws<GitLabException>(() =>
+            {
+                var mr = _mergeRequestClient[mergeRequest.Iid];
+            });
+        }
+
+        [Test]
+        public void Test_merge_request_approvers()
+        {
+            var branch = CreateBranch("tmp-branch-to-test-mr-approvers");
+            var mergeRequest = CreateMergeRequest(branch.Name, "master");
+
+            var approvalClient = _mergeRequestClient.ApprovalClient(mergeRequest.Iid);
+            var approvers = approvalClient.Approvals.Approvers;
+
+            Assert.AreEqual(0, approvers.Length, "Initially no approver defined");
+
+            // --- Add the "current user" as approver for this MR ---
+
+            var users = Initialize.GitLabClient.Users;
+
+            var approversChange = new MergeRequestApproversChange()
+            {
+                Approvers = new[] { users.Current.Id }
+            };
+
+            approvalClient.ChangeApprovers(approversChange);
+
+            approvers = approvalClient.Approvals.Approvers;
+
+            Assert.AreEqual(1, approvers.Length, "A single approver defined");
+            Assert.AreEqual(users.Current.Id, approvers[0].User.Id, "The approver is the current user");
+        }
+
+        [Test]
+        public void Test_get_unassigned_merge_requests()
+        {
+            var branch = CreateBranch("branch-for-unassigned_mr1");
+            CreateMergeRequest(branch.Name, "master");
+
+            branch = CreateBranch("branch-for-assigned_mr1");
+            CreateMergeRequest(branch.Name, "master", _currentUser.Id);
+
+            var mergeRequests = _mergeRequestClient.Get(new MergeRequestQuery()
+            {
+                AssigneeId = 0  // = unassigned
+            }).ToList();
+
+            Assert.AreNotEqual(0, mergeRequests.Count(),
+                "The query retrieved all open merged requests that are unassigned");
+            Assert.IsTrue(mergeRequests.All(mr => mr.Assignee == null),
+                "All collected merged requests are unassigned");
+        }
+
+        [Test]
+        public void Test_get_assigned_merge_requests()
+        {
+            var branch = CreateBranch("branch-for-unassigned_mr2");
+            CreateMergeRequest(branch.Name, "master");
+
+            branch = CreateBranch("branch-for-assigned_mr2");
+            CreateMergeRequest(branch.Name, "master", _currentUser.Id);
+
+            var mergeRequests = _mergeRequestClient.Get(new MergeRequestQuery()
+            {
+                AssigneeId = _currentUser.Id
+            }).ToList();
+
+            Assert.AreNotEqual(0, mergeRequests.Count(),
+                $"The query retrieved MRs that are assigned to the current user '{_currentUser.Username}'");
+            Assert.IsTrue(mergeRequests.All(mr => mr.Assignee?.Username == _currentUser.Username),
+                $"Collected MRs are all assigned to the current user '{_currentUser.Username}'");
+        }
+
         private void ListMergeRequest(Models.MergeRequest mergeRequest)
         {
             Assert.IsTrue(_mergeRequestClient.All.Any(x => x.Id == mergeRequest.Id), "Test 'All' accessor returns the merge request");
@@ -36,16 +142,22 @@ namespace NGitLab.Tests.MergeRequest
             Assert.IsFalse(_mergeRequestClient.AllInState(MergeRequestState.merged).Any(x => x.Id == mergeRequest.Id), "Can return all closed requests");
         }
 
-        private Models.MergeRequest CreateMergeRequest(string from, string to)
+        private Models.MergeRequest CreateMergeRequest(string from, string to, int assignee = -1)
         {
-            var mergeRequest = _mergeRequestClient.Create(new MergeRequestCreate
+            var mergeRequestCreate = new MergeRequestCreate
             {
                 Title = "Merge my-super-feature into master",
                 SourceBranch = from,
                 TargetBranch = to,
                 Labels = "a,b",
                 RemoveSourceBranch = true
-            });
+            };
+            if (assignee > 0)   // 0 means 'unassigned', but only in the Query
+            {
+                mergeRequestCreate.AssigneeId = assignee;
+            }
+
+            var mergeRequest = _mergeRequestClient.Create(mergeRequestCreate);
 
             Assert.That(mergeRequest, Is.Not.Null);
             Assert.That(mergeRequest.Title, Is.EqualTo("Merge my-super-feature into master"));
@@ -122,70 +234,6 @@ namespace NGitLab.Tests.MergeRequest
 
             Assert.That(mergeRequest.State, Is.EqualTo(nameof(MergeRequestState.merged)));
             Assert.IsNull(Initialize.Repository.Branches.All.FirstOrDefault(x => x.Name == request.SourceBranch));
-        }
-
-        [Test]
-        public void Test_gitlab_returns_an_error_when_trying_to_create_a_request_with_same_source_and_destination()
-        {
-            var exception = Assert.Throws<GitLabException>(() =>
-            {
-                _mergeRequestClient.Create(new MergeRequestCreate
-                {
-                    Title = "ErrorRequest",
-                    SourceBranch = "master",
-                    TargetBranch = "master"
-                });
-            });
-
-            Assert.AreEqual("[\"You can't use same project/branch for source and target\"]", exception.ErrorMessage);
-        }
-
-        [Test]
-        public void Test_merge_request_delete()
-        {
-            var branch = CreateBranch("tmp-branch-to-test-mr-deletion");
-            var mergeRequest = CreateMergeRequest(branch.Name, "master");
-            Assert.AreEqual(mergeRequest.Id, _mergeRequestClient[mergeRequest.Iid].Id, "Test can get a merge request by IId");
-
-            Assert.DoesNotThrow(() =>
-            {
-                var mr = _mergeRequestClient[mergeRequest.Iid];
-            });
-
-            _mergeRequestClient.Delete(mergeRequest.Iid);
-
-            Assert.Throws<GitLabException>(() =>
-            {
-                var mr = _mergeRequestClient[mergeRequest.Iid];
-            });
-        }
-
-        [Test]
-        public void Test_merge_request_approvers()
-        {
-            var branch = CreateBranch("tmp-branch-to-test-mr-approvers");
-            var mergeRequest = CreateMergeRequest(branch.Name, "master");
-
-            var approvalClient = _mergeRequestClient.ApprovalClient(mergeRequest.Iid);
-            var approvers = approvalClient.Approvals.Approvers;
-
-            Assert.AreEqual(0, approvers.Length, "Initially no approver defined");
-
-            // --- Add the "current user" as approver for this MR ---
-
-            var users = Initialize.GitLabClient.Users;
-
-            var approversChange = new MergeRequestApproversChange()
-            {
-                Approvers = new[] { users.Current.Id }
-            };
-
-            approvalClient.ChangeApprovers(approversChange);
-
-            approvers = approvalClient.Approvals.Approvers;
-
-            Assert.AreEqual(1, approvers.Length, "A single approver defined");
-            Assert.AreEqual(users.Current.Id, approvers[0].User.Id, "The approver is the current user");
         }
     }
 }
