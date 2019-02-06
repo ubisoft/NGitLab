@@ -109,6 +109,26 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        public void GetProjectLanguags()
+        {
+            var project = Initialize.UnitTestProject;
+
+            FileUpsert file =new FileUpsert
+            {
+                Branch = "master",
+                CommitMessage = "add javascript file",
+                Content = "var test = 0;",
+                Path = "test.js",
+            };
+
+            Initialize.GitLabClient.GetRepository(project.Id).Files.Create(file);
+            var languages = Initialize.GitLabClient.Projects.GetLanguages(project.Id.ToString());
+            Assert.That(languages.Count, Is.EqualTo(1));
+            StringAssert.AreEqualIgnoringCase("javascript", languages.First().Key);
+            Assert.That(languages.First().Value, Is.EqualTo(100));
+        }
+
+        [Test]
         public void GetProjectsCanSpecifyTheProjectPerPageCount()
         {
             var query = new ProjectQuery
