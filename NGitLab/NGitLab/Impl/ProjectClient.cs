@@ -87,5 +87,10 @@ namespace NGitLab.Impl
         {
             return _api.Post().With(forkProject).To<Project>(Project.Url + "/" + id + "/fork");
         }
+
+        public Dictionary<string, double> GetLanguages(string id)
+        {
+            return _api.Get().To<Dictionary<string, double>>(Project.Url + "/" + id + "/languages");
+        }
     }
 }

@@ -40,5 +40,7 @@ namespace NGitLab
         Project GetById(int id, SingleProjectQuery query);
 
         Project Fork(string id, ForkProject forkProject);
+
+        Dictionary<string, double> GetLanguages(string id);
     }
 }
