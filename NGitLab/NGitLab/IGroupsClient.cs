@@ -12,6 +12,11 @@ namespace NGitLab
 
         IEnumerable<Group> Search(string search);
 
+        /// <summary>
+        /// Get a list of GitLab groups.
+        /// </summary>
+        IEnumerable<Group> Get(GroupQuery query);
+
         Group this[int id] { get; }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using NGitLab.Models;
@@ -70,6 +70,218 @@ namespace NGitLab.Tests
                     CollectionAssert.IsEmpty(groups, $"Group was not deleted in the allotted time of {timeout.TotalSeconds:0}seconds");
                 }
             }
+        }
+
+        [Test]
+        public void Test_get_by_group_query_nulls_does_not_throws()
+        {
+            //Arrange
+            var groupQueryNull = new GroupQuery();
+
+            //Act & Assert
+            Assert.DoesNotThrow(() => Groups.Get(groupQueryNull));
+        }
+
+        [Test]
+        public void Test_get_by_group_query_nulls_returns_groups()
+        {
+            //Arrange
+            var groupQueryNull = new GroupQuery();
+
+            //Act
+            var result = Groups.Get(groupQueryNull);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        public void Test_get_by_group_query_groupQuery_SkipGroups_returns_groups()
+        {
+            //Arrange
+            var skippedGroupIds = new[] {1450, 1083 }; // Toolexample & Teabox IDs
+            var groupQueryNull = new GroupQuery();
+            var groupQuerySkipGroup = new GroupQuery
+            {
+                SkipGroups = skippedGroupIds,
+            };
+
+            //Act
+            var resultAll = Groups.Get(groupQueryNull).ToList();
+            var resultSkip = Groups.Get(groupQuerySkipGroup).ToList();
+
+            // Assert
+            Assert.AreEqual(2, resultAll.Count - resultSkip.Count);
+        }
+
+        [Test]
+        public void Test_get_by_group_query_groupQuery_Search_returns_groups()
+        {
+            //Arrange
+            var groupQueryNull = new GroupQuery
+            {
+                Search = "Toolexample",
+            };
+
+            //Act
+            var result = Groups.Get(groupQueryNull).ToList();
+
+            // Assert
+            Assert.AreEqual(1, result.Count);
+        }
+
+        [Test]
+        public void Test_get_by_group_query_groupQuery_AllAvailable_returns_groups()
+        {
+            //Arrange
+            var groupQueryAllAvailable = new GroupQuery
+            {
+                AllAvailable = true
+            };
+
+            //Act
+            var result = Groups.Get(groupQueryAllAvailable);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        public void Test_get_by_group_query_groupQuery_OrderBy_returns_groups()
+        {
+            //Arrange
+            var groupQueryOrderByName = new GroupQuery
+            {
+                OrderBy = "name"
+            };
+            var groupQueryOrderByPath = new GroupQuery
+            {
+                OrderBy = "path"
+            };
+            var groupQueryOrderById = new GroupQuery
+            {
+                OrderBy = "id"
+            };
+
+            //Act
+            var resultByName = Groups.Get(groupQueryOrderByName);
+            var resultByPath = Groups.Get(groupQueryOrderByPath);
+            var resultById = Groups.Get(groupQueryOrderById);
+
+            // Assert
+            Assert.IsTrue(resultByName.Any());
+            Assert.IsTrue(resultByPath.Any());
+            Assert.IsTrue(resultById.Any());
+        }
+
+        [Test]
+        public void Test_get_by_group_query_groupQuery_Sort_returns_groups()
+        {
+            //Arrange
+            var groupQueryAsc = new GroupQuery
+            {
+                Sort = "asc"
+            };
+            var groupQueryDesc = new GroupQuery
+            {
+                Sort = "desc"
+            };
+
+            //Act
+            var resultAsc = Groups.Get(groupQueryAsc);
+            var resultDesc = Groups.Get(groupQueryDesc);
+
+            // Assert
+            Assert.IsTrue(resultAsc.Any());
+            Assert.IsTrue(resultDesc.Any());
+        }
+
+        [Test]
+        public void Test_get_by_group_query_groupQuery_Statistics_returns_groups()
+        {
+            //Arrange
+            var groupQueryWithStats = new GroupQuery
+            {
+                Statistics = true
+            };
+
+            //Act
+            var result = Groups.Get(groupQueryWithStats);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        public void Test_get_by_group_query_groupQuery_WithCustomAttributes_returns_groups()
+        {
+            //Arrange
+            var groupQueryWithCustomAttributes = new GroupQuery
+            {
+                WithCustomAttributes = true
+            };
+
+            //Act
+            var result = Groups.Get(groupQueryWithCustomAttributes);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        public void Test_get_by_group_query_groupQuery_Owned_returns_groups()
+        {
+            //Arrange
+            var groupQueryOwned = new GroupQuery
+            {
+                Owned = true
+            };
+
+            //Act
+            var result = Groups.Get(groupQueryOwned);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        public void Test_get_by_group_query_groupQuery_MinAccessLevel_returns_groups()
+        {
+            //Arrange
+            var groupQuery10 = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Guest
+            };
+            var groupQuery20 = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Reporter
+            };
+            var groupQuery30 = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Developer
+            };
+            var groupQuery40 = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Master
+            };
+            var groupQuery50 = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Owner
+            };
+
+            //Act
+            var result10 = Groups.Get(groupQuery10);
+            var result20 = Groups.Get(groupQuery20);
+            var result30 = Groups.Get(groupQuery30);
+            var result40 = Groups.Get(groupQuery40);
+            var result50 = Groups.Get(groupQuery50);
+
+            // Assert
+            Assert.IsTrue(result10.Any());
+            Assert.IsTrue(result20.Any());
+            Assert.IsTrue(result30.Any());
+            Assert.IsTrue(result40.Any());
+            Assert.IsTrue(result50.Any());
         }
 
         private IGroupsClient Groups => Initialize.GitLabClient.Groups;
