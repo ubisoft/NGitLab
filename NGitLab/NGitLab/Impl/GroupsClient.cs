@@ -1,5 +1,7 @@
-﻿using NGitLab.Models;
+﻿using System;
+using NGitLab.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace NGitLab.Impl
@@ -19,6 +21,61 @@ namespace NGitLab.Impl
         }
 
         public IEnumerable<Group> Accessible => _api.Get().GetAll<Group>(Url);
+
+        public IEnumerable<Group> Get(GroupQuery query)
+        {
+            var url = Group.Url;
+
+            if (query.SkipGroups != null && query.SkipGroups.Any())
+            {
+                foreach (var skipGroup in query.SkipGroups)
+                {
+                    url = Utils.AddParameter(url, "skip_groups[]", skipGroup);
+                }
+            }
+
+            if (query.AllAvailable != null)
+            {
+                url = Utils.AddParameter(url, "all_available", query.AllAvailable);
+            }
+
+            if (!string.IsNullOrEmpty(query.Search))
+            {
+                url = Utils.AddParameter(url, "search", query.Search);
+            }
+
+            if (!string.IsNullOrEmpty(query.OrderBy))
+            {
+                url = Utils.AddParameter(url, "order_by", query.OrderBy);
+            }
+            
+            if (query.Sort != null)
+            {
+                url = Utils.AddParameter(url, "sort", query.Sort);
+            }
+
+            if (query.Statistics != null)
+            {
+                url = Utils.AddParameter(url, "statistics", query.Statistics);
+            }
+            
+            if (query.WithCustomAttributes != null)
+            {
+                url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
+            }
+
+            if (query.Owned != null)
+            {
+                url = Utils.AddParameter(url, "owned", query.Owned);
+            }
+               
+            if (query.MinAccessLevel != null)
+            {
+                url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
+            }   
+
+            return _api.Get().GetAll<Group>(url);
+        }
 
         public IEnumerable<Group> Search(string search)
         {
