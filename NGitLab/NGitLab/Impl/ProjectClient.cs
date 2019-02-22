@@ -72,6 +72,11 @@ namespace NGitLab.Impl
                 url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLower());
             }
 
+            if (query.MinAccessLevel != null)
+            {
+                url = Utils.AddParameter(url, "min_access_level", (int) query.MinAccessLevel.Value);
+            }
+
             return _api.Get().GetAll<Project>(url);
         }
 

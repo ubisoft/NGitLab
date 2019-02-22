@@ -55,6 +55,12 @@ namespace NGitLab.Models
         /// Project visible by user
         /// </summary>
         public int? UserId;
+
+        /// <summary>
+        /// Limit to projects where current user has at least this access level
+        /// (optional)
+        /// </summary>
+        public AccessLevel? MinAccessLevel;
     }
 
     public enum ProjectQueryScope
