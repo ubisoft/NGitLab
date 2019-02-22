@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
@@ -174,6 +174,41 @@ namespace NGitLab.Tests
             CollectionAssert.AreEquivalent(project.Tags, createdProject.TagList);
 
             _projects.Delete(createdProject.Id);
+        }
+
+        [Test]
+        public void Test_get_by_project_query_projectQuery_MinAccessLevel_returns_projects()
+        {
+            //Arrange
+            var projectQuery10 = new ProjectQuery
+            {
+                MinAccessLevel = AccessLevel.Guest
+            };
+            var projectQuery20 = new ProjectQuery
+            {
+                MinAccessLevel = AccessLevel.Reporter
+            };
+            var projectQuery30 = new ProjectQuery
+            {
+                MinAccessLevel = AccessLevel.Developer
+            };
+            var projectQuery40 = new ProjectQuery
+            {
+                MinAccessLevel = AccessLevel.Master
+            };
+
+            //Act
+            var result10 = _projects.Get(projectQuery10);
+            var result20 = _projects.Get(projectQuery20);
+            var result30 = _projects.Get(projectQuery30);
+            var result40 = _projects.Get(projectQuery40);
+            // No owner level (50) for project! See https://gitlab.example.com/help/api/members.md
+
+            // Assert
+            Assert.IsTrue(result10.Any());
+            Assert.IsTrue(result20.Any());
+            Assert.IsTrue(result30.Any());
+            Assert.IsTrue(result40.Any());
         }
     }
 }
