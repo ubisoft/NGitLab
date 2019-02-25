@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
@@ -202,7 +202,7 @@ namespace NGitLab.Tests
             var result20 = _projects.Get(projectQuery20);
             var result30 = _projects.Get(projectQuery30);
             var result40 = _projects.Get(projectQuery40);
-            // No owner level (50) for project! See https://gitlab.example.com/help/api/members.md
+            // No owner level (50) for project! See https://gitlab-ncsa.ubisoft.org/help/api/members.md
 
             // Assert
             Assert.IsTrue(result10.Any());

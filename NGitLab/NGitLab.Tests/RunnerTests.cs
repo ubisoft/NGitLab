@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -81,6 +81,50 @@ namespace NGitLab.Tests
             Assert.IsEmpty(result);
         }
 
+        [Test]
+        public void Test_Runner_Can_Be_Locked_And_Unlocked()
+        {
+            var projectId = Initialize.UnitTestProject.Id;
+            var runnerToEnable = GetDefaultRunner();
+            var runners = Initialize.GitLabClient.Runners;
+            runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
+
+            var result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
+            var runnerId = result[0].Id;
+            var runnerDetails = runners[runnerId];
+
+            // assert runner is not locked
+            Assert.IsNotNull(runnerDetails.Id);
+            Assert.IsFalse(runnerDetails.Locked);
+
+            // lock runner
+            var lockingRunner = new RunnerUpdate
+            {
+                Locked = true,
+                Description = runnerDetails.Description,
+                Active = runnerDetails.Active,
+                TagList = runnerDetails.TagList
+            };
+
+            var updatedRunner = runners.Update(runnerToEnable.Id, lockingRunner);
+
+            // assert runner is locked
+            Assert.IsNotNull(updatedRunner.Id);
+            Assert.IsFalse(updatedRunner.Locked);
+
+            // unlock runner
+            lockingRunner = new RunnerUpdate()
+            {
+                Locked = false,
+                Description = runnerDetails.Description,
+                Active = runnerDetails.Active,
+                TagList = runnerDetails.TagList
+            };
+
+            runners.Update(runnerToEnable.Id, lockingRunner);
+            runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
+        }
+
         private static bool IsEnabled(Runner runner, int projectId)
         {
             return Initialize.GitLabClient.Runners[runner.Id].Projects.Any(x => x.Id == projectId);
@@ -89,7 +133,7 @@ namespace NGitLab.Tests
         public static Runner GetDefaultRunner()
         {
             var allRunners = Initialize.GitLabClient.Runners.Accessible.ToArray();
-            var runner = Array.Find(allRunners, x => x.Active && string.Equals(x.Description, "example", StringComparison.Ordinal));
+            var runner = Array.Find(allRunners, x => x.Active && string.Equals(x.Description, "ToolSquare_Test", StringComparison.Ordinal));
 
             if (runner == null)
             {

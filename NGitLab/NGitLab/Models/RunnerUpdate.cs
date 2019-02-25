@@ -11,6 +11,12 @@ namespace NGitLab.Models
         [DataMember(Name = "description")]
         public string Description;
 
+        [DataMember(Name = "locked")]
+        public bool Locked;
+
+        [DataMember(Name = "run_untagged")]
+        public bool RunUntagged;
+
         [DataMember(Name = "tag_list")]
         public string[] TagList;
     }
