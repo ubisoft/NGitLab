@@ -84,35 +84,28 @@ namespace NGitLab.Tests
         [Test]
         public void Test_Runner_Can_Be_Locked_And_Unlocked()
         {
-            var projectId = Initialize.UnitTestProject.Id;
-            var runnerToEnable = GetLockingRunner();
+            var runner = GetLockingRunner();
             var runners = Initialize.GitLabClient.Runners;
 
-            var result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
-            var runnerId = result[0].Id;
-            var runnerDetails = runners[runnerId];
-
             // assert runner is not locked
-            Assert.IsNotNull(runnerDetails.Id);
-            Assert.IsFalse(runnerDetails.Locked, "Runner should not be locked.");
+            Assert.IsFalse(runner.Locked, "Runner should not be locked.");
 
             // lock runner
-            var lockingRunner = new RunnerUpdate
+            var lockedRunner = new RunnerUpdate
             {
                 Locked = true
             };
-            var updatedRunner = runners.Update(runnerToEnable.Id, lockingRunner);
+            var updatedRunner = runners.Update(runner.Id, lockedRunner);
 
             // assert runner is locked
-            Assert.IsNotNull(updatedRunner.Id);
-            Assert.True(updatedRunner.Locked, "Runner should be locked.");
+            Assert.IsTrue(updatedRunner.Locked, "Runner should be locked.");
 
             // unlock runner
-            lockingRunner = new RunnerUpdate
+            var unlockedRunner = new RunnerUpdate
             {
                 Locked = false
             };
-            runners.Update(runnerToEnable.Id, lockingRunner);
+            updatedRunner = runners.Update(runner.Id, unlockedRunner);
 
             Assert.False(updatedRunner.Locked, "Runner should not be locked.");
         }
@@ -120,42 +113,28 @@ namespace NGitLab.Tests
         [Test]
         public void Test_Runner_Can_Update_RunUntagged_Flag()
         {
-            var projectId = Initialize.UnitTestProject.Id;
-            var runnerToEnable = GetDefaultRunner();
+            var runner = GetLockingRunner();
             var runners = Initialize.GitLabClient.Runners;
-            runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
 
-            var result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
-            var runnerId = result[0].Id;
-            var runnerDetails = runners[runnerId];
+            Assert.IsFalse(runner.RunUntagged, "Runner should not run untagged.");
 
-            // assert runner is not locked
-            Assert.IsNotNull(runnerDetails.Id);
-            Assert.IsTrue(runnerDetails.RunUntagged, "RunUntagged should be true.");
+            // update runner
+            var update = new RunnerUpdate
+            {
+                RunUntagged = true
+            };
+            var updatedRunner = runners.Update(runner.Id, update);
 
-            // lock runner
-            var taggingRunner = new RunnerUpdate
+            Assert.IsTrue(updatedRunner.RunUntagged, "Runner should run untagged.");
+
+            // update runner
+            update = new RunnerUpdate
             {
                 RunUntagged = false
             };
+            updatedRunner = runners.Update(runner.Id, update);
 
-            var updatedRunner = runners.Update(runnerToEnable.Id, taggingRunner);
-
-            // assert runner is locked
-            Assert.IsNotNull(updatedRunner.Id);
-            Assert.True(updatedRunner.Locked, "Runner should be locked.");
-
-            // unlock runner
-            taggingRunner = new RunnerUpdate()
-            {
-                Locked = false,
-                Description = runnerDetails.Description,
-                Active = runnerDetails.Active,
-                TagList = runnerDetails.TagList
-            };
-
-            runners.Update(runnerToEnable.Id, taggingRunner);
-            runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
+            Assert.False(updatedRunner.Locked, "Runner should not run untagged.");
         }
 
         private static bool IsEnabled(Runner runner, int projectId)
