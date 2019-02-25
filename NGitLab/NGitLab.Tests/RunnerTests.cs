@@ -95,7 +95,7 @@ namespace NGitLab.Tests
 
             // assert runner is not locked
             Assert.IsNotNull(runnerDetails.Id);
-            Assert.IsFalse(runnerDetails.Locked);
+            Assert.IsFalse(runnerDetails.Locked, "Runner should not be locked.");
 
             // lock runner
             var lockingRunner = new RunnerUpdate
@@ -110,7 +110,7 @@ namespace NGitLab.Tests
 
             // assert runner is locked
             Assert.IsNotNull(updatedRunner.Id);
-            Assert.IsFalse(updatedRunner.Locked);
+            Assert.True(updatedRunner.Locked, "Runner should be locked.");
 
             // unlock runner
             lockingRunner = new RunnerUpdate()
