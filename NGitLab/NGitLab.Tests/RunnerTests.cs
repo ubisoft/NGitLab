@@ -85,9 +85,8 @@ namespace NGitLab.Tests
         public void Test_Runner_Can_Be_Locked_And_Unlocked()
         {
             var projectId = Initialize.UnitTestProject.Id;
-            var runnerToEnable = GetDefaultRunner();
+            var runnerToEnable = GetLockingRunner();
             var runners = Initialize.GitLabClient.Runners;
-            runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
 
             var result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
             var runnerId = result[0].Id;
@@ -100,12 +99,8 @@ namespace NGitLab.Tests
             // lock runner
             var lockingRunner = new RunnerUpdate
             {
-                Locked = true,
-                Description = runnerDetails.Description,
-                Active = runnerDetails.Active,
-                TagList = runnerDetails.TagList
+                Locked = true
             };
-
             var updatedRunner = runners.Update(runnerToEnable.Id, lockingRunner);
 
             // assert runner is locked
@@ -113,7 +108,45 @@ namespace NGitLab.Tests
             Assert.True(updatedRunner.Locked, "Runner should be locked.");
 
             // unlock runner
-            lockingRunner = new RunnerUpdate()
+            lockingRunner = new RunnerUpdate
+            {
+                Locked = false
+            };
+            runners.Update(runnerToEnable.Id, lockingRunner);
+
+            Assert.False(updatedRunner.Locked, "Runner should not be locked.");
+        }
+
+        [Test]
+        public void Test_Runner_Can_Update_RunUntagged_Flag()
+        {
+            var projectId = Initialize.UnitTestProject.Id;
+            var runnerToEnable = GetDefaultRunner();
+            var runners = Initialize.GitLabClient.Runners;
+            runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
+
+            var result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
+            var runnerId = result[0].Id;
+            var runnerDetails = runners[runnerId];
+
+            // assert runner is not locked
+            Assert.IsNotNull(runnerDetails.Id);
+            Assert.IsTrue(runnerDetails.RunUntagged, "RunUntagged should be true.");
+
+            // lock runner
+            var taggingRunner = new RunnerUpdate
+            {
+                RunUntagged = false
+            };
+
+            var updatedRunner = runners.Update(runnerToEnable.Id, taggingRunner);
+
+            // assert runner is locked
+            Assert.IsNotNull(updatedRunner.Id);
+            Assert.True(updatedRunner.Locked, "Runner should be locked.");
+
+            // unlock runner
+            taggingRunner = new RunnerUpdate()
             {
                 Locked = false,
                 Description = runnerDetails.Description,
@@ -121,7 +154,7 @@ namespace NGitLab.Tests
                 TagList = runnerDetails.TagList
             };
 
-            runners.Update(runnerToEnable.Id, lockingRunner);
+            runners.Update(runnerToEnable.Id, taggingRunner);
             runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
         }
 
@@ -138,6 +171,23 @@ namespace NGitLab.Tests
             if (runner == null)
             {
                 Assert.Inconclusive("Will not be able to test the builds as no runner is setup for this project");
+            }
+
+            return runner;
+        }
+
+        public static Runner GetLockingRunner()
+        {
+            https://pdc-tst-gitlab01.ubisoft.org/ToolSquare/Runners/SharedRunners_Staging/settings/ci_cd
+
+            var runnerName = "TestLockRunner";
+
+            var allRunners = Initialize.GitLabClient.Runners.Accessible.ToArray();
+            var runner = Array.Find(allRunners, x => string.Equals(x.Description, runnerName, StringComparison.Ordinal));
+
+            if (runner == null)
+            {
+                Assert.Inconclusive("Will not be able to test the locking mechanism as {runnerName} is unavailable.", runnerName);
             }
 
             return runner;
