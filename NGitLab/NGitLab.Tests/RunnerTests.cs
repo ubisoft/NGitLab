@@ -134,7 +134,7 @@ namespace NGitLab.Tests
             };
             updatedRunner = runners.Update(runner.Id, update);
 
-            Assert.False(updatedRunner.Locked, "Runner should not run untagged.");
+            Assert.False(updatedRunner.RunUntagged, "Runner should not run untagged.");
         }
 
         private static bool IsEnabled(Runner runner, int projectId)
