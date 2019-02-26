@@ -84,6 +84,7 @@ namespace NGitLab.Tests
         [Test]
         public void Test_Runner_Can_Be_Locked_And_Unlocked()
         {
+            Console.WriteLine("Start Test_Runner_Can_Be_Locked_And_Unlocked");
             var runner = GetLockingRunner();
             var runners = Initialize.GitLabClient.Runners;
 
@@ -108,11 +109,13 @@ namespace NGitLab.Tests
             updatedRunner = runners.Update(runner.Id, unlockedRunner);
 
             Assert.False(updatedRunner.Locked, "Runner should not be locked.");
+            Console.WriteLine("End Test_Runner_Can_Be_Locked_And_Unlocked");
         }
 
         [Test]
         public void Test_Runner_Can_Update_RunUntagged_Flag()
         {
+            Console.WriteLine("Start Test_Runner_Can_Update_RunUntagged_Flag");
             var runner = GetLockingRunner();
             var runners = Initialize.GitLabClient.Runners;
 
@@ -135,6 +138,7 @@ namespace NGitLab.Tests
             updatedRunner = runners.Update(runner.Id, update);
 
             Assert.False(updatedRunner.RunUntagged, "Runner should not run untagged.");
+            Console.WriteLine("End Test_Runner_Can_Update_RunUntagged_Flag");
         }
 
         private static bool IsEnabled(Runner runner, int projectId)
