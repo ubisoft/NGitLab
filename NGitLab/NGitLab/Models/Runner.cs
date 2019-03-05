@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
+    [DebuggerDisplay("{Description}")]
     [DataContract]
     public class Runner
     {
