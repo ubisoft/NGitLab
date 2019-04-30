@@ -1,4 +1,4 @@
-using NGitLab.Models;
+﻿using NGitLab.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -14,11 +14,25 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        private IEnumerable<Membership> GetAll(string url) => _api.Get().GetAll<Membership>(url + "/members");
+        private IEnumerable<Membership> GetAll(string url, bool includeInheritedMembers)
+        {
+            url += "/members";
+            if (includeInheritedMembers)
+            {
+                url += "/all";
+            }
+
+            return _api.Get().GetAll<Membership>(url);
+        }
 
         public IEnumerable<Membership> OfProject(string projectId)
         {
-            return GetAll(Project.Url + "/" + WebUtility.UrlEncode(projectId));
+            return OfProject(projectId, includeInheritedMembers: false);
+        }
+
+        public IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers)
+        {
+            return GetAll(Project.Url + "/" + WebUtility.UrlEncode(projectId), includeInheritedMembers);
         }
 
         [Obsolete("Use OfGroup")]
@@ -29,7 +43,12 @@ namespace NGitLab.Impl
 
         public IEnumerable<Membership> OfGroup(string groupId)
         {
-            return GetAll(GroupsClient.Url + "/" + WebUtility.UrlEncode(groupId));
+            return OfGroup(groupId, includeInheritedMembers: false);
+        }
+
+        public IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers)
+        {
+            return GetAll(GroupsClient.Url + "/" + WebUtility.UrlEncode(groupId), includeInheritedMembers);
         }
 
         public Membership GetMemberOfGroup(string groupId, string userId)
