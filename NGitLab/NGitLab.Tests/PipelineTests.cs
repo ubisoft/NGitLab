@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -29,12 +30,12 @@ namespace NGitLab.Tests
             });
 
             while (FindPipeline("NewTagForPipelineTests") == null)
-            { 
+            {
                 Console.WriteLine("Waiting for pipeline to start.");
                 Thread.Sleep(1000);
             }
         }
-        
+
         [Test]
         public void Test_can_list_the_pipeline_of_the_current_tag()
         {
@@ -49,6 +50,18 @@ namespace NGitLab.Tests
             var allJobs = _pipelines.AllJobs;
 
             Assert.That(allJobs.Any());
+        }
+
+        [Test]
+        public void Test_search_for_pipeline()
+        {
+            PipelineBasic pipeline = _pipelines.All.First();
+            IEnumerable<PipelineBasic> pipelinesFromQuery = _pipelines.Search(new PipelineQuery
+            {
+                    Ref = pipeline.Ref
+            });
+
+            Assert.IsTrue(pipelinesFromQuery.Any());
         }
 
         private PipelineBasic FindPipeline(string refName)
