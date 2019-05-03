@@ -62,5 +62,34 @@ namespace NGitLab.Impl
 
             return _api.Post().To<Pipeline>($"{_projectPath}/trigger/pipeline?token={token}&ref={@ref}{variablesToAdd}");
         }
+
+        public IEnumerable<PipelineBasic> Search(PipelineQuery query)
+        {
+            if (query == null)
+                throw new ArgumentNullException(nameof(query));
+
+            var queryEntries = new Dictionary<string, string>();
+            if (query.Scope.HasValue)
+                queryEntries.Add("scope", query.Scope.Value.ToString());
+            if (query.Status.HasValue)
+                queryEntries.Add("status", query.Status.Value.ToString());
+            if (!string.IsNullOrWhiteSpace(query.Ref))
+                queryEntries.Add("ref", query.Ref);
+            if (!string.IsNullOrWhiteSpace(query.Sha))
+                queryEntries.Add("sha", query.Sha);
+            if (query.YamlErrors.HasValue)
+                queryEntries.Add("yaml_errors", query.YamlErrors.Value.ToString());
+            if (!string.IsNullOrWhiteSpace(query.Name))
+                queryEntries.Add("name", query.Name);
+            if (!string.IsNullOrWhiteSpace(query.Username))
+                queryEntries.Add("username", query.Username);
+            if (query.OrderBy.HasValue)
+                queryEntries.Add("order_by", query.OrderBy.Value.ToString());
+            if (query.Sort.HasValue)
+                queryEntries.Add("sort", query.Sort.Value.ToString());
+
+            string stringQuery = string.Join("&", queryEntries.Select(kp => $"{kp.Key}={kp.Value}"));
+            return _api.Get().GetAll<PipelineBasic>($"{_projectPath}/pipelines{(queryEntries.Any() ? $"?{stringQuery}" : string.Empty)}");
+        }
     }
 }

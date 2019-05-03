@@ -48,5 +48,12 @@ namespace NGitLab
         /// <param name="variables">Names and values of the custom variables</param>
         /// <returns></returns>
         Pipeline CreatePipelineWithTrigger(string token, string @ref, Dictionary<string, string> variables);
+
+        /// <summary>
+        /// Searches for pipelines from <see cref="PipelineQuery"/>.
+        /// </summary>
+        /// <param name="query">The query to find pipelines with <see cref="PipelineQuery"/></param>
+        /// <returns>Returns a list of pipelines (<see cref="PipelineBasic"/>) using the query</returns>
+        IEnumerable<PipelineBasic> Search(PipelineQuery query);
     }
 }
