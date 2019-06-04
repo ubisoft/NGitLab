@@ -1,7 +1,9 @@
 ﻿using NGitLab.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Threading;
 
 namespace NGitLab.Impl
 {
@@ -94,6 +96,23 @@ namespace NGitLab.Impl
         }
 
         public Dictionary<string, double> GetLanguages(string id)
+        {
+            var languages = DoGetLanguages(id);
+
+            // After upgrading from v 11.6.2-ee to v 11.10.4-ee, the project /languages endpoint takes time execute.
+            // So now we wait for the languages to be returned with a max wait time of 10 s.
+            // The waiting logic should be removed once GitLab fix the issue in a version > 11.10.4-ee.
+            var started = DateTime.UtcNow;
+            while (!languages.Any() && (DateTime.UtcNow - started) < TimeSpan.FromSeconds(10))
+            {
+                Thread.Sleep(1000);
+                languages = DoGetLanguages(id);
+            }
+
+            return languages;
+        }
+
+        private Dictionary<string, double> DoGetLanguages(string id)
         {
             return _api.Get().To<Dictionary<string, double>>(Project.Url + "/" + id + "/languages");
         }

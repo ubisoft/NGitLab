@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using NGitLab.Models;
 using NGitLab.Tests.Extensions;
 using NUnit.Framework;
@@ -109,7 +110,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void GetProjectLanguags()
+        public void GetProjectLanguages()
         {
             var project = Initialize.UnitTestProject;
 
