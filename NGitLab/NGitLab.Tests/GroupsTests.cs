@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using NGitLab.Models;
@@ -99,7 +99,7 @@ namespace NGitLab.Tests
         public void Test_get_by_group_query_groupQuery_SkipGroups_returns_groups()
         {
             //Arrange
-            var skippedGroupIds = new[] {1450, 1083 }; // Toolexample & Teabox IDs
+            var skippedGroupIds = new[] {1450, 1083 }; // ToolSquare & Teabox IDs
             var groupQueryNull = new GroupQuery();
             var groupQuerySkipGroup = new GroupQuery
             {
@@ -120,7 +120,7 @@ namespace NGitLab.Tests
             //Arrange
             var groupQueryNull = new GroupQuery
             {
-                Search = "Toolexample",
+                Search = "ToolSquare",
             };
 
             //Act
