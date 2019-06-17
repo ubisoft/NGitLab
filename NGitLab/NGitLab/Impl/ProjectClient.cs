@@ -76,7 +76,7 @@ namespace NGitLab.Impl
 
             if (query.MinAccessLevel != null)
             {
-                url = Utils.AddParameter(url, "min_access_level", (int) query.MinAccessLevel.Value);
+                url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel.Value);
             }
 
             return _api.Get().GetAll<Project>(url);
@@ -93,6 +93,35 @@ namespace NGitLab.Impl
         public Project Fork(string id, ForkProject forkProject)
         {
             return _api.Post().With(forkProject).To<Project>(Project.Url + "/" + id + "/fork");
+        }
+
+        public IEnumerable<Project> GetForks(string id, ForkedProjectQuery query)
+        {
+            var url = Project.Url + "/" + id + "/forks";
+
+            if (query != null)
+            {
+                url = Utils.AddParameter(url, "owned", query.Owned);
+                url = Utils.AddParameter(url, "archived", query.Archived);
+                url = Utils.AddParameter(url, "membership", query.Membership);
+                url = Utils.AddParameter(url, "order_by", query.OrderBy);
+                url = Utils.AddParameter(url, "search", query.Search);
+                url = Utils.AddParameter(url, "simple", query.Simple);
+                url = Utils.AddParameter(url, "statistics", query.Statistics);
+                url = Utils.AddParameter(url, "per_page", query.PerPage);
+
+                if (query.Visibility.HasValue)
+                {
+                    url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLowerInvariant());
+                }
+
+                if (query.MinAccessLevel != null)
+                {
+                    url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel.Value);
+                }
+            }
+
+            return _api.Get().GetAll<Project>(url);
         }
 
         public Dictionary<string, double> GetLanguages(string id)

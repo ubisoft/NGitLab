@@ -10,5 +10,17 @@ namespace NGitLab.Models
         /// </summary>
         [DataMember(Name = "namespace")]
         public string Namespace { get; set; }
+
+        /// <summary>
+        /// The path that will be assigned to the resultant project after forking
+        /// </summary>
+        [DataMember(Name = "path")]
+        public string Path { get; set; }
+
+        /// <summary>
+        /// The name that will be assigned to the resultant project after forking
+        /// </summary>
+        [DataMember(Name = "name")]
+        public string Name { get; set; }
     }
 }
