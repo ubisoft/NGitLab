@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using NGitLab.Models;
@@ -114,7 +115,7 @@ namespace NGitLab.Tests
         {
             var project = Initialize.UnitTestProject;
 
-            FileUpsert file =new FileUpsert
+            FileUpsert file = new FileUpsert
             {
                 Branch = "master",
                 CommitMessage = "add javascript file",
@@ -211,5 +212,38 @@ namespace NGitLab.Tests
             Assert.IsTrue(result30.Any());
             Assert.IsTrue(result40.Any());
         }
+
+        [Test]
+        [Timeout(30000)]
+        public void ForkProject()
+        {
+            var project = new ProjectCreate
+            {
+                Description = "desc",
+                IssuesEnabled = true,
+                MergeRequestsEnabled = true,
+                Name = "ForkProject_Test_" + new Random().Next(),
+                NamespaceId = null,
+                SnippetsEnabled = true,
+                VisibilityLevel = VisibilityLevel.Internal,
+                WikiEnabled = true,
+                Tags = new List<string> { "Tag-1", "Tag-2" }
+            };
+
+            var createdProject = _projects.Create(project);
+            var forkedProject = _projects.Fork(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkProject()
+            {
+                Path = createdProject.Path + "-fork",
+                Name = createdProject.Name + "Fork",
+            });
+
+            var forks = _projects.GetForks(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkedProjectQuery());
+
+            Assert.That(forks.Single().Id, Is.EqualTo(forkedProject.Id));
+
+            _projects.Delete(forkedProject.Id);
+            _projects.Delete(createdProject.Id);
+        }
+
     }
 }
