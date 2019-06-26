@@ -18,18 +18,18 @@ namespace NGitLab.Tests
             _pipelines = Initialize.GitLabClient.GetPipelines(Initialize.UnitTestProject.Id);
             CommitsTests.EnableCiOnTestProject();
 
-            CreatePipeline();
+            CreatePipeline("NewTagForPipelineTests");
         }
 
-        private void CreatePipeline()
+        private void CreatePipeline(string name)
         {
             Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
             {
-                Name = "NewTagForPipelineTests",
+                Name = name,
                 Ref = "master"
             });
 
-            while (FindPipeline("NewTagForPipelineTests") == null)
+            while (FindPipeline(name) == null)
             {
                 Console.WriteLine("Waiting for pipeline to start.");
                 Thread.Sleep(1000);
@@ -62,6 +62,22 @@ namespace NGitLab.Tests
             });
 
             Assert.IsTrue(pipelinesFromQuery.Any());
+        }
+
+        [Test]
+        public void Test_delete_pipeline()
+        {
+            CreatePipeline("PipelineToDelete");
+            var pipelineToDelete = _pipelines.All.Single(p => string.Equals(p.Ref, "PipelineToDelete", StringComparison.Ordinal));
+            _pipelines.Delete(pipelineToDelete.Id);
+
+            while (FindPipeline("PipelineToDelete") != null)
+            {
+                Console.WriteLine("Waiting for pipeline to be deleted.");
+                Thread.Sleep(1000);
+            }
+
+            Assert.IsTrue(!_pipelines.All.Any(p => string.Equals(p.Ref, "PipelineToDelete", StringComparison.Ordinal)));
         }
 
         private PipelineBasic FindPipeline(string refName)

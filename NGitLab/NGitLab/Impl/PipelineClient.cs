@@ -91,5 +91,10 @@ namespace NGitLab.Impl
             string stringQuery = string.Join("&", queryEntries.Select(kp => $"{kp.Key}={kp.Value}"));
             return _api.Get().GetAll<PipelineBasic>($"{_projectPath}/pipelines{(queryEntries.Any() ? $"?{stringQuery}" : string.Empty)}");
         }
+
+        public void Delete(int pipelineId)
+        {
+            _api.Delete().Execute($"{_pipelinesPath}/{pipelineId}");
+        }
     }
 }

@@ -55,5 +55,11 @@ namespace NGitLab
         /// <param name="query">The query to find pipelines with <see cref="PipelineQuery"/></param>
         /// <returns>Returns a list of pipelines (<see cref="PipelineBasic"/>) using the query</returns>
         IEnumerable<PipelineBasic> Search(PipelineQuery query);
+
+        /// <summary>
+        /// Delete a pipeline.
+        /// </summary>
+        /// <param name="pipelineId">ID of the pipeline</param>
+        void Delete(int pipelineId);
     }
 }
