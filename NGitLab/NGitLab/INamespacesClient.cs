@@ -14,6 +14,14 @@ namespace NGitLab
         /// </summary>
         IEnumerable<Namespace> Accessible { get; }
 
+        Namespace this[int id] { get; }
+
+        /// <summary>
+        /// Returns the project with the provided full path in the form Namespace/Name.
+        /// </summary>
+        /// <remarks>https://github.com/gitlabhq/gitlabhq/blob/master/doc/api/groups.md#details-of-a-group</remarks>
+        Namespace this[string fullPath] { get; }
+
         IEnumerable<Namespace> Search(string search);
     }
 }
