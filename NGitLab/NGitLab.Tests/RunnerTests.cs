@@ -169,7 +169,7 @@ namespace NGitLab.Tests
 
             if (runner == null)
             {
-                Assert.Inconclusive($"Will not be able to test the builds as runner '{runnerName}' is not setup. You should register it on {Initialize.GitLabHost}/Toolexample/Runners/SharedRunners_Staging/settings/ci_cd");
+                Assert.Inconclusive($"Will not be able to test the builds as runner '{runnerName}' is not setup. You should register it on {Initialize.GitLabHost}/example/Runners/SharedRunners_Staging/settings/ci_cd");
             }
 
             return Initialize.GitLabClient.Runners[runner.Id];

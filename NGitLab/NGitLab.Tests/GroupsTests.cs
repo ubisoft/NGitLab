@@ -99,7 +99,7 @@ namespace NGitLab.Tests
         public void Test_get_by_group_query_groupQuery_SkipGroups_returns_groups()
         {
             //Arrange
-            var skippedGroupIds = new[] {1450, 1083 }; // Toolexample & Teabox IDs
+            var skippedGroupIds = new[] { 7161, 1083 }; // example & Teabox IDs
             var groupQueryNull = new GroupQuery();
             var groupQuerySkipGroup = new GroupQuery
             {
@@ -120,14 +120,14 @@ namespace NGitLab.Tests
             //Arrange
             var groupQueryNull = new GroupQuery
             {
-                Search = "Toolexample",
+                Search = "example",
             };
 
             //Act
-            var result = Groups.Get(groupQueryNull).ToList();
+            var result = Groups.Get(groupQueryNull).Count(g => string.Equals(g.Name, "example", StringComparison.InvariantCultureIgnoreCase));
 
             // Assert
-            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(1, result);
         }
 
         [Test]
