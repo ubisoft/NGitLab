@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -58,7 +59,7 @@ namespace NGitLab.Tests.MergeRequest
 
         [Test]
         [Order(1)]
-        public void AddCommentToMergeRequest()
+        public void AddCommentToMergeRequest_DeprecatedApi()
         {
             var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
             const string commentMessage = "Comment for MR";
@@ -68,6 +69,32 @@ namespace NGitLab.Tests.MergeRequest
             };
             var comment = mergeRequestComments.Add(newComment);
             Assert.That(comment.Body, Is.EqualTo(commentMessage));
+        }
+
+        [Test]
+        [Order(1)]
+        public void AddEditCommentToMergeRequest()
+        {
+            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
+
+            // add note
+            const string commentMessage = "Comment for MR";
+            var createdAt = new DateTime(2019, 01, 01, 0, 0, 0, DateTimeKind.Utc);
+            var newComment = new MergeRequestCommentCreate
+            {
+                Body = commentMessage,
+                CreatedAt = createdAt,
+            };
+            var comment = mergeRequestComments.Add(newComment);
+            Assert.That(comment.Body, Is.EqualTo(commentMessage));
+            Assert.That(comment.CreatedAt, Is.EqualTo(createdAt));
+
+            // edit note
+            const string commentMessageEdit = "Comment for MR edit";
+            var editedComment = mergeRequestComments.Edit(comment.Id, new MergeRequestCommentEdit { Body = commentMessageEdit });
+            Assert.That(editedComment.Id, Is.EqualTo(comment.Id));
+            Assert.That(editedComment.Body, Is.EqualTo(commentMessageEdit));
+            Assert.That(editedComment.CreatedAt, Is.EqualTo(createdAt));
         }
 
         [Test]

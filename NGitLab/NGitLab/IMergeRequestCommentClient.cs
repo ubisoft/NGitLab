@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -7,6 +8,11 @@ namespace NGitLab
     {
         IEnumerable<MergeRequestComment> All { get; }
 
+        [Obsolete("Use Add(MergeRequestCommentCreate comment)")]
         MergeRequestComment Add(MergeRequestComment comment);
+
+        MergeRequestComment Add(MergeRequestCommentCreate comment);
+
+        MergeRequestComment Edit(long id, MergeRequestCommentEdit comment);
     }
 }
