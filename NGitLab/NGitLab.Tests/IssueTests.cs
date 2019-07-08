@@ -74,6 +74,40 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        public void Test_get_assigned_issues_with_IssueQuery_and_project_id()
+        {
+            var issues = Initialize.GitLabClient.Issues.Get(Initialize.UnitTestProject.Id, new IssueQuery
+            {
+                AssigneeId = _currentUser.Id,
+                State = IssueState.opened,
+            }).ToList();
+
+            Assert.AreNotEqual(0, issues.Count(),
+                $"The query retrieved open issues that are assigned to the current user '{_currentUser.Username}'");
+            Assert.IsTrue(issues.All(issue => issue.Assignee?.Username == _currentUser.Username),
+                $"Collected issues are all assigned to the current user '{_currentUser.Username}'");
+        }
+
+
+        [Test]
+        public void Test_get_issues_with_invalid_project_id_will_throw()
+        {
+            Assert.Throws<GitLabException>(() => Initialize.GitLabClient.Issues.ForProject(548975564).ToList());
+            Assert.Throws<GitLabException>(() => Initialize.GitLabClient.Issues.Get(548975564, new IssueQuery()).ToList());
+        }
+
+        [Test]
+        public void Test_get_all_project_issues()
+        {
+            var issues = Initialize.GitLabClient.Issues.ForProject(Initialize.UnitTestProject.Id).ToList();
+            Assert.AreNotEqual(0, issues.Count);
+
+            issues = Initialize.GitLabClient.Issues.Get(Initialize.UnitTestProject.Id, new IssueQuery()).ToList();
+            Assert.AreNotEqual(0, issues.Count);
+        }
+
+
+        [Test]
         public void Test_post_commit_status()
         {
             var issue = Initialize.GitLabClient.Issues.Create(new IssueCreate

@@ -88,5 +88,10 @@ namespace NGitLab.Models
         /// Search merge requests against their title and description
         /// </summary>
         public string Search { get; set; }
+
+        /// <summary>
+        /// Specifies how many record per paging (Gitlab supports a maximum of 100 projects and defaults to 20).
+        /// </summary>
+        public int? PerPage { get; set; }
     }
 }
