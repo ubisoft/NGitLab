@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using NGitLab.Models;
@@ -99,7 +99,7 @@ namespace NGitLab.Tests
         public void Test_get_by_group_query_groupQuery_SkipGroups_returns_groups()
         {
             //Arrange
-            var skippedGroupIds = new[] { 7161, 1083 }; // example & Teabox IDs
+            var skippedGroupIds = new[] { 7161, 1083 }; // Square & Teabox IDs
             var groupQueryNull = new GroupQuery();
             var groupQuerySkipGroup = new GroupQuery
             {
@@ -120,11 +120,11 @@ namespace NGitLab.Tests
             //Arrange
             var groupQueryNull = new GroupQuery
             {
-                Search = "example",
+                Search = "Square",
             };
 
             //Act
-            var result = Groups.Get(groupQueryNull).Count(g => string.Equals(g.Name, "example", StringComparison.InvariantCultureIgnoreCase));
+            var result = Groups.Get(groupQueryNull).Count(g => string.Equals(g.Name, "Square", StringComparison.InvariantCultureIgnoreCase));
 
             // Assert
             Assert.AreEqual(1, result);
