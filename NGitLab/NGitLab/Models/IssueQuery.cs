@@ -4,13 +4,13 @@ using System.Runtime.Serialization;
 namespace NGitLab.Models
 {
     /// <summary>
-    /// Allows to use more advanced gitlab queries for getting merge requests
+    /// Allows to use more advanced gitlab queries for getting issues
     /// </summary>
     [DataContract]
     public class IssueQuery
     {
         /// <summary>
-        /// Return all merge requests or just those that are opened, closed, locked, or merged
+        /// Return all issues or just those that are open, closed, locked, or merged
         /// </summary>
         public IssueState? State { get; set; }
 
@@ -25,52 +25,52 @@ namespace NGitLab.Models
         public string Sort { get; set; }
 
         /// <summary>
-        /// Return merge requests for a specific milestone
+        /// Return issues for a specific milestone
         /// </summary>
         public string Milestone { get; set; }
 
         /// <summary>
-        /// Return merge requests matching a comma separated list of labels
+        /// Return issues matching a comma separated list of labels
         /// </summary>
         public string Labels { get; set; }
 
         /// <summary>
-        /// Return merge requests created on or after the given time
+        /// Return issues created on or after the given time
         /// </summary>
         public DateTime? CreatedAfter { get; set; }
 
         /// <summary>
-        /// Return merge requests created on or before the given time
+        /// Return issues created on or before the given time
         /// </summary>
         public DateTime? CreatedBefore { get; set; }
 
         /// <summary>
-        /// Return merge requests updated on or after the given time
+        /// Return issues updated on or after the given time
         /// </summary>
         public DateTime? UpdatedAfter { get; set; }
 
         /// <summary>
-        /// Return merge requests updated on or before the given time
+        /// Return issues updated on or before the given time
         /// </summary>
         public DateTime? UpdatedBefore { get; set; }
 
         /// <summary>
-        /// Return merge requests for the given scope: created_by_me, assigned_to_me or all. Defaults to created_by_me
+        /// Return issues for the given scope: created_by_me, assigned_to_me or all. Defaults to created_by_me
         /// </summary>
         public string Scope { get; set; }
 
         /// <summary>
-        /// Returns merge requests created by the given user id. Combine with scope=all or scope=assigned_to_me
+        /// Returns issues created by the given user id. Combine with scope=all or scope=assigned_to_me
         /// </summary>
         public int? AuthorId { get; set; }
 
         /// <summary>
-        /// Returns merge requests assigned to the given user id
+        /// Returns issues assigned to the given user id
         /// </summary>
-        public int? AssigneeId { get; set; }
+        public QueryAssigneeId AssigneeId { get; set; }
 
         /// <summary>
-        /// Search merge requests against their title and description
+        /// Search issues against their title and description
         /// </summary>
         public string Search { get; set; }
 

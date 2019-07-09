@@ -72,7 +72,7 @@ namespace NGitLab.Models
         /// <summary>
         /// Returns merge requests assigned to the given user id
         /// </summary>
-        public int? AssigneeId { get; set; }
+        public QueryAssigneeId AssigneeId { get; set; }
 
         /// <summary>
         /// Return merge requests with the given source branch

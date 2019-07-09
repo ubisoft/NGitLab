@@ -48,7 +48,7 @@ namespace NGitLab.Tests
         {
             var issues = Initialize.GitLabClient.Issues.Get(new IssueQuery
             {
-                AssigneeId = 0, // = unassigned
+                AssigneeId = QueryAssigneeId.None,
                 State = IssueState.opened,
             }).ToList();
 
