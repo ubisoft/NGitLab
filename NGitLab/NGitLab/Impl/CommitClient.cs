@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -23,7 +24,9 @@ namespace NGitLab.Impl
 
         public JobStatus GetJobStatus(string branchName)
         {
-            var latestCommit = _api.Get().To<Commit>(_repoPath + $"/commits/{branchName}?per_page=1");
+            var encodedBranch = WebUtility.UrlEncode(branchName);
+
+            var latestCommit = _api.Get().To<Commit>(_repoPath + $"/commits/{encodedBranch}?per_page=1");
             if (latestCommit == null)
             {
                 return JobStatus.Unknown;
