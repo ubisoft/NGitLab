@@ -106,7 +106,7 @@ namespace NGitLab.Tests.MergeRequest
 
             var mergeRequests = _mergeRequestClient.Get(new MergeRequestQuery()
             {
-                AssigneeId = 0  // = unassigned
+                AssigneeId = QueryAssigneeId.None
             }).ToList();
 
             Assert.AreNotEqual(0, mergeRequests.Count(),
@@ -152,7 +152,7 @@ namespace NGitLab.Tests.MergeRequest
                 Labels = "a,b",
                 RemoveSourceBranch = true
             };
-            if (assignee > 0)   // 0 means 'unassigned', but only in the Query
+            if (assignee > 0)   // Ignore values <= 0 (0 means 'unassigned', but only in a query)
             {
                 mergeRequestCreate.AssigneeId = assignee;
             }

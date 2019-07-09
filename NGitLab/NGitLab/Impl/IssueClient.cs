@@ -52,11 +52,7 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "scope", query.Scope);
             url = Utils.AddParameter(url, "author_id", query.AuthorId);
             url = Utils.AddParameter(url, "per_page", query.PerPage);
-
-            url = query.AssigneeId == 0 ?                                   // In NGitLab, 0 still means 'unassigned'
-                Utils.AddParameter(url, "assignee_id", "None") :            // but in GitLab API, we need to pass "None"
-                Utils.AddParameter(url, "assignee_id", query.AssigneeId);
-
+            url = Utils.AddParameter(url, "assignee_id", query.AssigneeId);
             url = Utils.AddParameter(url, "search", query.Search);
 
             return _api.Get().GetAll<Issue>(url);
