@@ -54,6 +54,9 @@ namespace NGitLab.Models
         [DataMember(Name = "user")]
         public User User;
 
+        [DataMember(Name = "web_url")]
+        public string WebUrl;
+
         [DataContract]
         public class JobRunner
         {
