@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -91,6 +91,11 @@ namespace NGitLab.Impl
         public IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid)
         {
             return _api.Get().GetAll<PipelineBasic>(_projectPath + "/merge_requests/" + mergeRequestIid + "/pipelines");
+        }
+
+        public IEnumerable<Author> GetParticipants(int mergeRequestIid)
+        {
+            return _api.Get().GetAll<Author>(_projectPath + "/merge_requests/" + mergeRequestIid + "/participants");
         }
 
         public IMergeRequestCommentClient Comments(int mergeRequestIid) => new MergeRequestCommentClient(_api, _projectPath, mergeRequestIid);
