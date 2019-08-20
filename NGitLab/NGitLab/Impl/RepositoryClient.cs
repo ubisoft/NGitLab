@@ -57,6 +57,9 @@ namespace NGitLab.Impl
 
         public IEnumerable<Diff> GetCommitDiff(Sha1 sha) => _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
 
+        public IEnumerable<Ref> GetCommitRefs(Sha1 sha, CommitRefType type = CommitRefType.All) =>
+            _api.Get().GetAll<Ref>($"{_repoPath}/commits/{sha}/refs?type={type.ToString().ToLowerInvariant()}");
+
         public IFilesClient Files => new FilesClient(_api, _repoPath);
 
         public IBranchClient Branches => new BranchClient(_api, _repoPath);

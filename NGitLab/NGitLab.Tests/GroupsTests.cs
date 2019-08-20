@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using NGitLab.Models;
@@ -96,10 +97,11 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NonParallelizable]
         public void Test_get_by_group_query_groupQuery_SkipGroups_returns_groups()
         {
             //Arrange
-            var skippedGroupIds = new[] { 7161, 1083 }; // example & Teabox IDs
+            var skippedGroupIds = new[] { 7161, 1083 };
             var groupQueryNull = new GroupQuery();
             var groupQuerySkipGroup = new GroupQuery
             {
@@ -110,8 +112,11 @@ namespace NGitLab.Tests
             var resultAll = Groups.Get(groupQueryNull).ToList();
             var resultSkip = Groups.Get(groupQuerySkipGroup).ToList();
 
+            var delta = resultAll.Except(resultSkip, new GroupComparer());
+
             // Assert
-            Assert.AreEqual(2, resultAll.Count - resultSkip.Count);
+            Assert.AreEqual(2, resultAll.Count - resultSkip.Count,
+                $"Groups that were skipped: {string.Join(", ", delta.Select(g => g.FullPath))}");
         }
 
         [Test]
@@ -285,5 +290,20 @@ namespace NGitLab.Tests
         }
 
         private IGroupsClient Groups => Initialize.GitLabClient.Groups;
+
+        private class GroupComparer : IEqualityComparer<Group>
+        {
+            public bool Equals(Group x, Group y)
+            {
+                if (x == null && y == null)
+                    return true;
+                if (x == null || y == null)
+                    return false;
+
+                return x.FullPath.Equals(y.FullPath, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public int GetHashCode(Group group) => StringComparer.OrdinalIgnoreCase.GetHashCode(group.FullPath);
+        }
     }
 }

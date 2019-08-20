@@ -73,5 +73,22 @@ namespace NGitLab.Tests.RepositoryClient
             var tree = Initialize.Repository.GetTree("Fakepath");
             Assert.IsEmpty(tree);
         }
+
+        [TestCase(CommitRefType.All)]
+        [TestCase(CommitRefType.Branch)]
+        [TestCase(CommitRefType.Tag)]
+        public void GetCommitRefs(CommitRefType type)
+        {
+            var commitRefs = Initialize.Repository.GetCommitRefs(Initialize.Repository.Commits.First().Id, type).ToArray();
+
+            if (type == CommitRefType.Tag)
+            {
+                CollectionAssert.IsEmpty(commitRefs);
+            }
+            else
+            {
+                CollectionAssert.IsNotEmpty(commitRefs);   
+            }
+        }
     }
 }

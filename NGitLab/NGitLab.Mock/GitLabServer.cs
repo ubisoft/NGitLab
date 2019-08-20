@@ -37,7 +37,7 @@ namespace NGitLab.Mock
             Client.GetRepository(-1).ReturnsForAnyArgs(call => GetProject((int)call[0]).Repository);
 
             Members.OfProject("dummy").ReturnsForAnyArgs(call => GetMembersOfProject((string)call[0]));
-            Members.OfNamespace("dummy").ReturnsForAnyArgs(_ => new Membership[0]);
+            Members.OfGroup("dummy").ReturnsForAnyArgs(_ => new Membership[0]);
             Client.Members.Returns(_ => Members);
         }
 

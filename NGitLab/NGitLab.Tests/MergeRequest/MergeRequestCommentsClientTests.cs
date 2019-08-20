@@ -63,7 +63,7 @@ namespace NGitLab.Tests.MergeRequest
         {
             var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
             const string commentMessage = "Comment for MR";
-            var newComment = new MergeRequestComment
+            var newComment = new MergeRequestCommentCreate
             {
                 Body = commentMessage,
             };

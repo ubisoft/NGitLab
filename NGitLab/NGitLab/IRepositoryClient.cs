@@ -22,7 +22,10 @@ namespace NGitLab
         IEnumerable<Commit> GetCommits(string refName, int maxResults = 0);
 
         Commit GetCommit(Sha1 sha);
+
         IEnumerable<Diff> GetCommitDiff(Sha1 sha);
+
+        IEnumerable<Ref> GetCommitRefs(Sha1 sha, CommitRefType type = CommitRefType.All);
 
         IFilesClient Files { get; }
 
