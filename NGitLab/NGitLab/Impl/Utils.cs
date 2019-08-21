@@ -15,6 +15,11 @@ namespace NGitLab.Impl
             return Equals(date, null) ? url : AddParameterInternal(url, parameterName, date.Value.ToString("o"));
         }
 
+        public static string AddParameter(string url, string parameterName, int[] values)
+        {
+            return Equals(values, null) ? url : AddParameterInternal(url, parameterName, string.Join(",", values));
+        }
+
         private static string AddParameterInternal(string url, string parameterName, string stringValue)
         {
             var @operator = !url.Contains("?") ? "?" : "&";

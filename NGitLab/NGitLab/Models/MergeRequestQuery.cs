@@ -75,6 +75,12 @@ namespace NGitLab.Models
         public QueryAssigneeId AssigneeId { get; set; }
 
         /// <summary>
+        /// Returns merge requests which have specified all the users with the given ids as individual approvers.
+        /// None returns merge requests without approvers. Any returns merge requests with an approver.
+        /// </summary>
+        public int[] ApproverIds { get; set; }
+
+        /// <summary>
         /// Return merge requests with the given source branch
         /// </summary>
         public string SourceBranch { get; set; }
