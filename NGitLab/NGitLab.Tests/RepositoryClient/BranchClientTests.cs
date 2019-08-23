@@ -28,8 +28,10 @@ namespace NGitLab.Tests.RepositoryClient
         public void GetByName()
         {
             var branch = _branches["master"];
+
             Assert.IsNotNull(branch);
             Assert.IsNotNull(branch.Name);
+            Assert.IsTrue(branch.Default);
         }
 
         [Test]
@@ -43,7 +45,9 @@ namespace NGitLab.Tests.RepositoryClient
                 Ref = "master"
             });
 
-            Assert.IsNotNull(_branches[branchName]);
+            var branch = _branches[branchName];
+            Assert.IsNotNull(branch);
+            Assert.IsFalse(branch.Default);
 
             _branches.Delete(branchName);
 
