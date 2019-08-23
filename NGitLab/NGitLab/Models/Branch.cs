@@ -14,6 +14,9 @@ namespace NGitLab.Models
         [DataMember(Name = "protected")]
         public bool Protected;
 
+        [DataMember(Name = "default")]
+        public bool Default;
+
         [DataMember(Name = "developers_can_push")]
         public bool DevelopersCanPush;
 
