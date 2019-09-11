@@ -65,7 +65,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(job2.Commit.Id, job.Commit.Id); // Same Commit
         }
 
-        [Test, Timeout(5000 * 60)] // The job must be took by the runner and completed, sometime it takes multiples minutes
+        [Test, Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
         public void Test_get_job_from_id()
         {
             // Rely on test timeout if no job are found
@@ -78,7 +78,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(job2.Commit.Id, job.Commit.Id); // Same Commit
         }
 
-        [Test, Timeout(5000 * 60)] // The job must be took by the runner and completed, sometime it takes multiples minutes
+        [Test, Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
         public void Test_get_job_trace()
         {
             // Rely on test timeout if no job are found
@@ -90,7 +90,7 @@ namespace NGitLab.Tests
             Assert.That(trace, Does.Contain("Job succeeded"));
         }
 
-        [Test, Timeout(5000 * 60)] // The job must be took by the runner and completed, sometime it takes multiples minutes
+        [Test, Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
         public void Test_get_job_artifacts()
         {
             // Rely on test timeout if no job are found

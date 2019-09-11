@@ -51,11 +51,11 @@ namespace NGitLab.Tests
             runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
 
             var result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
-            Assert.IsTrue(result[0].Id == runnerToEnable.Id);
+            Assert.IsTrue(result.Any(r => r.Id == runnerToEnable.Id));
 
             runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
             result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
-            Assert.IsEmpty(result);
+            Assert.IsTrue(result.All(r => r.Id != runnerToEnable.Id));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace NGitLab.Tests
 
             runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
             result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
-            Assert.IsEmpty(result);
+            Assert.IsTrue(result.All(r => r.Id != runnerToEnable.Id));
         }
 
         [Test]
