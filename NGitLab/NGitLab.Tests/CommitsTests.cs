@@ -29,14 +29,21 @@ namespace NGitLab.Tests
 
                 const string yml =
                     @"
-build:
+build:  
+  tags:
+    - win10
   script: 
   - echo OK
   artifacts:
     untracked: true
     expire_in: 1h
+    # add an artifact path to force uploading even if there are no binaries to upload
+    paths:
+      - .gitlab-ci.yml
 
 manual:
+  tags:
+    - win10
   when: manual
   script: 
   - echo manual OK
