@@ -49,6 +49,32 @@ namespace NGitLab.Tests.RepositoryClient
             Assert.IsNotNull(branch);
             Assert.IsFalse(branch.Default);
 
+            _branches.Protect(branchName);
+
+            _branches.Unprotect(branchName);
+
+            _branches.Delete(branchName);
+
+            AssertCannotFind(() => _branches[branchName]);
+        }
+
+        [Test]
+        public void Test_that_branch_names_containing_slashes_are_supported()
+        {
+            var branchName = "feature/addNewStuff/toto";
+
+            _branches.Create(new BranchCreate
+            {
+                Name = branchName,
+                Ref = "master"
+            });
+
+            Assert.IsNotNull(_branches[branchName]);
+
+            _branches.Protect(branchName);
+
+            _branches.Unprotect(branchName);
+
             _branches.Delete(branchName);
 
             AssertCannotFind(() => _branches[branchName]);
