@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -16,14 +17,14 @@ namespace NGitLab.Impl
 
         public IEnumerable<Branch> All => _api.Get().GetAll<Branch>(_repoPath + "/branches");
 
-        public Branch this[string name] => _api.Get().To<Branch>(_repoPath + "/branches/" + name);
+        public Branch this[string name] => _api.Get().To<Branch>(_repoPath + "/branches/" + Uri.EscapeDataString(name));
 
-        public Branch Protect(string name) => _api.Put().To<Branch>(_repoPath + "/branches/" + name + "/protect");
+        public Branch Protect(string name) => _api.Put().To<Branch>(_repoPath + "/branches/" + Uri.EscapeDataString(name) + "/protect");
 
-        public Branch Unprotect(string name) => _api.Put().To<Branch>(_repoPath + "/branches/" + name + "/unprotect");
+        public Branch Unprotect(string name) => _api.Put().To<Branch>(_repoPath + "/branches/" + Uri.EscapeDataString(name) + "/unprotect");
 
         public Branch Create(BranchCreate branch) => _api.Post().With(branch).To<Branch>(_repoPath + "/branches");
 
-        public void Delete(string name) => _api.Delete().Execute(_repoPath + "/branches/" + name);
+        public void Delete(string name) => _api.Delete().Execute(_repoPath + "/branches/" + Uri.EscapeDataString(name));
     }
 }
