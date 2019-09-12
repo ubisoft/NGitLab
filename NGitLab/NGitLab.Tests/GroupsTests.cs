@@ -102,21 +102,21 @@ namespace NGitLab.Tests
         {
             //Arrange
             var skippedGroupIds = new[] { 7161, 1083 };
-            var groupQueryNull = new GroupQuery();
-            var groupQuerySkipGroup = new GroupQuery
+
+            // Ensure the groups exist
+            foreach (var groupId in skippedGroupIds)
             {
-                SkipGroups = skippedGroupIds,
-            };
+                Assert.IsNotNull(Groups[groupId]);
+            }
 
             //Act
-            var resultAll = Groups.Get(groupQueryNull).ToList();
-            var resultSkip = Groups.Get(groupQuerySkipGroup).ToList();
-
-            var delta = resultAll.Except(resultSkip, new GroupComparer());
+            var resultSkip = Groups.Get(new GroupQuery { SkipGroups = skippedGroupIds }).ToList();
 
             // Assert
-            Assert.AreEqual(2, resultAll.Count - resultSkip.Count,
-                $"Groups that were skipped: {string.Join(", ", delta.Select(g => g.FullPath))}");
+            foreach (var skippedGroup in skippedGroupIds)
+            {
+                Assert.False(resultSkip.Any(group => group.Id == skippedGroup), $"Group {skippedGroup} found in results");
+            }
         }
 
         [Test]
