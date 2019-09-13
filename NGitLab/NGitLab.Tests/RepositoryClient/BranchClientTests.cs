@@ -14,7 +14,7 @@ namespace NGitLab.Tests.RepositoryClient
         [SetUp]
         public void Setup()
         {
-            var project = Initialize.GitLabClient.Projects.Owned.First();
+            var project = Initialize.UnitTestProject;
             _branches = Initialize.GitLabClient.GetRepository(project.Id).Branches;
         }
 
@@ -42,7 +42,7 @@ namespace NGitLab.Tests.RepositoryClient
             _branches.Create(new BranchCreate
             {
                 Name = branchName,
-                Ref = "master"
+                Ref = "master",
             });
 
             var branch = _branches[branchName];
@@ -89,7 +89,7 @@ namespace NGitLab.Tests.RepositoryClient
             }
             catch (GitLabException ex)
             {
-                Assert.IsTrue(ex.StatusCode == HttpStatusCode.NotFound);
+                Assert.AreEqual(HttpStatusCode.NotFound, ex.StatusCode);
             }
         }
     }
