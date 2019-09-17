@@ -92,8 +92,8 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_issues_with_invalid_project_id_will_throw()
         {
-            Assert.Throws<GitLabException>(() => Initialize.GitLabClient.Issues.ForProject(548975564).ToList());
-            Assert.Throws<GitLabException>(() => Initialize.GitLabClient.Issues.Get(548975564, new IssueQuery()).ToList());
+            Assert.Throws(Is.InstanceOf<GitLabException>(), () => Initialize.GitLabClient.Issues.ForProject(548975564).ToList());
+            Assert.Throws(Is.InstanceOf<GitLabException>(), () => Initialize.GitLabClient.Issues.Get(548975564, new IssueQuery()).ToList());
         }
 
         [Test]

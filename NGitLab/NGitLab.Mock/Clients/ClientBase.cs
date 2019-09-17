@@ -53,6 +53,34 @@ namespace NGitLab.Mock.Clients
             return project;
         }
 
+        protected User GetUser(int userId)
+        {
+            var user = Server.Users.GetById(userId);
+            if (user == null)
+                throw new GitLabNotFoundException();
+
+            return user;
+        }
+
+        protected Issue GetIssue(int projectId, int issueId)
+        {
+            var project = GetProject(projectId, ProjectPermission.View);
+            var issue = project.Issues.GetByIid(issueId);
+            if (issue == null)
+                throw new GitLabNotFoundException();
+
+            return issue;
+        }
+
+        protected Milestone GetMilestone(int projectId, int milestoneId)
+        {
+            var project = GetProject(projectId, ProjectPermission.View);
+            var milestone = project.Milestones.GetByIid(milestoneId);
+            if (milestone == null)
+                throw new GitLabNotFoundException();
+
+            return milestone;
+        }
 
         protected MergeRequest GetMergeRequest(int projectId, int mergeRequestIid)
         {

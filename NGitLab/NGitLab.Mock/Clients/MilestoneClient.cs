@@ -14,26 +14,26 @@ namespace NGitLab.Mock
             _projectId = projectId;
         }
 
-        public Milestone this[int id] => throw new System.NotImplementedException();
+        public Models.Milestone this[int id] => throw new System.NotImplementedException();
 
-        public IEnumerable<Milestone> All => throw new System.NotImplementedException();
+        public IEnumerable<Models.Milestone> All => throw new System.NotImplementedException();
 
-        public Milestone Activate(int milestoneId)
+        public Models.Milestone Activate(int milestoneId)
         {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<Milestone> AllInState(MilestoneState state)
+        public IEnumerable<Models.Milestone> AllInState(Models.MilestoneState state)
         {
             throw new System.NotImplementedException();
         }
 
-        public Milestone Close(int milestoneId)
+        public Models.Milestone Close(int milestoneId)
         {
             throw new System.NotImplementedException();
         }
 
-        public Milestone Create(MilestoneCreate milestone)
+        public Models.Milestone Create(MilestoneCreate milestone)
         {
             throw new System.NotImplementedException();
         }
@@ -43,12 +43,12 @@ namespace NGitLab.Mock
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<Milestone> Get(MilestoneQuery query)
+        public IEnumerable<Models.Milestone> Get(MilestoneQuery query)
         {
             throw new System.NotImplementedException();
         }
 
-        public Milestone Update(int milestoneId, MilestoneUpdate milestone)
+        public Models.Milestone Update(int milestoneId, MilestoneUpdate milestone)
         {
             throw new System.NotImplementedException();
         }

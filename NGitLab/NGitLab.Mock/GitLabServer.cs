@@ -16,6 +16,8 @@ namespace NGitLab.Mock
         private int _lastGroupId;
         private int _lastMergeRequestId;
         private int _lastRunnerId;
+        private int _lastIssueId;
+        private int _lastMilestoneId;
 
         public GitLabServer()
         {
@@ -65,6 +67,8 @@ namespace NGitLab.Mock
         internal int GetNewGroupId() => Interlocked.Increment(ref _lastGroupId);
         internal int GetNewProjectId() => Interlocked.Increment(ref _lastProjectId);
         internal int GetNewMergeRequestId() => Interlocked.Increment(ref _lastMergeRequestId);
+        internal int GetNewIssueId() => Interlocked.Increment(ref _lastIssueId);
+        internal int GetNewMilestoneId() => Interlocked.Increment(ref _lastMilestoneId);
         internal int GetNewRunnerId() => Interlocked.Increment(ref _lastRunnerId);
     }
 }
