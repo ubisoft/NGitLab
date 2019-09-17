@@ -34,5 +34,31 @@ namespace NGitLab.Mock
 
             return new UserRef(user);
         }
+
+        public Models.Author ToClientAuthor()
+        {
+            return new Models.Author
+            {
+                Id = Id,
+                Username = UserName,
+                Email = Email,
+                Name = Name,
+                State = _user.State.ToString(),
+                AvatarUrl = _user.AvatarUrl,
+                WebUrl = _user.WebUrl,
+            };
+        }
+
+        public Models.Assignee ToClientAssignee()
+        {
+            return new Models.Assignee
+            {
+                Id = Id,
+                Username = UserName,
+                Email = Email,
+                Name = Name,
+                State = _user.State.ToString(),
+            };
+        }
     }
 }

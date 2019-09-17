@@ -18,6 +18,8 @@ namespace NGitLab.Mock
             RegisteredRunners = new RunnerCollection(this);
             EnabledRunners = new RunnerRefCollection(this);
             MergeRequests = new MergeRequestCollection(this);
+            Issues = new IssueCollection(this);
+            Milestones = new MilestoneCollection(this);
         }
 
         public int Id { get; set; }
@@ -40,6 +42,8 @@ namespace NGitLab.Mock
         public ProjectHookCollection Hooks { get; }
         public RunnerCollection RegisteredRunners { get; }
         public RunnerRefCollection EnabledRunners { get; }
+        public IssueCollection Issues { get; }
+        public MilestoneCollection Milestones { get; }
 
         public void Remove()
         {

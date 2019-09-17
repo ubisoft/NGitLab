@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace NGitLab.Mock
 {
@@ -9,6 +10,7 @@ namespace NGitLab.Mock
             UserName = userName;
             Name = userName;
             Email = userName + "@example.com";
+            State = UserState.active;
         }
 
         public int Id { get; set; }
@@ -16,6 +18,9 @@ namespace NGitLab.Mock
         public string Name { get; set; }
         public string Email { get; set; }
         public bool IsAdmin { get; set; }
+        public string WebUrl { get; set; }
+        public string AvatarUrl { get; set; }
+        public UserState State { get; set; }
 
         public Models.User ToClientUser()
         {

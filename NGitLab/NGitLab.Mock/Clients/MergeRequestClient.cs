@@ -228,7 +228,7 @@ namespace NGitLab.Mock.Clients
             return result.Select(mr => mr.ToMergeRequestClient());
         }
 
-        public IEnumerable<Author> GetParticipants(int mergeRequestIid)
+        public IEnumerable<Models.Author> GetParticipants(int mergeRequestIid)
         {
             throw new NotImplementedException();
         }
