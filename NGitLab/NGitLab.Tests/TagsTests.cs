@@ -13,7 +13,7 @@ namespace NGitLab.Tests
             {
                 Name = "v0.5",
                 Ref = "master",
-                ReleaseDescription = "Test description"
+                ReleaseDescription = "Test description",
             });
 
             Assert.IsNotNull(result);

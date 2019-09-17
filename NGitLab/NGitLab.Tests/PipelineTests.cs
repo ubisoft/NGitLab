@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -39,7 +38,7 @@ namespace NGitLab.Tests
         [Test]
         public void Test_can_list_the_pipeline_of_the_current_tag()
         {
-            PipelineBasic thisTagPipeline = FindPipeline("NewTagForPipelineTests");
+            var thisTagPipeline = FindPipeline("NewTagForPipelineTests");
 
             Assert.IsNotNull(thisTagPipeline);
         }
@@ -55,8 +54,8 @@ namespace NGitLab.Tests
         [Test]
         public void Test_search_for_pipeline()
         {
-            PipelineBasic pipeline = _pipelines.All.First();
-            IEnumerable<PipelineBasic> pipelinesFromQuery = _pipelines.Search(new PipelineQuery
+            var pipeline = _pipelines.All.First();
+            var pipelinesFromQuery = _pipelines.Search(new PipelineQuery
             {
                     Ref = pipeline.Ref
             });

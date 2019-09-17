@@ -17,7 +17,7 @@ namespace NGitLab.Tests
         [Test]
         public void Test_add_update_delete_and_get_file()
         {
-            // Don`t use txt extensions: https://gitlab.com/gitlab-org/gitlab-ce/issues/31790
+            // Don't use txt extensions: https://gitlab.com/gitlab-org/gitlab-ce/issues/31790
             var fileUpsert = new FileUpsert
             {
                 Branch = "master",
@@ -48,7 +48,7 @@ namespace NGitLab.Tests
             };
             Files.Delete(fileDelete);
 
-            Assert.Throws<GitLabException>(() => Files.Get("testDelete.md", "master"));
+            Assert.Throws(Is.InstanceOf<GitLabException>(), () => Files.Get("testDelete.md", "master"));
         }
     }
 }

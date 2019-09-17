@@ -65,7 +65,7 @@ namespace NGitLab.Tests
                 if (groups.Count == 0)
                     return;
 
-                TimeSpan timeout = TimeSpan.FromSeconds(45);
+                var timeout = TimeSpan.FromSeconds(45);
                 if (sw.Elapsed > timeout)
                 {
                     CollectionAssert.IsEmpty(groups, $"Group was not deleted in the allotted time of {timeout.TotalSeconds:0}seconds");
