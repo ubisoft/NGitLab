@@ -19,7 +19,7 @@ namespace NGitLab.Tests
         {
             while (true)
             {
-                Job job = _jobs.GetJobs(jobMask).FirstOrDefault();
+                var job = _jobs.GetJobs(jobMask).FirstOrDefault();
                 if (job != null)
                     return job;
             }
@@ -43,9 +43,9 @@ namespace NGitLab.Tests
         public void Test_run_action_play()
         {
             // Rely on test timeout if no job are found
-            Job job = GetTestJob(JobScopeMask.Manual);
+            var job = GetTestJob(JobScopeMask.Manual);
 
-            Job job2 = _jobs.RunAction(job.Id, JobAction.Play);
+            var job2 = _jobs.RunAction(job.Id, JobAction.Play);
 
             Assert.AreEqual(job2.Id, job.Id); // Same Job
             Assert.AreEqual(job2.Pipeline.Id, job.Pipeline.Id); // Same Pipeline
@@ -56,9 +56,9 @@ namespace NGitLab.Tests
         public void Test_run_action_retry()
         {
             // Rely on test timeout if no job are found
-            Job job = GetTestJob(JobScopeMask.Success);
+            var job = GetTestJob(JobScopeMask.Success);
 
-            Job job2 = _jobs.RunAction(job.Id, JobAction.Retry);
+            var job2 = _jobs.RunAction(job.Id, JobAction.Retry);
 
             Assert.AreNotEqual(job2.Id, job.Id); // New job is created
             Assert.AreEqual(job2.Pipeline.Id, job.Pipeline.Id); // Same Pipeline
@@ -69,9 +69,9 @@ namespace NGitLab.Tests
         public void Test_get_job_from_id()
         {
             // Rely on test timeout if no job are found
-            Job job = GetTestJob(JobScopeMask.Manual);
+            var job = GetTestJob(JobScopeMask.Manual);
 
-            Job job2 = _jobs.Get(job.Id);
+            var job2 = _jobs.Get(job.Id);
 
             Assert.AreEqual(job2.Id, job.Id); // Same Job
             Assert.AreEqual(job2.Pipeline.Id, job.Pipeline.Id); // Same Pipeline
@@ -82,7 +82,7 @@ namespace NGitLab.Tests
         public void Test_get_job_trace()
         {
             // Rely on test timeout if no job are found
-            Job job = GetTestJob(JobScopeMask.Success);
+            var job = GetTestJob(JobScopeMask.Success);
 
             string trace = _jobs.GetTrace(job.Id);
 
@@ -94,7 +94,7 @@ namespace NGitLab.Tests
         public void Test_get_job_artifacts()
         {
             // Rely on test timeout if no job are found
-            Job job = GetTestJob(JobScopeMask.Success);
+            var job = GetTestJob(JobScopeMask.Success);
 
             byte[] artifacts = _jobs.GetJobArtifacts(job.Id);
 

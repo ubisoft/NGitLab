@@ -1,5 +1,4 @@
-﻿using System;
-using NGitLab.Models;
+﻿using NGitLab.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;

@@ -115,7 +115,7 @@ namespace NGitLab.Tests
         {
             var project = Initialize.UnitTestProject;
 
-            FileUpsert file = new FileUpsert
+            var file = new FileUpsert
             {
                 Branch = "master",
                 CommitMessage = "add javascript file",

@@ -1,7 +1,5 @@
 ﻿namespace NGitLab.Models
 {
-    using System;
-
     public class PipelineQuery
     {
         public PipelineScope? Scope { get; set; }
