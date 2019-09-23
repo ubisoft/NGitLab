@@ -40,6 +40,9 @@ namespace NGitLab.Models
         [DataMember(Name = "provider")]
         public string Provider;
 
+        [DataMember(Name = "extern_uid")]
+        public string ExternalUid;
+
         [DataMember(Name = "bio")]
         public string Bio;
 
@@ -48,5 +51,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "can_create_group")]
         public bool CanCreateGroup;
+
+        [DataMember(Name = "reset_password")]
+        public bool? ResetPassword;
     }
 }
