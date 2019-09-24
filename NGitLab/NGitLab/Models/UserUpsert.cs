@@ -54,5 +54,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "reset_password")]
         public bool? ResetPassword;
+
+        [DataMember(Name = "skip_confirmation")]
+        public bool? SkipConfirmation;
     }
 }
