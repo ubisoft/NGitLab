@@ -23,13 +23,16 @@ namespace NGitLab.Tests
 
         public static IRepositoryClient Repository => GitLabClient.GetRepository(UnitTestProject.Id);
 
-        public static string GitLabHost => "https://gitlab.example.com/";
+        public static string GitLabHost => "https://gitlab.example.com";
+        public static string GitLabHookTest => "https://gitlab.example.com";
         public static string GitLabHostFront1 => "https://pdc-dev-gitfront01/";
         public static string GitLabHostFront2 => " https://pdc-dev-gitfront02/";
 
         public static string GitLabToken => "dummy";
 
         public static bool IsAdmin => GitLabClient.Users.Current.IsAdmin;
+
+        public static int AdminAccountId = 42;
 
         public static string ProjectName;
 
@@ -143,7 +146,7 @@ namespace NGitLab.Tests
             {
                 MergeRequestsEvents = true,
                 PushEvents = true,
-                Url = new Uri("http://unit.test.scooletz.com"),
+                Url = new Uri(GitLabHookTest),
             });
 
             return createdProject;
