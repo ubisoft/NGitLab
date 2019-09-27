@@ -38,7 +38,7 @@ namespace NGitLab.Tests.RepositoryClient
                 TagPushEvents = true,
                 Token = "sample",
                 EnableSslVerification = true,
-                Url = new Uri("http://scooletz.com"),
+                Url = new Uri(Initialize.GitLabHookTest),
             };
 
             var created = _hooks.Create(toCreate);
@@ -65,7 +65,7 @@ namespace NGitLab.Tests.RepositoryClient
                 TagPushEvents = false,
                 Token = "sampleEdited",
                 EnableSslVerification = false,
-                Url = new Uri("http://scooletz.com"),
+                Url = new Uri(Initialize.GitLabHookTest),
             };
 
             var updated = _hooks.Update(created.Id, toUpdate);

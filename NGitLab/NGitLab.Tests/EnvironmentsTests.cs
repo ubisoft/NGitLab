@@ -20,7 +20,7 @@ namespace NGitLab.Tests
             var newEnvSlugNameNoUrlStart = GetSlugNameStart(newEnvNameNoUrl);
             var newEnvNameWithUrl = "env_test_name_with_url";
             var newEnvSlugNameWithUrlStart = GetSlugNameStart(newEnvNameWithUrl);
-            var newEnvNameExternalUrl = "http://somewhere";
+            var newEnvNameExternalUrl = Initialize.GitLabHookTest;
 
             // Validate environments doesn't exist yet
             Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameNoUrl || e.Name == newEnvNameWithUrl));
@@ -60,7 +60,7 @@ namespace NGitLab.Tests
             string newEnvNameToEdit = "env_test_name_to_edit_init";
             string newEnvNameUpdated = "env_test_name_to_edit_updated";
             string newEnvSlugNameUpdatedStart = GetSlugNameStart(newEnvNameUpdated);
-            string newEnvNameExternalUrlUpdated = "http://somewhere_updated";
+            string newEnvNameExternalUrlUpdated = Initialize.GitLabHookTest + "/updated";
 
             // Validate environments doesn't exist yet
             Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToEdit || e.Name == newEnvNameUpdated));

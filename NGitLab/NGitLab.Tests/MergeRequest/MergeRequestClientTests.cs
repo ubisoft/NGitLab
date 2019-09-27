@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -78,13 +78,12 @@ namespace NGitLab.Tests.MergeRequest
 
             Assert.AreEqual(0, approvers.Length, "Initially no approver defined");
 
-            // --- Add the "current user" as approver for this MR ---
-
-            var users = Initialize.GitLabClient.Users;
+            // --- Add the exampleAdminUser as approver for this MR since adding the MR owners won't increment the number of approvers---
+            var userId = Initialize.AdminAccountId;
 
             var approversChange = new MergeRequestApproversChange()
             {
-                Approvers = new[] { users.Current.Id }
+                Approvers = new[] { userId }
             };
 
             approvalClient.ChangeApprovers(approversChange);
@@ -92,7 +91,7 @@ namespace NGitLab.Tests.MergeRequest
             approvers = approvalClient.Approvals.Approvers;
 
             Assert.AreEqual(1, approvers.Length, "A single approver defined");
-            Assert.AreEqual(users.Current.Id, approvers[0].User.Id, "The approver is the current user");
+            Assert.AreEqual(userId, approvers[0].User.Id, "The approver is the current user");
         }
 
         [Test]
