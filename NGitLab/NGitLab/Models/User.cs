@@ -29,9 +29,6 @@ namespace NGitLab.Models
         [DataMember(Name = "twitter")]
         public string Twitter;
 
-        [DataMember(Name = "provider")]
-        public string Provider;
-
         [DataMember(Name = "state")]
         public string State;
 
@@ -53,9 +50,6 @@ namespace NGitLab.Models
         [DataMember(Name="theme_id")]
         public int ThemeId;
 
-        [DataMember(Name="extern_uid")]
-        public string ExternUid;
-
         [DataMember(Name="website_url")]
         public string WebsiteURL;
 
@@ -67,5 +61,8 @@ namespace NGitLab.Models
 
         [DataMember(Name="can_create_project")]
         public bool CanCreateProject;
+
+        [DataMember(Name = "identities")]
+        public Identity[] Identities;
     }
 }
