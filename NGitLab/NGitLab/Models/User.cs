@@ -64,5 +64,13 @@ namespace NGitLab.Models
 
         [DataMember(Name = "identities")]
         public Identity[] Identities;
+
+        [Obsolete("This does not match GitLab's Api. Use Identities.Provider instead.")]
+        [DataMember(Name = "provider")]
+        public string Provider;
+
+        [Obsolete("This does not match GitLab's Api. Use Identities.ExternUid instead.")]
+        [DataMember(Name = "extern_uid")]
+        public string ExternUid;
     }
 }
