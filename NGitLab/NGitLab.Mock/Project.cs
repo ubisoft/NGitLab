@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NGitLab.Mock.Clients;
 using NGitLab.Models;
 
 namespace NGitLab.Mock
 {
     public sealed class Project : GitLabObject
     {
+        public Project()
+            : this(Guid.NewGuid().ToString("N"))
+        {
+
+        }
+
         public Project(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -20,6 +25,8 @@ namespace NGitLab.Mock
             MergeRequests = new MergeRequestCollection(this);
             Issues = new IssueCollection(this);
             Milestones = new MilestoneCollection(this);
+            Pipelines = new PipelineCollection(this);
+            Jobs = new JobCollection(this);
         }
 
         public int Id { get; set; }
@@ -32,6 +39,8 @@ namespace NGitLab.Mock
         public PermissionCollection Permissions { get; }
         public Repository Repository { get; }
         public MergeRequestCollection MergeRequests { get; }
+        public PipelineCollection Pipelines { get; }
+        public JobCollection Jobs { get; }
 
         public Group Group => (Group)Parent;
 

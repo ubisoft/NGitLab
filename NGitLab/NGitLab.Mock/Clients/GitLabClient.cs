@@ -27,7 +27,7 @@
         public IJobClient GetJobs(int projectId) => new JobClient(Context, projectId);
         public IMergeRequestClient GetMergeRequest(int projectId) => new MergeRequestClient(Context, projectId);
         public IMilestoneClient GetMilestone(int projectId) => new MilestoneClient(Context, projectId);
-        public IPipelineClient GetPipelines(int projectId) => new PipelineClient(Context, projectId);
+        public IPipelineClient GetPipelines(int projectId) => new PipelineClient(Context, jobClient: GetJobs(projectId), projectId: projectId);
         public IProjectBadgeClient GetProjectBadgeClient(int projectId) => new ProjectBadgeClient(Context, projectId);
         public IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId) => new ProjectIssueNoteClient(Context, projectId);
         public IProjectVariableClient GetProjectVariableClient(int projectId) => new ProjectVariableClient(Context, projectId);
