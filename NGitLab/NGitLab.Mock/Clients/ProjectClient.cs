@@ -71,7 +71,7 @@ namespace NGitLab.Mock.Clients
             }
             else
             {
-                parentGroup = Context.User.UserNamespace;
+                parentGroup = Context.User.Namespace;
             }
 
             return parentGroup;
@@ -88,7 +88,7 @@ namespace NGitLab.Mock.Clients
             EnsureUserIsAuthenticated();
 
             var project = GetProject(id, ProjectPermission.View);
-            var group = forkProject.Namespace != null ? GetParentGroup(forkProject.Namespace) : Context.User.UserNamespace;
+            var group = forkProject.Namespace != null ? GetParentGroup(forkProject.Namespace) : Context.User.Namespace;
             var newProject = new Project(forkProject.Name ?? project.Name)
             {
                 Description = project.Description,

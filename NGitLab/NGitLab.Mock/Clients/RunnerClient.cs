@@ -68,12 +68,12 @@ namespace NGitLab.Mock.Clients
             return runnerRefs.Select(r => this[r.Id]);
         }
 
-        public IEnumerable<Job> GetJobs(int runnerId, JobScope jobScope)
+        public IEnumerable<Models.Job> GetJobs(int runnerId, JobScope jobScope)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Job> GetJobs(int runnerId, JobStatus? status = null)
+        public IEnumerable<Models.Job> GetJobs(int runnerId, JobStatus? status = null)
         {
             throw new NotImplementedException();
         }

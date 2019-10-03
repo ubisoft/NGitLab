@@ -39,6 +39,38 @@ namespace NGitLab.Mock
             base.Add(mergeRequest);
         }
 
+        public MergeRequest Add(string sourceBranch, string targetBranch, string title, User user)
+        {
+            return Add(Project, sourceBranch, targetBranch, title, user);
+        }
+
+        public MergeRequest Add(Project sourceProject, string sourceBranch, string targetBranch, string title, User user)
+        {
+            if (sourceProject is null)
+                throw new ArgumentNullException(nameof(sourceProject));
+            if (sourceBranch is null)
+                throw new ArgumentNullException(nameof(sourceBranch));
+            if (targetBranch is null)
+                throw new ArgumentNullException(nameof(targetBranch));
+            if (title is null)
+                throw new ArgumentNullException(nameof(title));
+            if (user is null)
+                throw new ArgumentNullException(nameof(user));
+
+            var mergeRequest = new MergeRequest
+            {
+                Author = user,
+                SourceBranch = sourceBranch,
+                SourceProject = sourceProject,
+                TargetBranch = targetBranch,
+                Title = title,
+            };
+
+            mergeRequest.UpdateSha();
+            Add(mergeRequest);
+            return mergeRequest;
+        }
+
         private int GetNewIid()
         {
             return this.Select(mr => mr.Iid).DefaultIfEmpty().Max() + 1;

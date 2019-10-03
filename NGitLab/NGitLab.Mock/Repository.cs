@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -67,16 +68,21 @@ namespace NGitLab.Mock
             return _repository;
         }
 
-        public Branch GetBranch(string name)
+        public Branch GetBranch(string branchName)
         {
             var repository = GetGitRepository();
-            return repository.Branches[name];
+            return repository.Branches[branchName];
         }
 
         public IReadOnlyCollection<Branch> GetAllBranches()
         {
             var repository = GetGitRepository();
             return repository.Branches.ToList();
+        }
+
+        public Commit Commit(User user, string message)
+        {
+            return Commit(user, message, null, new[] { File.CreateFromText("test.txt", Guid.NewGuid().ToString()) });
         }
 
         public Commit Commit(User user, string message, IEnumerable<File> files)
@@ -105,7 +111,7 @@ namespace NGitLab.Mock
             return repository.Commit(message, author, committer);
         }
 
-        public Commit Commit(User user, Models.CommitCreate commitCreate)
+        public Commit Commit(Models.CommitCreate commitCreate)
         {
             var repo = GetGitRepository();
             bool mustCreateBranch = !repo.Commits.Any();
@@ -127,6 +133,13 @@ namespace NGitLab.Mock
         public void Checkout(string committishOrBranchNameSpec)
         {
             Commands.Checkout(GetGitRepository(), committishOrBranchNameSpec);
+        }
+
+        public Branch CreateAndCheckoutBranch(string branchName)
+        {
+            var branch = CreateBranch(branchName, "HEAD");
+            Checkout(branch.CanonicalName);
+            return branch;
         }
 
         public Branch CreateBranch(string branchName)
@@ -246,16 +259,43 @@ namespace NGitLab.Mock
             throw new GitLabException("Could not merge");
         }
 
-        public Commit GetCommit(string reference)
+        public Commit GetBranchTipCommit(string branchName)
         {
-            var repository = GetGitRepository();
-            var branch = repository.Branches[reference];
+            var branch = GetBranch(branchName);
             if (branch != null)
                 return branch.Tip;
 
+            return null;
+        }
+
+        public IEnumerable<Commit> GetBranchCommits(string branchName)
+        {
+            var branch = GetBranch(branchName);
+            if (branch == null)
+                yield break;
+
+            var filter = new CommitFilter
+            {
+                SortBy = CommitSortStrategies.Topological,
+                IncludeReachableFrom = branch,
+            };
+
+            foreach (var commit in _repository.Commits.QueryBy(filter))
+            {
+                yield return commit;
+            }
+        }
+
+        public Commit GetCommit(string reference)
+        {
+            var repository = GetGitRepository();
+            var branchTip = GetBranchTipCommit(reference);
+            if (branchTip != null)
+                return branchTip;
+
             var tag = repository.Tags[reference];
             if (tag?.PeeledTarget is Commit commit)
-                return commit;
+                return branchTip;
 
             return repository.Commits.SingleOrDefault(c => string.Equals(c.Sha, reference, StringComparison.Ordinal));
         }
@@ -350,6 +390,14 @@ namespace NGitLab.Mock
 
             var newCommit = repo.Commit(commit.CommitMessage, author, committer);
             return newCommit;
+        }
+
+        private void UpdateMergeRequests()
+        {
+            foreach (var mergeRequest in Project.MergeRequests)
+            {
+                mergeRequest.UpdateSha();
+            }
         }
 
         private void ApplyActions(Models.CommitCreate commit)

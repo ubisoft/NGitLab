@@ -44,7 +44,7 @@ namespace NGitLab.Mock
             instance.Email = Email;
         }
 
-        public Group UserNamespace
+        public Group Namespace
         {
             get
             {

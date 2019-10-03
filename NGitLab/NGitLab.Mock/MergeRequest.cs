@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Mock
@@ -21,11 +23,11 @@ namespace NGitLab.Mock
         public string SourceBranch { get; set; }
         public string TargetBranch { get; set; }
         public Project SourceProject { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset? MergedAt { get; set; }
         public DateTimeOffset? ClosedAt { get; set; }
-        public DateTimeOffset UpdatedAt { get; set; }
-        public Sha1 Sha { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+        public Sha1 Sha { get; private set; }
         public Sha1? MergeCommitSha { get; set; }
         public bool ShouldRemoveSourceBranch { get; set; }
         public bool ForceRemoveSourceBranch { get; set; }
@@ -46,6 +48,24 @@ namespace NGitLab.Mock
                     return MergeRequestState.closed;
 
                 return MergeRequestState.opened;
+            }
+        }
+
+        public IEnumerable<LibGit2Sharp.Commit> Commits
+        {
+            get
+            {
+                var targetBranch = Project.Repository.GetBranch(TargetBranch);
+                return SourceProject.Repository.GetBranchCommits(SourceBranch).TakeWhile(commit => commit.Id != targetBranch.Tip.Id);
+            }
+        }
+
+        internal void UpdateSha()
+        {
+            var commit = SourceProject.Repository.GetBranchTipCommit(SourceBranch);
+            if (commit != null)
+            {
+                Sha = new Sha1(commit.Sha);
             }
         }
 

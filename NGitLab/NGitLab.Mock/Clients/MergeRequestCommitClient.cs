@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -16,6 +16,13 @@ namespace NGitLab.Mock.Clients
             _mergeRequestIid = mergeRequestIid;
         }
 
-        public IEnumerable<Commit> All => throw new NotImplementedException();
+        public IEnumerable<Commit> All
+        {
+            get
+            {
+                var mergeRequest = GetMergeRequest(_projectId, _mergeRequestIid);
+                return mergeRequest.Commits.Select(commit => commit.ToCommitClient());
+            }
+        }
     }
 }

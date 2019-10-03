@@ -37,7 +37,7 @@ namespace NGitLab.Mock.Clients
                 },
             };
 
-            project.Repository.Commit(Context.User, commitCreate);
+            project.Repository.Commit(commitCreate);
         }
 
         public void Delete(FileDelete file)
@@ -60,7 +60,7 @@ namespace NGitLab.Mock.Clients
                 },
             };
 
-            project.Repository.Commit(Context.User, commitCreate);
+            project.Repository.Commit(commitCreate);
         }
 
         public FileData Get(string filePath, string @ref)
@@ -93,7 +93,7 @@ namespace NGitLab.Mock.Clients
                 },
             };
 
-            project.Repository.Commit(Context.User, commitCreate);
+            project.Repository.Commit(commitCreate);
         }
     }
 }

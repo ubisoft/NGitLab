@@ -94,8 +94,10 @@ namespace NGitLab.Mock.Clients
 
             var sourceProject = GetProject(_projectId, ProjectPermission.Contribute);
             var targetProject = GetProject(mergeRequestCreate.TargetProjectId, ProjectPermission.View);
-            var sourceBranch = sourceProject.Repository.GetBranch(mergeRequestCreate.SourceBranch) ?? throw new GitLabBadRequestException("Source branch not found");
-            var targetBranch = targetProject.Repository.GetBranch(mergeRequestCreate.TargetBranch) ?? throw new GitLabBadRequestException("Target branch not found");
+
+            // Ensure the branches exist
+            _ = sourceProject.Repository.GetBranch(mergeRequestCreate.SourceBranch) ?? throw new GitLabBadRequestException("Source branch not found");
+            _ = targetProject.Repository.GetBranch(mergeRequestCreate.TargetBranch) ?? throw new GitLabBadRequestException("Target branch not found");
 
             UserRef assignee = null;
             if (mergeRequestCreate.AssigneeId != null)
@@ -103,23 +105,11 @@ namespace NGitLab.Mock.Clients
                 assignee = Server.Users.GetById(mergeRequestCreate.AssigneeId.Value) ?? throw new GitLabBadRequestException("assignee not found");
             }
 
-            var mergeRequest = new MergeRequest
-            {
-                Assignee = assignee,
-                Author = Context.User,
-                CreatedAt = DateTimeOffset.UtcNow,
-                Description = mergeRequestCreate.Description,
-                ShouldRemoveSourceBranch = mergeRequestCreate.RemoveSourceBranch,
-                Sha = new Sha1(sourceBranch.Tip.Sha),
-                SourceBranch = mergeRequestCreate.SourceBranch,
-                SourceProject = sourceProject,
-                Squash = mergeRequestCreate.Squash,
-                TargetBranch = mergeRequestCreate.TargetBranch,
-                Title = mergeRequestCreate.Title,
-                UpdatedAt = DateTimeOffset.UtcNow,
-            };
-
-            targetProject.MergeRequests.Add(mergeRequest);
+            var mergeRequest = targetProject.MergeRequests.Add(sourceProject, mergeRequestCreate.SourceBranch, mergeRequestCreate.TargetBranch, mergeRequestCreate.Title, Context.User);
+            mergeRequest.Assignee = assignee;
+            mergeRequest.Description = mergeRequestCreate.Description;
+            mergeRequest.ShouldRemoveSourceBranch = mergeRequestCreate.RemoveSourceBranch;
+            mergeRequest.Squash = mergeRequestCreate.Squash;
             return mergeRequest.ToMergeRequestClient();
         }
 

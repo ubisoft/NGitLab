@@ -9,6 +9,13 @@ namespace NGitLab.Mock
         {
         }
 
+        public Project AddNew()
+        {
+            var project = new Project();
+            Add(project);
+            return project;
+        }
+
         public override void Add(Project project)
         {
             if (project is null)

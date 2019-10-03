@@ -11,11 +11,11 @@ namespace NGitLab.Mock.Clients
         {
             _projectId = projectId;
         }
-         
+
         public Models.Commit Create(Models.CommitCreate commit)
         {
             var project = GetProject(commit.ProjectId, ProjectPermission.Contribute);
-            return project.Repository.Commit(Context.User, commit).ToCommitClient();
+            return project.Repository.Commit(commit).ToCommitClient();
         }
 
         public Models.Commit GetCommit(string @ref)

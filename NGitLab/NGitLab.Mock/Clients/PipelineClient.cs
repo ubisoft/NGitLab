@@ -1,49 +1,85 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
 {
     internal sealed class PipelineClient : ClientBase, IPipelineClient
     {
-        public PipelineClient(ClientContext context, int projectId)
+        private int _projectId;
+        private IJobClient _jobClient;
+
+        public PipelineClient(ClientContext context, IJobClient jobClient, int projectId)
             : base(context)
         {
+            _jobClient = jobClient;
+            _projectId = projectId;
         }
 
-        public Pipeline this[int id] => throw new System.NotImplementedException();
-
-        public IEnumerable<PipelineBasic> All => throw new System.NotImplementedException();
-
-        public IEnumerable<Job> AllJobs => throw new System.NotImplementedException();
-
-        public Pipeline Create(string @ref)
+        public Models.Pipeline this[int id]
         {
-            throw new System.NotImplementedException();
+            get
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var pipeline = project.Pipelines.GetById(id);
+                if (pipeline == null)
+                    throw new GitLabNotFoundException();
+
+                return pipeline.ToPipelineClient();
+            }
         }
 
-        public Pipeline CreatePipelineWithTrigger(string token, string @ref, Dictionary<string, string> variables)
+        public IEnumerable<PipelineBasic> All 
         {
-            throw new System.NotImplementedException();
+            get
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                return project.Pipelines.Select(p => p.ToPipelineBasicClient());
+            }
+        }
+
+        public IEnumerable<Models.Job> AllJobs
+        {
+            get 
+            {
+                return _jobClient.GetJobs(JobScopeMask.All);
+            }
+        }
+
+        public Models.Pipeline Create(string @ref)
+        {
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var pipeline = project.Pipelines.Add(@ref, JobStatus.Running, Context.User);
+            return pipeline.ToPipelineClient();
+        }
+
+        public Models.Pipeline CreatePipelineWithTrigger(string token, string @ref, Dictionary<string, string> variables)
+        {
+            throw new NotImplementedException();
         }
 
         public void Delete(int pipelineId)
         {
-            throw new System.NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var pipeline = project.Pipelines.GetById(pipelineId);
+            project.Pipelines.Remove(pipeline);
         }
 
-        public Job[] GetJobs(int pipelineId)
+        public Models.Job[] GetJobs(int pipelineId)
         {
-            throw new System.NotImplementedException();
+            return _jobClient.GetJobs(JobScopeMask.All).Where(p => p.Pipeline.Id == pipelineId).ToArray();
         }
 
-        public IEnumerable<Job> GetJobsInProject(JobScope scope)
+        [Obsolete("Use JobClient.GetJobs() instead")]
+        public IEnumerable<Models.Job> GetJobsInProject(JobScope scope)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IEnumerable<PipelineBasic> Search(PipelineQuery query)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

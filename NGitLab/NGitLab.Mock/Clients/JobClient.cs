@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -13,9 +14,15 @@ namespace NGitLab.Mock.Clients
             _projectId = projectId;
         }
 
-        public Job Get(int jobId)
+        public Models.Job Get(int jobId)
         {
-            throw new System.NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var job = project.Jobs.GetById(jobId);
+
+            if (job == null)
+                throw new GitLabNotFoundException();
+
+            return job.ToJobClient();
         }
 
         public byte[] GetJobArtifacts(int jobId)
@@ -23,9 +30,15 @@ namespace NGitLab.Mock.Clients
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<Job> GetJobs(JobScopeMask scope)
+        public IEnumerable<Models.Job> GetJobs(JobScopeMask scope)
         {
-            throw new System.NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+
+            if (scope == JobScopeMask.All)
+                return project.Jobs.Select( j => j.ToJobClient());
+
+            var jobs = project.Jobs.Where(j => string.Equals(j.Status.ToString(), scope.ToString(), System.StringComparison.OrdinalIgnoreCase));
+            return jobs.Select(j => j.ToJobClient());
         }
 
         public string GetTrace(int jobId)
@@ -33,9 +46,26 @@ namespace NGitLab.Mock.Clients
             throw new System.NotImplementedException();
         }
 
-        public Job RunAction(int jobId, JobAction action)
+        public Models.Job RunAction(int jobId, JobAction action)
         {
-            throw new System.NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var job = project.Jobs.GetById(jobId);
+
+            switch (action)
+            {
+                case JobAction.Cancel:
+                    job.Status = JobStatus.Canceled;
+                    break;
+                case JobAction.Erase:
+                    job.Artifacts = null;
+                    break;
+                case JobAction.Play:
+                case JobAction.Retry:
+                    job.Status = JobStatus.Running;
+                    break;
+            }
+
+            return job.ToJobClient();
         }
     }
 }
