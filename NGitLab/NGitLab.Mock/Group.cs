@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
@@ -7,10 +8,16 @@ namespace NGitLab.Mock
     public sealed class Group : GitLabObject
     {
         public Group()
+            : this(Guid.NewGuid().ToString("N"))
+        {
+        }
+
+        public Group(string name)
         {
             Groups = new GroupCollection(this);
             Projects = new ProjectCollection(this);
             Permissions = new PermissionCollection(this);
+            Name = name;
         }
 
         public int Id { get; set; }
