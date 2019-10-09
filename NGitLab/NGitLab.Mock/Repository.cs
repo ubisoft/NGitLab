@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,8 +7,8 @@ using System.Text;
 using System.Threading;
 using LibGit2Sharp;
 using NGitLab.Mock.Clients;
-using Internals.FileUtilities;
-using Internals.Abstractions;
+using Square.FileUtilities;
+using Ubisoft.Jobs.Abstractions;
 
 namespace NGitLab.Mock
 {
@@ -348,7 +348,7 @@ namespace NGitLab.Mock
             repo.Branches.Update(tempBranch, b => b.Remote = tempRemoteName, b => b.UpstreamBranch = tempBranch.CanonicalName);
 
             // libgit2sharp cannot push to non-bare local repo: repo.Network.Push(remote, branch.CanonicalName, options);
-            var job = new Internals.Git.GitPushJob(FullPath)
+            var job = new Ubisoft.Jobs.Git.GitPushJob(FullPath)
             {
                 RefSpec = tempBranch.CanonicalName,
             };

@@ -1,0 +1,57 @@
+variables:
+  TEABOX_PLUGIN: "-plugins=TeaBox.ContinuousDeliveryTelemetry@0.3.2"
+
+stages:
+  - build
+  - test
+  - deploy
+  - notification
+
+build:
+  stage: build
+  script:
+  - TeaBox.com %TEABOX_PLUGIN% Build
+  artifacts:
+    expire_in: 1 week
+    untracked: true
+  
+test:
+  stage: test
+  script:
+  - TeaBox.com %TEABOX_PLUGIN% GitLabMacros.RunTests
+
+launch_analysis:  
+  stage: test
+  variables:
+    CICD_DASHBOARD_STAGE_NAME: "Static Analysis"
+  script:
+  - TeaBox.com %TEABOX_PLUGIN% AnalyseCode
+  artifacts:
+    name: SonarQube
+    paths:
+    - .SonarQube/out/summary.md
+
+breaking_changes:
+  stage: test
+  script:
+  # NOTE: Despite the apparent inconsistency, setting
+  #       - the macro's 'FailBuild' argument AND
+  #       - the job's 'allow_failure' parameter
+  #       is intended. This way we'll get an "orange" status for that job if the API is broken.
+  - TeaBox.com DetectBreakingChanges -FailBuild=true -ProjectPath=NGitLab/NGitLab/NGitLab.csproj -ReferenceVersion="latest"
+  allow_failure: true
+
+deploy:
+  stage: deploy
+  environment: production
+  script: 
+  - TeaBox.com %TEABOX_PLUGIN% PublishNugetPackage -nuspecFile="NGitLab/NGitLab/NGitLab.nuspec"
+  - TeaBox.com %TEABOX_PLUGIN% PublishNugetPackage -ProjectPath="NGitLab/NGitLab.Mock/NGitLab.Mock.csproj"
+  
+NotifyOnFailure:
+  stage: notification
+  script:
+  - TeaBox.com DetectFailureAndSendNotificationEmail -DestinationAddress=Square-TG-Support@ubisoft.com -ProjectId=%CI_PROJECT_ID% -PipelineId=%CI_PIPELINE_ID%
+  only:
+  - schedules
+  when: on_failure

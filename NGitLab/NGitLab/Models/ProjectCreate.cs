@@ -22,8 +22,12 @@ namespace NGitLab.Models
         [DataMember(Name = "path")]
         public string Path;
 
+        [Obsolete("Use IssuesAccessLevel instead")]
         [DataMember(Name = "issues_enabled")]
         public bool IssuesEnabled;
+
+        [DataMember(Name = "issues_access_level")]
+        public IssuesAccessLevel IssuesAccessLevel;
 
         [Obsolete("Does not exist anymore in gitlab api")]
         public bool WallEnabled;

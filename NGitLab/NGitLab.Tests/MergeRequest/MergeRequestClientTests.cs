@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -78,8 +78,8 @@ namespace NGitLab.Tests.MergeRequest
 
             Assert.AreEqual(0, approvers.Length, "Initially no approver defined");
 
-            // --- Add the exampleAdminUser as approver for this MR since adding the MR owners won't increment the number of approvers---
-            var userId = Initialize.AdminAccountId;
+            // --- Add the SquareAdminUser as approver for this MR since adding the MR owners won't increment the number of approvers---
+            var userId = Initialize.SquareAdminRobotUserId;
 
             var approversChange = new MergeRequestApproversChange()
             {

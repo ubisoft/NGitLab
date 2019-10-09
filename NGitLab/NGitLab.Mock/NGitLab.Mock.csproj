@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
     <LangVersion>7.3</LangVersion>
@@ -8,7 +8,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.26.1" />
-    <PackageReference Include="Internals.FileUtilities" Version="2.3.1" />
-    <PackageReference Include="Internals.Git" Version="0.9.4" />
+    <PackageReference Include="Square.FileUtilities" Version="2.3.1" />
+    <PackageReference Include="Ubisoft.Jobs.Git" Version="0.9.4" />
   </ItemGroup>
 </Project>

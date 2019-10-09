@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using NGitLab.Models;
@@ -23,16 +23,16 @@ namespace NGitLab.Tests
 
         public static IRepositoryClient Repository => GitLabClient.GetRepository(UnitTestProject.Id);
 
-        public static string GitLabHost => "https://gitlab.example.com";
-        public static string GitLabHookTest => "https://gitlab.example.com";
+        public static string GitLabHost => "https://ne1-staging-gitlab01.ubisoft.org";
+        public static string GitLabHookTest => "https://ne1-staging-gitlab01.ubisoft.org";
         public static string GitLabHostFront1 => "https://pdc-dev-gitfront01/";
         public static string GitLabHostFront2 => " https://pdc-dev-gitfront02/";
 
-        public static string GitLabToken => "dummy";
+        public static string GitLabToken => "Vubdx-Up-V_ozFgbbx2E";
 
         public static bool IsAdmin => GitLabClient.Users.Current.IsAdmin;
 
-        public static int AdminAccountId = 42;
+        public static int SquareAdminRobotUserId = 3495;
 
         public static string ProjectName;
 
@@ -117,7 +117,7 @@ namespace NGitLab.Tests
             var createdProject = GitLabClient.Projects.Create(new ProjectCreate
             {
                 Description = "desc",
-                IssuesEnabled = true,
+                IssuesAccessLevel = IssuesAccessLevel.Enabled,
                 MergeRequestsEnabled = true,
                 Name = name,
                 NamespaceId = groupId?.ToString(),

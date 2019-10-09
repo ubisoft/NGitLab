@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -151,7 +151,7 @@ namespace NGitLab.Tests
         public static Runner GetDefaultRunner()
         {
             var allRunners = Initialize.GitLabClient.Runners.Accessible.ToArray();
-            var runner = Array.Find(allRunners, x => x.Active && string.Equals(x.Description, "example", StringComparison.Ordinal));
+            var runner = Array.Find(allRunners, x => x.Active && string.Equals(x.Description, "ToolSquare_Test", StringComparison.Ordinal));
 
             if (runner == null)
             {
@@ -169,7 +169,7 @@ namespace NGitLab.Tests
 
             if (runner == null)
             {
-                Assert.Inconclusive($"Will not be able to test the builds as runner '{runnerName}' is not setup. You should register it on {Initialize.GitLabHost}/example/Runners/SharedRunners_Staging/settings/ci_cd");
+                Assert.Inconclusive($"Will not be able to test the builds as runner '{runnerName}' is not setup. You should register it on {Initialize.GitLabHost}/Square/Runners/SharedRunners_Staging/settings/ci_cd");
             }
 
             return Initialize.GitLabClient.Runners[runner.Id];

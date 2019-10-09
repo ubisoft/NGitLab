@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -157,7 +157,7 @@ namespace NGitLab.Tests
             var project = new ProjectCreate
             {
                 Description = "desc",
-                IssuesEnabled = true,
+                IssuesAccessLevel = IssuesAccessLevel.Enabled,
                 MergeRequestsEnabled = true,
                 Name = "CreateDelete_Test_" + new Random().Next(),
                 NamespaceId = null,
@@ -170,7 +170,6 @@ namespace NGitLab.Tests
             var createdProject = _projects.Create(project);
 
             Assert.AreEqual(project.Description, createdProject.Description);
-            Assert.AreEqual(project.IssuesEnabled, createdProject.IssuesEnabled);
             Assert.AreEqual(project.MergeRequestsEnabled, createdProject.MergeRequestsEnabled);
             Assert.AreEqual(project.Name, createdProject.Name);
             CollectionAssert.AreEquivalent(project.Tags, createdProject.TagList);
@@ -204,7 +203,7 @@ namespace NGitLab.Tests
             var result20 = _projects.Get(projectQuery20);
             var result30 = _projects.Get(projectQuery30);
             var result40 = _projects.Get(projectQuery40);
-            // No owner level (50) for project! See https://gitlab.example.com/help/api/members.md
+            // No owner level (50) for project! See https://gitlab-ncsa.ubisoft.org/help/api/members.md
 
             // Assert
             Assert.IsTrue(result10.Any());
@@ -220,7 +219,7 @@ namespace NGitLab.Tests
             var project = new ProjectCreate
             {
                 Description = "desc",
-                IssuesEnabled = true,
+                IssuesAccessLevel = IssuesAccessLevel.Enabled,
                 MergeRequestsEnabled = true,
                 Name = "ForkProject_Test_" + new Random().Next(),
                 NamespaceId = null,

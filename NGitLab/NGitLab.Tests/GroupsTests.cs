@@ -101,7 +101,7 @@ namespace NGitLab.Tests
         public void Test_get_by_group_query_groupQuery_SkipGroups_returns_groups()
         {
             //Arrange
-            var skippedGroupIds = new[] { 7161, 1083 };
+            var skippedGroupIds = new[] { 7161, 1083 }; // Square & TeaBox IDs
 
             // Ensure the groups exist
             foreach (var groupId in skippedGroupIds)
@@ -125,11 +125,11 @@ namespace NGitLab.Tests
             //Arrange
             var groupQueryNull = new GroupQuery
             {
-                Search = "example",
+                Search = "Square",
             };
 
             //Act
-            var result = Groups.Get(groupQueryNull).Count(g => string.Equals(g.Name, "example", StringComparison.InvariantCultureIgnoreCase));
+            var result = Groups.Get(groupQueryNull).Count(g => string.Equals(g.Name, "Square", StringComparison.InvariantCultureIgnoreCase));
 
             // Assert
             Assert.AreEqual(1, result);

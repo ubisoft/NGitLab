@@ -1,4 +1,4 @@
-namespace NGitLab.Models
+﻿namespace NGitLab.Models
 {
     /// <summary>
     /// Specifies an assignee ID for a data query. It can be specified via
@@ -6,7 +6,7 @@ namespace NGitLab.Models
     /// - 'Any':                                            queries all assigned items
     /// - 'None':                                           queries all unassigned items
     /// </summary>
-    /// <see href="https://gitlab.example.com/help/api/issues.md#list-issues"/>
+    /// <see href="https://gitlab-ncsa.ubisoft.org/help/api/issues.md#list-issues"/>
     public sealed class QueryAssigneeId
     {
         private readonly string _id;
