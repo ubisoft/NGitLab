@@ -35,7 +35,7 @@ namespace NGitLab.Models
         public string WebsiteURL;
 
         [DataMember(Name = "projects_limit")]
-        public int ProjectsLimit;
+        public int? ProjectsLimit;
 
         [DataMember(Name = "provider")]
         public string Provider;
@@ -47,10 +47,10 @@ namespace NGitLab.Models
         public string Bio;
 
         [DataMember(Name = "admin")]
-        public bool IsAdmin;
+        public bool? IsAdmin;
 
         [DataMember(Name = "can_create_group")]
-        public bool CanCreateGroup;
+        public bool? CanCreateGroup;
 
         [DataMember(Name = "reset_password")]
         public bool? ResetPassword;
