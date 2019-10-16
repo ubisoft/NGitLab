@@ -88,5 +88,14 @@ namespace NGitLab.Models
 
         [DataMember(Name = "web_url")]
         public string WebUrl;
+
+        [DataMember(Name = "merged_by")]
+        public User MergedBy;
+
+        [DataMember(Name = "merged_at")]
+        public DateTime? MergedAt;
+
+        [DataMember(Name = "assignees")]
+        public User[] Assignees;
     }
 }
