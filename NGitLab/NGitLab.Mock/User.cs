@@ -48,13 +48,10 @@ namespace NGitLab.Mock
         {
             get
             {
-                var newGroup = Server.Groups.FirstOrDefault(group => group.Name == UserName);
+                var newGroup = Server.Groups.FirstOrDefault(group => string.Equals(@group.PathWithNameSpace, UserName, StringComparison.Ordinal));
                 if (newGroup == null)
                 {
-                    newGroup = new Group
-                    {
-                        Name = UserName,
-                    };
+                    newGroup = new Group(this);
 
                     Server.Groups.Add(newGroup);
                     newGroup.Permissions.Add(new Permission(this, Models.AccessLevel.Owner));
