@@ -7,6 +7,8 @@ namespace NGitLab.Mock
 {
     public sealed class Group : GitLabObject
     {
+        private string _path;
+
         public Group()
             : this(Guid.NewGuid().ToString("N"))
         {
@@ -20,10 +22,18 @@ namespace NGitLab.Mock
             Name = name;
         }
 
+        public Group(User user)
+            : this(user.Name)
+        {
+            IsUserNamespace = true;
+            Path = user.UserName;
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public VisibilityLevel Visibility { get; set; }
+        public bool IsUserNamespace { get; }
 
         public new Group Parent => base.Parent as Group;
 
@@ -31,7 +41,25 @@ namespace NGitLab.Mock
         public ProjectCollection Projects { get; }
         public PermissionCollection Permissions { get; }
 
-        public string Path => Slug.Create(Name);
+        public string Path
+        {
+            get
+            {
+                if (_path == null )
+                    _path = Slug.Create(Name);
+
+                return _path;
+            }
+
+            private set
+            {
+                if (!IsUserNamespace)
+                    return;
+
+                _path = value;
+            }
+        }
+
         public string PathWithNameSpace => Parent == null ? Path : (Parent.PathWithNameSpace + "/" + Path);
 
         public string FullName => Parent == null ? Name : (Parent.FullName + "/" + Name);

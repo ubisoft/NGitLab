@@ -568,7 +568,7 @@ namespace NGitLab.Impl
         /// The object.
         /// </param>
         /// <returns>
-        /// Returns true if successfull otherwise false.
+        /// Returns true if successful otherwise false.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1007:UseGenericsWhereAppropriate", Justification = "Need to support .NET 2")]
         public static bool TryDeserializeObject(string json, out object obj)

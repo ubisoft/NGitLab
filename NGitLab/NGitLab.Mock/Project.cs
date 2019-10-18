@@ -184,6 +184,8 @@ namespace NGitLab.Mock
 
         public Models.Project ToClientProject()
         {
+            var kind = Group.IsUserNamespace ? "user" : "group";
+
             return new Models.Project
             {
                 Id = Id,
@@ -196,6 +198,7 @@ namespace NGitLab.Mock
                 HttpUrl = Repository.FullPath,
                 DefaultBranch = DefaultBranch,
                 VisibilityLevel = Visibility,
+                Namespace = new Namespace() { FullPath = Group.PathWithNameSpace, Id = Group.Id, Kind = kind, Name = Group.Name, Path = Group.Path },
             };
         }
     }
