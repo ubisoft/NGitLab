@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using NGitLab.Models;
 
 namespace NGitLab.Mock
@@ -23,7 +24,7 @@ namespace NGitLab.Mock
         public JobStatus Status { get; set; }
         public bool Tag { get; set; }
         public User User { get; set; }
-        public string WebUrl { get; set; }
+        public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/jobs/{Id.ToString(CultureInfo.InvariantCulture)}");
 
         internal Models.Job ToJobClient()
         {

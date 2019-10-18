@@ -33,6 +33,7 @@ namespace NGitLab.Mock
         public string Name { get; set; }
         public string Description { get; set; }
         public string DefaultBranch { get; set; } = "master";
+        public string WebUrl => Server.MakeUrl(PathWithNamespace);
         public VisibilityLevel Visibility { get; set; }
         public Project ForkedFrom { get; internal set; }
         public string ImportStatus { get; set; }
@@ -160,6 +161,25 @@ namespace NGitLab.Mock
             return accessLevel.HasValue;
         }
 
+        public MergeRequest CreateNewMergeRequest(User user, string branchName, string targetBranch, string title, string description)
+        {
+            if (Repository.GetBranchTipCommit(branchName) == null)
+            {
+                Repository.Commit(user, "initial commit");
+            }
+            Repository.CreateAndCheckoutBranch(branchName);
+            Repository.Commit(user, "edit");
+
+            var mergeRequest = MergeRequests.Add(
+                sourceBranch: branchName,
+                targetBranch: targetBranch,
+                title: title,
+                user);
+            mergeRequest.Description = description;
+
+            return mergeRequest;
+        }
+
         public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared)
         {
             var runner = new Runner
@@ -199,6 +219,7 @@ namespace NGitLab.Mock
                 DefaultBranch = DefaultBranch,
                 VisibilityLevel = Visibility,
                 Namespace = new Namespace() { FullPath = Group.PathWithNameSpace, Id = Group.Id, Kind = kind, Name = Group.Name, Path = Group.Path },
+                WebUrl = WebUrl,
             };
         }
     }

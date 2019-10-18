@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net;
-using LibGit2Sharp;
+﻿using System.Net;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients

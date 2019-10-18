@@ -18,9 +18,9 @@ namespace NGitLab.Mock
         public string Name { get; set; }
         public string Email { get; set; }
         public bool IsAdmin { get; set; }
-        public string WebUrl { get; set; }
         public string AvatarUrl { get; set; }
         public UserState State { get; set; }
+        public string WebUrl => Server.MakeUrl(UserName);
 
         public Models.User ToClientUser()
         {
@@ -42,6 +42,11 @@ namespace NGitLab.Mock
             instance.Username = UserName;
             instance.Name = Name;
             instance.Email = Email;
+            instance.AvatarURL = AvatarUrl;
+            if (IsAdmin)
+            {
+                instance.IsAdmin = true;
+            }
         }
 
         public Group Namespace
