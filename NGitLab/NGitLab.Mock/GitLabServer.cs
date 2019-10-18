@@ -27,6 +27,8 @@ namespace NGitLab.Mock
             Users = new UserCollection(this);
         }
 
+        public Uri Url { get; set; } = new Uri("https://gitlab.example.com/", UriKind.Absolute);
+
         public GitLabVersion Version { get; set; } = new GitLabVersion { Version = "1.0.0", Revision = "rev1" };
         public GroupCollection Groups { get; }
         public UserCollection Users { get; }
@@ -74,5 +76,10 @@ namespace NGitLab.Mock
         internal int GetNewRunnerId() => Interlocked.Increment(ref _lastRunnerId);
         internal int GetNewPipelineId() => Interlocked.Increment(ref _lastPipelineId);
         internal int GetNewJobId() => Interlocked.Increment(ref _lastJobId);
+
+        internal string MakeUrl(string relativeUrl)
+        {
+            return new Uri(Url, relativeUrl).AbsoluteUri;
+        }
     }
 }

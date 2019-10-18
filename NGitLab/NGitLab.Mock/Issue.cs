@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Globalization;
 
 namespace NGitLab.Mock
 {
     public sealed class Issue : GitLabObject
     {
+        public Project Project => (Project)Parent;
+
         public int Id { get; set; }
         public int Iid { get; set; }
-        public int ProjectId => ((Project)Parent).Id;
+        public int ProjectId => Project.Id;
         public string Title { get; set; }
         public string Description { get; set; }
         public string[] Labels { get; set; }
@@ -16,7 +19,7 @@ namespace NGitLab.Mock
         public DateTimeOffset CreatedAt { get; }
         public DateTimeOffset UpdatedAt { get; set; }
         public DateTimeOffset? ClosedAt { get; set; }
-        public string WebUrl { get; set; }
+        public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/issues/{Id.ToString(CultureInfo.InvariantCulture)}");
 
         public IssueState State
         {

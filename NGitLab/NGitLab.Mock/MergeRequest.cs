@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using NGitLab.Models;
 
@@ -33,6 +34,8 @@ namespace NGitLab.Mock
         public bool ForceRemoveSourceBranch { get; set; }
         public bool Squash { get; set; }
         public bool MergeWhenPipelineSucceeds { get; set; }
+        public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/merge_requests/{Id.ToString(CultureInfo.InvariantCulture)}");
+
         public NoteCollection<MergeRequestComment> Comments { get; }
 
         public bool WorkInProgress => Title?.StartsWith("WIP:", StringComparison.OrdinalIgnoreCase) == true;
@@ -95,6 +98,7 @@ namespace NGitLab.Mock
                 Squash = Squash,
                 MergeStatus = "can_be_merged",
                 State = State.ToString(),
+                WebUrl = WebUrl,
             };
         }
     }

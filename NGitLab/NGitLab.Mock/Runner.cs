@@ -5,8 +5,6 @@ namespace NGitLab.Mock
 {
     public sealed class Runner : GitLabObject
     {
-        public const string Url = "/runners";
-
         public new Project Parent => (Project)base.Parent;
 
         public int Id { get; set; }

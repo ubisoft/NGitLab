@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using LibGit2Sharp;
 using NGitLab.Mock.Clients;
@@ -410,7 +408,7 @@ namespace NGitLab.Mock
             }
         }
 
-        private ICommitActionHandler GetActionHandler(string action)
+        private static ICommitActionHandler GetActionHandler(string action)
         {
             if (!Enum.TryParse<CommitAction>(action, ignoreCase: true, out var result))
                 throw new ArgumentOutOfRangeException(nameof(action));
