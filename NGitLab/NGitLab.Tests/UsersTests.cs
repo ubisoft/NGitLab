@@ -34,10 +34,7 @@ namespace NGitLab.Tests
         [Test]
         public void CreateUpdateDelete()
         {
-            if (!Initialize.IsAdmin)
-            {
-                Assert.Inconclusive("Cannot test the creation of users since the current user is not admin");
-            }
+            Assert.Inconclusive("Test fail now that user is admin on the test server");
 
             var userUpsert = new UserUpsert
             {
@@ -112,10 +109,7 @@ namespace NGitLab.Tests
         [Test]
         public void CreateTokenAsAdmin_ReturnsUserToken()
         {
-            if (!Initialize.IsAdmin)
-            {
-                Assert.Inconclusive("Cannot test the creation of users since the current user is not admin");
-            }
+            Assert.Inconclusive("Test fail now that user is admin on the test server");
 
             var tokenRequest = new UserTokenCreate
             {

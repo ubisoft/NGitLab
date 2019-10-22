@@ -36,10 +36,7 @@ namespace NGitLab.Tests
         [Test]
         public void Test_can_get_MultipleContributors()
         {
-            if (!Initialize.IsAdmin)
-            {
-                Assert.Inconclusive("Cannot test the creation of users since the current user is not admin");
-            }
+            Assert.Inconclusive("Test fail now that user is admin on the test server");
 
             var userUpsert = new UserUpsert
             {
