@@ -1,4 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Import Project="$([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.ToLowerInvariant().Replace('.switchtosource.sln', '.sln')), 'import', 'NGitLab.Mock.before.props'))" Condition="$(SolutionFileName.EndsWith('.SwitchToSource.sln', StringComparison.OrdinalIgnoreCase)) And Exists($([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.ToLowerInvariant().Replace('.switchtosource.sln', '.sln')), 'import', 'NGitLab.Mock.before.props')))" />
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
     <LangVersion>7.3</LangVersion>
@@ -11,4 +14,6 @@
     <PackageReference Include="Internals.FileUtilities" Version="2.3.1" />
     <PackageReference Include="Internals.Git" Version="0.9.4" />
   </ItemGroup>
+  <Import Project="$([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.ToLowerInvariant().Replace('.switchtosource.sln', '.sln')), 'import', 'NGitLab.Mock.after.props'))" Condition="$(SolutionFileName.EndsWith('.SwitchToSource.sln', StringComparison.OrdinalIgnoreCase)) And Exists($([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.ToLowerInvariant().Replace('.switchtosource.sln', '.sln')), 'import', 'NGitLab.Mock.after.props')))" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

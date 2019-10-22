@@ -27,6 +27,8 @@ namespace NGitLab.Mock
                 throw new GitLabException("User already exists");
             }
 
+            Server.Groups.Add(new Group(user));
+
             base.Add(user);
         }
 

@@ -27,6 +27,7 @@ namespace NGitLab.Mock
         {
             IsUserNamespace = true;
             Path = user.UserName;
+            Permissions.Add(new Permission(user, AccessLevel.Owner));
         }
 
         public int Id { get; set; }
