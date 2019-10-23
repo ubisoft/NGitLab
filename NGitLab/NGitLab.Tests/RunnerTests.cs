@@ -155,7 +155,7 @@ namespace NGitLab.Tests
 
             if (runner == null)
             {
-                Assert.Inconclusive("Will not be able to test the builds as no runner is setup for this project");
+                Utils.FailInCiEnvironment("Will not be able to test the builds as no runner is setup for this project");
             }
 
             return Initialize.GitLabClient.Runners[runner.Id];
@@ -169,7 +169,7 @@ namespace NGitLab.Tests
 
             if (runner == null)
             {
-                Assert.Inconclusive($"Will not be able to test the builds as runner '{runnerName}' is not setup. You should register it on {Initialize.GitLabHost}/example/Runners/SharedRunners_Staging/settings/ci_cd");
+                Utils.FailInCiEnvironment($"Will not be able to test the builds as runner '{runnerName}' is not setup. You should register it on {Initialize.GitLabHost}/example/Runners/SharedRunners_Staging/settings/ci_cd");
             }
 
             return Initialize.GitLabClient.Runners[runner.Id];

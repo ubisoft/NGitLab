@@ -24,7 +24,7 @@ namespace NGitLab.Tests
                 var defaultRunner = RunnerTests.GetDefaultRunner();
                 if (!defaultRunner.Online)
                 {
-                    Assert.Inconclusive($"Cannot run the test since the test runner {defaultRunner.Id} is offline.");
+                    Utils.FailInCiEnvironment($"Cannot run the test since the test runner {defaultRunner.Id} is offline.");
                 }
 
                 const string yml =

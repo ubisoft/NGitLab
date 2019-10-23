@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Net;
 using NGitLab.Models;
 using NUnit.Framework;
+using Polly;
 
 namespace NGitLab.Tests
 {
     [SetUpFixture]
     public class Initialize
     {
+        internal static readonly string TestEntityNamePrefix = "Unit_Test_";    // Name prefix for test groups, projects & issues
+
         public static GitLabClient GitLabClient;
         public static GitLabClient GitLabClientFront1;
         public static GitLabClient GitLabClientFront2;
@@ -64,9 +67,9 @@ namespace NGitLab.Tests
 
             // Delete project is really slow now, creating a new project name at each run
             // => https://gitlab.com/gitlab-com/support-forum/issues/1569
-            ProjectName = "Unit_Test_" + randomGenerator.Next();
-            GroupName = "Unit_Test_" + randomGenerator.Next();
-            IssueTitle = "Unit_Test_" + randomGenerator.Next();
+            ProjectName = TestEntityNamePrefix + randomGenerator.Next();
+            GroupName = TestEntityNamePrefix + randomGenerator.Next();
+            IssueTitle = TestEntityNamePrefix + randomGenerator.Next();
 
             // Create a test project with merge request etc.
             UnitTestGroup = CreateGroup(GroupName);
@@ -82,6 +85,14 @@ namespace NGitLab.Tests
             DeleteTestProject();
             //remove group
             DeleteTestGroup();
+        }
+
+        internal static void WaitWithTimeoutUntil(Func<bool> predicate)
+        {
+            Policy
+                .HandleResult(false)
+                .WaitAndRetry(retryCount: 2, sleepDurationProvider: retryAttempt => TimeSpan.FromMilliseconds(300 * retryAttempt))
+                .Execute(predicate);
         }
 
         private Group CreateGroup(string groupName)

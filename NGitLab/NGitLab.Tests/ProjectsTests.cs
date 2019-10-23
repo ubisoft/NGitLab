@@ -245,5 +245,38 @@ namespace NGitLab.Tests
             _projects.Delete(createdProject.Id);
         }
 
+        [Test]
+        public void DeleteOldTestProjects()
+        {
+            if (!Utils.RunningInCiEnvironment)
+            {
+                Assert.Inconclusive("This cleanup task will not run outside of CI environment");
+            }
+
+            var query = new ProjectQuery
+            {
+                Scope = ProjectQueryScope.Owned,
+                Search = Initialize.TestEntityNamePrefix,
+                OrderBy = "last_activity_at",
+                Ascending = true,
+                Simple = true
+            };
+
+            var now = DateTimeOffset.Now;
+            var oldAge = TimeSpan.FromDays(7);
+
+            var projects = _projects.Get(query);
+
+            foreach (var project in projects)
+            {
+                var age = now - project.CreatedAt;
+                if (age < oldAge)
+                    break;
+                if (!project.Name.StartsWith(Initialize.TestEntityNamePrefix, StringComparison.Ordinal))
+                    continue;
+                _projects.Delete(project.Id);
+            }
+        }
+
     }
 }
