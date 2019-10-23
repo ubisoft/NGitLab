@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
+using static NGitLab.Tests.Initialize;
 
 namespace NGitLab.Tests
 {
@@ -30,13 +32,18 @@ namespace NGitLab.Tests
         {
             var contributor = Contributors.All;
             Assert.IsNotNull(contributor);
-            Assert.IsTrue(contributor.Any(x => x.Email== _users.Current.Email));
+            Assert.IsTrue(contributor.Any(x => x.Email == _users.Current.Email));
         }
 
         [Test]
         public void Test_can_get_MultipleContributors()
         {
-            Assert.Inconclusive("Test fail now that user is admin on the test server");
+            if (!Initialize.IsAdmin)
+            {
+                Utils.FailInCiEnvironment("Cannot test the creation of users since the current user is not admin");
+            }
+
+            var randomNumber = new Random().Next();
 
             var userUpsert = new UserUpsert
             {
@@ -45,17 +52,18 @@ namespace NGitLab.Tests
                 CanCreateGroup = true,
                 IsAdmin = true,
                 Linkedin = null,
-                Name = "sadfasdf",
+                Name = $"NGitLab Test Contributor {randomNumber}",
                 Password = "!@#$QWDRQW@",
                 ProjectsLimit = 1000,
                 Provider = "provider",
+                ExternalUid = "external_uid",
                 Skype = "skype",
                 Twitter = "twitter",
-                Username = "username",
+                Username = $"ngitlabtestcontributor{randomNumber}",
                 WebsiteURL = "wp.pl",
             };
 
-            var addedUser =_users.Create(userUpsert);
+            var addedUser = _users.Create(userUpsert);
             _commitClient.Create(new CommitCreate()
             {
                 AuthorName = userUpsert.Name,
@@ -73,6 +81,10 @@ namespace NGitLab.Tests
             Assert.IsTrue(contributor.Any(x => x.Email == userUpsert.Email));
 
             _users.Delete(addedUser.Id);
+
+            WaitWithTimeoutUntil(() => !_users.Get(addedUser.Username).Any());
+
+            Assert.IsFalse(_users.Get(addedUser.Username).Any());
         }
 
         private IContributorClient Contributors

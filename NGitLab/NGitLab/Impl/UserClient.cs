@@ -34,7 +34,7 @@ namespace NGitLab.Impl
 
         public void Delete(int userId)
         {
-            _api.Delete().To<User>(User.Url + "/" + userId);
+            _api.Delete().Execute(User.Url + "/" + userId);
         }
     }
 }

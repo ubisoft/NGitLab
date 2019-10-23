@@ -289,6 +289,32 @@ namespace NGitLab.Tests
             Assert.IsTrue(result50.Any());
         }
 
+        [Test]
+        public void DeleteOldTestGroups()
+        {
+            if (!Utils.RunningInCiEnvironment)
+            {
+                Assert.Inconclusive("This cleanup task will not run outside of CI environment");
+            }
+
+            var query = new GroupQuery
+            {
+                Owned = true,
+                Search = Initialize.TestEntityNamePrefix,
+                OrderBy = "id",
+                Sort = "desc",
+            };
+
+            var oldGroups = Groups.Get(query).Skip(10);    // Skip the 10 most recent groups (arbitrary choice)
+
+            foreach (var group in oldGroups)
+            {
+                if (!group.Name.StartsWith(Initialize.TestEntityNamePrefix, StringComparison.Ordinal))
+                    continue;
+                Groups.Delete(group.Id);
+            }
+        }
+
         private IGroupsClient Groups => Initialize.GitLabClient.Groups;
 
         private class GroupComparer : IEqualityComparer<Group>

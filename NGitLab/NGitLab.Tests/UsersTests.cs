@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading;
 using NGitLab.Models;
 using NUnit.Framework;
+using static NGitLab.Tests.Initialize;
 
 namespace NGitLab.Tests
 {
@@ -34,7 +36,12 @@ namespace NGitLab.Tests
         [Test]
         public void CreateUpdateDelete()
         {
-            Assert.Inconclusive("Test fail now that user is admin on the test server");
+            if (!Initialize.IsAdmin)
+            {
+                Utils.FailInCiEnvironment("Cannot test the creation of users since the current user is not admin");
+            }
+
+            var randomNumber = new Random().Next();
 
             var userUpsert = new UserUpsert
             {
@@ -43,13 +50,14 @@ namespace NGitLab.Tests
                 CanCreateGroup = true,
                 IsAdmin = true,
                 Linkedin = null,
-                Name = "sadfasdf",
+                Name = $"NGitLab Test User {randomNumber}",
                 Password = "!@#$QWDRQW@",
                 ProjectsLimit = 1000,
                 Provider = "provider",
+                ExternalUid = "external_uid",
                 Skype = "skype",
                 Twitter = "twitter",
-                Username = "username",
+                Username = $"ngitlabtestuser{randomNumber}",
                 WebsiteURL = "wp.pl"
             };
 
@@ -64,19 +72,9 @@ namespace NGitLab.Tests
 
             _users.Delete(addedUser.Id);
 
-            TestCurrent(userUpsert);
-        }
+            WaitWithTimeoutUntil(() => !_users.Get(addedUser.Username).Any());
 
-        public void TestCurrent(UserUpsert user)
-        {
-            var client = new GitLabClient(Initialize.GitLabHost, user.Username, user.Password).Users;
-
-            var session = client.Current;
-            Assert.That(session, Is.Not.Null);
-            Assert.That(session.CreatedAt.Date, Is.EqualTo(DateTime.Now.Date));
-            Assert.That(session.Email, Is.EqualTo(user.Email));
-            Assert.That(session.Name, Is.EqualTo(user.Name));
-            Assert.That(session.PrivateToken, Is.Not.Null);
+            Assert.IsFalse(_users.Get(addedUser.Username).Any());
         }
 
         [Test]
@@ -109,7 +107,10 @@ namespace NGitLab.Tests
         [Test]
         public void CreateTokenAsAdmin_ReturnsUserToken()
         {
-            Assert.Inconclusive("Test fail now that user is admin on the test server");
+            if (!Initialize.IsAdmin)
+            {
+                Utils.FailInCiEnvironment("Cannot test the creation of users since the current user is not admin");
+            }
 
             var tokenRequest = new UserTokenCreate
             {
