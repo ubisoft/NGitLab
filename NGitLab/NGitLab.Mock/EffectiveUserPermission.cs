@@ -17,6 +17,8 @@ namespace NGitLab.Mock
         {
             return new Membership
             {
+                Id = User.Id,
+                AvatarURL= User.AvatarUrl,
                 UserName = User.UserName,
                 Name = User.Name,
                 AccessLevel = (int)AccessLevel,
