@@ -45,7 +45,7 @@ namespace NGitLab.Tests
 
             var userUpsert = new UserUpsert
             {
-                Email = "test@test.pl",
+                Email = $"test{randomNumber}@test.pl",
                 Bio = "bio",
                 CanCreateGroup = true,
                 IsAdmin = true,
@@ -65,7 +65,6 @@ namespace NGitLab.Tests
             Assert.That(addedUser.Bio, Is.EqualTo(userUpsert.Bio));
 
             userUpsert.Bio = "Bio2";
-            userUpsert.Email = "test@test.pl";
 
             var updatedUser = _users.Update(addedUser.Id, userUpsert);
             Assert.That(updatedUser.Bio, Is.EqualTo(userUpsert.Bio));
