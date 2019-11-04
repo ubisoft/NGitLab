@@ -28,6 +28,9 @@ namespace NGitLab.Models
 
         [DataMember(Name = "milestone_id")]
         public int? MilestoneId;
+
+        [DataMember(Name = "allow_collaboration")]
+        public bool? AllowCollaboration;
     }
 
     [DataContract]

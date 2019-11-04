@@ -229,8 +229,16 @@ namespace NGitLab.Tests
                 WikiEnabled = true,
                 Tags = new List<string> { "Tag-1", "Tag-2" }
             };
-
+            
             var createdProject = _projects.Create(project);
+            Initialize.GitLabClient.GetRepository(createdProject.Id).Files.Create(new FileUpsert
+            {
+                Branch = "master",
+                CommitMessage = "add readme",
+                Path = "README.md",
+                RawContent = "this project should only live during the unit tests, you can delete if you find some",
+            });
+
             var forkedProject = _projects.Fork(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkProject()
             {
                 Path = createdProject.Path + "-fork",
@@ -240,6 +248,20 @@ namespace NGitLab.Tests
             var forks = _projects.GetForks(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkedProjectQuery());
 
             Assert.That(forks.Single().Id, Is.EqualTo(forkedProject.Id));
+
+            // Create a merge request with AllowCollaboration (only testable on a fork, also the source branch must not be protected)
+            Initialize.GitLabClient.GetRepository(forkedProject.Id).Branches.Create(new BranchCreate { Name = "banch-test", Ref = "master" });
+            var mr = Initialize.GitLabClient.GetMergeRequest(forkedProject.Id).Create(new MergeRequestCreate()
+            {
+                AllowCollaboration = true,
+                Description = "desc",
+                SourceBranch = "branch-test",
+                TargetBranch = "master",
+                TargetProjectId = createdProject.Id,
+                Title = "title",
+            });
+
+            Assert.That(mr.AllowCollaboration, Is.True);
 
             _projects.Delete(forkedProject.Id);
             _projects.Delete(createdProject.Id);
