@@ -31,5 +31,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "squash")]
         public bool Squash;
+
+        [DataMember(Name = "allow_collaboration")]
+        public bool? AllowCollaboration;
     }
 }
