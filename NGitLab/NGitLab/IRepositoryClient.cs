@@ -10,6 +10,7 @@ namespace NGitLab
         ITagClient Tags { get; }
         IEnumerable<Tree> Tree { get; }
         IEnumerable<Tree> GetTree(string path);
+        IEnumerable<Tree> GetTree(string path, string @ref, bool recursive);
         void GetRawBlob(string sha, Action<Stream> parser);
         void GetArchive(Action<Stream> parser);
 
