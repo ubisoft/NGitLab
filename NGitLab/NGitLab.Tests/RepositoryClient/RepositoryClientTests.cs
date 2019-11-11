@@ -68,6 +68,20 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        public void GetAllTreeInPathRecursively()
+        {
+            var tree = Initialize.Repository.GetTree("", null, true);
+            Assert.IsNotEmpty(tree);
+        }
+
+        [Test]
+        public void GetAllTreeInPathOnRef()
+        {
+            var tree = Initialize.Repository.GetTree("", "master", false);
+            Assert.IsNotEmpty(tree);
+        }
+
+        [Test]
         public void GetAllTreeInNotGoodPath()
         {
             var tree = Initialize.Repository.GetTree("Fakepath");
@@ -87,7 +101,7 @@ namespace NGitLab.Tests.RepositoryClient
             }
             else
             {
-                CollectionAssert.IsNotEmpty(commitRefs);   
+                CollectionAssert.IsNotEmpty(commitRefs);
             }
         }
     }
