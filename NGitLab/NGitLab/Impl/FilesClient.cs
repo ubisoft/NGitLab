@@ -38,6 +38,11 @@ namespace NGitLab.Impl
             return _api.Get().To<FileData>(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={@ref}");
         }
 
+        public Blame[] Blame(string filePath, string @ref)
+        {
+            return _api.Get().To<Blame[]>(_repoPath + $"/files/{EncodeFilePath(filePath)}/blame?ref={@ref}");
+        }
+
         private static string EncodeFilePath(string path)
         {
             return Uri.EscapeDataString(path);

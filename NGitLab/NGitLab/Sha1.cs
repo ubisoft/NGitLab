@@ -33,11 +33,6 @@ namespace NGitLab
 
         public override bool Equals(object obj)
         {
-            if (obj is null)
-            {
-                return false;
-            }
-
             return obj is Sha1 sha1 && Equals(sha1);
         }
 
