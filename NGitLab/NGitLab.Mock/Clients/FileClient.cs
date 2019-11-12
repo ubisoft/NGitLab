@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -67,6 +68,11 @@ namespace NGitLab.Mock.Clients
 
             var project = GetProject(_projectId, ProjectPermission.View);
             return project.Repository.GetFile(fileSystemPath, @ref);
+        }
+
+        public Blame[] Blame(string filePath, string @ref)
+        {
+            throw new NotImplementedException();
         }
 
         public void Update(FileUpsert file)
