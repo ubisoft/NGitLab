@@ -126,9 +126,21 @@ namespace NGitLab.Mock.Clients
         public Models.Project Update(string id, ProjectUpdate projectUpdate)
         {
             var project = GetProject(id, ProjectPermission.Edit);
-            project.Name = projectUpdate.Name;
-            project.DefaultBranch = projectUpdate.DefaultBranch;
-            project.Description = projectUpdate.Description;
+
+            if (projectUpdate.Name != null)
+            {
+                project.Name = projectUpdate.Name;
+            }
+
+            if (projectUpdate.DefaultBranch != null)
+            {
+                project.DefaultBranch = projectUpdate.DefaultBranch;
+            }
+
+            if (projectUpdate.Description != null)
+            {
+                project.Description = projectUpdate.Description;
+            }
 
             if (projectUpdate.Visibility.HasValue)
             {
