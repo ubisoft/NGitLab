@@ -145,5 +145,10 @@ namespace NGitLab.Impl
         {
             return _api.Get().To<Dictionary<string, double>>(Project.Url + "/" + id + "/languages");
         }
+
+        public Project Update(string id, ProjectUpdate projectUpdate)
+        {
+            return _api.Put().With(projectUpdate).To<Project>(Project.Url + "/" + Uri.EscapeDataString(id));
+        }
     }
 }

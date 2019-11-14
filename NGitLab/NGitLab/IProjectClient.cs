@@ -35,6 +35,8 @@ namespace NGitLab
 
         Project Create(ProjectCreate project);
 
+        Project Update(string id, ProjectUpdate projectUpdate);
+
         void Delete(int id);
 
         Project GetById(int id, SingleProjectQuery query);
