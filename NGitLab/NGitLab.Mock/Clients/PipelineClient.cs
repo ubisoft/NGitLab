@@ -30,7 +30,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public IEnumerable<PipelineBasic> All 
+        public IEnumerable<PipelineBasic> All
         {
             get
             {
@@ -41,7 +41,7 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Models.Job> AllJobs
         {
-            get 
+            get
             {
                 return _jobClient.GetJobs(JobScopeMask.All);
             }
@@ -79,7 +79,20 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<PipelineBasic> Search(PipelineQuery query)
         {
-            throw new NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+            IEnumerable<Pipeline> pipelines = project.Pipelines;
+            if (query.Sha != null)
+            {
+                var sha = new Sha1(query.Sha);
+                pipelines = pipelines.Where(pipeline => pipeline.Sha.Equals(sha));
+            }
+
+            if (query.Name != null || query.OrderBy != null || query.Ref != null || query.Scope != null || query.Sort != null || query.Status != null || query.Username != null || query.YamlErrors != null)
+            {
+                throw new NotImplementedException();
+            }
+
+            return pipelines.Select(pipeline => pipeline.ToPipelineBasicClient());
         }
     }
 }
