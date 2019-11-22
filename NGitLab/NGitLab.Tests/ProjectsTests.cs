@@ -204,7 +204,7 @@ namespace NGitLab.Tests
             };
             var projectQuery40 = new ProjectQuery
             {
-                MinAccessLevel = AccessLevel.Master
+                MinAccessLevel = AccessLevel.Maintainer
             };
 
             //Act

@@ -117,7 +117,7 @@ namespace NGitLab.Tests
                 Branch = "master",
                 CommitMessage = "Delete file"
             };
-            Files.Delete(fileDelete);;
+            Files.Delete(fileDelete);
         }
 
         [Test]

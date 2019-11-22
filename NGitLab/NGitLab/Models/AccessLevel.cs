@@ -1,4 +1,6 @@
-﻿namespace NGitLab.Models
+﻿using System;
+
+namespace NGitLab.Models
 {
     /// <summary>
     /// The access levels are defined in the Gitlab::Access module. Currently, these levels are recognized:
@@ -9,7 +11,9 @@
         Guest = 10,
         Reporter = 20,
         Developer = 30,
-        Master = 40,
+        Maintainer = 40,
+        [Obsolete("Use Maintainer instead")]
+        Master = Maintainer,
 
         /// <summary>
         /// Only valid for groups.
