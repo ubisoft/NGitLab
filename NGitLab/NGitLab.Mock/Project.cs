@@ -126,7 +126,7 @@ namespace NGitLab.Mock
                 return false;
 
             var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
-            return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Master;
+            return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Maintainer;
         }
 
         public bool CanUserDeleteProject(User user)

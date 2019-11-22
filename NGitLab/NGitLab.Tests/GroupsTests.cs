@@ -267,7 +267,7 @@ namespace NGitLab.Tests
             };
             var groupQuery40 = new GroupQuery
             {
-                MinAccessLevel = AccessLevel.Master
+                MinAccessLevel = AccessLevel.Maintainer
             };
             var groupQuery50 = new GroupQuery
             {
