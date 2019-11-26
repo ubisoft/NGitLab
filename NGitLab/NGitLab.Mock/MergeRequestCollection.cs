@@ -17,6 +17,22 @@ namespace NGitLab.Mock
             return this.FirstOrDefault(mr => mr.Iid == iid);
         }
 
+        public MergeRequest AddNew(User author, string title = null, bool addCommit = false)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                title = Guid.NewGuid().ToString();
+            }
+
+            var branch = Project.Repository.CreateBranch(Guid.NewGuid().ToString(), Project.DefaultBranch);
+            if (addCommit)
+            {
+                Project.Repository.Commit(author, title, branch.CanonicalName, new[] { File.CreateFromText("test.txt", "test") });
+            }
+
+            return Add(branch.FriendlyName, Project.DefaultBranch, title, author);
+        }
+
         public override void Add(MergeRequest mergeRequest)
         {
             if (mergeRequest is null)

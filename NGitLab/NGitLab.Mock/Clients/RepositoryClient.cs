@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -47,7 +48,8 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Commit> GetCommits(string refName, int maxResults = 0)
         {
-            throw new NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+            return project.Repository.GetCommits(refName).Select(commit => commit.ToCommitClient());
         }
 
         public Commit GetCommit(Sha1 sha)

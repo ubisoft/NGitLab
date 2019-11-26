@@ -44,11 +44,7 @@ namespace NGitLab.Mock.Clients
             if (mergeRequest == null)
                 throw new GitLabNotFoundException();
 
-            var mergeCommit = mergeRequest.SourceProject.Repository.Merge(Context.User, mergeRequest.SourceBranch, mergeRequest.TargetBranch, mergeRequest.Project);
-
-            mergeRequest.MergeCommitSha = new Sha1(mergeCommit.Sha);
-            mergeRequest.MergedAt = DateTimeOffset.UtcNow;
-            mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
+            mergeRequest.Accept(Context.User);
             return mergeRequest.ToMergeRequestClient();
         }
 

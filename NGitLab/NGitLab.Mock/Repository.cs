@@ -252,7 +252,7 @@ namespace NGitLab.Mock
                 return result.Commit;
 
             if (result.Status == MergeStatus.UpToDate || result.Status == MergeStatus.FastForward)
-                return branch.Tip;
+                return repository.Branches[targetBranch].Tip;
 
             throw new GitLabException("Could not merge");
         }
@@ -277,6 +277,24 @@ namespace NGitLab.Mock
                 SortBy = CommitSortStrategies.Topological,
                 IncludeReachableFrom = branch,
             };
+
+            foreach (var commit in _repository.Commits.QueryBy(filter))
+            {
+                yield return commit;
+            }
+        }
+
+        public IEnumerable<Commit> GetCommits(string @ref)
+        {
+            var filter = new CommitFilter
+            {
+                SortBy = CommitSortStrategies.Topological,
+            };
+
+            if(!string.IsNullOrEmpty(@ref))
+            {
+                filter.IncludeReachableFrom = @ref;
+            }
 
             foreach (var commit in _repository.Commits.QueryBy(filter))
             {

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace NGitLab.Mock.Clients
 {
-    internal static class LibGit2SharpExtensions
+    public static class LibGit2SharpExtensions
     {
         public static Models.Commit ToCommitClient(this LibGit2Sharp.Commit commit)
         {
@@ -81,7 +81,7 @@ namespace NGitLab.Mock.Clients
             };
         }
 
-        public static Commit GetLastCommitForFileChanges(this LibGit2Sharp.Repository repository, string filePath)
+        internal static Commit GetLastCommitForFileChanges(this LibGit2Sharp.Repository repository, string filePath)
         {
             return repository.Commits.QueryBy(filePath).FirstOrDefault()?.Commit;
         }
