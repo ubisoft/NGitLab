@@ -10,7 +10,6 @@ namespace NGitLab.Mock
         public Project()
             : this(Guid.NewGuid().ToString("N"))
         {
-
         }
 
         public Project(string name)

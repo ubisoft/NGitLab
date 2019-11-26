@@ -72,6 +72,20 @@ namespace NGitLab.Mock
             }
         }
 
+        public void Accept(User user)
+        {
+            var mergeCommit = SourceProject.Repository.Merge(user, SourceBranch, TargetBranch, Project);
+
+            MergeCommitSha = new Sha1(mergeCommit.Sha);
+            MergedAt = DateTimeOffset.UtcNow;
+            UpdatedAt = DateTimeOffset.UtcNow;
+
+            if (ForceRemoveSourceBranch || ShouldRemoveSourceBranch)
+            {
+                SourceProject.Repository.RemoveBranch(SourceBranch);
+            }
+        }
+
         internal Models.MergeRequest ToMergeRequestClient()
         {
             return new Models.MergeRequest
