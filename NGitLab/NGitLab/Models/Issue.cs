@@ -30,6 +30,9 @@ namespace NGitLab.Models
         [DataMember(Name = "assignee")]
         public Assignee Assignee;
 
+        [DataMember(Name = "assignees")]
+        public Assignee[] Assignees;
+
         [DataMember(Name = "author")]
         public Author Author;
 
