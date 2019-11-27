@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 
 namespace NGitLab.Mock
 {
@@ -15,6 +16,7 @@ namespace NGitLab.Mock
         public string[] Labels { get; set; }
         public Milestone Milestone { get; set; }
         public UserRef Assignee { get; set; }
+        public UserRef[] Assignees { get; set; }
         public UserRef Author { get; set; }
         public DateTimeOffset CreatedAt { get; }
         public DateTimeOffset UpdatedAt { get; set; }
@@ -61,6 +63,7 @@ namespace NGitLab.Mock
                 Labels = Labels,
                 Milestone = Milestone?.ToClientMilestone(),
                 Assignee = Assignee?.ToClientAssignee(),
+                Assignees = Assignees?.Select(a => a.ToClientAssignee()).ToArray(),
                 Author = Author.ToClientAuthor(),
                 State = State.ToString(),
                 CreatedAt = CreatedAt.UtcDateTime,
