@@ -5,6 +5,13 @@ using NGitLab.Models;
 
 namespace NGitLab
 {
+    public class GetCommitsRequest
+    {
+        public string RefName { get; set; }
+        public string Path { get; set; }
+        public int MaxResults { get; set; }
+    }
+
     public interface IRepositoryClient
     {
         ITagClient Tags { get; }
@@ -21,6 +28,11 @@ namespace NGitLab
         /// Gets all the commits of the specified branch/tag.
         /// </summary>
         IEnumerable<Commit> GetCommits(string refName, int maxResults = 0);
+
+        /// <summary>
+        /// Gets all the commits of the specified branch/tag and path.
+        /// </summary>
+        IEnumerable<Commit> GetCommits(GetCommitsRequest request);
 
         Commit GetCommit(Sha1 sha);
 
