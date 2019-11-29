@@ -56,11 +56,29 @@ namespace NGitLab.Impl
         /// </summary>
         public IEnumerable<Commit> GetCommits(string refName, int maxResults)
         {
-            var allCommits = _api.Get().GetAll<Commit>(_repoPath + $"/commits?ref_name={refName}");
-            if (maxResults <= 0)
+            return GetCommits(new GetCommitsRequest {MaxResults = maxResults, RefName = refName});
+        }
+
+        /// <summary>
+        /// Gets all the commits of the specified branch/tag.
+        /// </summary>
+        public IEnumerable<Commit> GetCommits(GetCommitsRequest request)
+        {
+            var lst = new List<string>();
+            if (!string.IsNullOrWhiteSpace(request.RefName))
+            {
+                lst.Add($"ref_name={Uri.EscapeDataString(request.RefName)}");
+            }
+            if (!string.IsNullOrWhiteSpace(request.Path))
+            {
+                lst.Add($"path={Uri.EscapeDataString(request.Path)}");
+            }
+            var path = _repoPath + "/commits" + (lst.Count == 0 ? string.Empty : "?" + string.Join("&", lst));
+            var allCommits = _api.Get().GetAll<Commit>(path);
+            if (request.MaxResults <= 0)
                 return allCommits;
 
-            return allCommits.Take(maxResults);
+            return allCommits.Take(request.MaxResults);
         }
 
         public Commit GetCommit(Sha1 sha) => _api.Get().To<Commit>(_repoPath + "/commits/" + sha);
