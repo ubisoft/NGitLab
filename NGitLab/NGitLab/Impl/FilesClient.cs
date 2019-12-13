@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
 using NGitLab.Models;
@@ -36,6 +37,19 @@ namespace NGitLab.Impl
         public FileData Get(string filePath, string @ref)
         {
             return _api.Get().To<FileData>(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={@ref}");
+        }
+
+        public bool FileExists(string filePath, string @ref)
+        {
+            try
+            {
+                _api.Head().Execute(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={@ref}");
+                return true;
+            }
+            catch (GitLabException e) when (e.StatusCode == HttpStatusCode.NotFound)
+            {
+                return false;
+            }
         }
 
         public Blame[] Blame(string filePath, string @ref)
