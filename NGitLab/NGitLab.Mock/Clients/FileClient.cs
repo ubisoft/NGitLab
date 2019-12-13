@@ -70,6 +70,11 @@ namespace NGitLab.Mock.Clients
             return project.Repository.GetFile(fileSystemPath, @ref);
         }
 
+        public bool FileExists(string filePath, string @ref)
+        {
+            return Get(filePath, @ref) != null;
+        }
+
         public Blame[] Blame(string filePath, string @ref)
         {
             throw new NotImplementedException();

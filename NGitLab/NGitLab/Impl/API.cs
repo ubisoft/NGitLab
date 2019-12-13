@@ -34,6 +34,8 @@ namespace NGitLab.Impl
 
         public IHttpRequestor Delete() => CreateRequestor(MethodType.Delete);
 
+        public IHttpRequestor Head() => CreateRequestor(MethodType.Head);
+
         protected virtual IHttpRequestor CreateRequestor(MethodType methodType)
         {
             if (_credentials.ApiToken == null)
