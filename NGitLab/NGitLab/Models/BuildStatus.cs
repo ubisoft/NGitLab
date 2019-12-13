@@ -19,6 +19,8 @@
         /// <summary>
         /// NoBuild means that there were no build created
         /// </summary>
-        NoBuild
+        NoBuild,
+
+        Preparing,
     }
 }
