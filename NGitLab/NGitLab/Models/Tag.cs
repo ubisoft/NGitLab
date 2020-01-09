@@ -8,6 +8,9 @@ namespace NGitLab.Models
         [DataMember(Name = "name")]
         public string Name;
 
+        [DataMember(Name = "message")]
+        public string Message;
+
         [DataMember(Name = "commit")]
         public CommitInfo Commit;
 
