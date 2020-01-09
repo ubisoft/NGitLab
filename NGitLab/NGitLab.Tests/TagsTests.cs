@@ -12,12 +12,14 @@ namespace NGitLab.Tests
             var result = Tags.Create(new TagCreate
             {
                 Name = "v0.5",
+                Message = "Test message",
                 Ref = "master",
                 ReleaseDescription = "Test description",
             });
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(Tags.All.FirstOrDefault(x => x.Name == "v0.5"));
+            Assert.IsNotNull(Tags.All.FirstOrDefault(x => x.Message == "Test message"));
 
             Tags.Delete("v0.5");
             Assert.IsNull(Tags.All.FirstOrDefault(x => x.Name == "v0.5"));

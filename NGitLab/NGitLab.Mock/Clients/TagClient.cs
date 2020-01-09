@@ -67,6 +67,7 @@ namespace NGitLab.Mock.Clients
                     Description = project.Repository.GetReleaseTag(tag.FriendlyName)?.ReleaseNotes,
                     TagName = tag.FriendlyName,
                 },
+                Message = tag.Annotation.Message,
             };
         }
     }
