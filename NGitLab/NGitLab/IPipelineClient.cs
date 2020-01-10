@@ -61,5 +61,11 @@ namespace NGitLab
         /// </summary>
         /// <param name="pipelineId">ID of the pipeline</param>
         void Delete(int pipelineId);
+
+        /// <summary>
+        /// Get variables for a pipeline.
+        /// </summary>
+        /// <param name="pipelineId">ID of the pipeline</param>
+        IEnumerable<PipelineVariable> GetVariables(int pipelineId);
     }
 }

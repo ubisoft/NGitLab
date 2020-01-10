@@ -29,6 +29,9 @@ namespace NGitLab.Tests
 
                 const string yml =
                     @"
+variables:
+  TEST: HELLO WORLD
+
 build:  
   tags:
     - win10

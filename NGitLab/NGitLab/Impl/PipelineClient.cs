@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -95,6 +95,11 @@ namespace NGitLab.Impl
         public void Delete(int pipelineId)
         {
             _api.Delete().Execute($"{_pipelinesPath}/{pipelineId}");
+        }
+
+        public IEnumerable<PipelineVariable> GetVariables(int pipelineId)
+        {
+            return _api.Get().GetAll<PipelineVariable>($"{_projectPath}/pipelines/{pipelineId}/variables");
         }
     }
 }

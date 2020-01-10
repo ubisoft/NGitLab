@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using NGitLab.Models;
@@ -10,10 +11,14 @@ namespace NGitLab.Tests
     public class PipelineTests
     {
         private IPipelineClient _pipelines;
+        private string _ciJobToken;
 
         [OneTimeSetUp]
         public void FixtureSetup()
         {
+            var triggers = Initialize.GitLabClient.GetTriggers(Initialize.UnitTestProject.Id);
+            var trigger = triggers.Create("Test Trigger");
+            _ciJobToken = trigger.Token;
             _pipelines = Initialize.GitLabClient.GetPipelines(Initialize.UnitTestProject.Id);
             CommitsTests.EnableCiOnTestProject();
 
@@ -29,6 +34,20 @@ namespace NGitLab.Tests
             });
 
             while (FindPipeline(name) == null)
+            {
+                Console.WriteLine("Waiting for pipeline to start.");
+                Thread.Sleep(1000);
+            }
+        }
+
+        private void CreatePipelineWithVariables(Dictionary<string, string> variables)
+        {
+            const string refName = "master";
+
+            var initialNumberOfPipelines = CountPipelines(refName);
+            _pipelines.CreatePipelineWithTrigger(_ciJobToken, refName, variables);
+
+            while (CountPipelines(refName) == initialNumberOfPipelines)
             {
                 Console.WriteLine("Waiting for pipeline to start.");
                 Thread.Sleep(1000);
@@ -79,9 +98,27 @@ namespace NGitLab.Tests
             Assert.IsTrue(!_pipelines.All.Any(p => string.Equals(p.Ref, "PipelineToDelete", StringComparison.Ordinal)));
         }
 
+        [Test]
+        public void Test_get_pipeline_variables()
+        {
+            CreatePipelineWithVariables(new Dictionary<string, string>(StringComparer.InvariantCulture) { {"Test", "HelloWorld"}});
+            var pipelinesWithVariables = _pipelines.All.Where(p => string.Equals(p.Ref, "master", StringComparison.Ordinal));
+
+            var variables = _pipelines.GetVariables(pipelinesWithVariables.First().Id);
+            
+            Assert.IsTrue(variables.Any(v =>
+                v.Key.Equals("Test", StringComparison.InvariantCulture) &&
+                v.Value.Equals("HelloWorld", StringComparison.InvariantCulture)));
+        }
+
         private PipelineBasic FindPipeline(string refName)
         {
             return _pipelines.All.FirstOrDefault(x => x.Ref == refName);
+        }
+
+        private int CountPipelines(string refName)
+        {
+            return _pipelines.All.Count(x => x.Ref.Equals(refName, StringComparison.InvariantCulture));
         }
     }
 }
