@@ -66,6 +66,11 @@ namespace NGitLab.Mock.Clients
             project.Pipelines.Remove(pipeline);
         }
 
+        public IEnumerable<PipelineVariable> GetVariables(int pipelineId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Models.Job[] GetJobs(int pipelineId)
         {
             return _jobClient.GetJobs(JobScopeMask.All).Where(p => p.Pipeline.Id == pipelineId).ToArray();
