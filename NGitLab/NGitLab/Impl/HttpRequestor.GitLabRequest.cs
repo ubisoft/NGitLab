@@ -24,12 +24,16 @@ namespace NGitLab.Impl
 
             private bool HasOutput => (Method == MethodType.Delete || Method == MethodType.Post || Method == MethodType.Put) && Data != null;
 
-            public GitLabRequest(Uri url, MethodType method, object data)
+            public GitLabRequest(Uri url, MethodType method, object data, string apiToken)
             {
                 Method = method;
                 Url = url;
                 Data = data;
                 Headers.Add("Accept-Encoding", "gzip");
+                if (apiToken != null)
+                {
+                    Headers.Add("Private-Token", apiToken);
+                }
 
                 if (data != null)
                 {

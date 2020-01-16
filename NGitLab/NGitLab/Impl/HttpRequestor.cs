@@ -74,11 +74,6 @@ namespace NGitLab.Impl
 
         public Uri GetAPIUrl(string tailAPIUrl)
         {
-            if (_apiToken != null)
-            {
-                tailAPIUrl = tailAPIUrl + (tailAPIUrl.IndexOf('?') > 0 ? '&' : '?') + "private_token=" + _apiToken;
-            }
-
             if (!tailAPIUrl.StartsWith("/", StringComparison.Ordinal))
             {
                 tailAPIUrl = "/" + tailAPIUrl;
@@ -99,7 +94,7 @@ namespace NGitLab.Impl
 
         public virtual void Stream(string tailAPIUrl, Action<Stream> parser)
         {
-            var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data);
+            var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken);
 
             using (var response = request.GetResponse(_options))
             {
@@ -168,9 +163,7 @@ namespace NGitLab.Impl
                             return false;
                         }
 
-                        var request = new GitLabRequest(_nextUrlToLoad, MethodType.Get, data: null);
-                        request.Headers["PRIVATE-TOKEN"] = _apiToken;
-
+                        var request = new GitLabRequest(_nextUrlToLoad, MethodType.Get, data: null, _apiToken);
                         using (var response = request.GetResponse(_options))
                         {
                             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
