@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
 {
@@ -14,11 +13,11 @@ namespace NGitLab.Mock.Clients
             _groupId = groupId;
         }
 
-        public Badge this[int id] => throw new NotImplementedException();
+        public Models.Badge this[int id] => throw new NotImplementedException();
 
-        public IEnumerable<Badge> All => throw new NotImplementedException();
+        public IEnumerable<Models.Badge> All => throw new NotImplementedException();
 
-        public Badge Create(BadgeCreate badge)
+        public Models.Badge Create(Models.BadgeCreate badge)
         {
             throw new NotImplementedException();
         }
@@ -28,7 +27,7 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
-        public Badge Update(int id, BadgeUpdate badge)
+        public Models.Badge Update(int id, Models.BadgeUpdate badge)
         {
             throw new NotImplementedException();
         }

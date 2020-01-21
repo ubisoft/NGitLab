@@ -26,6 +26,7 @@ namespace NGitLab.Mock
             Milestones = new MilestoneCollection(this);
             Pipelines = new PipelineCollection(this);
             Jobs = new JobCollection(this);
+            Badges = new BadgeCollection(this);
         }
 
         public int Id { get; set; }
@@ -53,6 +54,7 @@ namespace NGitLab.Mock
         public RunnerRefCollection EnabledRunners { get; }
         public IssueCollection Issues { get; }
         public MilestoneCollection Milestones { get; }
+        public BadgeCollection Badges { get; }
 
         public void Remove()
         {
