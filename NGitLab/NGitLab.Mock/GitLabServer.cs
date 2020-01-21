@@ -25,6 +25,7 @@ namespace NGitLab.Mock
         {
             Groups = new GroupCollection(this);
             Users = new UserCollection(this);
+            SystemHooks = new SystemHookCollection(this);
         }
 
         public Uri Url { get; set; } = new Uri("https://gitlab.example.com/", UriKind.Absolute);
@@ -32,6 +33,7 @@ namespace NGitLab.Mock
         public GitLabVersion Version { get; set; } = new GitLabVersion { Version = "1.0.0", Revision = "rev1" };
         public GroupCollection Groups { get; }
         public UserCollection Users { get; }
+        public SystemHookCollection SystemHooks { get; }
 
         public IGitLabClient CreateClient(User user)
         {

@@ -20,6 +20,7 @@
         IVersionClient Version { get; }
         INamespacesClient Namespaces { get; }
         ISnippetClient Snippets { get; }
+        ISystemHookClient SystemHooks { get; }
         IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId);
         IEnvironmentClient GetEnvironmentClient(int projectId);
         IWikiClient GetWikiClient(int projectId);
