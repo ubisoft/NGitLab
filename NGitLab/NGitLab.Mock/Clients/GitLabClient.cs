@@ -19,6 +19,7 @@
         public IVersionClient Version => new VersionClient(Context);
         public INamespacesClient Namespaces => new NamespacesClient(Context);
         public ISnippetClient Snippets => new SnippetClient(Context);
+        public ISystemHookClient SystemHooks => new SystemHookClient(Context);
 
         public ICommitStatusClient GetCommitStatus(int projectId) => new CommitStatusClient(Context, projectId);
         public IEnvironmentClient GetEnvironmentClient(int projectId) => new EnvironmentClient(Context, projectId);

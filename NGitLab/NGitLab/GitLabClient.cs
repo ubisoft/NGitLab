@@ -18,6 +18,7 @@ namespace NGitLab
         public IVersionClient Version { get; }
         public ISnippetClient Snippets { get; }
         public IMembersClient Members { get; }
+        public ISystemHookClient SystemHooks { get; }
 
         public RequestOptions Options
         {
@@ -59,6 +60,7 @@ namespace NGitLab
             Version = new VersionClient(_api);
             Snippets = new SnippetClient(_api);
             Members = new MembersClient(_api);
+            SystemHooks = new SystemHookClient(_api);
         }
 
         [Obsolete("Use gitlab client constructor instead")]
