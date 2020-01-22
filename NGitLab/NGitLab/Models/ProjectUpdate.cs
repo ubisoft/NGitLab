@@ -85,5 +85,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "packages_enabled")]
         public bool? PackagesEnabled { get; set; }
+
+        [DataMember(Name = "build_timeout")]
+        public int? BuildTimeout;
     }
 }

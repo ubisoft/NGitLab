@@ -91,7 +91,7 @@ namespace NGitLab.Models
         [DataMember(Name = "last_activity_at")]
         public DateTime LastActivityAt;
 
-        [DataMember(Name = "creator_id")] 
+        [DataMember(Name = "creator_id")]
         public int CreatorId;
 
         [DataMember(Name = "ssh_url_to_repo")]
@@ -106,7 +106,7 @@ namespace NGitLab.Models
         [DataMember(Name = "namespace")]
         public Namespace Namespace;
 
-        [DataMember(Name = "import_status")] 
+        [DataMember(Name = "import_status")]
         public string ImportStatus;
 
         [DataMember(Name = "import_error")]
@@ -162,5 +162,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "visibility")]
         public VisibilityLevel VisibilityLevel;
+
+        [DataMember(Name = "build_timeout")]
+        public int? BuildTimeout;
     }
 }
