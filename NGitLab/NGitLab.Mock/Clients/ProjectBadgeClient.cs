@@ -48,7 +48,13 @@ namespace NGitLab.Mock.Clients
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            EnsureUserIsAuthenticated();
+
+            var badgeToRemove = GetProject(_projectId, ProjectPermission.View).Badges.FirstOrDefault(b => b.Id == id);
+            if (badgeToRemove != null)
+            {
+                GetProject(_projectId, ProjectPermission.Edit).Badges.Remove(badgeToRemove);
+            }
         }
 
         public Models.Badge Update(int id, Models.BadgeUpdate badge)
