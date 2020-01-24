@@ -291,14 +291,19 @@ namespace NGitLab.Mock
                 SortBy = CommitSortStrategies.Topological,
             };
 
-            if(!string.IsNullOrEmpty(@ref))
+            if (!string.IsNullOrEmpty(@ref))
             {
                 filter.IncludeReachableFrom = @ref;
             }
 
-            foreach (var commit in _repository.Commits.QueryBy(filter))
+            try
             {
-                yield return commit;
+                return _repository.Commits.QueryBy(filter).ToList();
+            }
+            catch (NotFoundException)
+            {
+                // @ref does not exist so no commits could be found
+                return Enumerable.Empty<Commit>();
             }
         }
 

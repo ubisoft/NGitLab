@@ -5,7 +5,7 @@ namespace NGitLab.Mock.Clients
 {
     public static class LibGit2SharpExtensions
     {
-        public static Models.Commit ToCommitClient(this LibGit2Sharp.Commit commit)
+        public static Models.Commit ToCommitClient(this LibGit2Sharp.Commit commit, CommitInfo commitInfo = null)
         {
             return new Models.Commit
             {
@@ -21,6 +21,7 @@ namespace NGitLab.Mock.Clients
                 ShortId = commit.Sha.Substring(0, 8),
                 Title = commit.MessageShort,
                 Parents = commit.Parents.Select(p => new Sha1(p.Sha)).ToArray(),
+                Status = commitInfo?.Status ?? "success"
             };
         }
 
