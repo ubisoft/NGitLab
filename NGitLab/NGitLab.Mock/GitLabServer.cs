@@ -26,6 +26,7 @@ namespace NGitLab.Mock
         {
             Groups = new GroupCollection(this);
             Users = new UserCollection(this);
+            CommitInfos = new CommitInfoCollection(this);
             SystemHooks = new SystemHookCollection(this);
         }
 
@@ -34,6 +35,7 @@ namespace NGitLab.Mock
         public GitLabVersion Version { get; set; } = new GitLabVersion { Version = "1.0.0", Revision = "rev1" };
         public GroupCollection Groups { get; }
         public UserCollection Users { get; }
+        public CommitInfoCollection CommitInfos { get; }
         public SystemHookCollection SystemHooks { get; }
 
         public IGitLabClient CreateClient(User user)

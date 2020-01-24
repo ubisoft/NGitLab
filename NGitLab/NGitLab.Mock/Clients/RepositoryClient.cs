@@ -49,7 +49,7 @@ namespace NGitLab.Mock.Clients
         public IEnumerable<Commit> GetCommits(string refName, int maxResults = 0)
         {
             var project = GetProject(_projectId, ProjectPermission.View);
-            return project.Repository.GetCommits(refName).Select(commit => commit.ToCommitClient());
+            return project.Repository.GetCommits(refName).Select(commit => commit.ToCommitClient(Server.CommitInfos.SingleOrDefault(c => c.Sha == commit.Sha)));
         }
 
         public IEnumerable<Commit> GetCommits(GetCommitsRequest request)
