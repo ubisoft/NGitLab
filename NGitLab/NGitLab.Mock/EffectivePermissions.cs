@@ -15,7 +15,12 @@ namespace NGitLab.Mock
 
         public AccessLevel? GetAccessLevel(User user)
         {
-            return Permissions.FirstOrDefault(p => p.User == user)?.AccessLevel;
+            return GetEffectivePermission(user)?.AccessLevel;
+        }
+
+        public EffectiveUserPermission GetEffectivePermission(User user)
+        {
+            return Permissions.FirstOrDefault(p => p.User == user);
         }
     }
 }

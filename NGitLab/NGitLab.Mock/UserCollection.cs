@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace NGitLab.Mock
@@ -9,6 +10,14 @@ namespace NGitLab.Mock
         public UserCollection(GitLabObject container)
             : base(container)
         {
+        }
+
+        public User GetById(string id)
+        {
+            if (int.TryParse(id, NumberStyles.None, CultureInfo.InvariantCulture, out var value))
+                return GetById(value);
+
+            return null;
         }
 
         public User GetById(int id) => this.FirstOrDefault(user => user.Id == id);

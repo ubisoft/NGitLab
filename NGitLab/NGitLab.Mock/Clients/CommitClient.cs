@@ -18,7 +18,7 @@ namespace NGitLab.Mock.Clients
             var project = GetProject(commit.ProjectId, ProjectPermission.Contribute);
             var gitCommit = project.Repository.Commit(commit);
 
-            return gitCommit.ToCommitClient(Server.CommitInfos.SingleOrDefault(c => c.Sha == gitCommit.Sha));
+            return gitCommit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => c.Sha == gitCommit.Sha));
         }
 
         public Models.Commit GetCommit(string @ref)
@@ -26,7 +26,7 @@ namespace NGitLab.Mock.Clients
             var project = GetProject(_projectId, ProjectPermission.View);
             var commit = project.Repository.GetCommit(@ref);
 
-            return commit?.ToCommitClient(Server.CommitInfos.SingleOrDefault(c => c.Sha == commit.Sha));
+            return commit?.ToCommitClient(project.CommitInfos.SingleOrDefault(c => c.Sha == commit.Sha));
         }
 
         public JobStatus GetJobStatus(string branchName)
