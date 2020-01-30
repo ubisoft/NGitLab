@@ -89,17 +89,7 @@ namespace NGitLab.Mock.Clients
 
             var project = GetProject(id, ProjectPermission.View);
             var group = forkProject.Namespace != null ? GetParentGroup(forkProject.Namespace) : Context.User.Namespace;
-            var newProject = new Project(forkProject.Name ?? project.Name)
-            {
-                Description = project.Description,
-                ForkedFrom = project,
-                ImportStatus = "finished",
-            };
-
-            newProject.Permissions.Add(new Permission(Context.User, AccessLevel.Owner));
-
-            group.Projects.Add(newProject);
-
+            var newProject = project.Fork(group, Context.User, forkProject.Name);
             return newProject.ToClientProject();
         }
 
@@ -145,6 +135,11 @@ namespace NGitLab.Mock.Clients
             if (projectUpdate.Visibility.HasValue)
             {
                 project.Visibility = projectUpdate.Visibility.Value;
+            }
+
+            if (projectUpdate.BuildTimeout.HasValue)
+            {
+                project.BuildTimeout = TimeSpan.FromMinutes(projectUpdate.BuildTimeout.Value);
             }
 
             return project.ToClientProject();

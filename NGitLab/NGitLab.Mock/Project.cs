@@ -27,6 +27,7 @@ namespace NGitLab.Mock
             Pipelines = new PipelineCollection(this);
             Jobs = new JobCollection(this);
             Badges = new BadgeCollection(this);
+            CommitInfos = new CommitInfoCollection(this);
         }
 
         public int Id { get; set; }
@@ -37,11 +38,13 @@ namespace NGitLab.Mock
         public VisibilityLevel Visibility { get; set; }
         public Project ForkedFrom { get; internal set; }
         public string ImportStatus { get; set; }
+        public TimeSpan? BuildTimeout { get; set; }
         public PermissionCollection Permissions { get; }
         public Repository Repository { get; }
         public MergeRequestCollection MergeRequests { get; }
         public PipelineCollection Pipelines { get; }
         public JobCollection Jobs { get; }
+        public CommitInfoCollection CommitInfos { get; }
 
         public Group Group => (Group)Parent;
 
@@ -114,6 +117,9 @@ namespace NGitLab.Mock
             if (user == null)
                 return false;
 
+            if (user.IsAdmin)
+                return true;
+
             var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
             if (accessLevel.HasValue)
                 return true;
@@ -126,12 +132,18 @@ namespace NGitLab.Mock
             if (user == null)
                 return false;
 
+            if (user.IsAdmin)
+                return true;
+
             var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
             return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Maintainer;
         }
 
         public bool CanUserDeleteProject(User user)
         {
+            if (user.IsAdmin)
+                return true;
+
             return IsUserOwner(user);
         }
 
@@ -139,6 +151,9 @@ namespace NGitLab.Mock
         {
             if (user == null)
                 return false;
+
+            if (user.IsAdmin)
+                return true;
 
             var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
             return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Developer;
@@ -203,6 +218,25 @@ namespace NGitLab.Mock
             return runner;
         }
 
+        public Project Fork(User user)
+        {
+            return Fork(user.Namespace, user, Name);
+        }
+
+        public Project Fork(Group group, User user, string projectName)
+        {
+            var newProject = new Project(projectName ?? Name)
+            {
+                Description = Description,
+                ForkedFrom = this,
+                ImportStatus = "finished",
+            };
+
+            newProject.Permissions.Add(new Permission(user, AccessLevel.Owner));
+            group.Projects.Add(newProject);
+            return newProject;
+        }
+
         public Models.Project ToClientProject()
         {
             var kind = Group.IsUserNamespace ? "user" : "group";
@@ -221,6 +255,7 @@ namespace NGitLab.Mock
                 VisibilityLevel = Visibility,
                 Namespace = new Namespace() { FullPath = Group.PathWithNameSpace, Id = Group.Id, Kind = kind, Name = Group.Name, Path = Group.Path },
                 WebUrl = WebUrl,
+                BuildTimeout = (int?)BuildTimeout?.TotalMinutes,
             };
         }
     }

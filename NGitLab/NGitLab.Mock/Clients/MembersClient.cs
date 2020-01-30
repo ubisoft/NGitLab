@@ -12,9 +12,15 @@ namespace NGitLab.Mock.Clients
         {
         }
 
-        public Membership AddMemberToProject(string projectId, ProjectMemberCreate user)
+        public Membership AddMemberToProject(string projectId, ProjectMemberCreate projectMemberCreate)
         {
-            throw new NotImplementedException();
+            var project = GetProject(projectId, ProjectPermission.Edit);
+            var user = Server.Users.GetById(projectMemberCreate.UserId);
+
+            var permission = new Permission(user, projectMemberCreate.AccessLevel);
+            project.Permissions.Add(permission);
+
+            return project.GetEffectivePermissions().GetEffectivePermission(user).ToMembershipClient();
         }
 
         public Membership GetMemberOfGroup(string groupId, string userId)
