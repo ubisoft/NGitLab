@@ -80,7 +80,7 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Models.Runner> GetAvailableRunners(int projectId)
         {
-            var project = Server.AllProjects.FindById(projectId);
+            var project = GetProject(projectId, ProjectPermission.Edit);
             return project.RegisteredRunners.Union(GetOwnedRunners()).Select(r => r.ToClientRunner());
         }
 
