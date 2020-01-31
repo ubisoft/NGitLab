@@ -98,7 +98,9 @@ namespace NGitLab.Mock
 
             foreach (var file in files)
             {
-                System.IO.File.WriteAllBytes(Path.Combine(FullPath, file.Path), file.Content);
+                var fullPath = Path.Combine(FullPath, file.Path);
+                Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                System.IO.File.WriteAllBytes(fullPath, file.Content);
                 repository.Index.Add(file.Path);
             }
 
