@@ -1,4 +1,6 @@
-﻿namespace NGitLab.Mock.Clients
+﻿using NGitLab.Impl;
+
+namespace NGitLab.Mock.Clients
 {
     internal sealed class GitLabClient : ClientBase, IGitLabClient
     {
@@ -23,6 +25,7 @@
 
         public ICommitStatusClient GetCommitStatus(int projectId) => new CommitStatusClient(Context, projectId);
         public IEnvironmentClient GetEnvironmentClient(int projectId) => new EnvironmentClient(Context, projectId);
+        public IClusterClient GetClusterClient(int projectId) => new ClusterClient(Context, projectId);
         public IGroupBadgeClient GetGroupBadgeClient(int groupId) => new GroupBadgeClient(Context, groupId);
         public IGroupVariableClient GetGroupVariableClient(int groupId) => new GroupVariableClient(Context, groupId);
         public IJobClient GetJobs(int projectId) => new JobClient(Context, projectId);
