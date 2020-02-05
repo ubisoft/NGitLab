@@ -78,10 +78,10 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Models.Runner> GetAvailableRunners(int projectId)
+        // Seems like an old method... In the actual code, the method is the same as OfProject.
+        IEnumerable<Models.Runner> IRunnerClient.GetAvailableRunners(int projectId)
         {
-            var project = GetProject(projectId, ProjectPermission.Edit);
-            return project.RegisteredRunners.Union(GetOwnedRunners()).Select(r => r.ToClientRunner());
+            return OfProject(projectId);
         }
 
         public IEnumerable<Models.Runner> GetAllRunnersWithScope(RunnerScope scope)
