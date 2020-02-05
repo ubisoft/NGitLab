@@ -65,12 +65,12 @@ namespace NGitLab.Mock.Clients
             projectHooks.Remove(hook);
         }
 
-        private IEnumerable<Models.ProjectHook> ToClientProjectHooks(IEnumerable<ProjectHook> hooks)
+        private static IEnumerable<Models.ProjectHook> ToClientProjectHooks(IEnumerable<ProjectHook> hooks)
         {
             return hooks.Select(hook => hook.ToClientProjectHook());
         }
 
-        private ProjectHook UpsertToHook(ProjectHookUpsert hook)
+        private static ProjectHook UpsertToHook(ProjectHookUpsert hook)
         {
             var hookFromUpsert = new ProjectHook()
             {

@@ -21,7 +21,7 @@ namespace NGitLab.Mock.Clients
                 ShortId = commit.Sha.Substring(0, 8),
                 Title = commit.MessageShort,
                 Parents = commit.Parents.Select(p => new Sha1(p.Sha)).ToArray(),
-                Status = commitInfo?.Status ?? "success"
+                Status = commitInfo?.Status ?? "success",
             };
         }
 

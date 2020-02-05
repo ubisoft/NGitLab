@@ -53,7 +53,7 @@ namespace NGitLab.Mock
                 Id = Id,
                 Status = Status,
                 Ref = Ref,
-                Sha = Sha
+                Sha = Sha,
             };
         }
 

@@ -28,7 +28,7 @@ namespace NGitLab.Mock.Clients
                 {
                     new CreateCommitAction()
                     {
-                        Action = CommitAction.Create.ToString(),
+                        Action = nameof(CommitAction.Create),
                         Content = file.Content,
                         Encoding = file.Encoding,
                         FilePath = file.Path,
@@ -53,7 +53,7 @@ namespace NGitLab.Mock.Clients
                 {
                     new CreateCommitAction()
                     {
-                        Action = CommitAction.Delete.ToString(),
+                        Action = nameof(CommitAction.Delete),
                         FilePath = file.Path,
                     },
                 },
@@ -94,7 +94,7 @@ namespace NGitLab.Mock.Clients
                 {
                     new CreateCommitAction()
                     {
-                        Action = CommitAction.Update.ToString(),
+                        Action = nameof(CommitAction.Update),
                         Content = file.Content,
                         Encoding = file.Encoding,
                         FilePath = file.Path,

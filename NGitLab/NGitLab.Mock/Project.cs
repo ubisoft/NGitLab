@@ -225,7 +225,13 @@ namespace NGitLab.Mock
 
         public Project Fork(Group group, User user, string projectName)
         {
-            var newProject = new Project(projectName ?? Name)
+            projectName = projectName ?? Name;
+
+            var existingProject = group.Projects.FirstOrDefault(p => string.Equals(p.Name, projectName, StringComparison.Ordinal));
+            if (existingProject != null)
+                return existingProject;
+
+            var newProject = new Project(projectName)
             {
                 Description = Description,
                 ForkedFrom = this,

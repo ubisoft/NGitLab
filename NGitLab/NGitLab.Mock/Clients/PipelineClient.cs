@@ -7,8 +7,8 @@ namespace NGitLab.Mock.Clients
 {
     internal sealed class PipelineClient : ClientBase, IPipelineClient
     {
-        private int _projectId;
-        private IJobClient _jobClient;
+        private readonly int _projectId;
+        private readonly IJobClient _jobClient;
 
         public PipelineClient(ClientContext context, IJobClient jobClient, int projectId)
             : base(context)
