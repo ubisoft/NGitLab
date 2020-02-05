@@ -50,7 +50,7 @@ namespace NGitLab.Mock.Clients
                 Permissions =
                 {
                     new Permission(Context.User, AccessLevel.Owner),
-                }
+                },
             };
 
             parentGroup.Projects.Add(newProject);

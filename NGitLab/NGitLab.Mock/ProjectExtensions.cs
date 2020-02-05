@@ -15,7 +15,7 @@ namespace NGitLab.Mock
 
             foreach (var project in projects)
             {
-                if (project.PathWithNamespace == idOrPathWithNamespace)
+                if (string.Equals(project.PathWithNamespace, idOrPathWithNamespace, System.StringComparison.OrdinalIgnoreCase))
                     return project;
             }
 

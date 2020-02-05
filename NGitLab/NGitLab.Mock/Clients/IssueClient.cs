@@ -101,7 +101,7 @@ namespace NGitLab.Mock.Clients
             return FilterByQuery(issues, query).Select(i => i.ToClientIssue());
         }
 
-        private IEnumerable<Issue> FilterByQuery(IEnumerable<Issue> issues, IssueQuery query)
+        private static IEnumerable<Issue> FilterByQuery(IEnumerable<Issue> issues, IssueQuery query)
         {
             if (query.State != null)
             {

@@ -5,7 +5,7 @@ using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
 {
-    internal class RunnerClient : ClientBase, IRunnerClient
+    internal sealed class RunnerClient : ClientBase, IRunnerClient
     {
         public IEnumerable<Models.Runner> Accessible => GetOwnedRunners().Select(r => r.ToClientRunner());
 
