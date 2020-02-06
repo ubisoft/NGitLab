@@ -36,6 +36,8 @@ namespace NGitLab.Mock
         public UserCollection Users { get; }
         public SystemHookCollection SystemHooks { get; }
 
+        public VisibilityLevel DefaultForkVisibilityLevel { get; set; } = VisibilityLevel.Private;
+
         public IGitLabClient CreateClient(User user)
         {
             if (!Users.Contains(user))
