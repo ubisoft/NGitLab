@@ -39,6 +39,7 @@ namespace NGitLab.Mock
         public Project ForkedFrom { get; internal set; }
         public string ImportStatus { get; set; }
         public TimeSpan? BuildTimeout { get; set; }
+        public RepositoryAccessLevel RepositoryAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
         public PermissionCollection Permissions { get; }
         public Repository Repository { get; }
         public MergeRequestCollection MergeRequests { get; }
@@ -238,6 +239,7 @@ namespace NGitLab.Mock
                 ImportStatus = "finished",
             };
 
+            newProject.Visibility = Server.DefaultForkVisibilityLevel;
             newProject.Permissions.Add(new Permission(user, AccessLevel.Owner));
             group.Projects.Add(newProject);
             return newProject;
@@ -262,6 +264,7 @@ namespace NGitLab.Mock
                 Namespace = new Namespace() { FullPath = Group.PathWithNameSpace, Id = Group.Id, Kind = kind, Name = Group.Name, Path = Group.Path },
                 WebUrl = WebUrl,
                 BuildTimeout = (int?)BuildTimeout?.TotalMinutes,
+                RepositoryAccessLevel = RepositoryAccessLevel,
             };
         }
     }
