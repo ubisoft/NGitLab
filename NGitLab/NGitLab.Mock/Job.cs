@@ -49,5 +49,28 @@ namespace NGitLab.Mock
                 WebUrl = WebUrl,
             };
         }
+
+        internal Job Clone()
+        {
+            return new Job
+            {
+                Id = Server.GetNewJobId(),
+                Name = Name,
+                Ref = Ref,
+                Commit = Commit,
+                CreatedAt = CreatedAt,
+                StartedAt = StartedAt,
+                FinishedAt = FinishedAt,
+                Stage = Stage,
+                Coverage = Coverage,
+                Artifacts = Artifacts,
+                Runner = Runner,
+                Pipeline = Pipeline,
+                Project = Project,
+                Status = Status,
+                Tag = Tag,
+                User = User,
+            };
+        }
     }
 }
