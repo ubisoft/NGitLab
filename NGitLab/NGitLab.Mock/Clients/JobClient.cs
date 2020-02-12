@@ -60,9 +60,13 @@ namespace NGitLab.Mock.Clients
                     job.Artifacts = null;
                     break;
                 case JobAction.Play:
-                case JobAction.Retry:
                     job.Status = JobStatus.Running;
                     break;
+                case JobAction.Retry:
+                    var retryJob = job.Clone();
+                    retryJob.Status = JobStatus.Running;
+                    project.Jobs.Add(retryJob, project.Pipelines.GetById((int)job.Pipeline.Id));
+                    return retryJob.ToJobClient();
             }
 
             return job.ToJobClient();
