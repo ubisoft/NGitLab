@@ -142,6 +142,11 @@ namespace NGitLab.Mock.Clients
                 project.BuildTimeout = TimeSpan.FromMinutes(projectUpdate.BuildTimeout.Value);
             }
 
+            if (projectUpdate.LfsEnabled.HasValue)
+            {
+                project.LfsEnabled = projectUpdate.LfsEnabled.Value;
+            }
+
             return project.ToClientProject();
         }
     }

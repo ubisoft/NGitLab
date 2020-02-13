@@ -168,5 +168,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "build_timeout")]
         public int? BuildTimeout;
+
+        [DataMember(Name = "lfs_enabled")]
+        public bool LfsEnabled;
     }
 }

@@ -39,6 +39,7 @@ namespace NGitLab.Mock
         public Project ForkedFrom { get; internal set; }
         public string ImportStatus { get; set; }
         public TimeSpan? BuildTimeout { get; set; }
+        public bool LfsEnabled { get; set; }
         public RepositoryAccessLevel RepositoryAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
         public PermissionCollection Permissions { get; }
         public Repository Repository { get; }
@@ -265,6 +266,7 @@ namespace NGitLab.Mock
                 WebUrl = WebUrl,
                 BuildTimeout = (int?)BuildTimeout?.TotalMinutes,
                 RepositoryAccessLevel = RepositoryAccessLevel,
+                LfsEnabled = LfsEnabled,
             };
         }
     }

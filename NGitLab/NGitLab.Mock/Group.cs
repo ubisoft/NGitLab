@@ -8,6 +8,7 @@ namespace NGitLab.Mock
     public sealed class Group : GitLabObject
     {
         private string _path;
+        private string _name;
 
         public Group()
             : this(Guid.NewGuid().ToString("N"))
@@ -25,16 +26,32 @@ namespace NGitLab.Mock
         public Group(User user)
             : this(user.Name)
         {
-            IsUserNamespace = true;
             Path = user.UserName;
             Permissions.Add(new Permission(user, AccessLevel.Owner));
+            IsUserNamespace = true;
         }
 
         public int Id { get; set; }
-        public string Name { get; set; }
+
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (IsUserNamespace)
+                    throw new InvalidOperationException("Cannot change the name of a user namespace");
+
+                _name = value;
+            }
+        }
+
         public string Description { get; set; }
         public VisibilityLevel Visibility { get; set; }
         public bool IsUserNamespace { get; }
+        public TimeSpan ExtraSharedRunnersLimit { get; set; }
+        public TimeSpan SharedRunnersLimit { get; set; }
+        public bool LfsEnabled { get; set; }
+        public bool RequestAccessEnabled { get; set; }
 
         public new Group Parent => base.Parent as Group;
 
@@ -46,16 +63,17 @@ namespace NGitLab.Mock
         {
             get
             {
-                if (_path == null )
+                if (_path == null)
+                {
                     _path = Slug.Create(Name);
+                }
 
                 return _path;
             }
-
-            private set
+            set
             {
-                if (!IsUserNamespace)
-                    return;
+                if (IsUserNamespace)
+                    throw new InvalidOperationException("Cannot change the name of a user namespace");
 
                 _path = value;
             }
@@ -154,6 +172,15 @@ namespace NGitLab.Mock
             return accessLevel.HasValue && accessLevel.Value == AccessLevel.Owner;
         }
 
+        public bool CanUserEditGroup(User user)
+        {
+            if (user == null)
+                return false;
+
+            var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
+            return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Maintainer;
+        }
+
         public bool CanUserAddGroup(User user)
         {
             if (user == null)
@@ -185,6 +212,10 @@ namespace NGitLab.Mock
                 FullPath = PathWithNameSpace,
                 Path = Path,
                 Description = Description,
+                RequestAccessEnabled = RequestAccessEnabled,
+                LfsEnabled = LfsEnabled,
+                ExtraSharedRunnersMinutesLimit = (int)ExtraSharedRunnersLimit.TotalMinutes,
+                SharedRunnersMinutesLimit = (int)SharedRunnersLimit.TotalMinutes,
             };
         }
     }
