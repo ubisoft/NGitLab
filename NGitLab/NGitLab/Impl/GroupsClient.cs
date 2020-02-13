@@ -1,5 +1,7 @@
 ﻿using NGitLab.Models;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 
@@ -78,23 +80,25 @@ namespace NGitLab.Impl
 
         public IEnumerable<Group> Search(string search)
         {
-            return _api.Get().GetAll<Group>(Url + $"?search={search}");
+            return _api.Get().GetAll<Group>(Url + $"?search={Uri.EscapeDataString(search)}");
         }
 
-        public Group this[int id] => _api.Get().To<Group>(Url + "/" + id);
+        public Group this[int id] => _api.Get().To<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
 
-        public Group this[string fullPath] => _api.Get().To<Group>(Url + "/" + WebUtility.UrlEncode(fullPath));
+        public Group this[string fullPath] => _api.Get().To<Group>(Url + "/" + Uri.EscapeDataString(fullPath));
 
         public IEnumerable<Project> SearchProjects(int groupId, string search)
         {
-            return _api.Get().GetAll<Project>(Url + "/" + groupId + $"/projects?search={search}");
+            return _api.Get().GetAll<Project>(Url + "/" + groupId + $"/projects?search={Uri.EscapeDataString(search)}");
         }
 
         public Group Create(GroupCreate group) => _api.Post().With(group).To<Group>(Url);
 
         public void Delete(int id)
         {
-            _api.Delete().Execute(Url + "/" + id);
+            _api.Delete().Execute(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
         }
+
+        public Group Update(int id, GroupUpdate groupUpdate) =>_api.Put().With(groupUpdate).To<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
     }
 }

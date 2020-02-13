@@ -42,5 +42,11 @@ namespace NGitLab.Models
 
         [DataMember(Name = "projects")]
         public Project[] Projects;
+
+        [DataMember(Name = "shared_runners_minutes_limit")]
+        public int? SharedRunnersMinutesLimit;
+
+        [DataMember(Name = "extra_shared_runners_minutes_limit")]
+        public int? ExtraSharedRunnersMinutesLimit;
     }
 }

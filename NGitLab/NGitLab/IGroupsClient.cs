@@ -30,5 +30,7 @@ namespace NGitLab
         IEnumerable<Project> SearchProjects(int groupId, string search);
 
         void Delete(int id);
+
+        Group Update(int id, GroupUpdate groupUpdate);
     }
 }

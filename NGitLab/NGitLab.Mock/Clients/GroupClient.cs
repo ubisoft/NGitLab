@@ -106,5 +106,57 @@ namespace NGitLab.Mock.Clients
         {
             throw new NotImplementedException();
         }
+
+        public Models.Group Update(int id, GroupUpdate groupUpdate)
+        {
+            var group = Server.AllGroups.FindGroupById(id);
+            if (group == null || !group.CanUserViewGroup(Context.User))
+                throw new GitLabNotFoundException();
+
+            if (!group.CanUserEditGroup(Context.User))
+                throw new GitLabForbiddenException();
+
+            if (groupUpdate.Description != null)
+            {
+                group.Description = groupUpdate.Description;
+            }
+
+            if (groupUpdate.ExtraSharedRunnersMinutesLimit != null)
+            {
+                group.ExtraSharedRunnersLimit = TimeSpan.FromMinutes(groupUpdate.ExtraSharedRunnersMinutesLimit.Value);
+            }
+
+            if (groupUpdate.LfsEnabled != null)
+            {
+                group.LfsEnabled = groupUpdate.LfsEnabled.Value;
+            }
+
+            if (groupUpdate.Name != null)
+            {
+                group.Name = groupUpdate.Name;
+            }
+
+            if (groupUpdate.Path != null)
+            {
+                group.Path = groupUpdate.Path;
+            }
+
+            if (groupUpdate.RequestAccessEnabled != null)
+            {
+                group.RequestAccessEnabled = groupUpdate.RequestAccessEnabled.Value;
+            }
+
+            if (groupUpdate.SharedRunnersMinutesLimit != null)
+            {
+                group.SharedRunnersLimit = TimeSpan.FromMinutes(groupUpdate.SharedRunnersMinutesLimit.Value);
+            }
+
+            if (groupUpdate.Visibility != null)
+            {
+                group.Visibility = groupUpdate.Visibility.Value;
+            }
+
+            return group.ToClientGroup();
+        }
     }
 }
