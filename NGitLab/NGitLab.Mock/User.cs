@@ -56,5 +56,7 @@ namespace NGitLab.Mock
                 return Server.Groups.FirstOrDefault(group => string.Equals(@group.PathWithNameSpace, UserName, StringComparison.Ordinal));
             }
         }
+
+        public override string ToString() => $"{Id}: {UserName}";
     }
 }

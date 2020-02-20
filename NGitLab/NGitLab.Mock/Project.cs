@@ -38,7 +38,7 @@ namespace NGitLab.Mock
         public VisibilityLevel Visibility { get; set; }
         public Project ForkedFrom { get; internal set; }
         public string ImportStatus { get; set; }
-        public TimeSpan? BuildTimeout { get; set; }
+        public TimeSpan BuildTimeout { get; set; } = TimeSpan.FromHours(1);
         public bool LfsEnabled { get; set; }
         public RepositoryAccessLevel RepositoryAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
         public PermissionCollection Permissions { get; }
@@ -241,7 +241,7 @@ namespace NGitLab.Mock
             };
 
             newProject.Visibility = Server.DefaultForkVisibilityLevel;
-            newProject.Permissions.Add(new Permission(user, AccessLevel.Owner));
+            newProject.Permissions.Add(new Permission(user, AccessLevel.Maintainer));
             group.Projects.Add(newProject);
             return newProject;
         }
@@ -264,7 +264,7 @@ namespace NGitLab.Mock
                 VisibilityLevel = Visibility,
                 Namespace = new Namespace() { FullPath = Group.PathWithNameSpace, Id = Group.Id, Kind = kind, Name = Group.Name, Path = Group.Path },
                 WebUrl = WebUrl,
-                BuildTimeout = (int?)BuildTimeout?.TotalMinutes,
+                BuildTimeout = (int)BuildTimeout.TotalMinutes,
                 RepositoryAccessLevel = RepositoryAccessLevel,
                 LfsEnabled = LfsEnabled,
             };

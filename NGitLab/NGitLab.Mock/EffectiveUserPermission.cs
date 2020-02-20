@@ -22,6 +22,7 @@ namespace NGitLab.Mock
                 UserName = User.UserName,
                 Name = User.Name,
                 AccessLevel = (int)AccessLevel,
+                State = User.State.ToString().ToLowerInvariant(),
             };
         }
     }
