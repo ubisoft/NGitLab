@@ -22,9 +22,9 @@ namespace NGitLab.Mock
 
         public User GetById(int id) => this.FirstOrDefault(user => user.Id == id);
 
-        public User AddNew()
+        public User AddNew(string name = null)
         {
-            var userName = "user" + Guid.NewGuid().ToString("N");
+            var userName = name ?? "user" + Guid.NewGuid().ToString("N");
             return Add(userName);
         }
 

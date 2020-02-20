@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace NGitLab.Mock.Clients
 {
@@ -16,6 +17,14 @@ namespace NGitLab.Mock.Clients
         {
             if (id is null)
                 throw new ArgumentNullException(nameof(id));
+
+            if (Context.User.State == UserState.blocked && permissions != ProjectPermission.View)
+            {
+                throw new GitLabException("403 Forbidden  - Your account has been blocked.")
+                {
+                    StatusCode = HttpStatusCode.Forbidden
+                };
+            }
 
             var project = id is int idInt
                 ? Server.AllProjects.FindById(idInt)
