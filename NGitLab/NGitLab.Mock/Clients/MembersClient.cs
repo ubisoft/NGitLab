@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -16,6 +17,23 @@ namespace NGitLab.Mock.Clients
         {
             var project = GetProject(projectId, ProjectPermission.Edit);
             var user = Server.Users.GetById(projectMemberCreate.UserId);
+
+            var existingPermission = project.GetEffectivePermissions().GetEffectivePermission(user);
+            if (existingPermission != null)
+            {
+                if (existingPermission.AccessLevel > projectMemberCreate.AccessLevel)
+                {
+                    throw new GitLabException($"{{\"access_level\":[\"should be greater than or equal to Owner inherited membership from group Runners\"]}}. Original call: Post https://gitlab.example.com/api/v4/projects/{project.Id}/members. With data {{\"user_id\":\"{user.Id}\",\"access_level\":{(int)projectMemberCreate.AccessLevel}}}")
+                    {
+                        StatusCode = HttpStatusCode.BadRequest
+                    };
+                }
+
+                if (existingPermission.AccessLevel == projectMemberCreate.AccessLevel)
+                {
+                    throw new GitLabException { StatusCode = HttpStatusCode.Conflict };
+                }
+            }
 
             var permission = new Permission(user, projectMemberCreate.AccessLevel);
             project.Permissions.Add(permission);
