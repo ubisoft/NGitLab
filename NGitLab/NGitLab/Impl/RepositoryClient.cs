@@ -73,6 +73,12 @@ namespace NGitLab.Impl
             {
                 lst.Add($"path={Uri.EscapeDataString(request.Path)}");
             }
+
+            if (request.FirstParent != null)
+            {
+                lst.Add($"first_parent={Uri.EscapeDataString(request.FirstParent.ToString())}");
+            }
+
             var path = _repoPath + "/commits" + (lst.Count == 0 ? string.Empty : "?" + string.Join("&", lst));
             var allCommits = _api.Get().GetAll<Commit>(path);
             if (request.MaxResults <= 0)
