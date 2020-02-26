@@ -5,13 +5,6 @@ using NGitLab.Models;
 
 namespace NGitLab
 {
-    public class GetCommitsRequest
-    {
-        public string RefName { get; set; }
-        public string Path { get; set; }
-        public int MaxResults { get; set; }
-    }
-
     public interface IRepositoryClient
     {
         ITagClient Tags { get; }
