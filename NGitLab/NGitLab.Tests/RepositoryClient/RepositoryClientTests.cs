@@ -55,6 +55,21 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        public void GetCommitBySha1Range()
+        {
+            var allCommits = Initialize.Repository.Commits.Reverse().ToArray();
+            var commitRequest = new GetCommitsRequest
+            {
+                RefName = $"{allCommits[1].Id}..{allCommits[3].Id}",
+                FirstParent = true,
+            };
+
+            var commits = Initialize.Repository.GetCommits(commitRequest).Reverse().ToArray();
+            Assert.AreEqual(allCommits[2].Id, commits[0].Id);
+            Assert.AreEqual(allCommits[3].Id, commits[1].Id);
+        }
+
+        [Test]
         public void GetCommitDiff()
         {
             CollectionAssert.IsNotEmpty(Initialize.Repository.GetCommitDiff(Initialize.Repository.Commits.First().Id).ToArray());
