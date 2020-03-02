@@ -323,6 +323,42 @@ namespace NGitLab.Mock
             return repository.Commits.SingleOrDefault(c => string.Equals(c.Sha, reference, StringComparison.Ordinal));
         }
 
+        public IEnumerable<Commit> GetCommits(GetCommitsRequest request)
+        {
+            var filter = new CommitFilter
+            {
+                SortBy = CommitSortStrategies.Topological | CommitSortStrategies.Reverse,
+            };
+
+            if (!string.IsNullOrEmpty(request.RefName))
+            {
+                if (request.RefName.Contains(".."))
+                {
+                    var refs = request.RefName.Split(new string[] { ".." }, StringSplitOptions.RemoveEmptyEntries);
+                    filter.ExcludeReachableFrom = refs[0];
+                    filter.IncludeReachableFrom = refs[1];
+                }
+                else
+                {
+                    filter.IncludeReachableFrom = request.RefName;
+                }
+            }
+
+            if (request.FirstParent != null)
+            {
+                filter.FirstParentOnly = (bool)request.FirstParent;
+            }
+
+            try
+            {
+                return _repository.Commits.QueryBy(filter).ToList();
+            }
+            catch (NotFoundException)
+            {
+                return Enumerable.Empty<Commit>();
+            }
+        }
+
         public Models.FileData GetFile(string filePath, string @ref)
         {
             var repo = GetGitRepository();

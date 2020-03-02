@@ -69,6 +69,7 @@ namespace NGitLab.Impl
             {
                 lst.Add($"ref_name={Uri.EscapeDataString(request.RefName)}");
             }
+
             if (!string.IsNullOrWhiteSpace(request.Path))
             {
                 lst.Add($"path={Uri.EscapeDataString(request.Path)}");

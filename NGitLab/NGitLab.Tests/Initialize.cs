@@ -145,13 +145,7 @@ namespace NGitLab.Tests
             //    Ref = "master"
             //});
 
-            GitLabClient.GetRepository(createdProject.Id).Files.Create(new FileUpsert
-            {
-                Branch = "master",
-                CommitMessage = "add readme",
-                Path = "README.md",
-                RawContent = "this project should only live during the unit tests, you can delete if you find some",
-            });
+            AddSomeCommits(createdProject.Id);
 
             GitLabClient.GetRepository(createdProject.Id).ProjectHooks.Create(new ProjectHookUpsert
             {
@@ -161,6 +155,28 @@ namespace NGitLab.Tests
             });
 
             return createdProject;
+        }
+
+        private void AddSomeCommits(int projectId)
+        {
+            GitLabClient.GetRepository(projectId).Files.Create(new FileUpsert
+            {
+                Branch = "master",
+                CommitMessage = "add readme",
+                Path = "README.md",
+                RawContent = "this project should only live during the unit tests, you can delete if you find some",
+            });
+
+            for (int i = 0; i < 3; i++)
+            {
+                GitLabClient.GetRepository(projectId).Files.Create(new FileUpsert
+                {
+                    Branch = "master",
+                    CommitMessage = $"add test file {i}",
+                    Path = $"TestFile{i}.txt",
+                    RawContent = "this project should only live during the unit tests, you can delete if you find some",
+                });
+            }
         }
 
         private void DeleteTestProject()

@@ -54,7 +54,8 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Commit> GetCommits(GetCommitsRequest request)
         {
-            throw new NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+            return project.Repository.GetCommits(request).Select(commit => commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal))));
         }
 
         public Commit GetCommit(Sha1 sha)
