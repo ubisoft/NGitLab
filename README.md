@@ -7,13 +7,13 @@
 It's a wrapper of REST api. Read the [GitLab docs](https://github.com/gitlabhq/gitlabhq/tree/master/doc/api) and start using by creating a GitLabClient instance:
 
 ```csharp
-var client =  GitLabClient.Connect("https://mygitlab.example.com", "your_private_token");
+var client =  new GitLabClient("https://mygitlab.example.com", "your_private_token");
 ```
 
 or
 
 ```cs
-var client =  GitLabClient.Connect("https://mygitlab.example.com", "username", "password");
+var client =  new GitLabClient("https://mygitlab.example.com", "username", "password");
 ```
 
 _Username and Password authentication is disabled for users with two-factor authentication turned on [see GitLab Documentation](https://docs.gitlab.com/ce/api/session.html)._
