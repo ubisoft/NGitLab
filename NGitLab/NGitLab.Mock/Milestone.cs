@@ -6,13 +6,21 @@ namespace NGitLab.Mock
     public sealed class Milestone : GitLabObject
     {
         public int Id { get; set; }
+
         public int Iid { get; set; }
+
         public string Title { get; set; }
+
         public string Description { get; set; }
+
         public DateTimeOffset DueDate { get; set; }
+
         public DateTimeOffset StartDate { get; set; }
+
         public DateTimeOffset CreatedAt { get; }
+
         public DateTimeOffset UpdatedAt { get; set; }
+
         public DateTimeOffset? ClosedAt { get; set; }
 
         public MilestoneState State
@@ -24,6 +32,7 @@ namespace NGitLab.Mock
 
                 return MilestoneState.active;
             }
+
             set
             {
                 if (value == MilestoneState.closed)

@@ -23,22 +23,22 @@ namespace NGitLab
         IEnumerable<Snippet> User { get; }
 
         /// <summary>
-        /// Create a new user's snippet 
+        /// Create a new user's snippet
         /// </summary>
         void Create(SnippetCreate snippet);
 
         /// <summary>
-        /// Create a new project's snippet 
+        /// Create a new project's snippet
         /// </summary>
         void Create(SnippetProjectCreate snippet);
 
         /// <summary>
-        ///Delete a snippet not linked to a project but only to a user, could delete snippet linked to a project but will return an error 403 in API v4
+        /// Delete a snippet not linked to a project but only to a user, could delete snippet linked to a project but will return an error 403 in API v4
         /// </summary>
         void Delete(int snippetId);
 
         /// <summary>
-        ///Delete a snippet linked to a project
+        /// Delete a snippet linked to a project
         /// </summary>
         void Delete(int projectId, int snippetId);
     }

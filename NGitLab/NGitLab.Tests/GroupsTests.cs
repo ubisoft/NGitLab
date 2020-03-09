@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using NGitLab.Models;
@@ -7,7 +6,7 @@ using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
-    internal class GroupsTests
+    public class GroupsTests
     {
         [Test]
         public void Test_groups_is_not_empty()
@@ -37,12 +36,13 @@ namespace NGitLab.Tests
             var randomNumber = new Random().Next();
             var name = "NewGroup" + randomNumber;
             var path = "NewGroupPath" + randomNumber;
+
             // Create
             var group = Groups.Create(new GroupCreate()
             {
                 Name = name,
                 Path = path,
-                Visibility = VisibilityLevel.Internal
+                Visibility = VisibilityLevel.Internal,
             });
             Assert.IsNotNull(group);
             Assert.AreEqual(name, group.Name);
@@ -76,20 +76,20 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_by_group_query_nulls_does_not_throws()
         {
-            //Arrange
+            // Arrange
             var groupQueryNull = new GroupQuery();
 
-            //Act & Assert
+            // Act & Assert
             Assert.DoesNotThrow(() => Groups.Get(groupQueryNull));
         }
 
         [Test]
         public void Test_get_by_group_query_nulls_returns_groups()
         {
-            //Arrange
+            // Arrange
             var groupQueryNull = new GroupQuery();
 
-            //Act
+            // Act
             var result = Groups.Get(groupQueryNull);
 
             // Assert
@@ -100,7 +100,7 @@ namespace NGitLab.Tests
         [NonParallelizable]
         public void Test_get_by_group_query_groupQuery_SkipGroups_returns_groups()
         {
-            //Arrange
+            // Arrange
             var skippedGroupIds = new[] { 7161, 1083 };
 
             // Ensure the groups exist
@@ -109,7 +109,7 @@ namespace NGitLab.Tests
                 Assert.IsNotNull(Groups[groupId]);
             }
 
-            //Act
+            // Act
             var resultSkip = Groups.Get(new GroupQuery { SkipGroups = skippedGroupIds }).ToList();
 
             // Assert
@@ -122,13 +122,13 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_by_group_query_groupQuery_Search_returns_groups()
         {
-            //Arrange
+            // Arrange
             var groupQueryNull = new GroupQuery
             {
                 Search = "example",
             };
 
-            //Act
+            // Act
             var result = Groups.Get(groupQueryNull).Count(g => string.Equals(g.Name, "example", StringComparison.InvariantCultureIgnoreCase));
 
             // Assert
@@ -138,13 +138,13 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_by_group_query_groupQuery_AllAvailable_returns_groups()
         {
-            //Arrange
+            // Arrange
             var groupQueryAllAvailable = new GroupQuery
             {
-                AllAvailable = true
+                AllAvailable = true,
             };
 
-            //Act
+            // Act
             var result = Groups.Get(groupQueryAllAvailable);
 
             // Assert
@@ -154,21 +154,21 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_by_group_query_groupQuery_OrderBy_returns_groups()
         {
-            //Arrange
+            // Arrange
             var groupQueryOrderByName = new GroupQuery
             {
-                OrderBy = "name"
+                OrderBy = "name",
             };
             var groupQueryOrderByPath = new GroupQuery
             {
-                OrderBy = "path"
+                OrderBy = "path",
             };
             var groupQueryOrderById = new GroupQuery
             {
-                OrderBy = "id"
+                OrderBy = "id",
             };
 
-            //Act
+            // Act
             var resultByName = Groups.Get(groupQueryOrderByName);
             var resultByPath = Groups.Get(groupQueryOrderByPath);
             var resultById = Groups.Get(groupQueryOrderById);
@@ -182,17 +182,17 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_by_group_query_groupQuery_Sort_returns_groups()
         {
-            //Arrange
+            // Arrange
             var groupQueryAsc = new GroupQuery
             {
-                Sort = "asc"
+                Sort = "asc",
             };
             var groupQueryDesc = new GroupQuery
             {
-                Sort = "desc"
+                Sort = "desc",
             };
 
-            //Act
+            // Act
             var resultAsc = Groups.Get(groupQueryAsc);
             var resultDesc = Groups.Get(groupQueryDesc);
 
@@ -204,13 +204,13 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_by_group_query_groupQuery_Statistics_returns_groups()
         {
-            //Arrange
+            // Arrange
             var groupQueryWithStats = new GroupQuery
             {
-                Statistics = true
+                Statistics = true,
             };
 
-            //Act
+            // Act
             var result = Groups.Get(groupQueryWithStats);
 
             // Assert
@@ -220,13 +220,13 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_by_group_query_groupQuery_WithCustomAttributes_returns_groups()
         {
-            //Arrange
+            // Arrange
             var groupQueryWithCustomAttributes = new GroupQuery
             {
-                WithCustomAttributes = true
+                WithCustomAttributes = true,
             };
 
-            //Act
+            // Act
             var result = Groups.Get(groupQueryWithCustomAttributes);
 
             // Assert
@@ -236,13 +236,13 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_by_group_query_groupQuery_Owned_returns_groups()
         {
-            //Arrange
+            // Arrange
             var groupQueryOwned = new GroupQuery
             {
-                Owned = true
+                Owned = true,
             };
 
-            //Act
+            // Act
             var result = Groups.Get(groupQueryOwned);
 
             // Assert
@@ -252,29 +252,29 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_by_group_query_groupQuery_MinAccessLevel_returns_groups()
         {
-            //Arrange
+            // Arrange
             var groupQuery10 = new GroupQuery
             {
-                MinAccessLevel = AccessLevel.Guest
+                MinAccessLevel = AccessLevel.Guest,
             };
             var groupQuery20 = new GroupQuery
             {
-                MinAccessLevel = AccessLevel.Reporter
+                MinAccessLevel = AccessLevel.Reporter,
             };
             var groupQuery30 = new GroupQuery
             {
-                MinAccessLevel = AccessLevel.Developer
+                MinAccessLevel = AccessLevel.Developer,
             };
             var groupQuery40 = new GroupQuery
             {
-                MinAccessLevel = AccessLevel.Maintainer
+                MinAccessLevel = AccessLevel.Maintainer,
             };
             var groupQuery50 = new GroupQuery
             {
-                MinAccessLevel = AccessLevel.Owner
+                MinAccessLevel = AccessLevel.Owner,
             };
 
-            //Act
+            // Act
             var result10 = Groups.Get(groupQuery10);
             var result20 = Groups.Get(groupQuery20);
             var result30 = Groups.Get(groupQuery30);
@@ -315,21 +315,6 @@ namespace NGitLab.Tests
             }
         }
 
-        private IGroupsClient Groups => Initialize.GitLabClient.Groups;
-
-        private class GroupComparer : IEqualityComparer<Group>
-        {
-            public bool Equals(Group x, Group y)
-            {
-                if (x == null && y == null)
-                    return true;
-                if (x == null || y == null)
-                    return false;
-
-                return x.FullPath.Equals(y.FullPath, StringComparison.OrdinalIgnoreCase);
-            }
-
-            public int GetHashCode(Group group) => StringComparer.OrdinalIgnoreCase.GetHashCode(group.FullPath);
-        }
+        private static IGroupsClient Groups => Initialize.GitLabClient.Groups;
     }
 }

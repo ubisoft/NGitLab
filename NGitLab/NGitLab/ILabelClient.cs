@@ -1,5 +1,5 @@
-﻿using NGitLab.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NGitLab.Models;
 
 namespace NGitLab
 {
@@ -14,7 +14,7 @@ namespace NGitLab
 
         /// <summary>
         /// Return a specified label from the project or null;
-        /// 
+        ///
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="name"></param>
@@ -37,10 +37,9 @@ namespace NGitLab
 
         /// <summary>
         /// Delete a label from the project.
-        /// 
+        ///
         /// </summary>
         /// <param name="label"></param>
-        /// <param name="result"></param>
         /// <returns>True if "200", the success code for delete, was returned from the service.</returns>
         Label Delete(LabelDelete label);
     }

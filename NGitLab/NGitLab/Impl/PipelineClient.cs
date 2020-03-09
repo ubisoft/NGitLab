@@ -42,7 +42,6 @@ namespace NGitLab.Impl
         {
             // For a reason gitlab returns the jobs in the reverse order as
             // they appear in their UI. Here we reverse them!
-
             var jobs = _api.Get().GetAll<Job>($"{_pipelinesPath}/{pipelineId}/jobs").Reverse().ToArray();
             return jobs;
         }
@@ -68,7 +67,7 @@ namespace NGitLab.Impl
             if (query == null)
                 throw new ArgumentNullException(nameof(query));
 
-            var queryEntries = new Dictionary<string, string>();
+            var queryEntries = new Dictionary<string, string>(StringComparer.Ordinal);
             if (query.Scope.HasValue)
                 queryEntries.Add("scope", query.Scope.Value.ToString());
             if (query.Status.HasValue)
@@ -88,7 +87,7 @@ namespace NGitLab.Impl
             if (query.Sort.HasValue)
                 queryEntries.Add("sort", query.Sort.Value.ToString());
 
-            string stringQuery = string.Join("&", queryEntries.Select(kp => $"{kp.Key}={kp.Value}"));
+            var stringQuery = string.Join("&", queryEntries.Select(kp => $"{kp.Key}={kp.Value}"));
             return _api.Get().GetAll<PipelineBasic>($"{_projectPath}/pipelines{(queryEntries.Any() ? $"?{stringQuery}" : string.Empty)}");
         }
 

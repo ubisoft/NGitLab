@@ -5,7 +5,9 @@
         public new MergeRequest Parent => (MergeRequest)base.Parent;
 
         public override string NoteableType => "MergeRequest";
+
         public override int NoticableId => Parent.Id;
+
         public override int NoticableIid => Parent.Iid;
 
         internal Models.MergeRequestComment ToMergeRequestCommentClient()

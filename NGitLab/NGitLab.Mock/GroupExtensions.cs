@@ -20,10 +20,10 @@ namespace NGitLab.Mock
         {
             foreach (var group in groups)
             {
-                if (group.PathWithNameSpace == idOrPathWithNamespace)
+                if (string.Equals(group.PathWithNameSpace, idOrPathWithNamespace, System.StringComparison.Ordinal))
                     return group;
 
-                if (group.Id.ToString(CultureInfo.InvariantCulture) == idOrPathWithNamespace)
+                if (string.Equals(group.Id.ToString(CultureInfo.InvariantCulture), idOrPathWithNamespace, System.StringComparison.Ordinal))
                     return group;
             }
 

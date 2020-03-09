@@ -20,6 +20,7 @@ namespace NGitLab.Mock
         }
 
         public string Path { get; }
+
         public abstract byte[] Content { get; }
     }
 }

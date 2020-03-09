@@ -3,7 +3,8 @@ using System.Linq;
 
 namespace NGitLab.Mock
 {
-    public sealed class NoteCollection<T> : Collection<T> where T : Note
+    public sealed class NoteCollection<T> : Collection<T>
+        where T : Note
     {
         public NoteCollection(GitLabObject parent)
             : base(parent)

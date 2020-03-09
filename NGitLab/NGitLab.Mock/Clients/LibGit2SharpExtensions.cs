@@ -1,5 +1,5 @@
-﻿using LibGit2Sharp;
-using System.Linq;
+﻿using System.Linq;
+using LibGit2Sharp;
 
 namespace NGitLab.Mock.Clients
 {
@@ -36,7 +36,7 @@ namespace NGitLab.Mock.Clients
                 DevelopersCanPush = true,
                 Merged = false,
                 Name = branch.FriendlyName,
-                Default = branch.FriendlyName == project.DefaultBranch,
+                Default = string.Equals(branch.FriendlyName, project.DefaultBranch, System.StringComparison.Ordinal),
                 Commit = new Models.CommitInfo
                 {
                     Author = new Models.PersonInfo

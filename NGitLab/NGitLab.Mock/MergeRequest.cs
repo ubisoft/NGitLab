@@ -16,24 +16,43 @@ namespace NGitLab.Mock
         public Project Project => (Project)Parent;
 
         public int Id { get; internal set; }
+
         public int Iid { get; internal set; }
+
         public string Title { get; set; }
+
         public string Description { get; set; }
+
         public UserRef Author { get; set; }
+
         public UserRef Assignee { get; set; }
+
         public string SourceBranch { get; set; }
+
         public string TargetBranch { get; set; }
+
         public Project SourceProject { get; set; }
+
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+
         public DateTimeOffset? MergedAt { get; set; }
+
         public DateTimeOffset? ClosedAt { get; set; }
+
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
         public Sha1 Sha { get; private set; }
+
         public Sha1? MergeCommitSha { get; set; }
+
         public bool ShouldRemoveSourceBranch { get; set; }
+
         public bool ForceRemoveSourceBranch { get; set; }
+
         public bool Squash { get; set; }
+
         public bool MergeWhenPipelineSucceeds { get; set; }
+
         public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/merge_requests/{Id.ToString(CultureInfo.InvariantCulture)}");
 
         public NoteCollection<MergeRequestComment> Comments { get; }

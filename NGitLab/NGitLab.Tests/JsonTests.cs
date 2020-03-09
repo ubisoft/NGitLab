@@ -13,7 +13,7 @@ namespace NGitLab.Tests
             Value1,
 
             [EnumMember(Value = "v2")]
-            Value2
+            Value2,
         }
 
         [Test]

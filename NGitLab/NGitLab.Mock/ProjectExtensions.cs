@@ -9,7 +9,7 @@ namespace NGitLab.Mock
         {
             foreach (var project in projects)
             {
-                if (project.Id.ToString(CultureInfo.InvariantCulture) == idOrPathWithNamespace)
+                if (string.Equals(project.Id.ToString(CultureInfo.InvariantCulture), idOrPathWithNamespace, System.StringComparison.Ordinal))
                     return project;
             }
 

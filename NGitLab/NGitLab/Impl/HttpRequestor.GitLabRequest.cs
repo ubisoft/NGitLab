@@ -10,7 +10,7 @@ namespace NGitLab.Impl
         /// <summary>
         /// A single request to gitlab, that can be retried.
         /// </summary>
-        private class GitLabRequest
+        private sealed class GitLabRequest
         {
             public Uri Url { get; }
 
@@ -65,32 +65,30 @@ namespace NGitLab.Impl
                         throw;
                     }
 
-                    using (var errorResponse = (HttpWebResponse)wex.Response)
+                    using var errorResponse = (HttpWebResponse)wex.Response;
+                    string jsonString;
+                    using (var reader = new StreamReader(errorResponse.GetResponseStream()))
                     {
-                        string jsonString;
-                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
-                        {
-                            jsonString = reader.ReadToEnd();
-                        }
-
-                        var errorMessage = ExtractErrorMessage(jsonString, out var parsedError);
-                        var exceptionMessage =
-                            $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
-                            $"Original call: {Method} {Url}";
-
-                        if (JsonData != null)
-                        {
-                            exceptionMessage += $". With data {JsonData}";
-                        }
-
-                        throw new GitLabException(exceptionMessage)
-                        {
-                            OriginalCall = Url,
-                            ErrorObject = parsedError,
-                            StatusCode = errorResponse.StatusCode,
-                            ErrorMessage = errorMessage,
-                        };
+                        jsonString = reader.ReadToEnd();
                     }
+
+                    var errorMessage = ExtractErrorMessage(jsonString, out var parsedError);
+                    var exceptionMessage =
+                        $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
+                        $"Original call: {Method} {Url}";
+
+                    if (JsonData != null)
+                    {
+                        exceptionMessage += $". With data {JsonData}";
+                    }
+
+                    throw new GitLabException(exceptionMessage)
+                    {
+                        OriginalCall = Url,
+                        ErrorObject = parsedError,
+                        StatusCode = errorResponse.StatusCode,
+                        ErrorMessage = errorMessage,
+                    };
                 }
             }
 
@@ -120,12 +118,10 @@ namespace NGitLab.Impl
             {
                 request.ContentType = "application/json";
 
-                using (var writer = new StreamWriter(request.GetRequestStream()))
-                {
-                    writer.Write(JsonData);
-                    writer.Flush();
-                    writer.Close();
-                }
+                using var writer = new StreamWriter(request.GetRequestStream());
+                writer.Write(JsonData);
+                writer.Flush();
+                writer.Close();
             }
 
             /// <summary>

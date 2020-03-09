@@ -172,12 +172,12 @@ namespace NGitLab.Mock.Clients
 
                 if (query.SourceBranch != null)
                 {
-                    result = result.Where(mr => mr.SourceBranch == query.SourceBranch);
+                    result = result.Where(mr => string.Equals(mr.SourceBranch, query.SourceBranch, StringComparison.Ordinal));
                 }
 
                 if (query.TargetBranch != null)
                 {
-                    result = result.Where(mr => mr.TargetBranch == query.TargetBranch);
+                    result = result.Where(mr => string.Equals(mr.TargetBranch, query.TargetBranch, StringComparison.Ordinal));
                 }
 
                 if (query.UpdatedAfter != null)

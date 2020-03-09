@@ -7,7 +7,7 @@ namespace NGitLab.Models
     {
         public new const string Url = "/session";
 
-        [DataMember(Name="private_token")]
+        [DataMember(Name = "private_token")]
         public string PrivateToken;
     }
 }

@@ -8,7 +8,6 @@ namespace NGitLab.Mock
         public JobCollection(GitLabObject parent)
             : base(parent)
         {
-
         }
 
         public Job GetById(int id)
@@ -45,8 +44,10 @@ namespace NGitLab.Mock
 
         public Job AddNew(Pipeline pipeline)
         {
-            var job = new Job();
-            job.Pipeline = pipeline.ToJobPipeline();
+            var job = new Job
+            {
+                Pipeline = pipeline.ToJobPipeline(),
+            };
             Add(job);
             return job;
         }

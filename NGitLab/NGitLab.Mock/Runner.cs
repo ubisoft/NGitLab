@@ -8,25 +8,25 @@ namespace NGitLab.Mock
         public new Project Parent => (Project)base.Parent;
 
         public int Id { get; set; }
-        
+
         public string Name { get; set; }
-        
+
         public bool Active { get; set; }
-        
+
         public bool Online { get; set; }
-        
+
         public string Description { get; set; }
-        
+
         public bool IsShared { get; set; }
-        
+
         public DateTime ContactedAt { get; set; }
-        
+
         public string Token { get; set; }
-        
+
         public string[] TagList { get; set; }
-        
+
         public string Version { get; set; }
-        
+
         public string IpAddress { get; set; }
 
         public bool Locked { get; set; }

@@ -5,7 +5,8 @@
         // ReSharper disable InconsistentNaming
         blob,
         tree,
-        commit
+        commit,
+
         // ReSharper restore InconsistentNaming
     }
 }

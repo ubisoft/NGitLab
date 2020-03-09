@@ -9,6 +9,6 @@
         Delete,
         Head,
         Options,
-        Trace
+        Trace,
     }
 }

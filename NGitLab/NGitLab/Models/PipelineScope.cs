@@ -1,5 +1,4 @@
-﻿
-namespace NGitLab.Models
+﻿namespace NGitLab.Models
 {
     public enum PipelineScope
     {
@@ -7,6 +6,6 @@ namespace NGitLab.Models
         pending,
         finished,
         branches,
-        tags
+        tags,
     }
 }

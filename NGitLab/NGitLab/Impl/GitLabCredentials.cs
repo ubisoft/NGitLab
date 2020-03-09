@@ -21,8 +21,10 @@ namespace NGitLab.Impl
 
         public GitLabCredentials(string hostUrl, string apiToken)
         {
-            if (string.IsNullOrEmpty(hostUrl)) throw new ArgumentException("HostUrl is mandatory", nameof(hostUrl));
-            if (string.IsNullOrEmpty(apiToken)) throw new ArgumentException("Token is mandatory", nameof(apiToken));
+            if (string.IsNullOrEmpty(hostUrl))
+                throw new ArgumentException("HostUrl is mandatory", nameof(hostUrl));
+            if (string.IsNullOrEmpty(apiToken))
+                throw new ArgumentException("Token is mandatory", nameof(apiToken));
 
             ValidateHostUrl(hostUrl);
 
@@ -32,9 +34,12 @@ namespace NGitLab.Impl
 
         public GitLabCredentials(string hostUrl, string userName, string password)
         {
-            if (string.IsNullOrEmpty(hostUrl)) throw new ArgumentException("HostUrl is mandatory", nameof(hostUrl));
-            if (string.IsNullOrEmpty(userName)) throw new ArgumentException("UserName is mandatory", nameof(userName));
-            if (string.IsNullOrEmpty(password)) throw new ArgumentException("Password is mandatory", nameof(password));
+            if (string.IsNullOrEmpty(hostUrl))
+                throw new ArgumentException("HostUrl is mandatory", nameof(hostUrl));
+            if (string.IsNullOrEmpty(userName))
+                throw new ArgumentException("UserName is mandatory", nameof(userName));
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentException("Password is mandatory", nameof(password));
 
             ValidateHostUrl(hostUrl);
 
@@ -56,7 +61,7 @@ namespace NGitLab.Impl
             }
         }
 
-        private void ValidateHostUrl(string url)
+        private static void ValidateHostUrl(string url)
         {
             if (url.EndsWith("/api/v3", StringComparison.OrdinalIgnoreCase) ||
                 url.EndsWith("/api/v3/", StringComparison.OrdinalIgnoreCase))
@@ -65,7 +70,7 @@ namespace NGitLab.Impl
             }
         }
 
-        private string GetApiUrl(string url)
+        private static string GetApiUrl(string url)
         {
             url = url.TrimEnd('/');
             if (url.EndsWith("/api/v4", StringComparison.OrdinalIgnoreCase))

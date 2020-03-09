@@ -43,7 +43,7 @@ namespace NGitLab.Tests.Milestone
                 Title = title,
                 Description = $"{title} description",
                 StartDate = "2017-08-20",
-                DueDate = "2017-09-20"
+                DueDate = "2017-09-20",
             });
 
             Assert.That(milestone, Is.Not.Null);
@@ -62,7 +62,7 @@ namespace NGitLab.Tests.Milestone
                 Title = milestone.Title + "new",
                 Description = milestone.Description + "new",
                 StartDate = "2018-08-20",
-                DueDate = "2018-09-20"
+                DueDate = "2018-09-20",
             });
 
             Assert.That(updatedMilestone, Is.Not.Null);
@@ -79,7 +79,7 @@ namespace NGitLab.Tests.Milestone
         {
             var updatedMilestone = _milestoneClient.Update(milestone.Id, new MilestoneUpdate
             {
-                Description = milestone.Description + "partial new"
+                Description = milestone.Description + "partial new",
             });
 
             Assert.That(updatedMilestone, Is.Not.Null);

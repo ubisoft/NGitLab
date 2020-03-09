@@ -54,7 +54,7 @@ namespace NGitLab.Models
         public string WikiAccessLevel;
 
         [DataMember(Name = "import_url")]
-        public string ImportUrl = "";
+        public string ImportUrl = string.Empty;
 
         [DataMember(Name = "visibility")]
         public VisibilityLevel VisibilityLevel;

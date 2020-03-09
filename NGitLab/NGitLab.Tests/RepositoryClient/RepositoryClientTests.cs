@@ -31,7 +31,7 @@ namespace NGitLab.Tests.RepositoryClient
             var commits = Initialize.Repository.Commits.ToArray();
             CollectionAssert.IsNotEmpty(commits);
             Assert.AreEqual(_commit.Message, commits[0].Message);
-            Assert.AreEqual("add readme", commits.Last().Message);
+            Assert.AreEqual("add readme", commits[commits.Length - 1].Message);
         }
 
         [Test]
@@ -78,21 +78,21 @@ namespace NGitLab.Tests.RepositoryClient
         [Test]
         public void GetAllTreeInPath()
         {
-            var tree = Initialize.Repository.GetTree("");
+            var tree = Initialize.Repository.GetTree(string.Empty);
             Assert.IsNotEmpty(tree);
         }
 
         [Test]
         public void GetAllTreeInPathRecursively()
         {
-            var tree = Initialize.Repository.GetTree("", null, true);
+            var tree = Initialize.Repository.GetTree(string.Empty, @ref: null, recursive: true);
             Assert.IsNotEmpty(tree);
         }
 
         [Test]
         public void GetAllTreeInPathOnRef()
         {
-            var tree = Initialize.Repository.GetTree("", "master", false);
+            var tree = Initialize.Repository.GetTree(string.Empty, "master", recursive: false);
             Assert.IsNotEmpty(tree);
         }
 

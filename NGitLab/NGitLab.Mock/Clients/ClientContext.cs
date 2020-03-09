@@ -9,6 +9,7 @@
         }
 
         public GitLabServer Server { get; }
+
         public User User { get; }
 
         public bool IsAuthenticated => User != null;

@@ -26,9 +26,9 @@ namespace NGitLab
 
         /// <summary>
         /// Return issues for a given query.
-        /// 
+        ///
         /// url like GET /issues?<parameter_name>=<value>
-        /// 
+        ///
         /// </summary>
         /// <param name="query"></param>
         /// <returns>the query's related issues</returns>
@@ -36,9 +36,9 @@ namespace NGitLab
 
         /// <summary>
         /// Return project issues for a given query.
-        /// 
+        ///
         /// url like GET /projects/:id/issues?<parameter_name>=<value>
-        /// 
+        ///
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="query"></param>
@@ -48,26 +48,14 @@ namespace NGitLab
         /// <summary>
         /// Add an issue witht he proposed title to the GitLab list for the selected proejct id.
         /// </summary>
-        /// <param name="projectId"></param>
-        /// <param name="title"></param>
-        /// <param name="description"></param>
-        /// <param name="assigneeId"></param>
-        /// <param name="milestoneId"></param>
-        /// <param name="labels"></param>
+        /// <param name="issueCreate"></param>
         /// <returns>The issue if it was created.  Null if not.</returns>
         Issue Create(IssueCreate issueCreate);
 
         /// <summary>
         /// Edit and save an issue.
         /// </summary>
-        /// <param name="projectId"></param>
-        /// <param name="issueId"></param>
-        /// <param name="title"></param>
-        /// <param name="description"></param>
-        /// <param name="assigneeId"></param>
-        /// <param name="milestoneId"></param>
-        /// <param name="labels"></param>
-        /// <param name="stateEvent"></param>
+        /// <param name="issueEdit"></param>
         /// <returns>The issue if it's updated.  Null if not.</returns>
         Issue Edit(IssueEdit issueEdit);
     }

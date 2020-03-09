@@ -13,7 +13,7 @@ namespace NGitLab.Models
         Success,
         Canceled,
         Skipped,
-        Manual
+        Manual,
     }
 
     [Flags]
@@ -27,6 +27,6 @@ namespace NGitLab.Models
         Success     = 0x10,
         Canceled    = 0x20,
         Skipped     = 0x40,
-        Manual      = 0x80
+        Manual      = 0x80,
     }
 }

@@ -13,7 +13,7 @@ namespace NGitLab
         /// Get a list of projects accessible by the authenticated user.
         /// </summary>
         IEnumerable<Runner> Accessible { get; }
-        
+
         /// <summary>
         /// Get a list of all GitLab projects (admin only).
         /// </summary>

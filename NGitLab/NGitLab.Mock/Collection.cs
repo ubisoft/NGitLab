@@ -15,12 +15,15 @@ namespace NGitLab.Mock
         }
 
         protected GitLabServer Server => Parent.Server;
+
         protected GitLabObject Parent { get; }
 
         public int Count => _items.Count;
 
         protected void Clear() => _items.Clear();
+
         public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
+
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public bool Contains(T item)

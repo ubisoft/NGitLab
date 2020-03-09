@@ -8,19 +8,19 @@ namespace NGitLab.Models
         [DataMember(Name = "source_branch")]
         public string SourceBranch;
 
-        [DataMember(Name="target_branch")]
+        [DataMember(Name = "target_branch")]
         public string TargetBranch;
 
-        [DataMember(Name="assignee_id")]
+        [DataMember(Name = "assignee_id")]
         public int? AssigneeId;
 
-        [DataMember(Name="title")]
+        [DataMember(Name = "title")]
         public string Title;
 
         [DataMember(Name = "description")]
         public string Description;
 
-        [DataMember(Name="target_project_id")]
+        [DataMember(Name = "target_project_id")]
         public int? TargetProjectId;
 
         [DataMember(Name = "remove_source_branch")]

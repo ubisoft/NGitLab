@@ -19,7 +19,7 @@ namespace NGitLab.Tests
             var noteCreate = new ProjectIssueNoteCreate()
             {
                 IssueId = Initialize.UnitTestIssue.IssueId,
-                Body = "Issue Body"
+                Body = "Issue Body",
             };
 
             var createdNote = _client.Create(noteCreate);
@@ -40,13 +40,14 @@ namespace NGitLab.Tests
             var noteCreate = new ProjectIssueNoteCreate()
             {
                 IssueId = createdIssue.IssueId,
-                Body = "Issue Body"
+                Body = "Issue Body",
             };
 
             _client.Create(noteCreate);
             _client.Create(noteCreate);
 
             var listedNote = _client.ForIssue(createdIssue.IssueId).ToList();
+
             // Gitlab create additional issue notes about initial manipulation on the issue,
             // so a starting count greater than one is expected.  Those issue notes have the 'system'
             // boolean set to true.
@@ -61,7 +62,7 @@ namespace NGitLab.Tests
             var noteCreate = new ProjectIssueNoteCreate()
             {
                 IssueId = Initialize.UnitTestIssue.IssueId,
-                Body = "Issue Body"
+                Body = "Issue Body",
             };
 
             var createdNote = _client.Create(noteCreate);
@@ -76,7 +77,7 @@ namespace NGitLab.Tests
             var noteCreate = new ProjectIssueNoteCreate()
             {
                 IssueId = Initialize.UnitTestIssue.IssueId,
-                Body = "Issue Body"
+                Body = "Issue Body",
             };
 
             var createdNote = _client.Create(noteCreate);
@@ -87,7 +88,7 @@ namespace NGitLab.Tests
             {
                 IssueId = Initialize.UnitTestIssue.IssueId,
                 NoteId = createdNote.NoteId,
-                Body = "Modified Issue Body"
+                Body = "Modified Issue Body",
             };
             var editedNote = _client.Edit(noteEdit);
             Assert.That(editedNote.Body, Is.EqualTo(noteEdit.Body));

@@ -12,9 +12,9 @@ namespace NGitLab
 
         /// <summary>
         /// Return a single issue note for a given.
-        /// 
+        ///
         /// url like GET /projects/:id/issues/:issue_id
-        /// 
+        ///
         /// </summary>
         /// <param name="issueId"></param>
         /// <param name="noteId"></param>

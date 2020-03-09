@@ -31,7 +31,7 @@ namespace NGitLab.Models
 
         [DataMember(Name = "pipeline_events")]
         public bool PipelineEvents;
-        
+
         [DataMember(Name = "enable_ssl_verification")]
         public bool EnableSslVerification;
 

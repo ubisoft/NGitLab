@@ -1,6 +1,6 @@
-﻿using NGitLab.Models;
-using System;
+﻿using System;
 using System.IO;
+using NGitLab.Models;
 
 namespace NGitLab.Mock
 {

@@ -4,7 +4,7 @@ namespace NGitLab.Mock
 {
     public sealed class ProjectHook : GitLabObject
     {
-        public new Project Parent => (Project) base.Parent;
+        public new Project Parent => (Project)base.Parent;
 
         public int Id { get; internal set; }
 

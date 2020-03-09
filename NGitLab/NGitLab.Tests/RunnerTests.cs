@@ -93,7 +93,7 @@ namespace NGitLab.Tests
             // lock runner
             var lockedRunner = new RunnerUpdate
             {
-                Locked = true
+                Locked = true,
             };
             runners.Update(runner.Id, lockedRunner);
 
@@ -105,7 +105,7 @@ namespace NGitLab.Tests
             // unlock runner
             var unlockedRunner = new RunnerUpdate
             {
-                Locked = false
+                Locked = false,
             };
             runners.Update(runner.Id, unlockedRunner);
 
@@ -125,7 +125,7 @@ namespace NGitLab.Tests
             // update runner
             var update = new RunnerUpdate
             {
-                RunUntagged = true
+                RunUntagged = true,
             };
             runners.Update(runner.Id, update);
 
@@ -135,7 +135,7 @@ namespace NGitLab.Tests
             // update runner
             update = new RunnerUpdate
             {
-                RunUntagged = false
+                RunUntagged = false,
             };
             runners.Update(runner.Id, update);
 

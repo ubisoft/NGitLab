@@ -18,11 +18,11 @@ namespace NGitLab.Tests
             });
 
             Assert.IsNotNull(result);
-            Assert.IsNotNull(Tags.All.FirstOrDefault(x => x.Name == "v0.5"));
-            Assert.IsNotNull(Tags.All.FirstOrDefault(x => x.Message == "Test message"));
+            Assert.IsNotNull(Tags.All.FirstOrDefault(x => string.Equals(x.Name, "v0.5", System.StringComparison.Ordinal)));
+            Assert.IsNotNull(Tags.All.FirstOrDefault(x => string.Equals(x.Message, "Test message", System.StringComparison.Ordinal)));
 
             Tags.Delete("v0.5");
-            Assert.IsNull(Tags.All.FirstOrDefault(x => x.Name == "v0.5"));
+            Assert.IsNull(Tags.All.FirstOrDefault(x => string.Equals(x.Name, "v0.5", System.StringComparison.Ordinal)));
         }
 
         [Test]
@@ -43,10 +43,10 @@ namespace NGitLab.Tests
             Assert.That(release.Description, Is.EqualTo("test edited"));
 
             Tags.Delete("0.7");
-            Assert.IsNull(Tags.All.FirstOrDefault(x => x.Name == "0.7"));
+            Assert.IsNull(Tags.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", System.StringComparison.Ordinal)));
         }
 
-        private ITagClient Tags
+        private static ITagClient Tags
         {
             get
             {

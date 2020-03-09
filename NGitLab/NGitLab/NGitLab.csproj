@@ -1,12 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!--# Visual Studio 15-->
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <Description>Provides a .NET REST client implementation of GitLab API.</Description>
-    <Copyright>Copyright © 2016</Copyright>
-    <Company>Ubisoft</Company>
-    <Authors>Ubisoft</Authors>
-    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

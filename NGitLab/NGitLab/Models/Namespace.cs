@@ -24,12 +24,12 @@ namespace NGitLab.Models
         public enum Type
         {
             Group,
-            User
+            User,
         }
 
         public Type GetKind()
         {
-            return (Type) Enum.Parse(typeof(Type), Kind, ignoreCase: true);
+            return (Type)Enum.Parse(typeof(Type), Kind, ignoreCase: true);
         }
     }
 }

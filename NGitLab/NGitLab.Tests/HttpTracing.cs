@@ -34,7 +34,8 @@ namespace NGitLab.Tests
         {
             if (!Logging.Initialized)
             {
-                HttpWebRequest.Create("http://localhost");
+                var uri = new Uri("http://localhost");
+                WebRequest.Create(uri);
                 var waitForInitializationThread = new Thread(() =>
                 {
                     while (!Logging.Initialized)
@@ -54,7 +55,9 @@ namespace NGitLab.Tests
         private static class Logging
         {
             private static Type LoggingType { get; } = typeof(WebRequest).Assembly.GetType("System.Net.Logging");
+
             private static FieldInfo EnabledField => LoggingType.GetField("s_LoggingEnabled", BindingFlags.NonPublic | BindingFlags.Static);
+
             private static FieldInfo InitializedField => LoggingType.GetField("s_LoggingInitialized", BindingFlags.NonPublic | BindingFlags.Static);
 
             public static bool IsEnabled
@@ -84,7 +87,7 @@ namespace NGitLab.Tests
         /// <summary>
         /// Logs in TeaBox output pad.
         /// </summary>
-        private class MyListener : TraceListener
+        private sealed class MyListener : TraceListener
         {
             public override void Write(string message)
             {

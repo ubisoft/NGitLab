@@ -1,0 +1,34 @@
+<Project>
+
+  <PropertyGroup>
+    <!-- Assembly Info -->
+    <Company>Ubisoft</Company>
+    <Copyright>Copyright © 2020 $(Company)</Copyright>
+    <Description>GitLab REST API .NET Client Library</Description>
+    <Product>NGitLab</Product>
+    <Version>0.0.0</Version>
+    <!-- Compile Options -->
+    <LangVersion>8.0</LangVersion>
+    <Deterministic>true</Deterministic>
+    <Features>strict</Features>
+  </PropertyGroup>
+
+  <!-- Analyzers (Roslyn, Meziantou, StyleCop, ...) -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+
+    <PackageReference Include="Meziantou.Analyzer" Version="1.0.324">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.164">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

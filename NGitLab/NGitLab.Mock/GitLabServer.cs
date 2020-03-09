@@ -32,8 +32,11 @@ namespace NGitLab.Mock
         public Uri Url { get; set; } = new Uri("https://gitlab.example.com/", UriKind.Absolute);
 
         public GitLabVersion Version { get; set; } = new GitLabVersion { Version = "1.0.0", Revision = "rev1" };
+
         public GroupCollection Groups { get; }
+
         public UserCollection Users { get; }
+
         public SystemHookCollection SystemHooks { get; }
 
         public VisibilityLevel DefaultForkVisibilityLevel { get; set; } = VisibilityLevel.Private;
@@ -74,13 +77,21 @@ namespace NGitLab.Mock
         }
 
         internal int GetNewGroupId() => Interlocked.Increment(ref _lastGroupId);
+
         internal int GetNewProjectId() => Interlocked.Increment(ref _lastProjectId);
+
         internal int GetNewMergeRequestId() => Interlocked.Increment(ref _lastMergeRequestId);
+
         internal int GetNewIssueId() => Interlocked.Increment(ref _lastIssueId);
+
         internal int GetNewMilestoneId() => Interlocked.Increment(ref _lastMilestoneId);
+
         internal int GetNewRunnerId() => Interlocked.Increment(ref _lastRunnerId);
+
         internal int GetNewPipelineId() => Interlocked.Increment(ref _lastPipelineId);
+
         internal int GetNewJobId() => Interlocked.Increment(ref _lastJobId);
+
         internal int GetNewBadgeId() => Interlocked.Increment(ref _lastBadgeId);
 
         internal string MakeUrl(string relativeUrl)

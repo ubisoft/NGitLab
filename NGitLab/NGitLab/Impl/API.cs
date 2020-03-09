@@ -15,8 +15,8 @@ namespace NGitLab.Impl
 
         public RequestOptions RequestOptions { get; set; }
 
-        public API(GitLabCredentials credentials) : 
-            this(credentials, RequestOptions.Default)
+        public API(GitLabCredentials credentials)
+            : this(credentials, RequestOptions.Default)
         {
         }
 
@@ -48,7 +48,7 @@ namespace NGitLab.Impl
 
         private string OpenPrivateSession()
         {
-            var httpRequestor = new HttpRequestor(_credentials.HostUrl, "", MethodType.Post, RequestOptions);
+            var httpRequestor = new HttpRequestor(_credentials.HostUrl, string.Empty, MethodType.Post, RequestOptions);
             var url =
                 $"/session?login={WebUtility.UrlEncode(_credentials.UserName)}&password={WebUtility.UrlEncode(_credentials.Password)}";
             try
@@ -64,7 +64,7 @@ namespace NGitLab.Impl
                 {
                     OriginalCall = new Uri(ex.OriginalCall.OriginalString.Replace(_credentials.Password, hiddenPassword)),
                     StatusCode = ex.StatusCode,
-                    ErrorObject = ex.ErrorObject
+                    ErrorObject = ex.ErrorObject,
                 };
 
                 throw securedException;

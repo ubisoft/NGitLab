@@ -14,10 +14,10 @@ namespace NGitLab.Models
 
         [DataMember(Name = "tree")]
         public Sha1 Tree;
-            
+
         [DataMember(Name = "message")]
         public string Message;
-            
+
         [DataMember(Name = "author")]
         public PersonInfo Author;
 

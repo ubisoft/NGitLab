@@ -15,12 +15,12 @@ namespace NGitLab.Models
 
         public bool Equals(Blame other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
             return Equals(Commit, other.Commit)
-                && !ReferenceEquals(Lines, null) && !ReferenceEquals(null, other.Lines) && Lines.SequenceEqual(other.Lines, StringComparer.Ordinal);
+                && Lines is object && other.Lines is object && Lines.SequenceEqual(other.Lines, StringComparer.Ordinal);
         }
 
         public override bool Equals(object obj)

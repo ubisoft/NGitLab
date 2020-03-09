@@ -1,6 +1,6 @@
-﻿using NGitLab.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using NGitLab.Models;
 
 namespace NGitLab.Impl
 {

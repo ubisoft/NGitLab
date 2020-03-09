@@ -9,18 +9,31 @@ namespace NGitLab.Mock
         public Project Project => (Project)Parent;
 
         public int Id { get; set; }
+
         public int Iid { get; set; }
+
         public int ProjectId => Project.Id;
+
         public string Title { get; set; }
+
         public string Description { get; set; }
+
         public string[] Labels { get; set; }
+
         public Milestone Milestone { get; set; }
+
         public UserRef Assignee { get; set; }
+
         public UserRef[] Assignees { get; set; }
+
         public UserRef Author { get; set; }
+
         public DateTimeOffset CreatedAt { get; }
+
         public DateTimeOffset UpdatedAt { get; set; }
+
         public DateTimeOffset? ClosedAt { get; set; }
+
         public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/issues/{Id.ToString(CultureInfo.InvariantCulture)}");
 
         public IssueState State
@@ -32,6 +45,7 @@ namespace NGitLab.Mock
 
                 return IssueState.opened;
             }
+
             set
             {
                 if (value == IssueState.closed)

@@ -10,7 +10,6 @@ namespace NGitLab.Impl
 
         public const string Url = "/namespaces";
 
-
         public NamespacesClient(API api)
         {
             _api = api;

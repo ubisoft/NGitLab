@@ -7,7 +7,7 @@ namespace NGitLab.Tests
 {
     public class SnippetsTest
     {
-        private ISnippetClient SnippetClient => Initialize.GitLabClient.Snippets;
+        private static ISnippetClient SnippetClient => Initialize.GitLabClient.Snippets;
 
         [Test]
         public void Test_snippet()
@@ -17,7 +17,7 @@ namespace NGitLab.Tests
             var snippetName = "testSnip" + guid;
             var projectSnippetName = "testSnipInProject" + guid;
 
-            //arrange
+            // arrange
             var newSnippet1 = new SnippetCreate
             {
                 Title = snippetName,
@@ -34,10 +34,10 @@ namespace NGitLab.Tests
                 Code = "var test = 43;",
                 FileName = "testFileName1.cs",
                 ProjectId = testProjectId,
-                Visibility = VisibilityLevel.Public
+                Visibility = VisibilityLevel.Public,
             };
 
-            //act - assert
+            // act - assert
             SnippetClient.Create(newSnippet1);
             Assert.That(SnippetClient.User.Select(x => x.Title), Contains.Item(snippetName));
             Assert.That(SnippetClient.All.Select(x => x.Title), Contains.Item(snippetName));
@@ -45,8 +45,8 @@ namespace NGitLab.Tests
             SnippetClient.Create(newSnippet2);
             Assert.That(SnippetClient.All.Select(x => x.Title), Contains.Item(projectSnippetName));
 
-            var returnedUserSnippet = SnippetClient.All.First(s => s.Title == snippetName);
-            var returnedProjectSnippet = SnippetClient.All.First(s => s.Title == projectSnippetName);
+            var returnedUserSnippet = SnippetClient.All.First(s => string.Equals(s.Title, snippetName, StringComparison.Ordinal));
+            var returnedProjectSnippet = SnippetClient.All.First(s => string.Equals(s.Title, projectSnippetName, StringComparison.Ordinal));
 
             Assert.That(SnippetClient.Get(newSnippet2.ProjectId, returnedProjectSnippet.Id), Is.Not.Null);
 

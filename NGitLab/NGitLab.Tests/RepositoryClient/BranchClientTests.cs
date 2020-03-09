@@ -66,7 +66,7 @@ namespace NGitLab.Tests.RepositoryClient
             _branches.Create(new BranchCreate
             {
                 Name = branchName,
-                Ref = "master"
+                Ref = "master",
             });
 
             Assert.IsNotNull(_branches[branchName]);

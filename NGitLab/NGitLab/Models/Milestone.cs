@@ -34,6 +34,6 @@ namespace NGitLab.Models
     public enum MilestoneState
     {
         active,
-        closed
+        closed,
     }
 }

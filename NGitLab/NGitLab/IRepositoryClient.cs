@@ -8,13 +8,19 @@ namespace NGitLab
     public interface IRepositoryClient
     {
         ITagClient Tags { get; }
+
         IEnumerable<Tree> Tree { get; }
+
         IEnumerable<Tree> GetTree(string path);
+
         IEnumerable<Tree> GetTree(string path, string @ref, bool recursive);
+
         void GetRawBlob(string sha, Action<Stream> parser);
+
         void GetArchive(Action<Stream> parser);
 
         IEnumerable<Commit> Commits { get; }
+
         IContributorClient Contributors { get; }
 
         /// <summary>

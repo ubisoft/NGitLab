@@ -27,16 +27,16 @@ namespace NGitLab.Impl
 
         public IEnumerable<Tree> Tree => _api.Get().GetAll<Tree>(_repoPath + "/tree");
 
-        public IEnumerable<Tree> GetTree(string path) => GetTree(path, null, false);
+        public IEnumerable<Tree> GetTree(string path) => GetTree(path, @ref: null, recursive: false);
 
-        public IEnumerable<Tree> GetTree(string path, string @ref, bool recursive )
+        public IEnumerable<Tree> GetTree(string path, string @ref, bool recursive)
         {
             var uri = $"{_repoPath}/tree?path={path}";
             if (@ref != null)
                 uri += $"&ref={Uri.EscapeDataString(@ref)}";
             if (recursive)
                 uri += "&recursive=true";
-           return _api.Get().GetAll<Tree>(uri);
+            return _api.Get().GetAll<Tree>(uri);
         }
 
         public void GetRawBlob(string sha, Action<Stream> parser)
@@ -56,7 +56,7 @@ namespace NGitLab.Impl
         /// </summary>
         public IEnumerable<Commit> GetCommits(string refName, int maxResults)
         {
-            return GetCommits(new GetCommitsRequest {MaxResults = maxResults, RefName = refName});
+            return GetCommits(new GetCommitsRequest { MaxResults = maxResults, RefName = refName });
         }
 
         /// <summary>

@@ -36,18 +36,18 @@ namespace NGitLab.Models
 
         public bool Equals(BlameCommit other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
 
             return Id.Equals(other.Id)
-                && string.Equals(Message, other.Message, StringComparison.Ordinal) 
-                && !ReferenceEquals(Parents, null) && !ReferenceEquals(null, other.Parents) && Parents.SequenceEqual(other.Parents)
-                && AuthoredDate.Equals(other.AuthoredDate) 
-                && string.Equals(AuthorName, other.AuthorName, StringComparison.Ordinal) 
-                && string.Equals(AuthorEmail, other.AuthorEmail, StringComparison.OrdinalIgnoreCase) 
-                && CommittedDate.Equals(other.CommittedDate) 
+                && string.Equals(Message, other.Message, StringComparison.Ordinal)
+                && Parents is object && other.Parents is object && Parents.SequenceEqual(other.Parents)
+                && AuthoredDate.Equals(other.AuthoredDate)
+                && string.Equals(AuthorName, other.AuthorName, StringComparison.Ordinal)
+                && string.Equals(AuthorEmail, other.AuthorEmail, StringComparison.OrdinalIgnoreCase)
+                && CommittedDate.Equals(other.CommittedDate)
                 && string.Equals(CommitterName, other.CommitterName, StringComparison.Ordinal)
                 && string.Equals(CommitterEmail, other.CommitterEmail, StringComparison.OrdinalIgnoreCase);
         }

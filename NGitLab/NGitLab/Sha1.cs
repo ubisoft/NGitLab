@@ -58,7 +58,7 @@ namespace NGitLab
         {
             unchecked
             {
-                return ((ulong)(GetInt(value, ref i)) << 32) + GetInt(value, ref i);
+                return ((ulong)GetInt(value, ref i) << 32) + GetInt(value, ref i);
             }
         }
 
@@ -85,7 +85,7 @@ namespace NGitLab
         {
             var val = (int)hex;
 
-            //lower or upper
+            // lower or upper
             return (uint)(val - (val < 58 ? 48 : (val < 97 ? 55 : 87)));
         }
     }

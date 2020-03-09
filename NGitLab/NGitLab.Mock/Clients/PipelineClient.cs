@@ -39,13 +39,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public IEnumerable<Models.Job> AllJobs
-        {
-            get
-            {
-                return _jobClient.GetJobs(JobScopeMask.All);
-            }
-        }
+        public IEnumerable<Models.Job> AllJobs => _jobClient.GetJobs(JobScopeMask.All);
 
         public Models.Pipeline Create(string @ref)
         {

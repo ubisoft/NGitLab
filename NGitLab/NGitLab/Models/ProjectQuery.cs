@@ -84,6 +84,6 @@ namespace NGitLab.Models
         /// <summary>
         /// Get a list of all GitLab projects.
         /// </summary>
-        All
+        All,
     }
 }

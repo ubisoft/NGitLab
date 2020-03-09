@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Threading;
 using NGitLab.Models;
 using NUnit.Framework;
 using static NGitLab.Tests.Initialize;
@@ -58,7 +57,7 @@ namespace NGitLab.Tests
                 Skype = "skype",
                 Twitter = "twitter",
                 Username = $"ngitlabtestuser{randomNumber}",
-                WebsiteURL = "wp.pl"
+                WebsiteURL = "wp.pl",
             };
 
             var addedUser = _users.Create(userUpsert);
@@ -116,7 +115,7 @@ namespace NGitLab.Tests
                 UserId = _users.Current.Id,
                 Name = $"Test_Create_{DateTime.Now.ToString("yyyyMMddHHmmss")}",
                 ExpiresAt = DateTime.Now.AddDays(1),
-                Scopes = new[] { "api", "read_user" }
+                Scopes = new[] { "api", "read_user" },
             };
 
             var tokenResult = _users.CreateToken(tokenRequest);
@@ -125,14 +124,15 @@ namespace NGitLab.Tests
             Assert.AreEqual(tokenRequest.Name, tokenResult.Name);
         }
 
-        //Comes from https://github.com/meziantou/Meziantou.GitLabClient/blob/master/Meziantou.GitLabClient.Tests/Internals/RsaSshKey.cs
-        private class RsaSshKey
+        // Comes from https://github.com/meziantou/Meziantou.GitLabClient/blob/master/Meziantou.GitLabClient.Tests/Internals/RsaSshKey.cs
+        private sealed class RsaSshKey
         {
             private const int PrefixSize = 4;
             private const int PaddedPrefixSize = PrefixSize + 1;
             private const string KeyType = "ssh-rsa";
 
             public string PublicKey { get; }
+
             public string PrivateKey { get; }
 
             public RsaSshKey(string publicKey, string privateKey)
@@ -143,22 +143,18 @@ namespace NGitLab.Tests
 
             public static RsaSshKey GenerateQuickest()
             {
-                using (var rsa = RSA.Create())
-                {
-                    var size = rsa.LegalKeySizes.Min();
-                    rsa.KeySize = size.MinSize;
+                using var rsa = RSA.Create();
+                var size = rsa.LegalKeySizes.Min();
+                rsa.KeySize = size.MinSize;
 
-                    return Generate(rsa);
-                }
+                return Generate(rsa);
             }
 
             public static RsaSshKey Generate(int keyLength)
             {
-                using (var rsa = RSA.Create())
-                {
-                    rsa.KeySize = keyLength;
-                    return Generate(rsa);
-                }
+                using var rsa = RSA.Create();
+                rsa.KeySize = keyLength;
+                return Generate(rsa);
             }
 
             public static RsaSshKey Generate(RSA cryptoServiceProvider)

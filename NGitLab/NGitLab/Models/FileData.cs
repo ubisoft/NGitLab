@@ -36,7 +36,7 @@ namespace NGitLab.Models
         {
             get
             {
-                if(Encoding == "base64")
+                if (string.Equals(Encoding, "base64", System.StringComparison.Ordinal))
                     return Base64Decode(Content);
                 return Content;
             }

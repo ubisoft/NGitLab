@@ -40,7 +40,7 @@ namespace NGitLab.Tests.MergeRequest
                 {
                     Title = "ErrorRequest",
                     SourceBranch = "master",
-                    TargetBranch = "master"
+                    TargetBranch = "master",
                 });
             });
 
@@ -83,7 +83,7 @@ namespace NGitLab.Tests.MergeRequest
 
             var approversChange = new MergeRequestApproversChange()
             {
-                Approvers = new[] { userId }
+                Approvers = new[] { userId },
             };
 
             approvalClient.ChangeApprovers(approversChange);
@@ -105,10 +105,10 @@ namespace NGitLab.Tests.MergeRequest
 
             var mergeRequests = _mergeRequestClient.Get(new MergeRequestQuery()
             {
-                AssigneeId = QueryAssigneeId.None
+                AssigneeId = QueryAssigneeId.None,
             }).ToList();
 
-            Assert.AreNotEqual(0, mergeRequests.Count(),
+            Assert.AreNotEqual(0, mergeRequests.Count,
                 "The query retrieved all open merged requests that are unassigned");
             Assert.IsTrue(mergeRequests.All(mr => mr.Assignee == null),
                 "All collected merged requests are unassigned");
@@ -125,12 +125,12 @@ namespace NGitLab.Tests.MergeRequest
 
             var mergeRequests = _mergeRequestClient.Get(new MergeRequestQuery()
             {
-                AssigneeId = _currentUser.Id
+                AssigneeId = _currentUser.Id,
             }).ToList();
 
-            Assert.AreNotEqual(0, mergeRequests.Count(),
+            Assert.AreNotEqual(0, mergeRequests.Count,
                 $"The query retrieved MRs that are assigned to the current user '{_currentUser.Username}'");
-            Assert.IsTrue(mergeRequests.All(mr => mr.Assignee?.Username == _currentUser.Username),
+            Assert.IsTrue(mergeRequests.All(mr => string.Equals(mr.Assignee?.Username, _currentUser.Username, System.StringComparison.Ordinal)),
                 $"Collected MRs are all assigned to the current user '{_currentUser.Username}'");
         }
 
@@ -149,9 +149,11 @@ namespace NGitLab.Tests.MergeRequest
                 SourceBranch = from,
                 TargetBranch = to,
                 Labels = "a,b",
-                RemoveSourceBranch = true
+                RemoveSourceBranch = true,
             };
-            if (assignee > 0)   // Ignore values <= 0 (0 means 'unassigned', but only in a query)
+
+            // Ignore values <= 0 (0 means 'unassigned', but only in a query)
+            if (assignee > 0)
             {
                 mergeRequestCreate.AssigneeId = assignee;
             }
@@ -177,7 +179,7 @@ namespace NGitLab.Tests.MergeRequest
             var branch = Initialize.Repository.Branches.Create(new BranchCreate
             {
                 Name = branchName,
-                Ref = "master"
+                Ref = "master",
             });
 
             Initialize.Repository.Files.Create(new FileUpsert
@@ -232,7 +234,7 @@ namespace NGitLab.Tests.MergeRequest
                 });
 
             Assert.That(mergeRequest.State, Is.EqualTo(nameof(MergeRequestState.merged)));
-            Assert.IsNull(Initialize.Repository.Branches.All.FirstOrDefault(x => x.Name == request.SourceBranch));
+            Assert.IsNull(Initialize.Repository.Branches.All.FirstOrDefault(x => string.Equals(x.Name, request.SourceBranch, System.StringComparison.Ordinal)));
         }
     }
 }
