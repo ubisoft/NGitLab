@@ -30,7 +30,7 @@ namespace NGitLab.Tests
             Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
             {
                 Name = name,
-                Ref = "master"
+                Ref = "master",
             });
 
             while (FindPipeline(name) == null)
@@ -76,7 +76,7 @@ namespace NGitLab.Tests
             var pipeline = _pipelines.All.First();
             var pipelinesFromQuery = _pipelines.Search(new PipelineQuery
             {
-                    Ref = pipeline.Ref
+                Ref = pipeline.Ref,
             });
 
             Assert.IsTrue(pipelinesFromQuery.Any());
@@ -101,11 +101,11 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_pipeline_variables()
         {
-            CreatePipelineWithVariables(new Dictionary<string, string>(StringComparer.InvariantCulture) { {"Test", "HelloWorld"}});
+            CreatePipelineWithVariables(new Dictionary<string, string>(StringComparer.InvariantCulture) { { "Test", "HelloWorld" } });
             var pipelinesWithVariables = _pipelines.All.Where(p => string.Equals(p.Ref, "master", StringComparison.Ordinal));
 
             var variables = _pipelines.GetVariables(pipelinesWithVariables.First().Id);
-            
+
             Assert.IsTrue(variables.Any(v =>
                 v.Key.Equals("Test", StringComparison.InvariantCulture) &&
                 v.Value.Equals("HelloWorld", StringComparison.InvariantCulture)));
@@ -113,7 +113,7 @@ namespace NGitLab.Tests
 
         private PipelineBasic FindPipeline(string refName)
         {
-            return _pipelines.All.FirstOrDefault(x => x.Ref == refName);
+            return _pipelines.All.FirstOrDefault(x => string.Equals(x.Ref, refName, StringComparison.Ordinal));
         }
 
         private int CountPipelines(string refName)

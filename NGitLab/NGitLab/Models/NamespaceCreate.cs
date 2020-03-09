@@ -11,8 +11,8 @@ namespace NGitLab.Models
         public string Name;
 
         [Required]
-		[DataMember(Name = "path")]
-		public string Path;
+        [DataMember(Name = "path")]
+        public string Path;
 
         [DataMember(Name = "description")]
         public string Description;

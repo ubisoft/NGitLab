@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -20,6 +20,16 @@ namespace NGitLab.Tests
             Assert.That(requestOptions.HandledRequests.Count, Is.EqualTo(2));
         }
 
+        [TestCase("http://feedbooks.com/type/Crime%2FMystery/books/top")]
+        [TestCase("http://feedbooks.com/type/Crime%252FMystery/books/top")]
+        [TestCase("https://gitlab.example.com/api/v4/projects/42400/environments?name=env_test_name_with_url&external_url=https%3A%2F%2Fgitlab.example.com")]
+        public void Test_UriFix(string str)
+        {
+            var uri = UriFix.Build(str);
+
+            Assert.That(uri.AbsoluteUri, Is.EqualTo(str));
+        }
+
         [Test]
         public void Test_the_timeout_can_be_overridden_in_the_request_options()
         {
@@ -31,7 +41,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(TimeSpan.FromMinutes(2).TotalMilliseconds, requestOptions.HandledRequests.Single().Timeout);
         }
 
-        private class MockRequestOptions : RequestOptions
+        private sealed class MockRequestOptions : RequestOptions
         {
             public bool ShouldRetryCalled { get; set; }
 

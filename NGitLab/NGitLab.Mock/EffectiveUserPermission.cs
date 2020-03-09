@@ -11,6 +11,7 @@ namespace NGitLab.Mock
         }
 
         public User User { get; }
+
         public AccessLevel AccessLevel { get; }
 
         public Membership ToMembershipClient()
@@ -18,7 +19,7 @@ namespace NGitLab.Mock
             return new Membership
             {
                 Id = User.Id,
-                AvatarURL= User.AvatarUrl,
+                AvatarURL = User.AvatarUrl,
                 UserName = User.UserName,
                 Name = User.Name,
                 AccessLevel = (int)AccessLevel,

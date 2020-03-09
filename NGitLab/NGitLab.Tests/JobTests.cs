@@ -25,21 +25,24 @@ namespace NGitLab.Tests
             }
         }
 
-        [Test, Timeout(30000)]
+        [Test]
+        [Timeout(30000)]
         public void Test_getjobs_all()
         {
             // Rely on test timeout if no job are found
             GetTestJob(JobScopeMask.All);
         }
 
-        [Test, Timeout(30000)]
+        [Test]
+        [Timeout(30000)]
         public void Test_getjobs_scope()
         {
             // Rely on test timeout if no job are found
             GetTestJob(JobScopeMask.Manual);
         }
 
-        [Test, Timeout(30000)]
+        [Test]
+        [Timeout(30000)]
         public void Test_run_action_play()
         {
             // Rely on test timeout if no job are found
@@ -52,7 +55,8 @@ namespace NGitLab.Tests
             Assert.AreEqual(job2.Commit.Id, job.Commit.Id); // Same Commit
         }
 
-        [Test, Timeout(30000)]
+        [Test]
+        [Timeout(30000)]
         public void Test_run_action_retry()
         {
             // Rely on test timeout if no job are found
@@ -65,7 +69,8 @@ namespace NGitLab.Tests
             Assert.AreEqual(job2.Commit.Id, job.Commit.Id); // Same Commit
         }
 
-        [Test, Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
+        [Test]
+        [Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
         public void Test_get_job_from_id()
         {
             // Rely on test timeout if no job are found
@@ -78,25 +83,27 @@ namespace NGitLab.Tests
             Assert.AreEqual(job2.Commit.Id, job.Commit.Id); // Same Commit
         }
 
-        [Test, Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
+        [Test]
+        [Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
         public void Test_get_job_trace()
         {
             // Rely on test timeout if no job are found
             var job = GetTestJob(JobScopeMask.Success);
 
-            string trace = _jobs.GetTrace(job.Id);
+            var trace = _jobs.GetTrace(job.Id);
 
             Assert.That(trace, Does.Contain("Running with gitlab-runner"));
             Assert.That(trace, Does.Contain("Job succeeded"));
         }
 
-        [Test, Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
+        [Test]
+        [Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
         public void Test_get_job_artifacts()
         {
             // Rely on test timeout if no job are found
             var job = GetTestJob(JobScopeMask.Success);
 
-            byte[] artifacts = _jobs.GetJobArtifacts(job.Id);
+            var artifacts = _jobs.GetJobArtifacts(job.Id);
 
             Assert.IsNotEmpty(artifacts);
         }

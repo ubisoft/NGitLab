@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
-    internal class NamespacesTests
+    public class NamespacesTests
     {
         [Test]
         public void Test_namespaces_contains_a_group()
@@ -37,6 +37,6 @@ namespace NGitLab.Tests
             Assert.IsNotNull(user);
         }
 
-        private INamespacesClient Namespaces => Initialize.GitLabClient.Namespaces;
+        private static INamespacesClient Namespaces => Initialize.GitLabClient.Namespaces;
     }
 }

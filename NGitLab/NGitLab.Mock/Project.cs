@@ -31,34 +31,57 @@ namespace NGitLab.Mock
         }
 
         public int Id { get; set; }
+
         public string Name { get; set; }
+
         public string Description { get; set; }
+
         public string DefaultBranch { get; set; } = "master";
+
         public string WebUrl => Server.MakeUrl(PathWithNamespace);
+
         public VisibilityLevel Visibility { get; set; }
+
         public Project ForkedFrom { get; internal set; }
+
         public string ImportStatus { get; set; }
+
         public TimeSpan BuildTimeout { get; set; } = TimeSpan.FromHours(1);
+
         public bool LfsEnabled { get; set; }
+
         public RepositoryAccessLevel RepositoryAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
+
         public PermissionCollection Permissions { get; }
+
         public Repository Repository { get; }
+
         public MergeRequestCollection MergeRequests { get; }
+
         public PipelineCollection Pipelines { get; }
+
         public JobCollection Jobs { get; }
+
         public CommitInfoCollection CommitInfos { get; }
 
         public Group Group => (Group)Parent;
 
         public string Path => Slug.Create(Name);
+
         public string PathWithNamespace => Group == null ? Path : (Group.PathWithNameSpace + "/" + Path);
+
         public string FullName => Group == null ? Name : (Group.FullName + "/" + Name);
 
         public ProjectHookCollection Hooks { get; }
+
         public RunnerCollection RegisteredRunners { get; }
+
         public RunnerRefCollection EnabledRunners { get; }
+
         public IssueCollection Issues { get; }
+
         public MilestoneCollection Milestones { get; }
+
         public BadgeCollection Badges { get; }
 
         public void Remove()
@@ -185,6 +208,7 @@ namespace NGitLab.Mock
             {
                 Repository.Commit(user, "initial commit");
             }
+
             Repository.CreateAndCheckoutBranch(branchName);
             Repository.Commit(user, "edit");
 
@@ -227,7 +251,7 @@ namespace NGitLab.Mock
 
         public Project Fork(Group group, User user, string projectName)
         {
-            projectName = projectName ?? Name;
+            projectName ??= Name;
 
             var existingProject = group.Projects.FirstOrDefault(p => string.Equals(p.Name, projectName, StringComparison.Ordinal));
             if (existingProject != null)

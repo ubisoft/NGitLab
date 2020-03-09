@@ -12,6 +12,6 @@ namespace NGitLab.Models
         Internal = 10,
 
         [EnumMember(Value = "public")]
-        Public = 20
+        Public = 20,
     }
 }

@@ -9,7 +9,7 @@ namespace NGitLab.Models
         [Required]
         [DataMember(Name = "id")]
         public int Id;
-        
+
         [Required]
         [DataMember(Name = "title")]
         public string Title;

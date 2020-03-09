@@ -19,7 +19,7 @@ namespace NGitLab.Impl
         public MergeRequestClient(API api)
         {
             _api = api;
-            _projectPath = "";
+            _projectPath = string.Empty;
         }
 
         public IEnumerable<MergeRequest> All => Get(new MergeRequestQuery());

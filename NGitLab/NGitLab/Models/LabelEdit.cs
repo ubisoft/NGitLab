@@ -6,7 +6,9 @@ namespace NGitLab.Models
     [DataContract]
     public class LabelEdit
     {
-        public LabelEdit() { }
+        public LabelEdit()
+        {
+        }
 
         public LabelEdit(int projectId, Label label)
         {

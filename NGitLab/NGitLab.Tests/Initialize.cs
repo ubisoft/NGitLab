@@ -10,7 +10,7 @@ namespace NGitLab.Tests
     [SetUpFixture]
     public class Initialize
     {
-        internal static readonly string TestEntityNamePrefix = "Unit_Test_";    // Name prefix for test groups, projects & issues
+        internal const string TestEntityNamePrefix = "Unit_Test_";    // Name prefix for test groups, projects & issues
 
         public static GitLabClient GitLabClient;
         public static GitLabClient GitLabClientFront1;
@@ -27,8 +27,11 @@ namespace NGitLab.Tests
         public static IRepositoryClient Repository => GitLabClient.GetRepository(UnitTestProject.Id);
 
         public static string GitLabHost => "https://gitlab.example.com";
+
         public static string GitLabHookTest => "https://gitlab.example.com";
+
         public static string GitLabHostFront1 => "https://pdc-dev-gitfront01/";
+
         public static string GitLabHostFront2 => " https://pdc-dev-gitfront02/";
 
         public static string GitLabToken => "dummy";
@@ -46,9 +49,9 @@ namespace NGitLab.Tests
         /// <summary>
         /// The last request executed against gitlab.
         /// </summary>
-        public static WebRequest LastRequest => _requests[_requests.Count - 1];
+        public static WebRequest LastRequest => s_requests[s_requests.Count - 1];
 
-        private static readonly List<WebRequest> _requests = new List<WebRequest>();
+        private static readonly List<WebRequest> s_requests = new List<WebRequest>();
 
         [OneTimeSetUp]
         public void Setup()
@@ -59,9 +62,9 @@ namespace NGitLab.Tests
             if (string.IsNullOrEmpty(GitLabToken))
                 throw new ArgumentNullException(nameof(GitLabToken));
 
-            GitLabClient = new GitLabClient(GitLabHost, apiToken: GitLabToken, options: new CustomRequestOptions(_requests));
-            GitLabClientFront1 = new GitLabClient(GitLabHostFront1, apiToken: GitLabToken, options: new CustomRequestOptions(_requests));
-            GitLabClientFront2 = new GitLabClient(GitLabHostFront2, apiToken: GitLabToken, options: new CustomRequestOptions(_requests));
+            GitLabClient = new GitLabClient(GitLabHost, apiToken: GitLabToken, options: new CustomRequestOptions(s_requests));
+            GitLabClientFront1 = new GitLabClient(GitLabHostFront1, apiToken: GitLabToken, options: new CustomRequestOptions(s_requests));
+            GitLabClientFront2 = new GitLabClient(GitLabHostFront2, apiToken: GitLabToken, options: new CustomRequestOptions(s_requests));
 
             var randomGenerator = new Random();
 
@@ -83,37 +86,38 @@ namespace NGitLab.Tests
         {
             // Remove the test project again
             DeleteTestProject();
-            //remove group
+
+            // remove group
             DeleteTestGroup();
         }
 
         internal static void WaitWithTimeoutUntil(Func<bool> predicate)
         {
             Policy
-                .HandleResult(false)
+                .HandleResult(result: false)
                 .WaitAndRetry(retryCount: 2, sleepDurationProvider: retryAttempt => TimeSpan.FromMilliseconds(300 * retryAttempt))
                 .Execute(predicate);
         }
 
-        private Group CreateGroup(string groupName)
+        private static Group CreateGroup(string groupName)
         {
             var group = GitLabClient.Groups.Create(new GroupCreate()
             {
                 Name = groupName,
                 Path = $"{groupName}Path",
                 Visibility = VisibilityLevel.Internal,
-                ParentId = null
+                ParentId = null,
             });
 
             return group;
         }
 
-        private Trigger CreateTrigger(int projectId)
+        private static Trigger CreateTrigger(int projectId)
         {
             return GitLabClient.GetTriggers(projectId).Create("Unit_Test_Description");
         }
 
-        private void DeleteTestGroup()
+        private static void DeleteTestGroup()
         {
             var group = GitLabClient.Groups[UnitTestGroup.Id];
 
@@ -123,7 +127,7 @@ namespace NGitLab.Tests
             GitLabClient.Groups.Delete(group.Id);
         }
 
-        private Project CreateProject(string name, int? groupId = null)
+        private static Project CreateProject(string name, int? groupId = null)
         {
             var createdProject = GitLabClient.Projects.Create(new ProjectCreate
             {
@@ -134,17 +138,16 @@ namespace NGitLab.Tests
                 NamespaceId = groupId?.ToString(),
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Internal,
-                WikiEnabled = true
+                WikiEnabled = true,
             });
 
-            //GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!
-            //https://gitlab.com/gitlab-org/gitlab-ce/issues/2420
-            //GitLabClient.GetRepository(createdProject.Id).Branches.Create(new BranchCreate
-            //{
+            // GitLab API does not allow to create branches on empty projects. Cant test in Docker at the moment!
+            // https://gitlab.com/gitlab-org/gitlab-ce/issues/2420
+            // GitLabClient.GetRepository(createdProject.Id).Branches.Create(new BranchCreate
+            // {
             //    Name = "merge-me-to-master",
             //    Ref = "master"
-            //});
-
+            // });
             AddSomeCommits(createdProject.Id);
 
             GitLabClient.GetRepository(createdProject.Id).ProjectHooks.Create(new ProjectHookUpsert
@@ -157,7 +160,7 @@ namespace NGitLab.Tests
             return createdProject;
         }
 
-        private void AddSomeCommits(int projectId)
+        private static void AddSomeCommits(int projectId)
         {
             GitLabClient.GetRepository(projectId).Files.Create(new FileUpsert
             {
@@ -167,7 +170,7 @@ namespace NGitLab.Tests
                 RawContent = "this project should only live during the unit tests, you can delete if you find some",
             });
 
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
             {
                 GitLabClient.GetRepository(projectId).Files.Create(new FileUpsert
                 {
@@ -179,7 +182,7 @@ namespace NGitLab.Tests
             }
         }
 
-        private void DeleteTestProject()
+        private static void DeleteTestProject()
         {
             var project = GitLabClient.Projects[UnitTestProject.Id];
 
@@ -191,7 +194,7 @@ namespace NGitLab.Tests
             GitLabClient.Projects.Delete(project.Id);
         }
 
-        private Issue CreateIssue(string title)
+        private static Issue CreateIssue(string title)
         {
             var createIssue = GitLabClient.Issues.Create(new IssueCreate()
             {
@@ -206,7 +209,7 @@ namespace NGitLab.Tests
         /// <summary>
         /// Stores all the web requests in a list.
         /// </summary>
-        private class CustomRequestOptions : RequestOptions
+        private sealed class CustomRequestOptions : RequestOptions
         {
             private readonly List<WebRequest> _allRequests;
 

@@ -6,7 +6,7 @@ namespace NGitLab.Tests
 {
     public class FilesTests
     {
-        private IFilesClient Files
+        private static IFilesClient Files
         {
             get
             {
@@ -26,7 +26,7 @@ namespace NGitLab.Tests
                 CommitMessage = "Add SonarQube badges to README.md",
                 RawContent = "test",
                 Encoding = "base64",
-                Path = fileName
+                Path = fileName,
             };
             Files.Create(fileUpsert);
 
@@ -46,7 +46,7 @@ namespace NGitLab.Tests
             {
                 Path = fileName,
                 Branch = "master",
-                CommitMessage = "Delete file"
+                CommitMessage = "Delete file",
             };
             Files.Delete(fileDelete);
 
@@ -64,7 +64,7 @@ namespace NGitLab.Tests
                 CommitMessage = "Add SonarQube badges to README.md",
                 RawContent = $"{content1}{Environment.NewLine}",
                 Encoding = "base64",
-                Path = fileName
+                Path = fileName,
             };
             Files.Create(fileUpsert1);
 
@@ -91,7 +91,7 @@ namespace NGitLab.Tests
                 CommitMessage = "SecondCommit",
                 RawContent = $"{content1}{Environment.NewLine}{content2}",
                 Encoding = "base64",
-                Path = fileName
+                Path = fileName,
             };
             Files.Update(fileUpsert2);
 
@@ -115,7 +115,7 @@ namespace NGitLab.Tests
             {
                 Path = fileName,
                 Branch = "master",
-                CommitMessage = "Delete file"
+                CommitMessage = "Delete file",
             };
             Files.Delete(fileDelete);
         }
@@ -131,7 +131,7 @@ namespace NGitLab.Tests
                 CommitMessage = "Add SonarQube badges to README.md",
                 RawContent = content1,
                 Encoding = "base64",
-                Path = fileName
+                Path = fileName,
             };
             Files.Create(fileUpsert1);
 
@@ -139,7 +139,7 @@ namespace NGitLab.Tests
 
             Assert.IsNotNull(initialBlame);
             Assert.AreEqual(1, initialBlame.Length);
-            
+
             var initialBlameInfo = initialBlame[0];
 
             var content2 = "second line";
@@ -149,7 +149,7 @@ namespace NGitLab.Tests
                 CommitMessage = $"SecondCommit{Environment.NewLine}",
                 RawContent = $"{content1}{content2}",
                 Encoding = "base64",
-                Path = fileName
+                Path = fileName,
             };
             Files.Update(fileUpsert2);
 
@@ -162,7 +162,7 @@ namespace NGitLab.Tests
             {
                 Path = fileName,
                 Branch = "master",
-                CommitMessage = "Delete file"
+                CommitMessage = "Delete file",
             };
             Files.Delete(fileDelete);
         }
@@ -178,7 +178,7 @@ namespace NGitLab.Tests
                 CommitMessage = "Add SonarQube badges to README.md",
                 RawContent = content1,
                 Encoding = "base64",
-                Path = fileName
+                Path = fileName,
             };
             Files.Create(fileUpsert1);
 
@@ -201,7 +201,7 @@ namespace NGitLab.Tests
             {
                 Path = fileName,
                 Branch = "master",
-                CommitMessage = "Delete file"
+                CommitMessage = "Delete file",
             };
             Files.Delete(fileDelete);
         }

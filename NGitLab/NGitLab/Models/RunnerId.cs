@@ -5,7 +5,9 @@ namespace NGitLab.Models
     [DataContract]
     public class RunnerId
     {
-        public RunnerId() { }
+        public RunnerId()
+        {
+        }
 
         public RunnerId(int id)
         {

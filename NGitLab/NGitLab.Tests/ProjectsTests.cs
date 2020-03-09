@@ -47,7 +47,7 @@ namespace NGitLab.Tests
             var query = new ProjectQuery
             {
                 Simple = true,
-                Search = Initialize.UnitTestProject.Name
+                Search = Initialize.UnitTestProject.Name,
             };
 
             var projects = GetProjects(query);
@@ -88,7 +88,7 @@ namespace NGitLab.Tests
             var query = new ProjectQuery
             {
                 Simple = true,
-                Visibility = VisibilityLevel.Internal
+                Visibility = VisibilityLevel.Internal,
             };
 
             var projects = GetProjects(query);
@@ -101,7 +101,7 @@ namespace NGitLab.Tests
         {
             var query = new SingleProjectQuery()
             {
-                Statistics = true
+                Statistics = true,
             };
 
             var project = _projects.GetById(Initialize.UnitTestProject.Id, query);
@@ -164,7 +164,7 @@ namespace NGitLab.Tests
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Internal,
                 WikiEnabled = true,
-                Tags = new List<string> { "Tag-1", "Tag-2" }
+                Tags = new List<string> { "Tag-1", "Tag-2" },
             };
 
             var createdProject = _projects.Create(project);
@@ -190,29 +190,30 @@ namespace NGitLab.Tests
         [Test]
         public void Test_get_by_project_query_projectQuery_MinAccessLevel_returns_projects()
         {
-            //Arrange
+            // Arrange
             var projectQuery10 = new ProjectQuery
             {
-                MinAccessLevel = AccessLevel.Guest
+                MinAccessLevel = AccessLevel.Guest,
             };
             var projectQuery20 = new ProjectQuery
             {
-                MinAccessLevel = AccessLevel.Reporter
+                MinAccessLevel = AccessLevel.Reporter,
             };
             var projectQuery30 = new ProjectQuery
             {
-                MinAccessLevel = AccessLevel.Developer
+                MinAccessLevel = AccessLevel.Developer,
             };
             var projectQuery40 = new ProjectQuery
             {
-                MinAccessLevel = AccessLevel.Maintainer
+                MinAccessLevel = AccessLevel.Maintainer,
             };
 
-            //Act
+            // Act
             var result10 = _projects.Get(projectQuery10);
             var result20 = _projects.Get(projectQuery20);
             var result30 = _projects.Get(projectQuery30);
             var result40 = _projects.Get(projectQuery40);
+
             // No owner level (50) for project! See https://gitlab.example.com/help/api/members.md
 
             // Assert
@@ -236,7 +237,7 @@ namespace NGitLab.Tests
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Internal,
                 WikiEnabled = true,
-                Tags = new List<string> { "Tag-1", "Tag-2" }
+                Tags = new List<string> { "Tag-1", "Tag-2" },
             };
 
             var createdProject = _projects.Create(project);
@@ -290,7 +291,7 @@ namespace NGitLab.Tests
                 Search = Initialize.TestEntityNamePrefix,
                 OrderBy = "last_activity_at",
                 Ascending = true,
-                Simple = true
+                Simple = true,
             };
 
             var now = DateTimeOffset.Now;
@@ -308,6 +309,5 @@ namespace NGitLab.Tests
                 _projects.Delete(project.Id);
             }
         }
-
     }
 }

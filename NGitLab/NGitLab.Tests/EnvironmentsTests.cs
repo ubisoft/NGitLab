@@ -23,7 +23,7 @@ namespace NGitLab.Tests
             var newEnvNameExternalUrl = Initialize.GitLabHookTest;
 
             // Validate environments doesn't exist yet
-            Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameNoUrl || e.Name == newEnvNameWithUrl));
+            Assert.IsNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameNoUrl, System.StringComparison.Ordinal) || string.Equals(e.Name, newEnvNameWithUrl, System.StringComparison.Ordinal)));
 
             // Create  and check return value
             var env = envClient.Create(newEnvNameNoUrl, externalUrl: null);
@@ -40,13 +40,13 @@ namespace NGitLab.Tests
             StringAssert.AreEqualIgnoringCase(newEnvNameExternalUrl, env.ExternalUrl);
 
             // Validate new environment are present in All
-            env = envClient.All.FirstOrDefault(e => e.Name == newEnvNameNoUrl);
+            env = envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameNoUrl, System.StringComparison.Ordinal));
             Assert.IsNotNull(env);
             StringAssert.StartsWith(newEnvSlugNameNoUrlStart, env.Slug);
             Assert.NotZero(env.Id);
             Assert.IsNull(env.ExternalUrl);
 
-            env = envClient.All.FirstOrDefault(e => e.Name == newEnvNameWithUrl);
+            env = envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameWithUrl, System.StringComparison.Ordinal));
             Assert.IsNotNull(env);
             StringAssert.StartsWith(newEnvSlugNameWithUrlStart, env.Slug);
             Assert.NotZero(env.Id);
@@ -57,20 +57,20 @@ namespace NGitLab.Tests
         public void Edit()
         {
             var envClient = Initialize.GitLabClient.GetEnvironmentClient(Initialize.UnitTestProject.Id);
-            string newEnvNameToEdit = "env_test_name_to_edit_init";
-            string newEnvNameUpdated = "env_test_name_to_edit_updated";
-            string newEnvSlugNameUpdatedStart = GetSlugNameStart(newEnvNameUpdated);
-            string newEnvNameExternalUrlUpdated = Initialize.GitLabHookTest + "/updated";
+            var newEnvNameToEdit = "env_test_name_to_edit_init";
+            var newEnvNameUpdated = "env_test_name_to_edit_updated";
+            var newEnvSlugNameUpdatedStart = GetSlugNameStart(newEnvNameUpdated);
+            var newEnvNameExternalUrlUpdated = Initialize.GitLabHookTest + "/updated";
 
             // Validate environments doesn't exist yet
-            Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToEdit || e.Name == newEnvNameUpdated));
+            Assert.IsNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToEdit, System.StringComparison.Ordinal) || string.Equals(e.Name, newEnvNameUpdated, System.StringComparison.Ordinal)));
 
             // Create newEnvNameToEdit
             var env = envClient.Create(newEnvNameToEdit, externalUrl: null);
-            int initialEnvId = env.Id;
+            var initialEnvId = env.Id;
 
             // Validate newEnvNameToEdit is present
-            Assert.IsNotNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToEdit));
+            Assert.IsNotNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToEdit, System.StringComparison.Ordinal)));
 
             // Edit and check return value
             env = envClient.Edit(initialEnvId, newEnvNameUpdated, newEnvNameExternalUrlUpdated);
@@ -80,7 +80,7 @@ namespace NGitLab.Tests
             StringAssert.AreEqualIgnoringCase(newEnvNameExternalUrlUpdated, env.ExternalUrl);
 
             // Validate update is effective
-            env = envClient.All.FirstOrDefault(e => e.Name == newEnvNameUpdated);
+            env = envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameUpdated, System.StringComparison.Ordinal));
             Assert.IsNotNull(env);
             StringAssert.StartsWith(newEnvSlugNameUpdatedStart, env.Slug);
             Assert.AreEqual(initialEnvId, env.Id, "Environment Id should not change");
@@ -91,23 +91,23 @@ namespace NGitLab.Tests
         public void Delete()
         {
             var envClient = Initialize.GitLabClient.GetEnvironmentClient(Initialize.UnitTestProject.Id);
-            string newEnvNameToDelete = "env_test_name_to_delete";
+            var newEnvNameToDelete = "env_test_name_to_delete";
 
             // Validate environment doesn't exist yet
-            Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToDelete));
+            Assert.IsNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToDelete, System.StringComparison.Ordinal)));
 
             // Create newEnvNameToDelete
             var env = envClient.Create(newEnvNameToDelete, externalUrl: null);
-            int initialEnvId = env.Id;
+            var initialEnvId = env.Id;
 
             // Validate newEnvNameToDelete is present
-            Assert.IsNotNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToDelete));
+            Assert.IsNotNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToDelete, System.StringComparison.Ordinal)));
 
             // Delete
             envClient.Delete(initialEnvId);
 
             // Validate delete is effective
-            Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToDelete));
+            Assert.IsNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToDelete, System.StringComparison.Ordinal)));
         }
 
         [Test]
@@ -118,14 +118,14 @@ namespace NGitLab.Tests
             var newEnvSlugNameToStopStart = GetSlugNameStart(newEnvNameToStop);
 
             // Validate environment doesn't exist yet
-            Assert.IsNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToStop));
+            Assert.IsNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToStop, System.StringComparison.Ordinal)));
 
             // Create newEnvNameToStop
             var env = envClient.Create(newEnvNameToStop, externalUrl: null);
-            int initialEnvId = env.Id;
+            var initialEnvId = env.Id;
 
             // Validate newEnvNameToStop is present
-            Assert.IsNotNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToStop));
+            Assert.IsNotNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToStop, System.StringComparison.Ordinal)));
 
             // Stop and check return value
             env = envClient.Stop(initialEnvId);
@@ -135,7 +135,7 @@ namespace NGitLab.Tests
             Assert.IsNull(env.ExternalUrl);
 
             // Validate environment is still present
-            Assert.IsNotNull(envClient.All.FirstOrDefault(e => e.Name == newEnvNameToStop));
+            Assert.IsNotNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToStop, System.StringComparison.Ordinal)));
         }
     }
 }

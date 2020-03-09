@@ -5,7 +5,7 @@ namespace NGitLab.Tests
 {
     public class WikiTests
     {
-        private IWikiClient WikiClient => Initialize.GitLabClient.GetWikiClient(Initialize.UnitTestProject.Id);
+        private static IWikiClient WikiClient => Initialize.GitLabClient.GetWikiClient(Initialize.UnitTestProject.Id);
 
         [Test]
         public void Test_wiki()
@@ -25,7 +25,7 @@ namespace NGitLab.Tests
             page = WikiClient.Update(page.Slug, new Models.WikiPageUpdate
             {
                 Content = "Edited content",
-                Title = "titi/toto/Edited Title"
+                Title = "titi/toto/Edited Title",
             });
 
             Assert.That(page.Title, Is.EqualTo("Edited Title"));

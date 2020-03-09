@@ -36,13 +36,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public IEnumerable<Models.Group> Accessible
-        {
-            get
-            {
-                return Server.AllGroups.Where(group => group.CanUserViewGroup(Context.User)).Select(group => group.ToClientGroup());
-            }
-        }
+        public IEnumerable<Models.Group> Accessible => Server.AllGroups.Where(group => group.CanUserViewGroup(Context.User)).Select(group => group.ToClientGroup());
 
         public Models.Group Create(GroupCreate group)
         {

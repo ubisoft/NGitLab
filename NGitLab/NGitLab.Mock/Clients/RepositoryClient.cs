@@ -8,7 +8,6 @@ namespace NGitLab.Mock.Clients
 {
     internal sealed class RepositoryClient : ClientBase, IRepositoryClient
     {
-
         private readonly int _projectId;
 
         public RepositoryClient(ClientContext context, int projectId)
@@ -18,12 +17,17 @@ namespace NGitLab.Mock.Clients
         }
 
         public ITagClient Tags => new TagClient(Context, _projectId);
+
         public IFilesClient Files => new FileClient(Context, _projectId);
+
         public IBranchClient Branches => new BranchClient(Context, _projectId);
+
         public IProjectHooksClient ProjectHooks => new ProjectHooksClient(Context, _projectId);
+
         public IContributorClient Contributors => new ContributorClient(Context, _projectId);
 
         public IEnumerable<Tree> Tree => throw new NotImplementedException();
+
         public IEnumerable<Commit> Commits => throw new NotImplementedException();
 
         public IEnumerable<Tree> GetTree(string path)
@@ -49,7 +53,7 @@ namespace NGitLab.Mock.Clients
         public IEnumerable<Commit> GetCommits(string refName, int maxResults = 0)
         {
             var project = GetProject(_projectId, ProjectPermission.View);
-            return project.Repository.GetCommits(refName).Select(commit => commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => c.Sha == commit.Sha)));
+            return project.Repository.GetCommits(refName).Select(commit => commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal))));
         }
 
         public IEnumerable<Commit> GetCommits(GetCommitsRequest request)

@@ -74,7 +74,7 @@ namespace NGitLab.Models
 
         [DataMember(Name = "merge_requests_access_level")]
         public string MergeRequestsAccessLevel;
-        
+
         [DataMember(Name = "repository_access_level")]
         public RepositoryAccessLevel RepositoryAccessLevel;
 

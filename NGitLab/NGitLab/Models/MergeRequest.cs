@@ -18,8 +18,8 @@ namespace NGitLab.Models
         public string State;
 
         [DataMember(Name = "title")]
-        public string Title;    
-            
+        public string Title;
+
         [DataMember(Name = "assignee")]
         public User Assignee;
 
@@ -41,16 +41,16 @@ namespace NGitLab.Models
         [DataMember(Name = "updated_at")]
         public DateTime UpdatedAt;
 
-        [DataMember(Name="target_branch")]
+        [DataMember(Name = "target_branch")]
         public string TargetBranch;
 
-        [DataMember(Name="source_branch")]
+        [DataMember(Name = "source_branch")]
         public string SourceBranch;
 
-        [DataMember(Name="project_id")]
+        [DataMember(Name = "project_id")]
         public int ProjectId;
 
-        [DataMember(Name="source_project_id")]
+        [DataMember(Name = "source_project_id")]
         public int SourceProjectId;
 
         [DataMember(Name = "target_project_id")]

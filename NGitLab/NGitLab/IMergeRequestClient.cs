@@ -14,15 +14,25 @@ namespace NGitLab
         MergeRequest this[int iid] { get; }
 
         MergeRequest Create(MergeRequestCreate mergeRequest);
+
         MergeRequest Update(int mergeRequestIid, MergeRequestUpdate mergeRequest);
+
         MergeRequest Close(int mergeRequestIid);
+
         MergeRequest Reopen(int mergeRequestIid);
+
         void Delete(int mergeRequestIid);
+
         MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message);
+
         IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid);
+
         IEnumerable<Author> GetParticipants(int mergeRequestIid);
+
         IMergeRequestCommentClient Comments(int mergeRequestIid);
+
         IMergeRequestCommitClient Commits(int mergeRequestIid);
+
         IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid);
     }
 }

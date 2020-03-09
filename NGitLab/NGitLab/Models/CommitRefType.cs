@@ -8,6 +8,6 @@
     {
         All,
         Branch,
-        Tag
+        Tag,
     }
 }

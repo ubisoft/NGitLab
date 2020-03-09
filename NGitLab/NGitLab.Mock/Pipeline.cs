@@ -10,19 +10,33 @@ namespace NGitLab.Mock
         }
 
         public int Id { get; set; }
+
         public JobStatus Status { get; set; }
+
         public string Ref { get; set; }
+
         public bool Tag { get; set; }
+
         public Sha1 Sha { get; set; }
+
         public Sha1 BeforeSha { get; set; }
+
         public string YamlError { get; set; }
+
         public User User { get; set; }
+
         public DateTimeOffset CreatedAt { get; set; }
+
         public DateTimeOffset UpdatedAt { get; set; }
+
         public DateTimeOffset? StartedAt { get; set; }
+
         public DateTimeOffset? FinishedAt { get; set; }
+
         public DateTimeOffset CommittedAt { get; set; }
+
         public TimeSpan? Duration { get; set; }
+
         public double Coverage { get; set; }
 
         public Job AddNewJob(Project project)
@@ -71,8 +85,8 @@ namespace NGitLab.Mock
                 User = User.ToClientUser(),
                 CreatedAt = CreatedAt.UtcDateTime,
                 UpdatedAt = UpdatedAt.UtcDateTime,
-                StartedAt = StartedAt.HasValue ? StartedAt.Value.DateTime : new DateTime(),
-                FinishedAt = FinishedAt.HasValue ? FinishedAt.Value.DateTime : new DateTime(),
+                StartedAt = StartedAt.HasValue ? StartedAt.Value.DateTime : default,
+                FinishedAt = FinishedAt.HasValue ? FinishedAt.Value.DateTime : default,
                 Duration = Duration.HasValue ? Duration.Value.Ticks : 0,
                 Coverage = Coverage,
             };

@@ -3,6 +3,6 @@
     public enum PipelineSort
     {
         asc,
-        desc
+        desc,
     }
 }

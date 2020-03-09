@@ -1,13 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2037
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGitLab", "NGitLab\NGitLab.csproj", "{EB69C6AD-64A6-4FE5-880C-38607A2430FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NGitLab", "NGitLab\NGitLab.csproj", "{EB69C6AD-64A6-4FE5-880C-38607A2430FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGitLab.Mock", "NGitLab.Mock\NGitLab.Mock.csproj", "{5D2A9BF6-17FE-4032-B34B-777F25E602CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NGitLab.Mock", "NGitLab.Mock\NGitLab.Mock.csproj", "{5D2A9BF6-17FE-4032-B34B-777F25E602CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NGitLab.Tests", "NGitLab.Tests\NGitLab.Tests.csproj", "{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NGitLab.Tests", "NGitLab.Tests\NGitLab.Tests.csproj", "{B1C9D8F6-22BC-4401-BD7B-E99C62A8E685}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB204408-0886-42F7-8218-C0820EB7B352}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +36,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F176C13C-32E0-43EC-BFD1-DA2F90DBF954}
 	EndGlobalSection
 EndGlobal

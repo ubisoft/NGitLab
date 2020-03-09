@@ -8,16 +8,27 @@ namespace NGitLab
         private readonly API _api;
 
         public IUserClient Users { get; }
+
         public IProjectClient Projects { get; }
+
         public IMergeRequestClient MergeRequests { get; }
+
         public IIssueClient Issues { get; }
+
         public IGroupsClient Groups { get; }
+
         public INamespacesClient Namespaces { get; }
+
         public ILabelClient Labels { get; }
+
         public IRunnerClient Runners { get; }
+
         public IVersionClient Version { get; }
+
         public ISnippetClient Snippets { get; }
+
         public IMembersClient Members { get; }
+
         public ISystemHookClient SystemHooks { get; }
 
         public RequestOptions Options

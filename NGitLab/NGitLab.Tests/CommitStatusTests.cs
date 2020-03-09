@@ -63,7 +63,7 @@ namespace NGitLab.Tests
         public void Test_post_commit_status_with_no_coverage()
         {
             var commitStatus = SetupCommitStatus(state: "success", coverage: null);
-            commitStatus.CommitSha = Initialize.Repository.Commits.FirstOrDefault(c => c.Id.ToString() != _commit.Id.ToString())?.Id.ToString();
+            commitStatus.CommitSha = Initialize.Repository.Commits.FirstOrDefault(c => !string.Equals(c.Id.ToString(), _commit.Id.ToString(), StringComparison.Ordinal))?.Id.ToString();
 
             var createdCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
             _sha = createdCommitStatus.CommitSha;
@@ -268,7 +268,7 @@ namespace NGitLab.Tests
                 ProjectId = _project.Id,
                 Description = "desc",
                 Coverage = coverage,
-                TargetUrl = "https://google.ca/"
+                TargetUrl = "https://google.ca/",
             };
         }
     }

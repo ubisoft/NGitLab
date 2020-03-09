@@ -6,6 +6,6 @@
         Shared,
         Active,
         Paused,
-        Online
+        Online,
     }
 }

@@ -45,6 +45,6 @@ namespace NGitLab.Models
     {
         close,
         reopen,
-        merge
+        merge,
     }
 }

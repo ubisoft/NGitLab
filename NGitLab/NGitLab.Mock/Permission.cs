@@ -17,7 +17,9 @@ namespace NGitLab.Mock
         }
 
         public User User { get; }
+
         public Group Group { get; }
+
         public AccessLevel AccessLevel { get; }
     }
 }

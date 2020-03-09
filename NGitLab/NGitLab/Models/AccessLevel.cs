@@ -18,6 +18,6 @@ namespace NGitLab.Models
         /// <summary>
         /// Only valid for groups.
         /// </summary>
-        Owner = 50
+        Owner = 50,
     }
 }

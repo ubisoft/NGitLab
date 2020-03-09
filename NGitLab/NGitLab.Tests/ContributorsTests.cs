@@ -6,7 +6,7 @@ using static NGitLab.Tests.Initialize;
 
 namespace NGitLab.Tests
 {
-    internal class ContributorsTests
+    public class ContributorsTests
     {
         private ICommitClient _commitClient;
         private IUserClient _users;
@@ -32,7 +32,7 @@ namespace NGitLab.Tests
         {
             var contributor = Contributors.All;
             Assert.IsNotNull(contributor);
-            Assert.IsTrue(contributor.Any(x => x.Email == _users.Current.Email));
+            Assert.IsTrue(contributor.Any(x => string.Equals(x.Email, _users.Current.Email, StringComparison.Ordinal)));
         }
 
         [Test]
@@ -77,8 +77,8 @@ namespace NGitLab.Tests
             var contributor = Contributors.All;
 
             Assert.IsNotNull(contributor);
-            Assert.IsTrue(contributor.Any(x => x.Email == _users.Current.Email));
-            Assert.IsTrue(contributor.Any(x => x.Email == userUpsert.Email));
+            Assert.IsTrue(contributor.Any(x => string.Equals(x.Email, _users.Current.Email, StringComparison.Ordinal)));
+            Assert.IsTrue(contributor.Any(x => string.Equals(x.Email, userUpsert.Email, StringComparison.Ordinal)));
 
             _users.Delete(addedUser.Id);
 
@@ -87,7 +87,7 @@ namespace NGitLab.Tests
             Assert.IsFalse(_users.Get(addedUser.Username).Any());
         }
 
-        private IContributorClient Contributors
+        private static IContributorClient Contributors
         {
             get
             {

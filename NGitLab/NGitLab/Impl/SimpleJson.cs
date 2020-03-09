@@ -20,33 +20,31 @@
 // VERSION: 0.38.0
 
 // NOTE: uncomment the following line to make SimpleJson class internal.
-
 #define SIMPLE_JSON_INTERNAL
 
 // NOTE: uncomment the following line to make JsonArray and JsonObject class internal.
-//#define SIMPLE_JSON_OBJARRAYINTERNAL
+// #define SIMPLE_JSON_OBJARRAYINTERNAL
 
 // NOTE: uncomment the following line to enable dynamic support.
-//#define SIMPLE_JSON_DYNAMIC
+// #define SIMPLE_JSON_DYNAMIC
 
 // NOTE: uncomment the following line to enable DataContract support.
 #define SIMPLE_JSON_DATACONTRACT
 
 // NOTE: uncomment the following line to enable IReadOnlyCollection<T> and IReadOnlyList<T> support.
-//#define SIMPLE_JSON_READONLY_COLLECTIONS
+// #define SIMPLE_JSON_READONLY_COLLECTIONS
 
 // NOTE: uncomment the following line to disable linq expressions/compiled lambda (better performance) instead of method.invoke().
 // define if you are using .net framework <= 3.0 or < WP7.5
-//#define SIMPLE_JSON_NO_LINQ_EXPRESSION
+// #define SIMPLE_JSON_NO_LINQ_EXPRESSION
 
 // NOTE: uncomment the following line if you are compiling under Window Metro style application/library.
 // usually already defined in properties
-//#define NETFX_CORE;
+// #define NETFX_CORE;
 
 // If you are targetting WinStore, WP8 and NET4.5+ PCL make sure to #define SIMPLE_JSON_TYPEINFO;
 
 // original json parsing code from http://techblog.procurios.nl/k/618/news/view/14605/14863/How-do-I-write-my-own-parser-for-JSON.html
-
 #if NETFX_CORE
 #define SIMPLE_JSON_TYPEINFO
 #endif
@@ -486,7 +484,7 @@ namespace NGitLab.Impl
 #endif
     }
 
-    internal class EnumMember
+    internal sealed class EnumMember
     {
         public EnumMember(Enum value, string name, string serializationName)
         {
@@ -496,7 +494,9 @@ namespace NGitLab.Impl
         }
 
         public Enum Value { get; }
+
         public string Name { get; }
+
         public string SerializationName { get; }
     }
 
@@ -1309,7 +1309,7 @@ namespace NGitLab.Impl
 
         internal virtual IDictionary<string, ReflectionUtils.GetDelegate> GetterValueFactory(Type type)
         {
-            IDictionary<string, ReflectionUtils.GetDelegate> result = new Dictionary<string, ReflectionUtils.GetDelegate>();
+            IDictionary<string, ReflectionUtils.GetDelegate> result = new Dictionary<string, ReflectionUtils.GetDelegate>(StringComparer.Ordinal);
             foreach (PropertyInfo propertyInfo in ReflectionUtils.GetProperties(type))
             {
                 if (propertyInfo.CanRead)
@@ -1332,7 +1332,7 @@ namespace NGitLab.Impl
         internal virtual IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>> SetterValueFactory(Type type)
         {
             IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>> result =
-                new Dictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>();
+                new Dictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>(StringComparer.Ordinal);
             foreach (PropertyInfo propertyInfo in ReflectionUtils.GetProperties(type))
             {
                 if (propertyInfo.CanWrite)
@@ -1658,7 +1658,7 @@ namespace NGitLab.Impl
             if (!hasDataContract)
                 return base.GetterValueFactory(type);
             string jsonKey;
-            IDictionary<string, ReflectionUtils.GetDelegate> result = new Dictionary<string, ReflectionUtils.GetDelegate>();
+            IDictionary<string, ReflectionUtils.GetDelegate> result = new Dictionary<string, ReflectionUtils.GetDelegate>(StringComparer.Ordinal);
             foreach (PropertyInfo propertyInfo in ReflectionUtils.GetProperties(type))
             {
                 if (propertyInfo.CanRead)
@@ -1683,7 +1683,7 @@ namespace NGitLab.Impl
                 return base.SetterValueFactory(type);
             string jsonKey;
             IDictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>> result =
-                new Dictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>();
+                new Dictionary<string, KeyValuePair<Type, ReflectionUtils.SetDelegate>>(StringComparer.Ordinal);
             foreach (PropertyInfo propertyInfo in ReflectionUtils.GetProperties(type))
             {
                 if (propertyInfo.CanWrite)

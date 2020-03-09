@@ -5,7 +5,7 @@ namespace NGitLab.Tests
 {
     public class CommitsTests
     {
-        private static bool _ciEnabled;
+        private static bool s_ciEnabled;
         private ICommitClient _commits;
 
         [OneTimeSetUp]
@@ -19,7 +19,7 @@ namespace NGitLab.Tests
         {
             var projectId = Initialize.UnitTestProject.Id;
 
-            if (!_ciEnabled)
+            if (!s_ciEnabled)
             {
                 var defaultRunner = RunnerTests.GetDefaultRunner();
                 if (!defaultRunner.Online)
@@ -58,11 +58,11 @@ manual:
                     Path = ".gitlab-ci.yml",
                     Branch = "master",
                     CommitMessage = "Enable ci",
-                    RawContent = yml
+                    RawContent = yml,
                 });
 
                 Initialize.GitLabClient.Runners.EnableRunner(projectId, new RunnerId(defaultRunner.Id));
-                _ciEnabled = true;
+                s_ciEnabled = true;
             }
         }
 

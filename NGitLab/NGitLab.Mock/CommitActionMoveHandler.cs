@@ -1,5 +1,5 @@
-﻿using NGitLab.Models;
-using System.IO;
+﻿using System.IO;
+using NGitLab.Models;
 
 namespace NGitLab.Mock
 {

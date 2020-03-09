@@ -17,10 +17,10 @@ namespace NGitLab.Tests.Extensions
             var mockClass = Substitute.For<ICustomTestClass>();
             mockClass.TestRetryMethod(Arg.Any<bool>()).Throws(new GitLabException() { StatusCode = HttpStatusCode.InternalServerError });
 
-            //act
+            // act
             Assert.Throws<GitLabException>(() => ((Func<string>)(() => mockClass.TestRetryMethod(isFailed: true))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental));
 
-            //assert
+            // assert
             mockClass.ReceivedWithAnyArgs(options.RetryCount + 1).TestRetryMethod(Arg.Any<bool>());
         }
 

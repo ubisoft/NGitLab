@@ -7,13 +7,11 @@ namespace NGitLab.Impl
     public class WikiClient : IWikiClient
     {
         private readonly API _api;
-        private readonly int _projectId;
         private readonly string _projectPath;
 
         public WikiClient(API api, int projectId)
         {
             _api = api;
-            _projectId = projectId;
             _projectPath = Project.Url + "/" + projectId;
         }
 

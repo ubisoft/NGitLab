@@ -14,12 +14,19 @@ namespace NGitLab.Mock
         }
 
         public int Id { get; set; }
+
         public string UserName { get; }
+
         public string Name { get; set; }
+
         public string Email { get; set; }
+
         public bool IsAdmin { get; set; }
+
         public string AvatarUrl { get; set; }
+
         public UserState State { get; set; }
+
         public string WebUrl => Server.MakeUrl(UserName);
 
         public Models.User ToClientUser()
@@ -36,7 +43,8 @@ namespace NGitLab.Mock
             return user;
         }
 
-        private void CopyTo<T>(T instance) where T : Models.User
+        private void CopyTo<T>(T instance)
+            where T : Models.User
         {
             instance.Id = Id;
             instance.Username = UserName;
@@ -49,13 +57,7 @@ namespace NGitLab.Mock
             }
         }
 
-        public Group Namespace
-        {
-            get
-            {
-                return Server.Groups.FirstOrDefault(group => string.Equals(@group.PathWithNameSpace, UserName, StringComparison.Ordinal));
-            }
-        }
+        public Group Namespace => Server.Groups.FirstOrDefault(group => string.Equals(@group.PathWithNameSpace, UserName, StringComparison.Ordinal));
 
         public override string ToString() => $"{Id}: {UserName}";
     }

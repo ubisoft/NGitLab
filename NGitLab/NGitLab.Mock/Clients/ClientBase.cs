@@ -11,6 +11,7 @@ namespace NGitLab.Mock.Clients
         }
 
         protected GitLabServer Server => Context.Server;
+
         protected ClientContext Context { get; }
 
         protected Project GetProject(object id, ProjectPermission permissions)
@@ -22,7 +23,7 @@ namespace NGitLab.Mock.Clients
             {
                 throw new GitLabException("403 Forbidden  - Your account has been blocked.")
                 {
-                    StatusCode = HttpStatusCode.Forbidden
+                    StatusCode = HttpStatusCode.Forbidden,
                 };
             }
 

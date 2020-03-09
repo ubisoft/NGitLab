@@ -15,7 +15,7 @@ namespace NGitLab.Models
         public string Path;
 
         [DataMember(Name = "description")]
-        public string Description = "";
+        public string Description = string.Empty;
 
         [DataMember(Name = "visibility")]
         public VisibilityLevel Visibility;

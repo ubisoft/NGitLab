@@ -46,17 +46,25 @@ namespace NGitLab.Mock
         }
 
         public string Description { get; set; }
+
         public VisibilityLevel Visibility { get; set; }
+
         public bool IsUserNamespace { get; }
+
         public TimeSpan ExtraSharedRunnersLimit { get; set; }
+
         public TimeSpan SharedRunnersLimit { get; set; }
+
         public bool LfsEnabled { get; set; }
+
         public bool RequestAccessEnabled { get; set; }
 
         public new Group Parent => base.Parent as Group;
 
         public GroupCollection Groups { get; }
+
         public ProjectCollection Projects { get; }
+
         public PermissionCollection Permissions { get; }
 
         public string Path
@@ -70,6 +78,7 @@ namespace NGitLab.Mock
 
                 return _path;
             }
+
             set
             {
                 if (IsUserNamespace)

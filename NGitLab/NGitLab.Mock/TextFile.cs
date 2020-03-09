@@ -17,6 +17,7 @@ namespace NGitLab.Mock
         }
 
         public string TextContent { get; }
+
         public Encoding Encoding { get; }
 
         public override byte[] Content => Encoding.GetBytes(TextContent);

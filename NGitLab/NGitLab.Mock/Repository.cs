@@ -23,7 +23,7 @@ namespace NGitLab.Mock
 
         internal Repository(Project project)
         {
-            base.Parent = project;
+            Parent = project;
         }
 
         public string FullPath
@@ -114,14 +114,14 @@ namespace NGitLab.Mock
         public Commit Commit(Models.CommitCreate commitCreate)
         {
             var repo = GetGitRepository();
-            bool mustCreateBranch = !repo.Commits.Any();
+            var mustCreateBranch = !repo.Commits.Any();
             if (!mustCreateBranch)
             {
                 Commands.Checkout(repo, commitCreate.Branch);
             }
 
             var commit = CreateOnNonBareRepo(commitCreate);
-            bool branchStillMissing = !repo.Branches.Any(b => string.Equals(b.FriendlyName, commitCreate.Branch, StringComparison.Ordinal));
+            var branchStillMissing = !repo.Branches.Any(b => string.Equals(b.FriendlyName, commitCreate.Branch, StringComparison.Ordinal));
             if (mustCreateBranch && branchStillMissing)
             {
                 repo.Branches.Add(commitCreate.Branch, commit.Sha);
@@ -199,6 +199,7 @@ namespace NGitLab.Mock
             {
                 _releaseTags.Add(new ReleaseTag(tagName, releaseNotes));
             }
+
             return tag;
         }
 
@@ -451,14 +452,6 @@ namespace NGitLab.Mock
             return newCommit;
         }
 
-        private void UpdateMergeRequests()
-        {
-            foreach (var mergeRequest in Project.MergeRequests)
-            {
-                mergeRequest.UpdateSha();
-            }
-        }
-
         private void ApplyActions(Models.CommitCreate commit)
         {
             var repo = GetGitRepository();
@@ -474,24 +467,14 @@ namespace NGitLab.Mock
             if (!Enum.TryParse<CommitAction>(action, ignoreCase: true, out var result))
                 throw new ArgumentOutOfRangeException(nameof(action));
 
-            switch (result)
+            return result switch
             {
-                case CommitAction.Create:
-                    return new CommitActionCreateHandler();
-
-                case CommitAction.Delete:
-                    return new CommitActionDeleteHandler();
-
-                case CommitAction.Update:
-                    return new CommitActionUpdateHandler();
-
-                case CommitAction.Move:
-                    return new CommitActionMoveHandler();
-
-                case CommitAction.chmod:
-                default:
-                    throw new NotSupportedException();
-            }
+                CommitAction.Create => new CommitActionCreateHandler(),
+                CommitAction.Delete => new CommitActionDeleteHandler(),
+                CommitAction.Update => new CommitActionUpdateHandler(),
+                CommitAction.Move => new CommitActionMoveHandler(),
+                _ => throw new NotSupportedException(),
+            };
         }
     }
 }

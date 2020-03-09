@@ -30,9 +30,11 @@ namespace NGitLab.Mock
 
         public Pipeline Add(string @ref, JobStatus status, User user)
         {
-            var pipeline = new Pipeline(@ref);
-            pipeline.Status = status;
-            pipeline.User = user;
+            var pipeline = new Pipeline(@ref)
+            {
+                Status = status,
+                User = user,
+            };
 
             Add(pipeline);
             return pipeline;

@@ -9,7 +9,7 @@ namespace NGitLab
         /// All the pipelines of the project.
         /// </summary>
         IEnumerable<PipelineBasic> All { get; }
-        
+
         /// <summary>
         /// Returns the detail of a single pipeline.
         /// </summary>

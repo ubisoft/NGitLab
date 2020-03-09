@@ -16,14 +16,14 @@ namespace NGitLab.Tests
             Initialize.GitLabClient.Issues.Create(new IssueCreate
             {
                 Id = Initialize.UnitTestProject.Id,
-                Title = "Unassigned Test issue"
+                Title = "Unassigned Test issue",
             });
 
             Initialize.GitLabClient.Issues.Create(new IssueCreate
             {
                 Id = Initialize.UnitTestProject.Id,
                 Title = "Assigned Test issue",
-                AssigneeId = _currentUser.Id
+                AssigneeId = _currentUser.Id,
             });
         }
 
@@ -35,7 +35,7 @@ namespace NGitLab.Tests
                 State = IssueState.opened,
             }).ToList();
 
-            Assert.AreNotEqual(0, issues.Count(),
+            Assert.AreNotEqual(0, issues.Count,
                 "The query retrieved all open issues, whether assigned or not");
             Assert.IsTrue(issues.Any(issue => issue.Assignee == null),
                 "Some of the collected issues are unassigned");
@@ -52,7 +52,7 @@ namespace NGitLab.Tests
                 State = IssueState.opened,
             }).ToList();
 
-            Assert.AreNotEqual(0, issues.Count(),
+            Assert.AreNotEqual(0, issues.Count,
                 "The query retrieved all open issues that are unassigned");
             Assert.IsTrue(issues.All(issue => issue.Assignee == null),
                 "All collected issues are unassigned");
@@ -67,9 +67,9 @@ namespace NGitLab.Tests
                 State = IssueState.opened,
             }).ToList();
 
-            Assert.AreNotEqual(0, issues.Count(),
+            Assert.AreNotEqual(0, issues.Count,
                 $"The query retrieved open issues that are assigned to the current user '{_currentUser.Username}'");
-            Assert.IsTrue(issues.All(issue => issue.Assignee?.Username == _currentUser.Username),
+            Assert.IsTrue(issues.All(issue => string.Equals(issue.Assignee?.Username, _currentUser.Username, System.StringComparison.Ordinal)),
                 $"Collected issues are all assigned to the current user '{_currentUser.Username}'");
         }
 
@@ -82,12 +82,11 @@ namespace NGitLab.Tests
                 State = IssueState.opened,
             }).ToList();
 
-            Assert.AreNotEqual(0, issues.Count(),
+            Assert.AreNotEqual(0, issues.Count,
                 $"The query retrieved open issues that are assigned to the current user '{_currentUser.Username}'");
-            Assert.IsTrue(issues.All(issue => issue.Assignee?.Username == _currentUser.Username),
+            Assert.IsTrue(issues.All(issue => string.Equals(issue.Assignee?.Username, _currentUser.Username, System.StringComparison.Ordinal)),
                 $"Collected issues are all assigned to the current user '{_currentUser.Username}'");
         }
-
 
         [Test]
         public void Test_get_issues_with_invalid_project_id_will_throw()
@@ -106,14 +105,13 @@ namespace NGitLab.Tests
             Assert.AreNotEqual(0, issues.Count);
         }
 
-
         [Test]
         public void Test_post_commit_status()
         {
             var issue = Initialize.GitLabClient.Issues.Create(new IssueCreate
             {
                 Id = Initialize.UnitTestProject.Id,
-                Title = "New Test issue 2"
+                Title = "New Test issue 2",
             });
 
             Assert.IsNotNull(issue);

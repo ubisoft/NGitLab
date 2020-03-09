@@ -1,9 +1,9 @@
-﻿using NGitLab.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
-    internal class ContributorClient : IContributorClient
+    internal sealed class ContributorClient : IContributorClient
     {
         private readonly API _api;
         private readonly string _contributorPath;

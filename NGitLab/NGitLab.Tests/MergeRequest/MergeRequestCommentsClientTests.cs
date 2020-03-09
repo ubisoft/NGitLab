@@ -23,7 +23,7 @@ namespace NGitLab.Tests.MergeRequest
                     {
                         Title = "Test merge request comments",
                         SourceBranch = branch.Name,
-                        TargetBranch = "master"
+                        TargetBranch = "master",
                     });
                 }
 
@@ -36,7 +36,7 @@ namespace NGitLab.Tests.MergeRequest
             var branch = Initialize.Repository.Branches.Create(new BranchCreate
             {
                 Name = "mr-comments-test",
-                Ref = "master"
+                Ref = "master",
             });
 
             Initialize.Repository.Files.Create(new FileUpsert

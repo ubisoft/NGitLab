@@ -10,7 +10,9 @@ namespace NGitLab
         IEnumerable<WikiPage> All { get; }
 
         WikiPage Create(WikiPageCreate wikiPage);
+
         void Delete(string slug);
+
         WikiPage Update(string slug, WikiPageUpdate wikiPage);
     }
 }

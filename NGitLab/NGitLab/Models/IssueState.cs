@@ -3,6 +3,6 @@
     public enum IssueState
     {
         opened,
-        closed
+        closed,
     }
 }

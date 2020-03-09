@@ -35,7 +35,7 @@ namespace NGitLab.Mock.Clients
             var project = GetProject(_projectId, ProjectPermission.View);
 
             if (scope == JobScopeMask.All)
-                return project.Jobs.Select( j => j.ToJobClient());
+                return project.Jobs.Select(j => j.ToJobClient());
 
             var jobs = project.Jobs.Where(j => string.Equals(j.Status.ToString(), scope.ToString(), System.StringComparison.OrdinalIgnoreCase));
             return jobs.Select(j => j.ToJobClient());

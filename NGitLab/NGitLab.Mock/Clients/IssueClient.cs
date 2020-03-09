@@ -17,7 +17,7 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(this.Context.User));
+                var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(Context.User));
                 var allIssues = viewableProjects.SelectMany(p => p.Issues);
                 var assignedOrAuthoredIssues = allIssues.Where(i => i.Author.Id == Context.User.Id || i.Assignee.Id == Context.User.Id);
                 return assignedOrAuthoredIssues.Select(i => i.ToClientIssue());
@@ -90,7 +90,7 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Models.Issue> Get(IssueQuery query)
         {
-            var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(this.Context.User));
+            var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(Context.User));
             var issues = viewableProjects.SelectMany(p => p.Issues);
             return FilterByQuery(issues, query).Select(i => i.ToClientIssue());
         }

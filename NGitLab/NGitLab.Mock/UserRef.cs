@@ -12,8 +12,11 @@ namespace NGitLab.Mock
         }
 
         public int Id => _user.Id;
+
         public string Name => _user.Name;
+
         public string UserName => _user.UserName;
+
         public string Email => _user.Email;
 
         public Models.User ToUserClient()

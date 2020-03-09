@@ -2,7 +2,7 @@
 
 namespace NGitLab.Impl
 {
-    internal class GroupVariableClient : VariableClient, IGroupVariableClient
+    internal sealed class GroupVariableClient : VariableClient, IGroupVariableClient
     {
         public GroupVariableClient(API api, int groupId)
             : base(api, Group.Url + $"/{groupId}")

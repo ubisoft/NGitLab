@@ -26,7 +26,7 @@ namespace NGitLab.Models
 
         [DataMember(Name = "author_name")]
         public string AuthorName;
-        
+
         [DataMember(Name = "actions")]
         public IList<CreateCommitAction> Actions = new List<CreateCommitAction>();
     }
@@ -38,7 +38,7 @@ namespace NGitLab.Models
         public string Action { get; set; }
 
         [DataMember(Name = "file_path")]
-        public string FilePath{ get; set; }
+        public string FilePath { get; set; }
 
         [DataMember(Name = "previous_path")]
         public string PreviousPath { get; set; }

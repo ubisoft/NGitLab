@@ -1,9 +1,8 @@
-﻿using NGitLab.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net;
+using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
@@ -49,7 +48,7 @@ namespace NGitLab.Impl
             {
                 url = Utils.AddParameter(url, "order_by", query.OrderBy);
             }
-            
+
             if (query.Sort != null)
             {
                 url = Utils.AddParameter(url, "sort", query.Sort);
@@ -59,7 +58,7 @@ namespace NGitLab.Impl
             {
                 url = Utils.AddParameter(url, "statistics", query.Statistics);
             }
-            
+
             if (query.WithCustomAttributes != null)
             {
                 url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
@@ -69,11 +68,11 @@ namespace NGitLab.Impl
             {
                 url = Utils.AddParameter(url, "owned", query.Owned);
             }
-               
+
             if (query.MinAccessLevel != null)
             {
                 url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
-            }   
+            }
 
             return _api.Get().GetAll<Group>(url);
         }
@@ -99,6 +98,6 @@ namespace NGitLab.Impl
             _api.Delete().Execute(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
         }
 
-        public Group Update(int id, GroupUpdate groupUpdate) =>_api.Put().With(groupUpdate).To<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
+        public Group Update(int id, GroupUpdate groupUpdate) => _api.Put().With(groupUpdate).To<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
     }
 }

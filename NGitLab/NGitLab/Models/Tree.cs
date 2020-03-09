@@ -10,10 +10,10 @@ namespace NGitLab.Models
 
         [DataMember(Name = "name")]
         public string Name;
-        
+
         [DataMember(Name = "type")]
         public ObjectType Type;
-        
+
         [DataMember(Name = "mode")]
         public string Mode;
 

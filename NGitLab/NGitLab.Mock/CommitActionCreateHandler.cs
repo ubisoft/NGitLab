@@ -1,6 +1,6 @@
-﻿using NGitLab.Models;
-using System;
+﻿using System;
 using System.IO;
+using NGitLab.Models;
 
 namespace NGitLab.Mock
 {
@@ -16,7 +16,7 @@ namespace NGitLab.Mock
             if (System.IO.File.Exists(filePath))
                 throw new GitLabException("File already exists.");
 
-            if(string.Equals(action.Encoding, "base64", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(action.Encoding, "base64", StringComparison.OrdinalIgnoreCase))
             {
                 var content = Convert.FromBase64String(action.Content);
                 System.IO.File.WriteAllBytes(filePath, content);

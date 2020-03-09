@@ -4,19 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+#if NET45
 using System.Reflection;
-using System.Runtime.Serialization;
+#endif
 
 namespace NGitLab.Impl
 {
-    [DataContract]
-    internal class JsonError
-    {
-#pragma warning disable 649
-        [DataMember(Name = "message")] public string Message;
-#pragma warning restore 649
-    }
-
     /// <summary>
     /// The requestor is typically used for a single call to gitlab.
     /// </summary>
@@ -31,20 +24,20 @@ namespace NGitLab.Impl
 
         static HttpRequestor()
         {
-            // By default only Sssl and Tls 1.0 is enabled with .NET 4.5 
+            // By default only Sssl and Tls 1.0 is enabled with .NET 4.5
             // We add Tls 1.2 and Tls 1.2 without affecting the other values in case new protocols are added in the future
             // (see https://stackoverflow.com/questions/28286086/default-securityprotocol-in-net-4-5)
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
         }
 
-        public HttpRequestor(string hostUrl, string apiToken, MethodType methodType) :
-            this(hostUrl, apiToken, methodType, RequestOptions.Default)
+        public HttpRequestor(string hostUrl, string apiToken, MethodType methodType)
+            : this(hostUrl, apiToken, methodType, RequestOptions.Default)
         {
         }
 
         public HttpRequestor(string hostUrl, string apiToken, MethodType methodType, RequestOptions options)
         {
-            _hostUrl = hostUrl.EndsWith("/", StringComparison.Ordinal) ? hostUrl.Replace("/$", "") : hostUrl;
+            _hostUrl = hostUrl.EndsWith("/", StringComparison.Ordinal) ? hostUrl.Replace("/$", string.Empty) : hostUrl;
             _apiToken = apiToken;
             _methodType = methodType;
             _options = options;
@@ -96,15 +89,11 @@ namespace NGitLab.Impl
         {
             var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken);
 
-            using (var response = request.GetResponse(_options))
+            using var response = request.GetResponse(_options);
+            if (parser != null)
             {
-                if (parser != null)
-                {
-                    using (var stream = response.GetResponseStream())
-                    {
-                        parser(stream);
-                    }
-                }
+                using var stream = response.GetResponseStream();
+                parser(stream);
             }
         }
 
@@ -113,7 +102,7 @@ namespace NGitLab.Impl
             return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options);
         }
 
-        private class Enumerable<T> : IEnumerable<T>
+        private sealed class Enumerable<T> : IEnumerable<T>
         {
             private readonly string _apiToken;
             private readonly RequestOptions _options;
@@ -136,7 +125,7 @@ namespace NGitLab.Impl
                 return GetEnumerator();
             }
 
-            private class Enumerator : IEnumerator<T>
+            private sealed class Enumerator : IEnumerator<T>
             {
                 private readonly string _apiToken;
                 private readonly RequestOptions _options;
