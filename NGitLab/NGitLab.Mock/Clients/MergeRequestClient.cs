@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -43,6 +44,18 @@ namespace NGitLab.Mock.Clients
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
                 throw new GitLabNotFoundException();
+
+            if (message.Sha != null)
+            {
+                var commit = project.Repository.GetBranchTipCommit(mergeRequest.SourceBranch);
+                if (!string.Equals(commit.Sha, message.Sha, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new GitLabException("SHA does not match HEAD of source branch")
+                    {
+                        StatusCode = HttpStatusCode.Conflict,
+                    };
+                }
+            }
 
             mergeRequest.Accept(Context.User);
             return mergeRequest.ToMergeRequestClient();

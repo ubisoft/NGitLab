@@ -75,10 +75,8 @@ namespace NGitLab.Mock.Clients
 
                 return user.ToClientUser();
             }
-            else
-            {
-                throw new GitLabNotFoundException();
-            }
+
+            throw new GitLabNotFoundException();
         }
     }
 }
