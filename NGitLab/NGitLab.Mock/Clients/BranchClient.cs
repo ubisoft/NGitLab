@@ -40,10 +40,8 @@ namespace NGitLab.Mock.Clients
             {
                 return project.Repository.CreateBranch(branch.Name, branch.Ref).ToBranchClient(project);
             }
-            else
-            {
-                return project.Repository.CreateBranch(branch.Name).ToBranchClient(project);
-            }
+
+            return project.Repository.CreateBranch(branch.Name).ToBranchClient(project);
         }
 
         public void Delete(string name)
