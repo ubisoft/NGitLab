@@ -6,7 +6,6 @@
     <Copyright>Copyright © 2020 $(Company)</Copyright>
     <Description>GitLab REST API .NET Client Library</Description>
     <Product>NGitLab</Product>
-    <Version>0.0.0</Version>
     <!-- Compile Options -->
     <LangVersion>8.0</LangVersion>
     <Deterministic>true</Deterministic>
