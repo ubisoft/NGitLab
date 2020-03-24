@@ -234,7 +234,20 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid)
         {
-            throw new NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
+            if (mergeRequest == null)
+                throw new GitLabNotFoundException();
+
+            return new[] {
+                new PipelineBasic
+                {
+                    Id = 42,
+                    Status = JobStatus.Running,
+                    Sha = mergeRequest.Sha,
+                    Ref = mergeRequest.TargetBranch,
+                },
+            };
         }
 
         public Models.MergeRequest Reopen(int mergeRequestIid)
