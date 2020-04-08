@@ -10,6 +10,7 @@ namespace NGitLab.Tests
         private static ISnippetClient SnippetClient => Initialize.GitLabClient.Snippets;
 
         [Test]
+        [Ignore("GitLab 12.9: staging GitLab breaks this. Revert this as soon as 12.9 is fixed.")]
         public void Test_snippet()
         {
             var guid = Guid.NewGuid().ToString("N");

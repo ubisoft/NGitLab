@@ -31,6 +31,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [Ignore("GitLab 12.9: staging GitLab breaks this. Revert this as soon as 12.9 is fixed.")]
         public void Test_create_delete_group()
         {
             var randomNumber = new Random().Next();
@@ -290,6 +291,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [Ignore("GitLab 12.9: staging GitLab breaks this. Revert this as soon as 12.9 is fixed.")]
         public void DeleteOldTestGroups()
         {
             if (!Utils.RunningInCiEnvironment)

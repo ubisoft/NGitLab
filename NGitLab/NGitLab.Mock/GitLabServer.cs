@@ -66,6 +66,8 @@ namespace NGitLab.Mock
             }
         }
 
+        public IEnumerable<Runner> AllRunners => AllProjects.SelectMany(p => p.RegisteredRunners);
+
         public IEnumerable<Project> AllProjects => AllGroups.SelectMany(group => group.Projects);
 
         public void Dispose()
