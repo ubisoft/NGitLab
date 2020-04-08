@@ -222,7 +222,7 @@ namespace NGitLab.Mock
             return mergeRequest;
         }
 
-        public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared)
+        public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged, int id)
         {
             var runner = new Runner
             {
@@ -233,6 +233,8 @@ namespace NGitLab.Mock
                 IsShared = isShared,
                 IpAddress = "0.0.0.0",
                 Online = true,
+                RunUntagged = runUntagged,
+                Id = id,
             };
 
             RegisteredRunners.Add(runner);
@@ -242,6 +244,11 @@ namespace NGitLab.Mock
             }
 
             return runner;
+        }
+
+        public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared)
+        {
+            return AddRunner(name, description, active, locked, isShared, runUntagged: false, default);
         }
 
         public Project Fork(User user)

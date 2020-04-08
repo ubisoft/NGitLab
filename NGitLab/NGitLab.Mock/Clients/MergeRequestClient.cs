@@ -239,7 +239,8 @@ namespace NGitLab.Mock.Clients
             if (mergeRequest == null)
                 throw new GitLabNotFoundException();
 
-            return new[] {
+            return new[]
+            {
                 new PipelineBasic
                 {
                     Id = 42,
