@@ -55,5 +55,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "coverage")]
         public double Coverage;
+
+        [DataMember(Name = "web_url")]
+        public string WebUrl;
     }
 }
