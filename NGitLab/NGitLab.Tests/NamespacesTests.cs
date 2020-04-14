@@ -8,7 +8,6 @@ namespace NGitLab.Tests
     public class NamespacesTests
     {
         [Test]
-        [Ignore("GitLab 12.9: staging GitLab breaks this. Revert this as soon as 12.9 is fixed.")]
         public void Test_namespaces_contains_a_group()
         {
             var group = Namespaces.Accessible.FirstOrDefault(g => g.Path.Equals(Initialize.UnitTestGroup.Path, StringComparison.OrdinalIgnoreCase));

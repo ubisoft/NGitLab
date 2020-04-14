@@ -16,11 +16,11 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        public IEnumerable<Project> Accessible => _api.Get().GetAll<Project>(Project.Url + "?membership=true");
+        public IEnumerable<Project> Accessible => _api.Get().GetAll<Project>(Utils.AddOrderBy(Project.Url + "?membership=true"));
 
-        public IEnumerable<Project> Owned => _api.Get().GetAll<Project>(Project.Url + "?owned=true");
+        public IEnumerable<Project> Owned => _api.Get().GetAll<Project>(Utils.AddOrderBy(Project.Url + "?owned=true"));
 
-        public IEnumerable<Project> Visible => _api.Get().GetAll<Project>(Project.Url);
+        public IEnumerable<Project> Visible => _api.Get().GetAll<Project>(Utils.AddOrderBy(Project.Url));
 
         public Project this[int id] => GetById(id, new SingleProjectQuery());
 
@@ -58,7 +58,7 @@ namespace NGitLab.Impl
             }
 
             url = Utils.AddParameter(url, "archived", query.Archived);
-            url = Utils.AddParameter(url, "order_by", query.OrderBy);
+            url = Utils.AddOrderBy(url, query.OrderBy);
             url = Utils.AddParameter(url, "search", query.Search);
             url = Utils.AddParameter(url, "simple", query.Simple);
             url = Utils.AddParameter(url, "statistics", query.Statistics);
@@ -104,7 +104,7 @@ namespace NGitLab.Impl
                 url = Utils.AddParameter(url, "owned", query.Owned);
                 url = Utils.AddParameter(url, "archived", query.Archived);
                 url = Utils.AddParameter(url, "membership", query.Membership);
-                url = Utils.AddParameter(url, "order_by", query.OrderBy);
+                url = Utils.AddOrderBy(url, query.OrderBy);
                 url = Utils.AddParameter(url, "search", query.Search);
                 url = Utils.AddParameter(url, "simple", query.Simple);
                 url = Utils.AddParameter(url, "statistics", query.Statistics);
