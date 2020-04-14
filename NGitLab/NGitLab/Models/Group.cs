@@ -48,5 +48,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "extra_shared_runners_minutes_limit")]
         public int? ExtraSharedRunnersMinutesLimit;
+
+        [DataMember(Name = "marked_for_deletion_on")]
+        public string MarkedForDeletionOn;
     }
 }

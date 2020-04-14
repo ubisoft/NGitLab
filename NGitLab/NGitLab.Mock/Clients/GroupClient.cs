@@ -91,6 +91,11 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public void Restore(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Models.Group> Search(string search)
         {
             throw new NotImplementedException();

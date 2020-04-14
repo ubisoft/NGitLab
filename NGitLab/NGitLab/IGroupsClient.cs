@@ -32,5 +32,7 @@ namespace NGitLab
         void Delete(int id);
 
         Group Update(int id, GroupUpdate groupUpdate);
+
+        void Restore(int id);
     }
 }

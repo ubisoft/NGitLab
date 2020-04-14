@@ -31,7 +31,6 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        [Ignore("GitLab 12.9: staging GitLab breaks this. Revert this as soon as 12.9 is fixed.")]
         public void Test_create_delete_group()
         {
             var randomNumber = new Random().Next();
@@ -66,12 +65,49 @@ namespace NGitLab.Tests
                 if (groups.Count == 0)
                     return;
 
+                // Group can be marked for deletion (https://docs.gitlab.com/ee/user/admin_area/settings/visibility_and_access_controls.html#default-deletion-adjourned-period-premium-only)
+                if (groups.Count == 1 && !string.IsNullOrEmpty(groups[0].MarkedForDeletionOn))
+                {
+                    return;
+                }
+
                 var timeout = TimeSpan.FromSeconds(45);
                 if (sw.Elapsed > timeout)
                 {
                     CollectionAssert.IsEmpty(groups, $"Group was not deleted in the allotted time of {timeout.TotalSeconds:0}seconds");
                 }
             }
+        }
+
+        [Test]
+        public void Test_create_delete_restore_group()
+        {
+            var randomNumber = new Random().Next();
+            var name = "NewGroup" + randomNumber;
+            var path = "NewGroupPath" + randomNumber;
+
+            var group = Groups.Create(new GroupCreate()
+            {
+                Name = name,
+                Path = path,
+                Visibility = VisibilityLevel.Internal,
+            });
+
+            Groups.Delete(group.Id);
+
+            var deletedGroup = Groups.Search(name).Single();
+
+            var groupIsMarkedForDeletion = !string.IsNullOrEmpty(deletedGroup.MarkedForDeletionOn);
+            Assert.That(groupIsMarkedForDeletion, Is.True);
+            Assert.That(group.Id, Is.EqualTo(deletedGroup.Id));
+
+            Groups.Restore(deletedGroup.Id);
+
+            var restoredGroup = Groups.Search(name).Single();
+
+            var restoredGroupIsMarkedForDeletion = !string.IsNullOrEmpty(restoredGroup.MarkedForDeletionOn);
+            Assert.That(restoredGroupIsMarkedForDeletion, Is.False);
+            Assert.That(group.Id, Is.EqualTo(restoredGroup.Id));
         }
 
         [Test]
@@ -291,7 +327,6 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        [Ignore("GitLab 12.9: staging GitLab breaks this. Revert this as soon as 12.9 is fixed.")]
         public void DeleteOldTestGroups()
         {
             if (!Utils.RunningInCiEnvironment)
@@ -311,8 +346,10 @@ namespace NGitLab.Tests
 
             foreach (var group in oldGroups)
             {
-                if (!group.Name.StartsWith(Initialize.TestEntityNamePrefix, StringComparison.Ordinal))
+                if (!group.Name.StartsWith(Initialize.TestEntityNamePrefix, StringComparison.Ordinal) ||
+                    !string.IsNullOrEmpty(group.MarkedForDeletionOn))
                     continue;
+
                 Groups.Delete(group.Id);
             }
         }

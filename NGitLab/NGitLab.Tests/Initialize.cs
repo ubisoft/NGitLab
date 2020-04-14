@@ -95,7 +95,7 @@ namespace NGitLab.Tests
         {
             Policy
                 .HandleResult(result: false)
-                .WaitAndRetry(retryCount: 2, sleepDurationProvider: retryAttempt => TimeSpan.FromMilliseconds(300 * retryAttempt))
+                .WaitAndRetry(retryCount: 3, sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(retryAttempt))
                 .Execute(predicate);
         }
 

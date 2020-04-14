@@ -20,7 +20,7 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        public IEnumerable<Group> Accessible => _api.Get().GetAll<Group>(Url);
+        public IEnumerable<Group> Accessible => _api.Get().GetAll<Group>(Utils.AddOrderBy(Url));
 
         public IEnumerable<Group> Get(GroupQuery query)
         {
@@ -44,10 +44,7 @@ namespace NGitLab.Impl
                 url = Utils.AddParameter(url, "search", query.Search);
             }
 
-            if (!string.IsNullOrEmpty(query.OrderBy))
-            {
-                url = Utils.AddParameter(url, "order_by", query.OrderBy);
-            }
+            url = Utils.AddOrderBy(url, query.OrderBy);
 
             if (query.Sort != null)
             {
@@ -79,7 +76,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<Group> Search(string search)
         {
-            return _api.Get().GetAll<Group>(Url + $"?search={Uri.EscapeDataString(search)}");
+            return _api.Get().GetAll<Group>(Utils.AddOrderBy(Url + $"?search={Uri.EscapeDataString(search)}"));
         }
 
         public Group this[int id] => _api.Get().To<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
@@ -88,7 +85,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<Project> SearchProjects(int groupId, string search)
         {
-            return _api.Get().GetAll<Project>(Url + "/" + groupId + $"/projects?search={Uri.EscapeDataString(search)}");
+            return _api.Get().GetAll<Project>(Utils.AddOrderBy(Url + "/" + groupId + $"/projects?search={Uri.EscapeDataString(search)}"));
         }
 
         public Group Create(GroupCreate group) => _api.Post().With(group).To<Group>(Url);
@@ -99,5 +96,7 @@ namespace NGitLab.Impl
         }
 
         public Group Update(int id, GroupUpdate groupUpdate) => _api.Put().With(groupUpdate).To<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
+
+        public void Restore(int id) => _api.Post().Execute(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)) + "/restore");
     }
 }
