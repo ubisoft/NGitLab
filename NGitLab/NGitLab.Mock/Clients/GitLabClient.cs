@@ -31,6 +31,8 @@
 
         public ISystemHookClient SystemHooks => new SystemHookClient(Context);
 
+        public IMergeRequestClient MergeRequests => new MergeRequestClient(Context);
+
         public ICommitStatusClient GetCommitStatus(int projectId) => new CommitStatusClient(Context, projectId);
 
         public IEnvironmentClient GetEnvironmentClient(int projectId) => new EnvironmentClient(Context, projectId);
