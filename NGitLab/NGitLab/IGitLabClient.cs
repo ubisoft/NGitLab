@@ -14,6 +14,8 @@
 
         IRunnerClient Runners { get; }
 
+        IMergeRequestClient MergeRequests { get; }
+
         IRepositoryClient GetRepository(int projectId);
 
         ICommitClient GetCommits(int projectId);

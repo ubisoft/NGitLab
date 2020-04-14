@@ -8,7 +8,12 @@ namespace NGitLab.Mock.Clients
 {
     internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
     {
-        private readonly int _projectId;
+        private readonly int? _projectId;
+
+        public MergeRequestClient(ClientContext context)
+            : base(context)
+        {
+        }
 
         public MergeRequestClient(ClientContext context, int projectId)
             : base(context)
@@ -16,11 +21,20 @@ namespace NGitLab.Mock.Clients
             _projectId = projectId;
         }
 
+        private void AssertProjectId()
+        {
+            if (_projectId == null)
+                throw new InvalidOperationException("Valid only for a specific project");
+
+        }
+
         public Models.MergeRequest this[int iid]
         {
             get
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
+                AssertProjectId();
+
+                var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
                 var mergeRequest = project.MergeRequests.GetByIid(iid);
                 if (mergeRequest == null)
                     throw new GitLabNotFoundException();
@@ -33,13 +47,23 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
+                if (_projectId == null)
+                {
+                    return Server.AllProjects
+                        .Where(project => project.CanUserViewProject(Context.User))
+                        .SelectMany(project => project.MergeRequests)
+                        .Select(mr => mr.ToMergeRequestClient());
+                }
+
+                var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
                 return project.MergeRequests.Select(mr => mr.ToMergeRequestClient());
             }
         }
 
         public Models.MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message)
         {
+            AssertProjectId();
+
             var project = GetProject(_projectId, ProjectPermission.Contribute);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
@@ -63,18 +87,31 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Models.MergeRequest> AllInState(MergeRequestState state)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
+            if (_projectId == null)
+            {
+                return Server.AllProjects
+                    .Where(project => project.CanUserViewProject(Context.User))
+                    .SelectMany(project => project.MergeRequests)
+                    .Where(mr => mr.State == state)
+                    .Select(mr => mr.ToMergeRequestClient());
+            }
+
+            var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             return project.MergeRequests.Where(mr => mr.State == state).Select(mr => mr.ToMergeRequestClient());
         }
 
         public IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid)
         {
-            return new MergeRequestApprovalClient(Context, _projectId, mergeRequestIid);
+            AssertProjectId();
+
+            return new MergeRequestApprovalClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
         }
 
         public Models.MergeRequest Close(int mergeRequestIid)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
+            AssertProjectId();
+
+            var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
                 throw new GitLabNotFoundException();
@@ -89,19 +126,25 @@ namespace NGitLab.Mock.Clients
 
         public IMergeRequestCommentClient Comments(int mergeRequestIid)
         {
-            return new MergeRequestCommentClient(Context, _projectId, mergeRequestIid);
+            AssertProjectId();
+
+            return new MergeRequestCommentClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
         }
 
         public IMergeRequestCommitClient Commits(int mergeRequestIid)
         {
-            return new MergeRequestCommitClient(Context, _projectId, mergeRequestIid);
+            AssertProjectId();
+
+            return new MergeRequestCommitClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
         }
 
         public Models.MergeRequest Create(MergeRequestCreate mergeRequestCreate)
         {
+            AssertProjectId();
+
             EnsureUserIsAuthenticated();
 
-            var sourceProject = GetProject(_projectId, ProjectPermission.Contribute);
+            var sourceProject = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.Contribute);
             var targetProject = GetProject(mergeRequestCreate.TargetProjectId, ProjectPermission.View);
 
             // Ensure the branches exist
@@ -124,7 +167,9 @@ namespace NGitLab.Mock.Clients
 
         public void Delete(int mergeRequestIid)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
+            AssertProjectId();
+
+            var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
                 throw new GitLabNotFoundException();
@@ -134,7 +179,9 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Models.MergeRequest> Get(MergeRequestQuery query)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
+            AssertProjectId();
+
+            var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             IEnumerable<MergeRequest> result = project.MergeRequests;
             if (query != null)
             {
@@ -229,12 +276,16 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Models.Author> GetParticipants(int mergeRequestIid)
         {
+            AssertProjectId();
+
             throw new NotImplementedException();
         }
 
         public IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
+            AssertProjectId();
+
+            var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
                 throw new GitLabNotFoundException();
@@ -253,7 +304,9 @@ namespace NGitLab.Mock.Clients
 
         public Models.MergeRequest Reopen(int mergeRequestIid)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
+            AssertProjectId();
+
+            var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
                 throw new GitLabNotFoundException();
@@ -268,7 +321,9 @@ namespace NGitLab.Mock.Clients
 
         public Models.MergeRequest Update(int mergeRequestIid, MergeRequestUpdate mergeRequestUpdate)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
+            AssertProjectId();
+
+            var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
                 throw new GitLabNotFoundException();

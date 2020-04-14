@@ -27,9 +27,12 @@ namespace NGitLab.Mock.Clients
                 };
             }
 
-            var project = id is int idInt
-                ? Server.AllProjects.FindById(idInt)
-                : Server.AllProjects.FindProject((string)id);
+            var project = id switch
+            {
+                int idInt => Server.AllProjects.FindById(idInt),
+                string idStr => Server.AllProjects.FindProject(idStr),
+                _ => throw new ArgumentException($"Id of type '{id.GetType()}' is not supported")
+            };
 
             if (project == null || !project.CanUserViewProject(Context.User))
                 throw new GitLabNotFoundException();
