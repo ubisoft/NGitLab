@@ -40,9 +40,9 @@ namespace NGitLab.Impl
             return AddParameter(url, "pagination", "keyset");
         }
 
-        public static string AddOrderBy(string url, string orderBy = null)
+        public static string AddOrderBy(string url, string orderBy = null, bool supportKeysetPagination = true)
         {
-            if (string.IsNullOrEmpty(orderBy) || string.Equals(orderBy, "id", StringComparison.Ordinal))
+            if (supportKeysetPagination && (string.IsNullOrEmpty(orderBy) || string.Equals(orderBy, "id", StringComparison.Ordinal)))
             {
                 return AddKeysetPaginationParameter(url, "id");
             }

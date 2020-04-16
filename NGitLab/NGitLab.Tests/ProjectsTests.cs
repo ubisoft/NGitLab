@@ -21,24 +21,27 @@ namespace NGitLab.Tests
         [Test]
         public void GetOwnedProjects()
         {
-            var projects = _projects.Owned.Take(10).ToArray();
+            var projects = _projects.Owned.Take(30).ToArray();
             CollectionAssert.IsNotEmpty(projects);
+            Assert.IsTrue(projects.Length > 20); // Ensure that the pagination works
         }
 
         [Test]
         public void GetVisibleProjects()
         {
-            var projects = this.ExecuteWithFallbacks(client => client.Projects.Visible.Take(10).ToArray());
+            var projects = this.ExecuteWithFallbacks(client => client.Projects.Visible.Take(30).ToArray());
 
             CollectionAssert.IsNotEmpty(projects);
+            Assert.IsTrue(projects.Length > 20); // Ensure that the pagination works
         }
 
         [Test]
         public void GetAccessibleProjects()
         {
-            var projects = _projects.Accessible.Take(10).ToArray();
+            var projects = _projects.Accessible.Take(30).ToArray();
 
             CollectionAssert.IsNotEmpty(projects);
+            Assert.IsTrue(projects.Length > 20); // Ensure that the pagination works
         }
 
         [Test]
