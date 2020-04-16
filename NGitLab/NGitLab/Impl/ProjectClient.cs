@@ -30,6 +30,11 @@ namespace NGitLab.Impl
 
         public void Delete(int id) => _api.Delete().Execute(Project.Url + "/" + id);
 
+        private bool SupportKeysetPagination(ProjectQuery query)
+        {
+            return string.IsNullOrEmpty(query.Search);
+        }
+
         public IEnumerable<Project> Get(ProjectQuery query)
         {
             var url = Project.Url;
@@ -58,7 +63,7 @@ namespace NGitLab.Impl
             }
 
             url = Utils.AddParameter(url, "archived", query.Archived);
-            url = Utils.AddOrderBy(url, query.OrderBy);
+            url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: SupportKeysetPagination(query));
             url = Utils.AddParameter(url, "search", query.Search);
             url = Utils.AddParameter(url, "simple", query.Simple);
             url = Utils.AddParameter(url, "statistics", query.Statistics);
