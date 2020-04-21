@@ -16,5 +16,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "external_url")]
         public string ExternalUrl;
+
+        [DataMember(Name = "state")]
+        public string State;
     }
 }
