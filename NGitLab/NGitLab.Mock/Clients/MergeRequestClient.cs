@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -278,7 +278,14 @@ namespace NGitLab.Mock.Clients
         {
             AssertProjectId();
 
-            throw new NotImplementedException();
+            var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
+            var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
+            if (mergeRequest == null)
+                throw new GitLabNotFoundException();
+
+            return mergeRequest.Comments.Select(c => c.Author)
+                .Union(new[] { mergeRequest.Author })
+                .Select(u => u.ToClientAuthor());
         }
 
         public IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid)
