@@ -50,6 +50,8 @@ namespace NGitLab.Mock
 
         public bool LfsEnabled { get; set; }
 
+        public bool Archived { get; set; }
+
         public RepositoryAccessLevel RepositoryAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
 
         public PermissionCollection Permissions { get; }
@@ -298,6 +300,7 @@ namespace NGitLab.Mock
                 BuildTimeout = (int)BuildTimeout.TotalMinutes,
                 RepositoryAccessLevel = RepositoryAccessLevel,
                 LfsEnabled = LfsEnabled,
+                Archived = Archived,
             };
         }
     }
