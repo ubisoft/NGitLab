@@ -12,6 +12,8 @@ namespace NGitLab.Tests
     {
         internal const string TestEntityNamePrefix = "Unit_Test_";    // Name prefix for test groups, projects & issues
 
+        private static readonly Random s_random = new Random();
+
         public static GitLabClient GitLabClient;
         public static GitLabClient GitLabClientFront1;
         public static GitLabClient GitLabClientFront2;
@@ -53,6 +55,14 @@ namespace NGitLab.Tests
 
         private static readonly List<WebRequest> s_requests = new List<WebRequest>();
 
+        public static int GetRandomNumber()
+        {
+            lock (s_random)
+            {
+                return s_random.Next();
+            }
+        }
+
         [OneTimeSetUp]
         public void Setup()
         {
@@ -66,13 +76,11 @@ namespace NGitLab.Tests
             GitLabClientFront1 = new GitLabClient(GitLabHostFront1, apiToken: GitLabToken, options: new CustomRequestOptions(s_requests));
             GitLabClientFront2 = new GitLabClient(GitLabHostFront2, apiToken: GitLabToken, options: new CustomRequestOptions(s_requests));
 
-            var randomGenerator = new Random();
-
             // Delete project is really slow now, creating a new project name at each run
             // => https://gitlab.com/gitlab-com/support-forum/issues/1569
-            ProjectName = TestEntityNamePrefix + randomGenerator.Next();
-            GroupName = TestEntityNamePrefix + randomGenerator.Next();
-            IssueTitle = TestEntityNamePrefix + randomGenerator.Next();
+            ProjectName = TestEntityNamePrefix + GetRandomNumber();
+            GroupName = TestEntityNamePrefix + GetRandomNumber();
+            IssueTitle = TestEntityNamePrefix + GetRandomNumber();
 
             // Create a test project with merge request etc.
             UnitTestGroup = CreateGroup(GroupName);

@@ -43,7 +43,7 @@ namespace NGitLab.Tests
                 Utils.FailInCiEnvironment("Cannot test the creation of users since the current user is not admin");
             }
 
-            var randomNumber = new Random().Next();
+            var randomNumber = GetRandomNumber();
 
             var userUpsert = new UserUpsert
             {
@@ -63,7 +63,17 @@ namespace NGitLab.Tests
                 WebsiteURL = "wp.pl",
             };
 
-            var addedUser = _users.Create(userUpsert);
+            User user;
+            try
+            {
+                user = _users.Create(userUpsert);
+            }
+            catch (GitLabException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
+            {
+                user = _users.Search(userUpsert.Email).FirstOrDefault();
+                Assert.IsNotNull(user);
+            }
+
             _commitClient.Create(new CommitCreate()
             {
                 AuthorName = userUpsert.Name,
@@ -80,11 +90,11 @@ namespace NGitLab.Tests
             Assert.IsTrue(contributor.Any(x => string.Equals(x.Email, _users.Current.Email, StringComparison.Ordinal)));
             Assert.IsTrue(contributor.Any(x => string.Equals(x.Email, userUpsert.Email, StringComparison.Ordinal)));
 
-            _users.Delete(addedUser.Id);
+            _users.Delete(user.Id);
 
-            WaitWithTimeoutUntil(() => !_users.Get(addedUser.Username).Any());
+            WaitWithTimeoutUntil(() => !_users.Get(user.Username).Any());
 
-            Assert.IsFalse(_users.Get(addedUser.Username).Any());
+            Assert.IsFalse(_users.Get(user.Username).Any());
         }
 
         private static IContributorClient Contributors

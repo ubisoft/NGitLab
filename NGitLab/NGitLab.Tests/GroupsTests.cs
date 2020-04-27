@@ -33,7 +33,7 @@ namespace NGitLab.Tests
         [Test]
         public void Test_create_delete_group()
         {
-            var randomNumber = new Random().Next();
+            var randomNumber = Initialize.GetRandomNumber();
             var name = "NewGroup" + randomNumber;
             var path = "NewGroupPath" + randomNumber;
 
@@ -82,7 +82,7 @@ namespace NGitLab.Tests
         [Test]
         public void Test_create_delete_restore_group()
         {
-            var randomNumber = new Random().Next();
+            var randomNumber = Initialize.GetRandomNumber();
             var name = "NewGroup" + randomNumber;
             var path = "NewGroupPath" + randomNumber;
 
