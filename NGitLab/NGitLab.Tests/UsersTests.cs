@@ -40,7 +40,7 @@ namespace NGitLab.Tests
                 Utils.FailInCiEnvironment("Cannot test the creation of users since the current user is not admin");
             }
 
-            var randomNumber = new Random().Next();
+            var randomNumber = Initialize.GetRandomNumber();
 
             var userUpsert = new UserUpsert
             {
