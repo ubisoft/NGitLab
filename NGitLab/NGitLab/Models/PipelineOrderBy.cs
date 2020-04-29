@@ -6,5 +6,6 @@
         status,
         @ref,
         user_id,
+        updated_at,
     }
 }
