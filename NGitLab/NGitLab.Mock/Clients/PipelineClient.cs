@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -86,12 +87,65 @@ namespace NGitLab.Mock.Clients
                 pipelines = pipelines.Where(pipeline => pipeline.Sha.Equals(sha));
             }
 
-            if (query.Name != null || query.OrderBy != null || query.Ref != null || query.Scope != null || query.Sort != null || query.Status != null || query.Username != null || query.YamlErrors != null)
+            if (query.Name != null)
+            {
+                pipelines = pipelines.Where(pipeline => string.Equals(pipeline.User.Name, query.Name, StringComparison.Ordinal));
+            }
+
+            if (query.Ref != null)
+            {
+                pipelines = pipelines.Where(pipeline => string.Equals(pipeline.Ref, query.Ref, StringComparison.Ordinal));
+            }
+
+            if (query.Scope.HasValue)
             {
                 throw new NotImplementedException();
             }
 
+            if (query.Status.HasValue)
+            {
+                pipelines = pipelines.Where(pipeline => pipeline.Status == query.Status);
+            }
+
+            if (query.Username != null)
+            {
+                pipelines = pipelines.Where(pipeline => string.Equals(pipeline.User.UserName, query.Username, StringComparison.Ordinal));
+            }
+
+            if (query.YamlErrors.HasValue)
+            {
+                pipelines = pipelines.Where(pipeline => !string.IsNullOrEmpty(pipeline.YamlError));
+            }
+
+            if (query.OrderBy.HasValue)
+            {
+                pipelines = query.OrderBy.Value switch
+                {
+                    PipelineOrderBy.id => QuerySort(pipelines, query.Sort, p => p.Id),
+                    PipelineOrderBy.status => QuerySort(pipelines, query.Sort, p => p.Status),
+                    PipelineOrderBy.@ref => QuerySort(pipelines, query.Sort, p => p.Ref),
+                    PipelineOrderBy.user_id => QuerySort(pipelines, query.Sort, p => p.User.Id),
+                    PipelineOrderBy.updated_at => QuerySort(pipelines, query.Sort, p => p.UpdatedAt),
+                    _ => throw new NotImplementedException(),
+                };
+            }
+            else
+            {
+                pipelines = QuerySort(pipelines, query.Sort, p => p.UpdatedAt);
+            }
+
             return pipelines.Select(pipeline => pipeline.ToPipelineBasicClient());
+        }
+
+        private IEnumerable<Pipeline> QuerySort<T>(IEnumerable<Pipeline> pipelines, PipelineSort? sort, Func<Pipeline, T> expression)
+        {
+            if (!sort.HasValue)
+                sort = PipelineSort.desc;
+
+            if (sort.Value == PipelineSort.desc)
+                return pipelines.OrderByDescending(expression);
+
+            return pipelines.OrderBy(expression);
         }
     }
 }
