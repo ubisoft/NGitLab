@@ -37,25 +37,7 @@ namespace NGitLab.Mock.Clients
                 Merged = false,
                 Name = branch.FriendlyName,
                 Default = string.Equals(branch.FriendlyName, project.DefaultBranch, System.StringComparison.Ordinal),
-                Commit = new Models.CommitInfo
-                {
-                    Author = new Models.PersonInfo
-                    {
-                        Email = commit.Author.Email,
-                        Name = commit.Author.Name,
-                    },
-                    Committer = new Models.PersonInfo
-                    {
-                        Email = commit.Committer.Email,
-                        Name = commit.Committer.Name,
-                    },
-                    AuthoredDate = commit.Author.When.UtcDateTime,
-                    CommittedDate = commit.Committer.When.UtcDateTime,
-                    Id = new Sha1(commit.Sha),
-                    Message = commit.Message,
-                    Tree = new Sha1(commit.Tree.Sha),
-                    Parents = commit.Parents.Select(p => new Sha1(p.Sha)).ToArray(),
-                },
+                Commit = ToCommitInfo(commit),
             };
         }
 
@@ -64,21 +46,14 @@ namespace NGitLab.Mock.Clients
             return new Models.CommitInfo
             {
                 Id = new Sha1(commit.Sha),
-                Author = new Models.PersonInfo
-                {
-                    Name = commit.Author.Name,
-                    Email = commit.Author.Email,
-                },
+                AuthorName = commit.Author.Name,
+                AuthorEmail = commit.Author.Email,
                 AuthoredDate = commit.Author.When.UtcDateTime,
-                Committer = new Models.PersonInfo
-                {
-                    Name = commit.Committer.Name,
-                    Email = commit.Committer.Email,
-                },
+                CommitterName = commit.Committer.Name,
+                CommitterEmail = commit.Committer.Email,
                 CommittedDate = commit.Committer.When.UtcDateTime,
                 Message = commit.Message,
                 Parents = commit.Parents.Select(c => new Sha1(c.Sha)).ToArray(),
-                Tree = new Sha1(commit.Tree.Sha),
             };
         }
 
