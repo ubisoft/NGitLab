@@ -29,6 +29,9 @@ namespace NGitLab.Models
 
         [DataMember(Name = "actions")]
         public IList<CreateCommitAction> Actions = new List<CreateCommitAction>();
+
+        [DataMember(Name = "force")]
+        public bool? Force;
     }
 
     [DataContract]
