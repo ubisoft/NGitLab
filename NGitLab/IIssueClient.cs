@@ -58,5 +58,16 @@ namespace NGitLab
         /// <param name="issueEdit"></param>
         /// <returns>The issue if it's updated.  Null if not.</returns>
         Issue Edit(IssueEdit issueEdit);
+
+        /// <summary>
+        /// Gets the resource label events.
+        ///        
+        /// url like GET /projects/:id/issues/:issue_iid/resource_label_events
+        ///
+        /// </summary>
+        /// <param name="projectId">The project id.</param>
+        /// <param name="issueId">The id of the issue in the project's scope.</param>
+        /// <returns>The issue if it's updated.  Null if not.</returns>
+        IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueId);
     }
 }

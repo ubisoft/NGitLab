@@ -77,6 +77,11 @@ namespace NGitLab.Mock.Clients
             return issueToModify.ToClientIssue();
         }
 
+        public IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Models.Issue> ForProject(int projectId)
         {
             return GetProject(projectId, ProjectPermission.View).Issues.Select(i => i.ToClientIssue());
