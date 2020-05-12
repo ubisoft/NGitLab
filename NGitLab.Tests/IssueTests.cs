@@ -116,5 +116,41 @@ namespace NGitLab.Tests
 
             Assert.IsNotNull(issue);
         }
+
+        [Test]
+        public void Test_get_all_resource_label_events()
+        {
+            var issues = Initialize.GitLabClient.Issues.ForProject(Initialize.UnitTestProject.Id).ToList();
+            Assert.AreNotEqual(0, issues.Count);
+
+            var testLabel = "test";
+            var updatedIssue = issues.First();
+            Initialize.GitLabClient.Issues.Edit(new IssueEdit
+            {
+                Id = Initialize.UnitTestProject.Id,
+                IssueId = updatedIssue.IssueId,
+                Labels = testLabel
+            });
+
+            Initialize.GitLabClient.Issues.Edit(new IssueEdit
+            {
+                Id = Initialize.UnitTestProject.Id,
+                IssueId = updatedIssue.IssueId,
+                Labels = string.Empty
+            });
+
+            var resourceLabelEvents = Initialize.GitLabClient.Issues.ResourceLabelEvents(Initialize.UnitTestProject.Id, updatedIssue.IssueId).ToList();
+            Assert.AreEqual(2, resourceLabelEvents.Count);
+
+            var addLabelEvent =
+                resourceLabelEvents.First(e => e.Action == ResourceLabelEventAction.Add);
+            Assert.AreEqual(testLabel, addLabelEvent.Label.Name);
+            Assert.AreEqual(ResourceLabelEventAction.Add, addLabelEvent.Action);
+            
+            var removeLabelEvent =
+                resourceLabelEvents.First(e => e.Action == ResourceLabelEventAction.Remove);
+            Assert.AreEqual(testLabel, removeLabelEvent.Label.Name);
+            Assert.AreEqual(ResourceLabelEventAction.Remove, removeLabelEvent.Action);
+        }
     }
 }

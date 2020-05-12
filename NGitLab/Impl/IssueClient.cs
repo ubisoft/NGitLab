@@ -8,6 +8,7 @@ namespace NGitLab.Impl
         private const string IssuesUrl = "/issues";
         private const string ProjectIssuesUrl = "/projects/{0}/issues";
         private const string SingleIssueUrl = "/projects/{0}/issues/{1}";
+        private const string ResourceLabelEventUrl = "/projects/{0}/issues/{1}/resource_label_events";
 
         private readonly API _api;
 
@@ -66,6 +67,11 @@ namespace NGitLab.Impl
         public Issue Edit(IssueEdit issueEdit)
         {
             return _api.Put().With(issueEdit).To<Issue>(string.Format(SingleIssueUrl, issueEdit.Id, issueEdit.IssueId));
+        }
+
+        public IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid)
+        {
+            return _api.Get().GetAll<ResourceLabelEvent>(string.Format(ResourceLabelEventUrl, projectId, issueIid));
         }
     }
 }
