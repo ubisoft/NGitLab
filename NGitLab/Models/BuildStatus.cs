@@ -1,4 +1,6 @@
-﻿namespace NGitLab
+﻿using System.Runtime.Serialization;
+
+namespace NGitLab
 {
     public enum JobStatus
     {
@@ -22,5 +24,8 @@
         NoBuild,
 
         Preparing,
+
+        [EnumMember(Value = "waiting_for_resource")]
+        WaitingForResource,
     }
 }
