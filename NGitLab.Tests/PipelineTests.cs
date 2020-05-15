@@ -111,6 +111,16 @@ namespace NGitLab.Tests
                 v.Value.Equals("HelloWorld", StringComparison.InvariantCulture)));
         }
 
+        [Test]
+        public void Test_get_pipeline_variables_special_characters()
+        {
+            CreatePipelineWithVariables(new Dictionary<string, string>(StringComparer.InvariantCulture) { { "EncodedVariable", "+4+" } });
+            var pipelinesWithVariables = _pipelines.All.Where(p => string.Equals(p.Ref, "master", StringComparison.Ordinal));
+
+            var variables = _pipelines.GetVariables(pipelinesWithVariables.First().Id);
+            Assert.IsTrue(variables.Any(v => v.Key.Equals("EncodedVariable", StringComparison.InvariantCulture) && v.Value.Equals("+4+", StringComparison.InvariantCulture)));
+        }
+
         private PipelineBasic FindPipeline(string refName)
         {
             return _pipelines.All.FirstOrDefault(x => string.Equals(x.Ref, refName, StringComparison.Ordinal));

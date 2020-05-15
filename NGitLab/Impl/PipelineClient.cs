@@ -56,7 +56,7 @@ namespace NGitLab.Impl
             var variablesToAdd = new StringBuilder();
             foreach (var variable in variables)
             {
-                variablesToAdd.Append("&variables[").Append(variable.Key).Append("]=").Append(variable.Value);
+                variablesToAdd.Append("&variables[").Append(variable.Key).Append("]=").Append(Uri.EscapeDataString(variable.Value));
             }
 
             return _api.Post().To<Pipeline>($"{_projectPath}/trigger/pipeline?token={token}&ref={@ref}{variablesToAdd}");
