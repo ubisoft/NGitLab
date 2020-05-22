@@ -48,6 +48,7 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "source_branch", query.SourceBranch);
             url = Utils.AddParameter(url, "target_branch", query.TargetBranch);
             url = Utils.AddParameter(url, "search", query.Search);
+            url = Utils.AddParameter(url, "wip", query.Wip.HasValue ? (query.Wip.Value ? "yes" : "no") : null);
 
             return _api.Get().GetAll<MergeRequest>(url);
         }

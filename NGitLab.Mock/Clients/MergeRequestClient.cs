@@ -269,6 +269,11 @@ namespace NGitLab.Mock.Clients
                 {
                     result = result.Take(query.PerPage.Value);
                 }
+
+                if (query.Wip != null)
+                {
+                    result = result.Where(mr => (bool)query.Wip ? mr.WorkInProgress : !mr.WorkInProgress);
+                }
             }
 
             return result.Select(mr => mr.ToMergeRequestClient());

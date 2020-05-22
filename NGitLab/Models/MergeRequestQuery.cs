@@ -99,5 +99,10 @@ namespace NGitLab.Models
         /// Specifies how many record per paging (Gitlab supports a maximum of 100 projects and defaults to 20).
         /// </summary>
         public int? PerPage { get; set; }
+
+        /// <summary>
+        /// Filter merge requests against their wip status. yes to return only WIP merge requests, no to return non WIP merge requests
+        /// </summary>
+        public bool? Wip { get; set; }
     }
 }
