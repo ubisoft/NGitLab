@@ -59,6 +59,8 @@ namespace NGitLab.Mock
 
         public bool WorkInProgress => Title?.StartsWith("WIP:", StringComparison.OrdinalIgnoreCase) == true;
 
+        public IList<UserRef> Approvers { get; } = new List<UserRef>();
+
         public MergeRequestState State
         {
             get
