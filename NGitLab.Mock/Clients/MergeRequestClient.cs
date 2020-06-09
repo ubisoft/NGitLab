@@ -63,9 +63,17 @@ namespace NGitLab.Mock.Clients
         public Models.MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message)
         {
             AssertProjectId();
-
             var project = GetProject(_projectId, ProjectPermission.Contribute);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
+
+            if (project.ApprovalsBeforeMerge > 0 && !mergeRequest.Approvers.Any())
+            {
+                throw new GitLabException("The merge request needs to be approved before merging")
+                {
+                    StatusCode = HttpStatusCode.Unauthorized,
+                };
+            }
+
             if (mergeRequest == null)
                 throw new GitLabNotFoundException();
 

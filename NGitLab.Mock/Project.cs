@@ -28,6 +28,7 @@ namespace NGitLab.Mock
             Jobs = new JobCollection(this);
             Badges = new BadgeCollection(this);
             CommitInfos = new CommitInfoCollection(this);
+            ApprovalsBeforeMerge = 0;
         }
 
         public int Id { get; set; }
@@ -85,6 +86,8 @@ namespace NGitLab.Mock
         public MilestoneCollection Milestones { get; }
 
         public BadgeCollection Badges { get; }
+
+        public int ApprovalsBeforeMerge { get; set; }
 
         public void Remove()
         {
@@ -301,6 +304,7 @@ namespace NGitLab.Mock
                 RepositoryAccessLevel = RepositoryAccessLevel,
                 LfsEnabled = LfsEnabled,
                 Archived = Archived,
+                ApprovalsBeforeMerge = ApprovalsBeforeMerge,
             };
         }
     }
