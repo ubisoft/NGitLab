@@ -26,5 +26,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "type")]
         public string Type;
+
+        [DataMember(Name = "system")]
+        public bool System;
     }
 }
