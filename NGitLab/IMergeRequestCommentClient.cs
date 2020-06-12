@@ -14,5 +14,7 @@ namespace NGitLab
         MergeRequestComment Add(MergeRequestCommentCreate comment);
 
         MergeRequestComment Edit(long id, MergeRequestCommentEdit comment);
+
+        void Delete(long id);
     }
 }
