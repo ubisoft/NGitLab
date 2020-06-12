@@ -52,5 +52,15 @@ namespace NGitLab.Mock.Clients
             comment.Body = edit.Body;
             return comment.ToMergeRequestCommentClient();
         }
+
+        public void Delete(long id)
+        {
+            var comments = GetMergeRequest().Comments;
+            var comment = comments.GetById(id);
+            if (comment == null)
+                throw new GitLabNotFoundException();
+
+            comments.Remove(comment);
+        }
     }
 }

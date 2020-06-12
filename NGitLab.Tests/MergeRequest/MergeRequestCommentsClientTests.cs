@@ -105,5 +105,20 @@ namespace NGitLab.Tests.MergeRequest
             var comments = mergeRequestComments.All.ToArray();
             CollectionAssert.IsNotEmpty(comments);
         }
+
+        [Test]
+        [Order(3)]
+        public void DeleteComment()
+        {
+            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
+            var comments = mergeRequestComments.All.ToArray();
+            foreach (var comment in comments)
+            {
+                mergeRequestComments.Delete(comment.Id);
+            }
+
+            comments = mergeRequestComments.All.ToArray();
+            CollectionAssert.IsEmpty(comments);
+        }
     }
 }

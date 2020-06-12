@@ -22,5 +22,7 @@ namespace NGitLab.Impl
         public MergeRequestComment Add(MergeRequestCommentCreate comment) => _api.Post().With(comment).To<MergeRequestComment>(_notesPath);
 
         public MergeRequestComment Edit(long id, MergeRequestCommentEdit comment) => _api.Put().With(comment).To<MergeRequestComment>(_notesPath + "/" + id.ToString(CultureInfo.InvariantCulture));
+
+        public void Delete(long id) => _api.Delete().Execute(_notesPath + "/" + id.ToString(CultureInfo.InvariantCulture));
     }
 }
