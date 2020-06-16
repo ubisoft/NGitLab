@@ -307,8 +307,12 @@ namespace NGitLab.Mock.Clients
 
             var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
+
             if (mergeRequest == null)
                 throw new GitLabNotFoundException();
+
+            var latestCommit = mergeRequest.Commits.FirstOrDefault();
+            var sha = latestCommit == null ? mergeRequest.Sha : new Sha1(latestCommit.Sha);
 
             return new[]
             {
@@ -316,7 +320,7 @@ namespace NGitLab.Mock.Clients
                 {
                     Id = 42,
                     Status = JobStatus.Running,
-                    Sha = mergeRequest.Sha,
+                    Sha = sha,
                     Ref = mergeRequest.TargetBranch,
                 },
             };
