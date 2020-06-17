@@ -176,7 +176,10 @@ namespace NGitLab.Impl
                             }
 
                             var stream = response.GetResponseStream();
-                            _buffer.AddRange(SimpleJson.DeserializeObject<T[]>(new StreamReader(stream).ReadToEnd()));
+                            var responseText = new StreamReader(stream).ReadToEnd();
+                            var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
+
+                            _buffer.AddRange(deserialized);
                         }
 
                         return _buffer.Count > 0;

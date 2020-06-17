@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
     [DataContract]
+    [DebuggerDisplay("{Name}")]
     public class User
     {
         public const string Url = "/users";
