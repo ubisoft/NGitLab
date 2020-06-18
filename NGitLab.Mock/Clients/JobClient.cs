@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
@@ -37,7 +38,16 @@ namespace NGitLab.Mock.Clients
             if (scope == JobScopeMask.All)
                 return project.Jobs.Select(j => j.ToJobClient());
 
-            var jobs = project.Jobs.Where(j => string.Equals(j.Status.ToString(), scope.ToString(), System.StringComparison.OrdinalIgnoreCase));
+            var scopes = new List<string>();
+            foreach (Enum value in Enum.GetValues(scope.GetType()))
+            {
+                if (scope.HasFlag(value))
+                {
+                    scopes.Add(value.ToString());
+                }
+            }
+
+            var jobs = project.Jobs.Where(j => scopes.Any(scope => string.Equals(j.Status.ToString(), scope, System.StringComparison.OrdinalIgnoreCase)));
             return jobs.Select(j => j.ToJobClient());
         }
 
