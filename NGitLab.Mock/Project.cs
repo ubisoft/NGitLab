@@ -89,6 +89,8 @@ namespace NGitLab.Mock
 
         public int ApprovalsBeforeMerge { get; set; }
 
+        public string MergeMethod { get; set; }
+
         public void Remove()
         {
             Group.Projects.Remove(this);
@@ -305,6 +307,7 @@ namespace NGitLab.Mock
                 LfsEnabled = LfsEnabled,
                 Archived = Archived,
                 ApprovalsBeforeMerge = ApprovalsBeforeMerge,
+                MergeMethod = MergeMethod,
             };
         }
     }

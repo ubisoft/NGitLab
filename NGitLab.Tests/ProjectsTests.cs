@@ -86,6 +86,20 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        public void GetProjectsMergeMethod()
+        {
+            var projects = GetProjects(new ProjectQuery()).ToList();
+
+            if (projects.Count == 0)
+            {
+                Assert.Fail("No projects found.");
+            }
+
+            projects.ForEach(p => Assert.IsNotNull(p.MergeMethod));
+        }
+
+
+        [Test]
         public void GetProjectsByQuery_VisibilityInternal()
         {
             var query = new ProjectQuery

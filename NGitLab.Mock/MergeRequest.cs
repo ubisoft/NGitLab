@@ -107,6 +107,15 @@ namespace NGitLab.Mock
             }
         }
 
+        public RebaseResult Rebase(User user)
+        {
+            SourceProject.Repository.Rebase(user, SourceBranch, TargetBranch, Project);
+
+            UpdatedAt = DateTimeOffset.UtcNow;
+
+            return new RebaseResult { RebaseInProgress = true };
+        }
+
         internal Models.MergeRequest ToMergeRequestClient()
         {
             return new Models.MergeRequest

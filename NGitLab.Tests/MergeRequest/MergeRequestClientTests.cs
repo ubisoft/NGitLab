@@ -32,6 +32,17 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
+        public void Test_merge_request_rebase()
+        {
+            var branch = CreateBranch("my-branch-to-rebase");
+            var mergeRequest = CreateMergeRequest(branch.Name, "master");
+
+            RebaseMergeRequest(mergeRequest);
+            var commits = _mergeRequestClient.Commits(mergeRequest.Iid).All;
+            Assert.IsTrue(commits.Any(), "Can return the commits");
+        }
+
+        [Test]
         public void Test_gitlab_returns_an_error_when_trying_to_create_a_request_with_same_source_and_destination()
         {
             var exception = Assert.Throws<GitLabException>(() =>
@@ -235,6 +246,13 @@ namespace NGitLab.Tests.MergeRequest
 
             Assert.That(mergeRequest.State, Is.EqualTo(nameof(MergeRequestState.merged)));
             Assert.IsNull(Initialize.Repository.Branches.All.FirstOrDefault(x => string.Equals(x.Name, request.SourceBranch, System.StringComparison.Ordinal)));
+        }
+
+        public void RebaseMergeRequest(Models.MergeRequest request)
+        {
+            var rebaseResult = _mergeRequestClient.Rebase(mergeRequestIid: request.Iid);
+
+            Assert.IsTrue(rebaseResult.RebaseInProgress);
         }
     }
 }
