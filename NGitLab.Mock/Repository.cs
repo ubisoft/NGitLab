@@ -66,6 +66,18 @@ namespace NGitLab.Mock
             return _repository;
         }
 
+        public bool IsRebaseNeeded(string branch, string ontoRebaseBranch)
+        {
+            var repository = GetGitRepository();
+
+            var branchCommit = GetCommit(branch);
+            var ontoRebaseCommit = GetCommit(ontoRebaseBranch);
+
+            var commonCommit = repository.ObjectDatabase.FindMergeBase(branchCommit, ontoRebaseCommit);
+
+            return commonCommit != ontoRebaseCommit;
+        }
+
         public Branch GetBranch(string branchName)
         {
             var repository = GetGitRepository();
@@ -425,6 +437,33 @@ namespace NGitLab.Mock
             targetGitRepository.Branches.Remove(tempBranchName);
 
             return result.Commit;
+        }
+
+        public Rebase Rebase(User user, string sourceBranch, string targetBranch)
+        {
+            var repo = GetGitRepository();
+            var rebase = repo.Rebase;
+
+            var branch = repo.Branches[sourceBranch];
+            var onto = repo.Branches[targetBranch];
+
+            var committer = new Identity(user.UserName, user.Email);
+            var options = new RebaseOptions();
+
+            var remote = repo.Network.Remotes[targetBranch];
+
+            var rebaseResult = rebase.Start(branch, branch, onto, committer, options);
+            if (rebaseResult.Status == RebaseStatus.Conflicts)
+            {
+                rebase.Abort();
+            }
+
+            return rebase;
+        }
+
+        public Rebase Rebase(User user, string sourceBranch, string targetBranch, Project targetProject)
+        {
+            return Rebase(user, sourceBranch, targetBranch);
         }
 
         public void Dispose()

@@ -78,6 +78,9 @@ namespace NGitLab.Models
         [DataMember(Name = "repository_access_level")]
         public RepositoryAccessLevel RepositoryAccessLevel;
 
+        [DataMember(Name = "merge_method")]
+        public string MergeMethod;
+
         [DataMember(Name = "wall_enabled")]
         public bool WallEnabled;
 

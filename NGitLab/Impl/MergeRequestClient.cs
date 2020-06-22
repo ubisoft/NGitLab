@@ -90,6 +90,10 @@ namespace NGitLab.Impl
             .Put().With(message)
             .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid + "/merge");
 
+        public RebaseResult Rebase(int mergeRequestIid) => _api
+            .Put()
+            .To<RebaseResult>(_projectPath + "/merge_requests/" + mergeRequestIid + "/rebase");
+
         public IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid)
         {
             return _api.Get().GetAll<PipelineBasic>(_projectPath + "/merge_requests/" + mergeRequestIid + "/pipelines");

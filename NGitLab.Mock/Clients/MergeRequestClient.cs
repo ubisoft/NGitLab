@@ -89,8 +89,30 @@ namespace NGitLab.Mock.Clients
                 }
             }
 
+            if (project.MergeMethod != null &&
+                (string.Equals(project.MergeMethod, "ff", StringComparison.Ordinal) || string.Equals(project.MergeMethod, "rebase_merge", StringComparison.Ordinal)) &&
+                project.Repository.IsRebaseNeeded(mergeRequest.SourceBranch, mergeRequest.TargetBranch))
+            {
+                throw new GitLabException("The merge request has some conflicts and cannot be merged")
+                {
+                    StatusCode = HttpStatusCode.NotAcceptable,
+                };
+            }
+
             mergeRequest.Accept(Context.User);
             return mergeRequest.ToMergeRequestClient();
+        }
+
+        public RebaseResult Rebase(int mergeRequestIid)
+        {
+            AssertProjectId();
+            var project = GetProject(_projectId, ProjectPermission.Contribute);
+            var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
+
+            if (mergeRequest == null)
+                throw new GitLabNotFoundException();
+
+            return mergeRequest.Rebase(Context.User);
         }
 
         public IEnumerable<Models.MergeRequest> AllInState(MergeRequestState state)
@@ -354,11 +376,18 @@ namespace NGitLab.Mock.Clients
 
             if (mergeRequestUpdate.AssigneeId != null)
             {
-                var user = Server.Users.GetById(mergeRequestUpdate.AssigneeId.Value);
-                if (user == null)
-                    throw new GitLabBadRequestException("user not found");
+                if (mergeRequestUpdate.AssigneeId.Value == 0)
+                {
+                    mergeRequest.Assignee = null;
+                }
+                else
+                {
+                    var user = Server.Users.GetById(mergeRequestUpdate.AssigneeId.Value);
+                    if (user == null)
+                        throw new GitLabBadRequestException("user not found");
 
-                mergeRequest.Assignee = new UserRef(user);
+                    mergeRequest.Assignee = new UserRef(user);
+                }
             }
 
             if (mergeRequestUpdate.Description != null)
