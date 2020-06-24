@@ -24,6 +24,9 @@ namespace NGitLab.Models
         [DataMember(Name = "resolved")]
         public bool Resolved;
 
+        [DataMember(Name = "resolvable")]
+        public bool Resolvable;
+
         [DataMember(Name = "type")]
         public string Type;
 
