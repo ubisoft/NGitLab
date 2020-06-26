@@ -14,6 +14,9 @@ namespace NGitLab.Models
         [DataMember(Name = "assignee_id")]
         public int? AssigneeId;
 
+        [DataMember(Name = "assignee_ids")]
+        public int[] AssigneeIds;
+
         [DataMember(Name = "title")]
         public string Title;
 
