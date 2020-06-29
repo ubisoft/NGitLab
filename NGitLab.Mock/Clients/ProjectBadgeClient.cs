@@ -59,7 +59,15 @@ namespace NGitLab.Mock.Clients
 
         public Models.Badge Update(int id, Models.BadgeUpdate badge)
         {
-            throw new NotImplementedException();
+            var badgeToUpdate = GetProject(_projectId, ProjectPermission.Edit).Badges.FirstOrDefault(b => b.Id == id);
+            if (badgeToUpdate != null)
+            {
+                badgeToUpdate.LinkUrl = badge.LinkUrl;
+                badgeToUpdate.ImageUrl = badge.ImageUrl;
+                return badgeToUpdate.ToBadgeModel();
+            }
+
+            throw new GitLabNotFoundException();
         }
     }
 }
