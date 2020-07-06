@@ -116,6 +116,16 @@ namespace NGitLab.Mock
             return new RebaseResult { RebaseInProgress = true };
         }
 
+        public IEnumerable<Models.MergeRequestDiscussion> GetDiscussions()
+        {
+            return Comments.GroupBy(c => c.ThreadId, StringComparer.Ordinal).Select(g => new MergeRequestDiscussion
+            {
+                Id = g.Key,
+                IndividualNote = g.Count() == 1,
+                Notes = g.Select(n => n.ToMergeRequestCommentClient()).ToArray(),
+            });
+        }
+
         internal Models.MergeRequest ToMergeRequestClient()
         {
             return new Models.MergeRequest
