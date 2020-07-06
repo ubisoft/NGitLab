@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -23,7 +24,10 @@ namespace NGitLab
 
         void Delete(int mergeRequestIid);
 
+        [Obsolete("You should use MergeRequestMerge instead of MergeRequestAccept")]
         MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message);
+
+        MergeRequest Accept(int mergeRequestIid, MergeRequestMerge message);
 
         RebaseResult Rebase(int mergeRequestIid);
 

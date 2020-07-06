@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NGitLab.Models;
 
@@ -87,6 +88,10 @@ namespace NGitLab.Impl
             .Execute(_projectPath + "/merge_requests/" + mergeRequestIid);
 
         public MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message) => _api
+            .Put().With(message)
+            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid + "/merge");
+
+        public MergeRequest Accept(int mergeRequestIid, MergeRequestMerge message) => _api
             .Put().With(message)
             .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid + "/merge");
 
