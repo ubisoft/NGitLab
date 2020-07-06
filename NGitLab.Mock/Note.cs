@@ -12,6 +12,8 @@ namespace NGitLab.Mock
 
         public long Id { get; set; }
 
+        public string ThreadId { get; set; }
+
         public string Body { get; set; }
 
         public UserRef Author { get; set; }

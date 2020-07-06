@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
@@ -19,6 +20,8 @@ namespace NGitLab.Mock.Clients
         private MergeRequest GetMergeRequest() => GetMergeRequest(_projectId, _mergeRequestIid);
 
         public IEnumerable<Models.MergeRequestComment> All => GetMergeRequest().Comments.Select(mr => mr.ToMergeRequestCommentClient());
+
+        public IEnumerable<MergeRequestDiscussion> Discussions => GetMergeRequest().GetDiscussions();
 
         public Models.MergeRequestComment Add(Models.MergeRequestComment comment)
         {

@@ -24,7 +24,12 @@ namespace NGitLab.Mock
             }
             else if (GetById(item.Id) != null)
             {
-                throw new GitLabException("User already exists");
+                throw new GitLabException("Note already exists");
+            }
+
+            if (item.ThreadId == default)
+            {
+                item.ThreadId = GetNewThreadId();
             }
 
             base.Add(item);
@@ -32,7 +37,12 @@ namespace NGitLab.Mock
 
         private long GetNewId()
         {
-            return this.Select(user => user.Id).DefaultIfEmpty().Max() + 1;
+            return this.Select(note => note.Id).DefaultIfEmpty().Max() + 1;
+        }
+
+        private string GetNewThreadId()
+        {
+            return Guid.NewGuid().ToString("N");
         }
     }
 }
