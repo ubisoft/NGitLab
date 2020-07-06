@@ -103,6 +103,49 @@ namespace NGitLab.Mock.Clients
             return mergeRequest.ToMergeRequestClient();
         }
 
+        public Models.MergeRequest Accept(int mergeRequestIid, MergeRequestMerge message)
+        {
+            AssertProjectId();
+            var project = GetProject(_projectId, ProjectPermission.Contribute);
+            var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
+
+            if (project.ApprovalsBeforeMerge > 0 && !mergeRequest.Approvers.Any())
+            {
+                throw new GitLabException("The merge request needs to be approved before merging")
+                {
+                    StatusCode = HttpStatusCode.Unauthorized,
+                };
+            }
+
+            if (mergeRequest == null)
+                throw new GitLabNotFoundException();
+
+            if (message.Sha != null)
+            {
+                var commit = project.Repository.GetBranchTipCommit(mergeRequest.SourceBranch);
+                if (!string.Equals(commit.Sha, message.Sha, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new GitLabException("SHA does not match HEAD of source branch")
+                    {
+                        StatusCode = HttpStatusCode.Conflict,
+                    };
+                }
+            }
+
+            if (project.MergeMethod != null &&
+                (string.Equals(project.MergeMethod, "ff", StringComparison.Ordinal) || string.Equals(project.MergeMethod, "rebase_merge", StringComparison.Ordinal)) &&
+                project.Repository.IsRebaseNeeded(mergeRequest.SourceBranch, mergeRequest.TargetBranch))
+            {
+                throw new GitLabException("The merge request has some conflicts and cannot be merged")
+                {
+                    StatusCode = HttpStatusCode.NotAcceptable,
+                };
+            }
+
+            mergeRequest.Accept(Context.User);
+            return mergeRequest.ToMergeRequestClient();
+        }
+
         public RebaseResult Rebase(int mergeRequestIid)
         {
             AssertProjectId();

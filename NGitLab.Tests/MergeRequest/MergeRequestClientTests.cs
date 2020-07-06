@@ -238,10 +238,12 @@ namespace NGitLab.Tests.MergeRequest
         {
             var mergeRequest = _mergeRequestClient.Accept(
                 mergeRequestIid: request.Iid,
-                message: new MergeRequestAccept
+                message: new MergeRequestMerge
                 {
                     MergeCommitMessage = "Merge my-super-feature into master",
                     ShouldRemoveSourceBranch = true,
+                    MergeWhenPipelineSucceeds = false,
+                    Squash = false,
                 });
 
             Assert.That(mergeRequest.State, Is.EqualTo(nameof(MergeRequestState.merged)));
