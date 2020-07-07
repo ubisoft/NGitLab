@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace NGitLab.Models
@@ -95,10 +96,21 @@ namespace NGitLab.Models
         [DataMember(Name = "merged_at")]
         public DateTime? MergedAt;
 
+        [DataMember(Name = "closed_at")]
+        public DateTime? ClosedAt;
+
+        [DataMember(Name = "closed_by")]
+        public User ClosedBy;
+
         [DataMember(Name = "assignees")]
         public User[] Assignees;
 
         [DataMember(Name = "allow_collaboration")]
         public bool? AllowCollaboration;
+
+        public override string ToString()
+        {
+            return $"!{Id}: {Title}";
+        }
     }
 }
