@@ -1,4 +1,5 @@
-﻿using NGitLab.Models;
+﻿using System;
+using NGitLab.Models;
 
 namespace NGitLab
 {
@@ -7,6 +8,8 @@ namespace NGitLab
         /// <summary>
         /// Returns the status of a branch.
         /// </summary>
+        [Obsolete("This endpoint does not always return data consistent with the pipeline list. " +
+                  "Consider using PipelineClient.Search() instead.")]
         JobStatus GetJobStatus(string branchName);
 
         /// <summary>
