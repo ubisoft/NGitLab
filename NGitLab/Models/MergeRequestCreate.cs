@@ -29,6 +29,9 @@ namespace NGitLab.Models
         [DataMember(Name = "remove_source_branch")]
         public bool RemoveSourceBranch;
 
+        [DataMember(Name = "milestone_id")]
+        public int? MilestoneId { get; set; }
+
         [DataMember(Name = "labels")]
         public string Labels;
 
