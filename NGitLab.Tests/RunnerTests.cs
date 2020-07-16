@@ -87,31 +87,42 @@ namespace NGitLab.Tests
             var runner = GetLockingRunner();
             var runners = Initialize.GitLabClient.Runners;
 
-            // assert runner is not locked
-            Assert.IsFalse(runner.Locked, "Runner should not be locked.");
-
-            // lock runner
-            var lockedRunner = new RunnerUpdate
+            if (runner.Locked)
             {
-                Locked = true,
-            };
-            runners.Update(runner.Id, lockedRunner);
-
-            // assert runner is locked
-            var updated = GetLockingRunner();
-
-            Assert.IsTrue(updated.Locked, "Runner should be locked.");
-
-            // unlock runner
-            var unlockedRunner = new RunnerUpdate
+                UnlockRunner();
+                LockRunner();
+            }
+            else
             {
-                Locked = false,
-            };
-            runners.Update(runner.Id, unlockedRunner);
+                LockRunner();
+                UnlockRunner();
+            }
 
-            updated = GetLockingRunner();
+            void LockRunner()
+            {
+                var lockedRunner = new RunnerUpdate
+                {
+                    Locked = true,
+                };
+                runners.Update(runner.Id, lockedRunner);
 
-            Assert.False(updated.Locked, "Runner should not be locked.");
+                // assert runner is locked
+                var updated = GetLockingRunner();
+
+                Assert.IsTrue(updated.Locked, "Runner should be locked.");
+            }
+
+            void UnlockRunner()
+            {
+                var unlockedRunner = new RunnerUpdate
+                {
+                    Locked = false,
+                };
+                runners.Update(runner.Id, unlockedRunner);
+
+                var updated = GetLockingRunner();
+                Assert.False(updated.Locked, "Runner should not be locked.");
+            }
         }
 
         [Test]
