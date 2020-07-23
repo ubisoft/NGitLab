@@ -165,5 +165,10 @@ namespace NGitLab
         {
             return new GroupVariableClient(_api, groupId);
         }
+
+        public IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId)
+        {
+            return  new ProjectLevelApprovalRulesClient(_api, projectId);
+        }
     }
 }

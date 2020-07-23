@@ -57,5 +57,7 @@
         IProjectVariableClient GetProjectVariableClient(int projectId);
 
         IGroupVariableClient GetGroupVariableClient(int groupId);
+
+        IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId);
     }
 }
