@@ -108,6 +108,9 @@ namespace NGitLab.Models
         [DataMember(Name = "allow_collaboration")]
         public bool? AllowCollaboration;
 
+        [DataMember(Name = "head_pipeline")]
+        public Pipeline HeadPipeline;
+
         public override string ToString()
         {
             return $"!{Id}: {Title}";

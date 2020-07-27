@@ -55,6 +55,17 @@ namespace NGitLab.Mock
 
         public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/merge_requests/{Id.ToString(CultureInfo.InvariantCulture)}");
 
+        public Pipeline HeadPipeline
+        {
+            get
+            {
+                return Project.Pipelines
+                  .Where(p => p.Sha.Equals(Sha))
+                  .OrderByDescending(p => p.CreatedAt)
+                  .FirstOrDefault();
+            }
+        }
+
         public NoteCollection<MergeRequestComment> Comments { get; }
 
         public bool WorkInProgress => Title?.StartsWith("WIP:", StringComparison.OrdinalIgnoreCase) == true;
@@ -153,6 +164,7 @@ namespace NGitLab.Mock
                 MergeStatus = "can_be_merged",
                 State = State.ToString(),
                 WebUrl = WebUrl,
+                HeadPipeline = HeadPipeline?.ToPipelineClient(),
             };
         }
     }
