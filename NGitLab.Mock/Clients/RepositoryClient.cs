@@ -40,6 +40,11 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
         public void GetRawBlob(string sha, Action<Stream> parser)
         {
             throw new NotImplementedException();

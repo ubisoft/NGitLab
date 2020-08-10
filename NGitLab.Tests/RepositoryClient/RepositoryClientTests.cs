@@ -97,6 +97,13 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        public void GetAllTreeInPathWith100ElementsByPage()
+        {
+            var tree = Initialize.Repository.GetTree(new RepositoryGetTreeOptions { Path = string.Empty, PerPage = 100 });
+            Assert.IsNotEmpty(tree);
+        }
+
+        [Test]
         public void GetAllTreeInNotGoodPath()
         {
             var tree = Initialize.Repository.GetTree("Fakepath");
