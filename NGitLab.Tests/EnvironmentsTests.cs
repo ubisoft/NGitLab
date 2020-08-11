@@ -100,8 +100,18 @@ namespace NGitLab.Tests
             var env = envClient.Create(newEnvNameToDelete, externalUrl: null);
             var initialEnvId = env.Id;
 
-            // Validate newEnvNameToDelete is present
-            Assert.IsNotNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToDelete, System.StringComparison.Ordinal)));
+            // Validate newEnvNameToDelete is present & available
+            env = envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToDelete, System.StringComparison.Ordinal));
+            Assert.IsNotNull(env);
+            StringAssert.AreEqualIgnoringCase("available", env.State);
+
+            // Trying to delete without stopping beforehand will throw...
+            Assert.Throws<GitLabException>(() => envClient.Delete(initialEnvId));
+
+            // Stop
+            envClient.Stop(initialEnvId);
+            env = envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToDelete, System.StringComparison.Ordinal));
+            StringAssert.AreEqualIgnoringCase("stopped", env.State);
 
             // Delete
             envClient.Delete(initialEnvId);

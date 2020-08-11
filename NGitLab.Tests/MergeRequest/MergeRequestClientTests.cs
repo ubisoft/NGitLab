@@ -180,6 +180,11 @@ namespace NGitLab.Tests.MergeRequest
             Assert.AreEqual(mergeRequest.Squash, false);
             Assert.NotNull(mergeRequest.Sha);
             StringAssert.StartsWith(Initialize.GitLabHost, mergeRequest.WebUrl);
+            Initialize.WaitWithTimeoutUntil(() =>
+            {
+                mergeRequest = _mergeRequestClient[mergeRequest.Iid];
+                return mergeRequest.MergeStatus.Equals("can_be_merged", System.StringComparison.OrdinalIgnoreCase);
+            });
             Assert.AreEqual("can_be_merged", mergeRequest.MergeStatus);
 
             return mergeRequest;

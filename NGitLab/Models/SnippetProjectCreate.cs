@@ -22,7 +22,7 @@ namespace NGitLab.Models
         public string Description;
 
         [Required]
-        [DataMember(Name = "code")]
+        [DataMember(Name = "content")]
         public string Code;
 
         [Required]
