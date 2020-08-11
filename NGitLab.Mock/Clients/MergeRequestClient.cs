@@ -235,7 +235,24 @@ namespace NGitLab.Mock.Clients
             mergeRequest.Description = mergeRequestCreate.Description;
             mergeRequest.ShouldRemoveSourceBranch = mergeRequestCreate.RemoveSourceBranch;
             mergeRequest.Squash = mergeRequestCreate.Squash;
+            SetLabels(mergeRequest, mergeRequestCreate.Labels);
+
             return mergeRequest.ToMergeRequestClient();
+        }
+
+        private static void SetLabels(MergeRequest mergeRequest, string labels)
+        {
+            if (labels != null)
+            {
+                mergeRequest.Labels.Clear();
+                foreach (var label in labels.Split(','))
+                {
+                    if (!string.IsNullOrEmpty(label))
+                    {
+                        mergeRequest.Labels.Add(label);
+                    }
+                }
+            }
         }
 
         public void Delete(int mergeRequestIid)
@@ -457,6 +474,8 @@ namespace NGitLab.Mock.Clients
             {
                 mergeRequest.Title = mergeRequestUpdate.Title;
             }
+
+            SetLabels(mergeRequest, mergeRequestUpdate.Labels);
 
             mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
             return mergeRequest.ToMergeRequestClient();

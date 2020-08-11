@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -65,6 +65,8 @@ namespace NGitLab.Mock
                   .FirstOrDefault();
             }
         }
+
+        public IList<string> Labels { get; } = new List<string>();
 
         public NoteCollection<MergeRequestComment> Comments { get; }
 
@@ -165,6 +167,7 @@ namespace NGitLab.Mock
                 State = State.ToString(),
                 WebUrl = WebUrl,
                 HeadPipeline = HeadPipeline?.ToPipelineClient(),
+                Labels = Labels.ToArray(),
             };
         }
     }
