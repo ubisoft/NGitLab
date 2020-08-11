@@ -149,5 +149,10 @@ namespace NGitLab.Mock.Clients
 
             return project.ToClientProject();
         }
+
+        public UploadedProjectFile UploadFile(string id, FormDataContent data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

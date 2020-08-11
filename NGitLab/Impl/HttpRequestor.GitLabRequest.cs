@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Text;
 using NGitLab.Extensions;
+using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
@@ -18,11 +23,15 @@ namespace NGitLab.Impl
 
             public string JsonData { get; }
 
+            public FormDataContent FormData { get; }
+
             private MethodType Method { get; }
 
             public WebHeaderCollection Headers { get; } = new WebHeaderCollection();
 
-            private bool HasOutput => (Method == MethodType.Delete || Method == MethodType.Post || Method == MethodType.Put) && Data != null;
+            private bool HasOutput
+                => (Method == MethodType.Delete || Method == MethodType.Post || Method == MethodType.Put)
+                    && Data != null;
 
             public GitLabRequest(Uri url, MethodType method, object data, string apiToken)
             {
@@ -35,7 +44,11 @@ namespace NGitLab.Impl
                     Headers.Add("Private-Token", apiToken);
                 }
 
-                if (data != null)
+                if (data is FormDataContent formData)
+                {
+                    FormData = formData;
+                }
+                else if (data != null)
                 {
                     JsonData = SimpleJson.SerializeObject(data);
                 }
@@ -104,7 +117,14 @@ namespace NGitLab.Impl
 
                 if (HasOutput)
                 {
-                    AddData(request);
+                    if (FormData != null)
+                    {
+                        AddFileData(request);
+                    }
+                    else if (JsonData != null)
+                    {
+                        AddJsonData(request);
+                    }
                 }
                 else if (Method == MethodType.Put)
                 {
@@ -114,7 +134,7 @@ namespace NGitLab.Impl
                 return request;
             }
 
-            private void AddData(WebRequest request)
+            private void AddJsonData(WebRequest request)
             {
                 request.ContentType = "application/json";
 
@@ -122,6 +142,21 @@ namespace NGitLab.Impl
                 writer.Write(JsonData);
                 writer.Flush();
                 writer.Close();
+            }
+
+            public void AddFileData(WebRequest request)
+            {
+                var boundary = $"--------------------------{DateTime.UtcNow.Ticks}";
+                if (!(Data is FormDataContent formData))
+                    return;
+                request.ContentType = "multipart/form-data; boundary=" + boundary;
+
+                using var uploadContent = new MultipartFormDataContent(boundary)
+                {
+                    { new StreamContent(formData.Stream), "file", formData.Name },
+                };
+
+                uploadContent.CopyToAsync(request.GetRequestStream()).Wait();
             }
 
             /// <summary>

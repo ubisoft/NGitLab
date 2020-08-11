@@ -39,6 +39,11 @@ namespace NGitLab
 
         void Delete(int id);
 
+        /// <summary>
+        /// Uploads a file to the specified project to be used in an issue or merge request description, or a comment.
+        /// </summary>
+        UploadedProjectFile UploadFile(string id, FormDataContent data);
+
         Project GetById(int id, SingleProjectQuery query);
 
         Project Fork(string id, ForkProject forkProject);
