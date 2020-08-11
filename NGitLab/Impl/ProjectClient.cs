@@ -155,5 +155,8 @@ namespace NGitLab.Impl
         {
             return _api.Put().With(projectUpdate).To<Project>(Project.Url + "/" + Uri.EscapeDataString(id));
         }
+
+        public UploadedProjectFile UploadFile(string id, FormDataContent data)
+            => _api.Post().With(data).To<UploadedProjectFile>($"{Project.Url}/{Uri.EscapeDataString(id)}/uploads");
     }
 }
