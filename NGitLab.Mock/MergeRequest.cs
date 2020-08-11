@@ -53,6 +53,8 @@ namespace NGitLab.Mock
 
         public bool MergeWhenPipelineSucceeds { get; set; }
 
+        public bool RebaseInProgress { get; set; }
+
         public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/merge_requests/{Id.ToString(CultureInfo.InvariantCulture)}");
 
         public Pipeline HeadPipeline
@@ -168,6 +170,7 @@ namespace NGitLab.Mock
                 WebUrl = WebUrl,
                 HeadPipeline = HeadPipeline?.ToPipelineClient(),
                 Labels = Labels.ToArray(),
+                RebaseInProgress = RebaseInProgress,
             };
         }
     }

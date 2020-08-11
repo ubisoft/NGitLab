@@ -54,7 +54,16 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<MergeRequest>(url);
         }
 
-        public MergeRequest this[int iid] => _api.Get().To<MergeRequest>(_projectPath + "/merge_requests/" + iid);
+        public MergeRequest this[int iid]
+        {
+            get
+            {
+                var url = $"{_projectPath}{MergeRequest.Url}/{iid}";
+                url = Utils.AddParameter(url, "include_rebase_in_progress", true);
+
+                return _api.Get().To<MergeRequest>(url);
+            }
+        }
 
         public MergeRequest Create(MergeRequestCreate mergeRequest)
         {

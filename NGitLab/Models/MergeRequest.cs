@@ -111,6 +111,9 @@ namespace NGitLab.Models
         [DataMember(Name = "head_pipeline")]
         public Pipeline HeadPipeline;
 
+        [DataMember(Name = "rebase_in_progress")]
+        public bool RebaseInProgress;
+
         public override string ToString()
         {
             return $"!{Id}: {Title}";
