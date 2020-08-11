@@ -73,6 +73,8 @@ namespace NGitLab.Tests
                 throw new ArgumentNullException(nameof(GitLabToken));
 
             GitLabClient = new GitLabClient(GitLabHost, apiToken: GitLabToken, options: new CustomRequestOptions(s_requests));
+            OutputInstanceInfo();
+
             GitLabClientFront1 = new GitLabClient(GitLabHostFront1, apiToken: GitLabToken, options: new CustomRequestOptions(s_requests));
             GitLabClientFront2 = new GitLabClient(GitLabHostFront2, apiToken: GitLabToken, options: new CustomRequestOptions(s_requests));
 
@@ -105,6 +107,17 @@ namespace NGitLab.Tests
                 .HandleResult(result: false)
                 .WaitAndRetry(retryCount: 3, sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(retryAttempt))
                 .Execute(predicate);
+        }
+
+        private void OutputInstanceInfo()
+        {
+            var version = GitLabClient.Version.Get().Version;
+            var versionMsg = $"* Running tests against GitLab {version} instance *";
+            var headerLine = new string('*', versionMsg.Length);
+
+            TestContext.Progress.WriteLine(headerLine);
+            TestContext.Progress.WriteLine(versionMsg);
+            TestContext.Progress.WriteLine(headerLine);
         }
 
         private static Group CreateGroup(string groupName)
