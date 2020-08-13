@@ -186,6 +186,7 @@ namespace NGitLab.Tests.MergeRequest
                 return mergeRequest.MergeStatus.Equals("can_be_merged", System.StringComparison.OrdinalIgnoreCase);
             });
             Assert.AreEqual("can_be_merged", mergeRequest.MergeStatus);
+            Assert.AreEqual(false, mergeRequest.RebaseInProgress);
 
             return mergeRequest;
         }
@@ -255,10 +256,9 @@ namespace NGitLab.Tests.MergeRequest
             Assert.IsNull(Initialize.Repository.Branches.All.FirstOrDefault(x => string.Equals(x.Name, request.SourceBranch, System.StringComparison.Ordinal)));
         }
 
-        public void RebaseMergeRequest(Models.MergeRequest request)
+        public void RebaseMergeRequest(Models.MergeRequest mergeRequest)
         {
-            var rebaseResult = _mergeRequestClient.Rebase(mergeRequestIid: request.Iid);
-
+            var rebaseResult = _mergeRequestClient.Rebase(mergeRequestIid: mergeRequest.Iid);
             Assert.IsTrue(rebaseResult.RebaseInProgress);
         }
     }
