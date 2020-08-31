@@ -15,6 +15,8 @@ namespace NGitLab
 
         IEnumerable<Tree> GetTree(string path, string @ref, bool recursive);
 
+        IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options);
+
         void GetRawBlob(string sha, Action<Stream> parser);
 
         void GetArchive(Action<Stream> parser);
