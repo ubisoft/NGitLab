@@ -29,6 +29,8 @@ namespace NGitLab
 
         MergeRequest Accept(int mergeRequestIid, MergeRequestMerge message);
 
+        MergeRequest Approve(int mergeRequestIid, MergeRequestApprove message);
+
         RebaseResult Rebase(int mergeRequestIid);
 
         IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid);

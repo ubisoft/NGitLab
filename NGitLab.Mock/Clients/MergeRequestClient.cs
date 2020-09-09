@@ -146,6 +146,48 @@ namespace NGitLab.Mock.Clients
             return mergeRequest.ToMergeRequestClient();
         }
 
+        public Models.MergeRequest Approve(int mergeRequestIid, MergeRequestApprove message)
+        {
+            AssertProjectId();
+            var project = GetProject(_projectId, ProjectPermission.Contribute);
+            project.CanUserContributeToProject(Context.User);
+            var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
+
+            if (mergeRequest == null)
+                throw new GitLabNotFoundException();
+
+            // Check if user has already aproved the merge request
+            if (mergeRequest.Approvers.Where(x => x.Id == Context.User.Id).Any())
+            {
+                throw new GitLabException("GitLab server returned an error (Unauthorized): Empty Response.")
+                {
+                    StatusCode = HttpStatusCode.Unauthorized,
+                };
+            }
+
+            /* To be implemented 
+             * need get configuration for gitlab merge request approval: https://docs.gitlab.com/ee/api/merge_request_approvals.html)
+             * 1) Check if project approval rules require password input
+             * 2) Check if project approval rules prevents merge request committers from approving
+             * 3) Check if project approval rules prevents merge request author from approving
+             */
+
+            if (message.Sha != null)
+            {
+                var commit = project.Repository.GetBranchTipCommit(mergeRequest.SourceBranch);
+                if (!string.Equals(commit.Sha, message.Sha, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new GitLabException("SHA does not match HEAD of source branch")
+                    {
+                        StatusCode = HttpStatusCode.Conflict,
+                    };
+                }
+            }
+
+            mergeRequest.Approvers.Add(new UserRef(Context.User));
+            return mergeRequest.ToMergeRequestClient();
+        }
+
         public RebaseResult Rebase(int mergeRequestIid)
         {
             AssertProjectId();

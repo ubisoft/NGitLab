@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -82,15 +83,15 @@ namespace NGitLab.Impl
 
         public MergeRequest Update(int mergeRequestIid, MergeRequestUpdate mergeRequest) => _api
             .Put().With(mergeRequest)
-            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid);
+            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture));
 
         public MergeRequest Close(int mergeRequestIid) => _api
             .Put().With(new MergeRequestUpdateState { NewState = nameof(MergeRequestStateEvent.close) })
-            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid);
+            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture));
 
         public MergeRequest Reopen(int mergeRequestIid) => _api
             .Put().With(new MergeRequestUpdateState { NewState = nameof(MergeRequestStateEvent.reopen) })
-            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid);
+            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture));
 
         public void Delete(int mergeRequestIid) => _api
             .Delete()
@@ -98,24 +99,28 @@ namespace NGitLab.Impl
 
         public MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message) => _api
             .Put().With(message)
-            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid + "/merge");
+            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/merge");
 
         public MergeRequest Accept(int mergeRequestIid, MergeRequestMerge message) => _api
             .Put().With(message)
-            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid + "/merge");
+            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/merge");
+
+        public MergeRequest Approve(int mergeRequestIid, MergeRequestApprove message) => _api
+            .Post().With(message)
+            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/approve");
 
         public RebaseResult Rebase(int mergeRequestIid) => _api
             .Put()
-            .To<RebaseResult>(_projectPath + "/merge_requests/" + mergeRequestIid + "/rebase");
+            .To<RebaseResult>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/rebase");
 
         public IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid)
         {
-            return _api.Get().GetAll<PipelineBasic>(_projectPath + "/merge_requests/" + mergeRequestIid + "/pipelines");
+            return _api.Get().GetAll<PipelineBasic>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/pipelines");
         }
 
         public IEnumerable<Author> GetParticipants(int mergeRequestIid)
         {
-            return _api.Get().GetAll<Author>(_projectPath + "/merge_requests/" + mergeRequestIid + "/participants");
+            return _api.Get().GetAll<Author>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/participants");
         }
 
         public IMergeRequestCommentClient Comments(int mergeRequestIid) => new MergeRequestCommentClient(_api, _projectPath, mergeRequestIid);
