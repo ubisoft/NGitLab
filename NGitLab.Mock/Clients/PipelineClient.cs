@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -47,6 +46,11 @@ namespace NGitLab.Mock.Clients
             var project = GetProject(_projectId, ProjectPermission.View);
             var pipeline = project.Pipelines.Add(@ref, JobStatus.Running, Context.User);
             return pipeline.ToPipelineClient();
+        }
+
+        public Models.Pipeline Create(PipelineCreate createOptions)
+        {
+            throw new NotImplementedException();
         }
 
         public Models.Pipeline CreatePipelineWithTrigger(string token, string @ref, Dictionary<string, string> variables)
