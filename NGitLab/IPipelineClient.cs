@@ -41,6 +41,12 @@ namespace NGitLab
         Pipeline Create(string @ref);
 
         /// <summary>
+        /// Create a new pipeline with a combination of possible create options
+        /// </summary>
+        /// <param name="createOptions">Pipeline create options</param>
+        Pipeline Create(PipelineCreate createOptions);
+
+        /// <summary>
         /// Trigger a pipeline and send some info with a custom variable
         /// </summary>
         /// <param name="token">Token of the trigger</param>

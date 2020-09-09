@@ -22,36 +22,7 @@ namespace NGitLab.Tests
             _pipelines = Initialize.GitLabClient.GetPipelines(Initialize.UnitTestProject.Id);
             CommitsTests.EnableCiOnTestProject();
 
-            CreatePipeline("NewTagForPipelineTests");
-        }
-
-        private void CreatePipeline(string name)
-        {
-            Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
-            {
-                Name = name,
-                Ref = "master",
-            });
-
-            while (FindPipeline(name) == null)
-            {
-                Console.WriteLine("Waiting for pipeline to start.");
-                Thread.Sleep(1000);
-            }
-        }
-
-        private void CreatePipelineWithVariables(Dictionary<string, string> variables)
-        {
-            const string refName = "master";
-
-            var initialNumberOfPipelines = CountPipelines(refName);
-            _pipelines.CreatePipelineWithTrigger(_ciJobToken, refName, variables);
-
-            while (CountPipelines(refName) == initialNumberOfPipelines)
-            {
-                Console.WriteLine("Waiting for pipeline to start.");
-                Thread.Sleep(1000);
-            }
+            AddTagToTriggerPipeline("NewTagForPipelineTests");
         }
 
         [Test]
@@ -85,7 +56,7 @@ namespace NGitLab.Tests
         [Test]
         public void Test_delete_pipeline()
         {
-            CreatePipeline("PipelineToDelete");
+            AddTagToTriggerPipeline("PipelineToDelete");
             var pipelineToDelete = _pipelines.All.Single(p => string.Equals(p.Ref, "PipelineToDelete", StringComparison.Ordinal));
             _pipelines.Delete(pipelineToDelete.Id);
 
@@ -99,9 +70,33 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void Test_get_pipeline_variables()
+        public void Test_create_pipeline_with_variables()
         {
-            CreatePipelineWithVariables(new Dictionary<string, string>(StringComparer.InvariantCulture) { { "Test", "HelloWorld" } });
+            // Arrange/Act
+            var refName = "master";
+            CreatePipelineWithVariables(refName,
+                new KeyValuePair<string, string>("Var1", "First Value"),
+                new KeyValuePair<string, string>("Var2", "Second Value"));
+
+            // Assert
+            var pipelines = _pipelines.All.Where(p => string.Equals(p.Ref, refName, StringComparison.Ordinal));
+
+            var variables = _pipelines.GetVariables(pipelines.First().Id);
+
+            var var1 = variables.SingleOrDefault(v => v.Key.Equals("Var1", StringComparison.Ordinal));
+            Assert.NotNull(var1);
+
+            var var2 = variables.SingleOrDefault(v => v.Key.Equals("Var2", StringComparison.Ordinal));
+            Assert.NotNull(var2);
+
+            Assert.AreEqual("First Value", var1.Value);
+            Assert.AreEqual("Second Value", var2.Value);
+        }
+
+        [Test]
+        public void Test_get_triggered_pipeline_variables()
+        {
+            TriggerPipelineWithVariables(new Dictionary<string, string>(StringComparer.InvariantCulture) { { "Test", "HelloWorld" } });
             var pipelinesWithVariables = _pipelines.All.Where(p => string.Equals(p.Ref, "master", StringComparison.Ordinal));
 
             var variables = _pipelines.GetVariables(pipelinesWithVariables.First().Id);
@@ -112,13 +107,60 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void Test_get_pipeline_variables_special_characters()
+        public void Test_get_triggered_pipeline_variables_special_characters()
         {
-            CreatePipelineWithVariables(new Dictionary<string, string>(StringComparer.InvariantCulture) { { "EncodedVariable", "+4+" } });
+            TriggerPipelineWithVariables(new Dictionary<string, string>(StringComparer.InvariantCulture) { { "EncodedVariable", "+4+" } });
             var pipelinesWithVariables = _pipelines.All.Where(p => string.Equals(p.Ref, "master", StringComparison.Ordinal));
 
             var variables = _pipelines.GetVariables(pipelinesWithVariables.First().Id);
             Assert.IsTrue(variables.Any(v => v.Key.Equals("EncodedVariable", StringComparison.InvariantCulture) && v.Value.Equals("+4+", StringComparison.InvariantCulture)));
+        }
+
+        private void AddTagToTriggerPipeline(string name)
+        {
+            Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
+            {
+                Name = name,
+                Ref = "master",
+            });
+
+            while (FindPipeline(name) == null)
+            {
+                Console.WriteLine("Waiting for pipeline to start.");
+                Thread.Sleep(1000);
+            }
+        }
+
+        private void CreatePipelineWithVariables(string @ref, params KeyValuePair<string, string>[] variables)
+        {
+            var createOptions = new PipelineCreate { Ref = @ref };
+            foreach (var pair in variables)
+            {
+                createOptions.Variables[pair.Key] = pair.Value;
+            }
+
+            var initialNumberOfPipelines = CountPipelines(@ref);
+            _pipelines.Create(createOptions);
+
+            while (CountPipelines(@ref) == initialNumberOfPipelines)
+            {
+                Console.WriteLine("Waiting for pipeline to start.");
+                Thread.Sleep(1000);
+            }
+        }
+
+        private void TriggerPipelineWithVariables(Dictionary<string, string> variables)
+        {
+            const string refName = "master";
+
+            var initialNumberOfPipelines = CountPipelines(refName);
+            _pipelines.CreatePipelineWithTrigger(_ciJobToken, refName, variables);
+
+            while (CountPipelines(refName) == initialNumberOfPipelines)
+            {
+                Console.WriteLine("Waiting for pipeline to start.");
+                Thread.Sleep(1000);
+            }
         }
 
         private PipelineBasic FindPipeline(string refName)

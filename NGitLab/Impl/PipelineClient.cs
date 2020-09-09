@@ -51,6 +51,20 @@ namespace NGitLab.Impl
             return _api.Post().To<Pipeline>($"{_projectPath}/pipeline?ref={@ref}");
         }
 
+        public Pipeline Create(PipelineCreate createOptions)
+        {
+            var variables = new StringBuilder();
+            foreach (var variable in createOptions.Variables)
+            {
+                // see https://docs.gitlab.com/ee/api/#array-of-hashes
+                variables
+                    .Append("&variables[][key]=").Append(Uri.EscapeDataString(variable.Key))
+                    .Append("&variables[][value]=").Append(Uri.EscapeDataString(variable.Value));
+            }
+
+            return _api.Post().To<Pipeline>($"{_projectPath}/pipeline?ref={Uri.EscapeDataString(createOptions.Ref)}{variables}");
+        }
+
         public Pipeline CreatePipelineWithTrigger(string token, string @ref, Dictionary<string, string> variables)
         {
             var variablesToAdd = new StringBuilder();
