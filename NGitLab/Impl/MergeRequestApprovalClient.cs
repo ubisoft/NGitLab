@@ -1,4 +1,5 @@
-﻿using NGitLab.Models;
+﻿using System.Globalization;
+using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
@@ -11,12 +12,15 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _approvalsPath;
         private readonly string _approversPath;
+        private readonly string _approvePath;
 
         public MergeRequestApprovalClient(API api, string projectPath, int mergeRequestIid)
         {
+            var iid = mergeRequestIid.ToString(CultureInfo.InvariantCulture);
             _api = api;
-            _approvalsPath = projectPath + "/merge_requests/" + mergeRequestIid + "/approvals";
-            _approversPath = projectPath + "/merge_requests/" + mergeRequestIid + "/approvers";
+            _approvalsPath = projectPath + "/merge_requests/" + iid + "/approvals";
+            _approversPath = projectPath + "/merge_requests/" + iid + "/approvers";
+            _approvePath = projectPath + "/merge_requests/" + iid + "/approve";
         }
 
         public MergeRequestApprovals Approvals => _api.Get().To<MergeRequestApprovals>(_approvalsPath);
