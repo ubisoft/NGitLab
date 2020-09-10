@@ -85,8 +85,8 @@ namespace NGitLab.Mock
                 User = User.ToClientUser(),
                 CreatedAt = CreatedAt.UtcDateTime,
                 UpdatedAt = UpdatedAt.UtcDateTime,
-                StartedAt = StartedAt.HasValue ? StartedAt.Value.DateTime : default,
-                FinishedAt = FinishedAt.HasValue ? FinishedAt.Value.DateTime : default,
+                StartedAt = StartedAt.HasValue ? StartedAt.Value.UtcDateTime : default,
+                FinishedAt = FinishedAt.HasValue ? FinishedAt.Value.UtcDateTime : default,
                 Duration = Duration.HasValue ? Duration.Value.Ticks : 0,
                 Coverage = Coverage,
             };
