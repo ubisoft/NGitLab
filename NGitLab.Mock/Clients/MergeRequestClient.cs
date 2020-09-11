@@ -66,7 +66,7 @@ namespace NGitLab.Mock.Clients
             var project = GetProject(_projectId, ProjectPermission.Contribute);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
 
-            if (project.ApprovalsBeforeMerge > 0 && !mergeRequest.Approvers.Any())
+            if (project.ApprovalsBeforeMerge > mergeRequest.Approvers.Count)
             {
                 throw new GitLabException("The merge request needs to be approved before merging")
                 {
@@ -109,7 +109,7 @@ namespace NGitLab.Mock.Clients
             var project = GetProject(_projectId, ProjectPermission.Contribute);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
 
-            if (project.ApprovalsBeforeMerge > 0 && !mergeRequest.Approvers.Any())
+            if (project.ApprovalsBeforeMerge > mergeRequest.Approvers.Count)
             {
                 throw new GitLabException("The merge request needs to be approved before merging")
                 {
