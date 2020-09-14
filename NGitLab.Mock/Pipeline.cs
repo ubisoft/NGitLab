@@ -9,6 +9,8 @@ namespace NGitLab.Mock
             Ref = @ref;
         }
 
+        public new Project Parent => (Project)base.Parent;
+
         public int Id { get; set; }
 
         public JobStatus Status { get; set; }
