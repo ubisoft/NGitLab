@@ -58,6 +58,8 @@ namespace NGitLab.Mock
                         }
 
                         _repository = new LibGit2Sharp.Repository(directory.FullPath);
+
+                        _repository.Config.Set("receive.advertisePushOptions", value: true);
                         _directory = directory;
                     }
                 }
