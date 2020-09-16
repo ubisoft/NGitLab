@@ -435,19 +435,12 @@ namespace NGitLab.Mock.Clients
             if (mergeRequest == null)
                 throw new GitLabNotFoundException();
 
-            var latestCommit = mergeRequest.Commits.FirstOrDefault();
-            var sha = latestCommit == null ? mergeRequest.Sha : new Sha1(latestCommit.Sha);
+            var allSha1 = mergeRequest.Commits.Select(m => new Sha1(m.Sha));
 
-            return new[]
-            {
-                new PipelineBasic
-                {
-                    Id = 42,
-                    Status = JobStatus.Running,
-                    Sha = sha,
-                    Ref = mergeRequest.TargetBranch,
-                },
-            };
+            return mergeRequest.SourceProject.Pipelines
+                    .Where(p => allSha1.Contains(p.Sha))
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Select(p => p.ToPipelineBasicClient());
         }
 
         public Models.MergeRequest Reopen(int mergeRequestIid)
