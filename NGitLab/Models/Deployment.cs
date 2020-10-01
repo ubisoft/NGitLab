@@ -13,18 +13,18 @@ namespace NGitLab.Models
         public int DeploymentId { get; set; }
 
         [DataMember(Name = "ref")]
-        public int Ref { get; set; }
+        public string Ref { get; set; }
 
         [DataMember(Name = "environment")]
-        public int Environment { get; set; }
+        public EnvironmentInfo Environment { get; set; }
 
         [DataMember(Name = "status")]
-        public int Status { get; set; }
+        public string Status { get; set; }
 
         [DataMember(Name = "created_at")]
-        public int CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [DataMember(Name = "updated_at")]
-        public int UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }
