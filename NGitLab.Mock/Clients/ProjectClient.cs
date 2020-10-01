@@ -100,7 +100,7 @@ namespace NGitLab.Mock.Clients
 
         public Models.Project GetById(int id, SingleProjectQuery query)
         {
-            throw new NotImplementedException();
+            return GetProject(id, ProjectPermission.View).ToClientProject();
         }
 
         public IEnumerable<Models.Project> GetForks(string id, ForkedProjectQuery query)

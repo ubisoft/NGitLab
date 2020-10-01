@@ -94,6 +94,8 @@ namespace NGitLab.Mock
 
         public string MergeMethod { get; set; }
 
+        public ProjectStatistics Statistics { get; set; }
+
         public void Remove()
         {
             Group.Projects.Remove(this);
@@ -311,6 +313,7 @@ namespace NGitLab.Mock
                 Archived = Archived,
                 ApprovalsBeforeMerge = ApprovalsBeforeMerge,
                 MergeMethod = MergeMethod,
+                Statistics = Statistics,
             };
         }
     }
