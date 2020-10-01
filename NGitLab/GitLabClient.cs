@@ -31,6 +31,8 @@ namespace NGitLab
 
         public ISystemHookClient SystemHooks { get; }
 
+        public IDeploymentClient Deployments { get; }
+
         public RequestOptions Options
         {
             get => _api.RequestOptions;
@@ -72,6 +74,7 @@ namespace NGitLab
             Snippets = new SnippetClient(_api);
             Members = new MembersClient(_api);
             SystemHooks = new SystemHookClient(_api);
+            Deployments = new DeploymentClient(_api);
         }
 
         [Obsolete("Use gitlab client constructor instead")]

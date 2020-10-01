@@ -42,6 +42,8 @@
 
         ISystemHookClient SystemHooks { get; }
 
+        IDeploymentClient Deployments { get; }
+
         IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId);
 
         IEnvironmentClient GetEnvironmentClient(int projectId);
