@@ -31,6 +31,8 @@
 
         public ISystemHookClient SystemHooks => new SystemHookClient(Context);
 
+        public IDeploymentClient Deployments { get; }
+
         public IMergeRequestClient MergeRequests => new MergeRequestClient(Context);
 
         public ICommitStatusClient GetCommitStatus(int projectId) => new CommitStatusClient(Context, projectId);
