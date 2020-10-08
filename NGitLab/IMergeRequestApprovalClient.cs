@@ -7,5 +7,7 @@ namespace NGitLab
         MergeRequestApprovals Approvals { get; }
 
         void ChangeApprovers(MergeRequestApproversChange approversChange);
+
+        MergeRequestApprovals ApproveMergeRequest(MergeRequestApproveRequest request = null);
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
@@ -113,6 +113,12 @@ namespace NGitLab.Models
 
         [DataMember(Name = "rebase_in_progress")]
         public bool RebaseInProgress;
+
+        [DataMember(Name = "has_conflicts")]
+        public bool HasConflicts { get; set; }
+
+        [DataMember(Name = "user")]
+        public MergeRequestUserInfo User { get; set; }
 
         public override string ToString()
         {
