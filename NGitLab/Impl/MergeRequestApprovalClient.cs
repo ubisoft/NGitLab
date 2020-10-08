@@ -25,6 +25,9 @@ namespace NGitLab.Impl
 
         public MergeRequestApprovals Approvals => _api.Get().To<MergeRequestApprovals>(_approvalsPath);
 
+        public MergeRequestApprovals ApproveMergeRequest(MergeRequestApproveRequest request = null)
+            => _api.Post().With(request ?? new MergeRequestApproveRequest()).To<MergeRequestApprovals>(_approvePath);
+
         public void ChangeApprovers(MergeRequestApproversChange approversChange) => _api.Put().With(approversChange).To<MergeRequestApproversChange>(_approversPath);
     }
 }
