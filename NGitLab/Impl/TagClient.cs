@@ -35,6 +35,6 @@ namespace NGitLab.Impl
             return _api.Put().With(data).To<RealeaseInfo>($"{_tagsPath}/{WebUtility.UrlEncode(name)}/release");
         }
 
-        public IEnumerable<Tag> All => _api.Get().GetAll<Tag>(_tagsPath);
+        public IEnumerable<Tag> All => _api.Get().GetAll<Tag>(_tagsPath + "?per_page=50");
     }
 }

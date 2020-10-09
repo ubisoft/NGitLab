@@ -62,7 +62,7 @@ namespace NGitLab.Impl
             _api.Get().Stream(_repoPath + "/archive", parser);
         }
 
-        public IEnumerable<Commit> Commits => _api.Get().GetAll<Commit>(_repoPath + "/commits");
+        public IEnumerable<Commit> Commits => _api.Get().GetAll<Commit>(_repoPath + $"/commits?per_page={GetCommitsRequest.DefaultPerPage}");
 
         /// <summary>
         /// Gets all the commits of the specified branch/tag.
@@ -92,6 +92,9 @@ namespace NGitLab.Impl
             {
                 lst.Add($"first_parent={Uri.EscapeDataString(request.FirstParent.ToString())}");
             }
+
+            var perPage = request.MaxResults > 0 ? Math.Min(request.MaxResults, request.PerPage) : request.PerPage;
+            lst.Add($"per_page={perPage}");
 
             var path = _repoPath + "/commits" + (lst.Count == 0 ? string.Empty : "?" + string.Join("&", lst));
             var allCommits = _api.Get().GetAll<Commit>(path);
