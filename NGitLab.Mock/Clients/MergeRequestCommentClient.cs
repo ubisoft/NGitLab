@@ -36,6 +36,10 @@ namespace NGitLab.Mock.Clients
         {
             EnsureUserIsAuthenticated();
 
+            var project = GetProject(_projectId, ProjectPermission.View);
+            if (project.Archived)
+                throw new GitLabForbiddenException();
+
             var comment = new MergeRequestComment
             {
                 Author = Context.User,
@@ -48,6 +52,10 @@ namespace NGitLab.Mock.Clients
 
         public Models.MergeRequestComment Edit(long id, MergeRequestCommentEdit edit)
         {
+            var project = GetProject(_projectId, ProjectPermission.View);
+            if (project.Archived)
+                throw new GitLabForbiddenException();
+
             var comment = GetMergeRequest().Comments.GetById(id);
             if (comment == null)
                 throw new GitLabNotFoundException();
