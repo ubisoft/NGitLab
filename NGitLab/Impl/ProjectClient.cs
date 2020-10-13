@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -28,7 +29,11 @@ namespace NGitLab.Impl
 
         public Project this[string fullName] => _api.Get().To<Project>(Project.Url + "/" + WebUtility.UrlEncode(fullName));
 
-        public void Delete(int id) => _api.Delete().Execute(Project.Url + "/" + id);
+        public void Delete(int id) => _api.Delete().Execute(Project.Url + "/" + id.ToString(CultureInfo.InvariantCulture));
+
+        public void Archive(int id) => _api.Post().Execute(Project.Url + "/" + id.ToString(CultureInfo.InvariantCulture) + "/archive");
+
+        public void Unarchive(int id) => _api.Post().Execute(Project.Url + "/" + id.ToString(CultureInfo.InvariantCulture) + "/unarchive");
 
         private bool SupportKeysetPagination(ProjectQuery query)
         {

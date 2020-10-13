@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
+using NGitLab.Impl;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -104,6 +106,31 @@ namespace NGitLab.Tests.MergeRequest
             var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
             var comments = mergeRequestComments.All.ToArray();
             CollectionAssert.IsNotEmpty(comments);
+        }
+
+        [Test]
+        [Order(3)]
+        public void AddCommentToMergeRequestOnArchivedProject()
+        {
+            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
+            const string commentMessage = "Comment for MR";
+            var newComment = new MergeRequestCommentCreate
+            {
+                Body = commentMessage,
+            };
+
+            var projectClient = Initialize.GitLabClient.Projects;
+            projectClient.Archive(_project.Id);
+
+            try
+            {
+                var ex = Assert.Throws<GitLabException>(() => mergeRequestComments.Add(newComment));
+                Assert.AreEqual(ex.StatusCode, HttpStatusCode.Forbidden);
+            }
+            finally
+            {
+                projectClient.Unarchive(_project.Id);
+            }
         }
 
         [Test]

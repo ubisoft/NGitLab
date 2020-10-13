@@ -83,6 +83,18 @@ namespace NGitLab.Mock.Clients
             project.Remove();
         }
 
+        public void Archive(int id)
+        {
+            var project = GetProject(id, ProjectPermission.Edit);
+            project.Archived = true;
+        }
+
+        public void Unarchive(int id)
+        {
+            var project = GetProject(id, ProjectPermission.Edit);
+            project.Archived = false;
+        }
+
         public Models.Project Fork(string id, ForkProject forkProject)
         {
             EnsureUserIsAuthenticated();

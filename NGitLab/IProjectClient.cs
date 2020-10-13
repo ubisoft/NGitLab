@@ -39,6 +39,10 @@ namespace NGitLab
 
         void Delete(int id);
 
+        void Archive(int id);
+
+        void Unarchive(int id);
+
         /// <summary>
         /// Uploads a file to the specified project to be used in an issue or merge request description, or a comment.
         /// </summary>
