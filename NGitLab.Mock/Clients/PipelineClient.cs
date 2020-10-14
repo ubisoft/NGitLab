@@ -50,7 +50,10 @@ namespace NGitLab.Mock.Clients
 
         public Models.Pipeline Create(PipelineCreate createOptions)
         {
-            throw new NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var pipeline = project.Pipelines.Add(createOptions.Ref, JobStatus.Running, Context.User);
+            pipeline.Variables = createOptions.Variables.Select(v => new PipelineVariable { Key = v.Key, Value = v.Value });
+            return pipeline.ToPipelineClient();
         }
 
         public Models.Pipeline CreatePipelineWithTrigger(string token, string @ref, Dictionary<string, string> variables)
@@ -67,7 +70,9 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<PipelineVariable> GetVariables(int pipelineId)
         {
-            throw new NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var pipeline = project.Pipelines.GetById(pipelineId);
+            return pipeline.Variables;
         }
 
         public Models.Job[] GetJobs(int pipelineId)

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using NGitLab.Models;
 
 namespace NGitLab.Mock
 {
@@ -40,6 +42,8 @@ namespace NGitLab.Mock
         public TimeSpan? Duration { get; set; }
 
         public double Coverage { get; set; }
+
+        public IEnumerable<PipelineVariable> Variables { get; set; }
 
         public Job AddNewJob(Project project)
         {
