@@ -33,6 +33,8 @@
 
         public IDeploymentClient Deployments { get; }
 
+        public IEpicClient Epics { get; }
+
         public IMergeRequestClient MergeRequests => new MergeRequestClient(Context);
 
         public ICommitStatusClient GetCommitStatus(int projectId) => new CommitStatusClient(Context, projectId);

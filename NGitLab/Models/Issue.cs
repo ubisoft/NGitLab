@@ -47,5 +47,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "web_url")]
         public string WebUrl;
+
+        [DataMember(Name = "epic")]
+        public IssueEpic Epic;
     }
 }

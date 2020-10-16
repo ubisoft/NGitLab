@@ -44,6 +44,8 @@
 
         IDeploymentClient Deployments { get; }
 
+        IEpicClient Epics { get; }
+
         IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId);
 
         IEnvironmentClient GetEnvironmentClient(int projectId);
