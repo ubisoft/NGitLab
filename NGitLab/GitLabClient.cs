@@ -33,6 +33,8 @@ namespace NGitLab
 
         public IDeploymentClient Deployments { get; }
 
+        public IEpicClient Epics { get; }
+
         public RequestOptions Options
         {
             get => _api.RequestOptions;
@@ -75,6 +77,7 @@ namespace NGitLab
             Members = new MembersClient(_api);
             SystemHooks = new SystemHookClient(_api);
             Deployments = new DeploymentClient(_api);
+            Epics = new EpicClient(_api);
         }
 
         [Obsolete("Use gitlab client constructor instead")]
