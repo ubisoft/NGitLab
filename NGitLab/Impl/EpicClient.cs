@@ -40,5 +40,10 @@ namespace NGitLab.Impl
 
             return _api.Get().GetAll<Epic>(url);
         }
+
+        public Epic Edit(int groupId, EpicEdit epicEdit)
+        {
+            return _api.Put().With(epicEdit).To<Epic>(string.Format(CultureInfo.InvariantCulture, SingleEpiceUrl, groupId, epicEdit.EpicId));
+        }
     }
 }
