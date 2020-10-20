@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 
 namespace NGitLab.Models
@@ -48,6 +48,9 @@ namespace NGitLab.Models
         [DataMember(Name = "web_url")]
         public string WebUrl;
 
+        [DataMember(Name = "merge_requests_count")]
+        public int MergeRequestsCount { get; set; }
+        
         [DataMember(Name = "epic")]
         public IssueEpic Epic;
     }
