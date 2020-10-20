@@ -10,7 +10,7 @@ namespace NGitLab.Models
     public class DeploymentQuery
     {
         /// <summary>
-        /// Return all deployments or just those that are created running, success, failed or canceled
+        /// Return all deployments or just those that are created, running, success, failed or canceled
         /// </summary>
         public DeploymentStatus? Status { get; set; }
 
@@ -28,16 +28,6 @@ namespace NGitLab.Models
         /// The name of the environment to filter deployments by
         /// </summary>
         public string Environment { get; set; }
-
-        /// <summary>
-        /// Return deployments created on or after the given time
-        /// </summary>
-        public DateTime? CreatedAfter { get; set; }
-
-        /// <summary>
-        /// Return deployments created on or before the given time
-        /// </summary>
-        public DateTime? CreatedBefore { get; set; }
 
         /// <summary>
         /// Return deployments updated on or after the given time
