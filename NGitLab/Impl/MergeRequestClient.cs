@@ -123,6 +123,11 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Author>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/participants");
         }
 
+        public IEnumerable<Issue> ClosesIssues(int mergeRequestIid)
+        {
+            return _api.Get().GetAll<Issue>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/closes_issues");
+        }
+
         public IMergeRequestCommentClient Comments(int mergeRequestIid) => new MergeRequestCommentClient(_api, _projectPath, mergeRequestIid);
 
         public IMergeRequestCommitClient Commits(int mergeRequestIid) => new MergeRequestCommitClient(_api, _projectPath, mergeRequestIid);

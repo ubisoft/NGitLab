@@ -515,5 +515,10 @@ namespace NGitLab.Mock.Clients
             mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
             return mergeRequest.ToMergeRequestClient();
         }
+
+        public IEnumerable<Models.Issue> ClosesIssues(int mergeRequestIid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
