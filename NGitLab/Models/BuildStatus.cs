@@ -27,5 +27,6 @@ namespace NGitLab
 
         [EnumMember(Value = "waiting_for_resource")]
         WaitingForResource,
+        Scheduled,
     }
 }
