@@ -6,6 +6,9 @@ namespace NGitLab.Tests
 {
     public class JobTests
     {
+        private const int ShortTimeoutInMs = 30 * 1000;
+        private const int LongTimeoutInMs = 5 * 60 * 1000;
+
         private IJobClient _jobs;
 
         [OneTimeSetUp]
@@ -26,7 +29,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        [Timeout(30000)]
+        [Timeout(ShortTimeoutInMs)]
         public void Test_getjobs_all()
         {
             // Rely on test timeout if no job are found
@@ -34,7 +37,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        [Timeout(30000)]
+        [Timeout(ShortTimeoutInMs)]
         public void Test_getjobs_scope()
         {
             // Rely on test timeout if no job are found
@@ -42,7 +45,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        [Timeout(30000)]
+        [Timeout(ShortTimeoutInMs)]
         public void Test_run_action_play()
         {
             // Rely on test timeout if no job are found
@@ -56,7 +59,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        [Timeout(30000)]
+        [Timeout(ShortTimeoutInMs)]
         public void Test_run_action_retry()
         {
             // Rely on test timeout if no job are found
@@ -70,7 +73,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        [Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
+        [Timeout(LongTimeoutInMs)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
         public void Test_get_job_from_id()
         {
             // Rely on test timeout if no job are found
@@ -84,7 +87,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        [Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
+        [Timeout(LongTimeoutInMs)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
         public void Test_get_job_trace()
         {
             // Rely on test timeout if no job are found
@@ -97,7 +100,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        [Timeout(5000 * 60)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
+        [Timeout(LongTimeoutInMs)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
         public void Test_get_job_artifacts()
         {
             // Rely on test timeout if no job are found
