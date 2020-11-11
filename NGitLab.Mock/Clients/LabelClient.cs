@@ -16,6 +16,11 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public Label CreateGroupLabel(LabelCreate label)
+        {
+            throw new NotImplementedException();
+        }
+
         public Label Delete(LabelDelete label)
         {
             throw new NotImplementedException();
@@ -26,7 +31,22 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public Label EditGroupLabel(LabelEdit label)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Label> ForGroup(int groupId)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Label> ForProject(int projectId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Label GetGroupLabel(int groupId, string name)
         {
             throw new NotImplementedException();
         }

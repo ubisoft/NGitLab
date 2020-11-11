@@ -10,5 +10,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "color")]
         public string Color;
+
+        [DataMember(Name = "description")]
+        public string Description;
     }
 }
