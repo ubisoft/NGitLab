@@ -130,28 +130,17 @@ namespace NGitLab.Tests
         {
             var runner = GetLockingRunner();
             var runners = Initialize.GitLabClient.Runners;
-
-            Assert.IsFalse(runner.RunUntagged, "Runner should not run untagged.");
+            var value = !runner.RunUntagged;
 
             // update runner
             var update = new RunnerUpdate
             {
-                RunUntagged = true,
+                RunUntagged = value,
             };
             runners.Update(runner.Id, update);
 
             var updated = GetLockingRunner();
-            Assert.IsTrue(updated.RunUntagged, "Runner should run untagged.");
-
-            // update runner
-            update = new RunnerUpdate
-            {
-                RunUntagged = false,
-            };
-            runners.Update(runner.Id, update);
-
-            updated = GetLockingRunner();
-            Assert.False(updated.RunUntagged, "Runner should not run untagged.");
+            Assert.AreEqual(value, updated.RunUntagged, $"Runner should {(value ? string.Empty : "not ")}run untagged.");
         }
 
         private static bool IsEnabled(Runner runner, int projectId)
