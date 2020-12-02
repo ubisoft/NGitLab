@@ -101,6 +101,14 @@ namespace NGitLab.Tests
             DeleteTestGroup();
         }
 
+        internal static void WaitWithSpecificTimeoutUntil(Func<bool> predicate, TimeSpan timeout)
+        {
+            Policy
+                .HandleResult(result: false)
+                .WaitAndRetry(retryCount: 3, sleepDurationProvider: _ => timeout)
+                .Execute(predicate);
+        }
+
         internal static void WaitWithTimeoutUntil(Func<bool> predicate)
         {
             Policy
