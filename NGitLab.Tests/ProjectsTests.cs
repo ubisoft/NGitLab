@@ -323,7 +323,16 @@ namespace NGitLab.Tests
                     break;
                 if (!project.Name.StartsWith(Initialize.TestEntityNamePrefix, StringComparison.Ordinal))
                     continue;
-                _projects.Delete(project.Id);
+
+                try
+                {
+                    _projects.Delete(project.Id);
+                }
+                catch (GitLabException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    Console.WriteLine($"The project '{project.NameWithNamespace}' ID:'{project.Id}' was not found. It might have been already deleted. Ex: {ex}");
+                    continue;
+                }
             }
         }
     }
