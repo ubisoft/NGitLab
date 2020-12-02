@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -180,11 +181,12 @@ namespace NGitLab.Tests.MergeRequest
             Assert.AreEqual(mergeRequest.Squash, false);
             Assert.NotNull(mergeRequest.Sha);
             StringAssert.StartsWith(Initialize.GitLabHost, mergeRequest.WebUrl);
-            Initialize.WaitWithTimeoutUntil(() =>
+            Initialize.WaitWithSpecificTimeoutUntil(() =>
             {
                 mergeRequest = _mergeRequestClient[mergeRequest.Iid];
-                return mergeRequest.MergeStatus.Equals("can_be_merged", System.StringComparison.OrdinalIgnoreCase);
-            });
+                return mergeRequest.MergeStatus.Equals("can_be_merged", StringComparison.OrdinalIgnoreCase);
+            }, TimeSpan.FromSeconds(5));
+
             Assert.AreEqual("can_be_merged", mergeRequest.MergeStatus);
             Assert.AreEqual(false, mergeRequest.RebaseInProgress);
 
