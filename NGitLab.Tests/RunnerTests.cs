@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using NGitLab.Models;
 using NUnit.Framework;
+using static NGitLab.Tests.Initialize;
 
 namespace NGitLab.Tests
 {
@@ -107,8 +108,8 @@ namespace NGitLab.Tests
                 runners.Update(runner.Id, lockedRunner);
 
                 // assert runner is locked
+                WaitWithTimeoutUntil(() => GetLockingRunner()?.Locked ?? false);
                 var updated = GetLockingRunner();
-
                 Assert.IsTrue(updated.Locked, "Runner should be locked.");
             }
 
@@ -120,6 +121,7 @@ namespace NGitLab.Tests
                 };
                 runners.Update(runner.Id, unlockedRunner);
 
+                WaitWithTimeoutUntil(() => !GetLockingRunner()?.Locked ?? false);
                 var updated = GetLockingRunner();
                 Assert.False(updated.Locked, "Runner should not be locked.");
             }

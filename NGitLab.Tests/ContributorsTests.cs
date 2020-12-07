@@ -84,6 +84,8 @@ namespace NGitLab.Tests
                 CommitMessage = "test",
             });
 
+            WaitWithTimeoutUntil(() => Contributors.All.Any());
+
             var contributor = Contributors.All;
 
             Assert.IsNotNull(contributor);
