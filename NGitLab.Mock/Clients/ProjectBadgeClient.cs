@@ -21,7 +21,7 @@ namespace NGitLab.Mock.Clients
                 var project = GetProject(_projectId, ProjectPermission.View);
                 var badge = project.Badges.GetById(id);
                 if (badge == null)
-                    throw new GitLabNotFoundException();
+                    throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
 
                 return badge.ToBadgeModel();
             }
@@ -32,7 +32,8 @@ namespace NGitLab.Mock.Clients
             get
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Badges.Select(badge => badge.ToBadgeModel());
+                var groupBadges = (project.Group != null) ? GetGroup(project.Group.Id, GroupPermission.View).Badges.Select(badge => badge.ToBadgeModel()) : Array.Empty<Models.Badge>();
+                return groupBadges.Union(project.Badges.Select(badge => badge.ToBadgeModel()));
             }
         }
 
@@ -51,23 +52,25 @@ namespace NGitLab.Mock.Clients
             EnsureUserIsAuthenticated();
 
             var badgeToRemove = GetProject(_projectId, ProjectPermission.View).Badges.FirstOrDefault(b => b.Id == id);
-            if (badgeToRemove != null)
+            if (badgeToRemove == null)
             {
-                GetProject(_projectId, ProjectPermission.Edit).Badges.Remove(badgeToRemove);
+                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
             }
+
+            GetProject(_projectId, ProjectPermission.Edit).Badges.Remove(badgeToRemove);
         }
 
         public Models.Badge Update(int id, Models.BadgeUpdate badge)
         {
             var badgeToUpdate = GetProject(_projectId, ProjectPermission.Edit).Badges.FirstOrDefault(b => b.Id == id);
-            if (badgeToUpdate != null)
+            if (badgeToUpdate == null)
             {
-                badgeToUpdate.LinkUrl = badge.LinkUrl;
-                badgeToUpdate.ImageUrl = badge.ImageUrl;
-                return badgeToUpdate.ToBadgeModel();
+                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
             }
 
-            throw new GitLabNotFoundException();
+            badgeToUpdate.LinkUrl = badge.LinkUrl;
+            badgeToUpdate.ImageUrl = badge.ImageUrl;
+            return badgeToUpdate.ToBadgeModel();
         }
     }
 }
