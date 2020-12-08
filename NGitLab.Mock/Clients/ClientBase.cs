@@ -14,6 +14,52 @@ namespace NGitLab.Mock.Clients
 
         protected ClientContext Context { get; }
 
+        protected Group GetGroup(object id, GroupPermission permissions)
+        {
+            if (id is null)
+                throw new ArgumentNullException(nameof(id));
+
+            if (Context.User.State == UserState.blocked && permissions != GroupPermission.View)
+            {
+                throw new GitLabException("403 Forbidden - Your account has been blocked.")
+                {
+                    StatusCode = HttpStatusCode.Forbidden,
+                };
+            }
+
+            var group = id switch
+            {
+                int idInt => Server.AllGroups.FindGroupById(idInt),
+                string idStr => Server.AllGroups.FindGroup(idStr),
+                _ => throw new ArgumentException($"Id of type '{id.GetType()}' is not supported"),
+            };
+
+            if (group == null || !group.CanUserViewGroup(Context.User))
+                throw new GitLabNotFoundException("Group does not exist or user doesn't have permission to view it");
+
+            switch (permissions)
+            {
+                case GroupPermission.View:
+                    // Already checked before
+                    break;
+
+                case GroupPermission.Edit:
+                    if (!group.CanUserEditGroup(Context.User))
+                        throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to edit the group '{group.Name}'");
+                    break;
+
+                case GroupPermission.Delete:
+                    if (!group.CanUserDeleteGroup(Context.User))
+                        throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to delete the group '{group.Name}'");
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(permissions));
+            }
+
+            return group;
+        }
+
         protected Project GetProject(object id, ProjectPermission permissions)
         {
             if (id is null)
@@ -21,7 +67,7 @@ namespace NGitLab.Mock.Clients
 
             if (Context.User.State == UserState.blocked && permissions != ProjectPermission.View)
             {
-                throw new GitLabException("403 Forbidden  - Your account has been blocked.")
+                throw new GitLabException("403 Forbidden - Your account has been blocked.")
                 {
                     StatusCode = HttpStatusCode.Forbidden,
                 };
@@ -31,27 +77,26 @@ namespace NGitLab.Mock.Clients
             {
                 int idInt => Server.AllProjects.FindById(idInt),
                 string idStr => Server.AllProjects.FindProject(idStr),
-                _ => throw new ArgumentException($"Id of type '{id.GetType()}' is not supported")
+                _ => throw new ArgumentException($"Id of type '{id.GetType()}' is not supported"),
             };
 
             if (project == null || !project.CanUserViewProject(Context.User))
-                throw new GitLabNotFoundException();
+                throw new GitLabNotFoundException("Project does not exist or User doesn't have permission to view it");
 
             switch (permissions)
             {
                 case ProjectPermission.View:
-                    if (!project.CanUserViewProject(Context.User))
-                        throw new GitLabForbiddenException();
+                    // Already checked before
                     break;
 
                 case ProjectPermission.Contribute:
                     if (!project.CanUserContributeToProject(Context.User))
-                        throw new GitLabForbiddenException();
+                        throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to edit the project '{project.Name}'");
                     break;
 
                 case ProjectPermission.Edit:
                     if (!project.CanUserEditProject(Context.User))
-                        throw new GitLabForbiddenException();
+                        throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to delete the project '{project.Name}'");
                     break;
 
                 case ProjectPermission.Delete:
@@ -115,6 +160,13 @@ namespace NGitLab.Mock.Clients
         {
             View,
             Contribute,
+            Edit,
+            Delete,
+        }
+
+        internal enum GroupPermission
+        {
+            View,
             Edit,
             Delete,
         }

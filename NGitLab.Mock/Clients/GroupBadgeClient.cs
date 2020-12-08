@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NGitLab.Mock.Clients
 {
@@ -13,23 +14,60 @@ namespace NGitLab.Mock.Clients
             _groupId = groupId;
         }
 
-        public Models.Badge this[int id] => throw new NotImplementedException();
+        public Models.Badge this[int id]
+        {
+            get
+            {
+                var group = GetGroup(_groupId, GroupPermission.View);
+                var badge = group.Badges.GetById(id);
+                if (badge == null)
+                    throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
 
-        public IEnumerable<Models.Badge> All => throw new NotImplementedException();
+                return badge.ToBadgeModel();
+            }
+        }
+
+        public IEnumerable<Models.Badge> All
+        {
+            get
+            {
+                var group = GetGroup(_groupId, GroupPermission.View);
+                return group.Badges.Select(badge => badge.ToBadgeModel());
+            }
+        }
 
         public Models.Badge Create(Models.BadgeCreate badge)
         {
-            throw new NotImplementedException();
+            EnsureUserIsAuthenticated();
+
+            var createdBadge = GetGroup(_groupId, GroupPermission.Edit).Badges.Add(badge.LinkUrl, badge.ImageUrl);
+            return createdBadge.ToBadgeModel();
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            EnsureUserIsAuthenticated();
+
+            var badgeToRemove = GetGroup(_groupId, GroupPermission.View).Badges.FirstOrDefault(b => b.Id == id);
+            if (badgeToRemove == null)
+            {
+                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
+            }
+
+            GetGroup(_groupId, GroupPermission.Edit).Badges.Remove(badgeToRemove);
         }
 
         public Models.Badge Update(int id, Models.BadgeUpdate badge)
         {
-            throw new NotImplementedException();
+            var badgeToUpdate = GetGroup(_groupId, GroupPermission.Edit).Badges.FirstOrDefault(b => b.Id == id);
+            if (badgeToUpdate == null)
+            {
+                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
+            }
+
+            badgeToUpdate.LinkUrl = badge.LinkUrl;
+            badgeToUpdate.ImageUrl = badge.ImageUrl;
+            return badgeToUpdate.ToBadgeModel();
         }
     }
 }
