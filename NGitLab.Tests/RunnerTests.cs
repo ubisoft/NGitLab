@@ -108,7 +108,7 @@ namespace NGitLab.Tests
                 runners.Update(runner.Id, lockedRunner);
 
                 // assert runner is locked
-                WaitWithTimeoutUntil(() => GetLockingRunner()?.Locked ?? false);
+                WaitWithSpecificTimeoutUntil(() => GetLockingRunner()?.Locked ?? false, TimeSpan.FromSeconds(10));
                 var updated = GetLockingRunner();
                 Assert.IsTrue(updated.Locked, "Runner should be locked.");
             }
@@ -121,7 +121,7 @@ namespace NGitLab.Tests
                 };
                 runners.Update(runner.Id, unlockedRunner);
 
-                WaitWithTimeoutUntil(() => !GetLockingRunner()?.Locked ?? false);
+                WaitWithSpecificTimeoutUntil(() => !GetLockingRunner()?.Locked ?? false, TimeSpan.FromSeconds(10));
                 var updated = GetLockingRunner();
                 Assert.False(updated.Locked, "Runner should not be locked.");
             }
