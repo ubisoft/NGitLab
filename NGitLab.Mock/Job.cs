@@ -40,6 +40,8 @@ namespace NGitLab.Mock
 
         public bool Tag { get; set; }
 
+        public bool AllowFailure { get; set; }
+
         public User User { get; set; }
 
         public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/jobs/{Id.ToString(CultureInfo.InvariantCulture)}");
@@ -62,6 +64,7 @@ namespace NGitLab.Mock
                 Pipeline = Pipeline,
                 Project = Project,
                 Status = Status,
+                AllowFailure = AllowFailure,
                 Tag = Tag,
                 User = User.ToClientUser(),
                 WebUrl = WebUrl,
