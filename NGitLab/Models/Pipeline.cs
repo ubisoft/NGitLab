@@ -58,5 +58,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "web_url")]
         public string WebUrl;
+
+        [DataMember(Name = "detailed_status")]
+        public PipelineDetailedStatus DetailedStatus { get; set; }
     }
 }
