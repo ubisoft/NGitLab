@@ -51,6 +51,9 @@ namespace NGitLab.Models
         [DataMember(Name = "tag")]
         public bool Tag;
 
+        [DataMember(Name = "allow_failure")]
+        public bool AllowFailure;
+
         [DataMember(Name = "user")]
         public User User;
 
