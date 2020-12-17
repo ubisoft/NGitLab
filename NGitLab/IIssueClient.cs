@@ -61,7 +61,7 @@ namespace NGitLab
 
         /// <summary>
         /// Gets the resource label events.
-        ///        
+        ///
         /// url like GET /projects/:id/issues/:issue_iid/resource_label_events
         ///
         /// </summary>

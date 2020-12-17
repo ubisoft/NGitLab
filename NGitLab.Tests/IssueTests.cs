@@ -129,14 +129,14 @@ namespace NGitLab.Tests
             {
                 Id = Initialize.UnitTestProject.Id,
                 IssueId = updatedIssue.IssueId,
-                Labels = testLabel
+                Labels = testLabel,
             });
 
             Initialize.GitLabClient.Issues.Edit(new IssueEdit
             {
                 Id = Initialize.UnitTestProject.Id,
                 IssueId = updatedIssue.IssueId,
-                Labels = string.Empty
+                Labels = string.Empty,
             });
 
             var resourceLabelEvents = Initialize.GitLabClient.Issues.ResourceLabelEvents(Initialize.UnitTestProject.Id, updatedIssue.IssueId).ToList();
@@ -146,7 +146,7 @@ namespace NGitLab.Tests
                 resourceLabelEvents.First(e => e.Action == ResourceLabelEventAction.Add);
             Assert.AreEqual(testLabel, addLabelEvent.Label.Name);
             Assert.AreEqual(ResourceLabelEventAction.Add, addLabelEvent.Action);
-            
+
             var removeLabelEvent =
                 resourceLabelEvents.First(e => e.Action == ResourceLabelEventAction.Remove);
             Assert.AreEqual(testLabel, removeLabelEvent.Label.Name);

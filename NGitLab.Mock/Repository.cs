@@ -463,11 +463,6 @@ namespace NGitLab.Mock
             return rebase;
         }
 
-        public Rebase Rebase(User user, string sourceBranch, string targetBranch, Project targetProject)
-        {
-            return Rebase(user, sourceBranch, targetBranch);
-        }
-
         public void Dispose()
         {
             try

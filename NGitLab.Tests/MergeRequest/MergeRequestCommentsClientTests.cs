@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using NGitLab.Impl;
 using NGitLab.Models;
 using NUnit.Framework;
 

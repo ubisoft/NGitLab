@@ -46,7 +46,7 @@
         public IGroupBadgeClient GetGroupBadgeClient(int groupId) => new GroupBadgeClient(Context, groupId);
 
         public IGroupVariableClient GetGroupVariableClient(int groupId) => new GroupVariableClient(Context, groupId);
-   
+
         public IJobClient GetJobs(int projectId) => new JobClient(Context, projectId);
 
         public IMergeRequestClient GetMergeRequest(int projectId) => new MergeRequestClient(Context, projectId);

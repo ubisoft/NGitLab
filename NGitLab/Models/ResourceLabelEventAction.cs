@@ -3,6 +3,6 @@
     public enum ResourceLabelEventAction
     {
         Add,
-        Remove
+        Remove,
     }
 }

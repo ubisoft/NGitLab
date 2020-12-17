@@ -8,7 +8,8 @@ namespace NGitLab.Mock.Clients
     {
         private readonly int _projectId;
 
-        public ProjectLevelApprovalRulesClient(ClientContext context, int projectId) : base(context)
+        public ProjectLevelApprovalRulesClient(ClientContext context, int projectId)
+            : base(context)
         {
             _projectId = projectId;
         }

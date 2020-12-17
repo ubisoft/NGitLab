@@ -124,7 +124,7 @@ namespace NGitLab.Mock
 
         public RebaseResult Rebase(User user)
         {
-            SourceProject.Repository.Rebase(user, SourceBranch, TargetBranch, Project);
+            SourceProject.Repository.Rebase(user, SourceBranch, TargetBranch);
 
             UpdatedAt = DateTimeOffset.UtcNow;
 

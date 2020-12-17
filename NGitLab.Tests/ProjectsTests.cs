@@ -98,7 +98,6 @@ namespace NGitLab.Tests
             projects.ForEach(p => Assert.IsNotNull(p.MergeMethod));
         }
 
-
         [Test]
         public void GetProjectsByQuery_VisibilityInternal()
         {

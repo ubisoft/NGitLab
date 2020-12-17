@@ -50,7 +50,7 @@ namespace NGitLab.Models
 
         [DataMember(Name = "merge_requests_count")]
         public int MergeRequestsCount { get; set; }
-        
+
         [DataMember(Name = "epic")]
         public IssueEpic Epic;
     }
