@@ -6,7 +6,6 @@ namespace NGitLab.Models
     [DataContract]
     public class ResourceLabelEvent
     {
-
         [DataMember(Name = "id")]
         public int Id { get; set; }
 

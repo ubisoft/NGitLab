@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
@@ -16,9 +15,9 @@ namespace NGitLab.Models
         public int GroupId { get; set; }
 
         [DataMember(Name = "title")]
-        public string Title { get; set; } 
+        public string Title { get; set; }
 
         [DataMember(Name = "url")]
-        public string Url { get; set; } 
+        public string Url { get; set; }
     }
 }

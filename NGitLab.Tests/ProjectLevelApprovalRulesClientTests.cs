@@ -67,7 +67,7 @@ namespace NGitLab.Tests
                     firstApprovalRule.RuleId,
                     new ApprovalRuleUpdate
                     {
-                        ApprovalsRequired = approvalRuleApprovalsRequired
+                        ApprovalsRequired = approvalRuleApprovalsRequired,
                     });
 
             Assert.NotNull(approvalRule);
@@ -103,7 +103,7 @@ namespace NGitLab.Tests
                 Id = Initialize.UnitTestProject.Id,
                 Name = approvalRuleName,
                 ApprovalsRequired = approvalsRequired,
-                RuleType = "regular"
+                RuleType = "regular",
             };
         }
     }

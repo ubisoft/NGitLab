@@ -19,10 +19,10 @@ namespace NGitLab.Models
         public string Title { get; set; }
 
         [DataMember(Name = "description")]
-        public string Description { get; set; } 
+        public string Description { get; set; }
 
         [DataMember(Name = "labels")]
-        public string[] Labels { get; set; } 
+        public string[] Labels { get; set; }
 
         [DataMember(Name = "state")]
         public EpicState State { get; set; }
@@ -34,6 +34,6 @@ namespace NGitLab.Models
         public DateTime UpdatedAt { get; set; }
 
         [DataMember(Name = "web_url")]
-        public string WebUrl { get; set; } 
+        public string WebUrl { get; set; }
     }
 }

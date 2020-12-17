@@ -4,7 +4,9 @@ using System.Runtime.Serialization;
 namespace NGitLab.Models
 {
     [DataContract]
+#pragma warning disable CA1724  // Type names should not match .NET Framework class library namespaces
     public class Deployment
+#pragma warning restore CA1724  // Type names should not match .NET Framework class library namespaces
     {
         [DataMember(Name = "id")]
         public int Id { get; set; }
