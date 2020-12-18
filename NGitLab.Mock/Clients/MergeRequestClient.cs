@@ -519,5 +519,12 @@ namespace NGitLab.Mock.Clients
         {
             throw new NotImplementedException();
         }
+
+        public IMergeRequestDiscussionClient Discussions(int mergeRequestIid)
+        {
+            AssertProjectId();
+
+            return new MergeRequestDiscussionClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
+        }
     }
 }

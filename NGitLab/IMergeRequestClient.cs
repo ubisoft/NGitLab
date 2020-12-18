@@ -39,6 +39,8 @@ namespace NGitLab
 
         IMergeRequestCommentClient Comments(int mergeRequestIid);
 
+        IMergeRequestDiscussionClient Discussions(int mergeRequestIid);
+
         IMergeRequestCommitClient Commits(int mergeRequestIid);
 
         IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid);
