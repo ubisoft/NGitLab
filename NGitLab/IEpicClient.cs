@@ -22,6 +22,14 @@ namespace NGitLab
         Epic Get(int groupId, int epicId);
 
         /// <summary>
+        /// Create an epic
+        /// </summary>
+        /// <param name="groupId">Group ID</param>
+        /// <param name="epic">Epic to create</param>
+        /// <returns></returns>
+        Epic Create(int groupId, EpicCreate epic);
+
+        /// <summary>
         /// Update an epic
         /// </summary>
         /// <param name="groupId">Group ID</param>
