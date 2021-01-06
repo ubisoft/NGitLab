@@ -25,6 +25,10 @@ namespace NGitLab
 
         void Delete(int id);
 
+        void Activate(int id);
+
+        void Deactivate(int id);
+
         Session Current { get; }
 
         /// <summary>

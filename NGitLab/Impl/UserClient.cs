@@ -36,5 +36,15 @@ namespace NGitLab.Impl
         {
             _api.Delete().Execute(User.Url + "/" + userId);
         }
+
+        public void Activate(int userId)
+        {
+            _api.Post().Execute($"{User.Url}/{userId}/activate");
+        }
+
+        public void Deactivate(int userId)
+        {
+            _api.Post().Execute($"{User.Url}/{userId}/deactivate");
+        }
     }
 }

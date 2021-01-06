@@ -40,25 +40,7 @@ namespace NGitLab.Tests
                 Utils.FailInCiEnvironment("Cannot test the creation of users since the current user is not admin");
             }
 
-            var randomNumber = Initialize.GetRandomNumber();
-
-            var userUpsert = new UserUpsert
-            {
-                Email = $"test{randomNumber}@test.pl",
-                Bio = "bio",
-                CanCreateGroup = true,
-                IsAdmin = true,
-                Linkedin = null,
-                Name = $"NGitLab Test User {randomNumber}",
-                Password = "!@#$QWDRQW@",
-                ProjectsLimit = 1000,
-                Provider = "provider",
-                ExternalUid = "external_uid",
-                Skype = "skype",
-                Twitter = "twitter",
-                Username = $"ngitlabtestuser{randomNumber}",
-                WebsiteURL = "wp.pl",
-            };
+            var userUpsert = GetNewUser();
 
             var addedUser = _users.Create(userUpsert);
             Assert.That(addedUser.Bio, Is.EqualTo(userUpsert.Bio));
@@ -72,6 +54,32 @@ namespace NGitLab.Tests
 
             WaitWithTimeoutUntil(() => !_users.Get(addedUser.Username).Any());
 
+            Assert.IsFalse(_users.Get(addedUser.Username).Any());
+        }
+
+        [Test]
+        public void DeactivatedAccountShouldBeAbleToActivate()
+        {
+            if (!Initialize.IsAdmin)
+            {
+                Utils.FailInCiEnvironment("Cannot test the creation of users since the current user is not admin");
+            }
+
+            var userUpsert = GetNewUser();
+
+            var addedUser = _users.Create(userUpsert);
+
+            _users.Deactivate(addedUser.Id);
+
+            Assert.That(_users[addedUser.Id].State, Is.EqualTo("deactivated"));
+
+            _users.Activate(addedUser.Id);
+
+            Assert.That(_users[addedUser.Id].State, Is.EqualTo("active"));
+
+            _users.Delete(addedUser.Id);
+
+            WaitWithTimeoutUntil(() => !_users.Get(addedUser.Username).Any());
             Assert.IsFalse(_users.Get(addedUser.Username).Any());
         }
 
@@ -123,6 +131,29 @@ namespace NGitLab.Tests
 
             Assert.IsNotEmpty(tokenResult.Token);
             Assert.AreEqual(tokenRequest.Name, tokenResult.Name);
+        }
+
+        private static UserUpsert GetNewUser()
+        {
+            var randomNumber = Initialize.GetRandomNumber();
+
+            return new UserUpsert
+            {
+                Email = $"test{randomNumber}@test.pl",
+                Bio = "bio",
+                CanCreateGroup = true,
+                IsAdmin = true,
+                Linkedin = null,
+                Name = $"NGitLab Test User {randomNumber}",
+                Password = "!@#$QWDRQW@",
+                ProjectsLimit = 1000,
+                Provider = "provider",
+                ExternalUid = $"external_uid_{randomNumber}",
+                Skype = "skype",
+                Twitter = "twitter",
+                Username = $"ngitlabtestuser{randomNumber}",
+                WebsiteURL = "wp.pl",
+            };
         }
 
         // Comes from https://github.com/meziantou/Meziantou.GitLabClient/blob/master/Meziantou.GitLabClient.Tests/Internals/RsaSshKey.cs
