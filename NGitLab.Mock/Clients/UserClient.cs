@@ -40,14 +40,37 @@ namespace NGitLab.Mock.Clients
         public void Delete(int id)
         {
             var user = Server.Users.GetById(id);
-            if (user != null)
+
+            if (user == null)
             {
-                Server.Users.Remove(user);
+                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deleted");
             }
-            else
+
+            Server.Users.Remove(user);
+        }
+
+        public void Activate(int id)
+        {
+            var user = Server.Users.GetById(id);
+
+            if (user == null)
             {
-                throw new GitLabNotFoundException();
+                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be activated");
             }
+
+            user.State = UserState.active;
+        }
+
+        public void Deactivate(int id)
+        {
+            var user = Server.Users.GetById(id);
+
+            if (user == null)
+            {
+                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deactivated");
+            }
+
+            user.State = UserState.deactivated;
         }
 
         public IEnumerable<Models.User> Get(string username)

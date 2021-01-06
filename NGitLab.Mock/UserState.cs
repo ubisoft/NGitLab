@@ -4,5 +4,6 @@
     {
         active,
         blocked,
+        deactivated,
     }
 }
