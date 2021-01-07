@@ -86,6 +86,9 @@ namespace NGitLab.Models
         [DataMember(Name = "squash")]
         public bool Squash;
 
+        [DataMember(Name = "changes_count")]
+        public string ChangesCount;
+
         [DataMember(Name = "web_url")]
         public string WebUrl;
 
