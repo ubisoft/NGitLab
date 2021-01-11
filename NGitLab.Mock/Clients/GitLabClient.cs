@@ -37,6 +37,21 @@
 
         public IMergeRequestClient MergeRequests => new MergeRequestClient(Context);
 
+        public IEventClient GetEvents()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEventClient GetUserEvents(int userId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEventClient GetProjectEvents(int projectId)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public ICommitStatusClient GetCommitStatus(int projectId) => new CommitStatusClient(Context, projectId);
 
         public IEnvironmentClient GetEnvironmentClient(int projectId) => new EnvironmentClient(Context, projectId);
