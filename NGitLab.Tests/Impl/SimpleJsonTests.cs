@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
 using NGitLab.Impl;
 using NUnit.Framework;
 
@@ -37,6 +37,7 @@ namespace NGitLab.Tests.Impl
             return SimpleJson.DeserializeObject<MockModel>(json);
         }
 
+        [SuppressMessage("Design", "CA1812: Avoid uninstantiated internal classes", Justification = "The class is instantiated dynamically using SimpleJson")]
         private class MockModel
         {
             public string BasicField { get; set; }
