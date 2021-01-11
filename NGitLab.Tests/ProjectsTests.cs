@@ -334,5 +334,21 @@ namespace NGitLab.Tests
                 }
             }
         }
+
+        [Test]
+        public void GetProjectsByLastActivity()
+        {
+            var date = DateTime.UtcNow.AddMonths(-1);
+            var query = new ProjectQuery
+            {
+                LastActivityAfter = date,
+                OrderBy = "last_activity_at",
+                Ascending = true,
+            };
+
+            var projects = GetProjects(query);
+            CollectionAssert.IsNotEmpty(projects);
+            Assert.That(projects.Select(p => p.LastActivityAt), Is.All.GreaterThan(date));
+        }
     }
 }

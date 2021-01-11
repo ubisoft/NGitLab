@@ -61,6 +61,11 @@ namespace NGitLab.Models
         /// (optional)
         /// </summary>
         public AccessLevel? MinAccessLevel;
+
+        /// <summary>
+        /// Limit results to projects with last_activity after specified time.
+        /// </summary>
+        public DateTimeOffset? LastActivityAfter;
     }
 
     public enum ProjectQueryScope
