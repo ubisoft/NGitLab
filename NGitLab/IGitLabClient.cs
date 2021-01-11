@@ -16,6 +16,22 @@
 
         IMergeRequestClient MergeRequests { get; }
 
+        /// <summary>
+        /// All the user events of GitLab (can be scoped for the current user).
+        /// </summary>
+        IEventClient GetEvents();
+
+        /// <summary>
+        /// Returns the events done by the specified user.
+        /// </summary>
+        IEventClient GetUserEvents(int userId);
+
+        /// <summary>
+        /// Returns the events that occurred in the specified project.
+        /// </summary>
+        /// <returns></returns>
+        IEventClient GetProjectEvents(int projectId);
+
         IRepositoryClient GetRepository(int projectId);
 
         ICommitClient GetCommits(int projectId);

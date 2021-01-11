@@ -92,6 +92,21 @@ namespace NGitLab
             return new GitLabClient(hostUrl, username, password);
         }
 
+        public IEventClient GetEvents()
+        {
+            return new EventClient(_api, "events");
+        }
+
+        public IEventClient GetUserEvents(int userId)
+        {
+            return new EventClient(_api, $"users/{userId}/events");
+        }
+
+        public IEventClient GetProjectEvents(int projectId)
+        {
+            return new EventClient(_api, $"projects/{projectId}/events");
+        }
+
         public IRepositoryClient GetRepository(int projectId)
         {
             return new RepositoryClient(_api, projectId);
@@ -174,7 +189,7 @@ namespace NGitLab
 
         public IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId)
         {
-            return  new ProjectLevelApprovalRulesClient(_api, projectId);
+            return new ProjectLevelApprovalRulesClient(_api, projectId);
         }
     }
 }

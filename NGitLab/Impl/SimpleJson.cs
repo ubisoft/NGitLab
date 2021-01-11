@@ -1367,16 +1367,13 @@ namespace NGitLab.Impl
             if (!type.IsEnum)
                 throw new ArgumentException("Type must be an enumeration", nameof(type));
 
-            List<EnumMember> result;
-            if (_enumMembers.TryGetValue(type, out result))
-                return result;
-
-            result = Enum.GetValues(type)
-                        .Cast<Enum>()
-                        .Select(v => new EnumMember(v, v.ToString(), GetAttributeOfType<EnumMemberAttribute>(v)?.Value))
-                        .ToList();
-
-            return _enumMembers.GetOrAdd(type, result);
+            return _enumMembers.GetOrAdd(type, enumType =>
+            {
+                return Enum.GetValues(enumType)
+                    .Cast<Enum>()
+                    .Select(v => new EnumMember(v, v.ToString(), GetAttributeOfType<EnumMemberAttribute>(v)?.Value))
+                    .ToList();
+            });
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -1407,8 +1404,7 @@ namespace NGitLab.Impl
                 {
                     var valueAsString = value.ToString();
                     var member = GetMembers(type)
-                        .Where(v => string.Equals(v.SerializationName, valueAsString, StringComparison.OrdinalIgnoreCase))
-                        .FirstOrDefault();
+                        .FirstOrDefault(v => string.Equals(v.SerializationName, valueAsString, StringComparison.OrdinalIgnoreCase));
 
                     if (member != null)
                         return member.Value;
@@ -1419,6 +1415,19 @@ namespace NGitLab.Impl
                 {
                     throw new Exception($"{str} is not a valid value for enum {type.Name}");
                 }
+            }
+            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(DynamicEnum<>))
+            {
+                var enumType = type.GetGenericArguments().First();
+                var valueAsString = value.ToString();
+                var knownEnumValue = GetMembers(enumType)
+                    .FirstOrDefault(v => string.Equals(v.SerializationName, valueAsString, StringComparison.OrdinalIgnoreCase) ||
+                                         string.Equals(v.Name, valueAsString, StringComparison.OrdinalIgnoreCase));
+
+                if (knownEnumValue != null)
+                    return Activator.CreateInstance(type, knownEnumValue.Value);
+
+                return Activator.CreateInstance(type, valueAsString);
             }
 
             if (str != null)
