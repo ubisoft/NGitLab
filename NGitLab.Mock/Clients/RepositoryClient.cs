@@ -57,14 +57,20 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Commit> GetCommits(string refName, int maxResults = 0)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
-            return project.Repository.GetCommits(refName).Select(commit => commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal))));
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                return project.Repository.GetCommits(refName).Select(commit => commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal)))).ToList();
+            }
         }
 
         public IEnumerable<Commit> GetCommits(GetCommitsRequest request)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
-            return project.Repository.GetCommits(request).Select(commit => commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal))));
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                return project.Repository.GetCommits(request).Select(commit => commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal))));
+            }
         }
 
         public Commit GetCommit(Sha1 sha)

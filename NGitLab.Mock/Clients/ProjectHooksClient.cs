@@ -18,8 +18,11 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var hooks = GetProject(ProjectId, ProjectPermission.Edit).Hooks;
-                return ToClientProjectHooks(hooks);
+                using (Context.BeginOperationScope())
+                {
+                    var hooks = GetProject(ProjectId, ProjectPermission.Edit).Hooks;
+                    return ToClientProjectHooks(hooks).ToList();
+                }
             }
         }
 
@@ -27,42 +30,54 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var hook = All.FirstOrDefault(h => h.Id == hookId) ?? throw new GitLabNotFoundException();
-                return hook;
+                using (Context.BeginOperationScope())
+                {
+                    var hook = All.FirstOrDefault(h => h.Id == hookId) ?? throw new GitLabNotFoundException();
+                    return hook;
+                }
             }
         }
 
         public Models.ProjectHook Create(ProjectHookUpsert hook)
         {
-            var projectHook = UpsertToHook(hook);
+            using (Context.BeginOperationScope())
+            {
+                var projectHook = UpsertToHook(hook);
 
-            GetProject(ProjectId, ProjectPermission.Edit).Hooks.Add(projectHook);
-            return projectHook.ToClientProjectHook();
+                GetProject(ProjectId, ProjectPermission.Edit).Hooks.Add(projectHook);
+                return projectHook.ToClientProjectHook();
+            }
         }
 
         public Models.ProjectHook Update(int hookId, ProjectHookUpsert hook)
         {
-            var currentHook = GetProject(ProjectId, ProjectPermission.Edit).Hooks.FirstOrDefault(h => h.Id == hookId) ?? throw new GitLabNotFoundException();
+            using (Context.BeginOperationScope())
+            {
+                var currentHook = GetProject(ProjectId, ProjectPermission.Edit).Hooks.FirstOrDefault(h => h.Id == hookId) ?? throw new GitLabNotFoundException();
 
-            currentHook.Url = hook.Url;
-            currentHook.PushEvents = hook.PushEvents;
-            currentHook.MergeRequestsEvents = hook.MergeRequestsEvents;
-            currentHook.IssuesEvents = hook.IssuesEvents;
-            currentHook.TagPushEvents = hook.TagPushEvents;
-            currentHook.NoteEvents = hook.NoteEvents;
-            currentHook.JobEvents = hook.JobEvents;
-            currentHook.PipelineEvents = hook.PipelineEvents;
-            currentHook.EnableSslVerification = hook.EnableSslVerification;
+                currentHook.Url = hook.Url;
+                currentHook.PushEvents = hook.PushEvents;
+                currentHook.MergeRequestsEvents = hook.MergeRequestsEvents;
+                currentHook.IssuesEvents = hook.IssuesEvents;
+                currentHook.TagPushEvents = hook.TagPushEvents;
+                currentHook.NoteEvents = hook.NoteEvents;
+                currentHook.JobEvents = hook.JobEvents;
+                currentHook.PipelineEvents = hook.PipelineEvents;
+                currentHook.EnableSslVerification = hook.EnableSslVerification;
 
-            return currentHook.ToClientProjectHook();
+                return currentHook.ToClientProjectHook();
+            }
         }
 
         public void Delete(int hookId)
         {
-            var projectHooks = GetProject(ProjectId, ProjectPermission.Edit).Hooks;
-            var hook = projectHooks.FirstOrDefault(h => h.Id == hookId) ?? throw new GitLabNotFoundException();
+            using (Context.BeginOperationScope())
+            {
+                var projectHooks = GetProject(ProjectId, ProjectPermission.Edit).Hooks;
+                var hook = projectHooks.FirstOrDefault(h => h.Id == hookId) ?? throw new GitLabNotFoundException();
 
-            projectHooks.Remove(hook);
+                projectHooks.Remove(hook);
+            }
         }
 
         private static IEnumerable<Models.ProjectHook> ToClientProjectHooks(IEnumerable<ProjectHook> hooks)

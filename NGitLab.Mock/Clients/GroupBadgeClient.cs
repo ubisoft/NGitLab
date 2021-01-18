@@ -17,12 +17,15 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var group = GetGroup(_groupId, GroupPermission.View);
-                var badge = group.Badges.GetById(id);
-                if (badge == null)
-                    throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
+                using (Context.BeginOperationScope())
+                {
+                    var group = GetGroup(_groupId, GroupPermission.View);
+                    var badge = group.Badges.GetById(id);
+                    if (badge == null)
+                        throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
 
-                return badge.ToBadgeModel();
+                    return badge.ToBadgeModel();
+                }
             }
         }
 
@@ -30,8 +33,11 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var group = GetGroup(_groupId, GroupPermission.View);
-                return group.Badges.Select(badge => badge.ToBadgeModel());
+                using (Context.BeginOperationScope())
+                {
+                    var group = GetGroup(_groupId, GroupPermission.View);
+                    return group.Badges.Select(badge => badge.ToBadgeModel()).ToList();
+                }
             }
         }
 
@@ -39,34 +45,43 @@ namespace NGitLab.Mock.Clients
         {
             EnsureUserIsAuthenticated();
 
-            var createdBadge = GetGroup(_groupId, GroupPermission.Edit).Badges.Add(badge.LinkUrl, badge.ImageUrl);
-            return createdBadge.ToBadgeModel();
+            using (Context.BeginOperationScope())
+            {
+                var createdBadge = GetGroup(_groupId, GroupPermission.Edit).Badges.Add(badge.LinkUrl, badge.ImageUrl);
+                return createdBadge.ToBadgeModel();
+            }
         }
 
         public void Delete(int id)
         {
             EnsureUserIsAuthenticated();
 
-            var badgeToRemove = GetGroup(_groupId, GroupPermission.View).Badges.FirstOrDefault(b => b.Id == id);
-            if (badgeToRemove == null)
+            using (Context.BeginOperationScope())
             {
-                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
-            }
+                var badgeToRemove = GetGroup(_groupId, GroupPermission.View).Badges.FirstOrDefault(b => b.Id == id);
+                if (badgeToRemove == null)
+                {
+                    throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
+                }
 
-            GetGroup(_groupId, GroupPermission.Edit).Badges.Remove(badgeToRemove);
+                GetGroup(_groupId, GroupPermission.Edit).Badges.Remove(badgeToRemove);
+            }
         }
 
         public Models.Badge Update(int id, Models.BadgeUpdate badge)
         {
-            var badgeToUpdate = GetGroup(_groupId, GroupPermission.Edit).Badges.FirstOrDefault(b => b.Id == id);
-            if (badgeToUpdate == null)
+            using (Context.BeginOperationScope())
             {
-                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
-            }
+                var badgeToUpdate = GetGroup(_groupId, GroupPermission.Edit).Badges.FirstOrDefault(b => b.Id == id);
+                if (badgeToUpdate == null)
+                {
+                    throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
+                }
 
-            badgeToUpdate.LinkUrl = badge.LinkUrl;
-            badgeToUpdate.ImageUrl = badge.ImageUrl;
-            return badgeToUpdate.ToBadgeModel();
+                badgeToUpdate.LinkUrl = badge.LinkUrl;
+                badgeToUpdate.ImageUrl = badge.ImageUrl;
+                return badgeToUpdate.ToBadgeModel();
+            }
         }
     }
 }

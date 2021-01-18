@@ -15,30 +15,33 @@ namespace NGitLab.Mock.Clients
 
         public Membership AddMemberToProject(string projectId, ProjectMemberCreate projectMemberCreate)
         {
-            var project = GetProject(projectId, ProjectPermission.Edit);
-            var user = Server.Users.GetById(projectMemberCreate.UserId);
-
-            var existingPermission = project.GetEffectivePermissions().GetEffectivePermission(user);
-            if (existingPermission != null)
+            using (Context.BeginOperationScope())
             {
-                if (existingPermission.AccessLevel > projectMemberCreate.AccessLevel)
+                var project = GetProject(projectId, ProjectPermission.Edit);
+                var user = Server.Users.GetById(projectMemberCreate.UserId);
+
+                var existingPermission = project.GetEffectivePermissions().GetEffectivePermission(user);
+                if (existingPermission != null)
                 {
-                    throw new GitLabException($"{{\"access_level\":[\"should be greater than or equal to Owner inherited membership from group Runners\"]}}. Original call: Post https://gitlab.example.com/api/v4/projects/{project.Id}/members. With data {{\"user_id\":\"{user.Id}\",\"access_level\":{(int)projectMemberCreate.AccessLevel}}}")
+                    if (existingPermission.AccessLevel > projectMemberCreate.AccessLevel)
                     {
-                        StatusCode = HttpStatusCode.BadRequest,
-                    };
+                        throw new GitLabException($"{{\"access_level\":[\"should be greater than or equal to Owner inherited membership from group Runners\"]}}. Original call: Post https://gitlab.example.com/api/v4/projects/{project.Id}/members. With data {{\"user_id\":\"{user.Id}\",\"access_level\":{(int)projectMemberCreate.AccessLevel}}}")
+                        {
+                            StatusCode = HttpStatusCode.BadRequest,
+                        };
+                    }
+
+                    if (existingPermission.AccessLevel == projectMemberCreate.AccessLevel)
+                    {
+                        throw new GitLabException { StatusCode = HttpStatusCode.Conflict };
+                    }
                 }
 
-                if (existingPermission.AccessLevel == projectMemberCreate.AccessLevel)
-                {
-                    throw new GitLabException { StatusCode = HttpStatusCode.Conflict };
-                }
+                var permission = new Permission(user, projectMemberCreate.AccessLevel);
+                project.Permissions.Add(permission);
+
+                return project.GetEffectivePermissions().GetEffectivePermission(user).ToMembershipClient();
             }
-
-            var permission = new Permission(user, projectMemberCreate.AccessLevel);
-            project.Permissions.Add(permission);
-
-            return project.GetEffectivePermissions().GetEffectivePermission(user).ToMembershipClient();
         }
 
         public Membership GetMemberOfGroup(string groupId, string userId)
@@ -68,9 +71,12 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers)
         {
-            var project = GetProject(projectId, ProjectPermission.View);
-            var members = project.GetEffectivePermissions().Permissions;
-            return members.Select(member => member.ToMembershipClient());
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(projectId, ProjectPermission.View);
+                var members = project.GetEffectivePermissions().Permissions;
+                return members.Select(member => member.ToMembershipClient());
+            }
         }
     }
 }

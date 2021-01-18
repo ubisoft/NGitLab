@@ -1,7 +1,13 @@
-﻿namespace NGitLab.Mock.Clients
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading;
+
+namespace NGitLab.Mock.Clients
 {
     internal sealed class ClientContext
     {
+        private readonly object _operationLock = new object();
+
         public ClientContext(GitLabServer server, User user)
         {
             Server = server;
@@ -13,5 +19,26 @@
         public User User { get; }
 
         public bool IsAuthenticated => User != null;
+
+        public IDisposable BeginOperationScope()
+        {
+            Monitor.Enter(_operationLock);
+            return new Releaser(_operationLock);
+        }
+
+        private sealed class Releaser : IDisposable
+        {
+            private readonly object _operationLock;
+
+            public Releaser(object operationLock)
+            {
+                _operationLock = operationLock;
+            }
+
+            public void Dispose()
+            {
+                Monitor.Exit(_operationLock);
+            }
+        }
     }
 }

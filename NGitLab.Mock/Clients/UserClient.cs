@@ -12,9 +12,27 @@ namespace NGitLab.Mock.Clients
         {
         }
 
-        public Models.User this[int id] => Server.Users.GetById(id)?.ToClientUser() ?? throw new GitLabNotFoundException();
+        public Models.User this[int id]
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return Server.Users.GetById(id)?.ToClientUser() ?? throw new GitLabNotFoundException();
+                }
+            }
+        }
 
-        public IEnumerable<Models.User> All => Server.Users.Select(user => user.ToClientUser());
+        public IEnumerable<Models.User> All
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return Server.Users.Select(user => user.ToClientUser()).ToList();
+                }
+            }
+        }
 
         public Session Current => Context.User?.ToClientSession();
 
@@ -22,14 +40,17 @@ namespace NGitLab.Mock.Clients
 
         public Models.User Create(UserUpsert user)
         {
-            var u = new User(user.Username)
+            using (Context.BeginOperationScope())
             {
-                Name = user.Name,
-                Email = user.Email,
-            };
+                var u = new User(user.Username)
+                {
+                    Name = user.Name,
+                    Email = user.Email,
+                };
 
-            Server.Users.Add(u);
-            return u.ToClientUser();
+                Server.Users.Add(u);
+                return u.ToClientUser();
+            }
         }
 
         public UserToken CreateToken(UserTokenCreate tokenRequest)
@@ -39,48 +60,63 @@ namespace NGitLab.Mock.Clients
 
         public void Delete(int id)
         {
-            var user = Server.Users.GetById(id);
-
-            if (user == null)
+            using (Context.BeginOperationScope())
             {
-                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deleted");
-            }
+                var user = Server.Users.GetById(id);
 
-            Server.Users.Remove(user);
+                if (user == null)
+                {
+                    throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deleted");
+                }
+
+                Server.Users.Remove(user);
+            }
         }
 
         public void Activate(int id)
         {
-            var user = Server.Users.GetById(id);
-
-            if (user == null)
+            using (Context.BeginOperationScope())
             {
-                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be activated");
-            }
+                var user = Server.Users.GetById(id);
 
-            user.State = UserState.active;
+                if (user == null)
+                {
+                    throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be activated");
+                }
+
+                user.State = UserState.active;
+            }
         }
 
         public void Deactivate(int id)
         {
-            var user = Server.Users.GetById(id);
-
-            if (user == null)
+            using (Context.BeginOperationScope())
             {
-                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deactivated");
-            }
+                var user = Server.Users.GetById(id);
 
-            user.State = UserState.deactivated;
+                if (user == null)
+                {
+                    throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deactivated");
+                }
+
+                user.State = UserState.deactivated;
+            }
         }
 
         public IEnumerable<Models.User> Get(string username)
         {
-            return Server.Users.SearchByUsername(username).Select(user => user.ToClientUser());
+            using (Context.BeginOperationScope())
+            {
+                return Server.Users.SearchByUsername(username).Select(user => user.ToClientUser()).ToList();
+            }
         }
 
         public IEnumerable<Models.User> Search(string query)
         {
-            return Server.Users.SearchByUsername(query).Select(user => user.ToClientUser());
+            using (Context.BeginOperationScope())
+            {
+                return Server.Users.SearchByUsername(query).Select(user => user.ToClientUser()).ToList();
+            }
         }
 
         public ISshKeyClient SShKeys(int userId)
@@ -90,16 +126,19 @@ namespace NGitLab.Mock.Clients
 
         public Models.User Update(int id, UserUpsert userUpsert)
         {
-            var user = Server.Users.GetById(id);
-            if (user != null)
+            using (Context.BeginOperationScope())
             {
-                user.Name = userUpsert.Name;
-                user.Email = userUpsert.Email;
+                var user = Server.Users.GetById(id);
+                if (user != null)
+                {
+                    user.Name = userUpsert.Name;
+                    user.Email = userUpsert.Email;
 
-                return user.ToClientUser();
+                    return user.ToClientUser();
+                }
+
+                throw new GitLabNotFoundException();
             }
-
-            throw new GitLabNotFoundException();
         }
     }
 }

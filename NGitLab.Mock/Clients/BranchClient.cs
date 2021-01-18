@@ -19,8 +19,11 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetBranch(name).ToBranchClient(project);
+                using (Context.BeginOperationScope())
+                {
+                    var project = GetProject(_projectId, ProjectPermission.View);
+                    return project.Repository.GetBranch(name).ToBranchClient(project);
+                }
             }
         }
 
@@ -28,26 +31,35 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetAllBranches().Select(branch => branch.ToBranchClient(project));
+                using (Context.BeginOperationScope())
+                {
+                    var project = GetProject(_projectId, ProjectPermission.View);
+                    return project.Repository.GetAllBranches().Select(branch => branch.ToBranchClient(project)).ToList();
+                }
             }
         }
 
         public Branch Create(BranchCreate branch)
         {
-            var project = GetProject(_projectId, ProjectPermission.Contribute);
-            if (branch.Ref != null)
+            using (Context.BeginOperationScope())
             {
-                return project.Repository.CreateBranch(branch.Name, branch.Ref).ToBranchClient(project);
-            }
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                if (branch.Ref != null)
+                {
+                    return project.Repository.CreateBranch(branch.Name, branch.Ref).ToBranchClient(project);
+                }
 
-            return project.Repository.CreateBranch(branch.Name).ToBranchClient(project);
+                return project.Repository.CreateBranch(branch.Name).ToBranchClient(project);
+            }
         }
 
         public void Delete(string name)
         {
-            var project = GetProject(_projectId, ProjectPermission.Contribute);
-            project.Repository.RemoveBranch(name);
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                project.Repository.RemoveBranch(name);
+            }
         }
 
         public Branch Protect(string name)

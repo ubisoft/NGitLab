@@ -21,12 +21,15 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                var pipeline = project.Pipelines.GetById(id);
-                if (pipeline == null)
-                    throw new GitLabNotFoundException();
+                using (Context.BeginOperationScope())
+                {
+                    var project = GetProject(_projectId, ProjectPermission.View);
+                    var pipeline = project.Pipelines.GetById(id);
+                    if (pipeline == null)
+                        throw new GitLabNotFoundException();
 
-                return pipeline.ToPipelineClient();
+                    return pipeline.ToPipelineClient();
+                }
             }
         }
 
@@ -34,8 +37,11 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Pipelines.Select(p => p.ToPipelineBasicClient());
+                using (Context.BeginOperationScope())
+                {
+                    var project = GetProject(_projectId, ProjectPermission.View);
+                    return project.Pipelines.Select(p => p.ToPipelineBasicClient()).ToList();
+                }
             }
         }
 
@@ -43,17 +49,23 @@ namespace NGitLab.Mock.Clients
 
         public Models.Pipeline Create(string @ref)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
-            var pipeline = project.Pipelines.Add(@ref, JobStatus.Running, Context.User);
-            return pipeline.ToPipelineClient();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var pipeline = project.Pipelines.Add(@ref, JobStatus.Running, Context.User);
+                return pipeline.ToPipelineClient();
+            }
         }
 
         public Models.Pipeline Create(PipelineCreate createOptions)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
-            var pipeline = project.Pipelines.Add(createOptions.Ref, JobStatus.Running, Context.User);
-            pipeline.Variables = createOptions.Variables.Select(v => new PipelineVariable { Key = v.Key, Value = v.Value });
-            return pipeline.ToPipelineClient();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var pipeline = project.Pipelines.Add(createOptions.Ref, JobStatus.Running, Context.User);
+                pipeline.Variables = createOptions.Variables.Select(v => new PipelineVariable { Key = v.Key, Value = v.Value });
+                return pipeline.ToPipelineClient();
+            }
         }
 
         public Models.Pipeline CreatePipelineWithTrigger(string token, string @ref, Dictionary<string, string> variables)
@@ -63,21 +75,30 @@ namespace NGitLab.Mock.Clients
 
         public void Delete(int pipelineId)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
-            var pipeline = project.Pipelines.GetById(pipelineId);
-            project.Pipelines.Remove(pipeline);
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var pipeline = project.Pipelines.GetById(pipelineId);
+                project.Pipelines.Remove(pipeline);
+            }
         }
 
         public IEnumerable<PipelineVariable> GetVariables(int pipelineId)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
-            var pipeline = project.Pipelines.GetById(pipelineId);
-            return pipeline.Variables;
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var pipeline = project.Pipelines.GetById(pipelineId);
+                return pipeline.Variables;
+            }
         }
 
         public Models.Job[] GetJobs(int pipelineId)
         {
-            return _jobClient.GetJobs(JobScopeMask.All).Where(p => p.Pipeline.Id == pipelineId).ToArray();
+            using (Context.BeginOperationScope())
+            {
+                return _jobClient.GetJobs(JobScopeMask.All).Where(p => p.Pipeline.Id == pipelineId).ToArray();
+            }
         }
 
         [Obsolete("Use JobClient.GetJobs() instead")]
@@ -88,62 +109,65 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<PipelineBasic> Search(PipelineQuery query)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
-            IEnumerable<Pipeline> pipelines = project.Pipelines;
-            if (query.Sha != null)
+            using (Context.BeginOperationScope())
             {
-                var sha = new Sha1(query.Sha);
-                pipelines = pipelines.Where(pipeline => pipeline.Sha.Equals(sha));
-            }
-
-            if (query.Name != null)
-            {
-                pipelines = pipelines.Where(pipeline => string.Equals(pipeline.User.Name, query.Name, StringComparison.Ordinal));
-            }
-
-            if (query.Ref != null)
-            {
-                pipelines = pipelines.Where(pipeline => string.Equals(pipeline.Ref, query.Ref, StringComparison.Ordinal));
-            }
-
-            if (query.Scope.HasValue)
-            {
-                throw new NotImplementedException();
-            }
-
-            if (query.Status.HasValue)
-            {
-                pipelines = pipelines.Where(pipeline => pipeline.Status == query.Status);
-            }
-
-            if (query.Username != null)
-            {
-                pipelines = pipelines.Where(pipeline => string.Equals(pipeline.User.UserName, query.Username, StringComparison.Ordinal));
-            }
-
-            if (query.YamlErrors.HasValue)
-            {
-                pipelines = pipelines.Where(pipeline => !string.IsNullOrEmpty(pipeline.YamlError));
-            }
-
-            if (query.OrderBy.HasValue)
-            {
-                pipelines = query.OrderBy.Value switch
+                var project = GetProject(_projectId, ProjectPermission.View);
+                IEnumerable<Pipeline> pipelines = project.Pipelines;
+                if (query.Sha != null)
                 {
-                    PipelineOrderBy.id => QuerySort(pipelines, query.Sort, p => p.Id),
-                    PipelineOrderBy.status => QuerySort(pipelines, query.Sort, p => p.Status),
-                    PipelineOrderBy.@ref => QuerySort(pipelines, query.Sort, p => p.Ref),
-                    PipelineOrderBy.user_id => QuerySort(pipelines, query.Sort, p => p.User.Id),
-                    PipelineOrderBy.updated_at => QuerySort(pipelines, query.Sort, p => p.UpdatedAt),
-                    _ => throw new NotImplementedException(),
-                };
-            }
-            else
-            {
-                pipelines = QuerySort(pipelines, query.Sort, p => p.UpdatedAt);
-            }
+                    var sha = new Sha1(query.Sha);
+                    pipelines = pipelines.Where(pipeline => pipeline.Sha.Equals(sha));
+                }
 
-            return pipelines.Select(pipeline => pipeline.ToPipelineBasicClient());
+                if (query.Name != null)
+                {
+                    pipelines = pipelines.Where(pipeline => string.Equals(pipeline.User.Name, query.Name, StringComparison.Ordinal));
+                }
+
+                if (query.Ref != null)
+                {
+                    pipelines = pipelines.Where(pipeline => string.Equals(pipeline.Ref, query.Ref, StringComparison.Ordinal));
+                }
+
+                if (query.Scope.HasValue)
+                {
+                    throw new NotImplementedException();
+                }
+
+                if (query.Status.HasValue)
+                {
+                    pipelines = pipelines.Where(pipeline => pipeline.Status == query.Status);
+                }
+
+                if (query.Username != null)
+                {
+                    pipelines = pipelines.Where(pipeline => string.Equals(pipeline.User.UserName, query.Username, StringComparison.Ordinal));
+                }
+
+                if (query.YamlErrors.HasValue)
+                {
+                    pipelines = pipelines.Where(pipeline => !string.IsNullOrEmpty(pipeline.YamlError));
+                }
+
+                if (query.OrderBy.HasValue)
+                {
+                    pipelines = query.OrderBy.Value switch
+                    {
+                        PipelineOrderBy.id => QuerySort(pipelines, query.Sort, p => p.Id),
+                        PipelineOrderBy.status => QuerySort(pipelines, query.Sort, p => p.Status),
+                        PipelineOrderBy.@ref => QuerySort(pipelines, query.Sort, p => p.Ref),
+                        PipelineOrderBy.user_id => QuerySort(pipelines, query.Sort, p => p.User.Id),
+                        PipelineOrderBy.updated_at => QuerySort(pipelines, query.Sort, p => p.UpdatedAt),
+                        _ => throw new NotImplementedException(),
+                    };
+                }
+                else
+                {
+                    pipelines = QuerySort(pipelines, query.Sort, p => p.UpdatedAt);
+                }
+
+                return pipelines.Select(pipeline => pipeline.ToPipelineBasicClient()).ToList();
+            }
         }
 
         private IEnumerable<Pipeline> QuerySort<T>(IEnumerable<Pipeline> pipelines, PipelineSort? sort, Func<Pipeline, T> expression)

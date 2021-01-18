@@ -16,63 +16,75 @@ namespace NGitLab.Mock.Clients
 
         public void Create(FileUpsert file)
         {
-            var project = GetProject(_projectId, ProjectPermission.Contribute);
-            var commitCreate = new CommitCreate
+            using (Context.BeginOperationScope())
             {
-                Branch = file.Branch,
-                CommitMessage = file.CommitMessage,
-                AuthorEmail = Context.User.Email,
-                AuthorName = Context.User.Name,
-                ProjectId = _projectId,
-                Actions = new[]
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var commitCreate = new CommitCreate
                 {
-                    new CreateCommitAction()
+                    Branch = file.Branch,
+                    CommitMessage = file.CommitMessage,
+                    AuthorEmail = Context.User.Email,
+                    AuthorName = Context.User.Name,
+                    ProjectId = _projectId,
+                    Actions = new[]
                     {
-                        Action = nameof(CommitAction.Create),
-                        Content = file.Content,
-                        Encoding = file.Encoding,
-                        FilePath = file.Path,
+                        new CreateCommitAction()
+                        {
+                            Action = nameof(CommitAction.Create),
+                            Content = file.Content,
+                            Encoding = file.Encoding,
+                            FilePath = file.Path,
+                        },
                     },
-                },
-            };
+                };
 
-            project.Repository.Commit(commitCreate);
+                project.Repository.Commit(commitCreate);
+            }
         }
 
         public void Delete(FileDelete file)
         {
-            var project = GetProject(_projectId, ProjectPermission.Contribute);
-            var commitCreate = new CommitCreate
+            using (Context.BeginOperationScope())
             {
-                Branch = file.Branch,
-                CommitMessage = file.CommitMessage,
-                AuthorEmail = Context.User.Email,
-                AuthorName = Context.User.Name,
-                ProjectId = _projectId,
-                Actions = new[]
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var commitCreate = new CommitCreate
                 {
-                    new CreateCommitAction()
+                    Branch = file.Branch,
+                    CommitMessage = file.CommitMessage,
+                    AuthorEmail = Context.User.Email,
+                    AuthorName = Context.User.Name,
+                    ProjectId = _projectId,
+                    Actions = new[]
                     {
-                        Action = nameof(CommitAction.Delete),
-                        FilePath = file.Path,
+                        new CreateCommitAction()
+                        {
+                            Action = nameof(CommitAction.Delete),
+                            FilePath = file.Path,
+                        },
                     },
-                },
-            };
+                };
 
-            project.Repository.Commit(commitCreate);
+                project.Repository.Commit(commitCreate);
+            }
         }
 
         public FileData Get(string filePath, string @ref)
         {
-            var fileSystemPath = WebUtility.UrlDecode(filePath);
+            using (Context.BeginOperationScope())
+            {
+                var fileSystemPath = WebUtility.UrlDecode(filePath);
 
-            var project = GetProject(_projectId, ProjectPermission.View);
-            return project.Repository.GetFile(fileSystemPath, @ref);
+                var project = GetProject(_projectId, ProjectPermission.View);
+                return project.Repository.GetFile(fileSystemPath, @ref);
+            }
         }
 
         public bool FileExists(string filePath, string @ref)
         {
-            return Get(filePath, @ref) != null;
+            using (Context.BeginOperationScope())
+            {
+                return Get(filePath, @ref) != null;
+            }
         }
 
         public Blame[] Blame(string filePath, string @ref)
@@ -82,27 +94,30 @@ namespace NGitLab.Mock.Clients
 
         public void Update(FileUpsert file)
         {
-            var project = GetProject(_projectId, ProjectPermission.Contribute);
-            var commitCreate = new CommitCreate
+            using (Context.BeginOperationScope())
             {
-                Branch = file.Branch,
-                CommitMessage = file.CommitMessage,
-                AuthorEmail = Context.User.Email,
-                AuthorName = Context.User.Name,
-                ProjectId = _projectId,
-                Actions = new[]
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var commitCreate = new CommitCreate
                 {
-                    new CreateCommitAction()
+                    Branch = file.Branch,
+                    CommitMessage = file.CommitMessage,
+                    AuthorEmail = Context.User.Email,
+                    AuthorName = Context.User.Name,
+                    ProjectId = _projectId,
+                    Actions = new[]
                     {
-                        Action = nameof(CommitAction.Update),
-                        Content = file.Content,
-                        Encoding = file.Encoding,
-                        FilePath = file.Path,
+                        new CreateCommitAction()
+                        {
+                            Action = nameof(CommitAction.Update),
+                            Content = file.Content,
+                            Encoding = file.Encoding,
+                            FilePath = file.Path,
+                        },
                     },
-                },
-            };
+                };
 
-            project.Repository.Commit(commitCreate);
+                project.Repository.Commit(commitCreate);
+            }
         }
     }
 }

@@ -18,9 +18,27 @@ namespace NGitLab.Mock.Clients
 
         private MergeRequest GetMergeRequest() => GetMergeRequest(_projectId, _mergeRequestIid);
 
-        public IEnumerable<Models.MergeRequestComment> All => GetMergeRequest().Comments.Select(mr => mr.ToMergeRequestCommentClient());
+        public IEnumerable<Models.MergeRequestComment> All
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return GetMergeRequest().Comments.Select(mr => mr.ToMergeRequestCommentClient()).ToList();
+                }
+            }
+        }
 
-        public IEnumerable<MergeRequestDiscussion> Discussions => GetMergeRequest().GetDiscussions();
+        public IEnumerable<MergeRequestDiscussion> Discussions
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return GetMergeRequest().GetDiscussions().ToList();
+                }
+            }
+        }
 
         public Models.MergeRequestComment Add(Models.MergeRequestComment comment)
         {
@@ -35,42 +53,51 @@ namespace NGitLab.Mock.Clients
         {
             EnsureUserIsAuthenticated();
 
-            var project = GetProject(_projectId, ProjectPermission.View);
-            if (project.Archived)
-                throw new GitLabForbiddenException();
-
-            var comment = new MergeRequestComment
+            using (Context.BeginOperationScope())
             {
-                Author = Context.User,
-                Body = commentCreate.Body,
-            };
+                var project = GetProject(_projectId, ProjectPermission.View);
+                if (project.Archived)
+                    throw new GitLabForbiddenException();
 
-            GetMergeRequest().Comments.Add(comment);
-            return comment.ToMergeRequestCommentClient();
+                var comment = new MergeRequestComment
+                {
+                    Author = Context.User,
+                    Body = commentCreate.Body,
+                };
+
+                GetMergeRequest().Comments.Add(comment);
+                return comment.ToMergeRequestCommentClient();
+            }
         }
 
         public Models.MergeRequestComment Edit(long id, MergeRequestCommentEdit edit)
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
-            if (project.Archived)
-                throw new GitLabForbiddenException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                if (project.Archived)
+                    throw new GitLabForbiddenException();
 
-            var comment = GetMergeRequest().Comments.GetById(id);
-            if (comment == null)
-                throw new GitLabNotFoundException();
+                var comment = GetMergeRequest().Comments.GetById(id);
+                if (comment == null)
+                    throw new GitLabNotFoundException();
 
-            comment.Body = edit.Body;
-            return comment.ToMergeRequestCommentClient();
+                comment.Body = edit.Body;
+                return comment.ToMergeRequestCommentClient();
+            }
         }
 
         public void Delete(long id)
         {
-            var comments = GetMergeRequest().Comments;
-            var comment = comments.GetById(id);
-            if (comment == null)
-                throw new GitLabNotFoundException();
+            using (Context.BeginOperationScope())
+            {
+                var comments = GetMergeRequest().Comments;
+                var comment = comments.GetById(id);
+                if (comment == null)
+                    throw new GitLabNotFoundException();
 
-            comments.Remove(comment);
+                comments.Remove(comment);
+            }
         }
     }
 }
