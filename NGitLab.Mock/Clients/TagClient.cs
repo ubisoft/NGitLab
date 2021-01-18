@@ -14,43 +14,64 @@ namespace NGitLab.Mock.Clients
             _projectId = projectId;
         }
 
-        public IEnumerable<Tag> All => GetProject(_projectId, ProjectPermission.View).Repository.GetTags().Select(t => ToTagClient(t));
+        public IEnumerable<Tag> All
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return GetProject(_projectId, ProjectPermission.View).Repository.GetTags().Select(t => ToTagClient(t)).ToList();
+                }
+            }
+        }
 
         public Tag Create(TagCreate tag)
         {
-            var project = GetProject(_projectId, ProjectPermission.Contribute);
-            var createdTag = project.Repository.CreateTag(Context.User, tag.Name, tag.Ref, tag.Message, tag.ReleaseDescription);
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var createdTag = project.Repository.CreateTag(Context.User, tag.Name, tag.Ref, tag.Message, tag.ReleaseDescription);
 
-            return ToTagClient(createdTag);
+                return ToTagClient(createdTag);
+            }
         }
 
         public RealeaseInfo CreateRelease(string name, ReleaseCreate data)
         {
-            var project = GetProject(_projectId, ProjectPermission.Contribute);
-            var tag = project.Repository.CreateReleaseTag(name, data.Description);
-            return new RealeaseInfo
+            using (Context.BeginOperationScope())
             {
-                TagName = tag.Name,
-                Description = tag.ReleaseNotes,
-            };
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var tag = project.Repository.CreateReleaseTag(name, data.Description);
+                return new RealeaseInfo
+                {
+                    TagName = tag.Name,
+                    Description = tag.ReleaseNotes,
+                };
+            }
         }
 
         public void Delete(string name)
         {
-            var project = GetProject(_projectId, ProjectPermission.Contribute);
-            project.Repository.DeleteTag(name);
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                project.Repository.DeleteTag(name);
+            }
         }
 
         public RealeaseInfo UpdateRelease(string name, ReleaseUpdate data)
         {
-            var project = GetProject(_projectId, ProjectPermission.Contribute);
-            var tag = project.Repository.UpdateReleaseTag(name, data.Description);
-
-            return new RealeaseInfo
+            using (Context.BeginOperationScope())
             {
-                TagName = tag.Name,
-                Description = tag.ReleaseNotes,
-            };
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var tag = project.Repository.UpdateReleaseTag(name, data.Description);
+
+                return new RealeaseInfo
+                {
+                    TagName = tag.Name,
+                    Description = tag.ReleaseNotes,
+                };
+            }
         }
 
         public Tag ToTagClient(LibGit2Sharp.Tag tag)

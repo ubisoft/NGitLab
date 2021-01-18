@@ -17,64 +17,73 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(Context.User));
-                var allIssues = viewableProjects.SelectMany(p => p.Issues);
-                var assignedOrAuthoredIssues = allIssues.Where(i => i.Author.Id == Context.User.Id || i.Assignee.Id == Context.User.Id);
-                return assignedOrAuthoredIssues.Select(i => i.ToClientIssue());
+                using (Context.BeginOperationScope())
+                {
+                    var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(Context.User));
+                    var allIssues = viewableProjects.SelectMany(p => p.Issues);
+                    var assignedOrAuthoredIssues = allIssues.Where(i => i.Author.Id == Context.User.Id || i.Assignee.Id == Context.User.Id);
+                    return assignedOrAuthoredIssues.Select(i => i.ToClientIssue()).ToList();
+                }
             }
         }
 
         public Models.Issue Create(IssueCreate issueCreate)
         {
-            var project = GetProject(issueCreate.Id, ProjectPermission.View);
-
-            var issue = new Issue
+            using (Context.BeginOperationScope())
             {
-                Description = issueCreate.Description,
-                Title = issueCreate.Title,
-                Author = Context.User,
-            };
+                var project = GetProject(issueCreate.Id, ProjectPermission.View);
 
-            if (!string.IsNullOrEmpty(issueCreate.Labels))
-            {
-                issue.Labels = issueCreate.Labels.Split(',');
+                var issue = new Issue
+                {
+                    Description = issueCreate.Description,
+                    Title = issueCreate.Title,
+                    Author = Context.User,
+                };
+
+                if (!string.IsNullOrEmpty(issueCreate.Labels))
+                {
+                    issue.Labels = issueCreate.Labels.Split(',');
+                }
+
+                if (issueCreate.AssigneeId != null)
+                {
+                    issue.Assignee = Server.Users.FirstOrDefault(u => u.Id == issueCreate.AssigneeId);
+                }
+
+                project.Issues.Add(issue);
+                return project.Issues.First(i => i.Iid == issue.Iid).ToClientIssue();
             }
-
-            if (issueCreate.AssigneeId != null)
-            {
-                issue.Assignee = Server.Users.FirstOrDefault(u => u.Id == issueCreate.AssigneeId);
-            }
-
-            project.Issues.Add(issue);
-            return project.Issues.First(i => i.Iid == issue.Iid).ToClientIssue();
         }
 
         public Models.Issue Edit(IssueEdit issueEdit)
         {
-            var projectId = issueEdit.Id;
-            var issueToModify = GetIssue(projectId, issueEdit.IssueId);
-
-            if (issueEdit.AssigneeId.HasValue)
+            using (Context.BeginOperationScope())
             {
-                issueToModify.Assignee = GetUser(issueEdit.AssigneeId.Value);
-            }
+                var projectId = issueEdit.Id;
+                var issueToModify = GetIssue(projectId, issueEdit.IssueId);
 
-            if (issueEdit.MilestoneId.HasValue)
-            {
-                issueToModify.Milestone = GetMilestone(projectId, issueEdit.MilestoneId.Value);
-            }
+                if (issueEdit.AssigneeId.HasValue)
+                {
+                    issueToModify.Assignee = GetUser(issueEdit.AssigneeId.Value);
+                }
 
-            issueToModify.Title = issueEdit.Title;
-            issueToModify.Description = issueEdit.Description;
-            issueToModify.Labels = issueEdit.Labels.Split(',');
-            issueToModify.UpdatedAt = DateTimeOffset.UtcNow;
-            var isValidState = Enum.TryParse<IssueState>(issueEdit.State, out var requestedState);
-            if (isValidState)
-            {
-                issueToModify.State = requestedState;
-            }
+                if (issueEdit.MilestoneId.HasValue)
+                {
+                    issueToModify.Milestone = GetMilestone(projectId, issueEdit.MilestoneId.Value);
+                }
 
-            return issueToModify.ToClientIssue();
+                issueToModify.Title = issueEdit.Title;
+                issueToModify.Description = issueEdit.Description;
+                issueToModify.Labels = issueEdit.Labels.Split(',');
+                issueToModify.UpdatedAt = DateTimeOffset.UtcNow;
+                var isValidState = Enum.TryParse<IssueState>(issueEdit.State, out var requestedState);
+                if (isValidState)
+                {
+                    issueToModify.State = requestedState;
+                }
+
+                return issueToModify.ToClientIssue();
+            }
         }
 
         public IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid)
@@ -84,26 +93,38 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Models.Issue> ForProject(int projectId)
         {
-            return GetProject(projectId, ProjectPermission.View).Issues.Select(i => i.ToClientIssue());
+            using (Context.BeginOperationScope())
+            {
+                return GetProject(projectId, ProjectPermission.View).Issues.Select(i => i.ToClientIssue()).ToList();
+            }
         }
 
         public Models.Issue Get(int projectId, int issueId)
         {
-            var project = GetProject(projectId, ProjectPermission.View);
-            return project.Issues.FirstOrDefault(i => i.Iid == issueId).ToClientIssue() ?? throw new GitLabNotFoundException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(projectId, ProjectPermission.View);
+                return project.Issues.FirstOrDefault(i => i.Iid == issueId).ToClientIssue() ?? throw new GitLabNotFoundException();
+            }
         }
 
         public IEnumerable<Models.Issue> Get(IssueQuery query)
         {
-            var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(Context.User));
-            var issues = viewableProjects.SelectMany(p => p.Issues);
-            return FilterByQuery(issues, query).Select(i => i.ToClientIssue());
+            using (Context.BeginOperationScope())
+            {
+                var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(Context.User));
+                var issues = viewableProjects.SelectMany(p => p.Issues);
+                return FilterByQuery(issues, query).Select(i => i.ToClientIssue()).ToList();
+            }
         }
 
         public IEnumerable<Models.Issue> Get(int projectId, IssueQuery query)
         {
-            var issues = GetProject(projectId, ProjectPermission.View).Issues;
-            return FilterByQuery(issues, query).Select(i => i.ToClientIssue());
+            using (Context.BeginOperationScope())
+            {
+                var issues = GetProject(projectId, ProjectPermission.View).Issues;
+                return FilterByQuery(issues, query).Select(i => i.ToClientIssue()).ToList();
+            }
         }
 
         private static IEnumerable<Issue> FilterByQuery(IEnumerable<Issue> issues, IssueQuery query)

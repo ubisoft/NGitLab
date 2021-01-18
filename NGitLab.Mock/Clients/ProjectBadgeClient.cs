@@ -18,12 +18,15 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                var badge = project.Badges.GetById(id);
-                if (badge == null)
-                    throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
+                using (Context.BeginOperationScope())
+                {
+                    var project = GetProject(_projectId, ProjectPermission.View);
+                    var badge = project.Badges.GetById(id);
+                    if (badge == null)
+                        throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
 
-                return badge.ToBadgeModel();
+                    return badge.ToBadgeModel();
+                }
             }
         }
 
@@ -31,46 +34,67 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                var groupBadges = (project.Group != null) ? GetGroup(project.Group.Id, GroupPermission.View).Badges.Select(badge => badge.ToBadgeModel()) : Array.Empty<Models.Badge>();
-                return groupBadges.Union(project.Badges.Select(badge => badge.ToBadgeModel()));
+                using (Context.BeginOperationScope())
+                {
+                    var project = GetProject(_projectId, ProjectPermission.View);
+                    var groupBadges = (project.Group != null) ? GetGroup(project.Group.Id, GroupPermission.View).Badges.Select(badge => badge.ToBadgeModel()) : Array.Empty<Models.Badge>();
+                    return groupBadges.Union(project.Badges.Select(badge => badge.ToBadgeModel())).ToList();
+                }
             }
         }
 
-        public IEnumerable<Models.Badge> ProjectsOnly => All.Where(badge => badge.Kind == Models.BadgeKind.Project);
+        public IEnumerable<Models.Badge> ProjectsOnly
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return All.Where(badge => badge.Kind == Models.BadgeKind.Project).ToList();
+                }
+            }
+        }
 
         public Models.Badge Create(Models.BadgeCreate badge)
         {
             EnsureUserIsAuthenticated();
 
-            var createdBadge = GetProject(_projectId, ProjectPermission.Edit).Badges.Add(badge.LinkUrl, badge.ImageUrl);
-            return createdBadge.ToBadgeModel();
+            using (Context.BeginOperationScope())
+            {
+                var createdBadge = GetProject(_projectId, ProjectPermission.Edit).Badges.Add(badge.LinkUrl, badge.ImageUrl);
+                return createdBadge.ToBadgeModel();
+            }
         }
 
         public void Delete(int id)
         {
             EnsureUserIsAuthenticated();
 
-            var badgeToRemove = GetProject(_projectId, ProjectPermission.View).Badges.FirstOrDefault(b => b.Id == id);
-            if (badgeToRemove == null)
+            using (Context.BeginOperationScope())
             {
-                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
-            }
+                var badgeToRemove = GetProject(_projectId, ProjectPermission.View).Badges.FirstOrDefault(b => b.Id == id);
+                if (badgeToRemove == null)
+                {
+                    throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
+                }
 
-            GetProject(_projectId, ProjectPermission.Edit).Badges.Remove(badgeToRemove);
+                GetProject(_projectId, ProjectPermission.Edit).Badges.Remove(badgeToRemove);
+            }
         }
 
         public Models.Badge Update(int id, Models.BadgeUpdate badge)
         {
-            var badgeToUpdate = GetProject(_projectId, ProjectPermission.Edit).Badges.FirstOrDefault(b => b.Id == id);
-            if (badgeToUpdate == null)
+            using (Context.BeginOperationScope())
             {
-                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
-            }
+                var badgeToUpdate = GetProject(_projectId, ProjectPermission.Edit).Badges.FirstOrDefault(b => b.Id == id);
+                if (badgeToUpdate == null)
+                {
+                    throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
+                }
 
-            badgeToUpdate.LinkUrl = badge.LinkUrl;
-            badgeToUpdate.ImageUrl = badge.ImageUrl;
-            return badgeToUpdate.ToBadgeModel();
+                badgeToUpdate.LinkUrl = badge.LinkUrl;
+                badgeToUpdate.ImageUrl = badge.ImageUrl;
+                return badgeToUpdate.ToBadgeModel();
+            }
         }
     }
 }

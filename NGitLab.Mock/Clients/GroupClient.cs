@@ -16,11 +16,14 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var group = Server.AllGroups.FirstOrDefault(g => g.Id == id);
-                if (group == null || !group.CanUserViewGroup(Context.User))
-                    throw new GitLabNotFoundException();
+                using (Context.BeginOperationScope())
+                {
+                    var group = Server.AllGroups.FirstOrDefault(g => g.Id == id);
+                    if (group == null || !group.CanUserViewGroup(Context.User))
+                        throw new GitLabNotFoundException();
 
-                return group.ToClientGroup();
+                    return group.ToClientGroup();
+                }
             }
         }
 
@@ -28,62 +31,80 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var group = Server.AllGroups.FindGroup(fullPath);
-                if (group == null || !group.CanUserViewGroup(Context.User))
-                    throw new GitLabNotFoundException();
+                using (Context.BeginOperationScope())
+                {
+                    var group = Server.AllGroups.FindGroup(fullPath);
+                    if (group == null || !group.CanUserViewGroup(Context.User))
+                        throw new GitLabNotFoundException();
 
-                return group.ToClientGroup();
+                    return group.ToClientGroup();
+                }
             }
         }
 
-        public IEnumerable<Models.Group> Accessible => Server.AllGroups.Where(group => group.CanUserViewGroup(Context.User)).Select(group => group.ToClientGroup());
+        public IEnumerable<Models.Group> Accessible
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return Server.AllGroups.Where(group => group.CanUserViewGroup(Context.User)).Select(group => group.ToClientGroup()).ToList();
+                }
+            }
+        }
 
         public Models.Group Create(GroupCreate group)
         {
-            Group parentGroup = null;
-            if (group.ParentId != null)
+            using (Context.BeginOperationScope())
             {
-                parentGroup = Server.AllGroups.FirstOrDefault(g => g.Id == group.ParentId.Value);
-                if (parentGroup == null || !parentGroup.CanUserViewGroup(Context.User))
-                    throw new GitLabNotFoundException();
-
-                if (!parentGroup.CanUserAddGroup(Context.User))
-                    throw new GitLabForbiddenException();
-            }
-
-            var newGroup = new Group
-            {
-                Name = group.Name,
-                Description = group.Description,
-                Visibility = group.Visibility,
-                Permissions =
+                Group parentGroup = null;
+                if (group.ParentId != null)
                 {
-                    new Permission(Context.User, AccessLevel.Owner),
-                },
-            };
+                    parentGroup = Server.AllGroups.FirstOrDefault(g => g.Id == group.ParentId.Value);
+                    if (parentGroup == null || !parentGroup.CanUserViewGroup(Context.User))
+                        throw new GitLabNotFoundException();
 
-            if (parentGroup != null)
-            {
-                parentGroup.Groups.Add(newGroup);
-            }
-            else
-            {
-                Server.Groups.Add(newGroup);
-            }
+                    if (!parentGroup.CanUserAddGroup(Context.User))
+                        throw new GitLabForbiddenException();
+                }
 
-            return newGroup.ToClientGroup();
+                var newGroup = new Group
+                {
+                    Name = group.Name,
+                    Description = group.Description,
+                    Visibility = group.Visibility,
+                    Permissions =
+                    {
+                        new Permission(Context.User, AccessLevel.Owner),
+                    },
+                };
+
+                if (parentGroup != null)
+                {
+                    parentGroup.Groups.Add(newGroup);
+                }
+                else
+                {
+                    Server.Groups.Add(newGroup);
+                }
+
+                return newGroup.ToClientGroup();
+            }
         }
 
         public void Delete(int id)
         {
-            var group = Server.AllGroups.FirstOrDefault(g => g.Id == id);
-            if (group == null || !group.CanUserViewGroup(Context.User))
-                throw new GitLabNotFoundException();
+            using (Context.BeginOperationScope())
+            {
+                var group = Server.AllGroups.FirstOrDefault(g => g.Id == id);
+                if (group == null || !group.CanUserViewGroup(Context.User))
+                    throw new GitLabNotFoundException();
 
-            if (!group.CanUserDeleteGroup(Context.User))
-                throw new GitLabForbiddenException();
+                if (!group.CanUserDeleteGroup(Context.User))
+                    throw new GitLabForbiddenException();
 
-            group.ToClientGroup();
+                group.ToClientGroup();
+            }
         }
 
         public IEnumerable<Models.Group> Get(GroupQuery query)
@@ -108,54 +129,57 @@ namespace NGitLab.Mock.Clients
 
         public Models.Group Update(int id, GroupUpdate groupUpdate)
         {
-            var group = Server.AllGroups.FindGroupById(id);
-            if (group == null || !group.CanUserViewGroup(Context.User))
-                throw new GitLabNotFoundException();
-
-            if (!group.CanUserEditGroup(Context.User))
-                throw new GitLabForbiddenException();
-
-            if (groupUpdate.Description != null)
+            using (Context.BeginOperationScope())
             {
-                group.Description = groupUpdate.Description;
-            }
+                var group = Server.AllGroups.FindGroupById(id);
+                if (group == null || !group.CanUserViewGroup(Context.User))
+                    throw new GitLabNotFoundException();
 
-            if (groupUpdate.ExtraSharedRunnersMinutesLimit != null)
-            {
-                group.ExtraSharedRunnersLimit = TimeSpan.FromMinutes(groupUpdate.ExtraSharedRunnersMinutesLimit.Value);
-            }
+                if (!group.CanUserEditGroup(Context.User))
+                    throw new GitLabForbiddenException();
 
-            if (groupUpdate.LfsEnabled != null)
-            {
-                group.LfsEnabled = groupUpdate.LfsEnabled.Value;
-            }
+                if (groupUpdate.Description != null)
+                {
+                    group.Description = groupUpdate.Description;
+                }
 
-            if (groupUpdate.Name != null)
-            {
-                group.Name = groupUpdate.Name;
-            }
+                if (groupUpdate.ExtraSharedRunnersMinutesLimit != null)
+                {
+                    group.ExtraSharedRunnersLimit = TimeSpan.FromMinutes(groupUpdate.ExtraSharedRunnersMinutesLimit.Value);
+                }
 
-            if (groupUpdate.Path != null)
-            {
-                group.Path = groupUpdate.Path;
-            }
+                if (groupUpdate.LfsEnabled != null)
+                {
+                    group.LfsEnabled = groupUpdate.LfsEnabled.Value;
+                }
 
-            if (groupUpdate.RequestAccessEnabled != null)
-            {
-                group.RequestAccessEnabled = groupUpdate.RequestAccessEnabled.Value;
-            }
+                if (groupUpdate.Name != null)
+                {
+                    group.Name = groupUpdate.Name;
+                }
 
-            if (groupUpdate.SharedRunnersMinutesLimit != null)
-            {
-                group.SharedRunnersLimit = TimeSpan.FromMinutes(groupUpdate.SharedRunnersMinutesLimit.Value);
-            }
+                if (groupUpdate.Path != null)
+                {
+                    group.Path = groupUpdate.Path;
+                }
 
-            if (groupUpdate.Visibility != null)
-            {
-                group.Visibility = groupUpdate.Visibility.Value;
-            }
+                if (groupUpdate.RequestAccessEnabled != null)
+                {
+                    group.RequestAccessEnabled = groupUpdate.RequestAccessEnabled.Value;
+                }
 
-            return group.ToClientGroup();
+                if (groupUpdate.SharedRunnersMinutesLimit != null)
+                {
+                    group.SharedRunnersLimit = TimeSpan.FromMinutes(groupUpdate.SharedRunnersMinutesLimit.Value);
+                }
+
+                if (groupUpdate.Visibility != null)
+                {
+                    group.Visibility = groupUpdate.Visibility.Value;
+                }
+
+                return group.ToClientGroup();
+            }
         }
     }
 }

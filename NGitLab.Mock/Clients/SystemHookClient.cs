@@ -17,11 +17,14 @@ namespace NGitLab.Mock.Clients
             get
             {
                 AssertIsAdmin();
-                var result = Server.SystemHooks.FirstOrDefault(hook => hook.Id == hookId);
-                if (result == null)
-                    throw new GitLabNotFoundException();
+                using (Context.BeginOperationScope())
+                {
+                    var result = Server.SystemHooks.FirstOrDefault(hook => hook.Id == hookId);
+                    if (result == null)
+                        throw new GitLabNotFoundException();
 
-                return result.ToClientSystemHook();
+                    return result.ToClientSystemHook();
+                }
             }
         }
 
@@ -30,36 +33,45 @@ namespace NGitLab.Mock.Clients
             get
             {
                 AssertIsAdmin();
-                return Server.SystemHooks.Select(hook => hook.ToClientSystemHook());
+                using (Context.BeginOperationScope())
+                {
+                    return Server.SystemHooks.Select(hook => hook.ToClientSystemHook()).ToList();
+                }
             }
         }
 
         public Models.SystemHook Create(SystemHookUpsert hook)
         {
             AssertIsAdmin();
-            var newHook = new SystemHook
+            using (Context.BeginOperationScope())
             {
-                CreatedAt = DateTime.UtcNow,
-                EnableSslVerification = hook.EnableSslVerification,
-                MergeRequestsEvents = hook.MergeRequestsEvents,
-                PushEvents = hook.PushEvents,
-                TagPushEvents = hook.TagPushEvents,
-                Url = hook.Url,
-                RepositoryUpdateEvents = hook.RepositoryUpdateEvents,
-            };
-            Server.SystemHooks.Add(newHook);
+                var newHook = new SystemHook
+                {
+                    CreatedAt = DateTime.UtcNow,
+                    EnableSslVerification = hook.EnableSslVerification,
+                    MergeRequestsEvents = hook.MergeRequestsEvents,
+                    PushEvents = hook.PushEvents,
+                    TagPushEvents = hook.TagPushEvents,
+                    Url = hook.Url,
+                    RepositoryUpdateEvents = hook.RepositoryUpdateEvents,
+                };
+                Server.SystemHooks.Add(newHook);
 
-            return newHook.ToClientSystemHook();
+                return newHook.ToClientSystemHook();
+            }
         }
 
         public void Delete(int hookId)
         {
             AssertIsAdmin();
-            var result = Server.SystemHooks.FirstOrDefault(hook => hook.Id == hookId);
-            if (result == null)
-                throw new GitLabNotFoundException();
+            using (Context.BeginOperationScope())
+            {
+                var result = Server.SystemHooks.FirstOrDefault(hook => hook.Id == hookId);
+                if (result == null)
+                    throw new GitLabNotFoundException();
 
-            Server.SystemHooks.Remove(result);
+                Server.SystemHooks.Remove(result);
+            }
         }
 
         private void AssertIsAdmin()

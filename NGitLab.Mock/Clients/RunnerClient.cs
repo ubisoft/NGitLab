@@ -18,9 +18,12 @@ namespace NGitLab.Mock.Clients
                     throw new GitLabForbiddenException();
                 }
 
-                var runners = Server.AllProjects.SelectMany(p => p.RegisteredRunners);
-                var clientRunners = runners.Select(r => r.ToClientRunner());
-                return clientRunners;
+                using (Context.BeginOperationScope())
+                {
+                    var runners = Server.AllProjects.SelectMany(p => p.RegisteredRunners);
+                    var clientRunners = runners.Select(r => r.ToClientRunner()).ToList();
+                    return clientRunners;
+                }
             }
         }
 
@@ -33,8 +36,11 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var runner = Accessible.FirstOrDefault(r => r.Id == id) ?? throw new GitLabNotFoundException();
-                return runner;
+                using (Context.BeginOperationScope())
+                {
+                    var runner = Accessible.FirstOrDefault(r => r.Id == id) ?? throw new GitLabNotFoundException();
+                    return runner;
+                }
             }
         }
 
@@ -50,22 +56,28 @@ namespace NGitLab.Mock.Clients
 
         public Models.Runner Update(int runnerId, RunnerUpdate runnerUpdate)
         {
-            var runner = this[runnerId] ?? throw new GitLabNotFoundException();
-            var runnerOnServer = GetServerRunner(runnerId);
+            using (Context.BeginOperationScope())
+            {
+                var runner = this[runnerId] ?? throw new GitLabNotFoundException();
+                var runnerOnServer = GetServerRunner(runnerId);
 
-            runnerOnServer.Active = runnerUpdate.Active ?? runnerOnServer.Active;
-            runnerOnServer.TagList = runnerUpdate.TagList ?? runnerOnServer.TagList;
-            runnerOnServer.Description = !string.IsNullOrEmpty(runnerUpdate.Description) ? runnerUpdate.Description : runnerOnServer.Description;
-            runnerOnServer.Locked = runnerUpdate.Locked ?? runnerOnServer.Locked;
-            runnerOnServer.RunUntagged = runnerUpdate.RunUntagged ?? runnerOnServer.RunUntagged;
+                runnerOnServer.Active = runnerUpdate.Active ?? runnerOnServer.Active;
+                runnerOnServer.TagList = runnerUpdate.TagList ?? runnerOnServer.TagList;
+                runnerOnServer.Description = !string.IsNullOrEmpty(runnerUpdate.Description) ? runnerUpdate.Description : runnerOnServer.Description;
+                runnerOnServer.Locked = runnerUpdate.Locked ?? runnerOnServer.Locked;
+                runnerOnServer.RunUntagged = runnerUpdate.RunUntagged ?? runnerOnServer.RunUntagged;
 
-            return runner;
+                return runner;
+            }
         }
 
         public IEnumerable<Models.Runner> OfProject(int projectId)
         {
-            var runnerRefs = GetProject(projectId, ProjectPermission.Edit).EnabledRunners;
-            return runnerRefs.Select(r => this[r.Id]);
+            using (Context.BeginOperationScope())
+            {
+                var runnerRefs = GetProject(projectId, ProjectPermission.Edit).EnabledRunners;
+                return runnerRefs.Select(r => this[r.Id]).ToList();
+            }
         }
 
         public IEnumerable<Models.Job> GetJobs(int runnerId, JobScope jobScope)
@@ -91,32 +103,38 @@ namespace NGitLab.Mock.Clients
 
         public Models.Runner EnableRunner(int projectId, RunnerId runnerId)
         {
-            var project = GetProject(projectId, ProjectPermission.Edit);
-            var runner = GetServerRunner(runnerId.Id);
-
-            var runnerReference = new RunnerRef(runner);
-
-            if (project.EnabledRunners.Contains(runnerReference))
+            using (Context.BeginOperationScope())
             {
-                throw new GitLabException("Bad Request. Runner has already been taken");
-            }
+                var project = GetProject(projectId, ProjectPermission.Edit);
+                var runner = GetServerRunner(runnerId.Id);
 
-            project.EnabledRunners.Add(runnerReference);
-            return runner.ToClientRunner();
+                var runnerReference = new RunnerRef(runner);
+
+                if (project.EnabledRunners.Contains(runnerReference))
+                {
+                    throw new GitLabException("Bad Request. Runner has already been taken");
+                }
+
+                project.EnabledRunners.Add(runnerReference);
+                return runner.ToClientRunner();
+            }
         }
 
         public void DisableRunner(int projectId, RunnerId runnerId)
         {
-            var project = GetProject(projectId, ProjectPermission.Edit);
-            var runner = GetServerRunner(runnerId.Id);
-
-            if (project.EnabledRunners.All(r => r.Id != runnerId.Id))
+            using (Context.BeginOperationScope())
             {
-                throw new GitLabNotFoundException();
-            }
+                var project = GetProject(projectId, ProjectPermission.Edit);
+                var runner = GetServerRunner(runnerId.Id);
 
-            var runnerReference = new RunnerRef(runner);
-            project.EnabledRunners.Remove(runnerReference);
+                if (project.EnabledRunners.All(r => r.Id != runnerId.Id))
+                {
+                    throw new GitLabNotFoundException();
+                }
+
+                var runnerReference = new RunnerRef(runner);
+                project.EnabledRunners.Remove(runnerReference);
+            }
         }
 
         private IEnumerable<Runner> GetOwnedRunners()

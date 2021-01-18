@@ -18,7 +18,16 @@ namespace NGitLab.Mock.Clients
 
         private MergeRequest GetMergeRequest() => GetMergeRequest(_projectId, _mergeRequestIid);
 
-        public IEnumerable<Models.MergeRequestDiscussion> All => GetMergeRequest().GetDiscussions();
+        public IEnumerable<Models.MergeRequestDiscussion> All
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return GetMergeRequest().GetDiscussions().ToList();
+                }
+            }
+        }
 
         public Models.MergeRequestDiscussion Add(Models.MergeRequestComment comment)
         {
@@ -33,55 +42,64 @@ namespace NGitLab.Mock.Clients
         {
             EnsureUserIsAuthenticated();
 
-            var project = GetProject(_projectId, ProjectPermission.View);
-            if (project.Archived)
-                throw new GitLabForbiddenException();
-
-            var comment = new MergeRequestComment
+            using (Context.BeginOperationScope())
             {
-                Author = Context.User,
-                Body = commentCreate.Body,
-            };
+                var project = GetProject(_projectId, ProjectPermission.View);
+                if (project.Archived)
+                    throw new GitLabForbiddenException();
 
-            GetMergeRequest().Comments.Add(comment);
+                var comment = new MergeRequestComment
+                {
+                    Author = Context.User,
+                    Body = commentCreate.Body,
+                };
 
-            return new MergeRequestDiscussion()
-            {
-                Id = comment.ThreadId,
-                IndividualNote = false,
-                Notes = new[] { comment.ToMergeRequestCommentClient() },
-            };
+                GetMergeRequest().Comments.Add(comment);
+
+                return new MergeRequestDiscussion()
+                {
+                    Id = comment.ThreadId,
+                    IndividualNote = false,
+                    Notes = new[] { comment.ToMergeRequestCommentClient() },
+                };
+            }
         }
 
         public MergeRequestDiscussion Resolve(MergeRequestDiscussionResolve resolve)
         {
-            var discussions = GetMergeRequest().GetDiscussions();
-            var discussion = discussions.First(x => string.Equals(x.Id, resolve.Id, System.StringComparison.Ordinal));
-            if (discussion == null)
-                throw new GitLabNotFoundException();
-
-            foreach (var note in discussion.Notes)
+            using (Context.BeginOperationScope())
             {
-                note.Resolved = true;
-            }
+                var discussions = GetMergeRequest().GetDiscussions();
+                var discussion = discussions.First(x => string.Equals(x.Id, resolve.Id, System.StringComparison.Ordinal));
+                if (discussion == null)
+                    throw new GitLabNotFoundException();
 
-            return discussion;
+                foreach (var note in discussion.Notes)
+                {
+                    note.Resolved = true;
+                }
+
+                return discussion;
+            }
         }
 
         public void Delete(string discussionId, long noteId)
         {
-            var discussions = GetMergeRequest().GetDiscussions();
-            var discussion = discussions.First(x => string.Equals(x.Id, discussionId, System.StringComparison.Ordinal));
-            if (discussion == null)
-                throw new GitLabNotFoundException();
-
-            var allComments = GetMergeRequest().Comments;
-            foreach (var discussionNote in discussion.Notes.Where(x => x.Id == noteId))
+            using (Context.BeginOperationScope())
             {
-                var note = allComments.FirstOrDefault(x => x.Id == discussionNote.Id);
-                if (note != null)
+                var discussions = GetMergeRequest().GetDiscussions();
+                var discussion = discussions.First(x => string.Equals(x.Id, discussionId, System.StringComparison.Ordinal));
+                if (discussion == null)
+                    throw new GitLabNotFoundException();
+
+                var allComments = GetMergeRequest().Comments;
+                foreach (var discussionNote in discussion.Notes.Where(x => x.Id == noteId))
                 {
-                    allComments.Remove(note);
+                    var note = allComments.FirstOrDefault(x => x.Id == discussionNote.Id);
+                    if (note != null)
+                    {
+                        allComments.Remove(note);
+                    }
                 }
             }
         }

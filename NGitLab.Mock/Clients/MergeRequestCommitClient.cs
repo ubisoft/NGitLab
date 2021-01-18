@@ -20,8 +20,11 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var mergeRequest = GetMergeRequest(_projectId, _mergeRequestIid);
-                return mergeRequest.Commits.Select(commit => commit.ToCommitClient());
+                using (Context.BeginOperationScope())
+                {
+                    var mergeRequest = GetMergeRequest(_projectId, _mergeRequestIid);
+                    return mergeRequest.Commits.Select(commit => commit.ToCommitClient()).ToList();
+                }
             }
         }
     }

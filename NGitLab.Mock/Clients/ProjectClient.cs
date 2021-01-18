@@ -16,11 +16,14 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var project = GetProject(id, ProjectPermission.View);
-                if (project == null || !project.CanUserViewProject(Context.User))
-                    throw new GitLabNotFoundException();
+                using (Context.BeginOperationScope())
+                {
+                    var project = GetProject(id, ProjectPermission.View);
+                    if (project == null || !project.CanUserViewProject(Context.User))
+                        throw new GitLabNotFoundException();
 
-                return project.ToClientProject();
+                    return project.ToClientProject();
+                }
             }
         }
 
@@ -28,33 +31,66 @@ namespace NGitLab.Mock.Clients
         {
             get
             {
-                var project = GetProject(fullName, ProjectPermission.View);
-                return project.ToClientProject();
+                using (Context.BeginOperationScope())
+                {
+                    var project = GetProject(fullName, ProjectPermission.View);
+                    return project.ToClientProject();
+                }
             }
         }
 
-        public IEnumerable<Models.Project> Accessible => Server.AllProjects.Where(project => project.IsUserMember(Context.User)).Select(project => project.ToClientProject());
+        public IEnumerable<Models.Project> Accessible
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return Server.AllProjects.Where(project => project.IsUserMember(Context.User)).Select(project => project.ToClientProject()).ToList();
+                }
+            }
+        }
 
-        public IEnumerable<Models.Project> Owned => Server.AllProjects.Where(project => project.IsUserOwner(Context.User)).Select(project => project.ToClientProject());
+        public IEnumerable<Models.Project> Owned
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return Server.AllProjects.Where(project => project.IsUserOwner(Context.User)).Select(project => project.ToClientProject()).ToList();
+                }
+            }
+        }
 
-        public IEnumerable<Models.Project> Visible => Server.AllProjects.Where(project => project.CanUserViewProject(Context.User)).Select(project => project.ToClientProject());
+        public IEnumerable<Models.Project> Visible
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return Server.AllProjects.Where(project => project.CanUserViewProject(Context.User)).Select(project => project.ToClientProject()).ToList();
+                }
+            }
+        }
 
         public Models.Project Create(ProjectCreate project)
         {
-            var parentGroup = GetParentGroup(project.NamespaceId);
-
-            var newProject = new Project(project.Name)
+            using (Context.BeginOperationScope())
             {
-                Description = project.Description,
-                Visibility = project.VisibilityLevel,
-                Permissions =
-                {
-                    new Permission(Context.User, AccessLevel.Owner),
-                },
-            };
+                var parentGroup = GetParentGroup(project.NamespaceId);
 
-            parentGroup.Projects.Add(newProject);
-            return newProject.ToClientProject();
+                var newProject = new Project(project.Name)
+                {
+                    Description = project.Description,
+                    Visibility = project.VisibilityLevel,
+                    Permissions =
+                    {
+                        new Permission(Context.User, AccessLevel.Owner),
+                    },
+                };
+
+                parentGroup.Projects.Add(newProject);
+                return newProject.ToClientProject();
+            }
         }
 
         private Group GetParentGroup(string namespaceId)
@@ -79,8 +115,11 @@ namespace NGitLab.Mock.Clients
 
         public void Delete(int id)
         {
-            var project = GetProject(id, ProjectPermission.Delete);
-            project.Remove();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(id, ProjectPermission.Delete);
+                project.Remove();
+            }
         }
 
         public void Archive(int id)
@@ -91,18 +130,24 @@ namespace NGitLab.Mock.Clients
 
         public void Unarchive(int id)
         {
-            var project = GetProject(id, ProjectPermission.Edit);
-            project.Archived = false;
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(id, ProjectPermission.Edit);
+                project.Archived = false;
+            }
         }
 
         public Models.Project Fork(string id, ForkProject forkProject)
         {
             EnsureUserIsAuthenticated();
 
-            var project = GetProject(id, ProjectPermission.View);
-            var group = forkProject.Namespace != null ? GetParentGroup(forkProject.Namespace) : Context.User.Namespace;
-            var newProject = project.Fork(group, Context.User, forkProject.Name);
-            return newProject.ToClientProject();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(id, ProjectPermission.View);
+                var group = forkProject.Namespace != null ? GetParentGroup(forkProject.Namespace) : Context.User.Namespace;
+                var newProject = project.Fork(group, Context.User, forkProject.Name);
+                return newProject.ToClientProject();
+            }
         }
 
         public IEnumerable<Models.Project> Get(ProjectQuery query)
@@ -112,7 +157,10 @@ namespace NGitLab.Mock.Clients
 
         public Models.Project GetById(int id, SingleProjectQuery query)
         {
-            return GetProject(id, ProjectPermission.View).ToClientProject();
+            using (Context.BeginOperationScope())
+            {
+                return GetProject(id, ProjectPermission.View).ToClientProject();
+            }
         }
 
         public IEnumerable<Models.Project> GetForks(string id, ForkedProjectQuery query)
@@ -127,39 +175,42 @@ namespace NGitLab.Mock.Clients
 
         public Models.Project Update(string id, ProjectUpdate projectUpdate)
         {
-            var project = GetProject(id, ProjectPermission.Edit);
-
-            if (projectUpdate.Name != null)
+            using (Context.BeginOperationScope())
             {
-                project.Name = projectUpdate.Name;
-            }
+                var project = GetProject(id, ProjectPermission.Edit);
 
-            if (projectUpdate.DefaultBranch != null)
-            {
-                project.DefaultBranch = projectUpdate.DefaultBranch;
-            }
+                if (projectUpdate.Name != null)
+                {
+                    project.Name = projectUpdate.Name;
+                }
 
-            if (projectUpdate.Description != null)
-            {
-                project.Description = projectUpdate.Description;
-            }
+                if (projectUpdate.DefaultBranch != null)
+                {
+                    project.DefaultBranch = projectUpdate.DefaultBranch;
+                }
 
-            if (projectUpdate.Visibility.HasValue)
-            {
-                project.Visibility = projectUpdate.Visibility.Value;
-            }
+                if (projectUpdate.Description != null)
+                {
+                    project.Description = projectUpdate.Description;
+                }
 
-            if (projectUpdate.BuildTimeout.HasValue)
-            {
-                project.BuildTimeout = TimeSpan.FromMinutes(projectUpdate.BuildTimeout.Value);
-            }
+                if (projectUpdate.Visibility.HasValue)
+                {
+                    project.Visibility = projectUpdate.Visibility.Value;
+                }
 
-            if (projectUpdate.LfsEnabled.HasValue)
-            {
-                project.LfsEnabled = projectUpdate.LfsEnabled.Value;
-            }
+                if (projectUpdate.BuildTimeout.HasValue)
+                {
+                    project.BuildTimeout = TimeSpan.FromMinutes(projectUpdate.BuildTimeout.Value);
+                }
 
-            return project.ToClientProject();
+                if (projectUpdate.LfsEnabled.HasValue)
+                {
+                    project.LfsEnabled = projectUpdate.LfsEnabled.Value;
+                }
+
+                return project.ToClientProject();
+            }
         }
 
         public UploadedProjectFile UploadFile(string id, FormDataContent data)
