@@ -10,7 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
-    <PackageReference Include="Internals.FileUtilities" Version="2.3.8" />
+    <PackageReference Include="Internals.FileUtilities" Version="2.3.9" />
     <PackageReference Include="Internals.Git" Version="0.16.1" />
   </ItemGroup>
   <Import Project="$([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.after.props'))" Condition="$(SolutionFileName.EndsWith('.SwitchToSource.sln', StringComparison.OrdinalIgnoreCase)) And Exists($([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.after.props')))" />
