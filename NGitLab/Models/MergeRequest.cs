@@ -77,6 +77,12 @@ namespace NGitLab.Models
         [DataMember(Name = "merge_commit_sha")]
         public string MergeCommitSha;
 
+        [DataMember(Name = "squash_commit_sha")]
+        public string SquashCommitSha;
+
+        [DataMember(Name = "diff_refs")]
+        public DiffRefs DiffRefs;
+
         [DataMember(Name = "should_remove_source_branch")]
         public bool? ShouldRemoveSourceBranch;
 
