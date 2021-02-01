@@ -4,6 +4,7 @@ namespace NGitLab.Models
 {
     public enum EventTargetType
     {
+        None = 0,
         Issue,
         Milestone,
         [EnumMember(Value = "merge_request")]

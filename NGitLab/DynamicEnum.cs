@@ -8,12 +8,12 @@ namespace NGitLab
     /// that can be serialized from the client.
     /// </summary>
     public struct DynamicEnum<TEnum> : IEquatable<DynamicEnum<TEnum>>, IEquatable<TEnum>
-        where TEnum : Enum
+        where TEnum : struct, Enum
     {
         /// <summary>
         /// This value is filled when the value is recognized.
         /// </summary>
-        private TEnum EnumValue { get; }
+        public TEnum? EnumValue { get; }
 
         /// <summary>
         /// Contains the serialized string when the value is not a known
@@ -40,7 +40,7 @@ namespace NGitLab
 
         public bool Equals(DynamicEnum<TEnum> other)
         {
-            return EqualityComparer<TEnum>.Default.Equals(EnumValue, other.EnumValue);
+            return EqualityComparer<TEnum?>.Default.Equals(EnumValue, other.EnumValue);
         }
 
         public override bool Equals(object obj)
@@ -50,7 +50,7 @@ namespace NGitLab
 
         public override int GetHashCode()
         {
-            return EqualityComparer<TEnum>.Default.GetHashCode(EnumValue);
+            return EqualityComparer<TEnum?>.Default.GetHashCode(EnumValue);
         }
 
         public static bool operator ==(DynamicEnum<TEnum> obj1, DynamicEnum<TEnum> obj2)
@@ -75,7 +75,7 @@ namespace NGitLab
 
         public override string ToString()
         {
-            return StringValue ?? EnumValue.ToString();
+            return StringValue ?? EnumValue?.ToString() ?? string.Empty;
         }
     }
 }
