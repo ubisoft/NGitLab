@@ -20,7 +20,7 @@ namespace NGitLab.Tests.Impl
             var model = Load("{ \"MyEnum\":\"unknown\" }");
 
             Assert.That(model.MyEnum.StringValue, Is.EqualTo("unknown"));
-            Assert.That(model.MyEnum, Is.EqualTo(MockEnum.Default));
+            Assert.That(model.MyEnum.EnumValue, Is.EqualTo(null));
         }
 
         [Test]
