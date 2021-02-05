@@ -18,18 +18,26 @@ namespace NGitLab.Impl
 
         public IEnumerable<Job> GetJobs(JobScopeMask scope)
         {
+            return GetJobs(new JobQuery { Scope = scope });
+        }
+
+        public IEnumerable<Job> GetJobs(JobQuery query)
+        {
             var url = _jobsPath;
 
-            if (scope != JobScopeMask.All)
+            if (query.Scope != JobScopeMask.All)
             {
-                foreach (Enum value in Enum.GetValues(scope.GetType()))
+                foreach (Enum value in Enum.GetValues(query.Scope.GetType()))
                 {
-                    if (scope.HasFlag(value))
+                    if (query.Scope.HasFlag(value))
                     {
                         url = Utils.AddParameter(url, "scope", value.ToString().ToLowerInvariant());
                     }
                 }
             }
+
+            if (query.PerPage != null)
+                url = Utils.AddParameter(url, "per_page", query.PerPage);
 
             return _api.Get().GetAll<Job>(url);
         }

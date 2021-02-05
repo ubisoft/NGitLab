@@ -36,17 +36,22 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Models.Job> GetJobs(JobScopeMask scope)
         {
+            return GetJobs(new JobQuery { Scope = scope });
+        }
+
+        public IEnumerable<Models.Job> GetJobs(JobQuery query)
+        {
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
 
-                if (scope == JobScopeMask.All)
+                if (query.Scope == JobScopeMask.All)
                     return project.Jobs.Select(j => j.ToJobClient());
 
                 var scopes = new List<string>();
-                foreach (Enum value in Enum.GetValues(scope.GetType()))
+                foreach (Enum value in Enum.GetValues(query.Scope.GetType()))
                 {
-                    if (scope.HasFlag(value))
+                    if (query.Scope.HasFlag(value))
                     {
                         scopes.Add(value.ToString());
                     }
