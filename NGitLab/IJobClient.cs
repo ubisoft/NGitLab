@@ -7,6 +7,8 @@ namespace NGitLab
     {
         IEnumerable<Job> GetJobs(JobScopeMask scope);
 
+        IEnumerable<Job> GetJobs(JobQuery query);
+
         Job RunAction(int jobId, JobAction action);
 
         Job Get(int jobId);
