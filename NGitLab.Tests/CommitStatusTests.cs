@@ -1,275 +1,185 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class CommitStatusTests
     {
-        private Commit _commit;
-        private ICommitStatusClient _commitStatus;
-        private Project _project;
-        private string _sha;
-
-        [OneTimeSetUp]
-        public void OneTimeSetup()
+        private sealed class CommitStatusTestContext : IDisposable
         {
-            _project = Initialize.UnitTestProject;
-            _commitStatus = Initialize.GitLabClient.GetCommitStatus(_project.Id);
-            CommitsTests.EnableCiOnTestProject();
+            public GitLabTestContext Context { get; }
 
-            var upsert = new FileUpsert
+            public Project Project { get; }
+
+            public Commit Commit { get; }
+
+            public ICommitStatusClient CommitStatusClient { get; }
+
+            public CommitStatusTestContext(GitLabTestContext context, Project project, Commit commit, ICommitStatusClient commitStatusClient)
             {
-                RawContent = "test",
-                CommitMessage = "Commit for CommitStatusTests",
-                Path = "CommitStatusTests.txt",
-                Branch = "master",
-            };
+                Context = context;
+                Project = project;
+                Commit = commit;
+                CommitStatusClient = commitStatusClient;
+            }
 
-            Initialize.Repository.Files.Create(upsert);
-            _commit = Initialize.Repository.Commits.FirstOrDefault(c => c.Message.Contains("CommitStatusTests"));
+            public void Dispose()
+            {
+                Context.Dispose();
+            }
 
-            Assert.AreEqual(upsert.CommitMessage, _commit.Message);
+            public static async Task<CommitStatusTestContext> Create()
+            {
+                var context = await GitLabTestContext.CreateAsync().ConfigureAwait(false);
+                var project = context.CreateProject();
+
+                var upsert = new FileUpsert
+                {
+                    RawContent = "test",
+                    CommitMessage = "Commit for CommitStatusTests",
+                    Path = "CommitStatusTests.txt",
+                    Branch = "master",
+                };
+                context.Client.GetRepository(project.Id).Files.Create(upsert);
+                var commit = context.Client.GetCommits(project.Id).GetCommit(upsert.Branch);
+                var client = context.Client.GetCommitStatus(project.Id);
+                return new CommitStatusTestContext(context, project, commit, client);
+            }
+
+            public CommitStatusCreate AddOrUpdateCommitStatus(string state = "success", int? coverage = null)
+            {
+                var commitStatus = SetupCommitStatus(state, coverage);
+
+                var createdCommitStatus = CommitStatusClient.AddOrUpdate(commitStatus);
+
+                Assert.AreEqual(commitStatus.Ref, createdCommitStatus.Ref);
+                Assert.AreEqual(commitStatus.Coverage, createdCommitStatus.Coverage);
+                Assert.AreEqual(commitStatus.Description, createdCommitStatus.Description);
+                Assert.AreEqual(commitStatus.State, createdCommitStatus.Status);
+                Assert.AreEqual(commitStatus.Name, createdCommitStatus.Name);
+                Assert.AreEqual(commitStatus.TargetUrl, createdCommitStatus.TargetUrl);
+                Assert.IsTrue(string.Equals(commitStatus.CommitSha, createdCommitStatus.CommitSha, StringComparison.OrdinalIgnoreCase));
+
+                return createdCommitStatus;
+            }
+
+            private CommitStatusCreate SetupCommitStatus(string state, int? coverage = 100)
+            {
+                return new CommitStatusCreate
+                {
+                    Ref = "master",
+                    CommitSha = Commit.Id.ToString(),
+                    Name = "Commit for CommitStatusTests",
+                    State = state,
+                    ProjectId = Project.Id,
+                    Description = "desc",
+                    Coverage = coverage,
+                    TargetUrl = "https://google.ca/",
+                };
+            }
         }
 
         [Test]
-        public void Test_get_commit_status()
+        public async Task Test_get_commit_status()
         {
-            Test_post_commit_status();
-            var sha1 = _sha;
-            var commitStatus = _commitStatus.AllBySha(sha1);
+            using var context = await CommitStatusTestContext.Create();
+            var createdCommitStatus = context.AddOrUpdateCommitStatus();
+
+            var commitStatus = context.CommitStatusClient.AllBySha(context.Commit.Id.ToString().ToLowerInvariant()).ToList();
             Assert.IsNotNull(commitStatus.FirstOrDefault()?.Status);
         }
 
         [Test]
-        public void Test_post_commit_status()
+        public async Task Test_post_commit_status_with_no_coverage()
         {
-            var commitStatus = SetupCommitStatus(state: "success");
+            using var context = await CommitStatusTestContext.Create();
+            var commitStatus = context.AddOrUpdateCommitStatus(coverage: null);
 
-            var createdCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            _sha = createdCommitStatus.CommitSha;
-
-            Assert.AreEqual(commitStatus.Ref, createdCommitStatus.Ref);
-            Assert.AreEqual(commitStatus.Coverage, createdCommitStatus.Coverage);
-            Assert.AreEqual(commitStatus.Description, createdCommitStatus.Description);
-            Assert.AreEqual(commitStatus.State, createdCommitStatus.Status);
-            Assert.AreEqual(commitStatus.Name, createdCommitStatus.Name);
-            Assert.AreEqual(commitStatus.TargetUrl, createdCommitStatus.TargetUrl);
-            Assert.IsTrue(string.Equals(commitStatus.CommitSha, createdCommitStatus.CommitSha, StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual(commitStatus.Coverage, null);
         }
 
         [Test]
-        public void Test_post_commit_status_with_no_coverage()
+        public async Task Test_post_commit_status_and_update_it_from_pending_to_running_to_success()
         {
-            var commitStatus = SetupCommitStatus(state: "success", coverage: null);
-            commitStatus.CommitSha = Initialize.Repository.Commits.FirstOrDefault(c => !string.Equals(c.Id.ToString(), _commit.Id.ToString(), StringComparison.Ordinal))?.Id.ToString();
+            using var context = await CommitStatusTestContext.Create();
+            var commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
+            Assert.AreEqual("pending", commitStatus.Status);
 
-            var createdCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            _sha = createdCommitStatus.CommitSha;
+            commitStatus = context.AddOrUpdateCommitStatus(state: "running");
+            Assert.AreEqual("running", commitStatus.Status);
 
-            Assert.AreEqual(commitStatus.Ref, createdCommitStatus.Ref);
-            Assert.AreEqual(commitStatus.Coverage, createdCommitStatus.Coverage);
-            Assert.AreEqual(commitStatus.Description, createdCommitStatus.Description);
-            Assert.AreEqual(commitStatus.State, createdCommitStatus.Status);
-            Assert.AreEqual(commitStatus.Name, createdCommitStatus.Name);
-            Assert.AreEqual(commitStatus.TargetUrl, createdCommitStatus.TargetUrl);
-            Assert.IsTrue(string.Equals(commitStatus.CommitSha, createdCommitStatus.CommitSha, StringComparison.OrdinalIgnoreCase));
+            commitStatus = context.AddOrUpdateCommitStatus(state: "success");
+            Assert.AreEqual("success", commitStatus.Status);
         }
 
         [Test]
-        public void Test_post_commit_status_and_update_it_from_pending_to_running_to_success()
+        public async Task Test_post_commit_status_and_update_it_from_pending_to_failed()
         {
-            var commitStatus = SetupCommitStatus(state: "pending");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
+            using var context = await CommitStatusTestContext.Create();
+            var commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
+            Assert.AreEqual("pending", commitStatus.Status);
 
-            commitStatus.State = "running";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-
-            commitStatus.State = "success";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
+            commitStatus = context.AddOrUpdateCommitStatus(state: "failed");
+            Assert.AreEqual("failed", commitStatus.Status);
         }
 
         [Test]
-        public void Test_post_commit_status_and_update_it_from_pending_to_failed()
+        public async Task Test_post_commit_status_and_update_it_from_pending_to_canceled()
         {
-            var commitStatus = SetupCommitStatus(state: "pending");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
+            using var context = await CommitStatusTestContext.Create();
+            var commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
+            Assert.AreEqual("pending", commitStatus.Status);
 
-            commitStatus.State = "failed";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
+            commitStatus = context.AddOrUpdateCommitStatus(state: "canceled");
+            Assert.AreEqual("canceled", commitStatus.Status);
         }
 
         [Test]
-        public void Test_post_commit_status_and_update_it_from_pending_to_canceled()
+        public async Task Test_post_commit_status_and_update_it_from_success_to_pending()
         {
-            var commitStatus = SetupCommitStatus(state: "pending");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
+            using var context = await CommitStatusTestContext.Create();
+            var commitStatus = context.AddOrUpdateCommitStatus(state: "success");
+            Assert.AreEqual("success", commitStatus.Status);
 
-            commitStatus.State = "canceled";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
+            commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
+            Assert.AreEqual("pending", commitStatus.Status);
         }
 
         [Test]
-        public void Test_post_commit_status_and_update_it_from_success_to_pending()
+        public async Task Test_post_commit_status_and_update_it_from_success_to_failed()
         {
-            var commitStatus = SetupCommitStatus(state: "success");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
+            using var context = await CommitStatusTestContext.Create();
+            var commitStatus = context.AddOrUpdateCommitStatus(state: "success");
+            Assert.AreEqual("success", commitStatus.Status);
 
-            commitStatus.State = "pending";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
+            commitStatus = context.AddOrUpdateCommitStatus(state: "failed");
+            Assert.AreEqual("failed", commitStatus.Status);
         }
 
         [Test]
-        public void Test_post_commit_status_and_update_it_from_success_to_failed()
+        public async Task Test_post_commit_status_and_update_it_from_success_to_canceled()
         {
-            var commitStatus = SetupCommitStatus(state: "success");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
+            using var context = await CommitStatusTestContext.Create();
+            var commitStatus = context.AddOrUpdateCommitStatus(state: "success");
+            Assert.AreEqual("success", commitStatus.Status);
 
-            commitStatus.State = "failed";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
+            commitStatus = context.AddOrUpdateCommitStatus(state: "canceled");
+            Assert.AreEqual("canceled", commitStatus.Status);
         }
 
         [Test]
-        public void Test_post_commit_status_and_update_it_from_success_to_canceled()
+        public async Task Test_post_commit_status_and_update_it_from_canceled_to_pending()
         {
-            var commitStatus = SetupCommitStatus(state: "success");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
+            using var context = await CommitStatusTestContext.Create();
+            var commitStatus = context.AddOrUpdateCommitStatus(state: "canceled");
+            Assert.AreEqual("canceled", commitStatus.Status);
 
-            commitStatus.State = "canceled";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-        }
-
-        [Test]
-        public void Test_post_commit_status_and_update_it_from_canceled_to_pending()
-        {
-            var commitStatus = SetupCommitStatus(state: "canceled");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-
-            commitStatus.State = "pending";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-        }
-
-        [Test]
-        public void Test_post_commit_status_and_update_it_from_canceled_to_running_to_failed()
-        {
-            var commitStatus = SetupCommitStatus(state: "canceled");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-
-            commitStatus.State = "running";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-
-            commitStatus.State = "failed";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-        }
-
-        [Test]
-        public void Test_post_commit_status_and_update_it_from_canceled_to_success()
-        {
-            var commitStatus = SetupCommitStatus(state: "canceled");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-
-            commitStatus.State = "success";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-        }
-
-        [Test]
-        public void Test_post_commit_status_and_update_it_from_canceled_to_failed()
-        {
-            var commitStatus = SetupCommitStatus(state: "canceled");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-
-            commitStatus.State = "failed";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-        }
-
-        [Test]
-        public void Test_post_commit_status_and_update_it_from_failed_to_pending()
-        {
-            var commitStatus = SetupCommitStatus(state: "failed");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-
-            commitStatus.State = "pending";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-        }
-
-        [Test]
-        public void Test_post_commit_status_and_update_it_from_failed_to_running_to_canceled()
-        {
-            var commitStatus = SetupCommitStatus(state: "failed");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-
-            commitStatus.State = "running";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-
-            commitStatus.State = "canceled";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-        }
-
-        [Test]
-        public void Test_post_commit_status_and_update_it_from_failed_to_success()
-        {
-            var commitStatus = SetupCommitStatus(state: "failed");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-
-            commitStatus.State = "success";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-        }
-
-        [Test]
-        public void Test_post_commit_status_and_update_it_from_failed_to_canceled()
-        {
-            var commitStatus = SetupCommitStatus(state: "failed");
-            var createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-
-            commitStatus.State = "canceled";
-            createdOrUpdatedCommitStatus = _commitStatus.AddOrUpdate(commitStatus);
-            Assert.AreEqual(commitStatus.State, createdOrUpdatedCommitStatus.Status);
-        }
-
-        private CommitStatusCreate SetupCommitStatus(string state, int? coverage = 100)
-        {
-            return new CommitStatusCreate
-            {
-                Ref = "master",
-                CommitSha = _commit.Id.ToString(),
-                Name = "Commit for CommitStatusTests",
-                State = state,
-                ProjectId = _project.Id,
-                Description = "desc",
-                Coverage = coverage,
-                TargetUrl = "https://google.ca/",
-            };
+            commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
+            Assert.AreEqual("pending", commitStatus.Status);
         }
     }
 }

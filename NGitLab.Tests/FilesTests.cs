@@ -1,23 +1,20 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class FilesTests
     {
-        private static IFilesClient Files
-        {
-            get
-            {
-                Assert.IsNotNull(Initialize.UnitTestProject);
-                return Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Files;
-            }
-        }
-
         [Test]
-        public void Test_add_update_delete_and_get_file()
+        public async Task Test_add_update_delete_and_get_file()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var filesClient = context.Client.GetRepository(project.Id).Files;
+
             // Don't use txt extensions: https://gitlab.com/gitlab-org/gitlab-ce/issues/31790
             var fileName = "test.md";
             var fileUpsert = new FileUpsert
@@ -28,17 +25,17 @@ namespace NGitLab.Tests
                 Encoding = "base64",
                 Path = fileName,
             };
-            Files.Create(fileUpsert);
+            filesClient.Create(fileUpsert);
 
-            var file = Files.Get(fileName, "master");
+            var file = filesClient.Get(fileName, "master");
             Assert.IsNotNull(file);
             Assert.AreEqual(fileName, file.Name);
             Assert.AreEqual("test", file.DecodedContent);
 
             fileUpsert.RawContent = "test2";
-            Files.Update(fileUpsert);
+            filesClient.Update(fileUpsert);
 
-            file = Files.Get(fileName, "master");
+            file = filesClient.Get(fileName, "master");
             Assert.IsNotNull(file);
             Assert.AreEqual("test2", file.DecodedContent);
 
@@ -48,14 +45,18 @@ namespace NGitLab.Tests
                 Branch = "master",
                 CommitMessage = "Delete file",
             };
-            Files.Delete(fileDelete);
+            filesClient.Delete(fileDelete);
 
-            Assert.Throws(Is.InstanceOf<GitLabException>(), () => Files.Get("testDelete.md", "master"));
+            Assert.Throws(Is.InstanceOf<GitLabException>(), () => filesClient.Get("testDelete.md", "master"));
         }
 
         [Test]
-        public void Test_get_blame_of_latest_commit()
+        public async Task Test_get_blame_of_latest_commit()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var filesClient = context.Client.GetRepository(project.Id).Files;
+
             var fileName = "blame_test_2.md";
             var content1 = "test";
             var fileUpsert1 = new FileUpsert
@@ -66,9 +67,9 @@ namespace NGitLab.Tests
                 Encoding = "base64",
                 Path = fileName,
             };
-            Files.Create(fileUpsert1);
+            filesClient.Create(fileUpsert1);
 
-            var blameArray1 = Files.Blame(fileName, "master");
+            var blameArray1 = filesClient.Blame(fileName, "master");
 
             Assert.AreEqual(1, blameArray1.Length);
             Assert.IsNotNull(blameArray1);
@@ -93,9 +94,9 @@ namespace NGitLab.Tests
                 Encoding = "base64",
                 Path = fileName,
             };
-            Files.Update(fileUpsert2);
+            filesClient.Update(fileUpsert2);
 
-            var blameArray2 = Files.Blame(fileName, "master");
+            var blameArray2 = filesClient.Blame(fileName, "master");
 
             Assert.AreEqual(2, blameArray2.Length);
             Assert.AreEqual(firstBlameInfo, blameArray2[0]);
@@ -117,12 +118,16 @@ namespace NGitLab.Tests
                 Branch = "master",
                 CommitMessage = "Delete file",
             };
-            Files.Delete(fileDelete);
+            filesClient.Delete(fileDelete);
         }
 
         [Test]
-        public void Test_get_blame_of_an_old_commit()
+        public async Task Test_get_blame_of_an_old_commit()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var filesClient = context.Client.GetRepository(project.Id).Files;
+
             var fileName = "blame_test_2.md";
             var content1 = $"test{Environment.NewLine}";
             var fileUpsert1 = new FileUpsert
@@ -133,9 +138,9 @@ namespace NGitLab.Tests
                 Encoding = "base64",
                 Path = fileName,
             };
-            Files.Create(fileUpsert1);
+            filesClient.Create(fileUpsert1);
 
-            var initialBlame = Files.Blame(fileName, "master");
+            var initialBlame = filesClient.Blame(fileName, "master");
 
             Assert.IsNotNull(initialBlame);
             Assert.AreEqual(1, initialBlame.Length);
@@ -151,9 +156,9 @@ namespace NGitLab.Tests
                 Encoding = "base64",
                 Path = fileName,
             };
-            Files.Update(fileUpsert2);
+            filesClient.Update(fileUpsert2);
 
-            var blameById = Files.Blame(fileName, initialBlameInfo.Commit.Id.ToString());
+            var blameById = filesClient.Blame(fileName, initialBlameInfo.Commit.Id.ToString());
 
             Assert.AreEqual(1, blameById.Length);
             Assert.AreEqual(initialBlameInfo, blameById[0]);
@@ -164,12 +169,16 @@ namespace NGitLab.Tests
                 Branch = "master",
                 CommitMessage = "Delete file",
             };
-            Files.Delete(fileDelete);
+            filesClient.Delete(fileDelete);
         }
 
         [Test]
-        public void Test_blame_comparison()
+        public async Task Test_blame_comparison()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var filesClient = context.Client.GetRepository(project.Id).Files;
+
             var fileName = "blame_test_3.md";
             var content1 = $"test{Environment.NewLine}";
             var fileUpsert1 = new FileUpsert
@@ -180,9 +189,9 @@ namespace NGitLab.Tests
                 Encoding = "base64",
                 Path = fileName,
             };
-            Files.Create(fileUpsert1);
+            filesClient.Create(fileUpsert1);
 
-            var realBlame = Files.Blame(fileName, "master");
+            var realBlame = filesClient.Blame(fileName, "master");
 
             Assert.IsNotNull(realBlame);
             Assert.AreEqual(1, realBlame.Length);
@@ -203,7 +212,7 @@ namespace NGitLab.Tests
                 Branch = "master",
                 CommitMessage = "Delete file",
             };
-            Files.Delete(fileDelete);
+            filesClient.Delete(fileDelete);
         }
     }
 }

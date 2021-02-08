@@ -2,68 +2,75 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
-using NGitLab.Tests.Extensions;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class ProjectsTests
     {
-        private readonly IProjectClient _projects;
-
-        public ProjectsTests()
-        {
-            _projects = Initialize.GitLabClient.Projects;
-        }
-
         [Test]
-        public void GetOwnedProjects()
+        public async Task GetOwnedProjects()
         {
-            var projects = _projects.Owned.Take(30).ToArray();
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectClient = context.Client.Projects;
+
+            var projects = projectClient.Owned.Take(30).ToArray();
             CollectionAssert.IsNotEmpty(projects);
-            Assert.IsTrue(projects.Length > 20); // Ensure that the pagination works
         }
 
         [Test]
-        public void GetVisibleProjects()
+        public async Task GetVisibleProjects()
         {
-            var projects = this.ExecuteWithFallbacks(client => client.Projects.Visible.Take(30).ToArray());
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectClient = context.Client.Projects;
 
-            CollectionAssert.IsNotEmpty(projects);
-            Assert.IsTrue(projects.Length > 20); // Ensure that the pagination works
-        }
-
-        [Test]
-        public void GetAccessibleProjects()
-        {
-            var projects = _projects.Accessible.Take(30).ToArray();
+            var projects = projectClient.Visible.Take(30).ToArray();
 
             CollectionAssert.IsNotEmpty(projects);
-            Assert.IsTrue(projects.Length > 20); // Ensure that the pagination works
         }
 
         [Test]
-        public void GetProjectsByQuery()
+        public async Task GetAccessibleProjects()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectClient = context.Client.Projects;
+
+            var projects = projectClient.Accessible.Take(30).ToArray();
+
+            CollectionAssert.IsNotEmpty(projects);
+        }
+
+        [Test]
+        public async Task GetProjectsByQuery()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectClient = context.Client.Projects;
+
             var query = new ProjectQuery
             {
                 Simple = true,
-                Search = Initialize.UnitTestProject.Name,
+                Search = project.Name,
             };
 
-            var projects = GetProjects(query);
+            var projects = projectClient.Get(query).Take(10).ToArray();
             Assert.AreEqual(1, projects.Length);
-
-            CollectionAssert.IsNotEmpty(projects);
         }
 
         [Test]
-        public void GetProjectsStatistics()
+        public async Task GetProjectsStatistics()
         {
-            var projects = GetProjects(new ProjectQuery { Statistics = true }).ToList();
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectClient = context.Client.Projects;
 
+            var projects = projectClient.Get(new ProjectQuery { Statistics = true }).Take(10).ToList();
             if (projects.Count == 0)
             {
                 Assert.Fail("No projects found.");
@@ -73,9 +80,13 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void GetProjectsLinks()
+        public async Task GetProjectsProperties()
         {
-            var projects = GetProjects(new ProjectQuery()).ToList();
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectClient = context.Client.Projects;
+
+            var projects = projectClient.Get(new ProjectQuery()).ToList();
 
             if (projects.Count == 0)
             {
@@ -83,53 +94,51 @@ namespace NGitLab.Tests
             }
 
             projects.ForEach(p => Assert.IsNotNull(p.Links));
-        }
-
-        [Test]
-        public void GetProjectsMergeMethod()
-        {
-            var projects = GetProjects(new ProjectQuery()).ToList();
-
-            if (projects.Count == 0)
-            {
-                Assert.Fail("No projects found.");
-            }
-
             projects.ForEach(p => Assert.IsNotNull(p.MergeMethod));
         }
 
         [Test]
-        public void GetProjectsByQuery_VisibilityInternal()
+        public async Task GetProjectsByQuery_VisibilityInternal()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(p => p.VisibilityLevel = VisibilityLevel.Internal);
+            var projectClient = context.Client.Projects;
+
             var query = new ProjectQuery
             {
                 Simple = true,
                 Visibility = VisibilityLevel.Internal,
             };
 
-            var projects = GetProjects(query);
+            var projects = projectClient.Get(query).ToList();
 
             CollectionAssert.IsNotEmpty(projects);
         }
 
         [Test]
-        public void GetProjectByIdByQuery_Statistics()
+        public async Task GetProjectByIdByQuery_Statistics()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(p => p.VisibilityLevel = VisibilityLevel.Internal);
+            var projectClient = context.Client.Projects;
+
             var query = new SingleProjectQuery()
             {
                 Statistics = true,
             };
 
-            var project = _projects.GetById(Initialize.UnitTestProject.Id, query);
+            project = projectClient.GetById(project.Id, query);
 
             Assert.IsNotNull(project);
             Assert.IsNotNull(project.Statistics);
         }
 
         [Test]
-        public void GetProjectLanguages()
+        public async Task GetProjectLanguages()
         {
-            var project = Initialize.UnitTestProject;
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(p => p.VisibilityLevel = VisibilityLevel.Internal);
+            var projectClient = context.Client.Projects;
 
             var file = new FileUpsert
             {
@@ -139,16 +148,20 @@ namespace NGitLab.Tests
                 Path = "test.js",
             };
 
-            Initialize.GitLabClient.GetRepository(project.Id).Files.Create(file);
-            var languages = Initialize.GitLabClient.Projects.GetLanguages(project.Id.ToString());
+            context.Client.GetRepository(project.Id).Files.Create(file);
+            var languages = projectClient.GetLanguages(project.Id.ToString(CultureInfo.InvariantCulture));
             Assert.That(languages.Count, Is.EqualTo(1));
             StringAssert.AreEqualIgnoringCase("javascript", languages.First().Key);
             Assert.That(languages.First().Value, Is.EqualTo(100));
         }
 
         [Test]
-        public void GetProjectsCanSpecifyTheProjectPerPageCount()
+        public async Task GetProjectsCanSpecifyTheProjectPerPageCount()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(p => p.VisibilityLevel = VisibilityLevel.Internal);
+            var projectClient = context.Client.Projects;
+
             var query = new ProjectQuery
             {
                 Simple = true,
@@ -156,26 +169,24 @@ namespace NGitLab.Tests
                 PerPage = 5,
             };
 
-            var projects = GetProjects(query);
+            var projects = projectClient.Get(query).Take(10).ToList();
 
             CollectionAssert.IsNotEmpty(projects);
-            Assert.That(Initialize.LastRequest.RequestUri.ToString(), Contains.Substring("per_page=5"));
-        }
-
-        private Project[] GetProjects(ProjectQuery query, int takeCount = 10)
-        {
-            return _projects.Get(query).Take(takeCount).ToArray();
+            Assert.That(context.LastRequest.RequestUri.ToString(), Contains.Substring("per_page=5"));
         }
 
         [Test]
-        public void CreateUpdateDelete()
+        public async Task CreateUpdateDelete()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var projectClient = context.Client.Projects;
+
             var project = new ProjectCreate
             {
                 Description = "desc",
                 IssuesEnabled = true,
                 MergeRequestsEnabled = true,
-                Name = "CreateDelete_Test_" + Initialize.GetRandomNumber(),
+                Name = "CreateDelete_Test_" + context.GetRandomNumber(),
                 NamespaceId = null,
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Internal,
@@ -183,7 +194,7 @@ namespace NGitLab.Tests
                 Tags = new List<string> { "Tag-1", "Tag-2" },
             };
 
-            var createdProject = _projects.Create(project);
+            var createdProject = projectClient.Create(project);
 
             Assert.AreEqual(project.Description, createdProject.Description);
             Assert.AreEqual(project.IssuesEnabled, createdProject.IssuesEnabled);
@@ -194,61 +205,52 @@ namespace NGitLab.Tests
             Assert.AreEqual(RepositoryAccessLevel.Enabled, createdProject.RepositoryAccessLevel);
 
             // Update
-            var updatedProject = _projects.Update(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ProjectUpdate { Visibility = VisibilityLevel.Private });
+            var updatedProject = projectClient.Update(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ProjectUpdate { Visibility = VisibilityLevel.Private });
             Assert.AreEqual(VisibilityLevel.Private, updatedProject.VisibilityLevel);
 
-            var updatedProject2 = _projects.Update(createdProject.PathWithNamespace, new ProjectUpdate { Visibility = VisibilityLevel.Internal });
+            var updatedProject2 = projectClient.Update(createdProject.PathWithNamespace, new ProjectUpdate { Visibility = VisibilityLevel.Internal });
             Assert.AreEqual(VisibilityLevel.Internal, updatedProject2.VisibilityLevel);
 
-            _projects.Delete(createdProject.Id);
+            projectClient.Delete(createdProject.Id);
         }
 
+        // No owner level (50) for project! See https://gitlab.example.com/help/api/members.md
         [Test]
-        public void Test_get_by_project_query_projectQuery_MinAccessLevel_returns_projects()
+        [TestCase(AccessLevel.Guest)]
+        [TestCase(AccessLevel.Reporter)]
+        [TestCase(AccessLevel.Developer)]
+        [TestCase(AccessLevel.Maintainer)]
+        public async Task Test_get_by_project_query_projectQuery_MinAccessLevel_returns_projects(AccessLevel accessLevel)
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectClient = context.Client.Projects;
+
             // Arrange
-            var projectQuery10 = new ProjectQuery
+            var query = new ProjectQuery
             {
-                MinAccessLevel = AccessLevel.Guest,
-            };
-            var projectQuery20 = new ProjectQuery
-            {
-                MinAccessLevel = AccessLevel.Reporter,
-            };
-            var projectQuery30 = new ProjectQuery
-            {
-                MinAccessLevel = AccessLevel.Developer,
-            };
-            var projectQuery40 = new ProjectQuery
-            {
-                MinAccessLevel = AccessLevel.Maintainer,
+                MinAccessLevel = accessLevel,
             };
 
             // Act
-            var result10 = _projects.Get(projectQuery10);
-            var result20 = _projects.Get(projectQuery20);
-            var result30 = _projects.Get(projectQuery30);
-            var result40 = _projects.Get(projectQuery40);
-
-            // No owner level (50) for project! See https://gitlab.example.com/help/api/members.md
+            var result = projectClient.Get(query).Take(10).ToArray();
 
             // Assert
-            Assert.IsTrue(result10.Any());
-            Assert.IsTrue(result20.Any());
-            Assert.IsTrue(result30.Any());
-            Assert.IsTrue(result40.Any());
+            Assert.IsTrue(result.Any());
         }
 
         [Test]
-        [Timeout(30000)]
-        public void ForkProject()
+        public async Task ForkProject()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var projectClient = context.Client.Projects;
+
             var project = new ProjectCreate
             {
                 Description = "desc",
                 IssuesEnabled = true,
                 MergeRequestsEnabled = true,
-                Name = "ForkProject_Test_" + Initialize.GetRandomNumber(),
+                Name = "ForkProject_Test_" + context.GetRandomNumber(),
                 NamespaceId = null,
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Internal,
@@ -256,8 +258,8 @@ namespace NGitLab.Tests
                 Tags = new List<string> { "Tag-1", "Tag-2" },
             };
 
-            var createdProject = _projects.Create(project);
-            Initialize.GitLabClient.GetRepository(createdProject.Id).Files.Create(new FileUpsert
+            var createdProject = projectClient.Create(project);
+            context.Client.GetRepository(createdProject.Id).Files.Create(new FileUpsert
             {
                 Branch = "master",
                 CommitMessage = "add readme",
@@ -265,19 +267,21 @@ namespace NGitLab.Tests
                 RawContent = "this project should only live during the unit tests, you can delete if you find some",
             });
 
-            var forkedProject = _projects.Fork(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkProject()
+            var forkedProject = projectClient.Fork(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkProject()
             {
                 Path = createdProject.Path + "-fork",
                 Name = createdProject.Name + "Fork",
             });
 
-            var forks = _projects.GetForks(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkedProjectQuery());
+            // Wait for the fork to be ready
+            await GitLabTestContext.RetryUntilAsync(() => projectClient[forkedProject.Id], p => string.Equals(p.ImportStatus, "finished", StringComparison.Ordinal), TimeSpan.FromMinutes(2));
 
+            var forks = projectClient.GetForks(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkedProjectQuery());
             Assert.That(forks.Single().Id, Is.EqualTo(forkedProject.Id));
 
             // Create a merge request with AllowCollaboration (only testable on a fork, also the source branch must not be protected)
-            Initialize.GitLabClient.GetRepository(forkedProject.Id).Branches.Create(new BranchCreate { Name = "banch-test", Ref = "master" });
-            var mr = Initialize.GitLabClient.GetMergeRequest(forkedProject.Id).Create(new MergeRequestCreate()
+            context.Client.GetRepository(forkedProject.Id).Branches.Create(new BranchCreate { Name = "banch-test", Ref = "master" });
+            var mr = context.Client.GetMergeRequest(forkedProject.Id).Create(new MergeRequestCreate()
             {
                 AllowCollaboration = true,
                 Description = "desc",
@@ -289,55 +293,17 @@ namespace NGitLab.Tests
 
             Assert.That(mr.AllowCollaboration, Is.True);
 
-            _projects.Delete(forkedProject.Id);
-            _projects.Delete(createdProject.Id);
+            projectClient.Delete(forkedProject.Id);
+            projectClient.Delete(createdProject.Id);
         }
 
         [Test]
-        public void DeleteOldTestProjects()
+        public async Task GetProjectsByLastActivity()
         {
-            if (!Utils.RunningInCiEnvironment)
-            {
-                Assert.Inconclusive("This cleanup task will not run outside of CI environment");
-            }
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectClient = context.Client.Projects;
 
-            var query = new ProjectQuery
-            {
-                Scope = ProjectQueryScope.Owned,
-                Search = Initialize.TestEntityNamePrefix,
-                OrderBy = "last_activity_at",
-                Ascending = true,
-                Simple = true,
-            };
-
-            var now = DateTimeOffset.Now;
-            var oldAge = TimeSpan.FromDays(7);
-
-            var projects = _projects.Get(query);
-
-            foreach (var project in projects)
-            {
-                var age = now - project.CreatedAt;
-                if (age < oldAge)
-                    break;
-                if (!project.Name.StartsWith(Initialize.TestEntityNamePrefix, StringComparison.Ordinal))
-                    continue;
-
-                try
-                {
-                    _projects.Delete(project.Id);
-                }
-                catch (GitLabException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    Console.WriteLine($"The project '{project.NameWithNamespace}' ID:'{project.Id}' was not found. It might have been already deleted. Ex: {ex}");
-                    continue;
-                }
-            }
-        }
-
-        [Test]
-        public void GetProjectsByLastActivity()
-        {
             var date = DateTime.UtcNow.AddMonths(-1);
             var query = new ProjectQuery
             {
@@ -346,7 +312,7 @@ namespace NGitLab.Tests
                 Ascending = true,
             };
 
-            var projects = GetProjects(query);
+            var projects = projectClient.Get(query).Take(10).ToList();
             CollectionAssert.IsNotEmpty(projects);
             Assert.That(projects.Select(p => p.LastActivityAt), Is.All.GreaterThan(date));
         }

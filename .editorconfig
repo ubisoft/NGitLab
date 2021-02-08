@@ -408,6 +408,9 @@ dotnet_diagnostic.MA0045.severity = none
 # MA0048: File name must match type name
 dotnet_diagnostic.MA0048.severity = none
 
+# Method too long
+dotnet_diagnostic.MA0051.severity = none
+
 # MA0061: Method overrides should not change parameter defaults
 dotnet_diagnostic.MA0061.severity = none
 

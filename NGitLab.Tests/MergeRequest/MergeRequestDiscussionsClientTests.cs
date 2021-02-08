@@ -1,67 +1,23 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
-namespace NGitLab.Tests.MergeRequest
+namespace NGitLab.Tests
 {
     public class MergeRequestDiscussionsClientTests
     {
-        private IMergeRequestClient _mergeRequestClient;
-        private Project _project;
-
-        private Models.MergeRequest _mergeRequest;
-
-        private Models.MergeRequest MergeRequest
-        {
-            get
-            {
-                if (_mergeRequest == null)
-                {
-                    var branch = CreateBranch();
-                    _mergeRequest = _mergeRequestClient.Create(new MergeRequestCreate
-                    {
-                        Title = "Test merge request comments",
-                        SourceBranch = branch.Name,
-                        TargetBranch = "master",
-                    });
-                }
-
-                return _mergeRequest;
-            }
-        }
-
-        private static Branch CreateBranch()
-        {
-            var branch = Initialize.Repository.Branches.Create(new BranchCreate
-            {
-                Name = "mr-discussions-test",
-                Ref = "master",
-            });
-
-            Initialize.Repository.Files.Create(new FileUpsert
-            {
-                RawContent = "test content",
-                CommitMessage = "commit to merge",
-                Branch = branch.Name,
-                Path = "mr-discussions-test.md",
-            });
-
-            return branch;
-        }
-
-        [SetUp]
-        public void Setup()
-        {
-            _project = Initialize.UnitTestProject;
-            _mergeRequestClient = Initialize.GitLabClient.GetMergeRequest(_project.Id);
-        }
-
         [Test]
-        public void AddDiscussionToMergeRequest_DiscussionCreated()
+        public async Task AddDiscussionToMergeRequest_DiscussionCreated()
         {
-            var mergeRequestDiscussions = _mergeRequestClient.Discussions(MergeRequest.Iid);
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
+
             const string discussionMessage = "Discussion for MR";
             var newDiscussion = new MergeRequestDiscussionCreate
             {
@@ -78,9 +34,12 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
-        public void EditCommentFromDiscussion_CommentEdited()
+        public async Task EditCommentFromDiscussion_CommentEdited()
         {
-            var mergeRequestDiscussions = _mergeRequestClient.Discussions(MergeRequest.Iid);
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
 
             // Create a discussion, it creates automatically one note
             const string discussionMessage = "Discussion for MR";
@@ -96,7 +55,7 @@ namespace NGitLab.Tests.MergeRequest
 
             // Edit the note associated with the discussion
             const string discussionMessageEdit = "Discussion for MR edit";
-            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
+            var mergeRequestComments = mergeRequestClient.Comments(mergeRequest.Iid);
 
             var editedComment = mergeRequestComments.Edit(discussion.Notes[0].Id, new MergeRequestCommentEdit { Body = discussionMessageEdit });
             Assert.That(editedComment.Id, Is.EqualTo(discussion.Notes[0].Id));
@@ -106,33 +65,32 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
-        public void AddDiscussionToMergeRequestOnArchivedProject()
+        public async Task AddDiscussionToMergeRequestOnArchivedProject()
         {
-            var mergeRequestDiscussions = _mergeRequestClient.Discussions(MergeRequest.Iid);
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
+
             const string discussionMessage = "Discussion for MR";
             var newDiscussion = new MergeRequestDiscussionCreate
             {
                 Body = discussionMessage,
             };
 
-            var projectClient = Initialize.GitLabClient.Projects;
-            projectClient.Archive(_project.Id);
-
-            try
-            {
-                var ex = Assert.Throws<GitLabException>(() => mergeRequestDiscussions.Add(newDiscussion));
-                Assert.AreEqual(ex.StatusCode, HttpStatusCode.Forbidden);
-            }
-            finally
-            {
-                projectClient.Unarchive(_project.Id);
-            }
+            var projectClient = context.Client.Projects;
+            projectClient.Archive(project.Id);
+            var ex = Assert.Throws<GitLabException>(() => mergeRequestDiscussions.Add(newDiscussion));
+            Assert.AreEqual(ex.StatusCode, HttpStatusCode.Forbidden);
         }
 
         [Test]
-        public void ResolveDiscussion_AllNotesResolved()
+        public async Task ResolveDiscussion_AllNotesResolved()
         {
-            var mergeRequestDiscussions = _mergeRequestClient.Discussions(MergeRequest.Iid);
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
 
             const string discussionMessage = "Discussion for MR";
             var newDiscussion = new MergeRequestDiscussionCreate
@@ -152,9 +110,12 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
-        public void DeleteOneNoteFromDiscussion_DiscussionAndNoteDeleted()
+        public async Task DeleteOneNoteFromDiscussion_DiscussionAndNoteDeleted()
         {
-            var mergeRequestDiscussions = _mergeRequestClient.Discussions(MergeRequest.Iid);
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
 
             const string discussionMessage = "Discussion for MR";
             var newDiscussion = new MergeRequestDiscussionCreate

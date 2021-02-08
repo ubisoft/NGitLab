@@ -1,17 +1,21 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class WikiTests
     {
-        private static IWikiClient WikiClient => Initialize.GitLabClient.GetWikiClient(Initialize.UnitTestProject.Id);
-
         [Test]
-        public void Test_wiki()
+        public async Task Test_wiki()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var wikiClient = context.Client.GetWikiClient(project.Id);
+
             // Create a page
-            var page = WikiClient.Create(new Models.WikiPageCreate
+            var page = wikiClient.Create(new Models.WikiPageCreate
             {
                 Title = "Titi/Test Title",
                 Content = "Test Content",
@@ -22,7 +26,7 @@ namespace NGitLab.Tests
             Assert.That(page.Slug, Is.EqualTo("Titi/Test-Title"));
 
             // Edit the page
-            page = WikiClient.Update(page.Slug, new Models.WikiPageUpdate
+            page = wikiClient.Update(page.Slug, new Models.WikiPageUpdate
             {
                 Content = "Edited content",
                 Title = "titi/toto/Edited Title",
@@ -33,17 +37,17 @@ namespace NGitLab.Tests
             Assert.That(page.Slug, Is.EqualTo("titi/toto/Edited-Title"));
 
             // Get the page
-            var getPage = WikiClient[page.Slug];
+            var getPage = wikiClient[page.Slug];
             Assert.That(getPage.Slug, Is.EqualTo(page.Slug));
 
             // Get all pages
-            var pages = WikiClient.All.ToList();
+            var pages = wikiClient.All.ToList();
             Assert.That(pages, Has.Count.EqualTo(1));
             Assert.That(pages[0].Slug, Is.EqualTo(page.Slug));
 
             // Delete the page
-            WikiClient.Delete(page.Slug);
-            pages = WikiClient.All.ToList();
+            wikiClient.Delete(page.Slug);
+            pages = wikiClient.All.ToList();
             Assert.That(pages, Has.Count.EqualTo(0));
         }
     }

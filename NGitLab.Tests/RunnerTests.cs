@@ -1,180 +1,100 @@
-using System;
+﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
-using static NGitLab.Tests.Initialize;
 
 namespace NGitLab.Tests
 {
     public class RunnerTests
     {
         [Test]
-        public void Test()
+        public async Task Test_can_enable_and_disable_a_runner_on_a_project()
         {
-            var runnerToEnable = GetDefaultRunner();
-            var runners = Initialize.GitLabClient.Runners;
+            // We need 2 projects associated to a runner to disable a runner
+            using var context = await GitLabTestContext.CreateAsync();
+            var project1 = context.CreateProject(initializeWithCommits: true);
+            var project2 = context.CreateProject(initializeWithCommits: true);
 
-#pragma warning disable 618 // Obsolete
-            var jobsOld = runners.GetJobs(runnerToEnable.Id, JobScope.All).Take(1);
-#pragma warning restore 618
-            var jobs = runners.GetJobs(runnerToEnable.Id).Take(1);
+            var runnersClient = context.Client.Runners;
+            var runner = runnersClient.Register(new RunnerRegister() { Token = project1.RunnersToken });
+            runnersClient.EnableRunner(project2.Id, new RunnerId(runner.Id));
 
-            Assert.That(jobsOld, Is.Not.Empty);
-            Assert.That(jobs, Is.Not.Empty);
+            runnersClient.DisableRunner(project1.Id, new RunnerId(runner.Id));
+            Assert.IsFalse(IsEnabled());
+
+            runnersClient.EnableRunner(project1.Id, new RunnerId(runner.Id));
+            Assert.IsTrue(IsEnabled());
+
+            bool IsEnabled() => runnersClient[runner.Id].Projects.Any(x => x.Id == project1.Id);
         }
 
         [Test]
-        public void Test_can_enable_and_disable_a_runner_on_a_project()
+        public async Task Test_can_find_a_runner_on_a_project()
         {
-            var projectId = Initialize.UnitTestProject.Id;
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true);
+            var project2 = context.CreateProject(initializeWithCommits: true);
+            var runnersClient = context.Client.Runners;
+            var runner = runnersClient.Register(new RunnerRegister() { Token = project.RunnersToken });
+            runnersClient.EnableRunner(project2.Id, new RunnerId(runner.Id));
 
-            var runnerToEnable = GetDefaultRunner();
-            var runners = Initialize.GitLabClient.Runners;
+            var result = runnersClient.OfProject(project.Id).ToList();
+            Assert.IsTrue(result.Any(r => r.Id == runner.Id));
 
-            if (IsEnabled(runnerToEnable, projectId))
-            {
-                runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
-            }
-
-            runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
-            Assert.IsTrue(IsEnabled(runnerToEnable, projectId));
-
-            runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
-            Assert.IsFalse(IsEnabled(runnerToEnable, projectId));
+            runnersClient.DisableRunner(project.Id, new RunnerId(runner.Id));
+            result = runnersClient.OfProject(project.Id).ToList();
+            Assert.IsTrue(result.All(r => r.Id != runner.Id));
         }
 
         [Test]
-        public void Test_can_find_a_runner_on_a_project()
+        public async Task Test_some_runner_fields_are_not_null()
         {
-            var projectId = Initialize.UnitTestProject.Id;
-            var runnerToEnable = GetDefaultRunner();
-            var runners = Initialize.GitLabClient.Runners;
-            runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true);
+            var runnersClient = context.Client.Runners;
+            var runner = runnersClient.Register(new RunnerRegister() { Token = project.RunnersToken });
 
-            var result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
-            Assert.IsTrue(result.Any(r => r.Id == runnerToEnable.Id));
-
-            runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
-            result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
-            Assert.IsTrue(result.All(r => r.Id != runnerToEnable.Id));
-        }
-
-        [Test]
-        public void Test_some_runner_fields_are_not_null()
-        {
-            var projectId = Initialize.UnitTestProject.Id;
-            var runnerToEnable = GetDefaultRunner();
-            var runners = Initialize.GitLabClient.Runners;
-            runners.EnableRunner(projectId, new RunnerId(runnerToEnable.Id));
-
-            var result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
-            var runnerId = result[0].Id;
-            var runnerDetails = runners[runnerId];
-
-            Assert.IsNotNull(runnerDetails.Id);
-            Assert.IsNotNull(runnerDetails.Active);
-            Assert.IsNotNull(runnerDetails.Locked);
-            Assert.IsNotNull(runnerDetails.RunUntagged);
-            Assert.IsNotNull(runnerDetails.IpAddress);
-
-            runners.DisableRunner(projectId, new RunnerId(runnerToEnable.Id));
-            result = Initialize.GitLabClient.Runners.OfProject(projectId).ToList();
-            Assert.IsTrue(result.All(r => r.Id != runnerToEnable.Id));
-        }
-
-        [Test]
-        public void Test_Runner_Can_Be_Locked_And_Unlocked()
-        {
-            var runner = GetLockingRunner();
-            var runners = Initialize.GitLabClient.Runners;
-
-            if (runner.Locked)
+            using (await context.StartRunnerForOneJobAsync(project.Id))
             {
-                UnlockRunner();
-                LockRunner();
-            }
-            else
-            {
-                LockRunner();
-                UnlockRunner();
-            }
+                var runnerDetails = await GitLabTestContext.RetryUntilAsync(() => runnersClient[runner.Id], runner => runner.IpAddress != null, TimeSpan.FromMinutes(2));
 
-            void LockRunner()
-            {
-                var lockedRunner = new RunnerUpdate
-                {
-                    Locked = true,
-                };
-                runners.Update(runner.Id, lockedRunner);
-
-                // assert runner is locked
-                WaitWithSpecificTimeoutUntil(() => GetLockingRunner()?.Locked ?? false, TimeSpan.FromSeconds(10));
-                var updated = GetLockingRunner();
-                Assert.IsTrue(updated.Locked, "Runner should be locked.");
-            }
-
-            void UnlockRunner()
-            {
-                var unlockedRunner = new RunnerUpdate
-                {
-                    Locked = false,
-                };
-                runners.Update(runner.Id, unlockedRunner);
-
-                WaitWithSpecificTimeoutUntil(() => !GetLockingRunner()?.Locked ?? false, TimeSpan.FromSeconds(10));
-                var updated = GetLockingRunner();
-                Assert.False(updated.Locked, "Runner should not be locked.");
+                Assert.IsNotNull(runnerDetails.Id);
+                Assert.IsNotNull(runnerDetails.Active);
+                Assert.IsNotNull(runnerDetails.Locked);
+                Assert.IsNotNull(runnerDetails.RunUntagged);
+                Assert.IsNotNull(runnerDetails.IpAddress);
             }
         }
 
         [Test]
-        public void Test_Runner_Can_Update_RunUntagged_Flag()
+        public async Task Test_Runner_Can_Be_Locked_And_Unlocked()
         {
-            var runner = GetLockingRunner();
-            var runners = Initialize.GitLabClient.Runners;
-            var value = !runner.RunUntagged;
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true);
+            var runnersClient = context.Client.Runners;
+            var runner = runnersClient.Register(new RunnerRegister() { Token = project.RunnersToken, Locked = false });
+            Assert.IsFalse(runner.Locked, "Runner should not be locked.");
 
-            // update runner
-            var update = new RunnerUpdate
-            {
-                RunUntagged = value,
-            };
-            runners.Update(runner.Id, update);
+            runner = runnersClient.Update(runner.Id, new RunnerUpdate { Locked = true });
+            Assert.IsTrue(runner.Locked, "Runner should be locked.");
 
-            var updated = GetLockingRunner();
-            Assert.AreEqual(value, updated.RunUntagged, $"Runner should {(value ? string.Empty : "not ")}run untagged.");
+            runner = runnersClient.Update(runner.Id, new RunnerUpdate { Locked = false });
+            Assert.IsFalse(runner.Locked, "Runner should not be locked.");
         }
 
-        private static bool IsEnabled(Runner runner, int projectId)
+        [Test]
+        public async Task Test_Runner_Can_Update_RunUntagged_Flag()
         {
-            return Initialize.GitLabClient.Runners[runner.Id].Projects.Any(x => x.Id == projectId);
-        }
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true);
+            var runnersClient = context.Client.Runners;
+            var runner = runnersClient.Register(new RunnerRegister() { Token = project.RunnersToken, RunUntagged = false, TagList = new[] { "tag" } });
+            Assert.False(runner.RunUntagged);
 
-        public static Runner GetDefaultRunner()
-        {
-            var allRunners = Initialize.GitLabClient.Runners.Accessible.ToArray();
-            var runner = Array.Find(allRunners, x => x.Active && string.Equals(x.Description, "example", StringComparison.Ordinal));
-
-            if (runner == null)
-            {
-                Utils.FailInCiEnvironment("Will not be able to test the builds as no runner is setup for this project");
-            }
-
-            return Initialize.GitLabClient.Runners[runner.Id];
-        }
-
-        private static Runner GetLockingRunner()
-        {
-            var runnerName = "TestLockRunner";
-            var allRunners = Initialize.GitLabClient.Runners.Accessible.ToArray();
-            var runner = Array.Find(allRunners, x => string.Equals(x.Description, runnerName, StringComparison.Ordinal));
-
-            if (runner == null)
-            {
-                Utils.FailInCiEnvironment($"Will not be able to test the builds as runner '{runnerName}' is not setup. You should register it on {Initialize.GitLabHost}/example/Runners/SharedRunners_Staging/settings/ci_cd");
-            }
-
-            return Initialize.GitLabClient.Runners[runner.Id];
+            runner = runnersClient.Update(runner.Id, new RunnerUpdate { RunUntagged = true });
+            Assert.AreEqual(true, runner.RunUntagged);
         }
     }
 }

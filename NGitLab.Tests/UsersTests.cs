@@ -2,92 +2,77 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
-using static NGitLab.Tests.Initialize;
 
 namespace NGitLab.Tests
 {
     public class UsersTests
     {
-        private readonly IUserClient _users;
-
-        public UsersTests()
-        {
-            _users = Initialize.GitLabClient.Users;
-        }
-
         [Test]
-        public void GetUsers()
+        public async Task GetUsers()
         {
-            var users = _users.All.ToArray();
+            using var context = await GitLabTestContext.CreateAsync();
+            var users = context.Client.Users.All.Take(100).ToArray(); // We don't want to enumerate all users
             CollectionAssert.IsNotEmpty(users);
         }
 
         [Test]
-        public void GetUser()
+        public async Task GetUser()
         {
-            var user = _users[_users.Current.Id];
+            using var context = await GitLabTestContext.CreateAsync();
+            var current = context.Client.Users.Current;
+
+            var user = context.Client.Users[current.Id];
             Assert.IsNotNull(user);
-            Assert.That(user.Username, Is.EqualTo(_users.Current.Username));
+            Assert.That(user.Username, Is.EqualTo(current.Username));
         }
 
         [Test]
-        public void CreateUpdateDelete()
+        public async Task CreateUpdateDelete()
         {
-            if (!Initialize.IsAdmin)
-            {
-                Utils.FailInCiEnvironment("Cannot test the creation of users since the current user is not admin");
-            }
+            using var context = await GitLabTestContext.CreateAsync();
+            var users = context.AdminClient.Users;
 
-            var userUpsert = GetNewUser();
+            var addedUser = CreateNewUser(context);
+            Assert.That(addedUser.Bio, Is.EqualTo("bio"));
 
-            var addedUser = _users.Create(userUpsert);
-            Assert.That(addedUser.Bio, Is.EqualTo(userUpsert.Bio));
+            var updatedUser = users.Update(addedUser.Id, new UserUpsert() { Bio = "Bio2" });
+            Assert.That(updatedUser.Bio, Is.EqualTo("Bio2"));
 
-            userUpsert.Bio = "Bio2";
+            users.Delete(addedUser.Id);
 
-            var updatedUser = _users.Update(addedUser.Id, userUpsert);
-            Assert.That(updatedUser.Bio, Is.EqualTo(userUpsert.Bio));
-
-            _users.Delete(addedUser.Id);
-
-            WaitWithTimeoutUntil(() => !_users.Get(addedUser.Username).Any());
-
-            Assert.IsFalse(_users.Get(addedUser.Username).Any());
+            await GitLabTestContext.RetryUntilAsync(() => users.Get(addedUser.Username).ToList(), users => !users.Any(), TimeSpan.FromMinutes(2));
         }
 
         [Test]
-        public void DeactivatedAccountShouldBeAbleToActivate()
+        public async Task DeactivatedAccountShouldBeAbleToActivate()
         {
-            if (!Initialize.IsAdmin)
-            {
-                Utils.FailInCiEnvironment("Cannot test the creation of users since the current user is not admin");
-            }
+            using var context = await GitLabTestContext.CreateAsync();
+            var users = context.AdminClient.Users;
 
-            var userUpsert = GetNewUser();
+            var addedUser = CreateNewUser(context);
 
-            var addedUser = _users.Create(userUpsert);
+            users.Deactivate(addedUser.Id);
 
-            _users.Deactivate(addedUser.Id);
+            Assert.That(users[addedUser.Id].State, Is.EqualTo("deactivated"));
 
-            Assert.That(_users[addedUser.Id].State, Is.EqualTo("deactivated"));
+            users.Activate(addedUser.Id);
 
-            _users.Activate(addedUser.Id);
+            Assert.That(users[addedUser.Id].State, Is.EqualTo("active"));
 
-            Assert.That(_users[addedUser.Id].State, Is.EqualTo("active"));
+            users.Delete(addedUser.Id);
 
-            _users.Delete(addedUser.Id);
-
-            WaitWithTimeoutUntil(() => !_users.Get(addedUser.Username).Any());
-            Assert.IsFalse(_users.Get(addedUser.Username).Any());
+            await GitLabTestContext.RetryUntilAsync(() => users.Get(addedUser.Username).ToList(), users => !users.Any(), TimeSpan.FromMinutes(2));
         }
 
         [Test]
-        public void Test_can_add_an_ssh_key_to_the_gitlab_profile()
+        public async Task Test_can_add_an_ssh_key_to_the_gitlab_profile()
         {
-            var users = _users;
-            var keys = users.CurrentUserSShKeys;
+            using var context = await GitLabTestContext.CreateAsync();
+            var keys = context.Client.Users.CurrentUserSShKeys;
 
             var generatedKey = RsaSshKey.GenerateQuickest();
 
@@ -112,32 +97,29 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void CreateTokenAsAdmin_ReturnsUserToken()
+        public async Task CreateTokenAsAdmin_ReturnsUserToken()
         {
-            if (!Initialize.IsAdmin)
-            {
-                Utils.FailInCiEnvironment("Cannot test the creation of users since the current user is not admin");
-            }
+            using var context = await GitLabTestContext.CreateAsync();
+            var users = context.AdminClient.Users;
 
             var tokenRequest = new UserTokenCreate
             {
-                UserId = _users.Current.Id,
-                Name = $"Test_Create_{DateTime.Now.ToString("yyyyMMddHHmmss")}",
-                ExpiresAt = DateTime.Now.AddDays(1),
+                UserId = users.Current.Id,
+                Name = $"Test_Create_{DateTime.UtcNow.ToString("yyyyMMddHHmmss")}",
+                ExpiresAt = DateTime.UtcNow.AddDays(1),
                 Scopes = new[] { "api", "read_user" },
             };
 
-            var tokenResult = _users.CreateToken(tokenRequest);
+            var tokenResult = users.CreateToken(tokenRequest);
 
             Assert.IsNotEmpty(tokenResult.Token);
             Assert.AreEqual(tokenRequest.Name, tokenResult.Name);
         }
 
-        private static UserUpsert GetNewUser()
+        private static User CreateNewUser(GitLabTestContext context)
         {
-            var randomNumber = Initialize.GetRandomNumber();
-
-            return new UserUpsert
+            var randomNumber = context.GetRandomNumber();
+            return context.AdminClient.Users.Create(new UserUpsert
             {
                 Email = $"test{randomNumber}@test.pl",
                 Bio = "bio",
@@ -153,7 +135,7 @@ namespace NGitLab.Tests
                 Twitter = "twitter",
                 Username = $"ngitlabtestuser{randomNumber}",
                 WebsiteURL = "wp.pl",
-            };
+            });
         }
 
         // Comes from https://github.com/meziantou/Meziantou.GitLabClient/blob/master/Meziantou.GitLabClient.Tests/Internals/RsaSshKey.cs

@@ -1,36 +1,24 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class ProjectLevelApprovalRulesClientTests
     {
-        private IProjectLevelApprovalRulesClient _projectLevelApprovalRulesClient;
-
-        [SetUp]
-        public void Setup()
-        {
-            _projectLevelApprovalRulesClient = Initialize.GitLabClient.GetProjectLevelApprovalRulesClient(Initialize.UnitTestProject.Id);
-        }
-
-        [TearDown]
-        public void Cleanup()
-        {
-            foreach (var approvalRule in _projectLevelApprovalRulesClient.GetProjectLevelApprovalRules())
-            {
-                _projectLevelApprovalRulesClient.DeleteProjectLevelRule(approvalRule.RuleId);
-            }
-        }
-
         [Test]
-        public void CreateApprovalRule()
+        public async Task CreateApprovalRule()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectLevelApprovalRulesClient = context.Client.GetProjectLevelApprovalRulesClient(project.Id);
+
             var approvalRuleName = "TestApprovalRule";
             var approvalRuleApprovalsRequired = 1;
 
-            var approvalRule =
-                _projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(approvalRuleName, approvalRuleApprovalsRequired));
+            var approvalRule = projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(project, approvalRuleName, approvalRuleApprovalsRequired));
 
             Assert.NotNull(approvalRule);
             Assert.AreEqual(approvalRuleName, approvalRule.Name);
@@ -38,32 +26,38 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void DeleteApprovalRule()
+        public async Task DeleteApprovalRule()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectLevelApprovalRulesClient = context.Client.GetProjectLevelApprovalRulesClient(project.Id);
+
             string approvalRuleName = "TestApprovalRuleDelete";
             int approvalsRequired = 1;
-            var approvalRule =
-                _projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(approvalRuleName, approvalsRequired));
+            var approvalRule = projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(project, approvalRuleName, approvalsRequired));
 
-            _projectLevelApprovalRulesClient.DeleteProjectLevelRule(approvalRule.RuleId);
+            projectLevelApprovalRulesClient.DeleteProjectLevelRule(approvalRule.RuleId);
 
-            Assert.AreEqual(0, _projectLevelApprovalRulesClient.GetProjectLevelApprovalRules().Count);
+            Assert.AreEqual(0, projectLevelApprovalRulesClient.GetProjectLevelApprovalRules().Count);
         }
 
         [Test]
-        public void UpdateApprovalRule()
+        public async Task UpdateApprovalRule()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectLevelApprovalRulesClient = context.Client.GetProjectLevelApprovalRulesClient(project.Id);
+
             var approvalRuleName = "TestApprovalRuleUpdate";
             var approvalRuleApprovalsRequired = 1;
 
-            var approvalRule =
-                _projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(approvalRuleName, approvalRuleApprovalsRequired));
+            var approvalRule = projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(project, approvalRuleName, approvalRuleApprovalsRequired));
 
-            var firstApprovalRule = _projectLevelApprovalRulesClient.GetProjectLevelApprovalRules().First();
+            var firstApprovalRule = projectLevelApprovalRulesClient.GetProjectLevelApprovalRules().First();
 
             approvalRuleApprovalsRequired = 3;
             approvalRule =
-                _projectLevelApprovalRulesClient.UpdateProjectLevelApprovalRule(
+                projectLevelApprovalRulesClient.UpdateProjectLevelApprovalRule(
                     firstApprovalRule.RuleId,
                     new ApprovalRuleUpdate
                     {
@@ -76,31 +70,29 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void GetApprovalRules()
+        public async Task GetApprovalRules()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectLevelApprovalRulesClient = context.Client.GetProjectLevelApprovalRulesClient(project.Id);
+
             var firstApprovalRuleName = "TestApprovalRule";
             var firstApprovalRuleApprovalsRequired = 1;
 
-            string secondApprovalRuleName = "TestApprovalRule2";
-            int secondApprovalRuleApprovalsRequired = 2;
+            projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(project, firstApprovalRuleName, firstApprovalRuleApprovalsRequired));
 
-            _projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(firstApprovalRuleName, firstApprovalRuleApprovalsRequired));
-            _projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(secondApprovalRuleName, secondApprovalRuleApprovalsRequired));
+            var approvalRules = projectLevelApprovalRulesClient.GetProjectLevelApprovalRules();
 
-            var approvalRules = _projectLevelApprovalRulesClient.GetProjectLevelApprovalRules();
-
-            Assert.AreEqual(2, approvalRules.Count);
+            Assert.AreEqual(1, approvalRules.Count);
             Assert.AreEqual(firstApprovalRuleName, approvalRules.First().Name);
             Assert.AreEqual(firstApprovalRuleApprovalsRequired, approvalRules.First().ApprovalsRequired);
-            Assert.AreEqual(secondApprovalRuleName, approvalRules.Last().Name);
-            Assert.AreEqual(secondApprovalRuleApprovalsRequired, approvalRules.Last().ApprovalsRequired);
         }
 
-        private ApprovalRuleCreate CreateTestApprovalRuleCreate(string approvalRuleName, int approvalsRequired)
+        private ApprovalRuleCreate CreateTestApprovalRuleCreate(Project project, string approvalRuleName, int approvalsRequired)
         {
             return new ApprovalRuleCreate
             {
-                Id = Initialize.UnitTestProject.Id,
+                Id = project.Id,
                 Name = approvalRuleName,
                 ApprovalsRequired = approvalsRequired,
                 RuleType = "regular",

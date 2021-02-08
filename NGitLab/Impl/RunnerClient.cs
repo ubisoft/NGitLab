@@ -86,5 +86,10 @@ namespace NGitLab.Impl
             var url = $"{Project.Url}/{projectId}/runners/{runnerId.Id}";
             _api.Delete().Execute(url);
         }
+
+        public Runner Register(RunnerRegister request)
+        {
+            return _api.Post().With(request).To<Runner>(Runner.Url);
+        }
     }
 }

@@ -83,5 +83,11 @@ namespace NGitLab
         /// <param name="projectId"></param>
         /// <param name="runnerId"></param>
         void DisableRunner(int projectId, RunnerId runnerId);
+
+        /// <summary>
+        /// Register a new runner for the instance.
+        /// <see href="https://docs.gitlab.com/ee/api/runners.html#register-a-new-runner" />
+        /// </summary>
+        Runner Register(RunnerRegister request);
     }
 }

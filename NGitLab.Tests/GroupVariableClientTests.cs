@@ -1,30 +1,22 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class GroupVariableClientTests
     {
-        private IGroupVariableClient _groupVariableClient;
-
-        [OneTimeSetUp]
-        public void FixtureSetup()
-        {
-            _groupVariableClient = Initialize.GitLabClient.GetGroupVariableClient(Initialize.UnitTestGroup.Id);
-        }
-
         [Test]
-        public void Test_group_variables()
+        public async Task Test_group_variables()
         {
-            // Clear variables
-            var variables = _groupVariableClient.All.ToList();
-            variables.ForEach(b => _groupVariableClient.Delete(b.Key));
-            variables = _groupVariableClient.All.ToList();
-            Assert.AreEqual(0, variables.Count);
+            using var context = await GitLabTestContext.CreateAsync();
+            var group = context.CreateGroup();
+            var groupVariableClient = context.Client.GetGroupVariableClient(group.Id);
 
             // Create
-            var variable = _groupVariableClient.Create(new VariableCreate
+            var variable = groupVariableClient.Create(new VariableCreate
             {
                 Key = "My_Key",
                 Value = "My value",
@@ -36,7 +28,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(true, variable.Protected);
 
             // Update
-            variable = _groupVariableClient.Update(variable.Key, new VariableUpdate
+            variable = groupVariableClient.Update(variable.Key, new VariableUpdate
             {
                 Value = "My value edited",
                 Protected = false,
@@ -47,16 +39,16 @@ namespace NGitLab.Tests
             Assert.AreEqual(false, variable.Protected);
 
             // Delete
-            _groupVariableClient.Delete(variable.Key);
+            groupVariableClient.Delete(variable.Key);
 
-            variables = _groupVariableClient.All.ToList();
+            var variables = groupVariableClient.All.ToList();
             Assert.IsEmpty(variables);
 
             // All
-            _groupVariableClient.Create(new VariableCreate { Key = "Variable1", Value = "test" });
-            _groupVariableClient.Create(new VariableCreate { Key = "Variable2", Value = "test" });
-            _groupVariableClient.Create(new VariableCreate { Key = "Variable3", Value = "test" });
-            variables = _groupVariableClient.All.ToList();
+            groupVariableClient.Create(new VariableCreate { Key = "Variable1", Value = "test" });
+            groupVariableClient.Create(new VariableCreate { Key = "Variable2", Value = "test" });
+            groupVariableClient.Create(new VariableCreate { Key = "Variable3", Value = "test" });
+            variables = groupVariableClient.All.ToList();
             Assert.AreEqual(3, variables.Count);
         }
     }
