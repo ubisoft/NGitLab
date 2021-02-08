@@ -1,121 +1,181 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests.RepositoryClient
 {
     public class RepositoryClientTests
     {
-        private Commit _commit;
-
-        [OneTimeSetUp]
-        public void OneTimeSetup()
+        private sealed class RepositoryClientTestsContext : IDisposable
         {
-            var upsert = new FileUpsert
+            public RepositoryClientTestsContext(GitLabTestContext context, Project project, Commit[] commits, IRepositoryClient repositoryClient)
             {
-                RawContent = "test",
-                CommitMessage = "Commit for RepositoryClientTests",
-                Path = "RepositoryClientTests.txt",
-                Branch = "master",
-            };
+                Context = context;
+                Project = project;
+                Commits = commits;
+                RepositoryClient = repositoryClient;
+            }
 
-            Initialize.Repository.Files.Create(upsert);
-            _commit = Initialize.Repository.Commits.First();
+            public GitLabTestContext Context { get; }
 
-            Assert.AreEqual(upsert.CommitMessage, _commit.Message);
+            public Project Project { get; }
+
+            public Commit[] Commits { get; }
+
+            public IRepositoryClient RepositoryClient { get; }
+
+            public void Dispose()
+            {
+                Context.Dispose();
+            }
+
+            public static async Task<RepositoryClientTestsContext> CreateAsync(int commitCount)
+            {
+                var context = await GitLabTestContext.CreateAsync().ConfigureAwait(false);
+                var project = context.CreateProject();
+                var repositoryClient = context.Client.GetRepository(project.Id);
+
+                var commits = new Commit[commitCount];
+                for (var i = 0; i < commits.Length; i++)
+                {
+                    commits[i] = context.Client.GetCommits(project.Id).Create(new CommitCreate
+                    {
+                        Branch = "master",
+                        CommitMessage = context.GetUniqueRandomString(),
+                        AuthorEmail = "a@example.com",
+                        AuthorName = "a",
+                        ProjectId = project.Id,
+                        Actions =
+                        {
+                            new CreateCommitAction
+                            {
+                                Action = "create",
+                                Content = $"test",
+                                FilePath = $"test{i}.md",
+                            },
+                        },
+                    });
+                }
+
+                return new RepositoryClientTestsContext(context, project, commits, repositoryClient);
+            }
         }
 
         [Test]
-        public void GetAllCommits()
+        public async Task GetAllCommits()
         {
-            var commits = Initialize.Repository.Commits.ToArray();
-            CollectionAssert.IsNotEmpty(commits);
-            Assert.AreEqual(_commit.Message, commits[0].Message);
-            Assert.AreEqual("add readme", commits[commits.Length - 1].Message);
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+            var commits = context.RepositoryClient.Commits.ToArray();
+            Assert.AreEqual(2, commits.Length);
+            Assert.AreEqual(context.Commits[1].Message, commits[0].Message);
+            Assert.AreEqual(context.Commits[0].Message, commits[1].Message);
         }
 
         [Test]
-        public void GetCommitByBranchName()
+        public async Task GetCommitByBranchName()
         {
-            CollectionAssert.IsNotEmpty(Initialize.Repository.GetCommits("master"));
-            CollectionAssert.IsNotEmpty(Initialize.Repository.GetCommits("master", -1));
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
 
-            var commits = Initialize.Repository.GetCommits("master", 1).ToArray();
+            CollectionAssert.IsNotEmpty(context.RepositoryClient.GetCommits("master"));
+            CollectionAssert.IsNotEmpty(context.RepositoryClient.GetCommits("master", -1));
+
+            var commits = context.RepositoryClient.GetCommits("master", 1).ToArray();
             Assert.AreEqual(1, commits.Length);
-            Assert.AreEqual(_commit.Message, commits[0].Message);
+            Assert.AreEqual(context.Commits[1].Message, commits[0].Message);
         }
 
         [Test]
-        public void GetCommitBySha1()
+        public async Task GetCommitBySha1()
         {
-            var sha1 = _commit.Id;
-            var commit = Initialize.Repository.GetCommit(sha1);
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+
+            var sha1 = context.Commits[0].Id;
+            var commit = context.RepositoryClient.GetCommit(sha1);
             Assert.AreEqual(sha1, commit.Id);
-            Assert.AreEqual(_commit.Message, commit.Message);
+            Assert.AreEqual(context.Commits[0].Message, commit.Message);
         }
 
         [Test]
-        public void GetCommitBySha1Range()
+        public async Task GetCommitBySha1Range()
         {
-            var allCommits = Initialize.Repository.Commits.Reverse().ToArray();
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+            var allCommits = context.RepositoryClient.Commits.Reverse().ToArray();
             var commitRequest = new GetCommitsRequest
             {
                 RefName = $"{allCommits[1].Id}..{allCommits[3].Id}",
                 FirstParent = true,
             };
 
-            var commits = Initialize.Repository.GetCommits(commitRequest).Reverse().ToArray();
+            var commits = context.RepositoryClient.GetCommits(commitRequest).Reverse().ToArray();
             Assert.AreEqual(allCommits[2].Id, commits[0].Id);
             Assert.AreEqual(allCommits[3].Id, commits[1].Id);
         }
 
         [Test]
-        public void GetCommitDiff()
+        public async Task GetCommitDiff()
         {
-            CollectionAssert.IsNotEmpty(Initialize.Repository.GetCommitDiff(Initialize.Repository.Commits.First().Id).ToArray());
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+
+            CollectionAssert.IsNotEmpty(context.RepositoryClient.GetCommitDiff(context.RepositoryClient.Commits.First().Id).ToArray());
         }
 
         [Test]
-        public void GetAllTreeInPath()
+        public async Task GetAllTreeInPath()
         {
-            var tree = Initialize.Repository.GetTree(string.Empty);
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+
+            var tree = context.RepositoryClient.GetTree(string.Empty);
             Assert.IsNotEmpty(tree);
         }
 
         [Test]
-        public void GetAllTreeInPathRecursively()
+        public async Task GetAllTreeInPathRecursively()
         {
-            var tree = Initialize.Repository.GetTree(string.Empty, @ref: null, recursive: true);
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+
+            var tree = context.RepositoryClient.GetTree(string.Empty, @ref: null, recursive: true);
             Assert.IsNotEmpty(tree);
         }
 
         [Test]
-        public void GetAllTreeInPathOnRef()
+        public async Task GetAllTreeInPathOnRef()
         {
-            var tree = Initialize.Repository.GetTree(string.Empty, "master", recursive: false);
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+
+            var tree = context.RepositoryClient.GetTree(string.Empty, "master", recursive: false);
             Assert.IsNotEmpty(tree);
         }
 
         [Test]
-        public void GetAllTreeInPathWith100ElementsByPage()
+        public async Task GetAllTreeInPathWith100ElementsByPage()
         {
-            var tree = Initialize.Repository.GetTree(new RepositoryGetTreeOptions { Path = string.Empty, PerPage = 100 });
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+
+            var tree = context.RepositoryClient.GetTree(new RepositoryGetTreeOptions { Path = string.Empty, PerPage = 100 });
             Assert.IsNotEmpty(tree);
         }
 
         [Test]
-        public void GetAllTreeInNotGoodPath()
+        public async Task GetAllTreeInNotGoodPath()
         {
-            var tree = Initialize.Repository.GetTree("Fakepath");
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+
+            var tree = context.RepositoryClient.GetTree("Fakepath");
             Assert.IsEmpty(tree);
         }
 
         [TestCase(CommitRefType.All)]
         [TestCase(CommitRefType.Branch)]
         [TestCase(CommitRefType.Tag)]
-        public void GetCommitRefs(CommitRefType type)
+        public async Task GetCommitRefs(CommitRefType type)
         {
-            var commitRefs = Initialize.Repository.GetCommitRefs(Initialize.Repository.Commits.First().Id, type).ToArray();
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+
+            var commitRefs = context.RepositoryClient.GetCommitRefs(context.RepositoryClient.Commits.First().Id, type).ToArray();
 
             if (type == CommitRefType.Tag)
             {

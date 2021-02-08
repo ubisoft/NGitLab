@@ -148,5 +148,10 @@ namespace NGitLab.Mock.Clients
         {
             return GetOwnedRunners().FirstOrDefault(runner => runner.Id == id) ?? throw new GitLabNotFoundException();
         }
+
+        Models.Runner IRunnerClient.Register(RunnerRegister request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

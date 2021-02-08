@@ -1,22 +1,21 @@
-using System;
+﻿using System;
+using System.Threading.Tasks;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class BranchClientTests
     {
-        private IBranchClient _branchClient;
-
-        [SetUp]
-        public void Setup()
-        {
-            _branchClient = Initialize.Repository.Branches;
-        }
-
         [Test]
-        public void Test_CommitInfoIsCorrectlyDeserialized()
+        public async Task Test_CommitInfoIsCorrectlyDeserialized()
         {
-            var masterBranch = _branchClient["master"];
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true);
+            var branchClient = context.Client.GetRepository(project.Id).Branches;
+            var currentUser = context.Client.Users.Current;
+
+            var masterBranch = branchClient["master"];
             Assert.NotNull(masterBranch);
 
             var commit = masterBranch.Commit;
@@ -33,12 +32,12 @@ namespace NGitLab.Tests
             Assert.AreEqual("add test file 2", commit.Title);
             Assert.AreEqual("add test file 2", commit.Message);
 
-            Assert.AreEqual("robot", commit.AuthorName);
-            Assert.AreEqual("robot@gitlab.example.com", commit.AuthorEmail);
+            Assert.AreEqual(currentUser.Name, commit.AuthorName);
+            Assert.AreEqual(currentUser.Email, commit.AuthorEmail);
             Assert.Less(fiveMinutesAgo, commit.AuthoredDate);
 
-            Assert.AreEqual("robot", commit.CommitterName);
-            Assert.AreEqual("robot@gitlab.example.com", commit.CommitterEmail);
+            Assert.AreEqual(currentUser.Name, commit.CommitterName);
+            Assert.AreEqual(currentUser.Email, commit.CommitterEmail);
             Assert.Less(fiveMinutesAgo, commit.CommittedDate);
 
             Assert.IsTrue(Uri.TryCreate(commit.WebUrl, UriKind.Absolute, out _));

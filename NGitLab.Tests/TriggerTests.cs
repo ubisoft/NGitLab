@@ -1,34 +1,29 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using NGitLab.Tests.Docker;
+using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class TriggerTests
     {
-        private ITriggerClient _triggers;
-
-        [OneTimeSetUp]
-        public void FixtureSetup()
-        {
-            _triggers = Initialize.GitLabClient.GetTriggers(Initialize.UnitTestProject.Id);
-        }
-
         [Test]
         [Timeout(10000)]
-        public void Test_can_get_triggers_for_project()
+        public async Task Test_can_get_triggers_for_project()
         {
-            var triggers = _triggers.All;
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var triggersClient = context.Client.GetTriggers(project.Id);
+
+            var createdTrigger = triggersClient.Create("Unit_Test_Description");
+            var trigger = triggersClient[createdTrigger.Id];
+
+            Assert.AreEqual("Unit_Test_Description", trigger.Description);
+
+            var triggers = triggersClient.All.Take(10).ToArray();
 
             Assert.IsNotNull(triggers);
             Assert.IsNotEmpty(triggers);
-        }
-
-        [Test]
-        [Timeout(10000)]
-        public void Test_can_get_specific_trigger()
-        {
-            var trigger = _triggers[Initialize.UnitTestTrigger.Id];
-
-            Assert.IsNotNull(trigger);
         }
     }
 }

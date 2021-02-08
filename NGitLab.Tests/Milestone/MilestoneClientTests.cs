@@ -1,44 +1,43 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests.Milestone
 {
     public class MilestoneClientTests
     {
-        private IMilestoneClient _milestoneClient;
-
-        [SetUp]
-        public void Setup()
-        {
-            _milestoneClient = Initialize.GitLabClient.GetMilestone(Initialize.UnitTestProject.Id);
-        }
-
         [Test]
-        public void Test_milestone_api()
+        public async Task Test_milestone_api()
         {
-            var milestone = CreateMilestone("my-super-milestone");
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var milestoneClient = context.Client.GetMilestone(project.Id);
 
-            Assert.AreEqual(milestone.Id, _milestoneClient[milestone.Id].Id, "Test we can get a milestone by Id");
-            Assert.IsTrue(_milestoneClient.All.Any(x => x.Id == milestone.Id), "Test 'All' accessor returns the milestone");
-            Assert.IsTrue(_milestoneClient.AllInState(MilestoneState.active).Any(x => x.Id == milestone.Id), "Can return all active milestone");
+            var milestone = CreateMilestone(context, project, "my-super-milestone");
 
-            milestone = UpdateMilestone(milestone);
+            Assert.AreEqual(milestone.Id, milestoneClient[milestone.Id].Id, "Test we can get a milestone by Id");
+            Assert.IsTrue(milestoneClient.All.Any(x => x.Id == milestone.Id), "Test 'All' accessor returns the milestone");
+            Assert.IsTrue(milestoneClient.AllInState(MilestoneState.active).Any(x => x.Id == milestone.Id), "Can return all active milestone");
 
-            milestone = UpdatePartialMilestone(milestone);
+            milestone = UpdateMilestone(context, project, milestone);
 
-            milestone = CloseMilestone(milestone);
+            milestone = UpdatePartialMilestone(context, project, milestone);
 
-            Assert.IsTrue(_milestoneClient.AllInState(MilestoneState.closed).Any(x => x.Id == milestone.Id), "Can return all closed milestone");
+            milestone = CloseMilestone(context, project, milestone);
 
-            milestone = ActivateMilestone(milestone);
+            Assert.IsTrue(milestoneClient.AllInState(MilestoneState.closed).Any(x => x.Id == milestone.Id), "Can return all closed milestone");
 
-            DeleteMilestone(milestone);
+            milestone = ActivateMilestone(context, project, milestone);
+
+            DeleteMilestone(context, project, milestone);
         }
 
-        private Models.Milestone CreateMilestone(string title)
+        private Models.Milestone CreateMilestone(GitLabTestContext context, Project project, string title)
         {
-            var milestone = _milestoneClient.Create(new MilestoneCreate
+            var milestoneClient = context.Client.GetMilestone(project.Id);
+            var milestone = milestoneClient.Create(new MilestoneCreate
             {
                 Title = title,
                 Description = $"{title} description",
@@ -55,9 +54,10 @@ namespace NGitLab.Tests.Milestone
             return milestone;
         }
 
-        private Models.Milestone UpdateMilestone(Models.Milestone milestone)
+        private Models.Milestone UpdateMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
         {
-            var updatedMilestone = _milestoneClient.Update(milestone.Id, new MilestoneUpdate
+            var milestoneClient = context.Client.GetMilestone(project.Id);
+            var updatedMilestone = milestoneClient.Update(milestone.Id, new MilestoneUpdate
             {
                 Title = milestone.Title + "new",
                 Description = milestone.Description + "new",
@@ -75,9 +75,10 @@ namespace NGitLab.Tests.Milestone
             return updatedMilestone;
         }
 
-        private Models.Milestone UpdatePartialMilestone(Models.Milestone milestone)
+        private Models.Milestone UpdatePartialMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
         {
-            var updatedMilestone = _milestoneClient.Update(milestone.Id, new MilestoneUpdate
+            var milestoneClient = context.Client.GetMilestone(project.Id);
+            var updatedMilestone = milestoneClient.Update(milestone.Id, new MilestoneUpdate
             {
                 Description = milestone.Description + "partial new",
             });
@@ -92,9 +93,10 @@ namespace NGitLab.Tests.Milestone
             return updatedMilestone;
         }
 
-        private Models.Milestone ActivateMilestone(Models.Milestone milestone)
+        private Models.Milestone ActivateMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
         {
-            var closedMilestone = _milestoneClient.Activate(milestone.Id);
+            var milestoneClient = context.Client.GetMilestone(project.Id);
+            var closedMilestone = milestoneClient.Activate(milestone.Id);
 
             Assert.That(closedMilestone.State, Is.EqualTo(nameof(MilestoneState.active)));
             Assert.That(closedMilestone.Title, Is.EqualTo(milestone.Title));
@@ -105,9 +107,10 @@ namespace NGitLab.Tests.Milestone
             return closedMilestone;
         }
 
-        private Models.Milestone CloseMilestone(Models.Milestone milestone)
+        private Models.Milestone CloseMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
         {
-            var closedMilestone = _milestoneClient.Close(milestone.Id);
+            var milestoneClient = context.Client.GetMilestone(project.Id);
+            var closedMilestone = milestoneClient.Close(milestone.Id);
 
             Assert.That(closedMilestone.State, Is.EqualTo(nameof(MilestoneState.closed)));
             Assert.That(closedMilestone.Title, Is.EqualTo(milestone.Title));
@@ -118,13 +121,14 @@ namespace NGitLab.Tests.Milestone
             return closedMilestone;
         }
 
-        private void DeleteMilestone(Models.Milestone milestone)
+        private void DeleteMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
         {
-            _milestoneClient.Delete(milestone.Id);
+            var milestoneClient = context.Client.GetMilestone(project.Id);
+            milestoneClient.Delete(milestone.Id);
 
             Assert.Throws<GitLabException>(() =>
             {
-                var ms = _milestoneClient[milestone.Id];
+                var ms = milestoneClient[milestone.Id];
             });
         }
     }

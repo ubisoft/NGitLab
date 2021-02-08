@@ -1,4 +1,6 @@
-﻿using NGitLab.Impl;
+﻿using System.Threading.Tasks;
+using NGitLab.Impl;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
@@ -6,9 +8,10 @@ namespace NGitLab.Tests
     public class APITests
     {
         [Test]
-        public void Test_the_exception_does_not_contain_the_password_on_connection_error()
+        public async Task Test_the_exception_does_not_contain_the_password_on_connection_error()
         {
-            var credentials = new GitLabCredentials(Initialize.GitLabHost, "invalidUser", "myInvalidPassword");
+            using var context = await GitLabTestContext.CreateAsync();
+            var credentials = new GitLabCredentials(context.DockerContainer.GitLabUrl.ToString(), "invalidUser", "myInvalidPassword");
             var api = new API(credentials);
             var exception = Assert.Throws<GitLabException>(() => api.Get());
 

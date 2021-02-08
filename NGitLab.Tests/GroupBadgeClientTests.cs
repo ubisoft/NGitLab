@@ -1,31 +1,22 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class GroupBadgeClientTests
     {
-        private IGroupBadgeClient _groupBadgeClient;
-
-        [OneTimeSetUp]
-        public void FixtureSetup()
-        {
-            _groupBadgeClient = Initialize.GitLabClient.GetGroupBadgeClient(Initialize.UnitTestGroup.Id);
-        }
-
         [Test]
-        public void Test_group_badges()
+        public async Task Test_group_badges()
         {
-            // Clear badges
-            var badges = _groupBadgeClient.All.ToList();
-            badges.ForEach(b => _groupBadgeClient.Delete(b.Id));
-
-            badges = _groupBadgeClient.All.ToList();
-            Assert.IsEmpty(badges);
+            using var context = await GitLabTestContext.CreateAsync();
+            var group = context.CreateGroup();
+            var groupBadgeClient = context.Client.GetGroupBadgeClient(group.Id);
 
             // Create
-            var badge = _groupBadgeClient.Create(new BadgeCreate
+            var badge = groupBadgeClient.Create(new BadgeCreate
             {
                 ImageUrl = "http://dummy/image.png",
                 LinkUrl = "http://dummy/image.html",
@@ -36,7 +27,7 @@ namespace NGitLab.Tests
             Assert.AreEqual("http://dummy/image.html", badge.LinkUrl);
 
             // Update
-            badge = _groupBadgeClient.Update(badge.Id, new BadgeUpdate
+            badge = groupBadgeClient.Update(badge.Id, new BadgeUpdate
             {
                 ImageUrl = "http://dummy/image_edit.png",
                 LinkUrl = "http://dummy/image_edit.html",
@@ -47,16 +38,16 @@ namespace NGitLab.Tests
             Assert.AreEqual("http://dummy/image_edit.html", badge.LinkUrl);
 
             // Delete
-            _groupBadgeClient.Delete(badge.Id);
+            groupBadgeClient.Delete(badge.Id);
 
-            badges = _groupBadgeClient.All.ToList();
+            var badges = groupBadgeClient.All.ToList();
             Assert.IsEmpty(badges);
 
             // All
-            _groupBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image1.png", LinkUrl = "http://dummy/image1.html", });
-            _groupBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image2.png", LinkUrl = "http://dummy/image2.html", });
-            _groupBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image3.png", LinkUrl = "http://dummy/image3.html", });
-            badges = _groupBadgeClient.All.ToList();
+            groupBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image1.png", LinkUrl = "http://dummy/image1.html", });
+            groupBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image2.png", LinkUrl = "http://dummy/image2.html", });
+            groupBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image3.png", LinkUrl = "http://dummy/image3.html", });
+            badges = groupBadgeClient.All.ToList();
             Assert.AreEqual(3, badges.Count);
         }
     }

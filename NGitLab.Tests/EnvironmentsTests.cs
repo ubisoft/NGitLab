@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
@@ -13,14 +15,17 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void CreateAndGetAll()
+        public async Task CreateAndGetAll()
         {
-            var envClient = Initialize.GitLabClient.GetEnvironmentClient(Initialize.UnitTestProject.Id);
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var envClient = context.Client.GetEnvironmentClient(project.Id);
+
             var newEnvNameNoUrl = "env_test_name_no_url";
             var newEnvSlugNameNoUrlStart = GetSlugNameStart(newEnvNameNoUrl);
             var newEnvNameWithUrl = "env_test_name_with_url";
             var newEnvSlugNameWithUrlStart = GetSlugNameStart(newEnvNameWithUrl);
-            var newEnvNameExternalUrl = Initialize.GitLabHookTest;
+            var newEnvNameExternalUrl = "https://www.example.com";
 
             // Validate environments doesn't exist yet
             Assert.IsNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameNoUrl, System.StringComparison.Ordinal) || string.Equals(e.Name, newEnvNameWithUrl, System.StringComparison.Ordinal)));
@@ -54,13 +59,16 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void Edit()
+        public async Task Edit()
         {
-            var envClient = Initialize.GitLabClient.GetEnvironmentClient(Initialize.UnitTestProject.Id);
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var envClient = context.Client.GetEnvironmentClient(project.Id);
+
             var newEnvNameToEdit = "env_test_name_to_edit_init";
             var newEnvNameUpdated = "env_test_name_to_edit_updated";
             var newEnvSlugNameUpdatedStart = GetSlugNameStart(newEnvNameUpdated);
-            var newEnvNameExternalUrlUpdated = Initialize.GitLabHookTest + "/updated";
+            var newEnvNameExternalUrlUpdated = "https://www.example.com/updated";
 
             // Validate environments doesn't exist yet
             Assert.IsNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToEdit, System.StringComparison.Ordinal) || string.Equals(e.Name, newEnvNameUpdated, System.StringComparison.Ordinal)));
@@ -88,9 +96,12 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void Delete()
+        public async Task Delete()
         {
-            var envClient = Initialize.GitLabClient.GetEnvironmentClient(Initialize.UnitTestProject.Id);
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var envClient = context.Client.GetEnvironmentClient(project.Id);
+
             var newEnvNameToDelete = "env_test_name_to_delete";
 
             // Validate environment doesn't exist yet
@@ -121,9 +132,12 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void Stop()
+        public async Task Stop()
         {
-            var envClient = Initialize.GitLabClient.GetEnvironmentClient(Initialize.UnitTestProject.Id);
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var envClient = context.Client.GetEnvironmentClient(project.Id);
+
             var newEnvNameToStop = "env_test_name_to_stop";
             var newEnvSlugNameToStopStart = GetSlugNameStart(newEnvNameToStop);
 

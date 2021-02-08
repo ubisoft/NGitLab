@@ -2,32 +2,33 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests.RepositoryClient
 {
     public class BranchClientTests
     {
-        private IBranchClient _branches;
-
-        [SetUp]
-        public void Setup()
+        [Test]
+        public async Task GetAll()
         {
-            var project = Initialize.UnitTestProject;
-            _branches = Initialize.GitLabClient.GetRepository(project.Id).Branches;
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true);
+            var branches = context.Client.GetRepository(project.Id).Branches;
+
+            CollectionAssert.IsNotEmpty(branches.All.ToArray());
         }
 
         [Test]
-        public void GetAll()
+        public async Task GetByName()
         {
-            CollectionAssert.IsNotEmpty(_branches.All.ToArray());
-        }
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true);
+            var branches = context.Client.GetRepository(project.Id).Branches;
 
-        [Test]
-        public void GetByName()
-        {
-            var branch = _branches["master"];
+            var branch = branches["master"];
 
             Assert.IsNotNull(branch);
             Assert.IsNotNull(branch.Name);
@@ -35,49 +36,57 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
-        public void AddDelete()
+        public async Task AddDelete()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true);
+            var branches = context.Client.GetRepository(project.Id).Branches;
+
             var branchName = $"merge-me-to-master_{Path.GetRandomFileName()}";
 
-            _branches.Create(new BranchCreate
+            branches.Create(new BranchCreate
             {
                 Name = branchName,
                 Ref = "master",
             });
 
-            var branch = _branches[branchName];
+            var branch = branches[branchName];
             Assert.IsNotNull(branch);
             Assert.IsFalse(branch.Default);
 
-            _branches.Protect(branchName);
+            branches.Protect(branchName);
 
-            _branches.Unprotect(branchName);
+            branches.Unprotect(branchName);
 
-            _branches.Delete(branchName);
+            branches.Delete(branchName);
 
-            AssertCannotFind(() => _branches[branchName]);
+            AssertCannotFind(() => branches[branchName]);
         }
 
         [Test]
-        public void Test_that_branch_names_containing_slashes_are_supported()
+        public async Task Test_that_branch_names_containing_slashes_are_supported()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true);
+            var branches = context.Client.GetRepository(project.Id).Branches;
+
             var branchName = "feature/addNewStuff/toto";
 
-            _branches.Create(new BranchCreate
+            branches.Create(new BranchCreate
             {
                 Name = branchName,
                 Ref = "master",
             });
 
-            Assert.IsNotNull(_branches[branchName]);
+            Assert.IsNotNull(branches[branchName]);
 
-            _branches.Protect(branchName);
+            branches.Protect(branchName);
 
-            _branches.Unprotect(branchName);
+            branches.Unprotect(branchName);
 
-            _branches.Delete(branchName);
+            branches.Delete(branchName);
 
-            AssertCannotFind(() => _branches[branchName]);
+            AssertCannotFind(() => branches[branchName]);
         }
 
         private static void AssertCannotFind<T>(Func<T> get)

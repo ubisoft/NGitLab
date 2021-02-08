@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class SnippetsTest
     {
-        private static ISnippetClient SnippetClient => Initialize.GitLabClient.Snippets;
-
         [Test]
-        public void Test_snippet_public()
+        public async Task Test_snippet_public()
         {
-            var guid = Guid.NewGuid().ToString("N");
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var snippetClient = context.Client.Snippets;
 
+            var guid = Guid.NewGuid().ToString("N");
             var snippetName = "testSnip" + guid;
 
             // arrange
@@ -26,25 +29,28 @@ namespace NGitLab.Tests
             };
 
             // act - assert
-            SnippetClient.Create(newSnippet1);
-            Assert.That(SnippetClient.User.Select(x => x.Title), Contains.Item(snippetName));
-            Assert.That(SnippetClient.All.Select(x => x.Title), Contains.Item(snippetName));
+            snippetClient.Create(newSnippet1);
+            Assert.That(snippetClient.User.Select(x => x.Title), Contains.Item(snippetName));
+            Assert.That(snippetClient.All.Select(x => x.Title), Contains.Item(snippetName));
 
-            var returnedUserSnippet = SnippetClient.All.First(s => string.Equals(s.Title, snippetName, StringComparison.Ordinal));
-            SnippetClient.Delete(returnedUserSnippet.Id);
+            var returnedUserSnippet = snippetClient.All.First(s => string.Equals(s.Title, snippetName, StringComparison.Ordinal));
+            snippetClient.Delete(returnedUserSnippet.Id);
         }
 
         [TestCase(VisibilityLevel.Private)]
         [TestCase(VisibilityLevel.Internal)]
         [TestCase(VisibilityLevel.Public)]
-        public void Test_snippet_inProject(VisibilityLevel visibility)
+        public async Task Test_snippet_inProject(VisibilityLevel visibility)
         {
-            var guid = Guid.NewGuid().ToString("N");
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var snippetClient = context.Client.Snippets;
 
+            var guid = Guid.NewGuid().ToString("N");
             var projectSnippetName = "testSnipInProject" + guid;
 
             // arrange
-            var testProjectId = Initialize.UnitTestProject.Id;
+            var testProjectId = project.Id;
 
             var newSnippet = new SnippetProjectCreate
             {
@@ -56,14 +62,14 @@ namespace NGitLab.Tests
             };
 
             // act - assert
-            SnippetClient.Create(newSnippet);
-            Assert.That(SnippetClient.User.Select(x => x.Title), Contains.Item(projectSnippetName));
+            snippetClient.Create(newSnippet);
+            Assert.That(snippetClient.User.Select(x => x.Title), Contains.Item(projectSnippetName));
 
-            var returnedProjectSnippet = SnippetClient.User.First(s => string.Equals(s.Title, projectSnippetName, StringComparison.Ordinal));
+            var returnedProjectSnippet = snippetClient.User.First(s => string.Equals(s.Title, projectSnippetName, StringComparison.Ordinal));
 
-            Assert.That(SnippetClient.Get(newSnippet.ProjectId, returnedProjectSnippet.Id), Is.Not.Null);
+            Assert.That(snippetClient.Get(newSnippet.ProjectId, returnedProjectSnippet.Id), Is.Not.Null);
 
-            SnippetClient.Delete(newSnippet.ProjectId, returnedProjectSnippet.Id);
+            snippetClient.Delete(newSnippet.ProjectId, returnedProjectSnippet.Id);
         }
     }
 }

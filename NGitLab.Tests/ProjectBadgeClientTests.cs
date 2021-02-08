@@ -1,31 +1,29 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class ProjectBadgeClientTests
     {
-        private IProjectBadgeClient _projectBadgeClient;
-
-        [OneTimeSetUp]
-        public void FixtureSetup()
-        {
-            _projectBadgeClient = Initialize.GitLabClient.GetProjectBadgeClient(Initialize.UnitTestProject.Id);
-        }
-
         [Test]
-        public void Test_project_badges()
+        public async Task Test_project_badges()
         {
-            // Clear badges
-            var badges = _projectBadgeClient.ProjectsOnly.ToList();
-            badges.ForEach(b => _projectBadgeClient.Delete(b.Id));
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectBadgeClient = context.Client.GetProjectBadgeClient(project.Id);
 
-            badges = _projectBadgeClient.ProjectsOnly.ToList();
+            // Clear badges
+            var badges = projectBadgeClient.ProjectsOnly.ToList();
+            badges.ForEach(b => projectBadgeClient.Delete(b.Id));
+
+            badges = projectBadgeClient.ProjectsOnly.ToList();
             Assert.IsEmpty(badges);
 
             // Create
-            var badge = _projectBadgeClient.Create(new BadgeCreate
+            var badge = projectBadgeClient.Create(new BadgeCreate
             {
                 ImageUrl = "http://dummy/image.png",
                 LinkUrl = "http://dummy/image.html",
@@ -36,7 +34,7 @@ namespace NGitLab.Tests
             Assert.AreEqual("http://dummy/image.html", badge.LinkUrl);
 
             // Update
-            badge = _projectBadgeClient.Update(badge.Id, new BadgeUpdate
+            badge = projectBadgeClient.Update(badge.Id, new BadgeUpdate
             {
                 ImageUrl = "http://dummy/image_edit.png",
                 LinkUrl = "http://dummy/image_edit.html",
@@ -47,16 +45,16 @@ namespace NGitLab.Tests
             Assert.AreEqual("http://dummy/image_edit.html", badge.LinkUrl);
 
             // Delete
-            _projectBadgeClient.Delete(badge.Id);
+            projectBadgeClient.Delete(badge.Id);
 
-            badges = _projectBadgeClient.ProjectsOnly.ToList();
+            badges = projectBadgeClient.ProjectsOnly.ToList();
             Assert.IsEmpty(badges);
 
             // All
-            _projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image1.png", LinkUrl = "http://dummy/image1.html", });
-            _projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image2.png", LinkUrl = "http://dummy/image2.html", });
-            _projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image3.png", LinkUrl = "http://dummy/image3.html", });
-            badges = _projectBadgeClient.ProjectsOnly.ToList();
+            projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image1.png", LinkUrl = "http://dummy/image1.html", });
+            projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image2.png", LinkUrl = "http://dummy/image2.html", });
+            projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image3.png", LinkUrl = "http://dummy/image3.html", });
+            badges = projectBadgeClient.ProjectsOnly.ToList();
             Assert.AreEqual(3, badges.Count);
         }
     }

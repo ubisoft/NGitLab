@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
@@ -10,78 +12,81 @@ namespace NGitLab.Tests
     [Timeout(30000)]
     public class PipelineTests
     {
-        private IPipelineClient _pipelines;
-        private string _ciJobToken;
-
-        [OneTimeSetUp]
-        public void FixtureSetup()
+        [Test]
+        public async Task Test_can_list_the_pipelines()
         {
-            var triggers = Initialize.GitLabClient.GetTriggers(Initialize.UnitTestProject.Id);
-            var trigger = triggers.Create("Test Trigger");
-            _ciJobToken = trigger.Token;
-            _pipelines = Initialize.GitLabClient.GetPipelines(Initialize.UnitTestProject.Id);
-            CommitsTests.EnableCiOnTestProject();
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var pipelineClient = context.Client.GetPipelines(project.Id);
+            JobTests.AddGitLabCiFile(context.Client, project);
 
-            AddTagToTriggerPipeline("NewTagForPipelineTests");
+            var pipelines = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All, p => p.Any(), TimeSpan.FromSeconds(120));
+            Assert.IsNotEmpty(pipelines);
         }
 
         [Test]
-        public void Test_can_list_the_pipeline_of_the_current_tag()
+        public async Task Test_can_list_all_jobs_from_project()
         {
-            var thisTagPipeline = FindPipeline("NewTagForPipelineTests");
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var pipelineClient = context.Client.GetPipelines(project.Id);
+            JobTests.AddGitLabCiFile(context.Client, project);
 
-            Assert.IsNotNull(thisTagPipeline);
-        }
-
-        [Test]
-        public void Test_can_list_all_jobs_from_project()
-        {
-            var allJobs = _pipelines.AllJobs;
-
+            var allJobs = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.AllJobs.ToList(), p => p.Any(), TimeSpan.FromSeconds(120));
             Assert.That(allJobs.Any());
         }
 
         [Test]
-        public void Test_search_for_pipeline()
+        public async Task Test_search_for_pipeline()
         {
-            var pipeline = _pipelines.All.First();
-            var pipelinesFromQuery = _pipelines.Search(new PipelineQuery
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var pipelineClient = context.Client.GetPipelines(project.Id);
+            JobTests.AddGitLabCiFile(context.Client, project);
+
+            var query = new PipelineQuery
             {
-                Ref = pipeline.Ref,
-            });
+                Ref = "main",
+            };
+            var pipelinesFromQuery = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.Search(query).ToList(), p => p.Any(), TimeSpan.FromSeconds(120));
 
             Assert.IsTrue(pipelinesFromQuery.Any());
         }
 
         [Test]
-        public void Test_delete_pipeline()
+        public async Task Test_delete_pipeline()
         {
-            AddTagToTriggerPipeline("PipelineToDelete");
-            var pipelineToDelete = _pipelines.All.Single(p => string.Equals(p.Ref, "PipelineToDelete", StringComparison.Ordinal));
-            _pipelines.Delete(pipelineToDelete.Id);
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var pipelineClient = context.Client.GetPipelines(project.Id);
+            JobTests.AddGitLabCiFile(context.Client, project);
+            var pipeline = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All.FirstOrDefault(), p => p != null, TimeSpan.FromSeconds(120));
 
-            while (FindPipeline("PipelineToDelete") != null)
-            {
-                Console.WriteLine("Waiting for pipeline to be deleted.");
-                Thread.Sleep(1000);
-            }
-
-            Assert.IsTrue(!_pipelines.All.Any(p => string.Equals(p.Ref, "PipelineToDelete", StringComparison.Ordinal)));
+            pipelineClient.Delete(pipeline.Id);
+            await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All.FirstOrDefault(), p => p == null, TimeSpan.FromSeconds(120));
         }
 
         [Test]
-        public void Test_create_pipeline_with_variables()
+        public async Task Test_create_pipeline_with_variables()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var pipelineClient = context.Client.GetPipelines(project.Id);
+            JobTests.AddGitLabCiFile(context.Client, project);
+
             // Arrange/Act
-            var refName = "master";
-            CreatePipelineWithVariables(refName,
-                new KeyValuePair<string, string>("Var1", "First Value"),
-                new KeyValuePair<string, string>("Var2", "Second Value"));
+            var pipeline = pipelineClient.Create(new PipelineCreate()
+            {
+                Ref = "main",
+                Variables =
+                {
+                    { "Var1", "Value1" },
+                    { "Var2", "+4+" },
+                },
+            });
 
             // Assert
-            var pipelines = _pipelines.All.Where(p => string.Equals(p.Ref, refName, StringComparison.Ordinal));
-
-            var variables = _pipelines.GetVariables(pipelines.First().Id);
+            var variables = pipelineClient.GetVariables(pipeline.Id);
 
             var var1 = variables.SingleOrDefault(v => v.Key.Equals("Var1", StringComparison.Ordinal));
             Assert.NotNull(var1);
@@ -89,88 +94,29 @@ namespace NGitLab.Tests
             var var2 = variables.SingleOrDefault(v => v.Key.Equals("Var2", StringComparison.Ordinal));
             Assert.NotNull(var2);
 
-            Assert.AreEqual("First Value", var1.Value);
-            Assert.AreEqual("Second Value", var2.Value);
+            Assert.AreEqual("Value1", var1.Value);
+            Assert.AreEqual("+4+", var2.Value);
         }
 
         [Test]
-        public void Test_get_triggered_pipeline_variables()
+        public async Task Test_get_triggered_pipeline_variables()
         {
-            TriggerPipelineWithVariables(new Dictionary<string, string>(StringComparer.InvariantCulture) { { "Test", "HelloWorld" } });
-            var pipelinesWithVariables = _pipelines.All.Where(p => string.Equals(p.Ref, "master", StringComparison.Ordinal));
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var pipelineClient = context.Client.GetPipelines(project.Id);
+            JobTests.AddGitLabCiFile(context.Client, project);
 
-            var variables = _pipelines.GetVariables(pipelinesWithVariables.First().Id);
+            var triggers = context.Client.GetTriggers(project.Id);
+            var trigger = triggers.Create("Test Trigger");
+            var ciJobToken = trigger.Token;
+
+            var pipeline = pipelineClient.CreatePipelineWithTrigger(ciJobToken, "main", new Dictionary<string, string>(StringComparer.InvariantCulture) { { "Test", "HelloWorld" } });
+
+            var variables = pipelineClient.GetVariables(pipeline.Id);
 
             Assert.IsTrue(variables.Any(v =>
                 v.Key.Equals("Test", StringComparison.InvariantCulture) &&
                 v.Value.Equals("HelloWorld", StringComparison.InvariantCulture)));
-        }
-
-        [Test]
-        public void Test_get_triggered_pipeline_variables_special_characters()
-        {
-            TriggerPipelineWithVariables(new Dictionary<string, string>(StringComparer.InvariantCulture) { { "EncodedVariable", "+4+" } });
-            var pipelinesWithVariables = _pipelines.All.Where(p => string.Equals(p.Ref, "master", StringComparison.Ordinal));
-
-            var variables = _pipelines.GetVariables(pipelinesWithVariables.First().Id);
-            Assert.IsTrue(variables.Any(v => v.Key.Equals("EncodedVariable", StringComparison.InvariantCulture) && v.Value.Equals("+4+", StringComparison.InvariantCulture)));
-        }
-
-        private void AddTagToTriggerPipeline(string name)
-        {
-            Initialize.GitLabClient.GetRepository(Initialize.UnitTestProject.Id).Tags.Create(new TagCreate
-            {
-                Name = name,
-                Ref = "master",
-            });
-
-            while (FindPipeline(name) == null)
-            {
-                Console.WriteLine("Waiting for pipeline to start.");
-                Thread.Sleep(1000);
-            }
-        }
-
-        private void CreatePipelineWithVariables(string @ref, params KeyValuePair<string, string>[] variables)
-        {
-            var createOptions = new PipelineCreate { Ref = @ref };
-            foreach (var pair in variables)
-            {
-                createOptions.Variables[pair.Key] = pair.Value;
-            }
-
-            var initialNumberOfPipelines = CountPipelines(@ref);
-            _pipelines.Create(createOptions);
-
-            while (CountPipelines(@ref) == initialNumberOfPipelines)
-            {
-                Console.WriteLine("Waiting for pipeline to start.");
-                Thread.Sleep(1000);
-            }
-        }
-
-        private void TriggerPipelineWithVariables(Dictionary<string, string> variables)
-        {
-            const string refName = "master";
-
-            var initialNumberOfPipelines = CountPipelines(refName);
-            _pipelines.CreatePipelineWithTrigger(_ciJobToken, refName, variables);
-
-            while (CountPipelines(refName) == initialNumberOfPipelines)
-            {
-                Console.WriteLine("Waiting for pipeline to start.");
-                Thread.Sleep(1000);
-            }
-        }
-
-        private PipelineBasic FindPipeline(string refName)
-        {
-            return _pipelines.All.FirstOrDefault(x => string.Equals(x.Ref, refName, StringComparison.Ordinal));
-        }
-
-        private int CountPipelines(string refName)
-        {
-            return _pipelines.All.Count(x => x.Ref.Equals(refName, StringComparison.InvariantCulture));
         }
     }
 }

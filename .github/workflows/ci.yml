@@ -1,0 +1,110 @@
+name: publish
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - '*'
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  NuGetDirectory: ${{ github.workspace}}/nuget
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  create_nuget:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core (latest)
+      uses: actions/setup-dotnet@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+    - run: dotnet pack NGitLab.sln --configuration Release --output ${{ env.NuGetDirectory }} /bl
+    #- uses: actions/upload-artifact@v2
+    #  with:
+    #    name: nuget
+    #    if-no-files-found: error
+    #    retention-days: 3
+    #    path: ${{ env.NuGetDirectory }}/**/*
+
+  build_and_test:
+    runs-on: 'ubuntu-20.04'
+    env:
+      TestResultsDirectory: ${{ github.workspace}}/TestResults
+    strategy:
+      matrix:
+        # Keep in sync with the version in GitLabDockerContainer.cs
+        gitlab: [
+          #'gitlab/gitlab-ee:latest',
+          'gitlab/gitlab-ee:13.7.1-ee.0'
+        ]
+        configuration: [ Debug, Release ]
+      fail-fast: false
+    services:
+      gitlab:
+        image: ${{ matrix.gitlab }}
+        ports:
+        - 48624:48624
+        env:
+          GITLAB_OMNIBUS_CONFIG: "external_url 'http://localhost:48624/'"
+    steps:
+    - uses: actions/checkout@v2    
+    - name: Setup .NET Core (latest)
+      uses: actions/setup-dotnet@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x' 
+    - run: |
+        $value = "${{ matrix.gitlab }}-${{ matrix.configuration }}".Replace(':', '-').Replace('/', '-')
+        Write-Host "::set-output name=artifact_name::test-results-$value"
+      name: Set artifact name
+      id: set-artifact-name
+    - run: dotnet test --configuration ${{ matrix.configuration }} --logger trx --results-directory "${{ env.TestResultsDirectory }}" --collect:"XPlat Code Coverage"
+      name: Run tests
+    - uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: ${{ steps.set-artifact-name.outputs.artifact_name }}
+        if-no-files-found: error
+        retention-days: 3
+        path: |
+          ${{ env.TestResultsDirectory }}/**/*
+
+  #deploy:
+  #  runs-on: 'ubuntu-20.04'
+  #  needs: [ lint_csharp, create_nuget, build_and_test ]
+  #  steps:
+  #  - uses: actions/download-artifact@v2
+  #    with:
+  #      name: nuget
+  #      path: ${{ env.NuGetDirectory }}
+  #  - name: Setup .NET Core
+  #    uses: actions/setup-dotnet@v1
+  #  - run: |
+  #      Write-Host "Current ref: $env:GITHUB_REF"
+  #      Write-Host "Searching nupkg in folder: ${{ env.NuGetDirectory }}"
+  #      $files = Get-ChildItem "${{ env.NuGetDirectory }}/*" -Include *.nupkg
+  #      foreach($file in $files) {
+  #          Write-Host "Pushing NuGet package: $($file.FullName)"
+  #          if ($env:GITHUB_REF -eq 'refs/heads/main')
+  #          {
+  #            & dotnet nuget push "$($file.FullName)" --api-key "$env:NuGetApiKey" --source https://api.nuget.org/v3/index.json --force-english-output --skip-duplicate
+  #          }
+  #          else
+  #          {
+  #            Write-Host "Not on the default branch => Do not push"
+  #          }
+  #      }
+  #    name: Publish NuGet packages
+  #    if: always()
+  #    env:
+  #      NuGetApiKey: ${{ secrets.NuGetApiKey }}

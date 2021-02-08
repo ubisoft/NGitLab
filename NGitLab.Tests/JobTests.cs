@@ -1,114 +1,174 @@
+using System;
+using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class JobTests
     {
-        private const int ShortTimeoutInMs = 30 * 1000;
-        private const int LongTimeoutInMs = 5 * 60 * 1000;
-
-        private IJobClient _jobs;
-
-        [OneTimeSetUp]
-        public void FixtureSetup()
+        internal static void AddGitLabCiFile(IGitLabClient client, Project project, int jobCount = 1, bool manualAction = false)
         {
-            _jobs = Initialize.GitLabClient.GetJobs(Initialize.UnitTestProject.Id);
-            CommitsTests.EnableCiOnTestProject();
+            var content = @"
+variables:
+  CI_DEBUG_TRACE: ""true""
+";
+
+            for (var i = 0; i < jobCount; i++)
+            {
+                content += $@"
+build{i.ToString(CultureInfo.InvariantCulture)}:
+  script:
+    - echo test
+    - echo test > file{i.ToString(CultureInfo.InvariantCulture)}.txt
+  artifacts:
+    paths:
+      - '*.txt'
+";
+
+                if (manualAction)
+                {
+                    content += @"
+  when: manual
+";
+                }
+            }
+
+            client.GetRepository(project.Id).Files.Create(new FileUpsert
+            {
+                Branch = "main",
+                CommitMessage = "test",
+                Path = ".gitlab-ci.yml",
+                Content = content,
+            });
         }
 
-        private Job GetTestJob(JobScopeMask jobMask)
+        [Test]
+        public async Task Test_getjobs_all()
         {
-            while (true)
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            AddGitLabCiFile(context.Client, project);
+            var jobs = await GitLabTestContext.RetryUntilAsync(() => context.Client.GetJobs(project.Id).GetJobs(JobScopeMask.Pending), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+            Assert.AreEqual(JobStatus.Pending, jobs.First().Status);
+        }
+
+        [Test]
+        public async Task Test_getjobs_scope()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            AddGitLabCiFile(context.Client, project, manualAction: true);
+            var jobs = await GitLabTestContext.RetryUntilAsync(() => context.Client.GetJobs(project.Id).GetJobs(JobScopeMask.Manual), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+            Assert.AreEqual(JobStatus.Manual, jobs.First().Status);
+        }
+
+        [Test]
+        public async Task Test_run_action_play()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var jobsClient = context.Client.GetJobs(project.Id);
+            AddGitLabCiFile(context.Client, project, manualAction: true);
+            var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Manual), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+            var job = jobs.Single();
+            Assert.AreEqual(JobStatus.Manual, job.Status);
+
+            var playedJob = jobsClient.RunAction(job.Id, JobAction.Play);
+
+            Assert.AreEqual(job.Id, playedJob.Id);
+            Assert.AreEqual(job.Pipeline.Id, playedJob.Pipeline.Id);
+            Assert.AreEqual(job.Commit.Id, playedJob.Commit.Id);
+            Assert.AreEqual(JobStatus.Pending, playedJob.Status);
+        }
+
+        [Test]
+        public async Task Test_run_action_retry()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var jobsClient = context.Client.GetJobs(project.Id);
+
+            AddGitLabCiFile(context.Client, project);
+            var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Pending), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+            var job = jobs.Single();
+
+            jobsClient.RunAction(job.Id, JobAction.Cancel);
+            await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Canceled), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+
+            var retriedJob = jobsClient.RunAction(job.Id, JobAction.Retry);
+
+            Assert.AreNotEqual(job.Id, retriedJob.Id);
+            Assert.AreEqual(job.Pipeline.Id, retriedJob.Pipeline.Id);
+            Assert.AreEqual(job.Commit.Id, retriedJob.Commit.Id);
+        }
+
+        [Test]
+        public async Task Test_get_job_from_id()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var jobsClient = context.Client.GetJobs(project.Id);
+            AddGitLabCiFile(context.Client, project);
+            var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.All), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+            var job = jobs.Single();
+
+            var job2 = jobsClient.Get(job.Id);
+
+            Assert.AreEqual(job.Id, job2.Id); // Same Job
+            Assert.AreEqual(job.Pipeline.Id, job2.Pipeline.Id); // Same Pipeline
+            Assert.AreEqual(job.Commit.Id, job2.Commit.Id); // Same Commit
+        }
+
+        [Test]
+        public async Task Test_get_job_trace()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var jobsClient = context.Client.GetJobs(project.Id);
+            using (await context.StartRunnerForOneJobAsync(project.Id))
             {
-                var job = _jobs.GetJobs(jobMask).FirstOrDefault();
-                if (job != null)
-                    return job;
+                AddGitLabCiFile(context.Client, project);
+                var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.All), jobs =>
+                {
+                    var job = jobs.FirstOrDefault();
+                    if (jobs.Any())
+                    {
+                        TestContext.WriteLine("Job status: " + job.Status);
+                        return job.Status == JobStatus.Success || job.Status == JobStatus.Failed;
+                    }
+
+                    return false;
+                }, TimeSpan.FromMinutes(2));
+
+                var job = jobs.Single();
+                var trace = jobsClient.GetTrace(job.Id);
+
+                Assert.That(trace, Does.Contain("Running with gitlab-runner"));
+                Assert.That(trace, Does.Contain("Job succeeded"));
             }
         }
 
         [Test]
-        [Timeout(ShortTimeoutInMs)]
-        public void Test_getjobs_all()
+        public async Task Test_get_job_artifacts()
         {
-            // Rely on test timeout if no job are found
-            GetTestJob(JobScopeMask.All);
-        }
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var jobsClient = context.Client.GetJobs(project.Id);
+            using (await context.StartRunnerForOneJobAsync(project.Id))
+            {
+                AddGitLabCiFile(context.Client, project);
+                var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Success), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+                var job = jobs.Single();
+                Assert.AreEqual(JobStatus.Success, job.Status);
 
-        [Test]
-        [Timeout(ShortTimeoutInMs)]
-        public void Test_getjobs_scope()
-        {
-            // Rely on test timeout if no job are found
-            GetTestJob(JobScopeMask.Manual);
-        }
+                var artifacts = jobsClient.GetJobArtifacts(job.Id);
 
-        [Test]
-        [Timeout(ShortTimeoutInMs)]
-        public void Test_run_action_play()
-        {
-            // Rely on test timeout if no job are found
-            var job = GetTestJob(JobScopeMask.Manual);
-
-            var job2 = _jobs.RunAction(job.Id, JobAction.Play);
-
-            Assert.AreEqual(job2.Id, job.Id); // Same Job
-            Assert.AreEqual(job2.Pipeline.Id, job.Pipeline.Id); // Same Pipeline
-            Assert.AreEqual(job2.Commit.Id, job.Commit.Id); // Same Commit
-        }
-
-        [Test]
-        [Timeout(ShortTimeoutInMs)]
-        public void Test_run_action_retry()
-        {
-            // Rely on test timeout if no job are found
-            var job = GetTestJob(JobScopeMask.Success);
-
-            var job2 = _jobs.RunAction(job.Id, JobAction.Retry);
-
-            Assert.AreNotEqual(job2.Id, job.Id); // New job is created
-            Assert.AreEqual(job2.Pipeline.Id, job.Pipeline.Id); // Same Pipeline
-            Assert.AreEqual(job2.Commit.Id, job.Commit.Id); // Same Commit
-        }
-
-        [Test]
-        [Timeout(LongTimeoutInMs)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
-        public void Test_get_job_from_id()
-        {
-            // Rely on test timeout if no job are found
-            var job = GetTestJob(JobScopeMask.Manual);
-
-            var job2 = _jobs.Get(job.Id);
-
-            Assert.AreEqual(job2.Id, job.Id); // Same Job
-            Assert.AreEqual(job2.Pipeline.Id, job.Pipeline.Id); // Same Pipeline
-            Assert.AreEqual(job2.Commit.Id, job.Commit.Id); // Same Commit
-        }
-
-        [Test]
-        [Timeout(LongTimeoutInMs)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
-        public void Test_get_job_trace()
-        {
-            // Rely on test timeout if no job are found
-            var job = GetTestJob(JobScopeMask.Success);
-
-            var trace = _jobs.GetTrace(job.Id);
-
-            Assert.That(trace, Does.Contain("Running with gitlab-runner"));
-            Assert.That(trace, Does.Contain("Job succeeded"));
-        }
-
-        [Test]
-        [Timeout(LongTimeoutInMs)] // The job must be taken by the runner and completed, sometimes it takes multiple minutes
-        public void Test_get_job_artifacts()
-        {
-            // Rely on test timeout if no job are found
-            var job = GetTestJob(JobScopeMask.Success);
-
-            var artifacts = _jobs.GetJobArtifacts(job.Id);
-
-            Assert.IsNotEmpty(artifacts);
+                Assert.IsNotEmpty(artifacts);
+            }
         }
     }
 }

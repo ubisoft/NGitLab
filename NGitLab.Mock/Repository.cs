@@ -1,12 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using LibGit2Sharp;
 using NGitLab.Mock.Clients;
-using Internals.FileUtilities;
-using Internals.Abstractions;
 
 namespace NGitLab.Mock
 {
@@ -422,12 +421,9 @@ namespace NGitLab.Mock
             repo.Branches.Update(tempBranch, b => b.Remote = tempRemoteName, b => b.UpstreamBranch = tempBranch.CanonicalName);
 
             // libgit2sharp cannot push to non-bare local repo: repo.Network.Push(remote, branch.CanonicalName, options);
-            var job = new Internals.Git.GitPushJob(FullPath)
-            {
-                RefSpec = tempBranch.CanonicalName,
-            };
-            var jobResult = job.ExecuteOnDefaultContext();
-            if (!jobResult.IsSuccess)
+            using var process = Process.Start("git", $"push {tempBranch.CanonicalName}");
+            process.WaitForExit();
+            if (process.ExitCode != 0)
                 throw new GitLabException("Cannot push branch");
 
             repo.Network.Remotes.Remove(tempRemoteName);

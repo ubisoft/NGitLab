@@ -1,68 +1,23 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
-namespace NGitLab.Tests.MergeRequest
+namespace NGitLab.Tests
 {
     public class MergeRequestCommentsClientTests
     {
-        private IMergeRequestClient _mergeRequestClient;
-        private Project _project;
-
-        private Models.MergeRequest _mergeRequest;
-
-        private Models.MergeRequest MergeRequest
-        {
-            get
-            {
-                if (_mergeRequest == null)
-                {
-                    var branch = CreateBranch();
-                    _mergeRequest = _mergeRequestClient.Create(new MergeRequestCreate
-                    {
-                        Title = "Test merge request comments",
-                        SourceBranch = branch.Name,
-                        TargetBranch = "master",
-                    });
-                }
-
-                return _mergeRequest;
-            }
-        }
-
-        private static Branch CreateBranch()
-        {
-            var branch = Initialize.Repository.Branches.Create(new BranchCreate
-            {
-                Name = "mr-comments-test",
-                Ref = "master",
-            });
-
-            Initialize.Repository.Files.Create(new FileUpsert
-            {
-                RawContent = "test content",
-                CommitMessage = "commit to merge",
-                Branch = branch.Name,
-                Path = "mr-comments-test.md",
-            });
-
-            return branch;
-        }
-
-        [SetUp]
-        public void Setup()
-        {
-            _project = Initialize.UnitTestProject;
-            _mergeRequestClient = Initialize.GitLabClient.GetMergeRequest(_project.Id);
-        }
-
         [Test]
-        [Order(1)]
-        public void AddCommentToMergeRequest_DeprecatedApi()
+        public async Task AddCommentToMergeRequest_DeprecatedApi()
         {
-            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            var mergeRequestComments = mergeRequestClient.Comments(mergeRequest.Iid);
+
             const string commentMessage = "Comment for MR";
             var newComment = new MergeRequestCommentCreate
             {
@@ -73,10 +28,12 @@ namespace NGitLab.Tests.MergeRequest
         }
 
         [Test]
-        [Order(1)]
-        public void AddEditCommentToMergeRequest()
+        public async Task AddEditCommentToMergeRequest()
         {
-            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            var mergeRequestComments = mergeRequestClient.Comments(mergeRequest.Iid);
 
             // add note
             const string commentMessage = "Comment for MR";
@@ -96,55 +53,34 @@ namespace NGitLab.Tests.MergeRequest
             Assert.That(editedComment.Id, Is.EqualTo(comment.Id));
             Assert.That(editedComment.Body, Is.EqualTo(commentMessageEdit));
             Assert.That(editedComment.CreatedAt, Is.EqualTo(createdAt));
-        }
 
-        [Test]
-        [Order(2)]
-        public void GetAllComments()
-        {
-            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
+            // Get all
             var comments = mergeRequestComments.All.ToArray();
             CollectionAssert.IsNotEmpty(comments);
+
+            // Delete
+            mergeRequestComments.Delete(comment.Id);
+            comments = mergeRequestComments.All.ToArray();
+            CollectionAssert.IsEmpty(comments);
         }
 
         [Test]
-        [Order(3)]
-        public void AddCommentToMergeRequestOnArchivedProject()
+        public async Task AddCommentToMergeRequestOnArchivedProject()
         {
-            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            var mergeRequestComments = mergeRequestClient.Comments(mergeRequest.Iid);
+
             const string commentMessage = "Comment for MR";
             var newComment = new MergeRequestCommentCreate
             {
                 Body = commentMessage,
             };
 
-            var projectClient = Initialize.GitLabClient.Projects;
-            projectClient.Archive(_project.Id);
-
-            try
-            {
-                var ex = Assert.Throws<GitLabException>(() => mergeRequestComments.Add(newComment));
-                Assert.AreEqual(ex.StatusCode, HttpStatusCode.Forbidden);
-            }
-            finally
-            {
-                projectClient.Unarchive(_project.Id);
-            }
-        }
-
-        [Test]
-        [Order(3)]
-        public void DeleteComment()
-        {
-            var mergeRequestComments = _mergeRequestClient.Comments(MergeRequest.Iid);
-            var comments = mergeRequestComments.All.ToArray();
-            foreach (var comment in comments)
-            {
-                mergeRequestComments.Delete(comment.Id);
-            }
-
-            comments = mergeRequestComments.All.ToArray();
-            CollectionAssert.IsEmpty(comments);
+            context.Client.Projects.Archive(project.Id);
+            var ex = Assert.Throws<GitLabException>(() => mergeRequestComments.Add(newComment));
+            Assert.AreEqual(ex.StatusCode, HttpStatusCode.Forbidden);
         }
     }
 }

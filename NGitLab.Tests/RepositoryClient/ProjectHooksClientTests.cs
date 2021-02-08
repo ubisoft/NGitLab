@@ -1,32 +1,21 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests.RepositoryClient
 {
     public class ProjectHooksClientTests
     {
-        private IProjectHooksClient _hooks;
-        private IRepositoryClient _repositoryClient;
-
-        [SetUp]
-        public void Setup()
-        {
-            var project = Initialize.UnitTestProject;
-            _repositoryClient = Initialize.GitLabClient.GetRepository(project.Id);
-            _hooks = _repositoryClient.ProjectHooks;
-        }
-
         [Test]
-        public void GetAll()
+        public async Task CreateUpdateDelete()
         {
-            CollectionAssert.IsNotEmpty(_hooks.All.ToArray());
-        }
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var hooksClient = context.Client.GetRepository(project.Id).ProjectHooks;
 
-        [Test]
-        public void CreateUpdateDelete()
-        {
             var toCreate = new ProjectHookUpsert
             {
                 MergeRequestsEvents = true,
@@ -38,11 +27,11 @@ namespace NGitLab.Tests.RepositoryClient
                 TagPushEvents = true,
                 Token = "sample",
                 EnableSslVerification = true,
-                Url = new Uri(Initialize.GitLabHookTest),
+                Url = new Uri("https://www.example.com"),
             };
 
-            var created = _hooks.Create(toCreate);
-            ThereAreTwoHooks();
+            var created = hooksClient.Create(toCreate);
+            Assert.That(hooksClient.All.ToArray().Length, Is.EqualTo(1));
 
             Assert.AreEqual(toCreate.MergeRequestsEvents, created.MergeRequestsEvents);
             Assert.AreEqual(toCreate.PushEvents, created.PushEvents);
@@ -65,12 +54,11 @@ namespace NGitLab.Tests.RepositoryClient
                 TagPushEvents = false,
                 Token = "sampleEdited",
                 EnableSslVerification = false,
-                Url = new Uri(Initialize.GitLabHookTest),
+                Url = new Uri("https://www.example.com"),
             };
 
-            var updated = _hooks.Update(created.Id, toUpdate);
-
-            ThereAreTwoHooks();
+            var updated = hooksClient.Update(created.Id, toUpdate);
+            Assert.That(hooksClient.All.ToArray().Length, Is.EqualTo(1));
 
             Assert.AreEqual(toUpdate.MergeRequestsEvents, updated.MergeRequestsEvents);
             Assert.AreEqual(toUpdate.PushEvents, updated.PushEvents);
@@ -82,19 +70,8 @@ namespace NGitLab.Tests.RepositoryClient
             Assert.AreEqual(toUpdate.EnableSslVerification, updated.EnableSslVerification);
             Assert.AreEqual(toUpdate.Url, updated.Url);
 
-            _hooks.Delete(updated.Id);
-
-            ThereIsOneHook();
-        }
-
-        private void ThereAreTwoHooks()
-        {
-            Assert.That(_hooks.All.ToArray().Length, Is.EqualTo(2));
-        }
-
-        private void ThereIsOneHook()
-        {
-            Assert.That(_hooks.All.ToArray().Length, Is.EqualTo(1));
+            hooksClient.Delete(updated.Id);
+            Assert.That(hooksClient.All.ToArray().Length, Is.EqualTo(0));
         }
     }
 }

@@ -1,6 +1,8 @@
-using System;
+﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
@@ -8,35 +10,49 @@ namespace NGitLab.Tests
     public class NamespacesTests
     {
         [Test]
-        public void Test_namespaces_contains_a_group()
+        public async Task Test_namespaces_contains_a_group()
         {
-            var group = Namespaces.Accessible.FirstOrDefault(g => g.Path.Equals(Initialize.UnitTestGroup.Path, StringComparison.OrdinalIgnoreCase));
+            using var context = await GitLabTestContext.CreateAsync();
+            var group = context.CreateGroup();
+            var namespacesClient = context.Client.Namespaces;
+
+            var groupSearch = namespacesClient.Accessible.FirstOrDefault(g => g.Path.Equals(group.Path, StringComparison.Ordinal));
             Assert.IsNotNull(group);
-            Assert.AreEqual(Namespace.Type.Group, group.GetKind());
+            Assert.AreEqual(Namespace.Type.Group, groupSearch.GetKind());
         }
 
         [Test]
-        public void Test_namespaces_contains_a_user()
+        public async Task Test_namespaces_contains_a_user()
         {
-            var user = Namespaces.Accessible.FirstOrDefault(g => g.Path.Equals("robot", StringComparison.OrdinalIgnoreCase));
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var namespacesClient = context.Client.Namespaces;
+
+            var user = namespacesClient.Accessible.FirstOrDefault(g => g.Path.Equals(context.Client.Users.Current.Username, StringComparison.Ordinal));
             Assert.IsNotNull(user);
             Assert.AreEqual(Namespace.Type.User, user.GetKind());
         }
 
         [Test]
-        public void Test_namespaces_search_for_user()
+        public async Task Test_namespaces_search_for_user()
         {
-            var user = Namespaces.Search("robot");
-            Assert.IsNotNull(user);
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var namespacesClient = context.Client.Namespaces;
+
+            var ns = namespacesClient.Search(context.Client.Users.Current.Username).First();
+            Assert.AreEqual(Namespace.Type.User, ns.GetKind());
         }
 
         [Test]
-        public void Test_namespaces_search_for_group()
+        public async Task Test_namespaces_search_for_group()
         {
-            var user = Namespaces.Search("TestGroup");
+            using var context = await GitLabTestContext.CreateAsync();
+            var group = context.CreateGroup();
+            var namespacesClient = context.Client.Namespaces;
+
+            var user = namespacesClient.Search(group.Name);
             Assert.IsNotNull(user);
         }
-
-        private static INamespacesClient Namespaces => Initialize.GitLabClient.Namespaces;
     }
 }

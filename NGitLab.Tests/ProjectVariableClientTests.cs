@@ -1,30 +1,22 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class ProjectVariableClientTests
     {
-        private IProjectVariableClient _projectVariableClient;
-
-        [OneTimeSetUp]
-        public void FixtureSetup()
-        {
-            _projectVariableClient = Initialize.GitLabClient.GetProjectVariableClient(Initialize.UnitTestProject.Id);
-        }
-
         [Test]
-        public void Test_project_variables()
+        public async Task Test_project_variables()
         {
-            // Clear variables
-            var variables = _projectVariableClient.All.ToList();
-            variables.ForEach(b => _projectVariableClient.Delete(b.Key));
-            variables = _projectVariableClient.All.ToList();
-            Assert.AreEqual(0, variables.Count);
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectVariableClient = context.Client.GetProjectVariableClient(project.Id);
 
             // Create
-            var variable = _projectVariableClient.Create(new VariableCreate
+            var variable = projectVariableClient.Create(new VariableCreate
             {
                 Key = "My_Key",
                 Value = "My value",
@@ -36,7 +28,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(true, variable.Protected);
 
             // Update
-            variable = _projectVariableClient.Update(variable.Key, new VariableUpdate
+            variable = projectVariableClient.Update(variable.Key, new VariableUpdate
             {
                 Value = "My value edited",
                 Protected = false,
@@ -47,16 +39,16 @@ namespace NGitLab.Tests
             Assert.AreEqual(false, variable.Protected);
 
             // Delete
-            _projectVariableClient.Delete(variable.Key);
+            projectVariableClient.Delete(variable.Key);
 
-            variables = _projectVariableClient.All.ToList();
+            var variables = projectVariableClient.All.ToList();
             Assert.IsEmpty(variables);
 
             // All
-            _projectVariableClient.Create(new VariableCreate { Key = "Variable1", Value = "test" });
-            _projectVariableClient.Create(new VariableCreate { Key = "Variable2", Value = "test" });
-            _projectVariableClient.Create(new VariableCreate { Key = "Variable3", Value = "test" });
-            variables = _projectVariableClient.All.ToList();
+            projectVariableClient.Create(new VariableCreate { Key = "Variable1", Value = "test" });
+            projectVariableClient.Create(new VariableCreate { Key = "Variable2", Value = "test" });
+            projectVariableClient.Create(new VariableCreate { Key = "Variable3", Value = "test" });
+            variables = projectVariableClient.All.ToList();
             Assert.AreEqual(3, variables.Count);
         }
     }

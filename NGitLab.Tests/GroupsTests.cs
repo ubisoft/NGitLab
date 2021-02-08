@@ -1,7 +1,9 @@
 using System;
-using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
@@ -9,145 +11,97 @@ namespace NGitLab.Tests
     public class GroupsTests
     {
         [Test]
-        public void Test_groups_is_not_empty()
+        public async Task Test_groups_is_not_empty()
         {
-            Assert.IsNotEmpty(Groups.Accessible);
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+
+            Assert.IsNotEmpty(groupClient.Accessible);
         }
 
         [Test]
-        public void Test_projects_are_set_in_a_group_by_id()
+        public async Task Test_projects_are_set_in_a_group_by_id()
         {
-            var group = Groups[Initialize.UnitTestGroup.Id];
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+            var project = context.Client.Projects.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture) });
+
+            group = groupClient[group.Id];
             Assert.IsNotNull(group);
             Assert.IsNotEmpty(group.Projects);
+            Assert.AreEqual(project.Id, group.Projects[0].Id);
         }
 
         [Test]
-        public void Test_projects_are_set_in_a_group_by_fullpath()
+        public async Task Test_get_group_by_fullpath()
         {
-            var group = Groups[Initialize.UnitTestGroup.FullPath];
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+
+            group = groupClient[group.FullPath];
             Assert.IsNotNull(group);
-            Assert.IsNotEmpty(group.Projects);
         }
 
         [Test]
-        public void Test_create_delete_group()
+        public async Task Test_create_delete_group()
         {
-            var randomNumber = Initialize.GetRandomNumber();
-            var name = "NewGroup" + randomNumber;
-            var path = "NewGroupPath" + randomNumber;
-
-            // Create
-            var group = Groups.Create(new GroupCreate()
-            {
-                Name = name,
-                Path = path,
-                Visibility = VisibilityLevel.Internal,
-            });
-            Assert.IsNotNull(group);
-            Assert.AreEqual(name, group.Name);
-            Assert.AreEqual(path, group.Path);
-            Assert.AreEqual(VisibilityLevel.Internal, group.Visibility);
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
 
             // Search
-            group = Groups.Search(name).Single();
-            Assert.AreEqual(name, group.Name);
-            Assert.AreEqual(path, group.Path);
-            Assert.AreEqual(VisibilityLevel.Internal, group.Visibility);
+            var searchedGroup = groupClient.Search(group.Name).Single();
+            Assert.AreEqual(group.Id, searchedGroup.Id);
 
             // Delete (operation is asynchronous so we have to retry until the project is deleted)
-            Groups.Delete(group.Id);
-            var sw = new Stopwatch();
-            sw.Start();
-            while (true)
+            // Group can be marked for deletion (https://docs.gitlab.com/ee/user/admin_area/settings/visibility_and_access_controls.html#default-deletion-adjourned-period-premium-only)
+            groupClient.Delete(group.Id);
+            await GitLabTestContext.RetryUntilAsync(() => TryGetGroup(groupClient, group.Id), group => group == null || group.MarkedForDeletionOn != null, TimeSpan.FromMinutes(2));
+        }
+
+        private static Group TryGetGroup(IGroupsClient groupClient, int groupId)
+        {
+            try
             {
-                var groups = Groups.Search(name).ToList();
-                if (groups.Count == 0)
-                    return;
-
-                // Group can be marked for deletion (https://docs.gitlab.com/ee/user/admin_area/settings/visibility_and_access_controls.html#default-deletion-adjourned-period-premium-only)
-                if (groups.Count == 1 && !string.IsNullOrEmpty(groups[0].MarkedForDeletionOn))
-                {
-                    return;
-                }
-
-                var timeout = TimeSpan.FromSeconds(45);
-                if (sw.Elapsed > timeout)
-                {
-                    CollectionAssert.IsEmpty(groups, $"Group was not deleted in the allotted time of {timeout.TotalSeconds:0}seconds");
-                }
+                return groupClient[groupId];
+            }
+            catch (GitLabException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
             }
         }
 
         [Test]
-        public void Test_create_delete_restore_group()
+        public async Task Test_get_by_group_query_nulls_does_not_throws()
         {
-            var randomNumber = Initialize.GetRandomNumber();
-            var name = "NewGroup" + randomNumber;
-            var path = "NewGroupPath" + randomNumber;
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
 
-            var group = Groups.Create(new GroupCreate()
-            {
-                Name = name,
-                Path = path,
-                Visibility = VisibilityLevel.Internal,
-            });
-
-            Groups.Delete(group.Id);
-
-            var deletedGroup = Groups.Search(name).Single();
-
-            var groupIsMarkedForDeletion = !string.IsNullOrEmpty(deletedGroup.MarkedForDeletionOn);
-            Assert.That(groupIsMarkedForDeletion, Is.True);
-            Assert.That(group.Id, Is.EqualTo(deletedGroup.Id));
-
-            Groups.Restore(deletedGroup.Id);
-
-            var restoredGroup = Groups.Search(name).Single();
-
-            var restoredGroupIsMarkedForDeletion = !string.IsNullOrEmpty(restoredGroup.MarkedForDeletionOn);
-            Assert.That(restoredGroupIsMarkedForDeletion, Is.False);
-            Assert.That(group.Id, Is.EqualTo(restoredGroup.Id));
-        }
-
-        [Test]
-        public void Test_get_by_group_query_nulls_does_not_throws()
-        {
             // Arrange
             var groupQueryNull = new GroupQuery();
 
             // Act & Assert
-            Assert.DoesNotThrow(() => Groups.Get(groupQueryNull));
+            Assert.NotNull(groupClient.Get(groupQueryNull).Take(10).ToList());
         }
 
         [Test]
-        public void Test_get_by_group_query_nulls_returns_groups()
+        public async Task Test_get_by_group_query_groupQuery_SkipGroups_returns_groups()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group1 = context.CreateGroup();
+            var group2 = context.CreateGroup();
+            var group3 = context.CreateGroup();
+
             // Arrange
-            var groupQueryNull = new GroupQuery();
+            var skippedGroupIds = new[] { group2.Id };
 
             // Act
-            var result = Groups.Get(groupQueryNull);
-
-            // Assert
-            Assert.IsTrue(result.Any());
-        }
-
-        [Test]
-        [NonParallelizable]
-        public void Test_get_by_group_query_groupQuery_SkipGroups_returns_groups()
-        {
-            // Arrange
-            var skippedGroupIds = new[] { 7161, 1083 };
-
-            // Ensure the groups exist
-            foreach (var groupId in skippedGroupIds)
-            {
-                Assert.IsNotNull(Groups[groupId]);
-            }
-
-            // Act
-            var resultSkip = Groups.Get(new GroupQuery { SkipGroups = skippedGroupIds }).ToList();
+            var resultSkip = groupClient.Get(new GroupQuery { SkipGroups = skippedGroupIds }).ToList();
 
             // Assert
             foreach (var skippedGroup in skippedGroupIds)
@@ -157,24 +111,33 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void Test_get_by_group_query_groupQuery_Search_returns_groups()
+        public async Task Test_get_by_group_query_groupQuery_Search_returns_groups()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group1 = context.CreateGroup();
+            var group2 = context.CreateGroup();
+
             // Arrange
             var groupQueryNull = new GroupQuery
             {
-                Search = "example",
+                Search = group1.Name,
             };
 
             // Act
-            var result = Groups.Get(groupQueryNull).Count(g => string.Equals(g.Name, "example", StringComparison.InvariantCultureIgnoreCase));
+            var result = groupClient.Get(groupQueryNull).Count(g => string.Equals(g.Name, group1.Name, StringComparison.Ordinal));
 
             // Assert
             Assert.AreEqual(1, result);
         }
 
         [Test]
-        public void Test_get_by_group_query_groupQuery_AllAvailable_returns_groups()
+        public async Task Test_get_by_group_query_groupQuery_AllAvailable_returns_groups()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+
             // Arrange
             var groupQueryAllAvailable = new GroupQuery
             {
@@ -182,15 +145,19 @@ namespace NGitLab.Tests
             };
 
             // Act
-            var result = Groups.Get(groupQueryAllAvailable);
+            var result = groupClient.Get(groupQueryAllAvailable);
 
             // Assert
             Assert.IsTrue(result.Any());
         }
 
         [Test]
-        public void Test_get_by_group_query_groupQuery_OrderBy_returns_groups()
+        public async Task Test_get_by_group_query_groupQuery_OrderBy_returns_groups()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+
             // Arrange
             var groupQueryOrderByName = new GroupQuery
             {
@@ -206,9 +173,9 @@ namespace NGitLab.Tests
             };
 
             // Act
-            var resultByName = Groups.Get(groupQueryOrderByName);
-            var resultByPath = Groups.Get(groupQueryOrderByPath);
-            var resultById = Groups.Get(groupQueryOrderById);
+            var resultByName = groupClient.Get(groupQueryOrderByName);
+            var resultByPath = groupClient.Get(groupQueryOrderByPath);
+            var resultById = groupClient.Get(groupQueryOrderById);
 
             // Assert
             Assert.IsTrue(resultByName.Any());
@@ -217,8 +184,12 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void Test_get_by_group_query_groupQuery_Sort_returns_groups()
+        public async Task Test_get_by_group_query_groupQuery_Sort_returns_groups()
         {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+
             // Arrange
             var groupQueryAsc = new GroupQuery
             {
@@ -230,8 +201,8 @@ namespace NGitLab.Tests
             };
 
             // Act
-            var resultAsc = Groups.Get(groupQueryAsc);
-            var resultDesc = Groups.Get(groupQueryDesc);
+            var resultAsc = groupClient.Get(groupQueryAsc);
+            var resultDesc = groupClient.Get(groupQueryDesc);
 
             // Assert
             Assert.IsTrue(resultAsc.Any());
@@ -239,57 +210,69 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public void Test_get_by_group_query_groupQuery_Statistics_returns_groups()
+        public async Task Test_get_by_group_query_groupQuery_Statistics_returns_groups()
         {
-            // Arrange
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+
             var groupQueryWithStats = new GroupQuery
             {
                 Statistics = true,
             };
 
             // Act
-            var result = Groups.Get(groupQueryWithStats);
+            var result = groupClient.Get(groupQueryWithStats);
 
             // Assert
             Assert.IsTrue(result.Any());
         }
 
         [Test]
-        public void Test_get_by_group_query_groupQuery_WithCustomAttributes_returns_groups()
+        public async Task Test_get_by_group_query_groupQuery_WithCustomAttributes_returns_groups()
         {
-            // Arrange
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+
             var groupQueryWithCustomAttributes = new GroupQuery
             {
                 WithCustomAttributes = true,
             };
 
             // Act
-            var result = Groups.Get(groupQueryWithCustomAttributes);
+            var result = groupClient.Get(groupQueryWithCustomAttributes);
 
             // Assert
             Assert.IsTrue(result.Any());
         }
 
         [Test]
-        public void Test_get_by_group_query_groupQuery_Owned_returns_groups()
+        public async Task Test_get_by_group_query_groupQuery_Owned_returns_groups()
         {
-            // Arrange
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+
             var groupQueryOwned = new GroupQuery
             {
                 Owned = true,
             };
 
             // Act
-            var result = Groups.Get(groupQueryOwned);
+            var result = groupClient.Get(groupQueryOwned);
 
             // Assert
             Assert.IsTrue(result.Any());
         }
 
         [Test]
-        public void Test_get_by_group_query_groupQuery_MinAccessLevel_returns_groups()
+        public async Task Test_get_by_group_query_groupQuery_MinAccessLevel_returns_groups()
         {
-            // Arrange
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+
             var groupQuery10 = new GroupQuery
             {
                 MinAccessLevel = AccessLevel.Guest,
@@ -312,11 +295,11 @@ namespace NGitLab.Tests
             };
 
             // Act
-            var result10 = Groups.Get(groupQuery10);
-            var result20 = Groups.Get(groupQuery20);
-            var result30 = Groups.Get(groupQuery30);
-            var result40 = Groups.Get(groupQuery40);
-            var result50 = Groups.Get(groupQuery50);
+            var result10 = groupClient.Get(groupQuery10);
+            var result20 = groupClient.Get(groupQuery20);
+            var result30 = groupClient.Get(groupQuery30);
+            var result40 = groupClient.Get(groupQuery40);
+            var result50 = groupClient.Get(groupQuery50);
 
             // Assert
             Assert.IsTrue(result10.Any());
@@ -325,35 +308,5 @@ namespace NGitLab.Tests
             Assert.IsTrue(result40.Any());
             Assert.IsTrue(result50.Any());
         }
-
-        [Test]
-        public void DeleteOldTestGroups()
-        {
-            if (!Utils.RunningInCiEnvironment)
-            {
-                Assert.Inconclusive("This cleanup task will not run outside of CI environment");
-            }
-
-            var query = new GroupQuery
-            {
-                Owned = true,
-                Search = Initialize.TestEntityNamePrefix,
-                OrderBy = "id",
-                Sort = "desc",
-            };
-
-            var oldGroups = Groups.Get(query).Skip(10);    // Skip the 10 most recent groups (arbitrary choice)
-
-            foreach (var group in oldGroups)
-            {
-                if (!group.Name.StartsWith(Initialize.TestEntityNamePrefix, StringComparison.Ordinal) ||
-                    !string.IsNullOrEmpty(group.MarkedForDeletionOn))
-                    continue;
-
-                Groups.Delete(group.Id);
-            }
-        }
-
-        private static IGroupsClient Groups => Initialize.GitLabClient.Groups;
     }
 }

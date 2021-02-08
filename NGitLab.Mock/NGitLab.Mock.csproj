@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <Import Project="$([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.before.props'))" Condition="$(SolutionFileName.EndsWith('.SwitchToSource.sln', StringComparison.OrdinalIgnoreCase)) And Exists($([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.before.props')))" />
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
@@ -10,8 +10,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
-    <PackageReference Include="Internals.FileUtilities" Version="2.4.1" />
-    <PackageReference Include="Internals.Git" Version="0.17.0" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework) == 'net461'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.after.props'))" Condition="$(SolutionFileName.EndsWith('.SwitchToSource.sln', StringComparison.OrdinalIgnoreCase)) And Exists($([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.after.props')))" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
