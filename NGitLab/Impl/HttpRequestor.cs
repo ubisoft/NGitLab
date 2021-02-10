@@ -129,8 +129,10 @@ namespace NGitLab.Impl
             {
                 private readonly string _apiToken;
                 private readonly RequestOptions _options;
-                private Uri _nextUrlToLoad;
                 private readonly List<T> _buffer = new List<T>();
+
+                private Uri _nextUrlToLoad;
+                private int _index;
 
                 public Enumerator(string apiToken, Uri startUrl, RequestOptions options)
                 {
@@ -145,53 +147,40 @@ namespace NGitLab.Impl
 
                 public bool MoveNext()
                 {
-                    if (_buffer.Count == 0)
+                    if (++_index < _buffer.Count)
+                        return true;
+
+                    if (_nextUrlToLoad == null)
+                        return false;
+
+                    // Empty the buffer and get next batch from GitLab, if any
+                    _index = 0;
+                    _buffer.Clear();
+
+                    var request = new GitLabRequest(_nextUrlToLoad, MethodType.Get, data: null, _apiToken);
+                    using (var response = request.GetResponse(_options))
                     {
-                        if (_nextUrlToLoad == null)
+                        // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
+                        var link = response.Headers["Link"] ?? response.Headers["Links"];
+
+                        string[] nextLink = null;
+                        if (!string.IsNullOrEmpty(link))
                         {
-                            return false;
+                            nextLink = link.Split(',')
+                               .Select(l => l.Split(';'))
+                               .FirstOrDefault(pair => pair[1].Contains("next"));
                         }
 
-                        var request = new GitLabRequest(_nextUrlToLoad, MethodType.Get, data: null, _apiToken);
-                        using (var response = request.GetResponse(_options))
-                        {
-                            // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
-                            var link = response.Headers["Link"] ?? response.Headers["Links"];
+                        _nextUrlToLoad = (nextLink != null) ? new Uri(nextLink[0].Trim('<', '>', ' ')) : null;
 
-                            string[] nextLink = null;
-                            if (!string.IsNullOrEmpty(link))
-                            {
-                                nextLink = link.Split(',')
-                                   .Select(l => l.Split(';'))
-                                   .FirstOrDefault(pair => pair[1].Contains("next"));
-                            }
+                        var stream = response.GetResponseStream();
+                        var responseText = new StreamReader(stream).ReadToEnd();
+                        var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
 
-                            if (nextLink != null)
-                            {
-                                _nextUrlToLoad = new Uri(nextLink[0].Trim('<', '>', ' '));
-                            }
-                            else
-                            {
-                                _nextUrlToLoad = null;
-                            }
-
-                            var stream = response.GetResponseStream();
-                            var responseText = new StreamReader(stream).ReadToEnd();
-                            var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
-
-                            _buffer.AddRange(deserialized);
-                        }
-
-                        return _buffer.Count > 0;
+                        _buffer.AddRange(deserialized);
                     }
 
-                    if (_buffer.Count > 0)
-                    {
-                        _buffer.RemoveAt(0);
-                        return (_buffer.Count > 0) ? true : MoveNext();
-                    }
-
-                    return false;
+                    return _buffer.Count > 0;
                 }
 
                 public void Reset()
@@ -199,7 +188,7 @@ namespace NGitLab.Impl
                     throw new NotSupportedException();
                 }
 
-                public T Current => _buffer[0];
+                public T Current => _buffer[_index];
 
                 object IEnumerator.Current => Current;
             }
