@@ -18,6 +18,7 @@ namespace NGitLab.Tests.Docker
 {
     public sealed class GitLabTestContext : IDisposable
     {
+        private static readonly Policy s_gitlabRetryPolicy = Policy.Handle<GitLabException>().WaitAndRetry(10, _ => TimeSpan.FromSeconds(1));
         private static readonly HashSet<string> s_generatedValues = new HashSet<string>(StringComparer.Ordinal);
         private static readonly SemaphoreSlim s_prepareRunnerLock = new SemaphoreSlim(1, 1);
 
@@ -125,8 +126,7 @@ namespace NGitLab.Tests.Docker
 
             void AddSomeCommits()
             {
-                var policy = Policy.Handle<GitLabException>().WaitAndRetry(10, _ => TimeSpan.FromSeconds(1));
-                policy.Execute(() =>
+                s_gitlabRetryPolicy.Execute(() =>
                     client.GetRepository(project.Id).Files.Create(new FileUpsert
                     {
                         Branch = "master",
@@ -137,7 +137,7 @@ namespace NGitLab.Tests.Docker
 
                 for (var i = 0; i < 3; i++)
                 {
-                    policy.Execute(() =>
+                    s_gitlabRetryPolicy.Execute(() =>
                         client.GetRepository(project.Id).Files.Create(new FileUpsert
                         {
                             Branch = "master",
@@ -169,9 +169,9 @@ namespace NGitLab.Tests.Docker
         {
             var client = Client;
             var project = CreateProject();
-            client.GetRepository(project.Id).Files.Create(new FileUpsert { Branch = "master", CommitMessage = "test", Content = "test", Path = "test.md" });
-            client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = "branch", Ref = "master" });
-            client.GetRepository(project.Id).Files.Update(new FileUpsert { Branch = "branch", CommitMessage = "test", Content = "test2", Path = "test.md" });
+            s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Create(new FileUpsert { Branch = "master", CommitMessage = "test", Content = "test", Path = "test.md" }));
+            s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = "branch", Ref = "master" }));
+            s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Update(new FileUpsert { Branch = "branch", CommitMessage = "test", Content = "test2", Path = "test.md" }));
             var mr = client.GetMergeRequest(project.Id).Create(new MergeRequestCreate
             {
                 SourceBranch = "branch",
