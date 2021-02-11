@@ -113,7 +113,7 @@ namespace NGitLab.Tests.Docker
                 if (isContinuousIntegration)
                 {
                     var now = Stopwatch.StartNew();
-                    while (now.Elapsed < TimeSpan.FromMinutes(5))
+                    while (now.Elapsed < TimeSpan.FromMinutes(10))
                     {
                         try
                         {
@@ -129,7 +129,8 @@ namespace NGitLab.Tests.Docker
                         await Task.Delay(1000);
                     }
 
-                    Assert.Fail("GitLab is not well configured in CI");
+                    s_creationErrorMessage = "GitLab is not well configured in CI";
+                    Assert.Fail(s_creationErrorMessage);
                 }
             }
 
