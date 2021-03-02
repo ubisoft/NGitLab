@@ -316,5 +316,32 @@ namespace NGitLab.Tests
             CollectionAssert.IsNotEmpty(projects);
             Assert.That(projects.Select(p => p.LastActivityAt), Is.All.GreaterThan(date));
         }
+
+        [Test]
+        public async Task IsEmpty()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var projectClient = context.Client.Projects;
+
+            var project = new ProjectCreate
+            {
+                Name = "Project_Test_" + context.GetRandomNumber(),
+                VisibilityLevel = VisibilityLevel.Internal,
+            };
+
+            var createdProject = projectClient.Create(project);
+            Assert.IsTrue(createdProject.EmptyRepo);
+
+            context.Client.GetRepository(createdProject.Id).Files.Create(new FileUpsert
+            {
+                Branch = "master",
+                CommitMessage = "add readme",
+                Path = "README.md",
+                RawContent = "this project should only live during the unit tests, you can delete if you find some",
+            });
+
+            createdProject = projectClient[createdProject.Id];
+            Assert.IsFalse(createdProject.EmptyRepo);
+        }
     }
 }
