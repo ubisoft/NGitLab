@@ -31,7 +31,7 @@ namespace NGitLab.Impl
                 {
                     if (query.Scope.HasFlag(value))
                     {
-                        url = Utils.AddParameter(url, "scope", value.ToString().ToLowerInvariant());
+                        url = Utils.AddParameter(url, "scope[]", value.ToString().ToLowerInvariant());
                     }
                 }
             }
