@@ -67,6 +67,30 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
         }
 
         [Test]
+        public async Task Test_getjobs_multiple_scopes()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var jobsClient = context.Client.GetJobs(project.Id);
+
+            AddGitLabCiFile(context.Client, project, 2);
+            var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Pending), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+            var job = jobs.First();
+
+            jobsClient.RunAction(job.Id, JobAction.Cancel);
+            jobs = await GitLabTestContext.RetryUntilAsync(() => context.Client.GetJobs(project.Id).GetJobs(
+                new JobQuery
+                {
+                    Scope = JobScopeMask.Pending |
+                            JobScopeMask.Canceled,
+                }),
+                jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+
+            Assert.IsTrue(jobs.First().Status == JobStatus.Canceled);
+            Assert.IsTrue(jobs.Last().Status == JobStatus.Pending);
+        }
+
+        [Test]
         public async Task Test_run_action_play()
         {
             using var context = await GitLabTestContext.CreateAsync();
