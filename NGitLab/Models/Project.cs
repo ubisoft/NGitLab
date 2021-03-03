@@ -176,5 +176,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "lfs_enabled")]
         public bool LfsEnabled;
+
+        [DataMember(Name = "empty_repo")]
+        public bool EmptyRepo;
     }
 }
