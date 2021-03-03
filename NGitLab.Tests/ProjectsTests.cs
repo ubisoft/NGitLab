@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -214,7 +214,7 @@ namespace NGitLab.Tests
             projectClient.Delete(createdProject.Id);
         }
 
-        // No owner level (50) for project! See https://gitlab.example.com/help/api/members.md
+        // No owner level (50) for project! See https://docs.gitlab.com/ee/api/members.html
         [Test]
         [TestCase(AccessLevel.Guest)]
         [TestCase(AccessLevel.Reporter)]
