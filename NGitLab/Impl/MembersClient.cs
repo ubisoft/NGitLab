@@ -60,5 +60,10 @@ namespace NGitLab.Impl
         {
             return _api.Post().With(user).To<Membership>(Project.Url + "/" + WebUtility.UrlEncode(projectId) + "/members");
         }
+
+        public Membership UpdateMemberOfProject(string projectId, ProjectMemberUpdate user)
+        {
+            return _api.Put().With(user).To<Membership>(Project.Url + "/" + WebUtility.UrlEncode(projectId) + "/members/" + WebUtility.UrlEncode(user.UserId));
+        }
     }
 }
