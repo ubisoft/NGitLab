@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -82,7 +82,6 @@ namespace NGitLab.Tests
                 Title = "test key",
             });
 
-            // result.Key = generatedKey.PublicKey + " robot (gitlab.example.com)"
             Assert.IsNotNull(result);
             StringAssert.StartsWith(generatedKey.PublicKey, result.Key);
 
