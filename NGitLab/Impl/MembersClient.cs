@@ -56,6 +56,11 @@ namespace NGitLab.Impl
             return _api.Get().To<Membership>(GroupsClient.Url + "/" + WebUtility.UrlEncode(groupId) + "/members/" + WebUtility.UrlEncode(userId));
         }
 
+        public Membership GetMemberOfProject(string projectId, string userId)
+        {
+            return _api.Get().To<Membership>(Project.Url + "/" + WebUtility.UrlEncode(projectId) + "/members/" + WebUtility.UrlEncode(userId));
+        }
+
         public Membership AddMemberToProject(string projectId, ProjectMemberCreate user)
         {
             return _api.Post().With(user).To<Membership>(Project.Url + "/" + WebUtility.UrlEncode(projectId) + "/members");
