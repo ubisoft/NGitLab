@@ -55,7 +55,14 @@ namespace NGitLab.Mock.Clients
 
         public Membership GetMemberOfGroup(string groupId, string userId)
         {
-            throw new NotImplementedException();
+            return OfGroup(groupId, includeInheritedMembers: false)
+                .FirstOrDefault(u => string.Equals(u.Id.ToString(CultureInfo.InvariantCulture), userId, StringComparison.Ordinal));
+        }
+
+        public Membership GetMemberOfProject(string projectId, string userId)
+        {
+            return OfProject(projectId, includeInheritedMembers: false)
+                .FirstOrDefault(u => string.Equals(u.Id.ToString(CultureInfo.InvariantCulture), userId, StringComparison.Ordinal));
         }
 
         public IEnumerable<Membership> OfGroup(string groupId)

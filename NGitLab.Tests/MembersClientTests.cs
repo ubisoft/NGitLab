@@ -35,5 +35,24 @@ namespace NGitLab.Tests
             projectUser = context.Client.Members.OfProject(projectId).Single(u => u.Id == user.Id);
             Assert.AreEqual(AccessLevel.Maintainer, (AccessLevel)projectUser.AccessLevel);
         }
+
+        [Test]
+        public async Task GetAccessLevelMemberOfProject()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            context.CreateNewUserAsync(out var user);
+            var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
+
+            context.Client.Members.AddMemberToProject(projectId, new ProjectMemberCreate
+            {
+                AccessLevel = AccessLevel.Developer,
+                UserId = user.Id.ToString(CultureInfo.InvariantCulture),
+            });
+
+            // Get
+            var projectUser = context.Client.Members.GetMemberOfProject(projectId, user.Id.ToString(CultureInfo.InvariantCulture));
+            Assert.AreEqual(AccessLevel.Developer, (AccessLevel)projectUser.AccessLevel);
+        }
     }
 }

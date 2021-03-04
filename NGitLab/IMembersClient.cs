@@ -22,6 +22,8 @@ namespace NGitLab
 
         Membership GetMemberOfGroup(string groupId, string userId);
 
+        Membership GetMemberOfProject(string projectId, string userId);
+
         Membership AddMemberToProject(string projectId, ProjectMemberCreate user);
 
         Membership UpdateMemberOfProject(string projectId, ProjectMemberUpdate user);
