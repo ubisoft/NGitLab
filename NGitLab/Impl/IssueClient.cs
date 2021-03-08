@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -9,6 +10,8 @@ namespace NGitLab.Impl
         private const string ProjectIssuesUrl = "/projects/{0}/issues";
         private const string SingleIssueUrl = "/projects/{0}/issues/{1}";
         private const string ResourceLabelEventUrl = "/projects/{0}/issues/{1}/resource_label_events";
+        private const string RelatedToUrl = "/projects/{0}/issues/{1}/related_merge_requests";
+        private const string ClosedByUrl = "/projects/{0}/issues/{1}/closed_by";
 
         private readonly API _api;
 
@@ -21,17 +24,17 @@ namespace NGitLab.Impl
 
         public IEnumerable<Issue> ForProject(int projectId)
         {
-            return _api.Get().GetAll<Issue>(string.Format(ProjectIssuesUrl, projectId));
+            return _api.Get().GetAll<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId));
         }
 
         public Issue Get(int projectId, int issueId)
         {
-            return _api.Get().To<Issue>(string.Format(SingleIssueUrl, projectId, issueId));
+            return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueId));
         }
 
         public IEnumerable<Issue> Get(int projectId, IssueQuery query)
         {
-            return Get(string.Format(ProjectIssuesUrl, projectId), query);
+            return Get(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId), query);
         }
 
         public IEnumerable<Issue> Get(IssueQuery query)
@@ -61,17 +64,27 @@ namespace NGitLab.Impl
 
         public Issue Create(IssueCreate issueCreate)
         {
-            return _api.Post().With(issueCreate).To<Issue>(string.Format(ProjectIssuesUrl, issueCreate.Id));
+            return _api.Post().With(issueCreate).To<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, issueCreate.Id));
         }
 
         public Issue Edit(IssueEdit issueEdit)
         {
-            return _api.Put().With(issueEdit).To<Issue>(string.Format(SingleIssueUrl, issueEdit.Id, issueEdit.IssueId));
+            return _api.Put().With(issueEdit).To<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, issueEdit.Id, issueEdit.IssueId));
         }
 
         public IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid)
         {
-            return _api.Get().GetAll<ResourceLabelEvent>(string.Format(ResourceLabelEventUrl, projectId, issueIid));
+            return _api.Get().GetAll<ResourceLabelEvent>(string.Format(CultureInfo.InvariantCulture, ResourceLabelEventUrl, projectId, issueIid));
+        }
+
+        public IEnumerable<MergeRequest> RelatedTo(int projectId, int issueIid)
+        {
+            return _api.Get().GetAll<MergeRequest>(string.Format(CultureInfo.InvariantCulture, RelatedToUrl, projectId, issueIid));
+        }
+
+        public IEnumerable<MergeRequest> ClosedBy(int projectId, int issueIid)
+        {
+            return _api.Get().GetAll<MergeRequest>(string.Format(CultureInfo.InvariantCulture, ClosedByUrl, projectId, issueIid));
         }
     }
 }

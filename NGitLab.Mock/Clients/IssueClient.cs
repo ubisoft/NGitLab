@@ -91,6 +91,16 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public IEnumerable<Models.MergeRequest> RelatedTo(int projectId, int issueId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Models.MergeRequest> ClosedBy(int projectId, int issueId)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Models.Issue> ForProject(int projectId)
         {
             using (Context.BeginOperationScope())
