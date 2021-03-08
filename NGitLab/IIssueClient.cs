@@ -69,5 +69,21 @@ namespace NGitLab
         /// <param name="issueId">The id of the issue in the project's scope.</param>
         /// <returns>The issue if it's updated.  Null if not.</returns>
         IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueId);
+
+        /// <summary>
+        /// Get all merge requests that are related to a particular issue.
+        /// </summary>
+        /// <param name="projectId">The project id.</param>
+        /// <param name="issueIid">The id of the issue in the project's scope.</param>
+        /// <returns>The list of MR that are related this issue.</returns>
+        IEnumerable<MergeRequest> RelatedTo(int projectId, int issueIid);
+
+        /// <summary>
+        /// Get all merge requests that close a particular issue when merged.
+        /// </summary>
+        /// <param name="projectId">The project id.</param>
+        /// <param name="issueIid">The id of the issue in the project's scope.</param>
+        /// <returns>The list of MR that closed this issue.</returns>
+        IEnumerable<MergeRequest> ClosedBy(int projectId, int issueIid);
     }
 }
