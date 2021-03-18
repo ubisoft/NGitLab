@@ -1,7 +1,8 @@
 <Project>
 
   <PropertyGroup>
-    <_ContinuousIntegrationBuild Condition="'$(TF_BUILD)' == 'true' or '$(GITHUB_ACTIONS)' == 'true' or '$(GITLAB_CI)' == 'true'">True</_ContinuousIntegrationBuild>
+    <_IsGitHub Condition="'$(GITHUB_ACTIONS)' == 'true'">true</_IsGitHub>
+    <_ContinuousIntegrationBuild Condition="'$(TF_BUILD)' == 'true' or '$(GITHUB_ACTIONS)' == 'true' or '$(GITLAB_CI)' == 'true'">true</_ContinuousIntegrationBuild>
 
     <!-- Assembly Info -->
     <Company>Ubisoft</Company>
@@ -16,6 +17,20 @@
 
     <RestoreUseStaticGraphEvaluation>true</RestoreUseStaticGraphEvaluation>
   </PropertyGroup>
+
+  <!-- SourceLink: https://www.meziantou.net/how-to-debug-nuget-packages-using-sourcelink.htm -->
+  <!--<PropertyGroup Condition="$(_IsGitHub)">
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <ContinuousIntegrationBuild>$(_ContinuousIntegrationBuild)</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(_IsGitHub)">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>
+    <PackageReference Include="MinVer" PrivateAssets="All" Version="2.5.0" />
+  </ItemGroup>-->
 
   <!-- Analyzers (Roslyn, Meziantou, StyleCop, ...) -->
   <ItemGroup>
