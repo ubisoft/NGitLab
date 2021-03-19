@@ -1,9 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <Import Project="$([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.before.props'))" Condition="$(SolutionFileName.EndsWith('.SwitchToSource.sln', StringComparison.OrdinalIgnoreCase)) And Exists($([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.before.props')))" />
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+    <PackageId Condition="'$(_IsGitHub)' == 'true'">NGitLab.Mock-Ubisoft</PackageId>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\NGitLab\NGitLab.csproj" />
