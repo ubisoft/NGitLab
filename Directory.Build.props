@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <!-- SourceLink: https://www.meziantou.net/how-to-debug-nuget-packages-using-sourcelink.htm -->
-  <!--<PropertyGroup Condition="$(_IsGitHub)">
+  <PropertyGroup Condition="'$(_IsGitHub)' == 'true'">
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
@@ -27,10 +27,10 @@
     <ContinuousIntegrationBuild>$(_ContinuousIntegrationBuild)</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(_IsGitHub)">
+  <ItemGroup Condition="'$(_IsGitHub)' == 'true'">
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>
     <PackageReference Include="MinVer" PrivateAssets="All" Version="2.5.0" />
-  </ItemGroup>-->
+  </ItemGroup>
 
   <!-- Analyzers (Roslyn, Meziantou, StyleCop, ...) -->
   <ItemGroup>
