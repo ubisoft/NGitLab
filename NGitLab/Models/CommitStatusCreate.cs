@@ -31,5 +31,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "coverage")]
         public int? Coverage;
+
+        [DataMember(Name = "pipeline_id")]
+        public int? PipelineId;
     }
 }
