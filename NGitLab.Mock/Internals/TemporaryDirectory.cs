@@ -87,16 +87,21 @@ namespace NGitLab.Mock
                 try
                 {
                     var tempPath = folderPath + "_";
-                    while (TempDirectories.Contains(folderPath) || Directory.Exists(folderPath))
-                    {
-                        folderPath = tempPath + count.ToString(CultureInfo.InvariantCulture);
-                        if (count == int.MaxValue)
-                            throw new InvalidOperationException("Cannot create a temporary directory");
 
-                        count++;
+                    lock (TempDirectories)
+                    {
+                        while (TempDirectories.Contains(folderPath) || Directory.Exists(folderPath))
+                        {
+                            folderPath = tempPath + count.ToString(CultureInfo.InvariantCulture);
+                            if (count == int.MaxValue)
+                                throw new InvalidOperationException("Cannot create a temporary directory");
+
+                            count++;
+                        }
+
+                        Directory.CreateDirectory(folderPath);
                     }
 
-                    Directory.CreateDirectory(folderPath);
                     var lockFilePath = Path.Combine(folderPath, LockFileName);
                     lockFileStream = new FileStream(lockFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
                     var innerFolderPath = Path.Combine(folderPath, DirectoryName);
@@ -108,8 +113,14 @@ namespace NGitLab.Mock
 
                     Directory.CreateDirectory(innerFolderPath);
 
+                    bool tempDirRegistered;
+                    lock (TempDirectories)
+                    {
+                        tempDirRegistered = TempDirectories.Add(folderPath);
+                    }
+
                     // Assert folder is empty
-                    if (!TempDirectories.Add(folderPath) || Directory.EnumerateFileSystemEntries(innerFolderPath).Any())
+                    if (!tempDirRegistered || Directory.EnumerateFileSystemEntries(innerFolderPath).Any())
                     {
                         lockFileStream.Dispose();
                         continue;
