@@ -25,12 +25,12 @@ Then use its properties. You can obtain the private token in your account page. 
 Get it from NuGet. You can simply install it with the Package Manager console:
 
     PM> Install-Package NGitLab
-    
+
 ## Unit-Test
 
 - Install Docker on your machine
 - It's recommended to use WSL version 2: https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
-## Maintainer
+## Thanks
 
-NGitLab is a fork of [github project](https://github.com/Franklin89/NGitLab) 
+Thanks to [Scooletz](https://github.com/Scooletz) for initiating the original project.
