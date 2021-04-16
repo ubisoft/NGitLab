@@ -51,7 +51,7 @@ namespace NGitLab.Impl
 
             if (query.LastActivityAfter.HasValue)
             {
-                url = Utils.AddParameter(url, "last_activity_after", query.LastActivityAfter.Value.UtcDateTime.ToString("o"));
+                url = Utils.AddParameter(url, "last_activity_after", query.LastActivityAfter.Value.UtcDateTime.ToString("O", CultureInfo.InvariantCulture));
             }
 
             switch (query.Scope)

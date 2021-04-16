@@ -1,4 +1,6 @@
-﻿namespace NGitLab.Models
+﻿using System;
+
+namespace NGitLab.Models
 {
     public class PipelineQuery
     {
@@ -15,6 +17,10 @@
         public string Name { get; set; }
 
         public string Username { get; set; }
+
+        public DateTimeOffset? UpdatedAfter { get; set; }
+
+        public DateTimeOffset? UpdatedBefore { get; set; }
 
         public PipelineOrderBy? OrderBy { get; set; }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using NGitLab.Models;
@@ -96,6 +97,10 @@ namespace NGitLab.Impl
                 queryEntries.Add("name", query.Name);
             if (!string.IsNullOrWhiteSpace(query.Username))
                 queryEntries.Add("username", query.Username);
+            if (query.UpdatedAfter.HasValue)
+                queryEntries.Add("updated_after", query.UpdatedAfter.Value.ToString("O", CultureInfo.InvariantCulture));
+            if (query.UpdatedBefore.HasValue)
+                queryEntries.Add("updated_before", query.UpdatedBefore.Value.ToString("O", CultureInfo.InvariantCulture));
             if (query.OrderBy.HasValue)
                 queryEntries.Add("order_by", query.OrderBy.Value.ToString());
             if (query.Sort.HasValue)
