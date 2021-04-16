@@ -21,7 +21,7 @@ namespace NGitLab.Impl
 
         public static string AddParameter(string url, string parameterName, DateTime? date)
         {
-            return Equals(date, null) ? url : AddParameterInternal(url, parameterName, date.Value.ToString("O", CultureInfo.InvariantCulture));
+            return Equals(date, null) ? url : AddParameterInternal(url, parameterName, date.Value.ToString("O"));
         }
 
         public static string AddParameter(string url, string parameterName, int[] values)
