@@ -30,12 +30,17 @@ namespace NGitLab.Impl
                 => (Method == MethodType.Delete || Method == MethodType.Post || Method == MethodType.Put)
                     && Data != null;
 
-            public GitLabRequest(Uri url, MethodType method, object data, string apiToken)
+            public GitLabRequest(Uri url, MethodType method, object data, string apiToken, string sudo = null)
             {
                 Method = method;
                 Url = url;
                 Data = data;
                 Headers.Add("Accept-Encoding", "gzip");
+                if (!string.IsNullOrEmpty(sudo))
+                {
+                    Headers.Add("Sudo", sudo);
+                }
+
                 if (apiToken != null)
                 {
                     Headers.Add("Private-Token", apiToken);
@@ -144,7 +149,7 @@ namespace NGitLab.Impl
             public void AddFileData(WebRequest request)
             {
                 var boundary = $"--------------------------{DateTime.UtcNow.Ticks}";
-                if (!(Data is FormDataContent formData))
+                if (Data is not FormDataContent formData)
                     return;
                 request.ContentType = "multipart/form-data; boundary=" + boundary;
 
