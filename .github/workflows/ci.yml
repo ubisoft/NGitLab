@@ -50,7 +50,7 @@ jobs:
         # Keep in sync with the version in GitLabDockerContainer.cs
         gitlab: [
           #'gitlab/gitlab-ee:latest',
-          'gitlab/gitlab-ee:13.7.1-ee.0'
+          'gitlab/gitlab-ee:13.8.1-ee.0'
         ]
         configuration: [ Debug, Release ]
       fail-fast: false
@@ -62,13 +62,13 @@ jobs:
         env:
           GITLAB_OMNIBUS_CONFIG: "external_url 'http://localhost:48624/'"
     steps:
-    - uses: actions/checkout@v2    
+    - uses: actions/checkout@v2
     - name: Setup .NET Core (latest)
       uses: actions/setup-dotnet@v1
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.x' 
+        dotnet-version: '3.1.x'
     - run: |
         $value = "${{ matrix.gitlab }}-${{ matrix.configuration }}".Replace(':', '-').Replace('/', '-')
         Write-Host "::set-output name=artifact_name::test-results-$value"

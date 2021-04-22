@@ -87,7 +87,7 @@ namespace NGitLab.Impl
 
         public virtual void Stream(string tailAPIUrl, Action<Stream> parser)
         {
-            var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken);
+            var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options.Sudo);
 
             using var response = request.GetResponse(_options);
             if (parser != null)
@@ -157,7 +157,7 @@ namespace NGitLab.Impl
                     _index = 0;
                     _buffer.Clear();
 
-                    var request = new GitLabRequest(_nextUrlToLoad, MethodType.Get, data: null, _apiToken);
+                    var request = new GitLabRequest(_nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
                     using (var response = request.GetResponse(_options))
                     {
                         // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"

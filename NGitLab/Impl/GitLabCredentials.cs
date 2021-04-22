@@ -3,12 +3,13 @@
 namespace NGitLab.Impl
 {
     /// <summary>
-    /// To connect to to GitLab, you need a token,
-    /// you can either fix one in your profile or ask for one
-    /// on demand.
+    /// To connect to GitLab, you need a token.
+    /// You can either set one in your profile or ask for one on the fly.
     /// </summary>
-    /// <remarks>The credentials will try to resolve the api token on demand only to make sure not cost is
-    /// incurred until the credentials are really used.</remarks>
+    /// <remarks>
+    /// The api token will be resolved only when required, to make sure no cost is
+    /// incurred until credentials are really needed.
+    /// </remarks>
     public class GitLabCredentials
     {
         private string _apiToken;

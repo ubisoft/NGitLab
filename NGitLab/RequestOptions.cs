@@ -16,6 +16,11 @@ namespace NGitLab
         public bool IsIncremental { get; set; }
 
         /// <summary>
+        /// ID or case-insensitive username of the user to impersonate, if any
+        /// </summary>
+        public string Sudo { get; set; }
+
+        /// <summary>
         /// Configure the default client side timeout when calling GitLab.
         /// GitLab exposes some end points which are really slow so
         /// the default we use is larger than the default 100 seconds of .net
@@ -34,10 +39,10 @@ namespace NGitLab
         /// </summary>
         public virtual bool ShouldRetry(Exception ex, int retryNumber)
         {
-            return retryNumber > 0 && (ex is GitLabException gitLabException && (int)gitLabException.StatusCode >= 500);
+            return retryNumber > 0 && ex is GitLabException gitLabException && (int)gitLabException.StatusCode >= 500;
         }
 
-        public static RequestOptions Default => new RequestOptions(0, TimeSpan.FromMilliseconds(0));
+        public static RequestOptions Default => new RequestOptions(0, TimeSpan.Zero);
 
         /// <summary>
         /// Allows to monitor the web requests from the caller library, for example
