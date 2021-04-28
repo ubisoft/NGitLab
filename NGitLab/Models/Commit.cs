@@ -46,5 +46,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "status")]
         public string Status;
+
+        [DataMember(Name = "stats")]
+        public CommitStats Stats;
     }
 }

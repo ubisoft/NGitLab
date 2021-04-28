@@ -30,6 +30,7 @@ Get it from NuGet. You can simply install it with the Package Manager console:
 
 - Install Docker on your machine
 - It's recommended to use WSL version 2: https://docs.microsoft.com/en-us/windows/wsl/install-win10
+- Executing tests under Linux requires PowerShell to be installed. (https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux)
 
 ## Thanks
 
