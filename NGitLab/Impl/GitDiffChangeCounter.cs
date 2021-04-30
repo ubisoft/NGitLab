@@ -8,7 +8,7 @@ namespace NGitLab.Impl
     /// https://gitlab.com/gitlab-org/gitlab/-/issues/233052
     /// This implementation could be also replace by a git log command
     /// </summary>
-    public class GitLabChangeDiffCounter: IGitDiffChangeCounter
+    public class GitLabChangeDiffCounter : IGitDiffChangeCounter
     {
         public DiffStats Compute(MergeRequestChange mergeRequestChange)
         {
@@ -22,12 +22,12 @@ namespace NGitLab.Impl
                 var deleted = 0;
                 foreach (var line in lines)
                 {
-                    if (line.StartsWith("+"))
+                    if (line.StartsWith("+", StringComparison.InvariantCulture))
                     {
                         diffStats.AddedLines++;
                         added++;
                     }
-                    else if (line.StartsWith("-"))
+                    else if (line.StartsWith("-", StringComparison.InvariantCulture))
                     {
                         diffStats.DeletedLines++;
                         deleted++;
