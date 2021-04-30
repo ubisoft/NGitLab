@@ -1,6 +1,6 @@
 namespace NGitLab.Mock
 {
-    public class Change:GitLabObject
+    public class Change : GitLabObject
     {
         public string OldPath { get; set; }
 
@@ -20,7 +20,7 @@ namespace NGitLab.Mock
 
         public Models.Change ToChange()
         {
-            return new()
+            return new ()
             {
                 Diff = Diff,
                 AMode = AMode,
@@ -29,7 +29,7 @@ namespace NGitLab.Mock
                 NewFile = NewFile,
                 NewPath = NewPath,
                 OldPath = OldPath,
-                RenamedFile = RenamedFile
+                RenamedFile = RenamedFile,
             };
         }
     }

@@ -2,9 +2,10 @@ using System;
 
 namespace NGitLab.Mock
 {
-    public class MergeRequestChangeCollection:Collection<Change>
+    public class MergeRequestChangeCollection : Collection<Change>
     {
-        public MergeRequestChangeCollection(GitLabObject parent) : base(parent)
+        public MergeRequestChangeCollection(GitLabObject parent)
+            : base(parent)
         {
         }
 
@@ -13,7 +14,7 @@ namespace NGitLab.Mock
             if (diff is null)
                 throw new ArgumentNullException(nameof(diff));
 
-            var change = new Change() {Diff = diff};
+            var change = new Change() { Diff = diff };
             Add(change);
             return change;
         }

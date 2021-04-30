@@ -3,9 +3,8 @@ using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
 {
-    internal sealed class  MergeRequestChangeClient: ClientBase, IMergeRequestChangeClient
+    internal sealed class  MergeRequestChangeClient : ClientBase, IMergeRequestChangeClient
     {
-
         private readonly int _projectId;
         private readonly int _mergeRequestIid;
 
@@ -16,7 +15,8 @@ namespace NGitLab.Mock.Clients
             _mergeRequestIid = mergeRequestIid;
         }
 
-        public MergeRequestChange MergeRequestChange {
+        public MergeRequestChange MergeRequestChange
+        {
             get
             {
                 using (Context.BeginOperationScope())
@@ -24,11 +24,10 @@ namespace NGitLab.Mock.Clients
                     return new MergeRequestChange()
                     {
                         Changes = GetMergeRequest(_projectId, _mergeRequestIid).Changes.Select(a => a.ToChange())
-                            .ToArray()
+                            .ToArray(),
                     };
                 }
             }
         }
-
     }
 }

@@ -33,7 +33,7 @@ namespace NGitLab.Tests
                     {
                         Diff =
                             "@@ -30,6 +30,7 @@ Get it from NuGet. You can simply install it with the Package Manager console:\n \n - Install Docker on your machine\n - It's recommended to use WSL version 2: https://docs.microsoft.com/en-us/windows/wsl/install-win10\n+- Executing tests under Linux requires Powershell to be installed. (https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux)\n \n ## Thanks\n \n"
-                    }
+                    },
                 }
             };
             var unitUnderTest = new GitLabChangeDiffCounter();
@@ -41,6 +41,5 @@ namespace NGitLab.Tests
             Assert.AreEqual(53,diffStats.AddedLines);
             Assert.AreEqual(2, diffStats.DeletedLines);
         }
-
     }
 }

@@ -343,7 +343,7 @@ namespace NGitLab.Mock
             var filter = new CommitFilter
             {
                 SortBy = CommitSortStrategies.Reverse,
-                IncludeReachableFrom= branchName
+                IncludeReachableFrom = branchName,
             };
             var sourceCommit = GetGitRepository().Commits.QueryBy(filter).First();
             return GetGitRepository().Diff.Compare<Patch>(sourceCommit.Tree, branch.Tip.Tree);

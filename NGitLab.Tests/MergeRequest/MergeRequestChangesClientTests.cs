@@ -16,9 +16,9 @@ namespace NGitLab.Tests
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
             var mergeRequestChanges = mergeRequestClient.Changes(mergeRequest.Iid);
             var changes = mergeRequestChanges.MergeRequestChange.Changes;
-            Assert.AreEqual(1, changes.Length);
-            Assert.AreEqual(100644,changes[0].AMode);
-            Assert.AreEqual(100644,changes[0].BMode);
+            Assert.AreEqual(1,  changes.Length);
+            Assert.AreEqual(100644, changes[0].AMode);
+            Assert.AreEqual(100644, changes[0].BMode);
             Assert.IsFalse(changes[0].DeletedFile);
             Assert.IsFalse(changes[0].NewFile);
             Assert.IsFalse(changes[0].RenamedFile);

@@ -85,9 +85,10 @@ namespace NGitLab.Mock
                 var changes = new MergeRequestChangeCollection(this);
                 foreach (var stat in stats)
                 {
-                    var diff = stat.Patch.Substring(stat.Patch.IndexOf("@@"));
+                    var diff = stat.Patch.Substring(stat.Patch.IndexOf("@@", StringComparison.InvariantCulture));
                     changes.Add(diff);
                 }
+
                 return changes;
             }
         }
