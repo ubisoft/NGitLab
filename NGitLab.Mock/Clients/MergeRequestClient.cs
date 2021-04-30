@@ -238,6 +238,13 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public IMergeRequestChangeClient Changes(int mergeRequestIid)
+        {
+            AssertProjectId();
+
+            return new MergeRequestChangeClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
+        }
+
         public IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid)
         {
             AssertProjectId();

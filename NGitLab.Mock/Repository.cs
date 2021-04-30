@@ -337,6 +337,18 @@ namespace NGitLab.Mock
             return repository.Commits.SingleOrDefault(c => string.Equals(c.Sha, reference, StringComparison.Ordinal));
         }
 
+        public Patch GetBranchFullPatch(string branchName)
+        {
+            var branch = GetBranch(branchName);
+            var filter = new CommitFilter
+            {
+                SortBy = CommitSortStrategies.Reverse,
+                IncludeReachableFrom= branchName
+            };
+            var sourceCommit = GetGitRepository().Commits.QueryBy(filter).First();
+            return GetGitRepository().Diff.Compare<Patch>(sourceCommit.Tree, branch.Tip.Tree);
+        }
+
         public IEnumerable<Commit> GetCommits(GetCommitsRequest request)
         {
             var filter = new CommitFilter
