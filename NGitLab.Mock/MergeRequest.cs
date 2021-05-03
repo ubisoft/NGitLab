@@ -76,6 +76,23 @@ namespace NGitLab.Mock
 
         public IList<UserRef> Approvers { get; } = new List<UserRef>();
 
+        public MergeRequestChangeCollection Changes
+        {
+            get
+            {
+                var tipCommit = SourceProject.Repository.GetBranchTipCommit(SourceBranch);
+                var stats = Project.Repository.GetBranchFullPatch(SourceBranch);
+                var changes = new MergeRequestChangeCollection(this);
+                foreach (var stat in stats)
+                {
+                    var diff = stat.Patch.Substring(stat.Patch.IndexOf("@@", StringComparison.InvariantCulture));
+                    changes.Add(diff);
+                }
+
+                return changes;
+            }
+        }
+
         public MergeRequestState State
         {
             get

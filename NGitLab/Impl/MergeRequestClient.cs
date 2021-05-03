@@ -134,5 +134,7 @@ namespace NGitLab.Impl
         public IMergeRequestCommitClient Commits(int mergeRequestIid) => new MergeRequestCommitClient(_api, _projectPath, mergeRequestIid);
 
         public IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid) => new MergeRequestApprovalClient(_api, _projectPath, mergeRequestIid);
+
+        public IMergeRequestChangeClient Changes(int mergeRequestIid) => new MergeRequestChangeClient(_api, _projectPath, mergeRequestIid);
     }
 }

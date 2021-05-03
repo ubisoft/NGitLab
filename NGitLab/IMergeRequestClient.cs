@@ -43,6 +43,8 @@ namespace NGitLab
 
         IMergeRequestCommitClient Commits(int mergeRequestIid);
 
+        IMergeRequestChangeClient Changes(int mergeRequestIid);
+
         IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid);
 
         IEnumerable<Issue> ClosesIssues(int mergeRequestIid);
