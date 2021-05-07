@@ -28,5 +28,15 @@ namespace NGitLab.Impl
         public MergeRequestComment Edit(long id, MergeRequestCommentEdit comment) => _api.Put().With(comment).To<MergeRequestComment>(_notesPath + "/" + id.ToString(CultureInfo.InvariantCulture));
 
         public void Delete(long id) => _api.Delete().Execute(_notesPath + "/" + id.ToString(CultureInfo.InvariantCulture));
+
+        public IEnumerable<MergeRequestComment> Get(MergeRequestCommentQuery query)
+        {
+            var url = _notesPath;
+            url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: false);
+            url = Utils.AddParameter(url, "sort", query.Sort);
+            url = Utils.AddParameter(url, "page", query.PageIndex);
+            url = Utils.AddParameter(url, "per_page", query.PerPage);
+            return _api.Get().To<IEnumerable<MergeRequestComment>>(url);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
@@ -98,6 +99,11 @@ namespace NGitLab.Mock.Clients
 
                 comments.Remove(comment);
             }
+        }
+
+        public IEnumerable<Models.MergeRequestComment> Get(MergeRequestCommentQuery query)
+        {
+            throw new NotImplementedException();
         }
     }
 }

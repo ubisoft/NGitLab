@@ -18,5 +18,7 @@ namespace NGitLab
         MergeRequestComment Edit(long id, MergeRequestCommentEdit comment);
 
         void Delete(long id);
+
+        IEnumerable<MergeRequestComment> Get(MergeRequestCommentQuery query);
     }
 }
