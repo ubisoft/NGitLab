@@ -35,7 +35,7 @@ namespace NGitLab.Impl
 
         public void Unarchive(int id) => _api.Post().Execute(Project.Url + "/" + id.ToString(CultureInfo.InvariantCulture) + "/unarchive");
 
-        private bool SupportKeysetPagination(ProjectQuery query)
+        private static bool SupportKeysetPagination(ProjectQuery query)
         {
             return string.IsNullOrEmpty(query.Search);
         }

@@ -172,7 +172,7 @@ namespace NGitLab.Mock.Clients
                     throw new GitLabNotFoundException();
 
                 // Check if user has already aproved the merge request
-                if (mergeRequest.Approvers.Where(x => x.Id == Context.User.Id).Any())
+                if (mergeRequest.Approvers.Any(x => x.Id == Context.User.Id))
                 {
                     throw new GitLabException("GitLab server returned an error (Unauthorized): Empty Response.")
                     {

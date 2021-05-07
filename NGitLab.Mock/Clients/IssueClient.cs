@@ -218,8 +218,8 @@ namespace NGitLab.Mock.Clients
             if (query.Search != null)
             {
                 issues = issues
-                    .Where(i => i.Title.Contains(query.Search, StringComparison.InvariantCultureIgnoreCase)
-                        || i.Description.Contains(query.Search, StringComparison.InvariantCultureIgnoreCase));
+                    .Where(i => i.Title.Contains(query.Search, StringComparison.OrdinalIgnoreCase)
+                        || i.Description.Contains(query.Search, StringComparison.OrdinalIgnoreCase));
             }
 
             if (query.PerPage != null)

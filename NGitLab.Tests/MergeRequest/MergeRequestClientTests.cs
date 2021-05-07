@@ -134,7 +134,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(1, mergeRequests.Count, "The query retrieved all open merged requests that are unassigned");
         }
 
-        private void ListMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest mergeRequest)
+        private static void ListMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest mergeRequest)
         {
             Assert.IsTrue(mergeRequestClient.All.Any(x => x.Id == mergeRequest.Id), "Test 'All' accessor returns the merge request");
             Assert.IsTrue(mergeRequestClient.AllInState(MergeRequestState.opened).Any(x => x.Id == mergeRequest.Id), "Can return all open requests");
@@ -160,7 +160,7 @@ namespace NGitLab.Tests
             return updatedMergeRequest;
         }
 
-        private void Test_can_update_a_subset_of_merge_request_fields(IMergeRequestClient mergeRequestClient, Models.MergeRequest mergeRequest)
+        private static void Test_can_update_a_subset_of_merge_request_fields(IMergeRequestClient mergeRequestClient, Models.MergeRequest mergeRequest)
         {
             var updated = mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate
             {
