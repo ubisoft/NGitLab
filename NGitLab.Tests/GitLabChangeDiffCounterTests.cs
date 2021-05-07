@@ -1,4 +1,3 @@
-using System;
 using NGitLab.Impl;
 using NGitLab.Models;
 using NUnit.Framework;

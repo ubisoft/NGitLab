@@ -60,10 +60,11 @@ namespace NGitLab.Models
 
             if (age.TotalDays > 1)
                 return $"{age.TotalDays:0.0} days ago";
-            else if (age.TotalHours > 1)
+
+            if (age.TotalHours > 1)
                 return $"{age.Hours:0.0} hours ago";
-            else
-                return $"{age.Minutes:0.0} minutes ago";
+
+            return $"{age.Minutes:0.0} minutes ago";
         }
     }
 }

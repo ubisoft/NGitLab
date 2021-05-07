@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -11,9 +12,9 @@ namespace NGitLab.Mock
 {
     public sealed class Repository : GitLabObject, IDisposable
     {
-        private static int _tempBranchName = 0;
+        private static int _tempBranchName;
 
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
         private TemporaryDirectory _directory;
         private LibGit2Sharp.Repository _repository;
         private readonly IList<ReleaseTag> _releaseTags = new List<ReleaseTag>();
@@ -358,7 +359,7 @@ namespace NGitLab.Mock
 
             if (!string.IsNullOrEmpty(request.RefName))
             {
-                if (request.RefName.Contains(".."))
+                if (request.RefName.Contains("..", StringComparison.Ordinal))
                 {
                     var refs = request.RefName.Split(new string[] { ".." }, StringSplitOptions.RemoveEmptyEntries);
                     filter.ExcludeReachableFrom = refs[0];
@@ -424,7 +425,7 @@ namespace NGitLab.Mock
             var branch = repo.Branches[sourceBranch];
             var options = new PushOptions();
 
-            var id = Interlocked.Increment(ref _tempBranchName);
+            var id = Interlocked.Increment(ref _tempBranchName).ToString(CultureInfo.InvariantCulture);
             var tempBranchName = "merge-" + id;
             var tempRemoteName = "origin-" + id;
 
@@ -460,7 +461,7 @@ namespace NGitLab.Mock
             var committer = new Identity(user.UserName, user.Email);
             var options = new RebaseOptions();
 
-            var remote = repo.Network.Remotes[targetBranch];
+            _ = repo.Network.Remotes[targetBranch];
 
             var rebaseResult = rebase.Start(branch, branch, onto, committer, options);
             if (rebaseResult.Status == RebaseStatus.Conflicts)

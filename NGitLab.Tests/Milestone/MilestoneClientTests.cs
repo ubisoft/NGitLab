@@ -34,7 +34,7 @@ namespace NGitLab.Tests.Milestone
             DeleteMilestone(context, project, milestone);
         }
 
-        private Models.Milestone CreateMilestone(GitLabTestContext context, Project project, string title)
+        private static Models.Milestone CreateMilestone(GitLabTestContext context, Project project, string title)
         {
             var milestoneClient = context.Client.GetMilestone(project.Id);
             var milestone = milestoneClient.Create(new MilestoneCreate
@@ -54,7 +54,7 @@ namespace NGitLab.Tests.Milestone
             return milestone;
         }
 
-        private Models.Milestone UpdateMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
+        private static Models.Milestone UpdateMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
         {
             var milestoneClient = context.Client.GetMilestone(project.Id);
             var updatedMilestone = milestoneClient.Update(milestone.Id, new MilestoneUpdate
@@ -75,7 +75,7 @@ namespace NGitLab.Tests.Milestone
             return updatedMilestone;
         }
 
-        private Models.Milestone UpdatePartialMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
+        private static Models.Milestone UpdatePartialMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
         {
             var milestoneClient = context.Client.GetMilestone(project.Id);
             var updatedMilestone = milestoneClient.Update(milestone.Id, new MilestoneUpdate
@@ -93,7 +93,7 @@ namespace NGitLab.Tests.Milestone
             return updatedMilestone;
         }
 
-        private Models.Milestone ActivateMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
+        private static Models.Milestone ActivateMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
         {
             var milestoneClient = context.Client.GetMilestone(project.Id);
             var closedMilestone = milestoneClient.Activate(milestone.Id);
@@ -107,7 +107,7 @@ namespace NGitLab.Tests.Milestone
             return closedMilestone;
         }
 
-        private Models.Milestone CloseMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
+        private static Models.Milestone CloseMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
         {
             var milestoneClient = context.Client.GetMilestone(project.Id);
             var closedMilestone = milestoneClient.Close(milestone.Id);
@@ -121,7 +121,7 @@ namespace NGitLab.Tests.Milestone
             return closedMilestone;
         }
 
-        private void DeleteMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
+        private static void DeleteMilestone(GitLabTestContext context, Project project, Models.Milestone milestone)
         {
             var milestoneClient = context.Client.GetMilestone(project.Id);
             milestoneClient.Delete(milestone.Id);

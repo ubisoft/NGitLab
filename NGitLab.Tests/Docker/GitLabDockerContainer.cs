@@ -29,8 +29,8 @@ namespace NGitLab.Tests.Docker
         // https://hub.docker.com/r/gitlab/gitlab-ee/tags/
         public const string GitLabDockerVersion = "13.8.1-ee.0"; // Keep in sync with .github/workflows/ci.yml
 
-        private static string s_creationErrorMessage = null;
-        private static readonly SemaphoreSlim s_setupLock = new SemaphoreSlim(1, 1);
+        private static string s_creationErrorMessage;
+        private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
         private static GitLabDockerContainer s_instance;
 
         public string Host { get; private set; } = "localhost";
@@ -142,7 +142,7 @@ namespace NGitLab.Tests.Docker
 
             TestContext.Progress.WriteLine("Searching existing GitLab docker image");
             var containers = await client.Containers.ListContainersAsync(new ContainersListParameters() { All = true }).ConfigureAwait(false);
-            var container = containers.FirstOrDefault(c => c.Names.Contains("/" + ContainerName));
+            var container = containers.FirstOrDefault(c => c.Names.Contains("/" + ContainerName, StringComparer.Ordinal));
             if (container != null)
             {
                 TestContext.Progress.WriteLine("Validating existing GitLab docker image");

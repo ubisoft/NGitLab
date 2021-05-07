@@ -5,7 +5,7 @@ namespace NGitLab
     /// <summary>
     /// Sha1 hash value representation.
     /// </summary>
-    public readonly struct Sha1
+    public readonly struct Sha1 : IEquatable<Sha1>
     {
         private readonly ulong _p1; // 8
         private readonly ulong _p2; // 16

@@ -88,7 +88,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(firstApprovalRuleApprovalsRequired, approvalRules.First().ApprovalsRequired);
         }
 
-        private ApprovalRuleCreate CreateTestApprovalRuleCreate(Project project, string approvalRuleName, int approvalsRequired)
+        private static ApprovalRuleCreate CreateTestApprovalRuleCreate(Project project, string approvalRuleName, int approvalsRequired)
         {
             return new ApprovalRuleCreate
             {

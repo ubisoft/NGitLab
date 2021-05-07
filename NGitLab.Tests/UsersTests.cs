@@ -104,7 +104,7 @@ namespace NGitLab.Tests
             var tokenRequest = new UserTokenCreate
             {
                 UserId = users.Current.Id,
-                Name = $"Test_Create_{DateTime.UtcNow.ToString("yyyyMMddHHmmss")}",
+                Name = $"Test_Create_{DateTime.UtcNow:yyyyMMddHHmmss}",
                 ExpiresAt = DateTime.UtcNow.AddDays(1),
                 Scopes = new[] { "api", "read_user" },
             };

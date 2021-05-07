@@ -250,6 +250,9 @@ dotnet_diagnostic.IDE0005.severity = warning
 # IDE1006: Naming Styles
 dotnet_diagnostic.IDE1006.severity = silent
 
+# SA1000: The keyword new should be followed by a space
+dotnet_diagnostic.SA1000.severity = none
+
 # SA1025: Code should not contain multiple whitespace in a row
 dotnet_diagnostic.SA1025.severity = none
 

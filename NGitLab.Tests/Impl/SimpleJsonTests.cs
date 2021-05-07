@@ -32,7 +32,7 @@ namespace NGitLab.Tests.Impl
             Assert.That(model.MyEnum, Is.EqualTo(MockEnum.KnownField));
         }
 
-        private MockModel Load(string json)
+        private static MockModel Load(string json)
         {
             return SimpleJson.DeserializeObject<MockModel>(json);
         }

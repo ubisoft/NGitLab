@@ -240,11 +240,25 @@ namespace NGitLab.Tests.Docker
                             throw new InvalidOperationException($"OS '{RuntimeInformation.OSDescription}' is not supported");
                         }
 
-                        await using var stream = await HttpClient.GetStreamAsync(url).ConfigureAwait(false);
-                        Directory.CreateDirectory(Path.GetDirectoryName(path));
+                        var stream = await HttpClient.GetStreamAsync(url).ConfigureAwait(false);
+                        try
+                        {
+                            Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-                        await using var fs = File.OpenWrite(path);
-                        await stream.CopyToAsync(fs).ConfigureAwait(false);
+                            var fs = File.OpenWrite(path);
+                            try
+                            {
+                                await stream.CopyToAsync(fs).ConfigureAwait(false);
+                            }
+                            finally
+                            {
+                                await fs.DisposeAsync().ConfigureAwait(false);
+                            }
+                        }
+                        finally
+                        {
+                            await stream.DisposeAsync().ConfigureAwait(false);
+                        }
                     }
                 }
 

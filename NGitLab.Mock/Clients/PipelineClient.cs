@@ -170,7 +170,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        private IEnumerable<Pipeline> QuerySort<T>(IEnumerable<Pipeline> pipelines, PipelineSort? sort, Func<Pipeline, T> expression)
+        private static IEnumerable<Pipeline> QuerySort<T>(IEnumerable<Pipeline> pipelines, PipelineSort? sort, Func<Pipeline, T> expression)
         {
             if (!sort.HasValue)
                 sort = PipelineSort.desc;

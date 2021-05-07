@@ -38,17 +38,6 @@ namespace NGitLab.Mock.Clients
                 var user = Server.Users.GetById(projectMemberUpdate.UserId);
 
                 CheckUserPermissionOfProject(projectMemberUpdate.AccessLevel, user, project);
-
-                project.Permissions.SingleOrDefault(p =>
-                {
-                    if (string.Equals(p.User.Id.ToString(CultureInfo.InvariantCulture), projectMemberUpdate.UserId, StringComparison.Ordinal))
-                    {
-                        p = new Permission(user, projectMemberUpdate.AccessLevel);
-                    }
-
-                    return true;
-                });
-
                 return project.GetEffectivePermissions().GetEffectivePermission(user).ToMembershipClient();
             }
         }
@@ -95,7 +84,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        private void CheckUserPermissionOfProject(AccessLevel accessLevel, User user, Project project)
+        private static void CheckUserPermissionOfProject(AccessLevel accessLevel, User user, Project project)
         {
             var existingPermission = project.GetEffectivePermissions().GetEffectivePermission(user);
             if (existingPermission != null)

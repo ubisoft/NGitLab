@@ -40,7 +40,7 @@ namespace NGitLab.Mock
             return this.Select(note => note.Id).DefaultIfEmpty().Max() + 1;
         }
 
-        private string GetNewThreadId()
+        private static string GetNewThreadId()
         {
             return Guid.NewGuid().ToString("N");
         }
