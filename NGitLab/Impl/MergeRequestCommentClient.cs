@@ -34,7 +34,7 @@ namespace NGitLab.Impl
             var url = _notesPath;
             url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: false);
             url = Utils.AddParameter(url, "sort", query.Sort);
-            url = Utils.AddParameter(url, "page", query.PageIndex);
+            url = Utils.AddParameter(url, "page", query.Page);
             url = Utils.AddParameter(url, "per_page", query.PerPage);
             return _api.Get().To<IEnumerable<MergeRequestComment>>(url);
         }

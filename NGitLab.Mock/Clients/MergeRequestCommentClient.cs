@@ -103,7 +103,26 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Models.MergeRequestComment> Get(MergeRequestCommentQuery query)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var comments = GetMergeRequest().Comments.Select(mr => mr.ToMergeRequestCommentClient());
+                var orderByUpdated = query.OrderBy.Equals("updated_at", StringComparison.Ordinal);
+
+                if (query.Sort.Equals("asc"))
+                {
+                    comments = orderByUpdated ? comments.OrderBy(comment => comment.UpdatedAt) : comments.OrderBy(comment => comment.CreatedAt);
+                }
+                else
+                {
+                    comments = orderByUpdated ? comments.OrderByDescending(comment => comment.UpdatedAt) : comments.OrderByDescending(comment => comment.CreatedAt);
+                }
+
+                var pageIndex = query.Page.HasValue ? query.Page.Value - 1 : 0;
+                var perPage = query.PerPage.HasValue ? query.PerPage.Value : 20;
+                var lowerBound = pageIndex * perPage;
+
+                return comments.Skip(lowerBound).Take(perPage);
+            }
         }
     }
 }

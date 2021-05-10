@@ -16,7 +16,7 @@ namespace NGitLab.Models
         /// <summary>
         /// Specifies the specific page desired.
         /// </summary>
-        public int? PageIndex { get; set; }
+        public int? Page { get; set; }
 
         /// <summary>
         /// Specifies if the sorting is ascending or descending
