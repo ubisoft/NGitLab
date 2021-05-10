@@ -22,9 +22,20 @@ namespace NGitLab.Tests
             mergeRequest = UpdateMergeRequest(mergeRequestClient, mergeRequest);
             Test_can_update_a_subset_of_merge_request_fields(mergeRequestClient, mergeRequest);
 
-            await GitLabTestContext.RetryUntilAsync(() => mergeRequestClient[mergeRequest.Iid], mr => string.Equals(mr.MergeStatus, "can_be_merged", StringComparison.Ordinal), TimeSpan.FromSeconds(120));
+            await GitLabTestContext.RetryUntilAsync(
+                    () => mergeRequestClient[mergeRequest.Iid],
+                    mr => string.Equals(mr.MergeStatus, "can_be_merged", StringComparison.Ordinal),
+                    TimeSpan.FromSeconds(120))
+                .ConfigureAwait(false);
+
             AcceptMergeRequest(mergeRequestClient, mergeRequest);
-            Assert.IsNull(context.Client.GetRepository(project.Id).Branches.All.FirstOrDefault(x => string.Equals(x.Name, mergeRequest.SourceBranch, StringComparison.Ordinal)));
+
+            await GitLabTestContext.RetryUntilAsync(
+                    () => context.Client.GetRepository(project.Id).Branches.All.FirstOrDefault(x => string.Equals(x.Name, mergeRequest.SourceBranch, StringComparison.Ordinal)),
+                    branch => branch == null,
+                    TimeSpan.FromSeconds(120))
+                .ConfigureAwait(false);
+
             var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
             Assert.IsTrue(commits.Any(), "Can return the commits");
         }
