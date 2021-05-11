@@ -50,13 +50,13 @@ namespace NGitLab.Tests
                 WebsiteURL = "wp.pl",
             };
 
-            User user = context.AdminClient.Users.Create(userUpsert);
+            var user = context.AdminClient.Users.Create(userUpsert);
             context.Client.GetCommits(project.Id).Create(new CommitCreate()
             {
                 AuthorName = userUpsert.Name,
                 AuthorEmail = userUpsert.Email,
-                Branch = "master",
-                StartBranch = "master",
+                Branch = project.DefaultBranch,
+                StartBranch = project.DefaultBranch,
                 ProjectId = project.Id,
                 CommitMessage = "test",
             });

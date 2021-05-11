@@ -28,7 +28,7 @@ namespace NGitLab.Tests.RepositoryClient
             var project = context.CreateProject(initializeWithCommits: true);
             var branches = context.Client.GetRepository(project.Id).Branches;
 
-            var branch = branches["master"];
+            var branch = branches[project.DefaultBranch];
 
             Assert.IsNotNull(branch);
             Assert.IsNotNull(branch.Name);
@@ -42,12 +42,12 @@ namespace NGitLab.Tests.RepositoryClient
             var project = context.CreateProject(initializeWithCommits: true);
             var branches = context.Client.GetRepository(project.Id).Branches;
 
-            var branchName = $"merge-me-to-master_{Path.GetRandomFileName()}";
+            var branchName = $"merge-me-to-{project.DefaultBranch}_{Path.GetRandomFileName()}";
 
             branches.Create(new BranchCreate
             {
                 Name = branchName,
-                Ref = "master",
+                Ref = project.DefaultBranch,
             });
 
             var branch = branches[branchName];
@@ -75,7 +75,7 @@ namespace NGitLab.Tests.RepositoryClient
             branches.Create(new BranchCreate
             {
                 Name = branchName,
-                Ref = "master",
+                Ref = project.DefaultBranch,
             });
 
             Assert.IsNotNull(branches[branchName]);

@@ -38,7 +38,7 @@ namespace NGitLab.Mock
 
         public string Description { get; set; }
 
-        public string DefaultBranch { get; set; } = "master";
+        public string DefaultBranch { get; set; } = "main";
 
         public string WebUrl => Server.MakeUrl(PathWithNamespace);
 

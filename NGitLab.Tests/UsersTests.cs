@@ -137,7 +137,7 @@ namespace NGitLab.Tests
             });
         }
 
-        // Comes from https://github.com/meziantou/Meziantou.GitLabClient/blob/master/Meziantou.GitLabClient.Tests/Internals/RsaSshKey.cs
+        // Comes from https://github.com/meziantou/Meziantou.GitLabClient/blob/main/test/Meziantou.GitLabClient.Tests/Internals/RsaSshKey.cs
         private sealed class RsaSshKey
         {
             private const int PrefixSize = 4;

@@ -42,7 +42,7 @@ namespace NGitLab.Tests
                     RawContent = "test",
                     CommitMessage = "Commit for CommitStatusTests",
                     Path = "CommitStatusTests.txt",
-                    Branch = "master",
+                    Branch = project.DefaultBranch,
                 };
                 context.Client.GetRepository(project.Id).Files.Create(upsert);
                 var commit = context.Client.GetCommits(project.Id).GetCommit(upsert.Branch);
@@ -71,7 +71,7 @@ namespace NGitLab.Tests
             {
                 return new CommitStatusCreate
                 {
-                    Ref = "master",
+                    Ref = Project.DefaultBranch,
                     CommitSha = Commit.Id.ToString(),
                     Name = "Commit for CommitStatusTests",
                     State = state,

@@ -43,7 +43,7 @@ namespace NGitLab.Tests.RepositoryClient
                 {
                     commits[i] = context.Client.GetCommits(project.Id).Create(new CommitCreate
                     {
-                        Branch = "master",
+                        Branch = project.DefaultBranch,
                         CommitMessage = context.GetUniqueRandomString(),
                         AuthorEmail = "a@example.com",
                         AuthorName = "a",
@@ -78,11 +78,12 @@ namespace NGitLab.Tests.RepositoryClient
         public async Task GetCommitByBranchName()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+            var defaultBranch = context.Project.DefaultBranch;
 
-            CollectionAssert.IsNotEmpty(context.RepositoryClient.GetCommits("master"));
-            CollectionAssert.IsNotEmpty(context.RepositoryClient.GetCommits("master", -1));
+            CollectionAssert.IsNotEmpty(context.RepositoryClient.GetCommits(defaultBranch));
+            CollectionAssert.IsNotEmpty(context.RepositoryClient.GetCommits(defaultBranch, -1));
 
-            var commits = context.RepositoryClient.GetCommits("master", 1).ToArray();
+            var commits = context.RepositoryClient.GetCommits(defaultBranch, 1).ToArray();
             Assert.AreEqual(1, commits.Length);
             Assert.AreEqual(context.Commits[1].Message, commits[0].Message);
         }
@@ -146,7 +147,7 @@ namespace NGitLab.Tests.RepositoryClient
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
 
-            var tree = context.RepositoryClient.GetTree(string.Empty, "master", recursive: false);
+            var tree = context.RepositoryClient.GetTree(string.Empty, context.Project.DefaultBranch, recursive: false);
             Assert.IsNotEmpty(tree);
         }
 

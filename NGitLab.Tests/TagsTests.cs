@@ -19,7 +19,7 @@ namespace NGitLab.Tests
             {
                 Name = "v0.5",
                 Message = "Test message",
-                Ref = "master",
+                Ref = project.DefaultBranch,
                 ReleaseDescription = "Test description",
             });
 
@@ -41,7 +41,7 @@ namespace NGitLab.Tests
             var result = tagsClient.Create(new TagCreate
             {
                 Name = "0.7",
-                Ref = "master",
+                Ref = project.DefaultBranch,
             });
 
             var release = tagsClient.CreateRelease("0.7", new ReleaseCreate() { Description = "test" });

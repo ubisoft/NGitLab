@@ -142,7 +142,7 @@ namespace NGitLab.Tests
 
             var file = new FileUpsert
             {
-                Branch = "master",
+                Branch = project.DefaultBranch,
                 CommitMessage = "add javascript file",
                 Content = "var test = 0;",
                 Path = "test.js",
@@ -245,23 +245,22 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var projectClient = context.Client.Projects;
 
-            var project = new ProjectCreate
+            var createdProject = context.CreateProject(p =>
             {
-                Description = "desc",
-                IssuesEnabled = true,
-                MergeRequestsEnabled = true,
-                Name = "ForkProject_Test_" + context.GetRandomNumber(),
-                NamespaceId = null,
-                SnippetsEnabled = true,
-                VisibilityLevel = VisibilityLevel.Internal,
-                WikiEnabled = true,
-                Tags = new List<string> { "Tag-1", "Tag-2" },
-            };
+                p.Description = "desc";
+                p.IssuesEnabled = true;
+                p.MergeRequestsEnabled = true;
+                p.Name = "ForkProject_Test_" + context.GetRandomNumber();
+                p.NamespaceId = null;
+                p.SnippetsEnabled = true;
+                p.VisibilityLevel = VisibilityLevel.Internal;
+                p.WikiEnabled = true;
+                p.Tags = new List<string> { "Tag-1", "Tag-2" };
+            });
 
-            var createdProject = projectClient.Create(project);
             context.Client.GetRepository(createdProject.Id).Files.Create(new FileUpsert
             {
-                Branch = "master",
+                Branch = createdProject.DefaultBranch,
                 CommitMessage = "add readme",
                 Path = "README.md",
                 RawContent = "this project should only live during the unit tests, you can delete if you find some",
@@ -280,13 +279,13 @@ namespace NGitLab.Tests
             Assert.That(forks.Single().Id, Is.EqualTo(forkedProject.Id));
 
             // Create a merge request with AllowCollaboration (only testable on a fork, also the source branch must not be protected)
-            context.Client.GetRepository(forkedProject.Id).Branches.Create(new BranchCreate { Name = "banch-test", Ref = "master" });
+            context.Client.GetRepository(forkedProject.Id).Branches.Create(new BranchCreate { Name = "branch-test", Ref = createdProject.DefaultBranch });
             var mr = context.Client.GetMergeRequest(forkedProject.Id).Create(new MergeRequestCreate()
             {
                 AllowCollaboration = true,
                 Description = "desc",
                 SourceBranch = "branch-test",
-                TargetBranch = "master",
+                TargetBranch = createdProject.DefaultBranch,
                 TargetProjectId = createdProject.Id,
                 Title = "title",
             });
@@ -323,18 +322,16 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var projectClient = context.Client.Projects;
 
-            var project = new ProjectCreate
+            var createdProject = context.CreateProject(prj =>
             {
-                Name = "Project_Test_" + context.GetRandomNumber(),
-                VisibilityLevel = VisibilityLevel.Internal,
-            };
-
-            var createdProject = projectClient.Create(project);
+                prj.Name = "Project_Test_" + context.GetRandomNumber();
+                prj.VisibilityLevel = VisibilityLevel.Internal;
+            });
             Assert.IsTrue(createdProject.EmptyRepo);
 
             context.Client.GetRepository(createdProject.Id).Files.Create(new FileUpsert
             {
-                Branch = "master",
+                Branch = createdProject.DefaultBranch,
                 CommitMessage = "add readme",
                 Path = "README.md",
                 RawContent = "this project should only live during the unit tests, you can delete if you find some",

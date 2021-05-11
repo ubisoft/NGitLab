@@ -15,7 +15,7 @@ namespace NGitLab.Tests
             var branchClient = context.Client.GetRepository(project.Id).Branches;
             var currentUser = context.Client.Users.Current;
 
-            var masterBranch = branchClient["master"];
+            var masterBranch = branchClient[project.DefaultBranch];
             Assert.NotNull(masterBranch);
 
             var commit = masterBranch.Commit;

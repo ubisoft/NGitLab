@@ -19,7 +19,7 @@ namespace NGitLab.Tests
             var fileName = "test.md";
             var fileUpsert = new FileUpsert
             {
-                Branch = "master",
+                Branch = project.DefaultBranch,
                 CommitMessage = "Add SonarQube badges to README.md",
                 RawContent = "test",
                 Encoding = "base64",
@@ -27,7 +27,7 @@ namespace NGitLab.Tests
             };
             filesClient.Create(fileUpsert);
 
-            var file = filesClient.Get(fileName, "master");
+            var file = filesClient.Get(fileName, project.DefaultBranch);
             Assert.IsNotNull(file);
             Assert.AreEqual(fileName, file.Name);
             Assert.AreEqual("test", file.DecodedContent);
@@ -35,19 +35,19 @@ namespace NGitLab.Tests
             fileUpsert.RawContent = "test2";
             filesClient.Update(fileUpsert);
 
-            file = filesClient.Get(fileName, "master");
+            file = filesClient.Get(fileName, project.DefaultBranch);
             Assert.IsNotNull(file);
             Assert.AreEqual("test2", file.DecodedContent);
 
             var fileDelete = new FileDelete()
             {
                 Path = fileName,
-                Branch = "master",
+                Branch = project.DefaultBranch,
                 CommitMessage = "Delete file",
             };
             filesClient.Delete(fileDelete);
 
-            Assert.Throws(Is.InstanceOf<GitLabException>(), () => filesClient.Get("testDelete.md", "master"));
+            Assert.Throws(Is.InstanceOf<GitLabException>(), () => filesClient.Get("testDelete.md", project.DefaultBranch));
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace NGitLab.Tests
             var content1 = "test";
             var fileUpsert1 = new FileUpsert
             {
-                Branch = "master",
+                Branch = project.DefaultBranch,
                 CommitMessage = "Add SonarQube badges to README.md",
                 RawContent = $"{content1}{Environment.NewLine}",
                 Encoding = "base64",
@@ -69,7 +69,7 @@ namespace NGitLab.Tests
             };
             filesClient.Create(fileUpsert1);
 
-            var blameArray1 = filesClient.Blame(fileName, "master");
+            var blameArray1 = filesClient.Blame(fileName, project.DefaultBranch);
 
             Assert.AreEqual(1, blameArray1.Length);
             Assert.IsNotNull(blameArray1);
@@ -88,7 +88,7 @@ namespace NGitLab.Tests
             var content2 = "second line";
             var fileUpsert2 = new FileUpsert
             {
-                Branch = "master",
+                Branch = project.DefaultBranch,
                 CommitMessage = "SecondCommit",
                 RawContent = $"{content1}{Environment.NewLine}{content2}",
                 Encoding = "base64",
@@ -96,7 +96,7 @@ namespace NGitLab.Tests
             };
             filesClient.Update(fileUpsert2);
 
-            var blameArray2 = filesClient.Blame(fileName, "master");
+            var blameArray2 = filesClient.Blame(fileName, project.DefaultBranch);
 
             Assert.AreEqual(2, blameArray2.Length);
             Assert.AreEqual(firstBlameInfo, blameArray2[0]);
@@ -115,7 +115,7 @@ namespace NGitLab.Tests
             var fileDelete = new FileDelete()
             {
                 Path = fileName,
-                Branch = "master",
+                Branch = project.DefaultBranch,
                 CommitMessage = "Delete file",
             };
             filesClient.Delete(fileDelete);
@@ -132,7 +132,7 @@ namespace NGitLab.Tests
             var content1 = $"test{Environment.NewLine}";
             var fileUpsert1 = new FileUpsert
             {
-                Branch = "master",
+                Branch = project.DefaultBranch,
                 CommitMessage = "Add SonarQube badges to README.md",
                 RawContent = content1,
                 Encoding = "base64",
@@ -140,7 +140,7 @@ namespace NGitLab.Tests
             };
             filesClient.Create(fileUpsert1);
 
-            var initialBlame = filesClient.Blame(fileName, "master");
+            var initialBlame = filesClient.Blame(fileName, project.DefaultBranch);
 
             Assert.IsNotNull(initialBlame);
             Assert.AreEqual(1, initialBlame.Length);
@@ -150,7 +150,7 @@ namespace NGitLab.Tests
             var content2 = "second line";
             var fileUpsert2 = new FileUpsert
             {
-                Branch = "master",
+                Branch = project.DefaultBranch,
                 CommitMessage = $"SecondCommit{Environment.NewLine}",
                 RawContent = $"{content1}{content2}",
                 Encoding = "base64",
@@ -166,7 +166,7 @@ namespace NGitLab.Tests
             var fileDelete = new FileDelete()
             {
                 Path = fileName,
-                Branch = "master",
+                Branch = project.DefaultBranch,
                 CommitMessage = "Delete file",
             };
             filesClient.Delete(fileDelete);
@@ -183,7 +183,7 @@ namespace NGitLab.Tests
             var content1 = $"test{Environment.NewLine}";
             var fileUpsert1 = new FileUpsert
             {
-                Branch = "master",
+                Branch = project.DefaultBranch,
                 CommitMessage = "Add SonarQube badges to README.md",
                 RawContent = content1,
                 Encoding = "base64",
@@ -191,7 +191,7 @@ namespace NGitLab.Tests
             };
             filesClient.Create(fileUpsert1);
 
-            var realBlame = filesClient.Blame(fileName, "master");
+            var realBlame = filesClient.Blame(fileName, project.DefaultBranch);
 
             Assert.IsNotNull(realBlame);
             Assert.AreEqual(1, realBlame.Length);
@@ -209,7 +209,7 @@ namespace NGitLab.Tests
             var fileDelete = new FileDelete()
             {
                 Path = fileName,
-                Branch = "master",
+                Branch = project.DefaultBranch,
                 CommitMessage = "Delete file",
             };
             filesClient.Delete(fileDelete);

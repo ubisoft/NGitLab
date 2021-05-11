@@ -103,9 +103,11 @@ namespace NGitLab.Tests.Docker
         public Project CreateProject(Action<ProjectCreate> configure = null, bool initializeWithCommits = false)
         {
             var client = Client;
+            var defaultBranch = "main4tests";
             var projectCreate = new ProjectCreate()
             {
                 Name = GetUniqueRandomString(),
+                DefaultBranch = defaultBranch,
                 Description = "Test project",
                 IssuesEnabled = true,
                 MergeRequestsEnabled = true,
@@ -116,6 +118,13 @@ namespace NGitLab.Tests.Docker
 
             configure?.Invoke(projectCreate);
             var project = client.Projects.Create(projectCreate);
+
+            // When creating a project, GitLab's JSON response should indicate the 'default_branch'. However, it
+            // currently returns null instead (at least in versions <= 13.10.3). This info would come in handy, since
+            // a 'default_branch' might be specified at the GitLab instance, group, subgroup and/or project levels, and
+            // we don't want to query those levels to determine what the default branch is for the current project.
+            // Until https://gitlab.com/gitlab-org/gitlab/-/issues/330622 is resolved, we'll patch the value ourselves.
+            project.DefaultBranch ??= defaultBranch;
 
             if (initializeWithCommits)
             {
@@ -129,7 +138,7 @@ namespace NGitLab.Tests.Docker
                 s_gitlabRetryPolicy.Execute(() =>
                     client.GetRepository(project.Id).Files.Create(new FileUpsert
                     {
-                        Branch = "master",
+                        Branch = project.DefaultBranch,
                         CommitMessage = "add readme",
                         Path = "README.md",
                         RawContent = "this project should only live during the unit tests, you can delete if you find some",
@@ -140,7 +149,7 @@ namespace NGitLab.Tests.Docker
                     s_gitlabRetryPolicy.Execute(() =>
                         client.GetRepository(project.Id).Files.Create(new FileUpsert
                         {
-                            Branch = "master",
+                            Branch = project.DefaultBranch,
                             CommitMessage = $"add test file {i}",
                             Path = $"TestFile{i}.txt",
                             RawContent = "this project should only live during the unit tests, you can delete if you find some",
@@ -169,13 +178,13 @@ namespace NGitLab.Tests.Docker
         {
             var client = Client;
             var project = CreateProject();
-            s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Create(new FileUpsert { Branch = "master", CommitMessage = "test", Content = "test", Path = "test.md" }));
-            s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = "branch", Ref = "master" }));
+            s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Create(new FileUpsert { Branch = project.DefaultBranch, CommitMessage = "test", Content = "test", Path = "test.md" }));
+            s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = "branch", Ref = project.DefaultBranch }));
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Update(new FileUpsert { Branch = "branch", CommitMessage = "test", Content = "test2", Path = "test.md" }));
             var mr = client.GetMergeRequest(project.Id).Create(new MergeRequestCreate
             {
                 SourceBranch = "branch",
-                TargetBranch = "master",
+                TargetBranch = project.DefaultBranch,
                 Title = "test",
             });
 

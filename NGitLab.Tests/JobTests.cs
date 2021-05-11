@@ -39,7 +39,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
 
             client.GetRepository(project.Id).Files.Create(new FileUpsert
             {
-                Branch = "main",
+                Branch = project.DefaultBranch,
                 CommitMessage = "test",
                 Path = ".gitlab-ci.yml",
                 Content = content,

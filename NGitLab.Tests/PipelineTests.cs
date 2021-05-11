@@ -46,7 +46,7 @@ namespace NGitLab.Tests
 
             var query = new PipelineQuery
             {
-                Ref = "main",
+                Ref = project.DefaultBranch,
             };
             var pipelinesFromQuery = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.Search(query).ToList(), p => p.Any(), TimeSpan.FromSeconds(120));
 
@@ -77,7 +77,7 @@ namespace NGitLab.Tests
             // Arrange/Act
             var pipeline = pipelineClient.Create(new PipelineCreate()
             {
-                Ref = "main",
+                Ref = project.DefaultBranch,
                 Variables =
                 {
                     { "Var1", "Value1" },
@@ -110,7 +110,7 @@ namespace NGitLab.Tests
             var trigger = triggers.Create("Test Trigger");
             var ciJobToken = trigger.Token;
 
-            var pipeline = pipelineClient.CreatePipelineWithTrigger(ciJobToken, "main", new Dictionary<string, string>(StringComparer.InvariantCulture) { { "Test", "HelloWorld" } });
+            var pipeline = pipelineClient.CreatePipelineWithTrigger(ciJobToken, project.DefaultBranch, new Dictionary<string, string>(StringComparer.InvariantCulture) { { "Test", "HelloWorld" } });
 
             var variables = pipelineClient.GetVariables(pipeline.Id);
 

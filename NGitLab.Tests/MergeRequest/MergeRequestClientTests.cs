@@ -64,8 +64,8 @@ namespace NGitLab.Tests
                 mergeRequestClient.Create(new MergeRequestCreate
                 {
                     Title = "ErrorRequest",
-                    SourceBranch = "master",
-                    TargetBranch = "master",
+                    SourceBranch = project.DefaultBranch,
+                    TargetBranch = project.DefaultBranch,
                 });
             });
 
@@ -160,7 +160,7 @@ namespace NGitLab.Tests
                 Description = "New description",
                 Labels = "a,b",
                 SourceBranch = "my-super-feature",
-                TargetBranch = "master",
+                TargetBranch = request.TargetBranch,
             });
 
             Assert.AreEqual("New title", updatedMergeRequest.Title);
@@ -188,7 +188,7 @@ namespace NGitLab.Tests
                 mergeRequestIid: request.Iid,
                 message: new MergeRequestMerge
                 {
-                    MergeCommitMessage = "Merge my-super-feature into master",
+                    MergeCommitMessage = $"Merge my-super-feature into {request.TargetBranch}",
                     ShouldRemoveSourceBranch = true,
                     MergeWhenPipelineSucceeds = false,
                     Squash = false,
