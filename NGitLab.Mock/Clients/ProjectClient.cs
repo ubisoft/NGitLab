@@ -186,12 +186,6 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        private bool IsQueryEqual<T>(T? query, T value)
-            where T : struct
-        {
-            return query == null || Equals(query.Value, value);
-        }
-
         public Dictionary<string, double> GetLanguages(string id)
         {
             throw new NotImplementedException();
