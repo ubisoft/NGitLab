@@ -178,8 +178,8 @@ namespace NGitLab.Mock.Clients
                     || query.Visibility != null)
                     throw new NotImplementedException();
 
-                var idAsInt = long.Parse(id);
-                var matches = Server.AllProjects.Where(project => project.ForkedFrom?.Id == idAsInt);
+                var upstream = GetProject(id, ProjectPermission.View);
+                var matches = Server.AllProjects.Where(project => project.ForkedFrom?.Id == upstream.Id);
                 matches = matches.Where(project => query.Owned == null || query.Owned == project.IsUserOwner(Context.User));
 
                 return matches.Select(project => project.ToClientProject()).ToList();
