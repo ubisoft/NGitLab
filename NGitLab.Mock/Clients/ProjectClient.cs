@@ -165,7 +165,31 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Models.Project> GetForks(string id, ForkedProjectQuery query)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                if (query.Archived != null
+                    || query.Membership != null
+                    || query.MinAccessLevel != null
+                    || query.OrderBy != null
+                    || query.PerPage != null
+                    || query.Search != null
+                    || query.Simple != null
+                    || query.Statistics != null
+                    || query.Visibility != null)
+                    throw new NotImplementedException();
+
+                var idAsInt = long.Parse(id);
+                var matches = Server.AllProjects.Where(project => project.ForkedFrom?.Id == idAsInt);
+                matches = matches.Where(project => query.Owned == null || query.Owned == project.IsUserOwner(Context.User));
+
+                return matches.Select(project => project.ToClientProject()).ToList();
+            }
+        }
+
+        private bool IsQueryEqual<T>(T? query, T value)
+            where T : struct
+        {
+            return query == null || Equals(query.Value, value);
         }
 
         public Dictionary<string, double> GetLanguages(string id)
