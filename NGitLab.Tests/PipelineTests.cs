@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
-    [Timeout(30000)]
+    [Timeout(240_000)]
     public class PipelineTests
     {
         [Test]

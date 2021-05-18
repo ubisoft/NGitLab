@@ -103,21 +103,25 @@ namespace NGitLab.Tests.Docker
         public Project CreateProject(Action<ProjectCreate> configure = null, bool initializeWithCommits = false)
         {
             var client = Client;
-            var defaultBranch = "main4tests";
-            var projectCreate = new ProjectCreate()
-            {
-                Name = GetUniqueRandomString(),
-                DefaultBranch = defaultBranch,
-                Description = "Test project",
-                IssuesEnabled = true,
-                MergeRequestsEnabled = true,
-                SnippetsEnabled = true,
-                VisibilityLevel = VisibilityLevel.Internal,
-                WikiEnabled = true,
-            };
+            var defaultBranch = "main";
 
-            configure?.Invoke(projectCreate);
-            var project = client.Projects.Create(projectCreate);
+            var project = s_gitlabRetryPolicy.Execute(() =>
+                {
+                    var projectCreate = new ProjectCreate()
+                    {
+                        Name = GetUniqueRandomString(),
+                        DefaultBranch = defaultBranch,
+                        Description = "Test project",
+                        IssuesEnabled = true,
+                        MergeRequestsEnabled = true,
+                        SnippetsEnabled = true,
+                        VisibilityLevel = VisibilityLevel.Internal,
+                        WikiEnabled = true,
+                    };
+
+                    configure?.Invoke(projectCreate);
+                    return client.Projects.Create(projectCreate);
+                });
 
             // When creating a project, GitLab's JSON response should indicate the 'default_branch'. However, it
             // currently returns null instead (at least in versions <= 13.10.3). This info would come in handy, since
@@ -129,6 +133,15 @@ namespace NGitLab.Tests.Docker
             if (initializeWithCommits)
             {
                 AddSomeCommits();
+                s_gitlabRetryPolicy.Execute(() =>
+                {
+                    var projectUpdate = new ProjectUpdate()
+                    {
+                        DefaultBranch = defaultBranch,
+                    };
+
+                    return client.Projects.Update(project.Id.ToString(CultureInfo.InvariantCulture), projectUpdate);
+                });
             }
 
             return project;
@@ -177,13 +190,15 @@ namespace NGitLab.Tests.Docker
         public (Project Project, MergeRequest MergeRequest) CreateMergeRequest()
         {
             var client = Client;
-            var project = CreateProject();
+            var project = CreateProject(initializeWithCommits: true);
+
+            const string BranchForMRName = "branch-for-mr";
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Create(new FileUpsert { Branch = project.DefaultBranch, CommitMessage = "test", Content = "test", Path = "test.md" }));
-            s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = "branch", Ref = project.DefaultBranch }));
-            s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Update(new FileUpsert { Branch = "branch", CommitMessage = "test", Content = "test2", Path = "test.md" }));
+            s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = BranchForMRName, Ref = project.DefaultBranch }));
+            s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Update(new FileUpsert { Branch = BranchForMRName, CommitMessage = "test", Content = "test2", Path = "test.md" }));
             var mr = client.GetMergeRequest(project.Id).Create(new MergeRequestCreate
             {
-                SourceBranch = "branch",
+                SourceBranch = BranchForMRName,
                 TargetBranch = project.DefaultBranch,
                 Title = "test",
             });
