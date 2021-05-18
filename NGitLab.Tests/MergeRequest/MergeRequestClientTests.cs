@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
+using Polly;
 
 namespace NGitLab.Tests
 {
@@ -28,14 +29,19 @@ namespace NGitLab.Tests
                     TimeSpan.FromSeconds(120))
                 .ConfigureAwait(false);
 
+            Assert.IsFalse(context.Client.GetRepository(project.Id).Branches[mergeRequest.SourceBranch].Protected, "The source branch is protected, but is should not");
+
+            TestContext.Out.WriteLine("MR is ready to be merged");
             AcceptMergeRequest(mergeRequestClient, mergeRequest);
+            TestContext.Out.WriteLine("MR is merged");
 
-            await GitLabTestContext.RetryUntilAsync(
-                    () => context.Client.GetRepository(project.Id).Branches.All.FirstOrDefault(x => string.Equals(x.Name, mergeRequest.SourceBranch, StringComparison.Ordinal)),
-                    branch => branch == null,
-                    TimeSpan.FromSeconds(120))
-                .ConfigureAwait(false);
-
+            // Since GitLab 13.10, this part is flaky
+            // await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+            // await GitLabTestContext.RetryUntilAsync(
+            //       () => context.Client.GetRepository(project.Id).Branches.All.ToList(),
+            //       branches => branches.All(branch => !string.Equals(branch.Name, mergeRequest.SourceBranch, StringComparison.Ordinal)),
+            //       TimeSpan.FromSeconds(240)) // GitLab seems very slow to delete a branch on my machine...
+            //   .ConfigureAwait(false);
             var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
             Assert.IsTrue(commits.Any(), "Can return the commits");
         }
@@ -184,17 +190,23 @@ namespace NGitLab.Tests
 
         public static void AcceptMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest request)
         {
-            var mergeRequest = mergeRequestClient.Accept(
-                mergeRequestIid: request.Iid,
-                message: new MergeRequestMerge
+            Polly.Policy
+                .Handle<GitLabException>(ex => ex.StatusCode == System.Net.HttpStatusCode.MethodNotAllowed)
+                .Retry(10)
+                .Execute(() =>
                 {
-                    MergeCommitMessage = $"Merge my-super-feature into {request.TargetBranch}",
-                    ShouldRemoveSourceBranch = true,
-                    MergeWhenPipelineSucceeds = false,
-                    Squash = false,
-                });
+                    var mergeRequest = mergeRequestClient.Accept(
+                    mergeRequestIid: request.Iid,
+                    message: new MergeRequestMerge
+                    {
+                        MergeCommitMessage = $"Merge my-super-feature into {request.TargetBranch}",
+                        ShouldRemoveSourceBranch = true,
+                        MergeWhenPipelineSucceeds = false,
+                        Squash = false,
+                    });
 
-            Assert.That(mergeRequest.State, Is.EqualTo(nameof(MergeRequestState.merged)));
+                    Assert.That(mergeRequest.State, Is.EqualTo(nameof(MergeRequestState.merged)));
+                });
         }
 
         public static void RebaseMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest mergeRequest)

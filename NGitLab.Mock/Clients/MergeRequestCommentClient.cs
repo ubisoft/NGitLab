@@ -108,7 +108,7 @@ namespace NGitLab.Mock.Clients
                 var comments = GetMergeRequest().Comments.Select(mr => mr.ToMergeRequestCommentClient());
                 var orderByUpdated = query.OrderBy.Equals("updated_at", StringComparison.Ordinal);
 
-                if (query.Sort.Equals("asc"))
+                if (string.Equals(query.Sort, "asc", StringComparison.Ordinal))
                 {
                     comments = orderByUpdated ? comments.OrderBy(comment => comment.UpdatedAt) : comments.OrderBy(comment => comment.CreatedAt);
                 }
@@ -118,7 +118,7 @@ namespace NGitLab.Mock.Clients
                 }
 
                 var pageIndex = query.Page.HasValue ? query.Page.Value - 1 : 0;
-                var perPage = query.PerPage.HasValue ? query.PerPage.Value : 20;
+                var perPage = query.PerPage ?? 20;
                 var lowerBound = pageIndex * perPage;
 
                 return comments.Skip(lowerBound).Take(perPage);
