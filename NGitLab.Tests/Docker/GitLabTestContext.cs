@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
@@ -18,7 +19,13 @@ namespace NGitLab.Tests.Docker
 {
     public sealed class GitLabTestContext : IDisposable
     {
-        private static readonly Policy s_gitlabRetryPolicy = Policy.Handle<GitLabException>().WaitAndRetry(10, _ => TimeSpan.FromSeconds(1));
+        private const int _maxRetryCount = 10;
+        private static readonly Policy s_gitlabRetryPolicy = Policy.Handle<GitLabException>()
+            .WaitAndRetry(_maxRetryCount, _ => TimeSpan.FromSeconds(1), (exception, timespan, retryCount, context) =>
+            {
+                TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {exception.Message} -> Polly Retry {retryCount} of {_maxRetryCount}...");
+            });
+
         private static readonly HashSet<string> s_generatedValues = new HashSet<string>(StringComparer.Ordinal);
         private static readonly SemaphoreSlim s_prepareRunnerLock = new SemaphoreSlim(1, 1);
 
@@ -195,7 +202,17 @@ namespace NGitLab.Tests.Docker
             const string BranchForMRName = "branch-for-mr";
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Create(new FileUpsert { Branch = project.DefaultBranch, CommitMessage = "test", Content = "test", Path = "test.md" }));
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = BranchForMRName, Ref = project.DefaultBranch }));
+
+            var branch = client.GetRepository(project.Id).Branches.All.FirstOrDefault(b => string.Equals(b.Name, project.DefaultBranch, StringComparison.Ordinal));
+            Assert.NotNull(branch, $"Branch '{project.DefaultBranch}' should exist");
+            Assert.IsTrue(branch.Default, $"Branch '{project.DefaultBranch}' should be the default one");
+
+            branch = client.GetRepository(project.Id).Branches.All.FirstOrDefault(b => string.Equals(b.Name, BranchForMRName, StringComparison.Ordinal));
+            Assert.NotNull(branch, $"Branch '{BranchForMRName}' should exist");
+            Assert.IsFalse(branch.Protected, $"Branch '{BranchForMRName}' should not be protected");
+
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Update(new FileUpsert { Branch = BranchForMRName, CommitMessage = "test", Content = "test2", Path = "test.md" }));
+
             var mr = client.GetMergeRequest(project.Id).Create(new MergeRequestCreate
             {
                 SourceBranch = BranchForMRName,
@@ -363,26 +380,6 @@ namespace NGitLab.Tests.Docker
             }
         }
 
-        public static async Task<T> RetryUntilAsync<T>(Func<Task<T>> action, Func<T, bool> predicate, TimeSpan timeSpan)
-        {
-            using var cts = new CancellationTokenSource(timeSpan);
-            return await RetryUntilAsync(action, predicate, cts.Token).ConfigureAwait(false);
-        }
-
-        public static async Task<T> RetryUntilAsync<T>(Func<Task<T>> action, Func<T, bool> predicate, CancellationToken cancellationToken)
-        {
-            var result = await action().ConfigureAwait(false);
-            while (!predicate(result))
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
-
-                result = await action().ConfigureAwait(false);
-            }
-
-            return result;
-        }
-
         public static async Task<T> RetryUntilAsync<T>(Func<T> action, Func<T, bool> predicate, TimeSpan timeSpan)
         {
             using var cts = new CancellationTokenSource(timeSpan);
@@ -391,10 +388,12 @@ namespace NGitLab.Tests.Docker
 
         public static async Task<T> RetryUntilAsync<T>(Func<T> action, Func<T, bool> predicate, CancellationToken cancellationToken)
         {
+            var retryCount = 1;
             var result = action();
             while (!predicate(result))
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] RetryUntilAsync {retryCount++}...");
                 await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
 
                 result = action();
