@@ -23,7 +23,7 @@ namespace NGitLab.Tests.Docker
         private static readonly Policy s_gitlabRetryPolicy = Policy.Handle<GitLabException>()
             .WaitAndRetry(_maxRetryCount, _ => TimeSpan.FromSeconds(1), (exception, timespan, retryCount, context) =>
             {
-                TestContext.Out.WriteLine($"{exception.Message} -> Polly Retry {retryCount} of {_maxRetryCount}...");
+                TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {exception.Message} -> Polly Retry {retryCount} of {_maxRetryCount}...");
             });
 
         private static readonly HashSet<string> s_generatedValues = new HashSet<string>(StringComparer.Ordinal);
@@ -387,7 +387,7 @@ namespace NGitLab.Tests.Docker
             while (!predicate(result))
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                TestContext.Out.WriteLine($"RetryUntilAsync {retryCount++}...");
+                TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] RetryUntilAsync {retryCount++}...");
                 await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
 
                 result = action();
