@@ -46,7 +46,7 @@ namespace NGitLab.Mock
             {
                 if (string.IsNullOrEmpty(_defaultBranch))
                 {
-                    _defaultBranch = Parent.Server.DefaultBranchName;
+                    _defaultBranch = Parent.Server?.DefaultBranchName ?? throw new InvalidOperationException("Project is not added to a Server");
                 }
 
                 return _defaultBranch;
