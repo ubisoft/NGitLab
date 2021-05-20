@@ -8,6 +8,8 @@ namespace NGitLab.Extensions
     /// </summary>
     internal static class FunctionRetryExtensions
     {
+        public static Action<string> Logger { get; set; }
+
         /// <summary>
         /// Do a retry a number of time on the received action if it fails
         /// </summary>
@@ -19,6 +21,8 @@ namespace NGitLab.Extensions
             }
             catch (Exception ex) when (retryWhen(ex, retryNumber))
             {
+                Logger?.Invoke($"{ex.Message} -> Internal Retry ({retryNumber - 1} attempts left)...");
+
                 Thread.Sleep(interval);
 
                 var nextInterval = isIncremental ? interval.Add(interval) : interval;
