@@ -38,7 +38,22 @@ namespace NGitLab.Mock
 
         public string Description { get; set; }
 
-        public string DefaultBranch { get; set; } = "main";
+        private string _defaultBranch;
+
+        public string DefaultBranch
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_defaultBranch))
+                {
+                    _defaultBranch = Parent.Server?.DefaultBranchName ?? throw new InvalidOperationException("Project is not added to a Server");
+                }
+
+                return _defaultBranch;
+            }
+
+            set => _defaultBranch = value;
+        }
 
         public string WebUrl => Server.MakeUrl(PathWithNamespace);
 

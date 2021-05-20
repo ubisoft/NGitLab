@@ -29,6 +29,8 @@ namespace NGitLab.Mock
             SystemHooks = new SystemHookCollection(this);
         }
 
+        public string DefaultBranchName { get; set; } = "main";
+
         public Uri Url { get; set; } = new Uri("https://gitlab.example.com/", UriKind.Absolute);
 
         public GitLabVersion Version { get; set; } = new GitLabVersion { Version = "1.0.0", Revision = "rev1" };

@@ -50,7 +50,11 @@ namespace NGitLab.Mock
                         var directory = TemporaryDirectory.Create();
                         if (Project.ForkedFrom == null)
                         {
-                            LibGit2Sharp.Repository.Init(directory.FullPath);
+                            // libgit2sharp cannot init with a branch other than master
+                            using var process = Process.Start("git", $"init --initial-branch \"{Project.DefaultBranch}\" \"{directory.FullPath}\"");
+                            process.WaitForExit();
+                            if (process.ExitCode != 0)
+                                throw new GitLabException($"Cannot init repository in '{directory.FullPath}'");
                         }
                         else
                         {
