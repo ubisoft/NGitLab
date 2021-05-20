@@ -12,6 +12,7 @@ namespace NGitLab.Mock
 {
     public sealed class Repository : GitLabObject, IDisposable
     {
+        public const string DefaultBranch = "main";
         private static int _tempBranchName;
 
         private readonly object _lock = new();
@@ -50,7 +51,11 @@ namespace NGitLab.Mock
                         var directory = TemporaryDirectory.Create();
                         if (Project.ForkedFrom == null)
                         {
-                            LibGit2Sharp.Repository.Init(directory.FullPath);
+                            // libgit2sharp cannot init with a branch other than master
+                            using var process = Process.Start("git", $"init --initial-branch {DefaultBranch} \"{directory.FullPath}\"");
+                            process.WaitForExit();
+                            if (process.ExitCode != 0)
+                                throw new GitLabException("Cannot init repository");
                         }
                         else
                         {
