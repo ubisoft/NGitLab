@@ -12,7 +12,7 @@ namespace NGitLab.Mock
     /// </summary>
     public sealed class GitLabServer : GitLabObject, IDisposable
     {
-        public const string DefaultBranch = "main";
+        public static string DefaultBranchName { get; set; } = "main";
 
         private int _lastProjectId;
         private int _lastGroupId;

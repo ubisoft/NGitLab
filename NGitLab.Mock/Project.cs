@@ -38,7 +38,7 @@ namespace NGitLab.Mock
 
         public string Description { get; set; }
 
-        public string DefaultBranch { get; set; } = GitLabServer.DefaultBranch;
+        public string DefaultBranch { get; set; } = GitLabServer.DefaultBranchName;
 
         public string WebUrl => Server.MakeUrl(PathWithNamespace);
 
