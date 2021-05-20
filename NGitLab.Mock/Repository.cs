@@ -55,7 +55,7 @@ namespace NGitLab.Mock
                             using var process = Process.Start("git", $"init --initial-branch {DefaultBranch} \"{directory.FullPath}\"");
                             process.WaitForExit();
                             if (process.ExitCode != 0)
-                                throw new GitLabException("Cannot init repository");
+                                throw new GitLabException($"Cannot init repository in '{directory.FullPath}'");
                         }
                         else
                         {
