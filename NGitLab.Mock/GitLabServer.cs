@@ -12,8 +12,6 @@ namespace NGitLab.Mock
     /// </summary>
     public sealed class GitLabServer : GitLabObject, IDisposable
     {
-        public string DefaultBranchName { get; set; } = "main";
-
         private int _lastProjectId;
         private int _lastGroupId;
         private int _lastMergeRequestId;
@@ -30,6 +28,8 @@ namespace NGitLab.Mock
             Users = new UserCollection(this);
             SystemHooks = new SystemHookCollection(this);
         }
+
+        public string DefaultBranchName { get; set; } = "main";
 
         public Uri Url { get; set; } = new Uri("https://gitlab.example.com/", UriKind.Absolute);
 
