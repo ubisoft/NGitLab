@@ -47,13 +47,13 @@ namespace NGitLab
 
             // For requests that are potentially NOT Safe/Idempotent, do not retry
             // See https://developer.mozilla.org/en-US/docs/Glossary/Safe/HTTP
-            // If there is no HTTP method info, carry on to the next condition below.
+            // If there is no HTTP request method specified, carry on to the next condition below.
             if (gitLabException.MethodType.HasValue &&
                 gitLabException.MethodType != Impl.MethodType.Get &&
                 gitLabException.MethodType != Impl.MethodType.Head)
                 return false;
 
-            // Same as what are considered Transient HTTP StatusCodes in Polly's HttpPolicyExtensions
+            // Use the same Transient HTTP StatusCodes as Polly's HttpPolicyExtensions
             // https://github.com/App-vNext/Polly.Extensions.Http/blob/69fd292bc603cb3032e57b028522737255f03a49/src/Polly.Extensions.Http/HttpPolicyExtensions.cs#L14
             return gitLabException.StatusCode >= HttpStatusCode.InternalServerError ||
                    gitLabException.StatusCode == HttpStatusCode.RequestTimeout;

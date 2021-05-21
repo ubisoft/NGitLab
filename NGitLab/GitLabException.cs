@@ -50,7 +50,7 @@ namespace NGitLab
         public Uri OriginalCall { get; set; }
 
         /// <summary>
-        /// Underlying HTTP method that triggered this exception, if any
+        /// HTTP request method, if any, that triggered this exception
         /// </summary>
         public MethodType? MethodType { get; set; }
     }
