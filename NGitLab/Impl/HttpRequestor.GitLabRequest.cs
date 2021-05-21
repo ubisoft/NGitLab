@@ -58,11 +58,11 @@ namespace NGitLab.Impl
 
             public WebResponse GetResponse(RequestOptions options)
             {
-                // For any requests that are POTENTIALLY NOT idempotent, send only once
-                if (Method != MethodType.Get)
+                // For requests that are potentially not safe/idempotent, send only once
+                if (options.RetrySafeRequestsOnly && Method != MethodType.Get && Method != MethodType.Head)
                     return GetResponseImpl(options);
 
-                // For presumably idempotent requests, allow retries
+                // Otherwise, allow retries
                 Func<WebResponse> getResponseImpl = () => GetResponseImpl(options);
 
                 return getResponseImpl.Retry(options.ShouldRetry,

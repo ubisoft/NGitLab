@@ -16,6 +16,12 @@ namespace NGitLab
         public bool IsIncremental { get; set; }
 
         /// <summary>
+        /// Limits retries to safe HTTP requests (i.e. read-only and thus idempotent), such as GET and HEAD.
+        /// </summary>
+        /// <see href="https://developer.mozilla.org/en-US/docs/Glossary/Safe/HTTP"/>
+        public bool RetrySafeRequestsOnly { get; set; } = true;
+
+        /// <summary>
         /// ID or case-insensitive username of the user to impersonate, if any
         /// </summary>
         public string Sudo { get; set; }
