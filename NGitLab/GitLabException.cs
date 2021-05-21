@@ -48,5 +48,10 @@ namespace NGitLab
         /// The call that triggerred the error.
         /// </summary>
         public Uri OriginalCall { get; set; }
+
+        /// <summary>
+        /// Underlying HTTP method that triggered this exception, if any
+        /// </summary>
+        public MethodType? MethodType { get; set; }
     }
 }

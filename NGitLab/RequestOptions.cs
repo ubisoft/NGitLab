@@ -16,12 +16,6 @@ namespace NGitLab
         public bool IsIncremental { get; set; }
 
         /// <summary>
-        /// Limits retries to safe HTTP requests (i.e. read-only and thus idempotent), such as GET and HEAD.
-        /// </summary>
-        /// <see href="https://developer.mozilla.org/en-US/docs/Glossary/Safe/HTTP"/>
-        public bool RetrySafeRequestsOnly { get; set; } = true;
-
-        /// <summary>
         /// ID or case-insensitive username of the user to impersonate, if any
         /// </summary>
         public string Sudo { get; set; }
@@ -45,7 +39,24 @@ namespace NGitLab
         /// </summary>
         public virtual bool ShouldRetry(Exception ex, int retryNumber)
         {
-            return retryNumber > 0 && ex is GitLabException gitLabException && (int)gitLabException.StatusCode >= 500;
+            if (retryNumber < 1)
+                return false;
+
+            if (!(ex is GitLabException gitLabException))
+                return false;
+
+            // For requests that are potentially NOT Safe/Idempotent, do not retry
+            // See https://developer.mozilla.org/en-US/docs/Glossary/Safe/HTTP
+            // If there is no HTTP method info, carry on to the next condition below.
+            if (gitLabException.MethodType.HasValue &&
+                gitLabException.MethodType != Impl.MethodType.Get &&
+                gitLabException.MethodType != Impl.MethodType.Head)
+                return false;
+
+            // Same as what are considered Transient HTTP StatusCodes in Polly's HttpPolicyExtensions
+            // https://github.com/App-vNext/Polly.Extensions.Http/blob/69fd292bc603cb3032e57b028522737255f03a49/src/Polly.Extensions.Http/HttpPolicyExtensions.cs#L14
+            return gitLabException.StatusCode >= HttpStatusCode.InternalServerError ||
+                   gitLabException.StatusCode == HttpStatusCode.RequestTimeout;
         }
 
         public static RequestOptions Default => new RequestOptions(0, TimeSpan.Zero);

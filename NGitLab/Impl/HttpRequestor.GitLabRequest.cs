@@ -58,11 +58,6 @@ namespace NGitLab.Impl
 
             public WebResponse GetResponse(RequestOptions options)
             {
-                // For requests that are potentially not safe/idempotent, send only once
-                if (options.RetrySafeRequestsOnly && Method != MethodType.Get && Method != MethodType.Head)
-                    return GetResponseImpl(options);
-
-                // Otherwise, allow retries
                 Func<WebResponse> getResponseImpl = () => GetResponseImpl(options);
 
                 return getResponseImpl.Retry(options.ShouldRetry,
@@ -108,6 +103,7 @@ namespace NGitLab.Impl
                         ErrorObject = parsedError,
                         StatusCode = errorResponse.StatusCode,
                         ErrorMessage = errorMessage,
+                        MethodType = Method,
                     };
                 }
             }
