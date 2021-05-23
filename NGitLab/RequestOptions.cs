@@ -53,7 +53,8 @@ namespace NGitLab
             // If there is no HTTP request method specified, carry on the predicate assessment.
             if (gitLabException.MethodType.HasValue &&
                 gitLabException.MethodType != Impl.MethodType.Get &&
-                gitLabException.MethodType != Impl.MethodType.Head)
+                gitLabException.MethodType != Impl.MethodType.Head &&
+                gitLabException.MethodType != Impl.MethodType.Options)
                 return false;
 
             // Use the same Transient HTTP StatusCodes as Polly's HttpPolicyExtensions
