@@ -13,20 +13,26 @@ namespace NGitLab.Extensions
         /// <summary>
         /// Do a retry a number of time on the received action if it fails
         /// </summary>
-        public static T Retry<T>(this Func<T> action, Func<Exception, int, bool> retryWhen, TimeSpan interval, int retryNumber, bool isIncremental)
+        public static T Retry<T>(this Func<T> action, Func<Exception, int, bool> predicate, TimeSpan waitTime, int maxRetryCount, bool useExponentialBackoff)
         {
-            try
+            var retriesLeft = maxRetryCount;
+            while (true)
             {
-                return action();
-            }
-            catch (Exception ex) when (retryWhen(ex, retryNumber))
-            {
-                Logger?.Invoke($"{ex.Message} -> Internal Retry ({retryNumber - 1} attempts left)...");
+                try
+                {
+                    return action();
+                }
+                catch (Exception ex) when (predicate(ex, retriesLeft))
+                {
+                    Logger?.Invoke($"{ex.Message} -> Internal Retry in {waitTime.TotalMilliseconds} ms ({maxRetryCount - retriesLeft + 1} of {maxRetryCount})...");
 
-                Thread.Sleep(interval);
+                    Thread.Sleep(waitTime);
 
-                var nextInterval = isIncremental ? interval.Add(interval) : interval;
-                return Retry(action, retryWhen, nextInterval, --retryNumber, isIncremental);
+                    if (useExponentialBackoff)
+                        waitTime = waitTime.Add(waitTime);
+
+                    retriesLeft--;
+                }
             }
         }
     }

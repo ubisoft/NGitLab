@@ -35,19 +35,22 @@ namespace NGitLab
         }
 
         /// <summary>
-        /// By default, true if there is still retries left.
+        /// Predicate indicating, after a request has failed, if a new attempt should occur
         /// </summary>
+        /// <param name="ex">Exception thrown by the failed request</param>
+        /// <param name="retryNumber">Number of retries left</param>
+        /// <returns>Whether the request should be retried</returns>
         public virtual bool ShouldRetry(Exception ex, int retryNumber)
         {
             if (retryNumber < 1)
                 return false;
 
-            if (!(ex is GitLabException gitLabException))
+            if (ex is not GitLabException gitLabException)
                 return false;
 
             // For requests that are potentially NOT Safe/Idempotent, do not retry
             // See https://developer.mozilla.org/en-US/docs/Glossary/Safe/HTTP
-            // If there is no HTTP request method specified, carry on to the next condition below.
+            // If there is no HTTP request method specified, carry on the predicate assessment.
             if (gitLabException.MethodType.HasValue &&
                 gitLabException.MethodType != Impl.MethodType.Get &&
                 gitLabException.MethodType != Impl.MethodType.Head)
