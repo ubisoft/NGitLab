@@ -50,11 +50,27 @@ namespace NGitLab.Mock
                         var directory = TemporaryDirectory.Create();
                         if (Project.ForkedFrom == null)
                         {
+                            LibGit2Sharp.Repository.Init(directory.FullPath);
+
                             // libgit2sharp cannot init with a branch other than master
-                            using var process = Process.Start("git", $"init --initial-branch \"{Project.DefaultBranch}\" \"{directory.FullPath}\"");
+                            // Use symbolic-ref to keep the code compatible with older version of git
+                            using var process = new Process
+                            {
+                                StartInfo = new ProcessStartInfo
+                                {
+                                    FileName = "git",
+                                    Arguments = $"-C \"{directory.FullPath}\" symbolic-ref HEAD refs/heads/{Project.DefaultBranch}",
+                                    RedirectStandardError = true,
+                                },
+                            };
+
+                            process.Start();
                             process.WaitForExit();
                             if (process.ExitCode != 0)
-                                throw new GitLabException($"Cannot init repository with branch '{Project.DefaultBranch}' in '{directory.FullPath}'");
+                            {
+                                var error = process.StandardError.ReadToEnd();
+                                throw new GitLabException($"Cannot update symbolic ref with branch '{Project.DefaultBranch}' in '{directory.FullPath}': {error}");
+                            }
                         }
                         else
                         {
