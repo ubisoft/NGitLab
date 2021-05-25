@@ -59,8 +59,9 @@ namespace NGitLab.Mock
                                 StartInfo = new ProcessStartInfo
                                 {
                                     FileName = "git",
-                                    Arguments = $"-C \"{directory.FullPath}\" symbolic-ref HEAD refs/heads/{Project.DefaultBranch}",
+                                    Arguments = $"symbolic-ref HEAD \"refs/heads/{Project.DefaultBranch}\"",
                                     RedirectStandardError = true,
+                                    WorkingDirectory = directory.FullPath,
                                 },
                             };
 
