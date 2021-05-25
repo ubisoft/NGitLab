@@ -29,7 +29,9 @@ namespace NGitLab.Extensions
                     Thread.Sleep(waitTime);
 
                     if (useExponentialBackoff)
+                    {
                         waitTime = waitTime.Add(waitTime);
+                    }
 
                     retriesLeft--;
                 }
