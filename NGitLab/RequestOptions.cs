@@ -42,9 +42,6 @@ namespace NGitLab
         /// <returns>Whether the request should be retried</returns>
         public virtual bool ShouldRetry(Exception ex, int retryNumber)
         {
-            if (retryNumber < 1)
-                return false;
-
             if (ex is not GitLabException gitLabException)
                 return false;
 
