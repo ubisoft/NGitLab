@@ -74,7 +74,6 @@ namespace NGitLab
         /// <param name="pipelineId">ID of the pipeline</param>
         IEnumerable<PipelineVariable> GetVariables(int pipelineId);
 
-
         /// <summary>
         /// Get test reports for a pipeline.
         /// </summary>
