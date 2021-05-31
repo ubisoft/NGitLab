@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NGitLab.Models;
+﻿using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Mock.Tests
