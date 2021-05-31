@@ -19,6 +19,6 @@ namespace NGitLab.Models
         [DataMember(Name = "error_count")]
         public int Error_count { get; set; }
         [DataMember(Name = "test_suites")]
-        public List<TestCases> Test_cases { get; set; }
+        public List<TestCases> Test_suites { get; set; }
     }
 }
