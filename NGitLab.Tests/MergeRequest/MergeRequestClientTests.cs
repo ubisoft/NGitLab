@@ -29,7 +29,7 @@ namespace NGitLab.Tests
                     TimeSpan.FromSeconds(120))
                 .ConfigureAwait(false);
 
-            Assert.IsFalse(context.Client.GetRepository(project.Id).Branches[mergeRequest.SourceBranch].Protected, "The source branch is protected, but is should not");
+            Assert.IsFalse(context.Client.GetRepository(project.Id).Branches[mergeRequest.SourceBranch].Protected, "The source branch is protected but should not be");
 
             TestContext.Out.WriteLine("MR is ready to be merged");
             AcceptMergeRequest(mergeRequestClient, mergeRequest);

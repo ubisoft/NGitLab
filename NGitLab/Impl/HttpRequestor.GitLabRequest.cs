@@ -103,6 +103,7 @@ namespace NGitLab.Impl
                         ErrorObject = parsedError,
                         StatusCode = errorResponse.StatusCode,
                         ErrorMessage = errorMessage,
+                        MethodType = Method,
                     };
                 }
             }
