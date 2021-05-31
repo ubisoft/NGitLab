@@ -16,6 +16,6 @@ namespace NGitLab.Models
         public IDictionary<string, string> Variables { get; } = new Dictionary<string, string>(StringComparer.Ordinal);
 
         [DataMember(Name = "testreports")]
-        public TestReports TestReports { get; set; } = new TestReports();
+        public TestReports TestReports { get; set; }
     }
 }
