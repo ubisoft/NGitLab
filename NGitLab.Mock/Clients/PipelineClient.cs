@@ -93,6 +93,16 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public IEnumerable<TestReports> GetTestReports(int pipelineId)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var pipeline = project.Pipelines.GetById(pipelineId);
+                return pipeline.TestReports;
+            }
+        }
+
         public Models.Job[] GetJobs(int pipelineId)
         {
             using (Context.BeginOperationScope())
