@@ -124,17 +124,15 @@ namespace NGitLab.Tests
 
             // Assert
             var testReports = pipelineClient.GetTestReports(pipeline.Id);
-
-            foreach(TestReports testReportInfo in testReports)
-            {
-                Assert.AreEqual(1, testReportInfo.Total_time);
-                Assert.AreEqual(1, testReportInfo.Total_count);
-                Assert.AreEqual(1, testReportInfo.Success_count);
-                Assert.AreEqual(1, testReportInfo.Failed_count);
-                Assert.AreEqual(0, testReportInfo.Skipped_count);
-                Assert.AreEqual(0, testReportInfo.Error_count);
-                Assert.IsNull(testReportInfo.Test_suites);
-            }
+            
+            Assert.IsTrue(testReports.Any(v =>
+                v.Total_time.Equals(1) &&
+                v.Total_count.Equals(1) &&
+                v.Success_count.Equals(1) &&
+                v.Failed_count.Equals(1) &&
+                v.Skipped_count.Equals(0) &&
+                v.Error_count.Equals(0) &&
+                v.Test_suites.Equals(null)));
         }
 
         [Test]
