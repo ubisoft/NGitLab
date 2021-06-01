@@ -124,6 +124,7 @@ namespace NGitLab.Tests
 
             // Assert
             var testReports = pipelineClient.GetTestReports(pipeline.Id);
+            Assert.IsNotNull(testReports);
 
             var totalTime = testReports.Select(x => x.Total_time);
             var totalCount = testReports.Select(x => x.Total_count);
