@@ -124,15 +124,28 @@ namespace NGitLab.Tests
 
             // Assert
             var testReports = pipelineClient.GetTestReports(pipeline.Id);
-            Assert.IsNotNull(testReports);
+            Assert.NotNull(testReports);
 
             var totalTime = testReports.Select(x => x.Total_time).First();
+            Assert.NotNull(totalTime);
+
             var totalCount = testReports.Select(x => x.Total_count).First();
+            Assert.NotNull(totalCount);
+
             var successCount = testReports.Select(x => x.Success_count).First();
+            Assert.NotNull(successCount);
+
             var failedCount = testReports.Select(x => x.Failed_count).First();
+            Assert.NotNull(failedCount);
+
             var skippedCount = testReports.Select(x => x.Skipped_count).First();
+            Assert.NotNull(skippedCount);
+
             var errorCount = testReports.Select(x => x.Error_count).First();
+            Assert.NotNull(errorCount);
+
             var testSuites = testReports.Select(x => x.Test_suites).First();
+            Assert.IsNull(testSuites);
 
             Assert.AreEqual(1, totalTime);
             Assert.AreEqual(1, totalCount);
@@ -140,7 +153,6 @@ namespace NGitLab.Tests
             Assert.AreEqual(1, failedCount);
             Assert.AreEqual(0, skippedCount);
             Assert.AreEqual(0, errorCount);
-            Assert.IsNull(testSuites);
         }
 
         [Test]
