@@ -7,7 +7,7 @@ namespace NGitLab.Models
     public class TestReports
     {
         [DataMember(Name = "total_time")]
-        public int Total_time { get; set; } 
+        public int Total_time { get; set; }
 
         [DataMember(Name = "total_count")]
         public int Total_count { get; set; }
