@@ -46,12 +46,37 @@ namespace NGitLab.Models
         public PushData PushData { get; set; }
 
         /// <summary>
+        /// The target is either a gitlab object (like a merge request)
+        /// or a commit object
+        /// </summary>
+        public string ResolvedTargetTitle
+        {
+            get
+            {
+                if (TargetTitle != null)
+                    return $"{TargetType} '{TargetTitle}'";
+
+                if (PushData != null)
+                {
+                    return $"{PushData.RefType} '{PushData.Ref}'";
+                }
+
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
         /// Debug display
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{AuthorUserName} {Action} {TargetType} {GetAge(CreatedAt)}";
+            return ToString(ProjectId.ToString());
+        }
+
+        public string ToString(string projectName)
+        {
+            return $"{AuthorUserName} {Action} {ResolvedTargetTitle} at {projectName} ({GetAge(CreatedAt)})";
         }
 
         private static string GetAge(DateTime date)
@@ -59,12 +84,12 @@ namespace NGitLab.Models
             var age = DateTime.Now.Subtract(date);
 
             if (age.TotalDays > 1)
-                return $"{age.TotalDays:0.0} days ago";
+                return $"{age.TotalDays:0} days ago";
 
             if (age.TotalHours > 1)
-                return $"{age.Hours:0.0} hours ago";
+                return $"{age.Hours:0} hours ago";
 
-            return $"{age.Minutes:0.0} minutes ago";
+            return $"{age.Minutes:0} minutes ago";
         }
     }
 }
