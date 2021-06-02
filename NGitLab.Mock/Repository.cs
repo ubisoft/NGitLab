@@ -61,6 +61,7 @@ namespace NGitLab.Mock
                                     FileName = "git",
                                     Arguments = $"symbolic-ref HEAD \"refs/heads/{Project.DefaultBranch}\"",
                                     RedirectStandardError = true,
+                                    UseShellExecute = false,
                                     WorkingDirectory = directory.FullPath,
                                 },
                             };
