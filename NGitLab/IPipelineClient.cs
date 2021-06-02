@@ -78,6 +78,6 @@ namespace NGitLab
         /// Get test reports for a pipeline.
         /// </summary>
         /// <param name="pipelineId">ID of the pipeline</param>
-        TestReports GetTestReports(int pipelineId);
+        TestReport GetTestReports(int pipelineId);
     }
 }

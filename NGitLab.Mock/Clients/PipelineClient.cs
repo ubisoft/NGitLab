@@ -93,7 +93,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public TestReports GetTestReports(int pipelineId)
+        public TestReport GetTestReports(int pipelineId)
         {
             using (Context.BeginOperationScope())
             {

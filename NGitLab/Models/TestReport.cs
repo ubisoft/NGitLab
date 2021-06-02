@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace NGitLab.Models
 {
     [DataContract]
-    public class TestReports
+    public class TestReport
     {
         [DataMember(Name = "total_time")]
         public int TotalTime { get; set; }
