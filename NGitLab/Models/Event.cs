@@ -83,7 +83,7 @@ namespace NGitLab.Models
 
         private static string GetAge(DateTime date)
         {
-            var age = DateTime.Now.Subtract(date);
+            var age = DateTime.UtcNow.Subtract(date);
 
             if (age.TotalDays > 1)
                 return $"{age.TotalDays:0} days ago";
