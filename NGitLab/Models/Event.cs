@@ -54,7 +54,9 @@ namespace NGitLab.Models
             get
             {
                 if (TargetTitle != null)
+                {
                     return $"{TargetType} '{TargetTitle}'";
+                }
 
                 if (PushData != null)
                 {
