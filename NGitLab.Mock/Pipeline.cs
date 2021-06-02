@@ -45,7 +45,7 @@ namespace NGitLab.Mock
 
         public IEnumerable<PipelineVariable> Variables { get; set; }
 
-        public IEnumerable<TestReports> TestReports { get; set; }
+        public TestReports TestReports { get; set; }
 
         public Job AddNewJob(Project project)
         {

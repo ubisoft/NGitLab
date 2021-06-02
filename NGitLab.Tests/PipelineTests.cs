@@ -110,49 +110,18 @@ namespace NGitLab.Tests
             var pipeline = pipelineClient.Create(new PipelineCreate()
             {
                 Ref = project.DefaultBranch,
-                TestReports =
-                {
-                    Total_time = 1,
-                    Total_count = 1,
-                    Success_count = 1,
-                    Failed_count = 1,
-                    Skipped_count = 0,
-                    Error_count = 0,
-                    Test_suites = null,
-                },
             });
 
             // Assert
             var testReports = pipelineClient.GetTestReports(pipeline.Id);
             Assert.NotNull(testReports);
 
-            var totalTime = testReports.Select(x => x.Total_time).First();
-            Assert.NotNull(totalTime);
-
-            var totalCount = testReports.Select(x => x.Total_count).First();
-            Assert.NotNull(totalCount);
-
-            var successCount = testReports.Select(x => x.Success_count).First();
-            Assert.NotNull(successCount);
-
-            var failedCount = testReports.Select(x => x.Failed_count).First();
-            Assert.NotNull(failedCount);
-
-            var skippedCount = testReports.Select(x => x.Skipped_count).First();
-            Assert.NotNull(skippedCount);
-
-            var errorCount = testReports.Select(x => x.Error_count).First();
-            Assert.NotNull(errorCount);
-
-            var testSuites = testReports.Select(x => x.Test_suites).First();
-            Assert.IsNull(testSuites);
-
-            Assert.AreEqual(1, totalTime);
-            Assert.AreEqual(1, totalCount);
-            Assert.AreEqual(1, successCount);
-            Assert.AreEqual(1, failedCount);
-            Assert.AreEqual(0, skippedCount);
-            Assert.AreEqual(0, errorCount);
+            Assert.AreEqual(1, testReports.Total_time);
+            Assert.AreEqual(1, testReports.Total_count);
+            Assert.AreEqual(1, testReports.Success_count);
+            Assert.AreEqual(1, testReports.Failed_count);
+            Assert.AreEqual(0, testReports.Skipped_count);
+            Assert.AreEqual(0, testReports.Error_count);
         }
 
         [Test]

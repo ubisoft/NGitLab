@@ -64,7 +64,6 @@ namespace NGitLab.Mock.Clients
                 var project = GetProject(_projectId, ProjectPermission.View);
                 var pipeline = project.Pipelines.Add(createOptions.Ref, JobStatus.Running, Context.User);
                 pipeline.Variables = createOptions.Variables.Select(v => new PipelineVariable { Key = v.Key, Value = v.Value });
-                pipeline.TestReports = null;
                 return pipeline.ToPipelineClient();
             }
         }
@@ -94,7 +93,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public IEnumerable<TestReports> GetTestReports(int pipelineId)
+        public TestReports GetTestReports(int pipelineId)
         {
             using (Context.BeginOperationScope())
             {

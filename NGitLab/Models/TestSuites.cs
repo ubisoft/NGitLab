@@ -10,24 +10,24 @@ namespace NGitLab.Models
         public string Name { get; set; }
 
         [DataMember(Name = "total_time")]
-        public int Total_time { get; set; }
+        public int TotalTime { get; set; }
 
         [DataMember(Name = "total_count")]
-        public int Total_count { get; set; }
+        public int TotalCount { get; set; }
 
         [DataMember(Name = "success_count")]
-        public int Success_count { get; set; }
+        public int SuccessCount { get; set; }
 
         [DataMember(Name = "failed_count")]
-        public int Failed_count { get; set; }
+        public int FailedCount { get; set; }
 
         [DataMember(Name = "skipped_count")]
-        public int Skipped_count { get; set; }
+        public int SkippedCount { get; set; }
 
         [DataMember(Name = "error_count")]
-        public int Error_count { get; set; }
+        public int ErrorCount { get; set; }
 
         [DataMember(Name = "test_cases")]
-        public List<TestCases> Test_cases { get; set; }
+        public TestCases[] TestCases { get; set; }
     }
 }

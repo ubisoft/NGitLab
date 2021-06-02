@@ -15,12 +15,12 @@ namespace NGitLab.Models
         public string Classname { get; set; }
 
         [DataMember(Name = "execution_time")]
-        public int Execution_time { get; set; }
+        public int ExecutionTime { get; set; }
 
         [DataMember(Name = "system_ouput")]
-        public string System_output { get; set; }
+        public string SystemOutput { get; set; }
 
         [DataMember(Name = "stack_trace")]
-        public string Strack_trace { get; set; }
+        public string StrackTrace { get; set; }
     }
 }
