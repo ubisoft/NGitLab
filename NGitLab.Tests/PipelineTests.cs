@@ -116,12 +116,13 @@ namespace NGitLab.Tests
             var testReports = pipelineClient.GetTestReports(pipeline.Id);
             Assert.NotNull(testReports);
 
-            Assert.AreEqual(1, testReports.Total_time);
-            Assert.AreEqual(1, testReports.Total_count);
-            Assert.AreEqual(1, testReports.Success_count);
-            Assert.AreEqual(1, testReports.Failed_count);
-            Assert.AreEqual(0, testReports.Skipped_count);
-            Assert.AreEqual(0, testReports.Error_count);
+            Assert.AreEqual(0, testReports.TotalTime);
+            Assert.AreEqual(0, testReports.TotalCount);
+            Assert.AreEqual(0, testReports.SuccessCount);
+            Assert.AreEqual(0, testReports.FailedCount);
+            Assert.AreEqual(0, testReports.SkippedCount);
+            Assert.AreEqual(0, testReports.ErrorCount);
+            Assert.IsEmpty(testReports.TestSuites);
         }
 
         [Test]
