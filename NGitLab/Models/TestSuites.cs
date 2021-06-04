@@ -28,6 +28,6 @@ namespace NGitLab.Models
         public int ErrorCount { get; set; }
 
         [DataMember(Name = "test_cases")]
-        public TestCases[] TestCases { get; set; }
+        public IReadOnlyCollection<TestCases> TestCases { get; set; }
     }
 }
