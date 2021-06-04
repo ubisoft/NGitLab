@@ -122,7 +122,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(0, testReports.FailedCount);
             Assert.AreEqual(0, testReports.SkippedCount);
             Assert.AreEqual(0, testReports.ErrorCount);
-            Assert.IsEmpty(testReports.TestSuites);
+            Assert.IsNull(testReports.TestSuites);
         }
 
         [Test]
