@@ -99,6 +99,33 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        public async Task Test_create_pipeline_with_testreports()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var pipelineClient = context.Client.GetPipelines(project.Id);
+            JobTests.AddGitLabCiFile(context.Client, project);
+
+            // Arrange/Act
+            var pipeline = pipelineClient.Create(new PipelineCreate()
+            {
+                Ref = project.DefaultBranch,
+            });
+
+            // Assert
+            var testReports = pipelineClient.GetTestReports(pipeline.Id);
+            Assert.NotNull(testReports);
+
+            Assert.AreEqual(0, testReports.TotalTime);
+            Assert.AreEqual(0, testReports.TotalCount);
+            Assert.AreEqual(0, testReports.SuccessCount);
+            Assert.AreEqual(0, testReports.FailedCount);
+            Assert.AreEqual(0, testReports.SkippedCount);
+            Assert.AreEqual(0, testReports.ErrorCount);
+            Assert.IsEmpty(testReports.TestSuites);
+        }
+
+        [Test]
         public async Task Test_get_triggered_pipeline_variables()
         {
             using var context = await GitLabTestContext.CreateAsync();

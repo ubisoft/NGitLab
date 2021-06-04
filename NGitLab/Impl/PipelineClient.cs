@@ -118,5 +118,10 @@ namespace NGitLab.Impl
         {
             return _api.Get().GetAll<PipelineVariable>($"{_projectPath}/pipelines/{pipelineId}/variables");
         }
+
+        public TestReport GetTestReports(int pipelineId)
+        {
+            return _api.Get().To<TestReport>($"{_projectPath}/pipelines/{pipelineId}/test_report");
+        }
     }
 }
