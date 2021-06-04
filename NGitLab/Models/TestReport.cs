@@ -25,6 +25,6 @@ namespace NGitLab.Models
         public int ErrorCount { get; set; }
 
         [DataMember(Name = "test_suites")]
-        public TestSuites[] TestSuites { get; set; }
+        public IReadOnlyCollection<TestSuites> TestSuites { get; set; }
     }
 }
