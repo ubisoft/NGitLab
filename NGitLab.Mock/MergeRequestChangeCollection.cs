@@ -10,6 +10,7 @@ namespace NGitLab.Mock
         {
         }
 
+        [Obsolete("Use Add(string diff, string oldPath, string newPath, ChangeKind? changeKind) instead")]
         public Change Add(string diff)
         {
             return Add(diff, oldPath: null, newPath: null, changeKind: null);
@@ -25,9 +26,9 @@ namespace NGitLab.Mock
                 Diff = diff,
                 NewPath = newPath,
                 OldPath = oldPath,
-                DeletedFile = changeKind.HasValue && changeKind.Value == ChangeKind.Deleted,
-                NewFile = changeKind.HasValue && changeKind.Value == ChangeKind.Added,
-                RenamedFile = changeKind.HasValue && changeKind.Value == ChangeKind.Renamed,
+                DeletedFile = changeKind == ChangeKind.Deleted,
+                NewFile = changeKind == ChangeKind.Added,
+                RenamedFile = changeKind == ChangeKind.Renamed,
             };
 
             Add(change);
