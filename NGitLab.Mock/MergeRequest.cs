@@ -80,13 +80,12 @@ namespace NGitLab.Mock
         {
             get
             {
-                var tipCommit = SourceProject.Repository.GetBranchTipCommit(SourceBranch);
                 var stats = Project.Repository.GetBranchFullPatch(SourceBranch);
                 var changes = new MergeRequestChangeCollection(this);
                 foreach (var stat in stats)
                 {
-                    var diff = stat.Patch.Substring(stat.Patch.IndexOf("@@", StringComparison.InvariantCulture));
-                    changes.Add(diff);
+                    var diff = stat.Patch.Substring(stat.Patch.IndexOf("@@", StringComparison.Ordinal));
+                    changes.Add(diff, stat.OldPath, stat.Path, stat.Status);
                 }
 
                 return changes;
