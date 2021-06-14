@@ -57,6 +57,10 @@ namespace NGitLab.Mock
 
         public string WebUrl => Server.MakeUrl(PathWithNamespace);
 
+        public string SshUrl => Repository.FullPath;
+
+        public string HttpUrl => Repository.FullPath;
+
         public VisibilityLevel Visibility { get; set; }
 
         public Project ForkedFrom { get; internal set; }
@@ -316,8 +320,8 @@ namespace NGitLab.Mock
                 PathWithNamespace = PathWithNamespace,
                 ForkedFromProject = ForkedFrom?.ToClientProject(),
                 ImportStatus = ImportStatus,
-                SshUrl = Repository.FullPath,
-                HttpUrl = Repository.FullPath,
+                HttpUrl = HttpUrl,
+                SshUrl = SshUrl,
                 DefaultBranch = DefaultBranch,
                 VisibilityLevel = Visibility,
                 Namespace = new Namespace() { FullPath = Group.PathWithNameSpace, Id = Group.Id, Kind = kind, Name = Group.Name, Path = Group.Path },
