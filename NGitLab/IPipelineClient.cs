@@ -35,6 +35,11 @@ namespace NGitLab
         Job[] GetJobs(int pipelineId);
 
         /// <summary>
+        /// Returns the jobs of a pipeline.
+        /// </summary>
+        Job[] GetJobs(PipelineGetJobsQuery query);
+
+        /// <summary>
         /// Create a new pipeline.
         /// </summary>
         /// <param name="ref">Reference to commit</param>
