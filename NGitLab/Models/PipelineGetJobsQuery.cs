@@ -14,6 +14,6 @@ namespace NGitLab.Models
 
         public string[] Scope { get; set; }
 
-        public bool IncludeRetried { get; set; }
+        public bool? IncludeRetried { get; set; }
     }
 }
