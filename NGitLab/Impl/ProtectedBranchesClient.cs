@@ -1,4 +1,5 @@
-﻿using NGitLab.Models;
+﻿using System;
+using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
