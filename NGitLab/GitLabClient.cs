@@ -191,5 +191,8 @@ namespace NGitLab
         {
             return new ProjectLevelApprovalRulesClient(_api, projectId);
         }
+
+        public IProtectedBranchesClient GetProtectedBranchesClient(int projectId)
+            => new ProtectedBranchesClient(_api, projectId);
     }
 }

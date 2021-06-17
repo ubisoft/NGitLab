@@ -19,5 +19,6 @@ namespace NGitLab.Models
         /// Only valid for groups.
         /// </summary>
         Owner = 50,
+        NoAccess = 0,
     }
 }
