@@ -111,6 +111,15 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public IEnumerable<Models.Job> GetJobs(PipelineJobsQuery query)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var jobs = _jobClient.GetJobs(JobScopeMask.All).Where(j => j.Pipeline.Id == query.PipelineId);
+                return !query.Scope.Any() ? jobs : jobs.Where(j => query.Scope.Contains(j.Status.ToString(), StringComparer.Ordinal));
+            }
+        }
+
         [Obsolete("Use JobClient.GetJobs() instead")]
         public IEnumerable<Models.Job> GetJobsInProject(JobScope scope)
         {
