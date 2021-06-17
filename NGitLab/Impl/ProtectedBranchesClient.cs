@@ -22,7 +22,7 @@ namespace NGitLab.Impl
             => _api.Delete().Execute($"{_protectedBranchesUrl}/{branchName}");
 
         public ProtectedBranch GetProtectedBranch(string branchName)
-            => _api.Get().To<ProtectedBranch>($"{_protectedBranchesUrl}/{branchName}");
+            => _api.Get().To<ProtectedBranch>($"{_protectedBranchesUrl}/{Uri.EscapeDataString(branchName)}");
 
         public ProtectedBranch GetProtectedBranches(string search)
         {
