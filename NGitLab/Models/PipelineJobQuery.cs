@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace NGitLab.Models
 {
     [DataContract]
-    public class PipelineJobsQuery
+    public class PipelineJobQuery
     {
         [Required]
         [DataMember(Name = "id")]
