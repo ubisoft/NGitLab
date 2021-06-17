@@ -111,7 +111,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public IEnumerable<Models.Job> GetJobs(PipelineGetJobsQuery query)
+        public IEnumerable<Models.Job> GetJobs(PipelineJobsQuery query)
         {
             using (Context.BeginOperationScope())
             {

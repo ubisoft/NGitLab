@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
     [DataContract]
-    public class PipelineGetJobsQuery
+    public class PipelineJobsQuery
     {
         [Required]
         [DataMember(Name = "id")]

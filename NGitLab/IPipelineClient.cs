@@ -37,7 +37,7 @@ namespace NGitLab
         /// <summary>
         /// Returns the jobs of a pipeline.
         /// </summary>
-        IEnumerable<Job> GetJobs(PipelineGetJobsQuery query);
+        IEnumerable<Job> GetJobs(PipelineJobsQuery query);
 
         /// <summary>
         /// Create a new pipeline.

@@ -46,7 +46,7 @@ namespace NGitLab.Impl
             return jobs;
         }
 
-        public IEnumerable<Job> GetJobs(PipelineGetJobsQuery query)
+        public IEnumerable<Job> GetJobs(PipelineJobsQuery query)
         {
             var url = $"{_pipelinesPath}/{query.PipelineId}/jobs";
             url = Utils.AddParameter(url, "scope", query.Scope);
