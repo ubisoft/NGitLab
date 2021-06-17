@@ -19,7 +19,7 @@ namespace NGitLab.Impl
             => _api.Post().With(branchProtect).To<ProtectedBranch>(_protectedBranchesUrl);
 
         public void UnprotectBranch(string branchName)
-            => _api.Delete().Execute($"{_protectedBranchesUrl}/{branchName}");
+            => _api.Delete().Execute($"{_protectedBranchesUrl}/{Uri.EscapeDataString(branchName)}");
 
         public ProtectedBranch GetProtectedBranch(string branchName)
             => _api.Get().To<ProtectedBranch>($"{_protectedBranchesUrl}/{Uri.EscapeDataString(branchName)}");
