@@ -6,6 +6,8 @@ namespace NGitLab
     {
         ProtectedBranch ProtectBranch(BranchProtect branchProtect);
 
+        void UnprotectBranch(string branchName);
+
         ProtectedBranch GetProtectedBranch(string branchName);
 
         ProtectedBranch GetProtectedBranches(string search);
