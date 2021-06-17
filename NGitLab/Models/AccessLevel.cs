@@ -8,6 +8,7 @@ namespace NGitLab.Models
     /// <remarks>https://github.com/gitlabhq/gitlabhq/blob/master/doc/api/members.md</remarks>
     public enum AccessLevel
     {
+        NoAccess = 0,
         Guest = 10,
         Reporter = 20,
         Developer = 30,
@@ -19,6 +20,6 @@ namespace NGitLab.Models
         /// Only valid for groups.
         /// </summary>
         Owner = 50,
-        NoAccess = 0,
+        Admin = 60,
     }
 }
