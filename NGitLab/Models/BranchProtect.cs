@@ -5,8 +5,13 @@ namespace NGitLab.Models
     [DataContract]
     public class BranchProtect
     {
+        public BranchProtect(string branchName)
+        {
+            BranchName = branchName;
+        }
+
         [DataMember(Name = "name")]
-        public string Name { get; set; }
+        public string BranchName { get; set; }
 
         [DataMember(Name = "push_access_level")]
         public AccessLevel? PushAccessLevel { get; set; } = null;
