@@ -1,14 +1,66 @@
 ﻿using System;
-using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using NGitLab.Impl;
 using NGitLab.Models;
+using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
     public class ProtectedBranchTests
     {
+        [Test]
+        public async Task ProtectBranch_Test()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var branchClient = context.Client.GetRepository(project.Id).Branches;
+            var branch = branchClient.Create(new BranchCreate() { Name = "protectedBranch" });
+            var protectedBranchClient = context.Client.GetProtectedBranchClient(project.Id);
+            var branchProtect = new BranchProtect(branch.Name)
+            {
+                PushAccessLevel = AccessLevel.Maintainer,
+                MergeAccessLevel = AccessLevel.NoAccess,
+                UnprotectAccessLevel = null,
+                AllowForcePush = false,
+                AllowedToPush = new AccessLevelInfo[]
+                {
+                    new AccessLevelInfo()
+                    {
+                        AccessLevel = AccessLevel.Admin,
+                        Description = "Admin",
+                    },
+                },
+                AllowedToUnprotect = new AccessLevelInfo[]
+                {
+                    new AccessLevelInfo()
+                    {
+                        AccessLevel = AccessLevel.NoAccess,
+                        Description = "Example",
+                    },
+                },
+                CodeOwnerApprovalRequired = false,
+            };
+
+            Assert.IsTrue(CompareProtectedBranchWithBranchProtect(branchProtect, protectedBranchClient.ProtectBranch(branchProtect)));
+            Assert.IsTrue(CompareProtectedBranchWithBranchProtect(branchProtect, protectedBranchClient.GetProtectedBranch(branch.Name)));
+            Assert.IsNotEmpty(protectedBranchClient.GetProtectedBranches());
+            Assert.IsNotEmpty(protectedBranchClient.GetProtectedBranches(branch.Name));
+            Assert.IsTrue(CompareProtectedBranchWithBranchProtect(branchProtect, protectedBranchClient.GetProtectedBranches(branch.Name)[0]));
+
+            protectedBranchClient.UnprotectBranch(branch.Name);
+
+            Assert.IsEmpty(protectedBranchClient.GetProtectedBranches(branch.Name));
+        }
+
+        private bool CompareProtectedBranchWithBranchProtect(BranchProtect branchProtect, ProtectedBranch protectedBranch)
+            => string.Equals(branchProtect.BranchName, protectedBranch.Name, StringComparison.Ordinal)
+            && branchProtect.PushAccessLevel == protectedBranch.PushAccessLevels[0].AccessLevel
+            && branchProtect.MergeAccessLevel == protectedBranch.MergeAccessLevels[0].AccessLevel
+            && branchProtect.AllowForcePush == protectedBranch.AllowForcePush
+            && branchProtect.CodeOwnerApprovalRequired == protectedBranch.CodeOwnerApprovalRequired);
+
         [Test]
         public void DeserializeProtectedBranch_Test()
         {
