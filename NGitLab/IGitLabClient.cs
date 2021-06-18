@@ -80,6 +80,6 @@
 
         IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId);
 
-        IProtectedBranchClient GetProtectedBranchesClient(int projectId);
+        IProtectedBranchClient GetProtectedBranchClient(int projectId);
     }
 }
