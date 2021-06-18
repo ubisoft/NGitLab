@@ -13,7 +13,7 @@ namespace NGitLab.Tests
         [Test]
         public async Task ProtectBranch_Test()
         {
-            using var context = await GitLabTestContext.CreateAsync();
+            using var context = await GitLabTestContext.CreateAsync(initializeWithCommits: true);
             var project = context.CreateProject();
             var branchClient = context.Client.GetRepository(project.Id).Branches;
             var branch = branchClient.Create(new BranchCreate() { Name = "protectedBranch", Ref = project.DefaultBranch });
