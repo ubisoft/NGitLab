@@ -2,7 +2,7 @@
 
 namespace NGitLab
 {
-    public interface IProtectedBranchesClient
+    public interface IProtectedBranchClient
     {
         ProtectedBranch ProtectBranch(BranchProtect branchProtect);
 

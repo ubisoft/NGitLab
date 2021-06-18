@@ -3,13 +3,13 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
-    internal sealed class ProtectedBranchesClient : IProtectedBranchesClient
+    internal sealed class ProtectedBranchClient : IProtectedBranchClient
     {
         private readonly API _api;
         private readonly int _projectId;
         private readonly string _protectedBranchesUrl;
 
-        public ProtectedBranchesClient(API api, int projectId)
+        public ProtectedBranchClient(API api, int projectId)
         {
             _api = api;
             _projectId = projectId;
