@@ -16,7 +16,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var branchClient = context.Client.GetRepository(project.Id).Branches;
-            var branch = branchClient.Create(new BranchCreate() { Name = "protectedBranch" });
+            var branch = branchClient.Create(new BranchCreate() { Name = "protectedBranch", Ref = project.DefaultBranch });
             var protectedBranchClient = context.Client.GetProtectedBranchClient(project.Id);
             var branchProtect = new BranchProtect(branch.Name)
             {
