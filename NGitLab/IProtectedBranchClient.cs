@@ -10,6 +10,6 @@ namespace NGitLab
 
         ProtectedBranch GetProtectedBranch(string branchName);
 
-        ProtectedBranch GetProtectedBranches(string search);
+        ProtectedBranch[] GetProtectedBranches(string search);
     }
 }

@@ -25,7 +25,7 @@ namespace NGitLab.Impl
         public ProtectedBranch GetProtectedBranch(string branchName)
             => _api.Get().To<ProtectedBranch>($"{_protectedBranchesUrl}/{Uri.EscapeDataString(branchName)}");
 
-        public ProtectedBranch GetProtectedBranches(string search)
-            => _api.Get().To<ProtectedBranch>(Utils.AddParameter(_protectedBranchesUrl, "search", search));
+        public ProtectedBranch[] GetProtectedBranches(string search)
+            => _api.Get().To<ProtectedBranch[]>(Utils.AddParameter(_protectedBranchesUrl, "search", search));
     }
 }
