@@ -84,7 +84,7 @@
 
         public IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId) => new ProjectLevelApprovalRulesClient(Context, projectId);
 
-        public IProtectedBranchClient GetProtectedBranchesClient(int projectId)
+        public IProtectedBranchClient GetProtectedBranchClient(int projectId)
         {
             throw new System.NotImplementedException();
         }
