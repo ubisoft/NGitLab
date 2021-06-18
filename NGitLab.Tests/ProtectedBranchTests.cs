@@ -23,7 +23,7 @@ namespace NGitLab.Tests
                 PushAccessLevel = AccessLevel.Maintainer,
                 MergeAccessLevel = AccessLevel.NoAccess,
                 UnprotectAccessLevel = null,
-                AllowForcePush = false,
+                AllowForcePush = true,
                 AllowedToPush = new AccessLevelInfo[]
                 {
                     new AccessLevelInfo()
@@ -40,7 +40,7 @@ namespace NGitLab.Tests
                         Description = "Example",
                     },
                 },
-                CodeOwnerApprovalRequired = false,
+                CodeOwnerApprovalRequired = true,
             };
 
             Assert.IsTrue(CompareProtectedBranchWithBranchProtect(branchProtect, protectedBranchClient.ProtectBranch(branchProtect)));
@@ -59,7 +59,7 @@ namespace NGitLab.Tests
             && branchProtect.PushAccessLevel == protectedBranch.PushAccessLevels[0].AccessLevel
             && branchProtect.MergeAccessLevel == protectedBranch.MergeAccessLevels[0].AccessLevel
             && branchProtect.AllowForcePush == protectedBranch.AllowForcePush
-            && branchProtect.CodeOwnerApprovalRequired == protectedBranch.CodeOwnerApprovalRequired);
+            && branchProtect.CodeOwnerApprovalRequired == protectedBranch.CodeOwnerApprovalRequired;
 
         [Test]
         public void DeserializeProtectedBranch_Test()
