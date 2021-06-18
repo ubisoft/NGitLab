@@ -11,8 +11,11 @@ namespace NGitLab.Models
         [DataMember(Name = "name")]
         public string Name { get; set; }
 
+        [DataMember(Name = "push_access_levels")]
+        public AccessLevelInfo[] PushAccessLevels { get; set; }
+
         [DataMember(Name = "merge_access_levels")]
-        public AccessLevelInfo[] AccessLevels { get; set; }
+        public AccessLevelInfo[] MergeAccessLevels { get; set; }
 
         [DataMember(Name = "allow_force_push")]
         public bool AllowForcePush { get; set; }
