@@ -83,5 +83,10 @@
         public IWikiClient GetWikiClient(int projectId) => new WikiClient(Context, projectId);
 
         public IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId) => new ProjectLevelApprovalRulesClient(Context, projectId);
+
+        public IProtectedBranchClient GetProtectedBranchClient(int projectId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
