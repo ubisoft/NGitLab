@@ -66,7 +66,6 @@ namespace NGitLab.Tests
             Assert.AreEqual(branchProtect.PushAccessLevel, protectedBranch.PushAccessLevels[0].AccessLevel);
             Assert.AreEqual(branchProtect.MergeAccessLevel, protectedBranch.MergeAccessLevels[0].AccessLevel);
             Assert.AreEqual(branchProtect.AllowForcePush, protectedBranch.AllowForcePush);
-            Assert.AreEqual(branchProtect.CodeOwnerApprovalRequired, protectedBranch.CodeOwnerApprovalRequired);
         }
 
         [Test]
