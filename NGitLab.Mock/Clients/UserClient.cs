@@ -111,6 +111,14 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public IEnumerable<Models.User> Get(UserQuery query)
+        {
+            using (Context.BeginOperationScope())
+            {
+                return Server.Users.Get(query).Select(user => user.ToClientUser());
+            }
+        }
+
         public IEnumerable<Models.User> Search(string query)
         {
             using (Context.BeginOperationScope())

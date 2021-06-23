@@ -11,7 +11,7 @@
         public JobScopeMask Scope { get; set; }
 
         /// <summary>
-        /// Specifies how many job records per page (GitLab supports a maximum of 100 jobs and defaults to 20)
+        /// Specifies how many records per page (GitLab supports a maximum of 100 items per page and defaults to 20).
         /// </summary>
         public int? PerPage { get; set; }
     }

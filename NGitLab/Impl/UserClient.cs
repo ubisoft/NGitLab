@@ -20,6 +20,23 @@ namespace NGitLab.Impl
 
         public IEnumerable<User> Get(string username) => _api.Get().GetAll<User>(User.Url + "?username=" + username);
 
+        public IEnumerable<User> Get(UserQuery query)
+        {
+            var url = User.Url;
+
+            url = Utils.AddParameter(url, "active", query.IsActive);
+            url = Utils.AddParameter(url, "blocked", query.IsBlocked);
+            url = Utils.AddParameter(url, "external", query.IsExternal);
+            url = Utils.AddParameter(url, "exclude_external", query.ExcludeExternal);
+            url = Utils.AddParameter(url, "username", query.Username);
+            url = Utils.AddParameter(url, "search", query.Search);
+            url = Utils.AddParameter(url, "per_page", query.PerPage);
+            url = Utils.AddParameter(url, "order_by", query.OrderBy);
+            url = Utils.AddParameter(url, "sort", query.Sort);
+
+            return _api.Get().GetAll<User>(url);
+        }
+
         public User Create(UserUpsert user) => _api.Post().With(user).To<User>(User.Url);
 
         public UserToken CreateToken(UserTokenCreate tokenRequest) => _api.Post().With(tokenRequest).To<UserToken>(User.Url + "/" + tokenRequest.UserId + "/impersonation_tokens");

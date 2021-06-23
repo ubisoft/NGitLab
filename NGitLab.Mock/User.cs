@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using NGitLab.Models;
 
 namespace NGitLab.Mock
 {
@@ -27,6 +28,10 @@ namespace NGitLab.Mock
 
         public UserState State { get; set; }
 
+        public DateTime CreatedAt { get; set; }
+
+        public Identity[] Identities { get; set; } = Array.Empty<Identity>();
+
         public string WebUrl => Server.MakeUrl(UserName);
 
         public Models.User ToClientUser()
@@ -51,6 +56,9 @@ namespace NGitLab.Mock
             instance.Name = Name;
             instance.Email = Email;
             instance.AvatarURL = AvatarUrl;
+            instance.CreatedAt = CreatedAt;
+            instance.Identities = Identities;
+
             if (IsAdmin)
             {
                 instance.IsAdmin = true;
