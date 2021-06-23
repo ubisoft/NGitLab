@@ -47,7 +47,7 @@ namespace NGitLab.Models
         public bool? Statistics;
 
         /// <summary>
-        /// Specifies how many record per paging (Gitlab supports a maximum of 100 projects and defaults to 20).
+        /// Specifies how many records per page (GitLab supports a maximum of 100 items per page and defaults to 20).
         /// </summary>
         public int? PerPage;
 

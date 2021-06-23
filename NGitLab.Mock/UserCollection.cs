@@ -68,22 +68,22 @@ namespace NGitLab.Mock
         {
             var users = this.AsQueryable();
 
-            if (query.IsActive.HasValue && query.IsActive.Value)
+            if (query.IsActive == true)
             {
                 users = users.Where(u => u.State == UserState.active);
             }
 
-            if (query.IsBlocked.HasValue && query.IsBlocked.Value)
+            if (query.IsBlocked == true)
             {
                 users = users.Where(u => u.State == UserState.blocked);
             }
 
-            if (query.IsExternal.HasValue && query.IsExternal.Value)
+            if (query.IsExternal == true)
             {
                 users = users.Where(u => u.Identities.Any(i => !string.IsNullOrEmpty(i.ExternUid)));
             }
 
-            if (query.ExcludeExternal.HasValue && query.ExcludeExternal.Value)
+            if (query.ExcludeExternal == true)
             {
                 users = users.Where(u => !u.Identities.Any() || u.Identities.All(i => string.IsNullOrEmpty(i.ExternUid)));
             }
