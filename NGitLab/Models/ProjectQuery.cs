@@ -32,7 +32,7 @@ namespace NGitLab.Models
         public string Search;
 
         /// <summary>
-        /// Return list of authorized projects matching the search criteria
+        /// Order projects results ascending. Default is descending
         /// </summary>
         public bool? Ascending;
 

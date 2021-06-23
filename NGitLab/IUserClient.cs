@@ -46,5 +46,10 @@ namespace NGitLab
         /// Get users that match the username
         /// </summary>
         IEnumerable<User> Get(string username);
+
+        /// <summary>
+        /// Get a list of users that match the query.
+        /// </summary>
+        IEnumerable<User> Get(UserQuery query);
     }
 }
