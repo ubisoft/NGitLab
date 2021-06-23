@@ -28,7 +28,8 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "blocked", query.IsBlocked);
             url = Utils.AddParameter(url, "external", query.IsExternal);
             url = Utils.AddParameter(url, "exclude_external", query.ExcludeExternal);
-            url = Utils.AddParameter(url, "username", query.Search);
+            url = Utils.AddParameter(url, "username", query.Username);
+            url = Utils.AddParameter(url, "search", query.Search);
             url = Utils.AddParameter(url, "per_page", query.PerPage);
             url = Utils.AddParameter(url, "order_by", query.OrderBy);
             url = Utils.AddParameter(url, "sort", query.Sort);
