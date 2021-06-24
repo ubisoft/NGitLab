@@ -85,7 +85,10 @@ namespace NGitLab.Impl
 
         public IEnumerable<Project> SearchProjects(int groupId, string search)
         {
-            return _api.Get().GetAll<Project>(Utils.AddOrderBy(Url + "/" + groupId + $"/projects?search={Uri.EscapeDataString(search)}"));
+            var url = Url + "/" + Uri.EscapeDataString(groupId.ToString(CultureInfo.InvariantCulture)) + "/projects";
+            url = Utils.AddParameter(url, "search", search);
+            url = Utils.AddOrderBy(url);
+            return _api.Get().GetAll<Project>(url);
         }
 
         public Group Create(GroupCreate group) => _api.Post().With(group).To<Group>(Url);
