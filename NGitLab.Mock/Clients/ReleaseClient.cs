@@ -52,5 +52,23 @@ namespace NGitLab.Mock.Clients
                 return project.Repository.UpdateRelease(data.Name, data.Description);
             }
         }
+
+        public Tag ToReleaseClient(LibGit2Sharp.Tag tag)
+        {
+            var project = GetProject(_projectId, ProjectPermission.Contribute);
+            var commit = (LibGit2Sharp.Commit)tag.PeeledTarget;
+
+            return new Models.Tag
+            {
+                Commit = commit.ToCommitInfo(),
+                Name = tag.FriendlyName,
+                Release = new Models.ReleaseInfo
+                {
+                    Description = project.Repository.GetRelease(tag.FriendlyName)?.Description,
+                    TagName = tag.FriendlyName,
+                },
+                Message = tag.Annotation?.Message,
+            };
+        }
     }
 }
