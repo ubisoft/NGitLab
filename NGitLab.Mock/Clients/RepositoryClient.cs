@@ -18,6 +18,8 @@ namespace NGitLab.Mock.Clients
 
         public ITagClient Tags => new TagClient(Context, _projectId);
 
+        public IReleaseClient Releases => new ReleaseClient(Context, _projectId);
+
         public IFilesClient Files => new FileClient(Context, _projectId);
 
         public IBranchClient Branches => new BranchClient(Context, _projectId);

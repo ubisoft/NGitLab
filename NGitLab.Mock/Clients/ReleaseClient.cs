@@ -4,35 +4,34 @@ using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
 {
-    internal sealed class TagClient : ClientBase, ITagClient
+    internal sealed class ReleaseClient : ClientBase, IReleaseClient
     {
         private readonly int _projectId;
 
-        public TagClient(ClientContext context, int projectId)
+        public ReleaseClient(ClientContext context, int projectId)
             : base(context)
         {
             _projectId = projectId;
         }
 
-        public IEnumerable<Tag> All
+        public IEnumerable<ReleaseInfo> All
         {
             get
             {
                 using (Context.BeginOperationScope())
                 {
-                    return GetProject(_projectId, ProjectPermission.View).Repository.GetTags().Select(t => ToTagClient(t)).ToList();
+                    var project = GetProject(_projectId, ProjectPermission.Contribute);
+                    return project.Repository.GetReleases();
                 }
             }
         }
 
-        public Tag Create(TagCreate tag)
+        public ReleaseInfo Create(ReleaseCreate data)
         {
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.Contribute);
-                var createdTag = project.Repository.CreateTag(Context.User, tag.Name, tag.Ref, tag.Message);
-
-                return ToTagClient(createdTag);
+                return project.Repository.CreateRelease(data.Name, data.Description);
             }
         }
 
@@ -41,20 +40,29 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.Contribute);
-                project.Repository.DeleteTag(name);
+                project.Repository.DeleteRelease(name);
             }
         }
 
-        public Tag ToTagClient(LibGit2Sharp.Tag tag)
+        public ReleaseInfo Update(ReleaseUpdate data)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                return project.Repository.UpdateRelease(data.Name, data.Description);
+            }
+        }
+
+        public Tag ToReleaseClient(LibGit2Sharp.Tag tag)
         {
             var project = GetProject(_projectId, ProjectPermission.Contribute);
             var commit = (LibGit2Sharp.Commit)tag.PeeledTarget;
 
-            return new Tag
+            return new Models.Tag
             {
                 Commit = commit.ToCommitInfo(),
                 Name = tag.FriendlyName,
-                Release = new ReleaseInfo
+                Release = new Models.ReleaseInfo
                 {
                     Description = project.Repository.GetRelease(tag.FriendlyName)?.Description,
                     TagName = tag.FriendlyName,
