@@ -9,6 +9,10 @@ namespace NGitLab
 
         void Delete(string name);
 
+        ReleaseInfo CreateRelease(string name, ReleaseCreate data);
+
+        ReleaseInfo UpdateRelease(string name, ReleaseUpdate data);
+
         IEnumerable<Tag> All { get; }
     }
 }

@@ -25,6 +25,17 @@ namespace NGitLab.Impl
             _api.Delete().Stream($"{_tagsPath}/{WebUtility.UrlEncode(name)}", _ => { });
         }
 
+        public ReleaseInfo CreateRelease(string name, ReleaseCreate data)
+        {
+            return _api.Post().With(data).To<ReleaseInfo>($"{_tagsPath}/{WebUtility.UrlEncode(name)}/release");
+        }
+
+        public ReleaseInfo UpdateRelease(string name, ReleaseUpdate data)
+        {
+            return _api.Put().With(data).To<ReleaseInfo>($"{_tagsPath}/{WebUtility.UrlEncode(name)}/release");
+        }
+
+
         public IEnumerable<Tag> All => _api.Get().GetAll<Tag>(_tagsPath + "?per_page=50");
     }
 }

@@ -36,13 +36,13 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public RealeaseInfo CreateRelease(string name, ReleaseCreate data)
+        public ReleaseInfo CreateRelease(string name, ReleaseCreate data)
         {
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.Contribute);
                 var tag = project.Repository.CreateReleaseTag(name, data.Description);
-                return new RealeaseInfo
+                return new ReleaseInfo
                 {
                     TagName = tag.Name,
                     Description = tag.ReleaseNotes,
@@ -59,14 +59,14 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public RealeaseInfo UpdateRelease(string name, ReleaseUpdate data)
+        public ReleaseInfo UpdateRelease(string name, ReleaseUpdate data)
         {
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.Contribute);
                 var tag = project.Repository.UpdateReleaseTag(name, data.Description);
 
-                return new RealeaseInfo
+                return new ReleaseInfo
                 {
                     TagName = tag.Name,
                     Description = tag.ReleaseNotes,
@@ -79,11 +79,11 @@ namespace NGitLab.Mock.Clients
             var project = GetProject(_projectId, ProjectPermission.Contribute);
             var commit = (LibGit2Sharp.Commit)tag.PeeledTarget;
 
-            return new Models.Tag
+            return new Tag
             {
                 Commit = commit.ToCommitInfo(),
                 Name = tag.FriendlyName,
-                Release = new Models.RealeaseInfo
+                Release = new ReleaseInfo
                 {
                     Description = project.Repository.GetReleaseTag(tag.FriendlyName)?.ReleaseNotes,
                     TagName = tag.FriendlyName,
