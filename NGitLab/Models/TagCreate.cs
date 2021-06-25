@@ -25,11 +25,5 @@ namespace NGitLab.Models
         /// </summary>
         [DataMember(Name = "message")]
         public string Message;
-
-        /// <summary>
-        /// (optional) - Add release notes to the git tag and store it in the GitLab database.
-        /// </summary>
-        [DataMember(Name = "release_description")]
-        public string ReleaseDescription;
     }
 }
