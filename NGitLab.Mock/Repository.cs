@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading;
 using LibGit2Sharp;
 using NGitLab.Mock.Clients;
-using ReleaseInfo = NGitLab.Models.ReleaseInfo;
 
 namespace NGitLab.Mock
 {
@@ -18,7 +17,7 @@ namespace NGitLab.Mock
         private readonly object _lock = new();
         private TemporaryDirectory _directory;
         private LibGit2Sharp.Repository _repository;
-        private readonly IList<ReleaseInfo> _releases = new List<ReleaseInfo>();
+        private readonly IList<ReleaseTag> _releaseTags = new List<ReleaseTag>();
 
         public Project Project => (Project)Parent;
 
@@ -204,15 +203,20 @@ namespace NGitLab.Mock
 
         public Tag CreateTag(string tagName)
         {
-            return CreateTag(user: null, tagName, "HEAD", message: null);
+            return CreateTag(user: null, tagName, "HEAD", message: null, releaseNotes: null);
         }
 
         public Tag CreateTag(string tagName, string reference)
         {
-            return CreateTag(user: null, tagName, reference, message: null);
+            return CreateTag(user: null, tagName, reference, message: null, releaseNotes: null);
         }
 
         public Tag CreateTag(User user, string tagName, string reference, string message)
+        {
+            return CreateTag(user, tagName, reference, message, releaseNotes: null);
+        }
+
+        public Tag CreateTag(User user, string tagName, string reference, string message, string releaseNotes)
         {
             var repository = GetGitRepository();
             Tag tag;
@@ -227,40 +231,40 @@ namespace NGitLab.Mock
                 tag = repository.ApplyTag(tagName, reference, tagger, message);
             }
 
+            if (!string.IsNullOrEmpty(releaseNotes))
+            {
+                _releaseTags.Add(new ReleaseTag(tagName, releaseNotes));
+            }
+
             return tag;
         }
 
-        public IList<ReleaseInfo> GetReleases()
+        public ReleaseTag GetReleaseTag(string tagName)
         {
-            return _releases;
+            return _releaseTags.FirstOrDefault(r => string.Equals(r.Name, tagName, StringComparison.Ordinal));
         }
 
-        public ReleaseInfo GetRelease(string tagName)
+        public ReleaseTag CreateReleaseTag(string tagName, string releaseNotes)
         {
-            return _releases.FirstOrDefault(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal));
-        }
-
-        public ReleaseInfo CreateRelease(string tagName, string releaseNotes)
-        {
-            if (_releases.Any(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal)))
+            if (_releaseTags.Any(r => string.Equals(r.Name, tagName, StringComparison.Ordinal)))
             {
                 throw new GitLabBadRequestException();
             }
 
-            var releaseTag = new ReleaseInfo() { TagName = tagName, Description = releaseNotes };
-            _releases.Add(releaseTag);
+            var releaseTag = new ReleaseTag(tagName, releaseNotes);
+            _releaseTags.Add(releaseTag);
             return releaseTag;
         }
 
-        public ReleaseInfo UpdateRelease(string tagName, string releaseNotes)
+        public ReleaseTag UpdateReleaseTag(string tagName, string releaseNotes)
         {
-            if (!_releases.Any(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal)))
+            if (!_releaseTags.Any(r => string.Equals(r.Name, tagName, StringComparison.Ordinal)))
             {
                 throw new GitLabBadRequestException();
             }
 
-            var releaseTag = _releases.First(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal));
-            releaseTag.Description = releaseNotes;
+            var releaseTag = _releaseTags.First(r => string.Equals(r.Name, tagName, StringComparison.Ordinal));
+            releaseTag.ReleaseNotes = releaseNotes;
             return releaseTag;
         }
 
@@ -268,14 +272,9 @@ namespace NGitLab.Mock
         {
             var repository = GetGitRepository();
             repository.Tags.Remove(tagName);
-        }
-
-        public void DeleteRelease(string tagName)
-        {
-            var repository = GetGitRepository();
-            if (_releases.Any(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal)))
+            if (_releaseTags.Any(r => string.Equals(r.Name, tagName, StringComparison.Ordinal)))
             {
-                _releases.Remove(_releases.First(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal)));
+                _releaseTags.Remove(_releaseTags.First(r => string.Equals(r.Name, tagName, StringComparison.Ordinal)));
             }
         }
 

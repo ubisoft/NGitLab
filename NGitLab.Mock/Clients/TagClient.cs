@@ -30,9 +30,23 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.Contribute);
-                var createdTag = project.Repository.CreateTag(Context.User, tag.Name, tag.Ref, tag.Message);
+                var createdTag = project.Repository.CreateTag(Context.User, tag.Name, tag.Ref, tag.Message, tag.ReleaseDescription);
 
                 return ToTagClient(createdTag);
+            }
+        }
+
+        public RealeaseInfo CreateRelease(string name, ReleaseCreate data)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var tag = project.Repository.CreateReleaseTag(name, data.Description);
+                return new RealeaseInfo
+                {
+                    TagName = tag.Name,
+                    Description = tag.ReleaseNotes,
+                };
             }
         }
 
@@ -45,18 +59,33 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public RealeaseInfo UpdateRelease(string name, ReleaseUpdate data)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var tag = project.Repository.UpdateReleaseTag(name, data.Description);
+
+                return new RealeaseInfo
+                {
+                    TagName = tag.Name,
+                    Description = tag.ReleaseNotes,
+                };
+            }
+        }
+
         public Tag ToTagClient(LibGit2Sharp.Tag tag)
         {
             var project = GetProject(_projectId, ProjectPermission.Contribute);
             var commit = (LibGit2Sharp.Commit)tag.PeeledTarget;
 
-            return new Tag
+            return new Models.Tag
             {
                 Commit = commit.ToCommitInfo(),
                 Name = tag.FriendlyName,
-                Release = new ReleaseInfo
+                Release = new Models.RealeaseInfo
                 {
-                    Description = project.Repository.GetRelease(tag.FriendlyName)?.Description,
+                    Description = project.Repository.GetReleaseTag(tag.FriendlyName)?.ReleaseNotes,
                     TagName = tag.FriendlyName,
                 },
                 Message = tag.Annotation?.Message,
