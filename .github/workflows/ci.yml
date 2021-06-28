@@ -74,7 +74,7 @@ jobs:
         Write-Host "::set-output name=artifact_name::test-results-$value"
       name: Set artifact name
       id: set-artifact-name
-    - run: dotnet test --configuration ${{ matrix.configuration }} --logger trx --results-directory "${{ env.TestResultsDirectory }}" --collect:"XPlat Code Coverage"
+    - run: dotnet test --configuration ${{ matrix.configuration }} --logger trx --results-directory "${{ env.TestResultsDirectory }}" --collect:"XPlat Code Coverage" /p:RunAnalyzers=false
       name: Run tests
     - uses: actions/upload-artifact@v2
       if: always()
