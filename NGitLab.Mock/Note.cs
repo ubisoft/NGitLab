@@ -33,5 +33,20 @@ namespace NGitLab.Mock
         public bool Resolvable { get; set; }
 
         public bool Resolved { get; set; }
+
+        public Models.Note ToClientEvent()
+        {
+            return new Models.Note
+            {
+                Id = Id,
+                Body = Body,
+                CreatedAt = CreatedAt.UtcDateTime,
+                Author = Author?.ToUserClient(),
+                Resolvable = Resolvable,
+                System = System,
+                Resolved = Resolved,
+                UpdatedAt = UpdatedAt.UtcDateTime,
+            };
+        }
     }
 }
