@@ -27,6 +27,7 @@ namespace NGitLab.Mock
             Groups = new GroupCollection(this);
             Users = new UserCollection(this);
             SystemHooks = new SystemHookCollection(this);
+            Events = new EventCollection(this);
         }
 
         public string DefaultBranchName { get; set; } = "main";
@@ -40,6 +41,8 @@ namespace NGitLab.Mock
         public UserCollection Users { get; }
 
         public SystemHookCollection SystemHooks { get; }
+
+        public EventCollection Events { get; }
 
         public VisibilityLevel DefaultForkVisibilityLevel { get; set; } = VisibilityLevel.Private;
 
