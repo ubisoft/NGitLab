@@ -38,5 +38,10 @@ namespace NGitLab.Models
         /// Sort events in asc or desc order by created_at. Default is desc
         /// </summary>
         public string Sort { get; set; }
+
+        /// <summary>
+        /// Specifies how many records per page (GitLab supports a maximum of 100 items per page and defaults to 20).
+        /// </summary>
+        public int? PerPage { get; set; }
     }
 }
