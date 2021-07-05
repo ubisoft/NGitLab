@@ -22,7 +22,11 @@ namespace NGitLab.Mock
 
         public Milestone Milestone { get; set; }
 
-        public UserRef Assignee { get; set; }
+        public UserRef Assignee
+        {
+            get => Assignees.FirstOrDefault();
+            set => Assignees = new[] { value };
+        }
 
         public UserRef[] Assignees { get; set; }
 
