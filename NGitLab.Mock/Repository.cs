@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading;
 using LibGit2Sharp;
 using NGitLab.Mock.Clients;
-using ReleaseInfo = NGitLab.Models.ReleaseInfo;
 
 namespace NGitLab.Mock
 {
@@ -18,7 +17,6 @@ namespace NGitLab.Mock
         private readonly object _lock = new();
         private TemporaryDirectory _directory;
         private LibGit2Sharp.Repository _repository;
-        private readonly IList<ReleaseInfo> _releases = new List<ReleaseInfo>();
         private readonly IList<ReleaseTag> _releaseTags = new List<ReleaseTag>();
 
         public Project Project => (Project)Parent;
@@ -239,49 +237,6 @@ namespace NGitLab.Mock
             }
 
             return tag;
-        }
-
-        public IList<ReleaseInfo> GetReleases()
-        {
-            return _releases;
-        }
-
-        public ReleaseInfo GetRelease(string tagName)
-        {
-            return _releases.FirstOrDefault(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal));
-        }
-
-        public ReleaseInfo CreateRelease(string tagName, string releaseNotes)
-        {
-            if (_releases.Any(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal)))
-            {
-                throw new GitLabBadRequestException();
-            }
-
-            var release = new ReleaseInfo() { TagName = tagName, Description = releaseNotes };
-            _releases.Add(release);
-            return release;
-        }
-
-        public ReleaseInfo UpdateRelease(string tagName, string releaseNotes)
-        {
-            if (!_releaseTags.Any(r => string.Equals(r.Name, tagName, StringComparison.Ordinal)))
-            {
-                throw new GitLabBadRequestException();
-            }
-
-            var release = _releases.First(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal));
-            release.Description = releaseNotes;
-            return release;
-        }
-
-        public void DeleteRelease(string tagName)
-        {
-            var repository = GetGitRepository();
-            if (_releases.Any(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal)))
-            {
-                _releases.Remove(_releases.First(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal)));
-            }
         }
 
         public ReleaseTag GetReleaseTag(string tagName)

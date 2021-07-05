@@ -29,6 +29,7 @@ namespace NGitLab.Mock
             Badges = new BadgeCollection(this);
             CommitInfos = new CommitInfoCollection(this);
             CommitStatuses = new CommitStatusCollection(this);
+            Releases = new ReleaseCollection(this);
             ApprovalsBeforeMerge = 0;
         }
 
@@ -88,6 +89,8 @@ namespace NGitLab.Mock
         public CommitInfoCollection CommitInfos { get; }
 
         public CommitStatusCollection CommitStatuses { get; }
+
+        public ReleaseCollection Releases { get; }
 
         public Group Group => (Group)Parent;
 

@@ -4,34 +4,32 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
-    // Handles interacting with Release Tags.
+    // Handles interacting with Releases.
     // Documentation: https://docs.gitlab.com/ee/api/releases/
     public class ReleaseClient : IReleaseClient
     {
         private readonly API _api;
-        private readonly string _releasePath;
+        private readonly int _projectId;
+        private readonly string _releasesPath;
 
-        public ReleaseClient(API api, string repoPath)
+        public ReleaseClient(API api, int projectId)
         {
             _api = api;
-            _releasePath = repoPath + "/releases";
+            _projectId = projectId;
+            var projectPath = Project.Url + "/" + projectId;
+            _releasesPath = projectPath + "/releases";
         }
 
-        public ReleaseInfo Create(ReleaseCreate release)
-        {
-            return _api.Post().With(release).To<ReleaseInfo>(_releasePath);
-        }
+        public IEnumerable<ReleaseInfo> All  => _api.Get().GetAll<ReleaseInfo>(_releasesPath + "?per_page=50");
 
-        public ReleaseInfo Update(ReleaseUpdate release)
-        {
-            return _api.Put().With(release).To<ReleaseInfo>(_releasePath);
-        }
+        public ReleaseInfo this[string tagName] => _api.Get().To<ReleaseInfo>($"{_releasesPath}/{WebUtility.UrlEncode(tagName)}");
 
-        public void Delete(string name)
-        {
-            _api.Delete().Stream($"{_releasePath}/{WebUtility.UrlEncode(name)}", _ => { });
-        }
+        public ReleaseInfo Create(ReleaseCreate data) => _api.Post().With(data).To<ReleaseInfo>(_releasesPath);
 
-        public IEnumerable<ReleaseInfo> All => _api.Get().GetAll<ReleaseInfo>(_releasePath + "?per_page=50");
+        public ReleaseInfo Update(ReleaseUpdate data) => _api.Put().With(data).To<ReleaseInfo>($"{_releasesPath}/{WebUtility.UrlEncode(data.TagName)}");
+
+        public void Delete(string tagName) => _api.Delete().Execute($"{_releasesPath}/{WebUtility.UrlEncode(tagName)}");
+
+        public IReleaseLinkClient ReleaseLinks(string tagName) => new ReleaseLinkClient(_api, _releasesPath, tagName);
     }
 }
