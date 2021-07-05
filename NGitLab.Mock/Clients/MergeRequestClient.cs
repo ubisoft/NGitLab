@@ -348,110 +348,141 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0051:Method is too long", Justification = "There are lots of cases to support")]
         public IEnumerable<Models.MergeRequest> Get(MergeRequestQuery query)
         {
-            AssertProjectId();
-
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
-                IEnumerable<MergeRequest> result = project.MergeRequests;
-                if (query != null)
+                var projects = _projectId == null
+                    ? Server.AllProjects.Where(project => project.CanUserViewProject(Context.User))
+                    : new[] { GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View) };
+                var mergeRequests = projects.SelectMany(x => x.MergeRequests);
+                return FilterByQuery(mergeRequests, query);
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0051:Method is too long", Justification = "There are lots of cases to support")]
+        public IEnumerable<Models.MergeRequest> FilterByQuery(IEnumerable<MergeRequest> mergeRequests, MergeRequestQuery query)
+        {
+            if (query != null)
+            {
+                if (query.ApproverIds != null)
                 {
-                    if (query.ApproverIds != null)
-                    {
-                        throw new NotImplementedException();
-                    }
+                    throw new NotImplementedException();
+                }
 
-                    if (query.AssigneeId != null)
-                    {
-                        throw new NotImplementedException();
-                    }
+                if (query.AssigneeId != null)
+                {
+                    var assigneeId = int.Parse(query.AssigneeId.ToString());
+                    mergeRequests = mergeRequests.Where(mr => mr.Assignee.Id == assigneeId);
+                }
 
-                    if (query.AuthorId != null)
-                    {
-                        result = result.Where(mr => mr.Author.Id == query.AuthorId);
-                    }
+                if (query.AuthorId != null)
+                {
+                    mergeRequests = mergeRequests.Where(mr => mr.Author.Id == query.AuthorId);
+                }
 
-                    if (query.CreatedAfter != null)
-                    {
-                        result = result.Where(mr => mr.CreatedAt >= query.CreatedAfter.Value);
-                    }
+                if (query.CreatedAfter != null)
+                {
+                    mergeRequests = mergeRequests.Where(mr => mr.CreatedAt >= query.CreatedAfter.Value);
+                }
 
-                    if (query.CreatedBefore != null)
-                    {
-                        result = result.Where(mr => mr.CreatedAt <= query.CreatedBefore.Value);
-                    }
+                if (query.CreatedBefore != null)
+                {
+                    mergeRequests = mergeRequests.Where(mr => mr.CreatedAt <= query.CreatedBefore.Value);
+                }
 
-                    if (query.Labels != null)
-                    {
-                        throw new NotImplementedException();
-                    }
+                if (query.Labels != null)
+                {
+                    throw new NotImplementedException();
+                }
 
-                    if (query.Milestone != null)
-                    {
-                        throw new NotImplementedException();
-                    }
+                if (query.Milestone != null)
+                {
+                    throw new NotImplementedException();
+                }
 
-                    if (query.Scope != null)
+                if (query.Scope != null)
+                {
+                    var userId = Context.User.Id;
+                    switch (query.Scope)
                     {
-                        throw new NotImplementedException();
-                    }
-
-                    if (query.Search != null)
-                    {
-                        throw new NotImplementedException();
-                    }
-
-                    if (query.SourceBranch != null)
-                    {
-                        result = result.Where(mr => string.Equals(mr.SourceBranch, query.SourceBranch, StringComparison.Ordinal));
-                    }
-
-                    if (query.TargetBranch != null)
-                    {
-                        result = result.Where(mr => string.Equals(mr.TargetBranch, query.TargetBranch, StringComparison.Ordinal));
-                    }
-
-                    if (query.UpdatedAfter != null)
-                    {
-                        result = result.Where(mr => mr.UpdatedAt >= query.UpdatedAfter.Value);
-                    }
-
-                    if (query.UpdatedBefore != null)
-                    {
-                        result = result.Where(mr => mr.UpdatedAt <= query.UpdatedBefore);
-                    }
-
-                    if (query.State != null)
-                    {
-                        result = result.Where(mr => mr.State == query.State);
-                    }
-
-                    if (query.Sort != null)
-                    {
-                        throw new NotImplementedException();
-                    }
-
-                    if (query.OrderBy != null)
-                    {
-                        throw new NotImplementedException();
-                    }
-
-                    if (query.PerPage != null)
-                    {
-                        result = result.Take(query.PerPage.Value);
-                    }
-
-                    if (query.Wip != null)
-                    {
-                        result = result.Where(mr => (bool)query.Wip ? mr.WorkInProgress : !mr.WorkInProgress);
+                        case "created_by_me":
+                        case "created-by-me":
+                            mergeRequests = mergeRequests.Where(mr => mr.Author.Id == userId);
+                            break;
+                        case "assigned_to_me":
+                        case "assigned-to-me":
+                            mergeRequests = mergeRequests.Where(mr => mr.Assignee.Id == userId);
+                            break;
+                        case "all":
+                            break;
+                        default:
+                            throw new NotSupportedException($"Scope '{query.Scope}' is not supported");
                     }
                 }
 
-                return result.Select(mr => mr.ToMergeRequestClient()).ToList();
+                if (query.Search != null)
+                {
+                    throw new NotImplementedException();
+                }
+
+                if (query.SourceBranch != null)
+                {
+                    mergeRequests = mergeRequests.Where(mr => string.Equals(mr.SourceBranch, query.SourceBranch, StringComparison.Ordinal));
+                }
+
+                if (query.TargetBranch != null)
+                {
+                    mergeRequests = mergeRequests.Where(mr => string.Equals(mr.TargetBranch, query.TargetBranch, StringComparison.Ordinal));
+                }
+
+                if (query.UpdatedAfter != null)
+                {
+                    mergeRequests = mergeRequests.Where(mr => mr.UpdatedAt >= query.UpdatedAfter.Value);
+                }
+
+                if (query.UpdatedBefore != null)
+                {
+                    mergeRequests = mergeRequests.Where(mr => mr.UpdatedAt <= query.UpdatedBefore);
+                }
+
+                if (query.State != null)
+                {
+                    mergeRequests = mergeRequests.Where(mr => mr.State == query.State);
+                }
+
+                if (string.Equals(query.Sort, "asc", StringComparison.Ordinal))
+                {
+                    mergeRequests = mergeRequests.Reverse();
+                }
+
+                if (query.OrderBy != null)
+                {
+                    switch (query.OrderBy)
+                    {
+                        case "created_at":
+                            mergeRequests = mergeRequests.OrderBy(mr => mr.CreatedAt);
+                            break;
+                        case "updated_at":
+                            mergeRequests = mergeRequests.OrderBy(mr => mr.UpdatedAt);
+                            break;
+                        default:
+                            throw new NotSupportedException($"OrderBy '{query.OrderBy}' is not supported");
+                    }
+                }
+
+                if (query.PerPage != null)
+                {
+                    mergeRequests = mergeRequests.Take(query.PerPage.Value);
+                }
+
+                if (query.Wip != null)
+                {
+                    mergeRequests = mergeRequests.Where(mr => (bool)query.Wip ? mr.WorkInProgress : !mr.WorkInProgress);
+                }
             }
+
+            return mergeRequests.Select(mr => mr.ToMergeRequestClient()).ToList();
         }
 
         public IEnumerable<Models.Author> GetParticipants(int mergeRequestIid)

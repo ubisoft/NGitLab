@@ -137,7 +137,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        private static IEnumerable<Issue> FilterByQuery(IEnumerable<Issue> issues, IssueQuery query)
+        private IEnumerable<Issue> FilterByQuery(IEnumerable<Issue> issues, IssueQuery query)
         {
             if (query.State != null)
             {
@@ -183,7 +183,22 @@ namespace NGitLab.Mock.Clients
 
             if (query.Scope != null)
             {
-                throw new NotImplementedException();
+                var userId = Context.User.Id;
+                switch (query.Scope)
+                {
+                    case "created_by_me":
+                    case "created-by-me":
+                        issues = issues.Where(i => i.Author.Id == userId);
+                        break;
+                    case "assigned_to_me":
+                    case "assigned-to-me":
+                        issues = issues.Where(i => i.Assignees.Any(x => x.Id == userId));
+                        break;
+                    case "all":
+                        break;
+                    default:
+                        throw new NotSupportedException($"Scope '{query.Scope}' is not supported");
+                }
             }
 
             if (query.AuthorId != null)
@@ -224,17 +239,27 @@ namespace NGitLab.Mock.Clients
 
             if (query.PerPage != null)
             {
-                throw new NotImplementedException();
+                issues = issues.Take(query.PerPage.Value);
             }
 
             if (query.OrderBy != null)
             {
-                throw new NotImplementedException();
+                switch (query.OrderBy)
+                {
+                    case "created_at":
+                        issues = issues.OrderBy(i => i.CreatedAt);
+                        break;
+                    case "updated_at":
+                        issues = issues.OrderBy(i => i.UpdatedAt);
+                        break;
+                    default:
+                        throw new NotSupportedException($"OrderBy '{query.OrderBy}' is not supported");
+                }
             }
 
-            if (query.Sort != null)
+            if (string.Equals(query.Sort, "asc", StringComparison.Ordinal))
             {
-                throw new NotImplementedException();
+                issues = issues.Reverse();
             }
 
             return issues;
