@@ -366,7 +366,8 @@ namespace NGitLab.Mock.Clients
 
                     if (query.AssigneeId != null)
                     {
-                        throw new NotImplementedException();
+                        var assigneeId = int.Parse(query.AssigneeId.ToString());
+                        result = result.Where(mr => mr.Assignee.Id == assigneeId);
                     }
 
                     if (query.AuthorId != null)
@@ -396,7 +397,22 @@ namespace NGitLab.Mock.Clients
 
                     if (query.Scope != null)
                     {
-                        throw new NotImplementedException();
+                        var userId = Context.User.Id;
+                        switch (query.Scope)
+                        {
+                            case "created_by_me":
+                            case "created-by-me":
+                                result = result.Where(mr => mr.Author.Id == userId);
+                                break;
+                            case "assigned_to_me":
+                            case "assigned-to-me":
+                                result = result.Where(mr => mr.Assignee.Id == userId);
+                                break;
+                            case "all":
+                                break;
+                            default:
+                                throw new NotSupportedException($"Scope '{query.Scope}' is not supported");
+                        }
                     }
 
                     if (query.Search != null)
@@ -429,14 +445,24 @@ namespace NGitLab.Mock.Clients
                         result = result.Where(mr => mr.State == query.State);
                     }
 
-                    if (query.Sort != null)
+                    if (string.Equals(query.Sort, "asc", StringComparison.Ordinal))
                     {
-                        throw new NotImplementedException();
+                        result = result.Reverse();
                     }
 
                     if (query.OrderBy != null)
                     {
-                        throw new NotImplementedException();
+                        switch (query.OrderBy)
+                        {
+                            case "created_at":
+                                result = result.OrderBy(mr => mr.CreatedAt);
+                                break;
+                            case "updated_at":
+                                result = result.OrderBy(mr => mr.UpdatedAt);
+                                break;
+                            default:
+                                throw new NotSupportedException($"OrderBy '{query.OrderBy}' is not supported");
+                        }
                     }
 
                     if (query.PerPage != null)
