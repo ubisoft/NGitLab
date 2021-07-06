@@ -3,7 +3,7 @@
 namespace NGitLab.Models
 {
     [DataContract]
-    public class RealeaseInfo
+    public class ReleaseInfo
     {
         [DataMember(Name = "tag_name")]
         public string TagName;

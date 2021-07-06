@@ -46,5 +46,7 @@ namespace NGitLab
         IBranchClient Branches { get; }
 
         IProjectHooksClient ProjectHooks { get; }
+
+        IReleaseClient Releases { get; }
     }
 }

@@ -25,16 +25,6 @@ namespace NGitLab.Impl
             _api.Delete().Stream($"{_tagsPath}/{WebUtility.UrlEncode(name)}", _ => { });
         }
 
-        public RealeaseInfo CreateRelease(string name, ReleaseCreate data)
-        {
-            return _api.Post().With(data).To<RealeaseInfo>($"{_tagsPath}/{WebUtility.UrlEncode(name)}/release");
-        }
-
-        public RealeaseInfo UpdateRelease(string name, ReleaseUpdate data)
-        {
-            return _api.Put().With(data).To<RealeaseInfo>($"{_tagsPath}/{WebUtility.UrlEncode(name)}/release");
-        }
-
         public IEnumerable<Tag> All => _api.Get().GetAll<Tag>(_tagsPath + "?per_page=50");
     }
 }

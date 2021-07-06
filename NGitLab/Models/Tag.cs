@@ -15,6 +15,6 @@ namespace NGitLab.Models
         public CommitInfo Commit;
 
         [DataMember(Name = "release")]
-        public RealeaseInfo Release;
+        public ReleaseInfo Release;
     }
 }
