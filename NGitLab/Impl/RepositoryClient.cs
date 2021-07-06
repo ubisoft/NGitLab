@@ -23,6 +23,7 @@ namespace NGitLab.Impl
         }
 
         public ITagClient Tags => new TagClient(_api, _repoPath);
+
         public IReleaseClient Releases => new ReleaseClient(_api, _projectPath);
 
         public IContributorClient Contributors => new ContributorClient(_api, _repoPath, _projectId);

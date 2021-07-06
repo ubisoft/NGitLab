@@ -6,6 +6,7 @@ namespace NGitLab
     public interface IReleaseClient
     {
         ReleaseInfo Create(ReleaseCreate release);
+
         ReleaseInfo Update(ReleaseUpdate release);
 
         void Delete(string name);

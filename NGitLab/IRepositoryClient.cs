@@ -8,6 +8,7 @@ namespace NGitLab
     public interface IRepositoryClient
     {
         ITagClient Tags { get; }
+
         IReleaseClient Releases { get; }
 
         IEnumerable<Tree> Tree { get; }
