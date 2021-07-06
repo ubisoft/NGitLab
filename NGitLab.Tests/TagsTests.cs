@@ -20,7 +20,6 @@ namespace NGitLab.Tests
                 Name = "v0.5",
                 Message = "Test message",
                 Ref = project.DefaultBranch,
-                ReleaseDescription = "Test description",
             });
 
             Assert.IsNotNull(result);
