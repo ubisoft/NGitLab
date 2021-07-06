@@ -9,8 +9,6 @@ namespace NGitLab
     {
         ITagClient Tags { get; }
 
-        IReleaseClient Releases { get; }
-
         IEnumerable<Tree> Tree { get; }
 
         IEnumerable<Tree> GetTree(string path);
@@ -48,5 +46,7 @@ namespace NGitLab
         IBranchClient Branches { get; }
 
         IProjectHooksClient ProjectHooks { get; }
+
+        IReleaseClient Releases { get; }
     }
 }
