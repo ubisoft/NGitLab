@@ -4,6 +4,8 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
+    // Handles interacting with Release Tags.
+    // Documentation: https://docs.gitlab.com/ee/api/releases/
     public class ReleaseClient : IReleaseClient
     {
         private readonly API _api;
