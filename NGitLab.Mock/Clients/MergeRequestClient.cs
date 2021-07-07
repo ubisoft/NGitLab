@@ -367,7 +367,8 @@ namespace NGitLab.Mock.Clients
             {
                 if (query.ApproverIds != null)
                 {
-                    throw new NotImplementedException();
+                    var approverIds = query.ApproverIds;
+                    mergeRequests = mergeRequests.Where(mr => mr.Approvers.Any(x => approverIds.Contains(x.Id)));
                 }
 
                 if (query.AssigneeId != null)
@@ -391,9 +392,12 @@ namespace NGitLab.Mock.Clients
                     mergeRequests = mergeRequests.Where(mr => mr.CreatedAt <= query.CreatedBefore.Value);
                 }
 
-                if (query.Labels != null)
+                if (!string.IsNullOrEmpty(query.Labels))
                 {
-                    throw new NotImplementedException();
+                    foreach (var label in query.Labels.Split(','))
+                    {
+                        mergeRequests = mergeRequests.Where(mr => mr.Labels.Contains(label, StringComparer.Ordinal));
+                    }
                 }
 
                 if (query.Milestone != null)
