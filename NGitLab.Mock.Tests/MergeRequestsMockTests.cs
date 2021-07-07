@@ -53,5 +53,31 @@ namespace NGitLab.Mock.Tests
             Assert.AreEqual(1, mergeRequests.Length, "Merge requests count is invalid");
             Assert.AreEqual("Merge request 2", mergeRequests[0].Title, "Merge request found is invalid");
         }
+
+        [Test]
+        public void Test_merge_requests_approvable_by_me_can_be_listed()
+        {
+            using var gitLabServer = new GitLabServer();
+            var user1 = new User("user1");
+            gitLabServer.Users.Add(user1);
+            var user2 = new User("user2");
+            gitLabServer.Users.Add(user2);
+            var group = new Group("TestGroup");
+            gitLabServer.Groups.Add(group);
+            var project = new Project("Test") { Visibility = VisibilityLevel.Internal };
+            group.Projects.Add(project);
+            var mergeRequest1 = new MergeRequest { Author = new UserRef(user1), Title = "Merge request 1", SourceProject = project };
+            mergeRequest1.Approvers.Add(new UserRef(user2));
+            project.MergeRequests.Add(mergeRequest1);
+            var mergeRequest2 = new MergeRequest { Author = new UserRef(user2), Title = "Merge request 2", SourceProject = project };
+            mergeRequest2.Approvers.Add(new UserRef(user1));
+            project.MergeRequests.Add(mergeRequest2);
+
+            var client = gitLabServer.CreateClient(user1);
+            var mergeRequests = client.MergeRequests.Get(new MergeRequestQuery { ApproverIds = new[] { user1.Id } }).ToArray();
+
+            Assert.AreEqual(1, mergeRequests.Length, "Merge requests count is invalid");
+            Assert.AreEqual("Merge request 2", mergeRequests[0].Title, "Merge request found is invalid");
+        }
     }
 }
