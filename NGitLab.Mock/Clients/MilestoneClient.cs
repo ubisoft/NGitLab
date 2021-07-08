@@ -66,7 +66,7 @@ namespace NGitLab.Mock
                 {
                     Title = milestone.Title,
                     Description = milestone.Description,
-                    DueDate = string.IsNullOrEmpty(milestone.DueDate) ? DateTimeOffset.Now : DateTimeOffset.Parse(milestone.DueDate),
+                    DueDate = string.IsNullOrEmpty(milestone.DueDate) ? DateTimeOffset.UtcNow : DateTimeOffset.Parse(milestone.DueDate),
                     StartDate = string.IsNullOrEmpty(milestone.StartDate) ? DateTimeOffset.Now : DateTimeOffset.Parse(milestone.StartDate),
                 };
                 project.Milestones.Add(ms);
