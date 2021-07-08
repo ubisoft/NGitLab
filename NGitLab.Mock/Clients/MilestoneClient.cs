@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using NGitLab.Mock.Clients;
 using NGitLab.Models;
@@ -122,12 +123,12 @@ namespace NGitLab.Mock
 
                 if (!string.IsNullOrEmpty(milestone.DueDate))
                 {
-                    ms.DueDate = DateTimeOffset.Parse(milestone.DueDate);
+                    ms.DueDate = DateTimeOffset.Parse(milestone.DueDate, CultureInfo.InvariantCulture);
                 }
 
                 if (!string.IsNullOrEmpty(milestone.StartDate))
                 {
-                    ms.StartDate = DateTimeOffset.Parse(milestone.StartDate);
+                    ms.StartDate = DateTimeOffset.Parse(milestone.StartDate, CultureInfo.InvariantCulture);
                 }
 
                 return ms.ToClientMilestone();
