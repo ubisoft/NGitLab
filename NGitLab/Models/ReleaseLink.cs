@@ -20,21 +20,21 @@ namespace NGitLab.Models
     public class ReleaseLink
     {
         [DataMember(Name = "id")]
-        public int? Id;
+        public int? Id { get; set; }
 
         [DataMember(Name = "name")]
-        public string Name;
+        public string Name { get; set; }
 
         [DataMember(Name = "url")]
-        public string Url;
+        public string Url { get; set; }
 
         [DataMember(Name = "direct_asset_url")]
-        public string DirectAssetUrl;
+        public string DirectAssetUrl { get; set; }
 
         [DataMember(Name = "external")]
-        public bool External;
+        public bool External { get; set; }
 
         [DataMember(Name = "link_type")]
-        public ReleaseLinkType LinkType;
+        public ReleaseLinkType LinkType { get; set; }
     }
 }

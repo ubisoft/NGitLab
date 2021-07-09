@@ -35,7 +35,5 @@ namespace NGitLab.Mock.Clients
         {
             throw new NotImplementedException();
         }
-
-       // private MergeRequest GetRelease() => GetMergeRequest(_projectId, _mergeRequestIid);
     }
 }

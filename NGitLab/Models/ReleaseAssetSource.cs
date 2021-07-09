@@ -6,9 +6,9 @@ namespace NGitLab.Models
     public class ReleaseAssetSource
     {
         [DataMember(Name = "format")]
-        public string Format;
+        public string Format { get; set; }
 
         [DataMember(Name = "url")]
-        public string Url;
+        public string Url { get; set; }
     }
 }

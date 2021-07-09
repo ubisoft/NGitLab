@@ -6,31 +6,31 @@ using NGitLab.Models;
 
 namespace NGitLab.Mock
 {
-    public sealed class Release : GitLabObject
+    public sealed class ReleaseInfo : GitLabObject
     {
-        public Release()
+        public ReleaseInfo()
         {
         }
 
         public Project Project => (Project)Parent;
 
-        public string TagName;
+        public string TagName { get; set; }
 
-        public string Description;
+        public string Description { get; set; }
 
-        public string Name;
+        public string Name { get; set; }
 
-        public DateTime CreatedAt = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public DateTime ReleasedAt = DateTime.UtcNow;
+        public DateTime ReleasedAt { get; set; } = DateTime.UtcNow;
 
-        public UserRef Author;
+        public UserRef Author { get; set; }
 
-        public Commit Commit;
+        public Commit Commit { get; set; }
 
-        public string CommitPath;
+        public string CommitPath { get; set; }
 
-        public string TagPath;
+        public string TagPath { get; set; }
 
         internal Models.ReleaseInfo ToReleaseClient()
         {

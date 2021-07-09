@@ -7,12 +7,12 @@ namespace NGitLab.Models
     public class ReleaseEvidence
     {
         [DataMember(Name = "sha")]
-        public string Sha;
+        public string Sha { get; set; }
 
         [DataMember(Name = "filepath")]
-        public string Filepath;
+        public string Filepath { get; set; }
 
         [DataMember(Name = "collected_at")]
-        public DateTime CollectedAt;
+        public DateTime CollectedAt { get; set; }
     }
 }

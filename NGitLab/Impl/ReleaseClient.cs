@@ -6,7 +6,7 @@ namespace NGitLab.Impl
 {
     // Handles interacting with Releases.
     // Documentation: https://docs.gitlab.com/ee/api/releases/
-    public class ReleaseClient : IReleaseClient
+    internal class ReleaseClient : IReleaseClient
     {
         private readonly API _api;
         private readonly int _projectId;
@@ -20,7 +20,7 @@ namespace NGitLab.Impl
             _releasesPath = projectPath + "/releases";
         }
 
-        public IEnumerable<ReleaseInfo> All  => _api.Get().GetAll<ReleaseInfo>(_releasesPath + "?per_page=50");
+        public IEnumerable<ReleaseInfo> All  => _api.Get().GetAll<ReleaseInfo>(_releasesPath);
 
         public ReleaseInfo this[string tagName] => _api.Get().To<ReleaseInfo>($"{_releasesPath}/{WebUtility.UrlEncode(tagName)}");
 

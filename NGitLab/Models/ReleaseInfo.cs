@@ -7,39 +7,39 @@ namespace NGitLab.Models
     public class ReleaseInfo
     {
         [DataMember(Name = "tag_name")]
-        public string TagName;
+        public string TagName { get; set; }
 
         [DataMember(Name = "description")]
-        public string Description;
+        public string Description { get; set; }
 
         [DataMember(Name = "name")]
-        public string Name;
+        public string Name { get; set; }
 
         [DataMember(Name = "created_at")]
-        public DateTime CreatedAt;
+        public DateTime CreatedAt { get; set; }
 
         [DataMember(Name = "released_at")]
-        public DateTime ReleasedAt;
+        public DateTime ReleasedAt { get; set; }
 
         [DataMember(Name = "author")]
-        public Author Author;
+        public Author Author { get; set; }
 
         [DataMember(Name = "commit")]
-        public Commit Commit;
+        public Commit Commit { get; set; }
 
         [DataMember(Name = "milestones")]
-        public Milestone[] Milestones;
+        public Milestone[] Milestones { get; set; }
 
         [DataMember(Name = "commit_path")]
-        public string CommitPath;
+        public string CommitPath { get; set; }
 
         [DataMember(Name = "tag_path")]
-        public string TagPath;
+        public string TagPath { get; set; }
 
         [DataMember(Name = "assets")]
-        public ReleaseAssetsInfo Assets;
+        public ReleaseAssetsInfo Assets { get; set; }
 
         [DataMember(Name = "evidences")]
-        public ReleaseEvidence[] Evidences;
+        public ReleaseEvidence[] Evidences { get; set; }
     }
 }

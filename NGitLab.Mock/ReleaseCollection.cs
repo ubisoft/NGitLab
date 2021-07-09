@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace NGitLab.Mock
 {
-    public class ReleaseCollection : Collection<Release>
+    public class ReleaseCollection : Collection<ReleaseInfo>
     {
         private Project Project => (Project)Parent;
 
@@ -12,12 +12,12 @@ namespace NGitLab.Mock
         {
         }
 
-        public Release GetByTagName(string tagName)
+        public ReleaseInfo GetByTagName(string tagName)
         {
             return this.FirstOrDefault(r => r.TagName.Equals(tagName));
         }
 
-        public override void Add(Release release)
+        public override void Add(ReleaseInfo release)
         {
             if (release is null)
                 throw new ArgumentNullException(nameof(release));
@@ -40,14 +40,14 @@ namespace NGitLab.Mock
             base.Add(release);
         }
 
-        public Release Add(string tagName, string name, string description, User user)
+        public ReleaseInfo Add(string tagName, string name, string description, User user)
         {
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));
             if (user is null)
                 throw new ArgumentNullException(nameof(user));
 
-            var release = new Release
+            var release = new ReleaseInfo
             {
                 TagName = tagName,
                 Name = name,

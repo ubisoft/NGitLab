@@ -8,7 +8,7 @@ namespace NGitLab.Impl
 {
     // Handles interacting with Release links.
     // Documentation: https://docs.gitlab.com/ee/api/releases/links
-    public class ReleaseLinkClient : IReleaseLinkClient
+    internal class ReleaseLinkClient : IReleaseLinkClient
     {
         private readonly API _api;
         private readonly string _linksPath;

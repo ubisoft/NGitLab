@@ -6,15 +6,15 @@ namespace NGitLab.Models
     public class ReleaseLinkCreate
     {
         [DataMember(Name = "name")]
-        public string Name;
+        public string Name { get; set; }
 
         [DataMember(Name = "url")]
-        public string Url;
+        public string Url { get; set; }
 
         [DataMember(Name = "filepath")]
-        public string Filepath;
+        public string Filepath { get; set; }
 
         [DataMember(Name = "link_type")]
-        public ReleaseLinkType LinkType;
+        public ReleaseLinkType LinkType { get; set; }
     }
 }

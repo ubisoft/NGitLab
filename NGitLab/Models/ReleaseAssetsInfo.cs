@@ -6,12 +6,12 @@ namespace NGitLab.Models
     public class ReleaseAssetsInfo
     {
         [DataMember(Name = "count")]
-        public int? Count;
+        public int? Count { get; set; }
 
         [DataMember(Name = "sources")]
-        public ReleaseAssetSource[] Sources;
+        public ReleaseAssetSource[] Sources { get; set; }
 
         [DataMember(Name = "links")]
-        public ReleaseLink[] Links;
+        public ReleaseLink[] Links { get; set; }
     }
 }
