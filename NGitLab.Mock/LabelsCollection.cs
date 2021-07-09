@@ -12,7 +12,12 @@ namespace NGitLab.Mock
 
         public Label GetById(int id)
         {
-            return this.FirstOrDefault(mr => mr.Id == id);
+            return this.FirstOrDefault(l => l.Id == id);
+        }
+
+        public Label GetByName(string name)
+        {
+            return this.FirstOrDefault(l => l.Name.Equals(name, StringComparison.Ordinal));
         }
 
         public Label Add(string name = null, string color = null, string description = null)
@@ -48,6 +53,11 @@ namespace NGitLab.Mock
                 label.Id = Server.GetNewLabelId();
             }
             else if (GetById(label.Id) != null)
+            {
+                throw new GitLabException("Label already exists");
+            }
+
+            if (GetByName(label.Name) != null)
             {
                 throw new GitLabException("Label already exists");
             }
