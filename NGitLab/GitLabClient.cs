@@ -147,6 +147,11 @@ namespace NGitLab
             return new MilestoneClient(_api, projectId);
         }
 
+        public IReleaseClient GetReleases(int projectId)
+        {
+            return new ReleaseClient(_api, projectId);
+        }
+
         public IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId)
         {
             return new ProjectIssueNoteClient(_api, projectId);
