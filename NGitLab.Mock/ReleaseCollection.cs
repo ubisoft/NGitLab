@@ -22,9 +22,9 @@ namespace NGitLab.Mock
             if (release is null)
                 throw new ArgumentNullException(nameof(release));
 
-            if (release.TagName == default || Project.Repository.GetTags().FirstOrDefault(t => t.FriendlyName.Equals(release.TagName)) == null)
+            if (release.TagName == default || Project.Repository.GetTags().FirstOrDefault(t => t.FriendlyName.Equals(release.TagName, StringComparison.Ordinal)) == null)
             {
-                throw new ArgumentException(nameof(release));
+                throw new ArgumentException($"Tag '{release.TagName}' invalid or not found", nameof(release));
             }
 
             if (release.Name == default)
