@@ -34,7 +34,7 @@ namespace NGitLab.Mock.Clients
                 using (Context.BeginOperationScope())
                 {
                     var project = GetProject(_projectId, ProjectPermission.View);
-                    var release = project.Releases.FirstOrDefault(r => r.TagName.Equals(tagName));
+                    var release = project.Releases.FirstOrDefault(r => r.TagName.Equals(tagName, StringComparison.Ordinal));
 
                     return release.ToReleaseClient();
                 }
@@ -86,7 +86,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                var release = project.Releases.FirstOrDefault(r => r.TagName.Equals(tagName));
+                var release = project.Releases.FirstOrDefault(r => r.TagName.Equals(tagName, StringComparison.Ordinal));
                 if (release == null)
                     throw new GitLabNotFoundException();
 
