@@ -24,8 +24,8 @@ namespace NGitLab.Mock
 
         public UserRef Assignee
         {
-            get => Assignees.FirstOrDefault();
-            set => Assignees = new[] { value };
+            get => Assignees?.FirstOrDefault();
+            set => Assignees = (value != null) ? new[] { value } : null;
         }
 
         public UserRef[] Assignees { get; set; }
@@ -81,7 +81,7 @@ namespace NGitLab.Mock
                 Labels = Labels,
                 Milestone = Milestone?.ToClientMilestone(),
                 Assignee = Assignee?.ToClientAssignee(),
-                Assignees = Assignees?.Select(a => a.ToClientAssignee()).ToArray(),
+                Assignees = Assignees?.Select(a => a.ToClientAssignee())?.ToArray(),
                 Author = Author.ToClientAuthor(),
                 State = State.ToString(),
                 CreatedAt = CreatedAt.UtcDateTime,
