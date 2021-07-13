@@ -53,5 +53,22 @@ namespace NGitLab.Mock.Tests
             Assert.AreEqual(1, issues.Length, "Issues count is invalid");
             Assert.AreEqual("Issue 2", issues[0].Title, "Issue found is invalid");
         }
+
+        [Test]
+        public void Test_issues_assignee_not_throwing_when_assignees_is_null()
+        {
+            using var gitLabServer = new GitLabServer();
+            var user = new User("user");
+            gitLabServer.Users.Add(user);
+            var group = new Group("TestGroup");
+            gitLabServer.Groups.Add(group);
+            var project = new Project("Test") { Visibility = VisibilityLevel.Internal };
+            group.Projects.Add(project);
+            var issue1 = new Issue { Author = new UserRef(user), Assignee = null, Title = "Issue title" };
+            project.Issues.Add(issue1);
+
+            var client = gitLabServer.CreateClient(user);
+            Assert.DoesNotThrow(() => client.Issues.Get(new IssueQuery { Scope = "assigned_to_me" }).ToArray());
+        }
     }
 }
