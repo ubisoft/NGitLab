@@ -37,6 +37,7 @@ namespace NGitLab.Mock.Tests
             var group = new Group("TestGroup");
             gitLabServer.Groups.Add(group);
             var project = new Project("Test") { Visibility = VisibilityLevel.Internal };
+            project.Permissions.Add(new Permission(user1, AccessLevel.Maintainer));
             group.Projects.Add(project);
 
             var client = gitLabServer.CreateClient(user1);
@@ -56,6 +57,7 @@ namespace NGitLab.Mock.Tests
             var group = new Group("TestGroup");
             gitLabServer.Groups.Add(group);
             var project = new Project("Test") { Visibility = VisibilityLevel.Internal };
+            project.Permissions.Add(new Permission(user1, AccessLevel.Maintainer));
             group.Projects.Add(project);
             project.Labels.Add(name: "test1");
 
@@ -76,6 +78,7 @@ namespace NGitLab.Mock.Tests
             var group = new Group("TestGroup");
             gitLabServer.Groups.Add(group);
             var project = new Project("Test") { Visibility = VisibilityLevel.Internal };
+            project.Permissions.Add(new Permission(user1, AccessLevel.Maintainer));
             group.Projects.Add(project);
             project.Labels.Add(name: "test1");
 
@@ -93,6 +96,7 @@ namespace NGitLab.Mock.Tests
             var user1 = new User("user1");
             gitLabServer.Users.Add(user1);
             var group = new Group("TestGroup");
+            group.Permissions.Add(new Permission(user1, AccessLevel.Maintainer));
             gitLabServer.Groups.Add(group);
             group.Labels.Add(name: "test1");
             group.Labels.Add(name: "test2");
@@ -112,6 +116,7 @@ namespace NGitLab.Mock.Tests
             var user1 = new User("user1");
             gitLabServer.Users.Add(user1);
             var group = new Group("TestGroup");
+            group.Permissions.Add(new Permission(user1, AccessLevel.Maintainer));
             gitLabServer.Groups.Add(group);
 
             var client = gitLabServer.CreateClient(user1);
@@ -129,6 +134,7 @@ namespace NGitLab.Mock.Tests
             var user1 = new User("user1");
             gitLabServer.Users.Add(user1);
             var group = new Group("TestGroup");
+            group.Permissions.Add(new Permission(user1, AccessLevel.Maintainer));
             gitLabServer.Groups.Add(group);
             group.Labels.Add(name: "test1");
 
