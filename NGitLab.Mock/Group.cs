@@ -21,6 +21,7 @@ namespace NGitLab.Mock
             Projects = new ProjectCollection(this);
             Permissions = new PermissionCollection(this);
             Badges = new BadgeCollection(this);
+            Labels = new LabelsCollection(this);
             Name = name;
         }
 
@@ -69,6 +70,8 @@ namespace NGitLab.Mock
         public PermissionCollection Permissions { get; }
 
         public BadgeCollection Badges { get; }
+
+        public LabelsCollection Labels { get; }
 
         public string Path
         {

@@ -27,6 +27,7 @@ namespace NGitLab.Mock
             Pipelines = new PipelineCollection(this);
             Jobs = new JobCollection(this);
             Badges = new BadgeCollection(this);
+            Labels = new LabelsCollection(this);
             CommitInfos = new CommitInfoCollection(this);
             CommitStatuses = new CommitStatusCollection(this);
             Releases = new ReleaseCollection(this);
@@ -85,6 +86,8 @@ namespace NGitLab.Mock
         public PipelineCollection Pipelines { get; }
 
         public JobCollection Jobs { get; }
+
+        public LabelsCollection Labels { get; }
 
         public CommitInfoCollection CommitInfos { get; }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -11,49 +12,126 @@ namespace NGitLab.Mock.Clients
         {
         }
 
-        public Label Create(LabelCreate label)
+        public Models.Label Create(LabelCreate label)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(label.Id, ProjectPermission.Edit);
+                return project.Labels.Add(label.Name, label.Color, label.Description).ToClientLabel();
+            }
         }
 
-        public Label CreateGroupLabel(LabelCreate label)
+        public Models.Label CreateGroupLabel(LabelCreate label)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var group = GetGroup(label.Id, GroupPermission.Edit);
+                return group.Labels.Add(label.Name, label.Color, label.Description).ToClientLabel();
+            }
         }
 
-        public Label Delete(LabelDelete label)
+        public Models.Label Delete(LabelDelete label)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(label.Id, ProjectPermission.Edit);
+                var l = FindLabel(project.Labels, label.Name) ?? throw new GitLabNotFoundException($"Cannot find label '{label.Name}'");
+                project.Labels.Remove(l);
+                return l.ToClientLabel();
+            }
         }
 
-        public Label Edit(LabelEdit label)
+        public Models.Label Edit(LabelEdit label)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(label.Id, ProjectPermission.Edit);
+                var l = FindLabel(project.Labels, label.Name) ?? throw new GitLabNotFoundException($"Cannot find label '{label.Name}'");
+
+                if (!string.IsNullOrEmpty(label.NewName))
+                {
+                    l.Name = label.NewName;
+                }
+
+                if (!string.IsNullOrEmpty(label.Color))
+                {
+                    l.Color = label.Color;
+                }
+
+                if (label.Description != null)
+                {
+                    l.Description = label.Description;
+                }
+
+                return l.ToClientLabel();
+            }
         }
 
-        public Label EditGroupLabel(LabelEdit label)
+        public Models.Label EditGroupLabel(LabelEdit label)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var group = GetGroup(label.Id, GroupPermission.Edit);
+                var l = FindLabel(group.Labels, label.Name) ?? throw new GitLabNotFoundException($"Cannot find label '{label.Name}'");
+
+                if (!string.IsNullOrEmpty(label.NewName))
+                {
+                    l.Name = label.NewName;
+                }
+
+                if (!string.IsNullOrEmpty(label.Color))
+                {
+                    l.Color = label.Color;
+                }
+
+                if (label.Description != null)
+                {
+                    l.Description = label.Description;
+                }
+
+                return l.ToClientLabel();
+            }
         }
 
-        public IEnumerable<Label> ForGroup(int groupId)
+        public IEnumerable<Models.Label> ForGroup(int groupId)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var group = GetGroup(groupId, GroupPermission.View);
+                return group.Labels.Select(x => x.ToClientLabel());
+            }
         }
 
-        public IEnumerable<Label> ForProject(int projectId)
+        public IEnumerable<Models.Label> ForProject(int projectId)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(projectId, ProjectPermission.View);
+                return project.Labels.Select(x => x.ToClientLabel());
+            }
         }
 
-        public Label GetGroupLabel(int groupId, string name)
+        public Models.Label GetGroupLabel(int groupId, string name)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var group = GetGroup(groupId, GroupPermission.View);
+                return FindLabel(group.Labels, name)?.ToClientLabel();
+            }
         }
 
-        public Label GetLabel(int projectId, string name)
+        public Models.Label GetLabel(int projectId, string name)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(projectId, ProjectPermission.View);
+                return FindLabel(project.Labels, name)?.ToClientLabel();
+            }
+        }
+
+        private static Label FindLabel(LabelsCollection collection, string name)
+        {
+            return collection.FirstOrDefault(x => x.Name.Equals(name, StringComparison.Ordinal));
         }
     }
 }

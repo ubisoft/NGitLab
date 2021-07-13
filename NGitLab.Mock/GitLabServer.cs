@@ -21,6 +21,7 @@ namespace NGitLab.Mock
         private int _lastPipelineId;
         private int _lastJobId;
         private int _lastBadgeId;
+        private int _lastLabelId;
 
         public GitLabServer()
         {
@@ -100,6 +101,8 @@ namespace NGitLab.Mock
         internal int GetNewJobId() => Interlocked.Increment(ref _lastJobId);
 
         internal int GetNewBadgeId() => Interlocked.Increment(ref _lastBadgeId);
+
+        internal int GetNewLabelId() => Interlocked.Increment(ref _lastLabelId);
 
         internal string MakeUrl(string relativeUrl)
         {
