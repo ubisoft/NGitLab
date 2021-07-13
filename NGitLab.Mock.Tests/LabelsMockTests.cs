@@ -8,7 +8,7 @@ namespace NGitLab.Mock.Tests
     public class LabelsMockTests
     {
         [Test]
-        public void Test_labels_from_project_can_be_found()
+        public void Test_labels_can_be_found_from_project()
         {
             using var gitLabServer = new GitLabServer();
             var user1 = new User("user1");
