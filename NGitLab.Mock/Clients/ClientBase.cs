@@ -91,17 +91,17 @@ namespace NGitLab.Mock.Clients
 
                 case ProjectPermission.Contribute:
                     if (!project.CanUserContributeToProject(Context.User))
-                        throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to edit the project '{project.Name}'");
+                        throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to contribute to the project '{project.Name}'");
                     break;
 
                 case ProjectPermission.Edit:
                     if (!project.CanUserEditProject(Context.User))
-                        throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to delete the project '{project.Name}'");
+                        throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to edit the project '{project.Name}'");
                     break;
 
                 case ProjectPermission.Delete:
                     if (!project.CanUserDeleteProject(Context.User))
-                        throw new GitLabForbiddenException();
+                        throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to delete the project '{project.Name}'");
                     break;
 
                 default:

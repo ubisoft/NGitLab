@@ -37,6 +37,7 @@ namespace NGitLab.Mock.Tests
             var group = new Group("TestGroup");
             gitLabServer.Groups.Add(group);
             var project = new Project("Test") { Visibility = VisibilityLevel.Internal };
+            project.Permissions.Add(new Permission(user1, AccessLevel.Maintainer));
             group.Projects.Add(project);
 
             var client = gitLabServer.CreateClient(user1);
@@ -56,6 +57,7 @@ namespace NGitLab.Mock.Tests
             var group = new Group("TestGroup");
             gitLabServer.Groups.Add(group);
             var project = new Project("Test") { Visibility = VisibilityLevel.Internal };
+            project.Permissions.Add(new Permission(user1, AccessLevel.Maintainer));
             group.Projects.Add(project);
             var milestone = new Milestone { Title = "Milestone 1" };
             project.Milestones.Add(milestone);
@@ -77,6 +79,7 @@ namespace NGitLab.Mock.Tests
             var group = new Group("TestGroup");
             gitLabServer.Groups.Add(group);
             var project = new Project("Test") { Visibility = VisibilityLevel.Internal };
+            project.Permissions.Add(new Permission(user1, AccessLevel.Maintainer));
             group.Projects.Add(project);
             var milestone = new Milestone { Title = "Milestone 1" };
             project.Milestones.Add(milestone);
@@ -97,6 +100,7 @@ namespace NGitLab.Mock.Tests
             var group = new Group("TestGroup");
             gitLabServer.Groups.Add(group);
             var project = new Project("Test") { Visibility = VisibilityLevel.Internal };
+            project.Permissions.Add(new Permission(user1, AccessLevel.Maintainer));
             group.Projects.Add(project);
             var milestone = new Milestone { Title = "Milestone 1" };
             project.Milestones.Add(milestone);
