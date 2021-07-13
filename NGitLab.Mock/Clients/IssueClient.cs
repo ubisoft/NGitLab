@@ -192,7 +192,7 @@ namespace NGitLab.Mock.Clients
                         break;
                     case "assigned_to_me":
                     case "assigned-to-me":
-                        issues = issues.Where(i => i.Assignees.Any(x => x.Id == userId));
+                        issues = issues.Where(i => i.Assignees?.Any(x => x.Id == userId) == true);
                         break;
                     case "all":
                         break;
