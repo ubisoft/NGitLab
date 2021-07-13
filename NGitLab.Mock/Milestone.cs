@@ -5,6 +5,8 @@ namespace NGitLab.Mock
 {
     public sealed class Milestone : GitLabObject
     {
+        public Project Project => Parent as Project;
+
         public int Id { get; set; }
 
         public int Iid { get; set; }
