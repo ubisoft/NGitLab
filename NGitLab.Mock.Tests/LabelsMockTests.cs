@@ -87,7 +87,7 @@ namespace NGitLab.Mock.Tests
         }
 
         [Test]
-        public void Test_labels_from_group_can_be_found()
+        public void Test_labels_can_be_found_from_group()
         {
             using var gitLabServer = new GitLabServer();
             var user1 = new User("user1");
