@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using NGitLab.Mock.Clients;
 
 namespace NGitLab.Mock
 {
@@ -40,12 +41,20 @@ namespace NGitLab.Mock
             base.Add(release);
         }
 
-        public ReleaseInfo Add(string tagName, string name, string description, User user)
+        public ReleaseInfo Add(string tagName, string name, string reference, string description, User user)
         {
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));
             if (user is null)
                 throw new ArgumentNullException(nameof(user));
+
+            if (!Project.Repository.GetTags().Any(r => string.Equals(r.FriendlyName, tagName, StringComparison.Ordinal)))
+            {
+                if (string.IsNullOrEmpty(reference))
+                    throw new GitLabBadRequestException();
+
+                Project.Repository.CreateTag(tagName);
+            }
 
             var release = new ReleaseInfo
             {
