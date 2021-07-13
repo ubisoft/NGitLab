@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
@@ -36,41 +37,12 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public ReleaseInfo CreateRelease(string name, ReleaseCreate data)
-        {
-            using (Context.BeginOperationScope())
-            {
-                var project = GetProject(_projectId, ProjectPermission.Contribute);
-                var tag = project.Repository.CreateReleaseTag(name, data.Description);
-                return new ReleaseInfo
-                {
-                    TagName = tag.Name,
-                    Description = tag.ReleaseNotes,
-                };
-            }
-        }
-
         public void Delete(string name)
         {
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.Contribute);
                 project.Repository.DeleteTag(name);
-            }
-        }
-
-        public ReleaseInfo UpdateRelease(string name, ReleaseUpdate data)
-        {
-            using (Context.BeginOperationScope())
-            {
-                var project = GetProject(_projectId, ProjectPermission.Contribute);
-                var tag = project.Repository.UpdateReleaseTag(name, data.Description);
-
-                return new ReleaseInfo
-                {
-                    TagName = tag.Name,
-                    Description = tag.ReleaseNotes,
-                };
             }
         }
 
@@ -83,7 +55,7 @@ namespace NGitLab.Mock.Clients
             {
                 Commit = commit.ToCommitInfo(),
                 Name = tag.FriendlyName,
-                Release = new ReleaseInfo
+                Release = new Models.ReleaseInfo
                 {
                     Description = project.Repository.GetReleaseTag(tag.FriendlyName)?.ReleaseNotes,
                     TagName = tag.FriendlyName,

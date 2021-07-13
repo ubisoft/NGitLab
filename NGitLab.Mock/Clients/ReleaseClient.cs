@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
@@ -14,43 +15,88 @@ namespace NGitLab.Mock.Clients
             _projectId = projectId;
         }
 
-        public IEnumerable<ReleaseInfo> All
+        public IEnumerable<Models.ReleaseInfo> All
         {
             get
             {
                 using (Context.BeginOperationScope())
                 {
-                    var project = GetProject(_projectId, ProjectPermission.Contribute);
-                    return project.Repository.GetReleases();
+                    var project = GetProject(_projectId, ProjectPermission.View);
+                    return project.Releases.Select(r => r.ToReleaseClient());
                 }
             }
         }
 
-        public ReleaseInfo Create(ReleaseCreate data)
+        public Models.ReleaseInfo this[string tagName]
         {
-            using (Context.BeginOperationScope())
+            get
             {
-                var project = GetProject(_projectId, ProjectPermission.Contribute);
-                return project.Repository.CreateRelease(data.Name, data.Description);
+                using (Context.BeginOperationScope())
+                {
+                    var project = GetProject(_projectId, ProjectPermission.View);
+                    var release = project.Releases.FirstOrDefault(r => r.TagName.Equals(tagName, StringComparison.Ordinal));
+
+                    return release.ToReleaseClient();
+                }
             }
         }
 
-        public void Delete(string name)
+        public Models.ReleaseInfo Create(Models.ReleaseCreate data)
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Contribute);
-                project.Repository.DeleteRelease(name);
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var release = project.Releases.Add(data.TagName, data.Name, data.Description, Context.User);
+                return release.ToReleaseClient();
             }
         }
 
-        public ReleaseInfo Update(ReleaseUpdate data)
+        public Models.ReleaseInfo Update(ReleaseUpdate data)
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Contribute);
-                return project.Repository.UpdateRelease(data.Name, data.Description);
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var release = project.Releases.GetByTagName(data.TagName);
+                if (release == null)
+                {
+                    throw new GitLabNotFoundException();
+                }
+
+                if (data.Name != null)
+                {
+                    release.Name = data.Name;
+                }
+
+                if (data.Description != null)
+                {
+                    release.Description = data.Description;
+                }
+
+                if (data.ReleasedAt.HasValue)
+                {
+                    release.ReleasedAt = data.ReleasedAt.Value;
+                }
+
+                return release.ToReleaseClient();
             }
+        }
+
+        public void Delete(string tagName)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var release = project.Releases.FirstOrDefault(r => r.TagName.Equals(tagName, StringComparison.Ordinal));
+                if (release == null)
+                    throw new GitLabNotFoundException();
+
+                project.Releases.Remove(release);
+            }
+        }
+
+        public IReleaseLinkClient ReleaseLinks(string tagName)
+        {
+            throw new NotImplementedException();
         }
     }
 }

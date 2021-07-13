@@ -48,6 +48,8 @@
 
         IMilestoneClient GetMilestone(int projectId);
 
+        IReleaseClient GetReleases(int projectId);
+
         IMembersClient Members { get; }
 
         IVersionClient Version { get; }
