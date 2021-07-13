@@ -24,7 +24,7 @@ namespace NGitLab.Mock
 
         public UserRef Assignee
         {
-            get => Assignees.FirstOrDefault();
+            get => Assignees?.FirstOrDefault();
             set => Assignees = new[] { value };
         }
 
