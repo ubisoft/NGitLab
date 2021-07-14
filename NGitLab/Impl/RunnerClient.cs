@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -57,6 +58,7 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Job>(url);
         }
 
+        [SuppressMessage("ApiDesign", "RS0027:Public API with optional parameter(s) should have the most parameters amongst its public overloads", Justification = "Keep compatibility")]
         public IEnumerable<Job> GetJobs(int runnerId, JobStatus? status = null)
         {
             var url = $"{Runner.Url}/{runnerId}/jobs";
