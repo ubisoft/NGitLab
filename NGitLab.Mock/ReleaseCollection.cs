@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using NGitLab.Mock.Clients;
 
 namespace NGitLab.Mock
 {
@@ -42,10 +43,23 @@ namespace NGitLab.Mock
 
         public ReleaseInfo Add(string tagName, string name, string description, User user)
         {
+            return Add(tagName, name, reference: null, description, user);
+        }
+
+        public ReleaseInfo Add(string tagName, string name, string reference, string description, User user)
+        {
             if (tagName is null)
                 throw new ArgumentNullException(nameof(tagName));
             if (user is null)
                 throw new ArgumentNullException(nameof(user));
+
+            if (!Project.Repository.GetTags().Any(r => string.Equals(r.FriendlyName, tagName, StringComparison.Ordinal)))
+            {
+                if (string.IsNullOrEmpty(reference))
+                    throw new GitLabBadRequestException("A reference must be set when the tag does not exist");
+
+                Project.Repository.CreateTag(tagName);
+            }
 
             var release = new ReleaseInfo
             {
