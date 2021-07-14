@@ -173,7 +173,6 @@ namespace NGitLab.Mock.Clients
                     || query.OrderBy != null
                     || query.PerPage != null
                     || query.Search != null
-                    || query.Simple != null
                     || query.Statistics != null
                     || query.Visibility != null)
                     throw new NotImplementedException();
