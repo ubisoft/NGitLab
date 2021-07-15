@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -55,6 +56,7 @@ namespace NGitLab
         /// <summary>
         /// List all jobs of the given runner that meet the specified status
         /// </summary>
+        [SuppressMessage("ApiDesign", "RS0027:Public API with optional parameter(s) should have the most parameters amongst its public overloads", Justification = "Keep compatibility")]
         IEnumerable<Job> GetJobs(int runnerId, JobStatus? status = null);
 
         /// <summary>
