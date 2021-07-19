@@ -29,7 +29,7 @@ namespace NGitLab.Tests.Docker
         private static readonly HashSet<string> s_generatedValues = new HashSet<string>(StringComparer.Ordinal);
         private static readonly SemaphoreSlim s_prepareRunnerLock = new SemaphoreSlim(1, 1);
 
-        private readonly CustomRequestOptions _customRequestOptions = new CustomRequestOptions();
+        private readonly GitLabTestContextRequestOptions _customRequestOptions = new GitLabTestContextRequestOptions();
         private readonly List<IGitLabClient> _clients = new List<IGitLabClient>();
 
         public GitLabDockerContainer DockerContainer { get; set; }
@@ -419,31 +419,6 @@ namespace NGitLab.Tests.Docker
             {
                 _process.Kill(entireProcessTree: true);
                 _process.WaitForExit();
-            }
-        }
-
-        /// <summary>
-        /// Stores all the web requests in a list.
-        /// </summary>
-        private sealed class CustomRequestOptions : RequestOptions
-        {
-            private readonly List<WebRequest> _allRequests = new List<WebRequest>();
-
-            public IReadOnlyList<WebRequest> AllRequests => _allRequests;
-
-            public CustomRequestOptions()
-                : base(retryCount: 10, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
-            {
-            }
-
-            public override WebResponse GetResponse(HttpWebRequest request)
-            {
-                lock (_allRequests)
-                {
-                    _allRequests.Add(request);
-                }
-
-                return base.GetResponse(request);
             }
         }
     }

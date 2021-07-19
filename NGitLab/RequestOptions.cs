@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 
 namespace NGitLab
@@ -69,6 +70,11 @@ namespace NGitLab
         public virtual WebResponse GetResponse(HttpWebRequest request)
         {
             return request.GetResponse();
+        }
+
+        internal virtual Stream GetRequestStream(HttpWebRequest request)
+        {
+            return request.GetRequestStream();
         }
     }
 }
