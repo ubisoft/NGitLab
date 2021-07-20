@@ -14,7 +14,7 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
-            context.CreateNewUserAsync(out var user);
+            context.CreateNewUser(out var user);
             var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
 
             // Add
@@ -41,7 +41,7 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
-            context.CreateNewUserAsync(out var user);
+            context.CreateNewUser(out var user);
             var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
 
             context.Client.Members.AddMemberToProject(projectId, new ProjectMemberCreate

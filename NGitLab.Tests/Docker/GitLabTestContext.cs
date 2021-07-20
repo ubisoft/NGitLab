@@ -80,9 +80,9 @@ namespace NGitLab.Tests.Docker
             }
         }
 
-        public IGitLabClient CreateNewUserAsync() => CreateNewUserAsync(out _);
+        public IGitLabClient CreateNewUserAsync() => CreateNewUser(out _);
 
-        public IGitLabClient CreateNewUserAsync(out User user)
+        public IGitLabClient CreateNewUser(out User user)
         {
             var username = "user_" + DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
             var email = username + "@dummy.com";

@@ -97,6 +97,11 @@ namespace NGitLab.Tests
         public async Task Test_merge_request_approvers()
         {
             using var context = await GitLabTestContext.CreateAsync();
+            if(context.AdminClient.Version.Get().Version.StartsWith("14.", StringComparison.Ordinal))
+            {
+                Assert.Inconclusive("Setting approvers is not supported in GitLab 14, you must use approval rules");
+            }
+
             var (project, mergeRequest) = context.CreateMergeRequest();
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 

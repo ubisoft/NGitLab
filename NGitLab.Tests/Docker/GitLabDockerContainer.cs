@@ -27,7 +27,7 @@ namespace NGitLab.Tests.Docker
         public const string ImageName = "gitlab/gitlab-ee";
 
         // https://hub.docker.com/r/gitlab/gitlab-ee/tags/
-        public const string GitLabDockerVersion = "13.10.3-ee.0"; // Keep in sync with .github/workflows/ci.yml
+        public const string GitLabDockerVersion = "14.0.6-ee.0"; // Keep in sync with .github/workflows/ci.yml
 
         private static string s_creationErrorMessage;
         private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
@@ -184,6 +184,7 @@ namespace NGitLab.Tests.Docker
                     Env = new List<string>
                     {
                         "GITLAB_OMNIBUS_CONFIG=external_url 'http://localhost:" + HttpPort.ToString(CultureInfo.InvariantCulture) + "/'",
+                        "GITLAB_ROOT_PASSWORD=" + AdminPassword,
                     },
                 }).ConfigureAwait(false);
 
@@ -306,6 +307,11 @@ namespace NGitLab.Tests.Docker
                 {
                     TestContext.Progress.WriteLine("Creating root token");
                     result = await context.OpenAsync(GitLabUrl + "/profile/personal_access_tokens").ConfigureAwait(false);
+                    if(result.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        result = await context.OpenAsync(GitLabUrl + "/-/profile/personal_access_tokens").ConfigureAwait(false);
+                    }
+
                     var form = result.Forms["new_personal_access_token"];
                     ((IHtmlInputElement)form["personal_access_token[name]"]).Value = $"GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
                     foreach (var element in form.Elements.OfType<IHtmlInputElement>().Where(e => e.Name == "personal_access_token[scopes][]"))
@@ -324,13 +330,13 @@ namespace NGitLab.Tests.Docker
                 result = await context.OpenAsync(GitLabUrl + "/admin/requests_profiles").ConfigureAwait(false);
                 TestContext.Progress.WriteLine("Navigating to " + result.Location);
                 var codeElements = result.QuerySelectorAll("code").ToList();
-                var tokenElement = codeElements.SingleOrDefault(n => n.TextContent.StartsWith("X-Profile-Token:", StringComparison.Ordinal));
+                var tokenElement = codeElements.SingleOrDefault(n => n.TextContent.Trim().StartsWith("X-Profile-Token:", StringComparison.Ordinal));
                 if (tokenElement == null)
                 {
                     Assert.Fail("Cannot find X-Profile-Token in the page:\n\n" + result.DocumentElement.OuterHtml);
                 }
 
-                credentials.ProfileToken = tokenElement.TextContent.Substring("X-Profile-Token:".Length).Trim();
+                credentials.ProfileToken = tokenElement.TextContent.Trim().Substring("X-Profile-Token:".Length).Trim();
 
                 // Get admin login cookie
                 // result.Cookie: experimentation_subject_id=XXX; _gitlab_session=XXXX; known_sign_in=XXXX
