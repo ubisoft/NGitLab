@@ -62,6 +62,7 @@ jobs:
         - 48624:48624
         env:
           GITLAB_OMNIBUS_CONFIG: "external_url 'http://localhost:48624/'"
+          GITLAB_ROOT_PASSWORD: "Pa$$w0rd"
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core (latest)

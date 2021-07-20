@@ -39,7 +39,17 @@ namespace NGitLab.Tests.Docker
 
         public string AdminUserName { get; } = "root";
 
-        public string AdminPassword { get; } = "Pa$$w0rd";
+        public string AdminPassword
+        {
+            get
+            {
+                var env = Environment.GetEnvironmentVariable("GITLAB_ROOT_PASSWORD");
+                if (!string.IsNullOrEmpty(env))
+                    return env;
+
+                return "Pa$$w0rd";
+            }
+        }
 
         public string LicenseFile { get; set; }
 
@@ -281,7 +291,7 @@ namespace NGitLab.Tests.Docker
                 {
                     TestContext.Progress.WriteLine("Creating root password");
                     var form = result.Forms["new_user"];
-                    if(form == null)
+                    if (form == null)
                         throw new InvalidOperationException($"Cannot set the root password. The page doesn't contain the form 'new-user'");
 
                     ((IHtmlInputElement)form["user[password]"]).Value = AdminPassword;
@@ -307,7 +317,7 @@ namespace NGitLab.Tests.Docker
                 {
                     TestContext.Progress.WriteLine("Creating root token");
                     result = await context.OpenAsync(GitLabUrl + "/profile/personal_access_tokens").ConfigureAwait(false);
-                    if(result.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
                     {
                         result = await context.OpenAsync(GitLabUrl + "/-/profile/personal_access_tokens").ConfigureAwait(false);
                     }
