@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -16,6 +16,8 @@ namespace NGitLab.Tests.Docker
     internal sealed class GitLabTestContextRequestOptions : RequestOptions
     {
         private readonly List<WebRequest> _allRequests = new();
+        private static readonly SemaphoreSlim s_semaphoreSlim = new(1, 1);
+
         private readonly ConcurrentDictionary<WebRequest, LoggableRequestStream> _pendingRequest = new();
 
         public IReadOnlyList<WebRequest> AllRequests => _allRequests;
@@ -33,86 +35,102 @@ namespace NGitLab.Tests.Docker
             }
 
             WebResponse response = null;
+
+            // GitLab is unstable, so let's make sure we don't overload it with many concurrent requests
+            s_semaphoreSlim.Wait();
             try
             {
-                response = base.GetResponse(request);
-            }
-            catch (WebException exception)
-            {
-                response = exception.Response;
-                if (response is HttpWebResponse webResponse)
+                try
                 {
-                    response = new LoggableHttpWebResponse(webResponse);
-                    throw new WebException(exception.Message, exception, exception.Status, response);
+                    response = base.GetResponse(request);
                 }
+                catch (WebException exception)
+                {
+                    response = exception.Response;
+                    if (response is HttpWebResponse webResponse)
+                    {
+                        response = new LoggableHttpWebResponse(webResponse);
+                        throw new WebException(exception.Message, exception, exception.Status, response);
+                    }
 
-                throw;
+                    throw;
+                }
+                finally
+                {
+                    response = LogRequest(request, response);
+                }
             }
             finally
             {
-                byte[] requestContent = null;
-                if (_pendingRequest.TryRemove(request, out var requestStream))
+                s_semaphoreSlim.Release();
+            }
+
+            return response;
+        }
+
+        private WebResponse LogRequest(HttpWebRequest request, WebResponse response)
+        {
+            byte[] requestContent = null;
+            if (_pendingRequest.TryRemove(request, out var requestStream))
+            {
+                requestContent = requestStream.GetRequestContent();
+            }
+
+            var sb = new StringBuilder();
+            sb.Append(request.Method);
+            sb.Append(' ');
+            sb.Append(request.RequestUri);
+            sb.AppendLine();
+            LogHeaders(sb, request.Headers);
+            if (requestContent != null)
+            {
+                sb.AppendLine();
+
+                if (string.Equals(request.ContentType, "application/json", StringComparison.OrdinalIgnoreCase))
                 {
-                    requestContent = requestStream.GetRequestContent();
+                    sb.AppendLine(Encoding.UTF8.GetString(requestContent));
+                }
+                else
+                {
+                    sb.Append("Binary data: ").Append(requestContent.Length).AppendLine(" bytes");
                 }
 
-                var sb = new StringBuilder();
-                sb.Append(request.Method);
-                sb.Append(' ');
-                sb.Append(request.RequestUri);
                 sb.AppendLine();
-                LogHeaders(sb, request.Headers);
-                if (requestContent != null)
-                {
-                    sb.AppendLine();
+            }
 
-                    if (string.Equals(request.ContentType, "application/json", StringComparison.OrdinalIgnoreCase))
+            if (response != null)
+            {
+                sb.AppendLine("----------");
+
+                if (response.ResponseUri != request.RequestUri)
+                {
+                    sb.Append(request.RequestUri).AppendLine();
+                }
+
+                if (response is HttpWebResponse webResponse)
+                {
+                    sb.Append((int)webResponse.StatusCode).Append(' ').AppendLine(webResponse.StatusCode.ToString());
+                    LogHeaders(sb, response.Headers);
+                    if (string.Equals(webResponse.ContentType, "application/json", StringComparison.OrdinalIgnoreCase))
                     {
-                        sb.AppendLine(Encoding.UTF8.GetString(requestContent));
+                        // This response allows multiple reads, so NGitLab can also read the response
+                        // AllowResponseBuffering does not seem to work for WebException.Response
+                        response = new LoggableHttpWebResponse(webResponse);
+                        sb.AppendLine();
+                        using var responseStream = response.GetResponseStream();
+                        using var sr = new StreamReader(responseStream);
+                        var responseText = sr.ReadToEnd();
+                        sb.AppendLine(responseText);
                     }
                     else
                     {
-                        sb.Append("Binary data: ").Append(requestContent.Length).AppendLine(" bytes");
-                    }
-
-                    sb.AppendLine();
-                }
-
-                if (response != null)
-                {
-                    sb.AppendLine("----------");
-
-                    if (response.ResponseUri != request.RequestUri)
-                    {
-                        sb.Append(request.RequestUri).AppendLine();
-                    }
-
-                    if (response is HttpWebResponse webResponse)
-                    {
-                        sb.Append((int)webResponse.StatusCode).Append(' ').AppendLine(webResponse.StatusCode.ToString());
-                        LogHeaders(sb, response.Headers);
-                        if (string.Equals(webResponse.ContentType, "application/json", StringComparison.OrdinalIgnoreCase))
-                        {
-                            // This response allows multiple reads, so NGitLab can also read the response
-                            // AllowResponseBuffering does not seem to work for WebException.Response
-                            response = new LoggableHttpWebResponse(webResponse);
-                            sb.AppendLine();
-                            using var responseStream = response.GetResponseStream();
-                            using var sr = new StreamReader(responseStream);
-                            var responseText = sr.ReadToEnd();
-                            sb.AppendLine(responseText);
-                        }
-                        else
-                        {
-                            sb.Append("Binary data: ").Append(response.ContentLength).AppendLine(" bytes");
-                        }
+                        sb.Append("Binary data: ").Append(response.ContentLength).AppendLine(" bytes");
                     }
                 }
-
-                var logs = sb.ToString();
-                TestContext.WriteLine(new string('-', 100) + "\nGitLab request: " + logs);
             }
 
+            var logs = sb.ToString();
+            TestContext.WriteLine(new string('-', 100) + "\nGitLab request: " + logs);
             return response;
         }
 
