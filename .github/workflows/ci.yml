@@ -49,10 +49,10 @@ jobs:
       matrix:
         # Keep in sync with the version in GitLabDockerContainer.cs
         gitlab: [
-          #'gitlab/gitlab-ee:latest',
+          'gitlab/gitlab-ee:latest',
           'gitlab/gitlab-ee:13.10.3-ee.0'
         ]
-        configuration: [ Release ]
+        configuration: [ Debug, Release ]
       fail-fast: false
     services:
       gitlab:
