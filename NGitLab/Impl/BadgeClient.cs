@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -16,12 +17,12 @@ namespace NGitLab.Impl
 
         public IEnumerable<Badge> All => _api.Get().GetAll<Badge>(_urlPrefix + "/badges");
 
-        public Badge this[int id] => _api.Get().To<Badge>(_urlPrefix + "/badges/" + id);
+        public Badge this[int id] => _api.Get().To<Badge>(_urlPrefix + "/badges/" + id.ToStringInvariant());
 
         public Badge Create(BadgeCreate badge) => _api.Post().With(badge).To<Badge>(_urlPrefix + "/badges");
 
-        public Badge Update(int id, BadgeUpdate badge) => _api.Put().With(badge).To<Badge>(_urlPrefix + "/badges/" + id);
+        public Badge Update(int id, BadgeUpdate badge) => _api.Put().With(badge).To<Badge>(_urlPrefix + "/badges/" + id.ToStringInvariant());
 
-        public void Delete(int id) => _api.Delete().Execute(_urlPrefix + "/badges/" + id);
+        public void Delete(int id) => _api.Delete().Execute(_urlPrefix + "/badges/" + id.ToStringInvariant());
     }
 }

@@ -5,7 +5,7 @@ namespace NGitLab.Mock.Clients
 {
     internal sealed class ClientContext
     {
-        private readonly object _operationLock = new object();
+        private readonly object _operationLock = new();
 
         public ClientContext(GitLabServer server, User user)
         {

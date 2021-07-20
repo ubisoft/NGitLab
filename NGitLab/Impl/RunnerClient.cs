@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -18,7 +19,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<Runner> All => _api.Get().GetAll<Runner>(Runner.Url + "/all");
 
-        public Runner this[int id] => _api.Get().To<Runner>(Runner.Url + "/" + id);
+        public Runner this[int id] => _api.Get().To<Runner>(Runner.Url + "/" + id.ToStringInvariant());
 
         public IEnumerable<Runner> GetAllRunnersWithScope(RunnerScope scope)
         {
@@ -29,26 +30,26 @@ namespace NGitLab.Impl
 
         public IEnumerable<Runner> OfProject(int projectId)
         {
-            return _api.Get().GetAll<Runner>(Project.Url + $"/{projectId}" + Runner.Url);
+            return _api.Get().GetAll<Runner>(Project.Url + $"/{projectId.ToStringInvariant()}" + Runner.Url);
         }
 
         public void Delete(Runner runner) => Delete(runner.Id);
 
         public void Delete(int runnerId)
         {
-            _api.Delete().Execute(Runner.Url + "/" + runnerId);
+            _api.Delete().Execute(Runner.Url + "/" + runnerId.ToStringInvariant());
         }
 
         public Runner Update(int runnerId, RunnerUpdate runnerUpdate)
         {
-            var url = $"{Runner.Url}/{runnerId}";
+            var url = $"{Runner.Url}/{runnerId.ToStringInvariant()}";
             return _api.Put().With(runnerUpdate).To<Runner>(url);
         }
 
         [Obsolete("Use GetJobs(int, JobStatus?) instead")]
         public IEnumerable<Job> GetJobs(int runnerId, JobScope scope)
         {
-            var url = $"{Runner.Url}/{runnerId}/jobs";
+            var url = $"{Runner.Url}/{runnerId.ToStringInvariant()}/jobs";
 
             if (scope != JobScope.All)
             {
@@ -61,7 +62,7 @@ namespace NGitLab.Impl
         [SuppressMessage("ApiDesign", "RS0027:Public API with optional parameter(s) should have the most parameters amongst its public overloads", Justification = "Keep compatibility")]
         public IEnumerable<Job> GetJobs(int runnerId, JobStatus? status = null)
         {
-            var url = $"{Runner.Url}/{runnerId}/jobs";
+            var url = $"{Runner.Url}/{runnerId.ToStringInvariant()}/jobs";
 
             if (status != null)
             {
@@ -73,19 +74,19 @@ namespace NGitLab.Impl
 
         IEnumerable<Runner> IRunnerClient.GetAvailableRunners(int projectId)
         {
-            var url = $"{Project.Url}/{projectId}/runners";
+            var url = $"{Project.Url}/{projectId.ToStringInvariant()}/runners";
             return _api.Get().GetAll<Runner>(url);
         }
 
         public Runner EnableRunner(int projectId, RunnerId runnerId)
         {
-            var url = $"{Project.Url}/{projectId}/runners";
+            var url = $"{Project.Url}/{projectId.ToStringInvariant()}/runners";
             return _api.Post().With(runnerId).To<Runner>(url);
         }
 
         public void DisableRunner(int projectId, RunnerId runnerId)
         {
-            var url = $"{Project.Url}/{projectId}/runners/{runnerId.Id}";
+            var url = $"{Project.Url}/{projectId.ToStringInvariant()}/runners/{runnerId.Id.ToStringInvariant()}";
             _api.Delete().Execute(url);
         }
 

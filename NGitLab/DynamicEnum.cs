@@ -1,4 +1,5 @@
-﻿using System;
+﻿#pragma warning disable MA0102 // Make member readonly, this would be a breaking change
+using System;
 using System.Collections.Generic;
 
 namespace NGitLab
@@ -53,25 +54,13 @@ namespace NGitLab
             return EqualityComparer<TEnum?>.Default.GetHashCode(EnumValue);
         }
 
-        public static bool operator ==(DynamicEnum<TEnum> obj1, DynamicEnum<TEnum> obj2)
-        {
-            return obj1.Equals(obj2);
-        }
+        public static bool operator ==(DynamicEnum<TEnum> obj1, DynamicEnum<TEnum> obj2) => obj1.Equals(obj2);
 
-        public static bool operator !=(DynamicEnum<TEnum> obj1, DynamicEnum<TEnum> obj2)
-        {
-            return !obj1.Equals(obj2);
-        }
+        public static bool operator !=(DynamicEnum<TEnum> obj1, DynamicEnum<TEnum> obj2) => !obj1.Equals(obj2);
 
-        public static bool operator ==(DynamicEnum<TEnum> obj1, TEnum obj2)
-        {
-            return obj1.Equals(obj2);
-        }
+        public static bool operator ==(DynamicEnum<TEnum> obj1, TEnum obj2) => obj1.Equals(obj2);
 
-        public static bool operator !=(DynamicEnum<TEnum> obj1, TEnum obj2)
-        {
-            return !obj1.Equals(obj2);
-        }
+        public static bool operator !=(DynamicEnum<TEnum> obj1, TEnum obj2) => !obj1.Equals(obj2);
 
         public override string ToString()
         {

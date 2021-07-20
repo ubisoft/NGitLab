@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -13,7 +14,7 @@ namespace NGitLab.Impl
         {
             _api = api;
 
-            var projectPath = Project.Url + "/" + projectId;
+            var projectPath = Project.Url + "/" + projectId.ToStringInvariant();
             _statusCreatePath = projectPath + "/statuses";
             _statusPath = projectPath + "/repository/commits";
         }

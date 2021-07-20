@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using NGitLab.Extensions;
 
 namespace NGitLab.Models
 {
@@ -89,12 +90,12 @@ namespace NGitLab.Models
             var age = DateTime.UtcNow.Subtract(date);
 
             if (age.TotalDays > 1)
-                return $"{age.TotalDays:0} days ago";
+                return age.TotalDays.ToStringInvariant("0") + " days ago";
 
             if (age.TotalHours > 1)
-                return $"{age.Hours:0} hours ago";
+                return age.Hours.ToStringInvariant("0") + " hours ago";
 
-            return $"{age.Minutes:0} minutes ago";
+            return age.Minutes.ToStringInvariant("0") + " minutes ago";
         }
     }
 }

@@ -15,7 +15,7 @@ namespace NGitLab.Mock
 
         private readonly string _path;
         private readonly Stream _lockFile;
-        private static readonly HashSet<string> TempDirectories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private static readonly HashSet<string> TempDirectories = new(StringComparer.OrdinalIgnoreCase);
 
         public string FullPath { get; }
 
@@ -64,7 +64,7 @@ namespace NGitLab.Mock
         {
             if (fileSystemInfo is DirectoryInfo directoryInfo)
             {
-                foreach (FileSystemInfo childInfo in directoryInfo.GetFileSystemInfos())
+                foreach (var childInfo in directoryInfo.GetFileSystemInfos())
                 {
                     MakeReadOnly(childInfo);
                 }
@@ -169,7 +169,7 @@ namespace NGitLab.Mock
             if (!fileSystemInfo.Exists)
                 return;
 
-            int exceptionBefore = ioExceptions.Count;
+            var exceptionBefore = ioExceptions.Count;
 
             if (fileSystemInfo is DirectoryInfo directoryInfo)
             {
@@ -208,7 +208,7 @@ namespace NGitLab.Mock
 
         private static void DeleteDirectoryContent(DirectoryInfo directoryInfo, List<Exception> ioExceptions)
         {
-            foreach (FileSystemInfo childInfo in directoryInfo.GetFileSystemInfos())
+            foreach (var childInfo in directoryInfo.GetFileSystemInfos())
             {
                 if (IsSymbolicLink(childInfo))
                 {
@@ -261,7 +261,7 @@ namespace NGitLab.Mock
 
             foreach (var newPath in Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories))
             {
-                System.IO.File.Copy(newPath, newPath.Replace(sourcePath, FullPath), true);
+                System.IO.File.Copy(newPath, newPath.Replace(sourcePath, FullPath), overwrite: true);
             }
         }
     }

@@ -462,17 +462,12 @@ namespace NGitLab.Mock.Clients
 
                 if (query.OrderBy != null)
                 {
-                    switch (query.OrderBy)
+                    mergeRequests = query.OrderBy switch
                     {
-                        case "created_at":
-                            mergeRequests = mergeRequests.OrderBy(mr => mr.CreatedAt);
-                            break;
-                        case "updated_at":
-                            mergeRequests = mergeRequests.OrderBy(mr => mr.UpdatedAt);
-                            break;
-                        default:
-                            throw new NotSupportedException($"OrderBy '{query.OrderBy}' is not supported");
-                    }
+                        "created_at" => mergeRequests.OrderBy(mr => mr.CreatedAt),
+                        "updated_at" => mergeRequests.OrderBy(mr => mr.UpdatedAt),
+                        _ => throw new NotSupportedException($"OrderBy '{query.OrderBy}' is not supported"),
+                    };
                 }
 
                 if (query.PerPage != null)

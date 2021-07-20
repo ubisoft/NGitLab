@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -21,12 +22,12 @@ namespace NGitLab.Impl
 
         public IEnumerable<Snippet> ForProject(int projectId)
         {
-            return _api.Get().GetAll<Snippet>($"{ProjectUrl}/{projectId}/snippets");
+            return _api.Get().GetAll<Snippet>($"{ProjectUrl}/{projectId.ToStringInvariant()}/snippets");
         }
 
         public Snippet Get(int projectId, int snippetId)
         {
-            return _api.Get().To<Snippet>($"{ProjectUrl}/{projectId}/snippets/{snippetId}");
+            return _api.Get().To<Snippet>($"{ProjectUrl}/{projectId.ToStringInvariant()}/snippets/{snippetId.ToStringInvariant()}");
         }
 
         public void Create(SnippetCreate snippet)
@@ -36,11 +37,11 @@ namespace NGitLab.Impl
 
         public void Create(SnippetProjectCreate snippet)
         {
-            _api.Post().With(snippet).To<SnippetProjectCreate>($"{ProjectUrl}/{snippet.ProjectId}/snippets");
+            _api.Post().With(snippet).To<SnippetProjectCreate>($"{ProjectUrl}/{snippet.ProjectId.ToStringInvariant()}/snippets");
         }
 
-        public void Delete(int snippetId) => _api.Delete().Execute($"{SnippetUrl}/{snippetId}");
+        public void Delete(int snippetId) => _api.Delete().Execute($"{SnippetUrl}/{snippetId.ToStringInvariant()}");
 
-        public void Delete(int projectId, int snippetId) => _api.Delete().Execute($"{ProjectUrl}/{projectId}/snippets/{snippetId}");
+        public void Delete(int projectId, int snippetId) => _api.Delete().Execute($"{ProjectUrl}/{projectId.ToStringInvariant()}/snippets/{snippetId.ToStringInvariant()}");
     }
 }

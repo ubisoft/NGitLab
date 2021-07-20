@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -12,7 +13,7 @@ namespace NGitLab.Impl
         public WikiClient(API api, int projectId)
         {
             _api = api;
-            _projectPath = Project.Url + "/" + projectId;
+            _projectPath = Project.Url + "/" + projectId.ToStringInvariant();
         }
 
         public IEnumerable<WikiPage> All => _api.Get().GetAll<WikiPage>(_projectPath + "/wikis");

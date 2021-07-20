@@ -1,4 +1,5 @@
 ﻿using System;
+using NGitLab.Extensions;
 using NGitLab.Impl;
 
 namespace NGitLab
@@ -99,12 +100,12 @@ namespace NGitLab
 
         public IEventClient GetUserEvents(int userId)
         {
-            return new EventClient(_api, $"users/{userId}/events");
+            return new EventClient(_api, $"users/{userId.ToStringInvariant()}/events");
         }
 
         public IEventClient GetProjectEvents(int projectId)
         {
-            return new EventClient(_api, $"projects/{projectId}/events");
+            return new EventClient(_api, $"projects/{projectId.ToStringInvariant()}/events");
         }
 
         public IRepositoryClient GetRepository(int projectId)

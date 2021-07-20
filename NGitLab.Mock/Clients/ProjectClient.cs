@@ -175,7 +175,9 @@ namespace NGitLab.Mock.Clients
                     || query.Search != null
                     || query.Statistics != null
                     || query.Visibility != null)
+                {
                     throw new NotImplementedException();
+                }
 
                 var upstream = GetProject(id, ProjectPermission.View);
                 var matches = Server.AllProjects.Where(project => project.ForkedFrom?.Id == upstream.Id);

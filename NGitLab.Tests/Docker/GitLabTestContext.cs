@@ -19,18 +19,19 @@ namespace NGitLab.Tests.Docker
 {
     public sealed class GitLabTestContext : IDisposable
     {
-        private const int _maxRetryCount = 10;
+        private const int MaxRetryCount = 10;
+
         private static readonly Policy s_gitlabRetryPolicy = Policy.Handle<GitLabException>()
-            .WaitAndRetry(_maxRetryCount, _ => TimeSpan.FromSeconds(1), (exception, timespan, retryCount, context) =>
+            .WaitAndRetry(MaxRetryCount, _ => TimeSpan.FromSeconds(1), (exception, timespan, retryCount, context) =>
             {
-                TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {exception.Message} -> Polly Retry {retryCount} of {_maxRetryCount}...");
+                TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {exception.Message} -> Polly Retry {retryCount} of {MaxRetryCount}...");
             });
 
-        private static readonly HashSet<string> s_generatedValues = new HashSet<string>(StringComparer.Ordinal);
-        private static readonly SemaphoreSlim s_prepareRunnerLock = new SemaphoreSlim(1, 1);
+        private static readonly HashSet<string> s_generatedValues = new(StringComparer.Ordinal);
+        private static readonly SemaphoreSlim s_prepareRunnerLock = new(1, 1);
 
-        private readonly CustomRequestOptions _customRequestOptions = new CustomRequestOptions();
-        private readonly List<IGitLabClient> _clients = new List<IGitLabClient>();
+        private readonly GitLabTestContextRequestOptions _customRequestOptions = new();
+        private readonly List<IGitLabClient> _clients = new();
 
         public GitLabDockerContainer DockerContainer { get; set; }
 
@@ -170,8 +171,8 @@ namespace NGitLab.Tests.Docker
                         client.GetRepository(project.Id).Files.Create(new FileUpsert
                         {
                             Branch = project.DefaultBranch,
-                            CommitMessage = $"add test file {i}",
-                            Path = $"TestFile{i}.txt",
+                            CommitMessage = $"add test file {i.ToString(CultureInfo.InvariantCulture)}",
+                            Path = $"TestFile{i.ToString(CultureInfo.InvariantCulture)}.txt",
                             RawContent = "this project should only live during the unit tests, you can delete if you find some",
                         }));
                 }
@@ -203,6 +204,12 @@ namespace NGitLab.Tests.Docker
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Create(new FileUpsert { Branch = project.DefaultBranch, CommitMessage = "test", Content = "test", Path = "test.md" }));
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = BranchForMRName, Ref = project.DefaultBranch }));
 
+            // Restore the default branch because sometimes GitLab change the default branch to "branch-for-mr"
+            project = client.Projects.Update(project.Id.ToString(CultureInfo.InvariantCulture), new ProjectUpdate
+            {
+                DefaultBranch = project.DefaultBranch,
+            });
+
             var branch = client.GetRepository(project.Id).Branches.All.FirstOrDefault(b => string.Equals(b.Name, project.DefaultBranch, StringComparison.Ordinal));
             Assert.NotNull(branch, $"Branch '{project.DefaultBranch}' should exist");
             Assert.IsTrue(branch.Default, $"Branch '{project.DefaultBranch}' should be the default one");
@@ -223,6 +230,7 @@ namespace NGitLab.Tests.Docker
             return (project, mr);
         }
 
+        [SuppressMessage("Performance", "MA0038:Make method static", Justification = "By design")]
         [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "By design")]
         public string GetUniqueRandomString()
         {
@@ -236,10 +244,11 @@ namespace NGitLab.Tests.Docker
             throw new InvalidOperationException("Cannot generate a new random unique string");
         }
 
+        [SuppressMessage("Design", "MA0038:Make method static", Justification = "By design")]
         [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "By design")]
         public int GetRandomNumber()
         {
-            return RandomNumberGenerator.GetInt32(int.MaxValue);
+            return RandomNumberGenerator.GetInt32(0, int.MaxValue);
         }
 
         private IGitLabClient CreateClient(string token)
@@ -419,31 +428,6 @@ namespace NGitLab.Tests.Docker
             {
                 _process.Kill(entireProcessTree: true);
                 _process.WaitForExit();
-            }
-        }
-
-        /// <summary>
-        /// Stores all the web requests in a list.
-        /// </summary>
-        private sealed class CustomRequestOptions : RequestOptions
-        {
-            private readonly List<WebRequest> _allRequests = new List<WebRequest>();
-
-            public IReadOnlyList<WebRequest> AllRequests => _allRequests;
-
-            public CustomRequestOptions()
-                : base(retryCount: 10, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
-            {
-            }
-
-            public override WebResponse GetResponse(HttpWebRequest request)
-            {
-                lock (_allRequests)
-                {
-                    _allRequests.Add(request);
-                }
-
-                return base.GetResponse(request);
             }
         }
     }

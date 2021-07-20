@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -13,7 +14,7 @@ namespace NGitLab.Impl
         {
             _api = api;
             _projectId = projectId;
-            _approvalRulesUrl = $"{Project.Url}/{_projectId}/approval_rules";
+            _approvalRulesUrl = $"{Project.Url}/{_projectId.ToStringInvariant()}/approval_rules";
         }
 
         public List<ApprovalRule> GetProjectLevelApprovalRules()
@@ -23,7 +24,7 @@ namespace NGitLab.Impl
 
         public ApprovalRule UpdateProjectLevelApprovalRule(int approvalRuleIdToUpdate, ApprovalRuleUpdate approvalRuleUpdate)
         {
-            return _api.Put().With(approvalRuleUpdate).To<ApprovalRule>(_approvalRulesUrl + $"/{approvalRuleIdToUpdate}");
+            return _api.Put().With(approvalRuleUpdate).To<ApprovalRule>(_approvalRulesUrl + $"/{approvalRuleIdToUpdate.ToStringInvariant()}");
         }
 
         public ApprovalRule CreateProjectLevelRule(ApprovalRuleCreate approvalRuleCreate)
@@ -33,7 +34,7 @@ namespace NGitLab.Impl
 
         public void DeleteProjectLevelRule(int approvalRuleIdToDelete)
         {
-            _api.Delete().Execute(_approvalRulesUrl + $"/{approvalRuleIdToDelete}");
+            _api.Delete().Execute(_approvalRulesUrl + $"/{approvalRuleIdToDelete.ToStringInvariant()}");
         }
     }
 }

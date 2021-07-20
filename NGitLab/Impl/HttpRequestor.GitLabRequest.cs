@@ -70,7 +70,7 @@ namespace NGitLab.Impl
             {
                 try
                 {
-                    var request = CreateRequest(options.HttpClientTimeout);
+                    var request = CreateRequest(options);
                     return options.GetResponse(request);
                 }
                 catch (WebException wex)
@@ -108,25 +108,25 @@ namespace NGitLab.Impl
                 }
             }
 
-            private HttpWebRequest CreateRequest(TimeSpan httpClientTimeout)
+            private HttpWebRequest CreateRequest(RequestOptions options)
             {
-                var request = (HttpWebRequest)WebRequest.Create(Url);
+                var request = WebRequest.CreateHttp(Url);
                 request.Method = Method.ToString().ToUpperInvariant();
                 request.Accept = "application/json";
                 request.Headers = Headers;
                 request.AutomaticDecompression = DecompressionMethods.GZip;
-                request.Timeout = (int)httpClientTimeout.TotalMilliseconds;
-                request.ReadWriteTimeout = (int)httpClientTimeout.TotalMilliseconds;
+                request.Timeout = (int)options.HttpClientTimeout.TotalMilliseconds;
+                request.ReadWriteTimeout = (int)options.HttpClientTimeout.TotalMilliseconds;
 
                 if (HasOutput)
                 {
                     if (FormData != null)
                     {
-                        AddFileData(request);
+                        AddFileData(request, options);
                     }
                     else if (JsonData != null)
                     {
-                        AddJsonData(request);
+                        AddJsonData(request, options);
                     }
                 }
                 else if (Method == MethodType.Put)
@@ -137,19 +137,19 @@ namespace NGitLab.Impl
                 return request;
             }
 
-            private void AddJsonData(WebRequest request)
+            private void AddJsonData(HttpWebRequest request, RequestOptions options)
             {
                 request.ContentType = "application/json";
 
-                using var writer = new StreamWriter(request.GetRequestStream());
+                using var writer = new StreamWriter(options.GetRequestStream(request));
                 writer.Write(JsonData);
                 writer.Flush();
                 writer.Close();
             }
 
-            public void AddFileData(WebRequest request)
+            public void AddFileData(HttpWebRequest request, RequestOptions options)
             {
-                var boundary = $"--------------------------{DateTime.UtcNow.Ticks}";
+                var boundary = $"--------------------------{DateTime.UtcNow.Ticks.ToStringInvariant()}";
                 if (Data is not FormDataContent formData)
                     return;
                 request.ContentType = "multipart/form-data; boundary=" + boundary;
@@ -159,7 +159,7 @@ namespace NGitLab.Impl
                     { new StreamContent(formData.Stream), "file", formData.Name },
                 };
 
-                uploadContent.CopyToAsync(request.GetRequestStream()).Wait();
+                uploadContent.CopyToAsync(options.GetRequestStream(request)).Wait();
             }
 
             /// <summary>
