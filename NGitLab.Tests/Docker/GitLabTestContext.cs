@@ -223,7 +223,7 @@ namespace NGitLab.Tests.Docker
             return (project, mr);
         }
 
-        [SuppressMessage("Performance", "MA0038:Mark members as static", Justification = "By design")]
+        [SuppressMessage("Performance", "MA0038:Make method static", Justification = "By design")]
         [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "By design")]
         public string GetUniqueRandomString()
         {
