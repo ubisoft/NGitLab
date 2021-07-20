@@ -120,7 +120,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(1, issues.Count);
 
             var testLabel = "test";
-            var updatedIssue = issues.First();
+            var updatedIssue = issues[0];
             issuesClient.Edit(new IssueEdit
             {
                 Id = project.Id,

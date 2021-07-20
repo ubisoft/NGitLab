@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -54,7 +55,7 @@ namespace NGitLab.Tests.RepositoryClient
                             {
                                 Action = "create",
                                 Content = $"test",
-                                FilePath = $"test{i}.md",
+                                FilePath = $"test{i.ToString(CultureInfo.InvariantCulture)}.md",
                             },
                         },
                     });

@@ -20,7 +20,7 @@ namespace NGitLab.Tests.Impl
             var model = Load("{ \"MyEnum\":\"unknown\" }");
 
             Assert.That(model.MyEnum.StringValue, Is.EqualTo("unknown"));
-            Assert.That(model.MyEnum.EnumValue, Is.EqualTo(null));
+            Assert.That(model.MyEnum.EnumValue, Is.Null);
         }
 
         [Test]
@@ -28,7 +28,7 @@ namespace NGitLab.Tests.Impl
         {
             var model = Load("{ \"MyEnum\":\"KnownField\" }");
 
-            Assert.That(model.MyEnum.StringValue, Is.EqualTo(null));
+            Assert.That(model.MyEnum.StringValue, Is.Null);
             Assert.That(model.MyEnum, Is.EqualTo(MockEnum.KnownField));
         }
 
@@ -38,7 +38,7 @@ namespace NGitLab.Tests.Impl
         }
 
         [SuppressMessage("Design", "CA1812: Avoid uninstantiated internal classes", Justification = "The class is instantiated dynamically using SimpleJson")]
-        private class MockModel
+        private sealed class MockModel
         {
             public string BasicField { get; set; }
 

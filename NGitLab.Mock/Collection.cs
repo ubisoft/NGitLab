@@ -7,7 +7,7 @@ namespace NGitLab.Mock
     public abstract class Collection<T> : IReadOnlyCollection<T>
         where T : GitLabObject
     {
-        private readonly List<T> _items = new List<T>();
+        private readonly List<T> _items = new();
 
         protected Collection(GitLabObject parent)
         {

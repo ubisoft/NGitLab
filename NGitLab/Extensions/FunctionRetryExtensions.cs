@@ -24,7 +24,8 @@ namespace NGitLab.Extensions
                 }
                 catch (Exception ex) when (retriesLeft > 0 && predicate(ex, retriesLeft))
                 {
-                    Logger?.Invoke($"{ex.Message} -> Internal Retry in {waitTime.TotalMilliseconds} ms ({maxRetryCount - retriesLeft + 1} of {maxRetryCount})...");
+                    var currentRetry = maxRetryCount - retriesLeft + 1;
+                    Logger?.Invoke($"{ex.Message} -> Internal Retry in {waitTime.TotalMilliseconds.ToStringInvariant()} ms ({currentRetry.ToStringInvariant()} of {maxRetryCount.ToStringInvariant()})...");
 
                     Thread.Sleep(waitTime);
 

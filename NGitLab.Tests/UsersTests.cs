@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -104,7 +105,7 @@ namespace NGitLab.Tests
             var tokenRequest = new UserTokenCreate
             {
                 UserId = users.Current.Id,
-                Name = $"Test_Create_{DateTime.UtcNow:yyyyMMddHHmmss}",
+                Name = FormattableString.Invariant($"Test_Create_{DateTime.UtcNow:yyyyMMddHHmmss}"),
                 ExpiresAt = DateTime.UtcNow.AddDays(1),
                 Scopes = new[] { "api", "read_user" },
             };
@@ -117,7 +118,7 @@ namespace NGitLab.Tests
 
         private static User CreateNewUser(GitLabTestContext context)
         {
-            var randomNumber = context.GetRandomNumber();
+            var randomNumber = context.GetRandomNumber().ToString(CultureInfo.InvariantCulture);
             return context.AdminClient.Users.Create(new UserUpsert
             {
                 Email = $"test{randomNumber}@test.pl",

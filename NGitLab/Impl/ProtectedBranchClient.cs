@@ -1,4 +1,5 @@
 ﻿using System;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -13,7 +14,7 @@ namespace NGitLab.Impl
         {
             _api = api;
             _projectId = projectId;
-            _protectedBranchesUrl = $"{Project.Url}/{_projectId}/protected_branches";
+            _protectedBranchesUrl = $"{Project.Url}/{_projectId.ToStringInvariant()}/protected_branches";
         }
 
         public ProtectedBranch ProtectBranch(BranchProtect branchProtect)

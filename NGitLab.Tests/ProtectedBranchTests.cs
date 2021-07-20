@@ -55,7 +55,7 @@ namespace NGitLab.Tests
             Assert.IsEmpty(protectedBranchClient.GetProtectedBranches(branch.Name));
         }
 
-        private void ProtectedBranchAndBranchProtectAreEquals(BranchProtect branchProtect, ProtectedBranch protectedBranch)
+        private static void ProtectedBranchAndBranchProtectAreEquals(BranchProtect branchProtect, ProtectedBranch protectedBranch)
         {
             Assert.AreEqual(branchProtect.BranchName, protectedBranch.Name);
             Assert.AreEqual(branchProtect.PushAccessLevel, protectedBranch.PushAccessLevels[0].AccessLevel);

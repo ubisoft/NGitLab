@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -15,8 +16,8 @@ namespace NGitLab.Impl
         public PipelineClient(API api, int projectId)
         {
             _api = api;
-            _projectPath = $"{Project.Url}/{projectId}";
-            _pipelinesPath = $"{Project.Url}/{projectId}/pipelines";
+            _projectPath = $"{Project.Url}/{projectId.ToStringInvariant()}";
+            _pipelinesPath = $"{Project.Url}/{projectId.ToStringInvariant()}/pipelines";
         }
 
         public IEnumerable<PipelineBasic> All => _api.Get().GetAll<PipelineBasic>(_pipelinesPath);
@@ -36,19 +37,19 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Job>(url);
         }
 
-        public Pipeline this[int id] => _api.Get().To<Pipeline>($"{_pipelinesPath}/{id}");
+        public Pipeline this[int id] => _api.Get().To<Pipeline>($"{_pipelinesPath}/{id.ToStringInvariant()}");
 
         public Job[] GetJobs(int pipelineId)
         {
             // For some reason gitlab returns the jobs in the reverse order as
             // they appear in their UI. Here we reverse them!
-            var jobs = _api.Get().GetAll<Job>($"{_pipelinesPath}/{pipelineId}/jobs").Reverse().ToArray();
+            var jobs = _api.Get().GetAll<Job>($"{_pipelinesPath}/{pipelineId.ToStringInvariant()}/jobs").Reverse().ToArray();
             return jobs;
         }
 
         public IEnumerable<Job> GetJobs(PipelineJobQuery query)
         {
-            var url = $"{_pipelinesPath}/{query.PipelineId}/jobs";
+            var url = $"{_pipelinesPath}/{query.PipelineId.ToStringInvariant()}/jobs";
             url = Utils.AddParameter(url, "scope", query.Scope);
             url = Utils.AddParameter(url, "include_retried", query.IncludeRetried);
 
@@ -122,17 +123,17 @@ namespace NGitLab.Impl
 
         public void Delete(int pipelineId)
         {
-            _api.Delete().Execute($"{_pipelinesPath}/{pipelineId}");
+            _api.Delete().Execute($"{_pipelinesPath}/{pipelineId.ToStringInvariant()}");
         }
 
         public IEnumerable<PipelineVariable> GetVariables(int pipelineId)
         {
-            return _api.Get().GetAll<PipelineVariable>($"{_projectPath}/pipelines/{pipelineId}/variables");
+            return _api.Get().GetAll<PipelineVariable>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/variables");
         }
 
         public TestReport GetTestReports(int pipelineId)
         {
-            return _api.Get().To<TestReport>($"{_projectPath}/pipelines/{pipelineId}/test_report");
+            return _api.Get().To<TestReport>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/test_report");
         }
     }
 }

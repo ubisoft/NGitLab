@@ -129,7 +129,7 @@ namespace NGitLab.Impl
             {
                 private readonly string _apiToken;
                 private readonly RequestOptions _options;
-                private readonly List<T> _buffer = new List<T>();
+                private readonly List<T> _buffer = new();
 
                 private Uri _nextUrlToLoad;
                 private int _index;

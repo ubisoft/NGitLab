@@ -43,7 +43,7 @@ namespace NGitLab.Tests.Docker
 
         public string LicenseFile { get; set; }
 
-        public Uri GitLabUrl => new Uri("http://" + Host + ":" + HttpPort.ToString(CultureInfo.InvariantCulture));
+        public Uri GitLabUrl => new("http://" + Host + ":" + HttpPort.ToString(CultureInfo.InvariantCulture));
 
         public GitLabCredential Credentials { get; set; }
 

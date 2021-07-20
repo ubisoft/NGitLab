@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -17,7 +18,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<Namespace> Accessible => _api.Get().GetAll<Namespace>(Url);
 
-        public Namespace this[int id] => _api.Get().To<Namespace>(Url + "/" + id);
+        public Namespace this[int id] => _api.Get().To<Namespace>(Url + "/" + id.ToStringInvariant());
 
         public Namespace this[string fullPath] => _api.Get().To<Namespace>(Url + "/" + WebUtility.UrlEncode(fullPath));
 

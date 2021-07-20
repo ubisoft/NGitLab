@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -16,7 +17,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<SshKey> All => _api.Get().GetAll<SshKey>(_url);
 
-        public SshKey this[int keyId] => _api.Get().To<SshKey>($"{_url}/{keyId}");
+        public SshKey this[int keyId] => _api.Get().To<SshKey>($"{_url}/{keyId.ToStringInvariant()}");
 
         public SshKey Add(SshKeyCreate key)
         {
@@ -25,7 +26,7 @@ namespace NGitLab.Impl
 
         public void Remove(int keyId)
         {
-            _api.Delete().Execute($"{_url}/{keyId}");
+            _api.Delete().Execute($"{_url}/{keyId.ToStringInvariant()}");
         }
     }
 }

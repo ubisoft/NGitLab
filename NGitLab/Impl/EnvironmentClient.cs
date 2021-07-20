@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -12,7 +13,7 @@ namespace NGitLab.Impl
         public EnvironmentClient(API api, int projectId)
         {
             _api = api;
-            _environmentsPath = $"{Project.Url}/{projectId}/environments";
+            _environmentsPath = $"{Project.Url}/{projectId.ToStringInvariant()}/environments";
         }
 
         public IEnumerable<EnvironmentInfo> All => _api.Get().GetAll<EnvironmentInfo>(_environmentsPath);
@@ -34,7 +35,7 @@ namespace NGitLab.Impl
 
         public EnvironmentInfo Edit(int environmentId, string name, string externalUrl)
         {
-            var url = $"{_environmentsPath}/{environmentId}";
+            var url = $"{_environmentsPath}/{environmentId.ToStringInvariant()}";
 
             if (!string.IsNullOrEmpty(name))
             {
@@ -49,11 +50,11 @@ namespace NGitLab.Impl
             return _api.Put().To<EnvironmentInfo>(url);
         }
 
-        public void Delete(int environmentId) => _api.Delete().Execute($"{_environmentsPath}/{environmentId}");
+        public void Delete(int environmentId) => _api.Delete().Execute($"{_environmentsPath}/{environmentId.ToStringInvariant()}");
 
         public EnvironmentInfo Stop(int environmentId)
         {
-            return _api.Post().To<EnvironmentInfo>($"{_environmentsPath}/{environmentId}/stop");
+            return _api.Post().To<EnvironmentInfo>($"{_environmentsPath}/{environmentId.ToStringInvariant()}/stop");
         }
     }
 }

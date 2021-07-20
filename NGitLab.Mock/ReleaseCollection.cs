@@ -15,7 +15,7 @@ namespace NGitLab.Mock
 
         public ReleaseInfo GetByTagName(string tagName)
         {
-            return this.FirstOrDefault(r => r.TagName.Equals(tagName));
+            return this.FirstOrDefault(r => string.Equals(r.TagName, tagName, StringComparison.Ordinal));
         }
 
         public override void Add(ReleaseInfo release)

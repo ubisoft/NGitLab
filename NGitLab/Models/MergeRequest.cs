@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using NGitLab.Extensions;
 
 namespace NGitLab.Models
 {
@@ -130,7 +131,7 @@ namespace NGitLab.Models
 
         public override string ToString()
         {
-            return $"!{Id}: {Title}";
+            return $"!{Id.ToStringInvariant()}: {Title}";
         }
     }
 }

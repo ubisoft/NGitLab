@@ -53,7 +53,9 @@ namespace NGitLab
                 gitLabException.MethodType != Impl.MethodType.Get &&
                 gitLabException.MethodType != Impl.MethodType.Head &&
                 gitLabException.MethodType != Impl.MethodType.Options)
+            {
                 return false;
+            }
 
             // Use the same Transient HTTP StatusCodes as Polly's HttpPolicyExtensions
             // https://github.com/App-vNext/Polly.Extensions.Http/blob/69fd292bc603cb3032e57b028522737255f03a49/src/Polly.Extensions.Http/HttpPolicyExtensions.cs#L14
@@ -61,7 +63,7 @@ namespace NGitLab
                    gitLabException.StatusCode == HttpStatusCode.RequestTimeout;
         }
 
-        public static RequestOptions Default => new RequestOptions(0, TimeSpan.Zero);
+        public static RequestOptions Default => new(retryCount: 0, retryInterval: TimeSpan.Zero);
 
         /// <summary>
         /// Allows to monitor the web requests from the caller library, for example

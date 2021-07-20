@@ -244,17 +244,12 @@ namespace NGitLab.Mock.Clients
 
             if (query.OrderBy != null)
             {
-                switch (query.OrderBy)
+                issues = query.OrderBy switch
                 {
-                    case "created_at":
-                        issues = issues.OrderBy(i => i.CreatedAt);
-                        break;
-                    case "updated_at":
-                        issues = issues.OrderBy(i => i.UpdatedAt);
-                        break;
-                    default:
-                        throw new NotSupportedException($"OrderBy '{query.OrderBy}' is not supported");
-                }
+                    "created_at" => issues.OrderBy(i => i.CreatedAt),
+                    "updated_at" => issues.OrderBy(i => i.UpdatedAt),
+                    _ => throw new NotSupportedException($"OrderBy '{query.OrderBy}' is not supported"),
+                };
             }
 
             if (string.Equals(query.Sort, "asc", StringComparison.Ordinal))
