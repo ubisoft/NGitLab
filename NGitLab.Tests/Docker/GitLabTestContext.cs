@@ -19,11 +19,12 @@ namespace NGitLab.Tests.Docker
 {
     public sealed class GitLabTestContext : IDisposable
     {
-        private const int _maxRetryCount = 10;
+        private const int MaxRetryCount = 10;
+
         private static readonly Policy s_gitlabRetryPolicy = Policy.Handle<GitLabException>()
-            .WaitAndRetry(_maxRetryCount, _ => TimeSpan.FromSeconds(1), (exception, timespan, retryCount, context) =>
+            .WaitAndRetry(MaxRetryCount, _ => TimeSpan.FromSeconds(1), (exception, timespan, retryCount, context) =>
             {
-                TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {exception.Message} -> Polly Retry {retryCount} of {_maxRetryCount}...");
+                TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {exception.Message} -> Polly Retry {retryCount} of {MaxRetryCount}...");
             });
 
         private static readonly HashSet<string> s_generatedValues = new(StringComparer.Ordinal);
@@ -202,6 +203,12 @@ namespace NGitLab.Tests.Docker
             const string BranchForMRName = "branch-for-mr";
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Create(new FileUpsert { Branch = project.DefaultBranch, CommitMessage = "test", Content = "test", Path = "test.md" }));
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = BranchForMRName, Ref = project.DefaultBranch }));
+
+            // Restore the default branch because sometimes GitLab change the default branch to "branch-for-mr"
+            project = client.Projects.Update(project.Id.ToString(CultureInfo.InvariantCulture), new ProjectUpdate
+            {
+                DefaultBranch = project.DefaultBranch,
+            });
 
             var branch = client.GetRepository(project.Id).Branches.All.FirstOrDefault(b => string.Equals(b.Name, project.DefaultBranch, StringComparison.Ordinal));
             Assert.NotNull(branch, $"Branch '{project.DefaultBranch}' should exist");
