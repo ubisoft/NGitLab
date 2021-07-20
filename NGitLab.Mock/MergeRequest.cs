@@ -57,16 +57,10 @@ namespace NGitLab.Mock
 
         public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/merge_requests/{Id.ToString(CultureInfo.InvariantCulture)}");
 
-        public Pipeline HeadPipeline
-        {
-            get
-            {
-                return Project.Pipelines
+        public Pipeline HeadPipeline => Project.Pipelines
                   .Where(p => p.Sha.Equals(Sha))
                   .OrderByDescending(p => p.CreatedAt)
                   .FirstOrDefault();
-            }
-        }
 
         public IList<string> Labels { get; } = new List<string>();
 
@@ -152,7 +146,7 @@ namespace NGitLab.Mock
             return Comments.GroupBy(c => c.ThreadId, StringComparer.Ordinal).Select(g => new MergeRequestDiscussion
             {
                 Id = g.Key,
-                IndividualNote = g.Count() == 1,
+                IndividualNote = g.Take(2).Count() == 1,
                 Notes = g.Select(n => n.ToMergeRequestCommentClient()).ToArray(),
             });
         }

@@ -15,7 +15,7 @@ namespace NGitLab.Tests.Docker
     /// </summary>
     internal sealed class GitLabTestContextRequestOptions : RequestOptions
     {
-        private readonly List<WebRequest> _allRequests = new List<WebRequest>();
+        private readonly List<WebRequest> _allRequests = new();
         private readonly ConcurrentDictionary<WebRequest, LoggableRequestStream> _pendingRequest = new();
 
         public IReadOnlyList<WebRequest> AllRequests => _allRequests;
@@ -239,7 +239,7 @@ namespace NGitLab.Tests.Docker
         private sealed class LoggableRequestStream : Stream
         {
             private readonly Stream _innerStream;
-            private readonly MemoryStream _memoryStream = new MemoryStream();
+            private readonly MemoryStream _memoryStream = new();
 
             public override bool CanRead => _innerStream.CanRead;
 
@@ -281,8 +281,7 @@ namespace NGitLab.Tests.Docker
 
             public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
             {
-                await _innerStream.WriteAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
-                await _memoryStream.WriteAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
+                await WriteAsync(buffer.AsMemory(offset, count), cancellationToken).ConfigureAwait(false);
             }
 
             public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)

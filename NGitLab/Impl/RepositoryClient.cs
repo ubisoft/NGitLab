@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -18,7 +19,7 @@ namespace NGitLab.Impl
         {
             _api = api;
             _projectId = projectId;
-            _projectPath = Project.Url + "/" + projectId;
+            _projectPath = Project.Url + "/" + projectId.ToStringInvariant();
             _repoPath = _projectPath + "/repository";
         }
 
@@ -94,7 +95,7 @@ namespace NGitLab.Impl
             }
 
             var perPage = request.MaxResults > 0 ? Math.Min(request.MaxResults, request.PerPage) : request.PerPage;
-            lst.Add($"per_page={perPage}");
+            lst.Add($"per_page={perPage.ToStringInvariant()}");
 
             var path = _repoPath + "/commits" + (lst.Count == 0 ? string.Empty : "?" + string.Join("&", lst));
             var allCommits = _api.Get().GetAll<Commit>(path);

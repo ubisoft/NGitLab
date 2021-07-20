@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -16,7 +17,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<User> Search(string query) => _api.Get().GetAll<User>(User.Url + $"?search={query}");
 
-        public User this[int id] => _api.Get().To<User>(User.Url + "/" + id);
+        public User this[int id] => _api.Get().To<User>(User.Url + "/" + id.ToStringInvariant());
 
         public IEnumerable<User> Get(string username) => _api.Get().GetAll<User>(User.Url + "?username=" + username);
 
@@ -39,9 +40,9 @@ namespace NGitLab.Impl
 
         public User Create(UserUpsert user) => _api.Post().With(user).To<User>(User.Url);
 
-        public UserToken CreateToken(UserTokenCreate tokenRequest) => _api.Post().With(tokenRequest).To<UserToken>(User.Url + "/" + tokenRequest.UserId + "/impersonation_tokens");
+        public UserToken CreateToken(UserTokenCreate tokenRequest) => _api.Post().With(tokenRequest).To<UserToken>(User.Url + "/" + tokenRequest.UserId.ToStringInvariant() + "/impersonation_tokens");
 
-        public User Update(int id, UserUpsert user) => _api.Put().With(user).To<User>(User.Url + "/" + id);
+        public User Update(int id, UserUpsert user) => _api.Put().With(user).To<User>(User.Url + "/" + id.ToStringInvariant());
 
         public Session Current => _api.Get().To<Session>("/user");
 
@@ -51,17 +52,17 @@ namespace NGitLab.Impl
 
         public void Delete(int userId)
         {
-            _api.Delete().Execute(User.Url + "/" + userId);
+            _api.Delete().Execute(User.Url + "/" + userId.ToStringInvariant());
         }
 
         public void Activate(int userId)
         {
-            _api.Post().Execute($"{User.Url}/{userId}/activate");
+            _api.Post().Execute($"{User.Url}/{userId.ToStringInvariant()}/activate");
         }
 
         public void Deactivate(int userId)
         {
-            _api.Post().Execute($"{User.Url}/{userId}/deactivate");
+            _api.Post().Execute($"{User.Url}/{userId.ToStringInvariant()}/deactivate");
         }
     }
 }

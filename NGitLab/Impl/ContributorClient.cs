@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -19,6 +20,6 @@ namespace NGitLab.Impl
         /// <remarks>
         /// HACK: We force the order_by and sort due to a pagination bug from GitLab
         /// </remarks>
-        public IEnumerable<Contributor> All => _api.Get().GetAll<Contributor>(_contributorPath + $"?id={_projectId}&order_by=commits&sort=desc");
+        public IEnumerable<Contributor> All => _api.Get().GetAll<Contributor>(_contributorPath + $"?id={_projectId.ToStringInvariant()}&order_by=commits&sort=desc");
     }
 }

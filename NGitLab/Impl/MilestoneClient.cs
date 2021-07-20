@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -11,7 +12,7 @@ namespace NGitLab.Impl
         public MilestoneClient(API api, int projectId)
         {
             _api = api;
-            _milestonePath = $"{Project.Url}/{projectId}/milestones";
+            _milestonePath = $"{Project.Url}/{projectId.ToStringInvariant()}/milestones";
         }
 
         public IEnumerable<Milestone> All => Get(new MilestoneQuery());
@@ -28,7 +29,7 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Milestone>(url);
         }
 
-        public Milestone this[int id] => _api.Get().To<Milestone>($"{_milestonePath}/{id}");
+        public Milestone this[int id] => _api.Get().To<Milestone>($"{_milestonePath}/{id.ToStringInvariant()}");
 
         public Milestone Create(MilestoneCreate milestone) => _api
             .Post().With(milestone)
@@ -36,18 +37,18 @@ namespace NGitLab.Impl
 
         public Milestone Update(int milestoneId, MilestoneUpdate milestone) => _api
             .Put().With(milestone)
-            .To<Milestone>($"{_milestonePath}/{milestoneId}");
+            .To<Milestone>($"{_milestonePath}/{milestoneId.ToStringInvariant()}");
 
         public Milestone Close(int milestoneId) => _api
             .Put().With(new MilestoneUpdateState { NewState = nameof(MilestoneStateEvent.close) })
-            .To<Milestone>($"{_milestonePath}/{milestoneId}");
+            .To<Milestone>($"{_milestonePath}/{milestoneId.ToStringInvariant()}");
 
         public Milestone Activate(int milestoneId) => _api
             .Put().With(new MilestoneUpdateState { NewState = nameof(MilestoneStateEvent.activate) })
-            .To<Milestone>($"{_milestonePath}/{milestoneId}");
+            .To<Milestone>($"{_milestonePath}/{milestoneId.ToStringInvariant()}");
 
         public void Delete(int milestoneId) => _api
             .Delete()
-            .Execute($"{_milestonePath}/{milestoneId}");
+            .Execute($"{_milestonePath}/{milestoneId.ToStringInvariant()}");
     }
 }

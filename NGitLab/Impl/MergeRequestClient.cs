@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -14,7 +15,7 @@ namespace NGitLab.Impl
         {
             _api = api;
             _projectId = projectId;
-            _projectPath = Project.Url + "/" + projectId;
+            _projectPath = Project.Url + "/" + projectId.ToStringInvariant();
         }
 
         public MergeRequestClient(API api)
@@ -58,8 +59,8 @@ namespace NGitLab.Impl
         {
             get
             {
-                var url = $"{_projectPath}{MergeRequest.Url}/{iid}";
-                url = Utils.AddParameter(url, "include_rebase_in_progress", true);
+                var url = $"{_projectPath}{MergeRequest.Url}/{iid.ToStringInvariant()}";
+                url = Utils.AddParameter(url, "include_rebase_in_progress", value: true);
 
                 return _api.Get().To<MergeRequest>(url);
             }
@@ -94,7 +95,7 @@ namespace NGitLab.Impl
 
         public void Delete(int mergeRequestIid) => _api
             .Delete()
-            .Execute(_projectPath + "/merge_requests/" + mergeRequestIid);
+            .Execute(_projectPath + "/merge_requests/" + mergeRequestIid.ToStringInvariant());
 
         public MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message) => _api
             .Put().With(message)

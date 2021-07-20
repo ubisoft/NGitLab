@@ -186,7 +186,7 @@ namespace NGitLab.Tests
                 Description = "desc",
                 IssuesEnabled = true,
                 MergeRequestsEnabled = true,
-                Name = "CreateDelete_Test_" + context.GetRandomNumber(),
+                Name = "CreateDelete_Test_" + context.GetRandomNumber().ToString(CultureInfo.InvariantCulture),
                 NamespaceId = null,
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Internal,
@@ -249,7 +249,7 @@ namespace NGitLab.Tests
                 p.Description = "desc";
                 p.IssuesEnabled = true;
                 p.MergeRequestsEnabled = true;
-                p.Name = "ForkProject_Test_" + context.GetRandomNumber();
+                p.Name = "ForkProject_Test_" + context.GetRandomNumber().ToString(CultureInfo.InvariantCulture);
                 p.NamespaceId = null;
                 p.SnippetsEnabled = true;
                 p.VisibilityLevel = VisibilityLevel.Internal;
@@ -323,7 +323,7 @@ namespace NGitLab.Tests
 
             var createdProject = context.CreateProject(prj =>
             {
-                prj.Name = "Project_Test_" + context.GetRandomNumber();
+                prj.Name = "Project_Test_" + context.GetRandomNumber().ToString(CultureInfo.InvariantCulture);
                 prj.VisibilityLevel = VisibilityLevel.Internal;
             });
             Assert.IsTrue(createdProject.EmptyRepo);

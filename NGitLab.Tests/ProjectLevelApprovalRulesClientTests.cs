@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -32,8 +31,8 @@ namespace NGitLab.Tests
             var project = context.CreateProject();
             var projectLevelApprovalRulesClient = context.Client.GetProjectLevelApprovalRulesClient(project.Id);
 
-            string approvalRuleName = "TestApprovalRuleDelete";
-            int approvalsRequired = 1;
+            var approvalRuleName = "TestApprovalRuleDelete";
+            var approvalsRequired = 1;
             var approvalRule = projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(project, approvalRuleName, approvalsRequired));
 
             projectLevelApprovalRulesClient.DeleteProjectLevelRule(approvalRule.RuleId);
@@ -53,7 +52,7 @@ namespace NGitLab.Tests
 
             var approvalRule = projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(project, approvalRuleName, approvalRuleApprovalsRequired));
 
-            var firstApprovalRule = projectLevelApprovalRulesClient.GetProjectLevelApprovalRules().First();
+            var firstApprovalRule = projectLevelApprovalRulesClient.GetProjectLevelApprovalRules()[0];
 
             approvalRuleApprovalsRequired = 3;
             approvalRule =
@@ -84,8 +83,8 @@ namespace NGitLab.Tests
             var approvalRules = projectLevelApprovalRulesClient.GetProjectLevelApprovalRules();
 
             Assert.AreEqual(1, approvalRules.Count);
-            Assert.AreEqual(firstApprovalRuleName, approvalRules.First().Name);
-            Assert.AreEqual(firstApprovalRuleApprovalsRequired, approvalRules.First().ApprovalsRequired);
+            Assert.AreEqual(firstApprovalRuleName, approvalRules[0].Name);
+            Assert.AreEqual(firstApprovalRuleApprovalsRequired, approvalRules[0].ApprovalsRequired);
         }
 
         private static ApprovalRuleCreate CreateTestApprovalRuleCreate(Project project, string approvalRuleName, int approvalsRequired)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -13,7 +14,7 @@ namespace NGitLab.Impl
         {
             _api = api;
 
-            var projectPath = Project.Url + "/" + projectId;
+            var projectPath = Project.Url + "/" + projectId.ToStringInvariant();
             _repoPath = projectPath + "/repository";
         }
 

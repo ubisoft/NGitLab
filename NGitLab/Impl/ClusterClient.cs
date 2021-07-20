@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -11,7 +12,7 @@ namespace NGitLab.Impl
         public ClusterClient(API api, int projectId)
         {
             _api = api;
-            _environmentsPath = $"{Project.Url}/{projectId}/clusters";
+            _environmentsPath = $"{Project.Url}/{projectId.ToStringInvariant()}/clusters";
         }
 
         public IEnumerable<ClusterInfo> All => _api.Get().GetAll<ClusterInfo>(_environmentsPath);

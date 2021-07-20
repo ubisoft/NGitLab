@@ -26,11 +26,11 @@ namespace NGitLab.Tests.Docker
                 TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {exception.Message} -> Polly Retry {retryCount} of {_maxRetryCount}...");
             });
 
-        private static readonly HashSet<string> s_generatedValues = new HashSet<string>(StringComparer.Ordinal);
-        private static readonly SemaphoreSlim s_prepareRunnerLock = new SemaphoreSlim(1, 1);
+        private static readonly HashSet<string> s_generatedValues = new(StringComparer.Ordinal);
+        private static readonly SemaphoreSlim s_prepareRunnerLock = new(1, 1);
 
-        private readonly GitLabTestContextRequestOptions _customRequestOptions = new GitLabTestContextRequestOptions();
-        private readonly List<IGitLabClient> _clients = new List<IGitLabClient>();
+        private readonly GitLabTestContextRequestOptions _customRequestOptions = new();
+        private readonly List<IGitLabClient> _clients = new();
 
         public GitLabDockerContainer DockerContainer { get; set; }
 
@@ -170,8 +170,8 @@ namespace NGitLab.Tests.Docker
                         client.GetRepository(project.Id).Files.Create(new FileUpsert
                         {
                             Branch = project.DefaultBranch,
-                            CommitMessage = $"add test file {i}",
-                            Path = $"TestFile{i}.txt",
+                            CommitMessage = $"add test file {i.ToString(CultureInfo.InvariantCulture)}",
+                            Path = $"TestFile{i.ToString(CultureInfo.InvariantCulture)}.txt",
                             RawContent = "this project should only live during the unit tests, you can delete if you find some",
                         }));
                 }
@@ -223,6 +223,7 @@ namespace NGitLab.Tests.Docker
             return (project, mr);
         }
 
+        [SuppressMessage("Performance", "MA0038:Make method static", Justification = "By design")]
         [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "By design")]
         public string GetUniqueRandomString()
         {
@@ -236,10 +237,11 @@ namespace NGitLab.Tests.Docker
             throw new InvalidOperationException("Cannot generate a new random unique string");
         }
 
+        [SuppressMessage("Design", "MA0038:Make method static", Justification = "By design")]
         [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "By design")]
         public int GetRandomNumber()
         {
-            return RandomNumberGenerator.GetInt32(int.MaxValue);
+            return RandomNumberGenerator.GetInt32(0, int.MaxValue);
         }
 
         private IGitLabClient CreateClient(string token)

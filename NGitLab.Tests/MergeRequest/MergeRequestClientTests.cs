@@ -31,9 +31,9 @@ namespace NGitLab.Tests
 
             Assert.IsFalse(context.Client.GetRepository(project.Id).Branches[mergeRequest.SourceBranch].Protected, "The source branch is protected but should not be");
 
-            TestContext.Out.WriteLine("MR is ready to be merged");
+            TestContext.WriteLine("MR is ready to be merged");
             AcceptMergeRequest(mergeRequestClient, mergeRequest);
-            TestContext.Out.WriteLine("MR is merged");
+            TestContext.WriteLine("MR is merged");
 
             // Since GitLab 13.10, this part is flaky
             // await Task.Delay(TimeSpan.FromSeconds(5)).ConfigureAwait(false);

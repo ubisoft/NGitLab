@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -11,10 +12,10 @@ namespace NGitLab.Impl
         public TriggerClient(API api, int projectId)
         {
             _api = api;
-            _triggersPath = $"{Project.Url}/{projectId}/triggers";
+            _triggersPath = $"{Project.Url}/{projectId.ToStringInvariant()}/triggers";
         }
 
-        public Trigger this[int id] => _api.Get().To<Trigger>(_triggersPath + "/" + id);
+        public Trigger this[int id] => _api.Get().To<Trigger>(_triggersPath + "/" + id.ToStringInvariant());
 
         public IEnumerable<Trigger> All => _api.Get().GetAll<Trigger>(_triggersPath);
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -16,13 +17,13 @@ namespace NGitLab.Impl
 
         public IEnumerable<SystemHook> All => _api.Get().GetAll<SystemHook>(_path);
 
-        public SystemHook this[int hookId] => _api.Get().To<SystemHook>(_path + "/" + hookId);
+        public SystemHook this[int hookId] => _api.Get().To<SystemHook>(_path + "/" + hookId.ToStringInvariant());
 
         public SystemHook Create(SystemHookUpsert hook) => _api.Post().With(hook).To<SystemHook>(_path);
 
         public void Delete(int hookId)
         {
-            _api.Delete().Execute(_path + "/" + hookId);
+            _api.Delete().Execute(_path + "/" + hookId.ToStringInvariant());
         }
     }
 }

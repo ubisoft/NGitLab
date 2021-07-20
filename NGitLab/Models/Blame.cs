@@ -20,7 +20,7 @@ namespace NGitLab.Models
             if (ReferenceEquals(this, other))
                 return true;
             return Equals(Commit, other.Commit)
-                && Lines is object && other.Lines is object && Lines.SequenceEqual(other.Lines, StringComparer.Ordinal);
+                && Lines is not null && other.Lines is not null && Lines.SequenceEqual(other.Lines, StringComparer.Ordinal);
         }
 
         public override bool Equals(object obj)

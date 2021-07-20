@@ -43,7 +43,7 @@ namespace NGitLab.Models
 
             return Id.Equals(other.Id)
                 && string.Equals(Message, other.Message, StringComparison.Ordinal)
-                && Parents is object && other.Parents is object && Parents.SequenceEqual(other.Parents)
+                && Parents is not null && other.Parents is not null && Parents.SequenceEqual(other.Parents)
                 && AuthoredDate.Equals(other.AuthoredDate)
                 && string.Equals(AuthorName, other.AuthorName, StringComparison.Ordinal)
                 && string.Equals(AuthorEmail, other.AuthorEmail, StringComparison.OrdinalIgnoreCase)

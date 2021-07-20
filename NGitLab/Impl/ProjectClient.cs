@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -46,7 +47,7 @@ namespace NGitLab.Impl
 
             if (query.UserId.HasValue)
             {
-                url = $"/users/{query.UserId.Value}/projects";
+                url = $"/users/{query.UserId.Value.ToStringInvariant()}/projects";
             }
 
             if (query.LastActivityAfter.HasValue)
@@ -99,7 +100,7 @@ namespace NGitLab.Impl
 
         public Project GetById(int id, SingleProjectQuery query)
         {
-            var url = Project.Url + "/" + id;
+            var url = Project.Url + "/" + id.ToStringInvariant();
             url = Utils.AddParameter(url, "statistics", query.Statistics);
 
             return _api.Get().To<Project>(url);

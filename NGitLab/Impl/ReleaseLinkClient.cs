@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using NGitLab.Models;
@@ -8,7 +7,7 @@ namespace NGitLab.Impl
 {
     // Handles interacting with Release links.
     // Documentation: https://docs.gitlab.com/ee/api/releases/links
-    internal class ReleaseLinkClient : IReleaseLinkClient
+    internal sealed class ReleaseLinkClient : IReleaseLinkClient
     {
         private readonly API _api;
         private readonly string _linksPath;

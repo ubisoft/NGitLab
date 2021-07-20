@@ -149,7 +149,7 @@ namespace NGitLab.Impl
 
             public void AddFileData(HttpWebRequest request, RequestOptions options)
             {
-                var boundary = $"--------------------------{DateTime.UtcNow.Ticks}";
+                var boundary = $"--------------------------{DateTime.UtcNow.Ticks.ToStringInvariant()}";
                 if (Data is not FormDataContent formData)
                     return;
                 request.ContentType = "multipart/form-data; boundary=" + boundary;
