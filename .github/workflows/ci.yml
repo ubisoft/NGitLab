@@ -51,6 +51,8 @@ jobs:
         # Keep in sync with the version in GitLabDockerContainer.cs
         gitlab: [
           'gitlab/gitlab-ee:latest',
+          'gitlab/gitlab-ee:13.11.7-ee.0',
+          'gitlab/gitlab-ee:13.10.5-ee.0',
           'gitlab/gitlab-ee:13.10.3-ee.0'
         ]
         configuration: [ Debug, Release ]
