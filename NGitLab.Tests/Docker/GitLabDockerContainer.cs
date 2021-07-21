@@ -6,12 +6,14 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AngleSharp;
+using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using AngleSharp.Io;
 using Docker.DotNet;
@@ -295,6 +297,8 @@ namespace NGitLab.Tests.Docker
 
                 // Change password
                 var result = await context.OpenAsync(GitLabUrl.AbsoluteUri).ConfigureAwait(false);
+                result = await ReloadIfError(context, result);
+
                 TestContext.Progress.WriteLine("Navigating to " + result.Location);
                 if (result.Location.PathName == "/users/password/edit")
                 {
@@ -396,6 +400,17 @@ namespace NGitLab.Tests.Docker
                 });
 
                 credentials.UserToken = token.Token;
+            }
+
+            async Task<IDocument> ReloadIfError(IBrowsingContext context, IDocument document)
+            {
+                while (document.StatusCode is HttpStatusCode.BadGateway or HttpStatusCode.ServiceUnavailable)
+                {
+                    await Task.Delay(1000);
+                    document = await context.OpenAsync(document.Url);
+                }
+
+                return document;
             }
         }
 
