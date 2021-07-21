@@ -18,6 +18,7 @@ using Docker.DotNet;
 using Docker.DotNet.Models;
 using NGitLab.Models;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace NGitLab.Tests.Docker
 {
@@ -69,9 +70,17 @@ namespace NGitLab.Tests.Docker
                         Assert.Fail(s_creationErrorMessage);
                     }
 
-                    var instance = new GitLabDockerContainer();
-                    await instance.SetupAsync().ConfigureAwait(false);
-                    s_instance = instance;
+                    try
+                    {
+                        var instance = new GitLabDockerContainer();
+                        await instance.SetupAsync().ConfigureAwait(false);
+                        s_instance = instance;
+                    }
+                    catch (Exception ex)
+                    {
+                        s_creationErrorMessage = ex.ToString();
+                        throw;
+                    }
                 }
 
                 return s_instance;
@@ -323,7 +332,14 @@ namespace NGitLab.Tests.Docker
                     }
 
                     var form = result.Forms["new_personal_access_token"];
-                    ((IHtmlInputElement)form["personal_access_token[name]"]).Value = $"GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
+                    if (form is null)
+                        throw new InvalidOperationException("The page does not contain the form 'new_personal_access_token':\n" + result.ToHtml());
+
+                    var htmlInputElement = (IHtmlInputElement)form["personal_access_token[name]"];
+                    if (htmlInputElement is null)
+                        throw new InvalidOperationException("The page does not contain the field 'new_personal_access_token.personal_access_token[name]':\n" + result.ToHtml());
+
+                    htmlInputElement.Value = $"GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
                     foreach (var element in form.Elements.OfType<IHtmlInputElement>().Where(e => e.Name == "personal_access_token[scopes][]"))
                     {
                         element.IsChecked = true;
