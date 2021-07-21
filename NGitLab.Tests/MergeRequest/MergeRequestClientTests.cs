@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Meziantou.Framework.Versioning;
 using NGitLab.Models;
@@ -198,7 +199,7 @@ namespace NGitLab.Tests
         public static void AcceptMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest request)
         {
             Polly.Policy
-                .Handle<GitLabException>(ex => ex.StatusCode == System.Net.HttpStatusCode.MethodNotAllowed)
+                .Handle<GitLabException>(ex => ex.StatusCode is HttpStatusCode.MethodNotAllowed or HttpStatusCode.NotAcceptable)
                 .Retry(10)
                 .Execute(() =>
                 {
