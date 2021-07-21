@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Meziantou.Framework.Versioning;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -97,7 +98,8 @@ namespace NGitLab.Tests
         public async Task Test_merge_request_approvers()
         {
             using var context = await GitLabTestContext.CreateAsync();
-            if(context.AdminClient.Version.Get().Version.StartsWith("14.", StringComparison.Ordinal))
+            var version = SemanticVersion.Parse(context.AdminClient.Version.Get().Version);
+            if (version >= SemanticVersion.Parse("13.11.0"))
             {
                 Assert.Inconclusive("Setting approvers is not supported in GitLab 14, you must use approval rules");
             }

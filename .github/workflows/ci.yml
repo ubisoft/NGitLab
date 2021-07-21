@@ -49,6 +49,7 @@ jobs:
     strategy:
       matrix:
         # Keep in sync with the version in GitLabDockerContainer.cs
+        # Available tags: https://hub.docker.com/r/gitlab/gitlab-ee/tags
         gitlab: [
           'gitlab/gitlab-ee:latest',
           'gitlab/gitlab-ee:13.11.7-ee.0',
