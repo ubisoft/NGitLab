@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
+using Polly;
 
 namespace NGitLab.Tests
 {
@@ -62,7 +64,11 @@ namespace NGitLab.Tests
             JobTests.AddGitLabCiFile(context.Client, project);
             var pipeline = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All.FirstOrDefault(), p => p != null, TimeSpan.FromSeconds(120));
 
-            pipelineClient.Delete(pipeline.Id);
+            Policy
+                .Handle<GitLabException>(ex => ex.StatusCode == (HttpStatusCode)309) // 409 Conflict
+                .Retry(10)
+                .Execute(() => pipelineClient.Delete(pipeline.Id));
+
             await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All.FirstOrDefault(), p => p == null, TimeSpan.FromSeconds(120));
         }
 
