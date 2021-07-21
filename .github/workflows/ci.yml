@@ -55,6 +55,7 @@ jobs:
           'gitlab/gitlab-ee:13.10.3-ee.0'
         ]
         configuration: [ Debug, Release ]
+        dummy: [ 1, 2, 3 ]
       fail-fast: false
     services:
       gitlab:
