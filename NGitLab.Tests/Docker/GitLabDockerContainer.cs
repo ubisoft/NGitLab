@@ -352,7 +352,11 @@ namespace NGitLab.Tests.Docker
                     result = await form.SubmitAsync().ConfigureAwait(false);
                     TestContext.Progress.WriteLine("Navigating to " + result.Location);
 
-                    credentials.AdminUserToken = result.GetElementById("created-personal-access-token").GetAttribute("value");
+                    var personalAccessTokenElement = result.GetElementById("created-personal-access-token");
+                    if (personalAccessTokenElement is null)
+                        throw new InvalidOperationException("The page does not contain the element 'created-personal-access-token':\n" + result.ToHtml());
+
+                    credentials.AdminUserToken = personalAccessTokenElement.GetAttribute("value");
                 }
 
                 // Get X-Profile-Token
@@ -363,7 +367,7 @@ namespace NGitLab.Tests.Docker
                 var tokenElement = codeElements.SingleOrDefault(n => n.TextContent.Trim().StartsWith("X-Profile-Token:", StringComparison.Ordinal));
                 if (tokenElement == null)
                 {
-                    Assert.Fail("Cannot find X-Profile-Token in the page:\n\n" + result.DocumentElement.OuterHtml);
+                    Assert.Fail("Cannot find X-Profile-Token in the page:\n\n" + result.ToHtml());
                 }
 
                 credentials.ProfileToken = tokenElement.TextContent.Trim().Substring("X-Profile-Token:".Length).Trim();
