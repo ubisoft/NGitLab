@@ -34,27 +34,21 @@ namespace NGitLab.Tests.Docker
                     try
                     {
                         context.CurrentResult = innerCommand.Execute(context);
-                        break;
-                    }
-                    catch (GitLabException ex)
-                    {
-                        context.CurrentResult ??= context.CurrentTest.MakeTestResult();
-                        context.CurrentResult.RecordException(ex);
-                        if (context.CurrentResult.ResultState != ResultState.Failure && context.CurrentResult.ResultState != ResultState.Error)
-                            break;
-
-                        if (count > 0)
-                        {
-                            context.CurrentResult = context.CurrentTest.MakeTestResult();
-                            context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
-                        }
                     }
                     catch (Exception ex)
                     {
                         if (context.CurrentResult == null)
                             context.CurrentResult = context.CurrentTest.MakeTestResult();
                         context.CurrentResult.RecordException(ex);
+                    }
+
+                    if (context.CurrentResult.ResultState != ResultState.Failure && context.CurrentResult.ResultState != ResultState.Error)
                         break;
+
+                    if (count > 0)
+                    {
+                        context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
                     }
                 }
 
