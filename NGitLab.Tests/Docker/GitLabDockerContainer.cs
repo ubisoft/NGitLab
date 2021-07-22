@@ -408,6 +408,9 @@ namespace NGitLab.Tests.Docker
 
                               TestContext.Progress.WriteLine("Logging in root user");
                               var form = result.Forms["new_user"];
+                              if (form is null)
+                                  throw new InvalidOperationException("Cannot find the form 'new_user' in the page:\n" + result.ToHtml());
+
                               ((IHtmlInputElement)form["user[login]"]).Value = AdminUserName;
                               ((IHtmlInputElement)form["user[password]"]).Value = AdminPassword;
                               ((IHtmlInputElement)form["user[remember_me]"]).IsChecked = true;
