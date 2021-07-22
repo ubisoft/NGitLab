@@ -9,6 +9,7 @@ namespace NGitLab.Tests
     public class IssueTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_issue_with_IssueQuery()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -26,6 +27,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_unassigned_issues_with_IssueQuery()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -45,6 +47,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_assigned_issues_with_IssueQuery()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -64,6 +67,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_assigned_issues_with_IssueQuery_and_project_id()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -83,6 +87,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_issues_with_invalid_project_id_will_throw()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -93,6 +98,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_all_project_issues()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -109,6 +115,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_all_resource_label_events()
         {
             using var context = await GitLabTestContext.CreateAsync();

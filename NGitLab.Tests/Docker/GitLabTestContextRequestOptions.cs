@@ -25,7 +25,7 @@ namespace NGitLab.Tests.Docker
         public IReadOnlyList<WebRequest> AllRequests => _allRequests;
 
         public GitLabTestContextRequestOptions()
-            : base(retryCount: 10, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
+            : base(retryCount: 0, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
         {
         }
 

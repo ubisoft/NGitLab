@@ -8,6 +8,7 @@ namespace NGitLab.Tests
     public class BranchClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_CommitInfoIsCorrectlyDeserialized()
         {
             using var context = await GitLabTestContext.CreateAsync();

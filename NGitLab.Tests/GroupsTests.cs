@@ -11,6 +11,7 @@ namespace NGitLab.Tests
     public class GroupsTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_groups_is_not_empty()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -21,6 +22,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_projects_are_set_in_a_group_by_id()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -35,6 +37,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_group_by_fullpath()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -46,6 +49,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_create_delete_group()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -75,6 +79,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_by_group_query_nulls_does_not_throws()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -89,6 +94,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_by_group_query_groupQuery_SkipGroups_returns_groups()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -111,6 +117,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_by_group_query_groupQuery_Search_returns_groups()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -132,6 +139,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_by_group_query_groupQuery_AllAvailable_returns_groups()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -152,6 +160,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_by_group_query_groupQuery_OrderBy_returns_groups()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -184,6 +193,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_by_group_query_groupQuery_Sort_returns_groups()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -210,6 +220,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_by_group_query_groupQuery_Statistics_returns_groups()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -229,6 +240,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_by_group_query_groupQuery_WithCustomAttributes_returns_groups()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -248,6 +260,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_by_group_query_groupQuery_Owned_returns_groups()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -267,6 +280,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_by_group_query_groupQuery_MinAccessLevel_returns_groups()
         {
             using var context = await GitLabTestContext.CreateAsync();

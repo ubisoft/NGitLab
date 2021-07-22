@@ -9,6 +9,7 @@ namespace NGitLab.Tests
     public class ProjectIssueNoteTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task CreateNote()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -42,6 +43,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task ListNotes()
         {
             using var context = await GitLabTestContext.CreateAsync();

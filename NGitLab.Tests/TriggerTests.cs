@@ -8,6 +8,7 @@ namespace NGitLab.Tests
     public class TriggerTests
     {
         [Test]
+        [NGitLabRetry]
         [Timeout(10000)]
         public async Task Test_can_get_triggers_for_project()
         {

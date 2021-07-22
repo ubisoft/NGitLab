@@ -15,6 +15,7 @@ namespace NGitLab.Tests
     public class PipelineTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_list_the_pipelines()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -27,6 +28,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_list_all_jobs_from_project()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -39,6 +41,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_search_for_pipeline()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -56,6 +59,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_delete_pipeline()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -73,6 +77,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_create_pipeline_with_variables()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -105,6 +110,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_create_pipeline_with_testreports()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -132,6 +138,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_triggered_pipeline_variables()
         {
             using var context = await GitLabTestContext.CreateAsync();

@@ -22,6 +22,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_calls_are_retried_when_they_fail_in_gitlab()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -45,6 +46,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_the_timeout_can_be_overridden_in_the_request_options()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -58,6 +60,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_request_options_sudo_transferred_to_request_header()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -69,6 +72,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_impersonation_via_sudo_and_username()
         {
             // Arrange
@@ -99,6 +103,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_impersonation_via_sudo_and_user_id()
         {
             // Arrange

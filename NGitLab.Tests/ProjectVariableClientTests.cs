@@ -9,6 +9,7 @@ namespace NGitLab.Tests
     public class ProjectVariableClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_project_variables()
         {
             using var context = await GitLabTestContext.CreateAsync();

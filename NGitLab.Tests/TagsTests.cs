@@ -9,6 +9,7 @@ namespace NGitLab.Tests
     public class TagsTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_tag_a_project()
         {
             using var context = await GitLabTestContext.CreateAsync();

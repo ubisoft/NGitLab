@@ -20,7 +20,6 @@ using Docker.DotNet;
 using Docker.DotNet.Models;
 using NGitLab.Models;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace NGitLab.Tests.Docker
 {
@@ -328,7 +327,7 @@ namespace NGitLab.Tests.Docker
                 // Create a token
                 if (result.Location.PathName == "/")
                 {
-                    result = await GeneratePersonalAccessToken(credentials, context, result).ConfigureAwait(false);
+                    result = await GeneratePersonalAccessToken(credentials, context, result, attempt: 0).ConfigureAwait(false);
                 }
 
                 // Get X-Profile-Token
@@ -379,8 +378,7 @@ namespace NGitLab.Tests.Docker
                         if (attempt > 10)
                             throw new InvalidOperationException("Cannot generate a personal access token:\n" + result.ToHtml());
 
-                        GeneratePersonalAccessToken(credentials, context, result, attempt++);
-                        return;
+                        return await GeneratePersonalAccessToken(credentials, context, result, attempt++);
                     }
 
                     var personalAccessTokenElement = result.GetElementById("created-personal-access-token");

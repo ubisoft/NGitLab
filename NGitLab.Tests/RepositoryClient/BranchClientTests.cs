@@ -12,6 +12,7 @@ namespace NGitLab.Tests.RepositoryClient
     public class BranchClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task GetAll()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -22,6 +23,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetByName()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -36,6 +38,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task AddDelete()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -64,6 +67,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_that_branch_names_containing_slashes_are_supported()
         {
             using var context = await GitLabTestContext.CreateAsync();

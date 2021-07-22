@@ -10,6 +10,7 @@ namespace NGitLab.Tests
     public class ContributorsTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_get_contributors()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -23,6 +24,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_get_MultipleContributors()
         {
             using var context = await GitLabTestContext.CreateAsync();

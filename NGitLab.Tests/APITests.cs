@@ -8,6 +8,7 @@ namespace NGitLab.Tests
     public class APITests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_the_exception_does_not_contain_the_password_on_connection_error()
         {
             using var context = await GitLabTestContext.CreateAsync();

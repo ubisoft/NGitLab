@@ -11,6 +11,7 @@ namespace NGitLab.Tests
     public class MergeRequestCommentsClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task AddCommentToMergeRequest_DeprecatedApi()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -28,6 +29,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task AddEditCommentToMergeRequest()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -65,6 +67,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task AddCommentToMergeRequestOnArchivedProject()
         {
             using var context = await GitLabTestContext.CreateAsync();

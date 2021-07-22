@@ -66,6 +66,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetAllCommits()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -76,6 +77,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetCommitByBranchName()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -90,6 +92,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetCommitBySha1()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -101,6 +104,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetCommitBySha1Range()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
@@ -118,6 +122,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetCommitDiff()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -126,6 +131,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetAllTreeInPath()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -135,6 +141,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetAllTreeInPathRecursively()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -144,6 +151,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetAllTreeInPathOnRef()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -153,6 +161,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetAllTreeInPathWith100ElementsByPage()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -162,6 +171,7 @@ namespace NGitLab.Tests.RepositoryClient
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetAllTreeInNotGoodPath()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -173,6 +183,7 @@ namespace NGitLab.Tests.RepositoryClient
         [TestCase(CommitRefType.All)]
         [TestCase(CommitRefType.Branch)]
         [TestCase(CommitRefType.Tag)]
+        [NGitLabRetry]
         public async Task GetCommitRefs(CommitRefType type)
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);

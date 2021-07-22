@@ -13,6 +13,7 @@ namespace NGitLab.Tests
     public class MergeRequestClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_merge_request_api()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -49,6 +50,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_merge_request_rebase()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -61,6 +63,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_gitlab_returns_an_error_when_trying_to_create_a_request_with_same_source_and_destination()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -81,6 +84,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_merge_request_delete()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -96,6 +100,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_merge_request_approvers()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -130,6 +135,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_unassigned_merge_requests()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -144,6 +150,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_assigned_merge_requests()
         {
             using var context = await GitLabTestContext.CreateAsync();

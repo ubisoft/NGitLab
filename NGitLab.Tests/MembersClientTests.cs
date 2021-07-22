@@ -10,6 +10,7 @@ namespace NGitLab.Tests
     public class MembersClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task UpsertAccessLevelMemberOfProject()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -37,6 +38,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetAccessLevelMemberOfProject()
         {
             using var context = await GitLabTestContext.CreateAsync();

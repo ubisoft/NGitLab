@@ -9,6 +9,7 @@ namespace NGitLab.Tests
     public class FilesTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_add_update_delete_and_get_file()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -51,6 +52,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_blame_of_latest_commit()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -122,6 +124,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_blame_of_an_old_commit()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -173,6 +176,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_blame_comparison()
         {
             using var context = await GitLabTestContext.CreateAsync();

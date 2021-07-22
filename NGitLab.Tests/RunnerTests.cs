@@ -10,6 +10,7 @@ namespace NGitLab.Tests
     public class RunnerTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_enable_and_disable_a_runner_on_a_project()
         {
             // We need 2 projects associated to a runner to disable a runner
@@ -31,6 +32,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_find_a_runner_on_a_project()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -49,6 +51,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_some_runner_fields_are_not_null()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -69,6 +72,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_Runner_Can_Be_Locked_And_Unlocked()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -85,6 +89,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_Runner_Can_Update_RunUntagged_Flag()
         {
             using var context = await GitLabTestContext.CreateAsync();

@@ -8,6 +8,7 @@ namespace NGitLab.Tests
     public class CommitsTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_get_commit()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -19,6 +20,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_get_stats_in_commit()
         {
             using var context = await GitLabTestContext.CreateAsync();

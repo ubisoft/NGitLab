@@ -8,6 +8,7 @@ namespace NGitLab.Tests
     public class WikiTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_wiki()
         {
             using var context = await GitLabTestContext.CreateAsync();
