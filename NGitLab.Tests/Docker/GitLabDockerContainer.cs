@@ -316,13 +316,13 @@ namespace NGitLab.Tests.Docker
                 // Login
                 if (result.Location.PathName == "/users/sign_in")
                 {
-                    result = await SignIn(result);
+                    result = await SignIn(context);
                 }
 
                 // Create a token
                 if (result.Location.PathName == "/")
                 {
-                    result = await GeneratePersonalAccessToken(credentials, context, result).ConfigureAwait(false);
+                    result = await GeneratePersonalAccessToken(credentials, context).ConfigureAwait(false);
                 }
 
                 // Get X-Profile-Token
@@ -333,14 +333,14 @@ namespace NGitLab.Tests.Docker
                 TestContext.Progress.WriteLine("Extracting gitlab session cookie");
                 credentials.AdminCookies = result.Cookie.Split(';').Select(part => part.Trim()).Single(part => part.StartsWith("_gitlab_session=", StringComparison.Ordinal)).Substring("_gitlab_session=".Length);
 
-                Task<IDocument> GeneratePersonalAccessToken(GitLabCredential credentials, IBrowsingContext context, IDocument result)
+                Task<IDocument> GeneratePersonalAccessToken(GitLabCredential credentials, IBrowsingContext context)
                 {
                     return Policy.Handle<InvalidOperationException>()
                          .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(1))
                          .ExecuteAsync(async () =>
                          {
                              TestContext.Progress.WriteLine("Creating root token");
-                             result = await context.OpenAsync(GitLabUrl + "/profile/personal_access_tokens").ConfigureAwait(false);
+                             var result = await context.OpenAsync(GitLabUrl + "/profile/personal_access_tokens").ConfigureAwait(false);
                              if (result.StatusCode == HttpStatusCode.NotFound)
                              {
                                  result = await context.OpenAsync(GitLabUrl + "/-/profile/personal_access_tokens").ConfigureAwait(false);
@@ -396,12 +396,16 @@ namespace NGitLab.Tests.Docker
                         });
                 }
 
-                Task<IDocument> SignIn(IDocument result)
+                Task<IDocument> SignIn(IBrowsingContext context)
                 {
                     return Policy.Handle<InvalidOperationException>()
                           .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(1))
                           .ExecuteAsync(async () =>
                           {
+                              var result = await context.OpenAsync(GitLabUrl + "/users/sign_in").ConfigureAwait(false);
+                              if (result.StatusCode == HttpStatusCode.BadGateway)
+                                  throw new InvalidOperationException("Cannot open sign in page:\n" + result.ToHtml());
+
                               TestContext.Progress.WriteLine("Logging in root user");
                               var form = result.Forms["new_user"];
                               ((IHtmlInputElement)form["user[login]"]).Value = AdminUserName;
