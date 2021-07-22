@@ -20,6 +20,7 @@ using Docker.DotNet;
 using Docker.DotNet.Models;
 using NGitLab.Models;
 using NUnit.Framework;
+using Polly;
 
 namespace NGitLab.Tests.Docker
 {
@@ -327,7 +328,7 @@ namespace NGitLab.Tests.Docker
                 // Create a token
                 if (result.Location.PathName == "/")
                 {
-                    result = await GeneratePersonalAccessToken(credentials, context, result, attempt: 0).ConfigureAwait(false);
+                    result = await GeneratePersonalAccessToken(credentials, context, result).ConfigureAwait(false);
                 }
 
                 // Get X-Profile-Token
@@ -348,45 +349,45 @@ namespace NGitLab.Tests.Docker
                 TestContext.Progress.WriteLine("Extracting gitlab session cookie");
                 credentials.AdminCookies = result.Cookie.Split(';').Select(part => part.Trim()).Single(part => part.StartsWith("_gitlab_session=", StringComparison.Ordinal)).Substring("_gitlab_session=".Length);
 
-                async Task<IDocument> GeneratePersonalAccessToken(GitLabCredential credentials, IBrowsingContext context, IDocument result, int attempt)
+                Task<IDocument> GeneratePersonalAccessToken(GitLabCredential credentials, IBrowsingContext context, IDocument result)
                 {
-                    TestContext.Progress.WriteLine("Creating root token");
-                    result = await context.OpenAsync(GitLabUrl + "/profile/personal_access_tokens").ConfigureAwait(false);
-                    if (result.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        result = await context.OpenAsync(GitLabUrl + "/-/profile/personal_access_tokens").ConfigureAwait(false);
-                    }
+                    return Policy.Handle<InvalidOperationException>()
+                         .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(1))
+                         .ExecuteAsync(async () =>
+                         {
+                             TestContext.Progress.WriteLine("Creating root token");
+                             result = await context.OpenAsync(GitLabUrl + "/profile/personal_access_tokens").ConfigureAwait(false);
+                             if (result.StatusCode == HttpStatusCode.NotFound)
+                             {
+                                 result = await context.OpenAsync(GitLabUrl + "/-/profile/personal_access_tokens").ConfigureAwait(false);
+                             }
 
-                    var form = result.Forms["new_personal_access_token"];
-                    if (form is null)
-                        throw new InvalidOperationException("The page does not contain the form 'new_personal_access_token':\n" + result.ToHtml());
+                             var form = result.Forms["new_personal_access_token"];
+                             if (form is null)
+                                 throw new InvalidOperationException("The page does not contain the form 'new_personal_access_token':\n" + result.ToHtml());
 
-                    var htmlInputElement = (IHtmlInputElement)form["personal_access_token[name]"];
-                    if (htmlInputElement is null)
-                        throw new InvalidOperationException("The page does not contain the field 'new_personal_access_token.personal_access_token[name]':\n" + result.ToHtml());
+                             var htmlInputElement = (IHtmlInputElement)form["personal_access_token[name]"];
+                             if (htmlInputElement is null)
+                                 throw new InvalidOperationException("The page does not contain the field 'new_personal_access_token.personal_access_token[name]':\n" + result.ToHtml());
 
-                    htmlInputElement.Value = $"GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
-                    foreach (var element in form.Elements.OfType<IHtmlInputElement>().Where(e => e.Name == "personal_access_token[scopes][]"))
-                    {
-                        element.IsChecked = true;
-                    }
+                             htmlInputElement.Value = $"GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
+                             foreach (var element in form.Elements.OfType<IHtmlInputElement>().Where(e => e.Name == "personal_access_token[scopes][]"))
+                             {
+                                 element.IsChecked = true;
+                             }
 
-                    result = await form.SubmitAsync().ConfigureAwait(false);
-                    TestContext.Progress.WriteLine("Navigating to " + result.Location);
-                    if (result.StatusCode == HttpStatusCode.BadGateway)
-                    {
-                        if (attempt > 10)
-                            throw new InvalidOperationException("Cannot generate a personal access token:\n" + result.ToHtml());
+                             result = await form.SubmitAsync().ConfigureAwait(false);
+                             TestContext.Progress.WriteLine("Navigating to " + result.Location);
+                             if (result.StatusCode == HttpStatusCode.BadGateway)
+                                 throw new InvalidOperationException("Cannot generate a personal access token:\n" + result.ToHtml());
 
-                        return await GeneratePersonalAccessToken(credentials, context, result, attempt++);
-                    }
+                             var personalAccessTokenElement = result.GetElementById("created-personal-access-token");
+                             if (personalAccessTokenElement is null)
+                                 throw new InvalidOperationException("The page does not contain the element 'created-personal-access-token':\n" + result.ToHtml());
 
-                    var personalAccessTokenElement = result.GetElementById("created-personal-access-token");
-                    if (personalAccessTokenElement is null)
-                        throw new InvalidOperationException("The page does not contain the element 'created-personal-access-token':\n" + result.ToHtml());
-
-                    credentials.AdminUserToken = personalAccessTokenElement.GetAttribute("value");
-                    return result;
+                             credentials.AdminUserToken = personalAccessTokenElement.GetAttribute("value");
+                             return result;
+                         });
                 }
             }
 
