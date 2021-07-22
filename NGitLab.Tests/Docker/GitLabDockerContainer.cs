@@ -328,9 +328,32 @@ namespace NGitLab.Tests.Docker
                 // Create a token
                 if (result.Location.PathName == "/")
                 {
+                    result = await GeneratePersonalAccessToken(credentials, context, result).ConfigureAwait(false);
+                }
+
+                // Get X-Profile-Token
+                TestContext.Progress.WriteLine("Generating request profiles token");
+                result = await context.OpenAsync(GitLabUrl + "/admin/requests_profiles").ConfigureAwait(false);
+                TestContext.Progress.WriteLine("Navigating to " + result.Location);
+                var codeElements = result.QuerySelectorAll("code").ToList();
+                var tokenElement = codeElements.SingleOrDefault(n => n.TextContent.Trim().StartsWith("X-Profile-Token:", StringComparison.Ordinal));
+                if (tokenElement == null)
+                {
+                    Assert.Fail("Cannot find X-Profile-Token in the page:\n\n" + result.ToHtml());
+                }
+
+                credentials.ProfileToken = tokenElement.TextContent.Trim().Substring("X-Profile-Token:".Length).Trim();
+
+                // Get admin login cookie
+                // result.Cookie: experimentation_subject_id=XXX; _gitlab_session=XXXX; known_sign_in=XXXX
+                TestContext.Progress.WriteLine("Extracting gitlab session cookie");
+                credentials.AdminCookies = result.Cookie.Split(';').Select(part => part.Trim()).Single(part => part.StartsWith("_gitlab_session=", StringComparison.Ordinal)).Substring("_gitlab_session=".Length);
+
+                async Task<IDocument> GeneratePersonalAccessToken(GitLabCredential credentials, IBrowsingContext context, IDocument result, int attempt)
+                {
                     TestContext.Progress.WriteLine("Creating root token");
                     result = await context.OpenAsync(GitLabUrl + "/profile/personal_access_tokens").ConfigureAwait(false);
-                    if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    if (result.StatusCode == HttpStatusCode.NotFound)
                     {
                         result = await context.OpenAsync(GitLabUrl + "/-/profile/personal_access_tokens").ConfigureAwait(false);
                     }
@@ -351,31 +374,22 @@ namespace NGitLab.Tests.Docker
 
                     result = await form.SubmitAsync().ConfigureAwait(false);
                     TestContext.Progress.WriteLine("Navigating to " + result.Location);
+                    if (result.StatusCode == HttpStatusCode.BadGateway)
+                    {
+                        if (attempt > 10)
+                            throw new InvalidOperationException("Cannot generate a personal access token:\n" + result.ToHtml());
+
+                        GeneratePersonalAccessToken(credentials, context, result, attempt++);
+                        return;
+                    }
 
                     var personalAccessTokenElement = result.GetElementById("created-personal-access-token");
                     if (personalAccessTokenElement is null)
                         throw new InvalidOperationException("The page does not contain the element 'created-personal-access-token':\n" + result.ToHtml());
 
                     credentials.AdminUserToken = personalAccessTokenElement.GetAttribute("value");
+                    return result;
                 }
-
-                // Get X-Profile-Token
-                TestContext.Progress.WriteLine("Generating request profiles token");
-                result = await context.OpenAsync(GitLabUrl + "/admin/requests_profiles").ConfigureAwait(false);
-                TestContext.Progress.WriteLine("Navigating to " + result.Location);
-                var codeElements = result.QuerySelectorAll("code").ToList();
-                var tokenElement = codeElements.SingleOrDefault(n => n.TextContent.Trim().StartsWith("X-Profile-Token:", StringComparison.Ordinal));
-                if (tokenElement == null)
-                {
-                    Assert.Fail("Cannot find X-Profile-Token in the page:\n\n" + result.ToHtml());
-                }
-
-                credentials.ProfileToken = tokenElement.TextContent.Trim().Substring("X-Profile-Token:".Length).Trim();
-
-                // Get admin login cookie
-                // result.Cookie: experimentation_subject_id=XXX; _gitlab_session=XXXX; known_sign_in=XXXX
-                TestContext.Progress.WriteLine("Extracting gitlab session cookie");
-                credentials.AdminCookies = result.Cookie.Split(';').Select(part => part.Trim()).Single(part => part.StartsWith("_gitlab_session=", StringComparison.Ordinal)).Substring("_gitlab_session=".Length);
             }
 
             void GenerateUserToken()
