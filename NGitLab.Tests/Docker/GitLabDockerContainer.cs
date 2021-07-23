@@ -305,7 +305,7 @@ namespace NGitLab.Tests.Docker
                     TestContext.Progress.WriteLine("Creating root password");
                     var form = result.Forms["new_user"];
                     if (form == null)
-                        throw new InvalidOperationException($"Cannot set the root password. The page doesn't contain the form 'new-user'");
+                        throw new InvalidOperationException($"Cannot set the root password. The page doesn't contain the form 'new_user'");
 
                     ((IHtmlInputElement)form["user[password]"]).Value = AdminPassword;
                     ((IHtmlInputElement)form["user[password_confirmation]"]).Value = AdminPassword;
