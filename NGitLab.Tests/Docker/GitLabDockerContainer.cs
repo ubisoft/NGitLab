@@ -426,28 +426,38 @@ namespace NGitLab.Tests.Docker
 
             void GenerateUserToken()
             {
+                var retryPolicy = Policy.Handle<GitLabException>().WaitAndRetry(10, _ => TimeSpan.FromSeconds(1));
                 var client = new GitLabClient(GitLabUrl.ToString(), credentials.AdminUserToken);
-                var user = client.Users.Get("common_user").FirstOrDefault();
+                var user = retryPolicy.Execute(() => client.Users.Get("common_user")).FirstOrDefault();
                 if (user == null)
                 {
-                    user = client.Users.Create(new UserUpsert()
+                    try
                     {
-                        Username = "common_user",
-                        Email = "common_user@example.com",
-                        IsAdmin = false,
-                        Name = "common_user",
-                        SkipConfirmation = true,
-                        ResetPassword = false,
-                        Password = AdminPassword,
-                    });
+                        user = retryPolicy.Execute(() => client.Users.Create(new UserUpsert()
+                        {
+                            Username = "common_user",
+                            Email = "common_user@example.com",
+                            IsAdmin = false,
+                            Name = "common_user",
+                            SkipConfirmation = true,
+                            ResetPassword = false,
+                            Password = AdminPassword,
+                        }));
+                    }
+                    catch (GitLabException)
+                    {
+                        user = retryPolicy.Execute(() => client.Users.Get("common_user")).FirstOrDefault();
+                        if (user == null)
+                            throw new InvalidOperationException("Cannot create the common user");
+                    }
                 }
 
-                var token = client.Users.CreateToken(new UserTokenCreate
+                var token = retryPolicy.Execute(() => client.Users.CreateToken(new UserTokenCreate
                 {
                     UserId = user.Id,
                     Name = "common_user",
                     Scopes = new[] { "api" },
-                });
+                }));
 
                 credentials.UserToken = token.Token;
             }
