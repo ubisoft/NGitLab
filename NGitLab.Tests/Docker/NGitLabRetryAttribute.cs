@@ -37,8 +37,7 @@ namespace NGitLab.Tests.Docker
                     }
                     catch (Exception ex)
                     {
-                        if (context.CurrentResult == null)
-                            context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentResult ??= context.CurrentTest.MakeTestResult();
                         context.CurrentResult.RecordException(ex);
                     }
 

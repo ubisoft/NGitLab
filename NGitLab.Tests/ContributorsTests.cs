@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -32,24 +33,23 @@ namespace NGitLab.Tests
             var contributorsClient = context.Client.GetRepository(project.Id).Contributors;
             var currentUser = context.Client.Users.Current;
 
-            var randomNumber = context.GetRandomNumber();
-
+            var randomString = context.GetUniqueRandomString();
             var userUpsert = new UserUpsert
             {
-                Email = "test@test.pl",
+                Email = $"{randomString}@example.com",
                 Bio = "bio",
                 CanCreateGroup = true,
                 IsAdmin = true,
                 Linkedin = null,
-                Name = $"NGitLab Test Contributor {randomNumber}",
+                Name = $"NGitLab Test Contributor {randomString}",
                 Password = "!@#$QWDRQW@",
                 ProjectsLimit = 1000,
                 Provider = "provider",
                 ExternalUid = "external_uid",
                 Skype = "skype",
                 Twitter = "twitter",
-                Username = $"ngitlabtestcontributor{randomNumber}",
-                WebsiteURL = "wp.pl",
+                Username = $"ngitlabtestcontributor{randomString}",
+                WebsiteURL = "example.com",
             };
 
             var user = context.AdminClient.Users.Create(userUpsert);
@@ -63,7 +63,7 @@ namespace NGitLab.Tests
                 CommitMessage = "test",
             });
 
-            var contributors = await GitLabTestContext.RetryUntilAsync(() => contributorsClient.All.ToList(), c => c.Any(), TimeSpan.FromMinutes(2));
+            var contributors = await GitLabTestContext.RetryUntilAsync(() => contributorsClient.All.ToList(), c => c.Count >= 2, TimeSpan.FromMinutes(2));
 
             Assert.IsTrue(contributors.Any(x => string.Equals(x.Email, currentUser.Email, StringComparison.Ordinal)));
             Assert.IsTrue(contributors.Any(x => string.Equals(x.Email, userUpsert.Email, StringComparison.Ordinal)));
