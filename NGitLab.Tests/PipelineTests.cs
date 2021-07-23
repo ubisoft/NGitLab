@@ -69,7 +69,7 @@ namespace NGitLab.Tests
             var pipeline = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All.FirstOrDefault(), p => p != null, TimeSpan.FromSeconds(120));
 
             Policy
-                .Handle<GitLabException>(ex => ex.StatusCode == (HttpStatusCode)409) // 409 Conflict
+                .Handle<GitLabException>(ex => ex.StatusCode == HttpStatusCode.Conflict)
                 .Retry(10)
                 .Execute(() => pipelineClient.Delete(pipeline.Id));
 

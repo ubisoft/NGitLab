@@ -333,6 +333,33 @@ namespace NGitLab.Tests.Docker
                 TestContext.Progress.WriteLine("Extracting gitlab session cookie");
                 credentials.AdminCookies = result.Cookie.Split(';').Select(part => part.Trim()).Single(part => part.StartsWith("_gitlab_session=", StringComparison.Ordinal)).Substring("_gitlab_session=".Length);
 
+                Task<IDocument> SignIn(IBrowsingContext context)
+                {
+                    return Policy.Handle<InvalidOperationException>()
+                          .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(1))
+                          .ExecuteAsync(async () =>
+                          {
+                              var result = await context.OpenAsync(GitLabUrl + "/users/sign_in").ConfigureAwait(false);
+                              if (result.StatusCode == HttpStatusCode.BadGateway)
+                                  throw new InvalidOperationException("Cannot open sign in page:\n" + result.ToHtml());
+
+                              TestContext.Progress.WriteLine("Logging in root user");
+                              var form = result.Forms["new_user"];
+                              if (form is null)
+                                  throw new InvalidOperationException("Cannot find the form 'new_user' in the page:\n" + result.ToHtml());
+
+                              ((IHtmlInputElement)form["user[login]"]).Value = AdminUserName;
+                              ((IHtmlInputElement)form["user[password]"]).Value = AdminPassword;
+                              ((IHtmlInputElement)form["user[remember_me]"]).IsChecked = true;
+                              result = await form.SubmitAsync();
+                              TestContext.Progress.WriteLine("Navigating to " + result.Location);
+                              if (result.StatusCode == HttpStatusCode.BadGateway)
+                                  throw new InvalidOperationException("Cannot sign in:\n" + result.ToHtml());
+
+                              return result;
+                          });
+                }
+
                 Task<IDocument> GeneratePersonalAccessToken(GitLabCredential credentials, IBrowsingContext context)
                 {
                     return Policy.Handle<InvalidOperationException>()
@@ -394,33 +421,6 @@ namespace NGitLab.Tests.Docker
                             credentials.ProfileToken = tokenElement.TextContent.Trim().Substring("X-Profile-Token:".Length).Trim();
                             return result;
                         });
-                }
-
-                Task<IDocument> SignIn(IBrowsingContext context)
-                {
-                    return Policy.Handle<InvalidOperationException>()
-                          .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(1))
-                          .ExecuteAsync(async () =>
-                          {
-                              var result = await context.OpenAsync(GitLabUrl + "/users/sign_in").ConfigureAwait(false);
-                              if (result.StatusCode == HttpStatusCode.BadGateway)
-                                  throw new InvalidOperationException("Cannot open sign in page:\n" + result.ToHtml());
-
-                              TestContext.Progress.WriteLine("Logging in root user");
-                              var form = result.Forms["new_user"];
-                              if (form is null)
-                                  throw new InvalidOperationException("Cannot find the form 'new_user' in the page:\n" + result.ToHtml());
-
-                              ((IHtmlInputElement)form["user[login]"]).Value = AdminUserName;
-                              ((IHtmlInputElement)form["user[password]"]).Value = AdminPassword;
-                              ((IHtmlInputElement)form["user[remember_me]"]).IsChecked = true;
-                              result = await form.SubmitAsync();
-                              TestContext.Progress.WriteLine("Navigating to " + result.Location);
-                              if (result.StatusCode == HttpStatusCode.BadGateway)
-                                  throw new InvalidOperationException("Cannot sign in:\n" + result.ToHtml());
-
-                              return result;
-                          });
                 }
             }
 
