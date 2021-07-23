@@ -10,11 +10,12 @@ namespace NGitLab.Tests
     public class MembersClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task UpsertAccessLevelMemberOfProject()
         {
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
-            context.CreateNewUserAsync(out var user);
+            context.CreateNewUser(out var user);
             var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
 
             // Add
@@ -37,11 +38,12 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetAccessLevelMemberOfProject()
         {
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
-            context.CreateNewUserAsync(out var user);
+            context.CreateNewUser(out var user);
             var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
 
             context.Client.Members.AddMemberToProject(projectId, new ProjectMemberCreate

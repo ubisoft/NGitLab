@@ -10,6 +10,7 @@ namespace NGitLab.Tests
     public class SnippetsTest
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_snippet_public()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -40,6 +41,7 @@ namespace NGitLab.Tests
         [TestCase(VisibilityLevel.Private)]
         [TestCase(VisibilityLevel.Internal)]
         [TestCase(VisibilityLevel.Public)]
+        [NGitLabRetry]
         public async Task Test_snippet_inProject(VisibilityLevel visibility)
         {
             using var context = await GitLabTestContext.CreateAsync();

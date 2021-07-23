@@ -13,6 +13,7 @@ namespace NGitLab.Tests
     public class UsersTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task GetUsers()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -21,6 +22,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetUser()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -32,6 +34,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task CreateUpdateDelete()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -49,6 +52,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task DeactivatedAccountShouldBeAbleToActivate()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -70,6 +74,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_add_an_ssh_key_to_the_gitlab_profile()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -97,6 +102,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task CreateTokenAsAdmin_ReturnsUserToken()
         {
             using var context = await GitLabTestContext.CreateAsync();

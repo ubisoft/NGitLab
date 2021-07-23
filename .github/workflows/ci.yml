@@ -1,5 +1,6 @@
 name: publish
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'main'
@@ -48,8 +49,9 @@ jobs:
     strategy:
       matrix:
         # Keep in sync with the version in GitLabDockerContainer.cs
+        # Available tags: https://hub.docker.com/r/gitlab/gitlab-ee/tags
         gitlab: [
-          #'gitlab/gitlab-ee:latest',
+          'gitlab/gitlab-ee:14.0.6-ee.0',
           'gitlab/gitlab-ee:13.10.3-ee.0'
         ]
         configuration: [ Release ]
@@ -61,14 +63,11 @@ jobs:
         - 48624:48624
         env:
           GITLAB_OMNIBUS_CONFIG: "external_url 'http://localhost:48624/'"
+          GITLAB_ROOT_PASSWORD: "Pa$$w0rd"
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core (latest)
       uses: actions/setup-dotnet@v1
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '3.1.x'
     - run: |
         $value = "${{ matrix.gitlab }}-${{ matrix.configuration }}".Replace(':', '-').Replace('/', '-')
         Write-Host "::set-output name=artifact_name::test-results-$value"

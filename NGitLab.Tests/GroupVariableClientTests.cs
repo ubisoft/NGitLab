@@ -9,6 +9,7 @@ namespace NGitLab.Tests
     public class GroupVariableClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_group_variables()
         {
             using var context = await GitLabTestContext.CreateAsync();

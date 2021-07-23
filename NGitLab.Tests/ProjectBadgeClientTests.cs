@@ -9,6 +9,7 @@ namespace NGitLab.Tests
     public class ProjectBadgeClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_project_badges()
         {
             using var context = await GitLabTestContext.CreateAsync();

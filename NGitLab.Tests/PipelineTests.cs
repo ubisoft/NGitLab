@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
+using Polly;
 
 namespace NGitLab.Tests
 {
@@ -13,6 +15,7 @@ namespace NGitLab.Tests
     public class PipelineTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_list_the_pipelines()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -25,6 +28,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_can_list_all_jobs_from_project()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -37,6 +41,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_search_for_pipeline()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -54,6 +59,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_delete_pipeline()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -62,11 +68,16 @@ namespace NGitLab.Tests
             JobTests.AddGitLabCiFile(context.Client, project);
             var pipeline = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All.FirstOrDefault(), p => p != null, TimeSpan.FromSeconds(120));
 
-            pipelineClient.Delete(pipeline.Id);
+            Policy
+                .Handle<GitLabException>(ex => ex.StatusCode == HttpStatusCode.Conflict)
+                .Retry(10)
+                .Execute(() => pipelineClient.Delete(pipeline.Id));
+
             await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All.FirstOrDefault(), p => p == null, TimeSpan.FromSeconds(120));
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_create_pipeline_with_variables()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -99,6 +110,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_create_pipeline_with_testreports()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -126,6 +138,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_triggered_pipeline_variables()
         {
             using var context = await GitLabTestContext.CreateAsync();

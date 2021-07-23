@@ -10,6 +10,7 @@ namespace NGitLab.Tests
     public class EventTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_user_events_works()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -28,6 +29,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_global_events_works()
         {
             using var context = await GitLabTestContext.CreateAsync();

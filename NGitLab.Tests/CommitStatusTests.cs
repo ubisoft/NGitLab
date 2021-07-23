@@ -84,6 +84,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_commit_status()
         {
             using var context = await CommitStatusTestContext.Create();
@@ -94,6 +95,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_post_commit_status_with_no_coverage()
         {
             using var context = await CommitStatusTestContext.Create();
@@ -103,6 +105,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_post_commit_status_and_update_it_from_pending_to_running_to_success()
         {
             using var context = await CommitStatusTestContext.Create();
@@ -117,6 +120,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_post_commit_status_and_update_it_from_pending_to_failed()
         {
             using var context = await CommitStatusTestContext.Create();
@@ -128,6 +132,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_post_commit_status_and_update_it_from_pending_to_canceled()
         {
             using var context = await CommitStatusTestContext.Create();
@@ -139,6 +144,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_post_commit_status_and_update_it_from_success_to_pending()
         {
             using var context = await CommitStatusTestContext.Create();
@@ -150,6 +156,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_post_commit_status_and_update_it_from_success_to_failed()
         {
             using var context = await CommitStatusTestContext.Create();
@@ -161,6 +168,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_post_commit_status_and_update_it_from_success_to_canceled()
         {
             using var context = await CommitStatusTestContext.Create();
@@ -172,6 +180,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_post_commit_status_and_update_it_from_canceled_to_pending()
         {
             using var context = await CommitStatusTestContext.Create();

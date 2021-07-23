@@ -15,6 +15,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task CreateAndGetAll()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -59,6 +60,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Edit()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -96,6 +98,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Delete()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -132,6 +135,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Stop()
         {
             using var context = await GitLabTestContext.CreateAsync();

@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Meziantou.Framework.Versioning;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -11,6 +13,7 @@ namespace NGitLab.Tests
     public class MergeRequestClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_merge_request_api()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -47,6 +50,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_merge_request_rebase()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -59,6 +63,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_gitlab_returns_an_error_when_trying_to_create_a_request_with_same_source_and_destination()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -79,6 +84,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_merge_request_delete()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -94,9 +100,16 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_merge_request_approvers()
         {
             using var context = await GitLabTestContext.CreateAsync();
+            var version = SemanticVersion.Parse(context.AdminClient.Version.Get().Version);
+            if (version >= SemanticVersion.Parse("13.11.0"))
+            {
+                Assert.Inconclusive("Setting approvers is not supported in GitLab 14, you must use approval rules");
+            }
+
             var (project, mergeRequest) = context.CreateMergeRequest();
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
@@ -122,6 +135,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_unassigned_merge_requests()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -136,6 +150,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_assigned_merge_requests()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -191,7 +206,7 @@ namespace NGitLab.Tests
         public static void AcceptMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest request)
         {
             Polly.Policy
-                .Handle<GitLabException>(ex => ex.StatusCode == System.Net.HttpStatusCode.MethodNotAllowed)
+                .Handle<GitLabException>(ex => ex.StatusCode is HttpStatusCode.MethodNotAllowed or HttpStatusCode.NotAcceptable)
                 .Retry(10)
                 .Execute(() =>
                 {

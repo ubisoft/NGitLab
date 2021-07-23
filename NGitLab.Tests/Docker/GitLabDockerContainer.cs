@@ -6,18 +6,21 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AngleSharp;
+using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using AngleSharp.Io;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 using NGitLab.Models;
 using NUnit.Framework;
+using Polly;
 
 namespace NGitLab.Tests.Docker
 {
@@ -27,7 +30,7 @@ namespace NGitLab.Tests.Docker
         public const string ImageName = "gitlab/gitlab-ee";
 
         // https://hub.docker.com/r/gitlab/gitlab-ee/tags/
-        public const string GitLabDockerVersion = "13.10.3-ee.0"; // Keep in sync with .github/workflows/ci.yml
+        public const string GitLabDockerVersion = "14.0.6-ee.0"; // Keep in sync with .github/workflows/ci.yml
 
         private static string s_creationErrorMessage;
         private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
@@ -39,7 +42,17 @@ namespace NGitLab.Tests.Docker
 
         public string AdminUserName { get; } = "root";
 
-        public string AdminPassword { get; } = "Pa$$w0rd";
+        public string AdminPassword
+        {
+            get
+            {
+                var env = Environment.GetEnvironmentVariable("GITLAB_ROOT_PASSWORD");
+                if (!string.IsNullOrEmpty(env))
+                    return env;
+
+                return "Pa$$w0rd";
+            }
+        }
 
         public string LicenseFile { get; set; }
 
@@ -59,9 +72,17 @@ namespace NGitLab.Tests.Docker
                         Assert.Fail(s_creationErrorMessage);
                     }
 
-                    var instance = new GitLabDockerContainer();
-                    await instance.SetupAsync().ConfigureAwait(false);
-                    s_instance = instance;
+                    try
+                    {
+                        var instance = new GitLabDockerContainer();
+                        await instance.SetupAsync().ConfigureAwait(false);
+                        s_instance = instance;
+                    }
+                    catch (Exception ex)
+                    {
+                        s_creationErrorMessage = ex.ToString();
+                        throw;
+                    }
                 }
 
                 return s_instance;
@@ -184,6 +205,7 @@ namespace NGitLab.Tests.Docker
                     Env = new List<string>
                     {
                         "GITLAB_OMNIBUS_CONFIG=external_url 'http://localhost:" + HttpPort.ToString(CultureInfo.InvariantCulture) + "/'",
+                        "GITLAB_ROOT_PASSWORD=" + AdminPassword,
                     },
                 }).ConfigureAwait(false);
 
@@ -275,13 +297,15 @@ namespace NGitLab.Tests.Docker
 
                 // Change password
                 var result = await context.OpenAsync(GitLabUrl.AbsoluteUri).ConfigureAwait(false);
+                result = await ReloadIfError(context, result);
+
                 TestContext.Progress.WriteLine("Navigating to " + result.Location);
                 if (result.Location.PathName == "/users/password/edit")
                 {
                     TestContext.Progress.WriteLine("Creating root password");
                     var form = result.Forms["new_user"];
-                    if(form == null)
-                        throw new InvalidOperationException($"Cannot set the root password. The page doesn't contain the form 'new-user'");
+                    if (form == null)
+                        throw new InvalidOperationException($"Cannot set the root password. The page doesn't contain the form 'new_user'");
 
                     ((IHtmlInputElement)form["user[password]"]).Value = AdminPassword;
                     ((IHtmlInputElement)form["user[password_confirmation]"]).Value = AdminPassword;
@@ -292,50 +316,112 @@ namespace NGitLab.Tests.Docker
                 // Login
                 if (result.Location.PathName == "/users/sign_in")
                 {
-                    TestContext.Progress.WriteLine("Logging in root user");
-                    var form = result.Forms["new_user"];
-                    ((IHtmlInputElement)form["user[login]"]).Value = AdminUserName;
-                    ((IHtmlInputElement)form["user[password]"]).Value = AdminPassword;
-                    ((IHtmlInputElement)form["user[remember_me]"]).IsChecked = true;
-                    result = await form.SubmitAsync();
-                    TestContext.Progress.WriteLine("Navigating to " + result.Location);
+                    result = await SignIn(context);
                 }
 
                 // Create a token
                 if (result.Location.PathName == "/")
                 {
-                    TestContext.Progress.WriteLine("Creating root token");
-                    result = await context.OpenAsync(GitLabUrl + "/profile/personal_access_tokens").ConfigureAwait(false);
-                    var form = result.Forms["new_personal_access_token"];
-                    ((IHtmlInputElement)form["personal_access_token[name]"]).Value = $"GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
-                    foreach (var element in form.Elements.OfType<IHtmlInputElement>().Where(e => e.Name == "personal_access_token[scopes][]"))
-                    {
-                        element.IsChecked = true;
-                    }
-
-                    result = await form.SubmitAsync().ConfigureAwait(false);
-                    TestContext.Progress.WriteLine("Navigating to " + result.Location);
-
-                    credentials.AdminUserToken = result.GetElementById("created-personal-access-token").GetAttribute("value");
+                    result = await GeneratePersonalAccessToken(credentials, context).ConfigureAwait(false);
                 }
 
                 // Get X-Profile-Token
-                TestContext.Progress.WriteLine("Generating request profiles token");
-                result = await context.OpenAsync(GitLabUrl + "/admin/requests_profiles").ConfigureAwait(false);
-                TestContext.Progress.WriteLine("Navigating to " + result.Location);
-                var codeElements = result.QuerySelectorAll("code").ToList();
-                var tokenElement = codeElements.SingleOrDefault(n => n.TextContent.StartsWith("X-Profile-Token:", StringComparison.Ordinal));
-                if (tokenElement == null)
-                {
-                    Assert.Fail("Cannot find X-Profile-Token in the page:\n\n" + result.DocumentElement.OuterHtml);
-                }
-
-                credentials.ProfileToken = tokenElement.TextContent.Substring("X-Profile-Token:".Length).Trim();
+                result = await GenerateXProfileToken(credentials, context, result).ConfigureAwait(false);
 
                 // Get admin login cookie
                 // result.Cookie: experimentation_subject_id=XXX; _gitlab_session=XXXX; known_sign_in=XXXX
                 TestContext.Progress.WriteLine("Extracting gitlab session cookie");
                 credentials.AdminCookies = result.Cookie.Split(';').Select(part => part.Trim()).Single(part => part.StartsWith("_gitlab_session=", StringComparison.Ordinal)).Substring("_gitlab_session=".Length);
+
+                Task<IDocument> SignIn(IBrowsingContext context)
+                {
+                    return Policy.Handle<InvalidOperationException>()
+                          .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(1))
+                          .ExecuteAsync(async () =>
+                          {
+                              var result = await context.OpenAsync(GitLabUrl + "/users/sign_in").ConfigureAwait(false);
+                              if (result.StatusCode == HttpStatusCode.BadGateway)
+                                  throw new InvalidOperationException("Cannot open sign in page:\n" + result.ToHtml());
+
+                              TestContext.Progress.WriteLine("Logging in root user");
+                              var form = result.Forms["new_user"];
+                              if (form is null)
+                                  throw new InvalidOperationException("Cannot find the form 'new_user' in the page:\n" + result.ToHtml());
+
+                              ((IHtmlInputElement)form["user[login]"]).Value = AdminUserName;
+                              ((IHtmlInputElement)form["user[password]"]).Value = AdminPassword;
+                              ((IHtmlInputElement)form["user[remember_me]"]).IsChecked = true;
+                              result = await form.SubmitAsync();
+                              TestContext.Progress.WriteLine("Navigating to " + result.Location);
+                              if (result.StatusCode == HttpStatusCode.BadGateway)
+                                  throw new InvalidOperationException("Cannot sign in:\n" + result.ToHtml());
+
+                              return result;
+                          });
+                }
+
+                Task<IDocument> GeneratePersonalAccessToken(GitLabCredential credentials, IBrowsingContext context)
+                {
+                    return Policy.Handle<InvalidOperationException>()
+                         .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(1))
+                         .ExecuteAsync(async () =>
+                         {
+                             TestContext.Progress.WriteLine("Creating root token");
+                             var result = await context.OpenAsync(GitLabUrl + "/profile/personal_access_tokens").ConfigureAwait(false);
+                             if (result.StatusCode == HttpStatusCode.NotFound)
+                             {
+                                 result = await context.OpenAsync(GitLabUrl + "/-/profile/personal_access_tokens").ConfigureAwait(false);
+                             }
+
+                             var form = result.Forms["new_personal_access_token"];
+                             if (form is null)
+                                 throw new InvalidOperationException("The page does not contain the form 'new_personal_access_token':\n" + result.ToHtml());
+
+                             var htmlInputElement = (IHtmlInputElement)form["personal_access_token[name]"];
+                             if (htmlInputElement is null)
+                                 throw new InvalidOperationException("The page does not contain the field 'new_personal_access_token.personal_access_token[name]':\n" + result.ToHtml());
+
+                             htmlInputElement.Value = $"GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
+                             foreach (var element in form.Elements.OfType<IHtmlInputElement>().Where(e => e.Name == "personal_access_token[scopes][]"))
+                             {
+                                 element.IsChecked = true;
+                             }
+
+                             result = await form.SubmitAsync().ConfigureAwait(false);
+                             TestContext.Progress.WriteLine("Navigating to " + result.Location);
+                             if (result.StatusCode == HttpStatusCode.BadGateway)
+                                 throw new InvalidOperationException("Cannot generate a personal access token:\n" + result.ToHtml());
+
+                             var personalAccessTokenElement = result.GetElementById("created-personal-access-token");
+                             if (personalAccessTokenElement is null)
+                                 throw new InvalidOperationException("The page does not contain the element 'created-personal-access-token':\n" + result.ToHtml());
+
+                             credentials.AdminUserToken = personalAccessTokenElement.GetAttribute("value");
+                             return result;
+                         });
+                }
+
+                Task<IDocument> GenerateXProfileToken(GitLabCredential credentials, IBrowsingContext context, IDocument result)
+                {
+                    return Policy.Handle<InvalidOperationException>()
+                        .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(1))
+                        .ExecuteAsync(async () =>
+                        {
+                            TestContext.Progress.WriteLine("Generating request profiles token");
+                            result = await context.OpenAsync(GitLabUrl + "/admin/requests_profiles").ConfigureAwait(false);
+                            TestContext.Progress.WriteLine("Navigating to " + result.Location);
+                            if (result.StatusCode == HttpStatusCode.BadGateway)
+                                throw new InvalidOperationException("Cannot navigate to admin/requests_profiles:\n" + result.ToHtml());
+
+                            var codeElements = result.QuerySelectorAll("code").ToList();
+                            var tokenElement = codeElements.SingleOrDefault(n => n.TextContent.Trim().StartsWith("X-Profile-Token:", StringComparison.Ordinal));
+                            if (tokenElement == null)
+                                throw new InvalidOperationException("Cannot find X-Profile-Token in the page:\n" + result.ToHtml());
+
+                            credentials.ProfileToken = tokenElement.TextContent.Trim().Substring("X-Profile-Token:".Length).Trim();
+                            return result;
+                        });
+                }
             }
 
             void GenerateUserToken()
@@ -364,6 +450,17 @@ namespace NGitLab.Tests.Docker
                 });
 
                 credentials.UserToken = token.Token;
+            }
+
+            async Task<IDocument> ReloadIfError(IBrowsingContext context, IDocument document)
+            {
+                while (document.StatusCode is HttpStatusCode.BadGateway or HttpStatusCode.ServiceUnavailable)
+                {
+                    await Task.Delay(1000);
+                    document = await context.OpenAsync(document.Url);
+                }
+
+                return document;
             }
         }
 

@@ -9,6 +9,7 @@ namespace NGitLab.Tests.Milestone
     public class MilestoneClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_milestone_api()
         {
             using var context = await GitLabTestContext.CreateAsync();

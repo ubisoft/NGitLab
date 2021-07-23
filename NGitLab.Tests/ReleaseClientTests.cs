@@ -9,6 +9,7 @@ namespace NGitLab.Tests.Release
     public class ReleaseClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_release_api()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -51,6 +52,7 @@ namespace NGitLab.Tests.Release
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_release_links()
         {
             using var context = await GitLabTestContext.CreateAsync();

@@ -11,6 +11,7 @@ namespace NGitLab.Tests
     public class MergeRequestDiscussionsClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task AddDiscussionToMergeRequest_DiscussionCreated()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -34,6 +35,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task EditCommentFromDiscussion_CommentEdited()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -65,6 +67,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task AddDiscussionToMergeRequestOnArchivedProject()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -85,6 +88,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task ResolveDiscussion_AllNotesResolved()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -110,6 +114,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task DeleteOneNoteFromDiscussion_DiscussionAndNoteDeleted()
         {
             using var context = await GitLabTestContext.CreateAsync();

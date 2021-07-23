@@ -8,6 +8,7 @@ namespace NGitLab.Tests
     public class ProjectLevelApprovalRulesClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task CreateApprovalRule()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -25,6 +26,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task DeleteApprovalRule()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -41,6 +43,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task UpdateApprovalRule()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -69,6 +72,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetApprovalRules()
         {
             using var context = await GitLabTestContext.CreateAsync();

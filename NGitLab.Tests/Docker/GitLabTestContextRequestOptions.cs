@@ -1,3 +1,5 @@
+#pragma warning disable CS0672  // Member overrides obsolete member
+#pragma warning disable SYSLIB0010 // Member overrides obsolete member
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -23,7 +25,7 @@ namespace NGitLab.Tests.Docker
         public IReadOnlyList<WebRequest> AllRequests => _allRequests;
 
         public GitLabTestContextRequestOptions()
-            : base(retryCount: 10, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
+            : base(retryCount: 0, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
         {
         }
 
@@ -172,6 +174,7 @@ namespace NGitLab.Tests.Docker
             private readonly HttpWebResponse _innerWebResponse;
             private byte[] _stream;
 
+            [Obsolete("We have to use it")]
             public LoggableHttpWebResponse(HttpWebResponse innerWebResponse)
             {
                 _innerWebResponse = innerWebResponse;

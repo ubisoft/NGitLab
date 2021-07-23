@@ -10,6 +10,7 @@ namespace NGitLab.Tests.RepositoryClient
     public class ProjectHooksClientTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task CreateUpdateDelete()
         {
             using var context = await GitLabTestContext.CreateAsync();

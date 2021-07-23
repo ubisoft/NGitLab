@@ -10,6 +10,7 @@ namespace NGitLab.Tests
     public class NamespacesTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task Test_namespaces_contains_a_group()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -22,6 +23,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_namespaces_contains_a_user()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -34,6 +36,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_namespaces_search_for_user()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -45,6 +48,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_namespaces_search_for_group()
         {
             using var context = await GitLabTestContext.CreateAsync();

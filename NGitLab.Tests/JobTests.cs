@@ -47,6 +47,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_getjobs_all()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -57,6 +58,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_getjobs_scope()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -67,6 +69,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_getjobs_multiple_scopes()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -91,6 +94,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_run_action_play()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -110,6 +114,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_run_action_retry()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -131,6 +136,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_job_from_id()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -148,6 +154,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_job_trace()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -177,6 +184,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task Test_get_job_artifacts()
         {
             using var context = await GitLabTestContext.CreateAsync();

@@ -12,6 +12,7 @@ namespace NGitLab.Tests
     public class ProjectsTests
     {
         [Test]
+        [NGitLabRetry]
         public async Task GetOwnedProjects()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -23,6 +24,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetVisibleProjects()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -35,6 +37,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetAccessibleProjects()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -47,6 +50,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetProjectsByQuery()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -64,6 +68,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetProjectsStatistics()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -80,6 +85,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetProjectsProperties()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -98,6 +104,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetProjectsByQuery_VisibilityInternal()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -116,6 +123,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetProjectByIdByQuery_Statistics()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -134,6 +142,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetProjectLanguages()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -156,6 +165,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetProjectsCanSpecifyTheProjectPerPageCount()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -176,6 +186,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task CreateUpdateDelete()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -219,6 +230,7 @@ namespace NGitLab.Tests
         [TestCase(AccessLevel.Reporter)]
         [TestCase(AccessLevel.Developer)]
         [TestCase(AccessLevel.Maintainer)]
+        [NGitLabRetry]
         public async Task Test_get_by_project_query_projectQuery_MinAccessLevel_returns_projects(AccessLevel accessLevel)
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -239,6 +251,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task ForkProject()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -296,6 +309,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task GetProjectsByLastActivity()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -316,6 +330,7 @@ namespace NGitLab.Tests
         }
 
         [Test]
+        [NGitLabRetry]
         public async Task IsEmpty()
         {
             using var context = await GitLabTestContext.CreateAsync();
