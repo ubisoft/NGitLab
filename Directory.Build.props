@@ -13,19 +13,19 @@
     <TreatWarningsAsErrors Condition="'$(Configuration)' != 'Debug'">true</TreatWarningsAsErrors>
 
     <RestoreUseStaticGraphEvaluation>true</RestoreUseStaticGraphEvaluation>
-	
-	<!-- Package info -->
+
+    <!-- Package info -->
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
-  
-  <ItemGroup>  
+
+  <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)\LICENSE" Pack="true" PackagePath="" Visible="false" />
     <None Include="$(MSBuildThisFileDirectory)\README.md" Pack="true" PackagePath="" />
-	
+
     <SourceRoot Include="$(MSBuildThisFileDirectory)/" />
 
-	<PackageReference Include="MinVer" PrivateAssets="All" Version="2.5.0" />
+    <PackageReference Include="MinVer" PrivateAssets="All" Version="2.5.0" />
 
     <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.64">
       <PrivateAssets>all</PrivateAssets>
