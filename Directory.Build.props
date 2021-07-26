@@ -1,14 +1,11 @@
 <Project>
-
   <PropertyGroup>
-    <_IsGitHub Condition="'$(GITHUB_ACTIONS)' == 'true'">true</_IsGitHub>
-    <_ContinuousIntegrationBuild Condition="'$(TF_BUILD)' == 'true' or '$(GITHUB_ACTIONS)' == 'true' or '$(GITLAB_CI)' == 'true'">true</_ContinuousIntegrationBuild>
-
     <!-- Assembly Info -->
     <Company>Ubisoft</Company>
     <Copyright>Copyright © $([System.DateTime]::UtcNow.Year) $(Company)</Copyright>
     <Description>GitLab REST API .NET Client Library</Description>
     <Product>NGitLab</Product>
+
     <!-- Compile Options -->
     <LangVersion>9.0</LangVersion>
     <Deterministic>true</Deterministic>
@@ -16,20 +13,24 @@
     <TreatWarningsAsErrors Condition="'$(Configuration)' != 'Debug'">true</TreatWarningsAsErrors>
 
     <RestoreUseStaticGraphEvaluation>true</RestoreUseStaticGraphEvaluation>
+
+    <!-- Package info -->
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
-  <!-- SourceLink: https://www.meziantou.net/how-to-debug-nuget-packages-using-sourcelink.htm -->
-  <PropertyGroup Condition="'$(_IsGitHub)' == 'true'">
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <ContinuousIntegrationBuild>$(_ContinuousIntegrationBuild)</ContinuousIntegrationBuild>
-  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)\LICENSE" Pack="true" PackagePath="" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)\README.md" Pack="true" PackagePath="" />
 
-  <ItemGroup Condition="'$(_IsGitHub)' == 'true'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>
+    <SourceRoot Include="$(MSBuildThisFileDirectory)/" />
+
     <PackageReference Include="MinVer" PrivateAssets="All" Version="2.5.0" />
+
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.64">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <!-- Analyzers (Roslyn, Meziantou, StyleCop, ...) -->
