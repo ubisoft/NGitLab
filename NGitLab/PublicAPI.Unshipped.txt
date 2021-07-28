@@ -1466,6 +1466,7 @@ NGitLab.Models.Issue.Assignees -> NGitLab.Models.Assignee[]
 NGitLab.Models.Issue.Author -> NGitLab.Models.Author
 NGitLab.Models.Issue.CreatedAt -> System.DateTime
 NGitLab.Models.Issue.Description -> string
+NGitLab.Models.Issue.DueDate -> System.DateTime?
 NGitLab.Models.Issue.Epic -> NGitLab.Models.IssueEpic
 NGitLab.Models.Issue.Id -> int
 NGitLab.Models.Issue.Issue() -> void

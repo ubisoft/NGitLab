@@ -45,6 +45,9 @@ namespace NGitLab.Models
         [DataMember(Name = "updated_at")]
         public DateTime UpdatedAt;
 
+        [DataMember(Name = "due_date")]
+        public DateTime? DueDate;
+
         [DataMember(Name = "web_url")]
         public string WebUrl;
 

@@ -1282,7 +1282,9 @@ namespace NGitLab.Impl
             @"yyyy-MM-dd\THH:mm:ss.FFFFFFFK",
             @"yyyy-MM-dd\THH:mm:ss.FFFFFFF\Z",
             @"yyyy-MM-dd\THH:mm:ss\Z",
-            @"yyyy-MM-dd\THH:mm:ssK"
+            @"yyyy-MM-dd\THH:mm:ssK",
+            @"yyyy-MM-ddK",
+            @"yyyy-MM-dd\Z"
         };
 
         public PocoJsonSerializerStrategy()
