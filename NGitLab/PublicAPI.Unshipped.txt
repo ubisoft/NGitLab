@@ -2734,15 +2734,27 @@ NGitLab.Models.UserUpsert.Username -> string
 NGitLab.Models.UserUpsert.UserUpsert() -> void
 NGitLab.Models.UserUpsert.WebsiteURL -> string
 NGitLab.Models.Variable
-NGitLab.Models.Variable.Key -> string
-NGitLab.Models.Variable.Protected -> bool
-NGitLab.Models.Variable.Value -> string
+NGitLab.Models.Variable.Key.get -> string
+NGitLab.Models.Variable.Key.set -> void
+NGitLab.Models.Variable.Masked.get -> bool
+NGitLab.Models.Variable.Masked.set -> void
+NGitLab.Models.Variable.Protected.get -> bool
+NGitLab.Models.Variable.Protected.set -> void
+NGitLab.Models.Variable.Scope.get -> string
+NGitLab.Models.Variable.Scope.set -> void
+NGitLab.Models.Variable.Type.get -> NGitLab.Models.VariableType
+NGitLab.Models.Variable.Type.set -> void
+NGitLab.Models.Variable.Value.get -> string
+NGitLab.Models.Variable.Value.set -> void
 NGitLab.Models.Variable.Variable() -> void
 NGitLab.Models.VariableCreate
 NGitLab.Models.VariableCreate.Key -> string
 NGitLab.Models.VariableCreate.Protected -> bool
 NGitLab.Models.VariableCreate.Value -> string
 NGitLab.Models.VariableCreate.VariableCreate() -> void
+NGitLab.Models.VariableType
+NGitLab.Models.VariableType.File = 1 -> NGitLab.Models.VariableType
+NGitLab.Models.VariableType.Variable = 0 -> NGitLab.Models.VariableType
 NGitLab.Models.VariableUpdate
 NGitLab.Models.VariableUpdate.Protected -> bool
 NGitLab.Models.VariableUpdate.Value -> string
