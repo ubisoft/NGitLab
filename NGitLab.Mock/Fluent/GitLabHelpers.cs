@@ -220,11 +220,19 @@ namespace NGitLab.Mock.Fluent
                 {
                     foreach (var label in labels)
                     {
-                        issue.Labels.Add(label);
+                        WithLabel(issue, label);
                     }
                 }
 
                 configure?.Invoke(issue);
+            });
+        }
+
+        public static GitLabIssue WithLabel(this GitLabIssue issue, string label)
+        {
+            return Configure(issue, _ =>
+            {
+                issue.Labels.Add(label);
             });
         }
 
@@ -245,7 +253,7 @@ namespace NGitLab.Mock.Fluent
             });
         }
 
-        public static GitLabProject WithMergeRequest(this GitLabProject project, string title, string sourceBranch, string targetBranch = null, string description = null, string author = null, string assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string> labels = null, Action<GitLabMergeRequest> configure = null)
+        public static GitLabProject WithMergeRequest(this GitLabProject project, string title, string sourceBranch, string targetBranch = null, string description = null, string author = null, string assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string> approvers = null, IEnumerable<string> labels = null, Action<GitLabMergeRequest> configure = null)
         {
             return WithMergeRequest(project, title, sourceBranch, mergeRequest =>
             {
@@ -261,11 +269,35 @@ namespace NGitLab.Mock.Fluent
                 {
                     foreach (var label in labels)
                     {
-                        mergeRequest.Labels.Add(label);
+                        WithLabel(mergeRequest, label);
+                    }
+                }
+
+                if (approvers != null)
+                {
+                    foreach (var approver in approvers)
+                    {
+                        WithApprover(mergeRequest, approver);
                     }
                 }
 
                 configure?.Invoke(mergeRequest);
+            });
+        }
+
+        public static GitLabMergeRequest WithLabel(this GitLabMergeRequest mergeRequest, string label)
+        {
+            return Configure(mergeRequest, _ =>
+            {
+                mergeRequest.Labels.Add(label);
+            });
+        }
+
+        public static GitLabMergeRequest WithApprover(this GitLabMergeRequest mergeRequest, string approver)
+        {
+            return Configure(mergeRequest, _ =>
+            {
+                mergeRequest.Approvers.Add(approver);
             });
         }
 
@@ -310,7 +342,7 @@ namespace NGitLab.Mock.Fluent
                 CreateProject(server, project);
             }
 
-            var client = CreateClient(server, config.CurrentUser);
+            var client = CreateClient(server, config.CurrentUser ?? config.Users[0].Username);
 
             foreach (var project in config.Projects)
             {
@@ -468,6 +500,11 @@ namespace NGitLab.Mock.Fluent
             foreach (var label in mergeRequest.Labels)
             {
                 request.Labels.Add(label);
+            }
+
+            foreach (var approver in mergeRequest.Approvers)
+            {
+                request.Approvers.Add(new UserRef(server.Users.First(x => string.Equals(x.UserName, approver, StringComparison.Ordinal))));
             }
 
             project.MergeRequests.Add(request);

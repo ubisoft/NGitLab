@@ -19,6 +19,8 @@ namespace NGitLab.Mock.Fluent
 
         public IList<string> Labels { get; } = new List<string>();
 
+        public IList<string> Approvers { get; } = new List<string>();
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;

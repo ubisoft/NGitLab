@@ -11,7 +11,7 @@ namespace NGitLab.Mock.Tests
         public void Test_issues_created_by_me_can_be_listed()
         {
             var client = new GitLabConfig()
-                .WithUser("user1")
+                .WithUser("user1", isCurrent: true)
                 .WithUser("user2")
                 .WithProject("Test", configure: project => project
                     .WithIssue("Issue 1", author: "user1", assignee: "user2")
@@ -28,7 +28,7 @@ namespace NGitLab.Mock.Tests
         public void Test_issues_assigned_to_me_can_be_listed()
         {
             var client = new GitLabConfig()
-                .WithUser("user1")
+                .WithUser("user1", isCurrent: true)
                 .WithUser("user2")
                 .WithProject("Test", configure: project => project
                     .WithIssue("Issue 1", author: "user1", assignee: "user2")
@@ -45,7 +45,7 @@ namespace NGitLab.Mock.Tests
         public void Test_issues_assignee_not_throwing_when_assignees_is_null()
         {
             var client = new GitLabConfig()
-                .WithUser("user")
+                .WithUser("user", isCurrent: true)
                 .WithProject("Test", configure: project => project
                     .WithIssue("Issue title", author: "user"))
                 .ResolveClient();
