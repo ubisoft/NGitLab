@@ -6,7 +6,7 @@
 
         public string Name { get; set; } = "User";
 
-        public string Email { get; set; } = "user@ubisoft.com";
+        public string Email { get; set; } = "user@example.com";
 
         public string AvatarUrl { get; set; }
 

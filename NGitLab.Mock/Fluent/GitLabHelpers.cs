@@ -59,7 +59,7 @@ namespace NGitLab.Mock.Fluent
             });
         }
 
-        public static GitLabConfig WithUser(this GitLabConfig config, string username, string name = "User", string email = "user@ubisoft.com", string avatarUrl = null, bool isAdmin = false, Action<GitLabUser> configure = null)
+        public static GitLabConfig WithUser(this GitLabConfig config, string username, string name = "User", string email = "user@example.com", string avatarUrl = null, bool isAdmin = false, Action<GitLabUser> configure = null)
         {
             return WithUser(config, username, user =>
             {
