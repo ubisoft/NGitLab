@@ -1,4 +1,4 @@
-﻿using NGitLab.Models;
+﻿using NGitLab.Mock.Fluent;
 using NUnit.Framework;
 
 namespace NGitLab.Mock.Tests
@@ -8,16 +8,15 @@ namespace NGitLab.Mock.Tests
         [Test]
         public void Test_project_can_be_mocked()
         {
-            using var gitLabServer = new GitLabServer();
-            var group = new Group("TestGroup");
-            gitLabServer.Groups.Add(group);
-            var project = new Project("Test") { Visibility = VisibilityLevel.Internal };
-            group.Projects.Add(project);
+            var client = new GitLabConfig()
+                .WithUser("Test", isCurrent: true)
+                .WithProject("Test", @namespace: "testgroup", currentAsMaintainer: true)
+                .ResolveClient();
 
-            var modelProject = project.ToClientProject();
-            Assert.IsNotNull(modelProject);
-            Assert.AreEqual("Test", modelProject.Name);
-            Assert.AreEqual("testgroup", modelProject.Namespace.FullPath);
+            var project = client.Projects["testgroup/Test"];
+            Assert.IsNotNull(project);
+            Assert.AreEqual("Test", project.Name);
+            Assert.AreEqual("testgroup", project.Namespace.FullPath);
         }
     }
 }

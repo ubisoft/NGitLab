@@ -59,7 +59,7 @@ namespace NGitLab.Mock.Fluent
             });
         }
 
-        public static GitLabConfig WithUser(this GitLabConfig config, string username, string name = "User", string email = "user@example.com", string avatarUrl = null, bool isAdmin = false, Action<GitLabUser> configure = null)
+        public static GitLabConfig WithUser(this GitLabConfig config, string username, string name = "User", string email = "user@example.com", string avatarUrl = null, bool isAdmin = false, bool isCurrent = false, Action<GitLabUser> configure = null)
         {
             return WithUser(config, username, user =>
             {
@@ -67,6 +67,11 @@ namespace NGitLab.Mock.Fluent
                 user.Email = email;
                 user.AvatarUrl = avatarUrl;
                 user.IsAdmin = isAdmin;
+                if (isCurrent)
+                {
+                    user.AsCurrentUser();
+                }
+
                 configure?.Invoke(user);
             });
         }
@@ -101,7 +106,7 @@ namespace NGitLab.Mock.Fluent
             });
         }
 
-        public static GitLabConfig WithProject(this GitLabConfig config, string name, string @namespace = "functional", string description = null, string defaultBranch = "main", VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false, string clonePath = null, Action<GitLabProject> configure = null)
+        public static GitLabConfig WithProject(this GitLabConfig config, string name, string @namespace = "functional", string description = null, string defaultBranch = "main", VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false, bool currentAsMaintainer = false, string clonePath = null, Action<GitLabProject> configure = null)
         {
             return WithProject(config, name, project =>
             {
@@ -118,6 +123,11 @@ namespace NGitLab.Mock.Fluent
                         commit.Message = "Initial commit";
                         WithFile(commit, "README.md", $"# {name}{Environment.NewLine}");
                     });
+                }
+
+                if (currentAsMaintainer)
+                {
+                    WithUserPermission(project, project.Parent.CurrentUser, AccessLevel.Maintainer);
                 }
 
                 configure?.Invoke(project);
