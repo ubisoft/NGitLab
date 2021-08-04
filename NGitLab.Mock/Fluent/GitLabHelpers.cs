@@ -160,6 +160,22 @@ namespace NGitLab.Mock.Fluent
             });
         }
 
+        public static GitLabProject WithLabel(this GitLabProject project, string name, string color = null, string description = null, bool group = false)
+        {
+            return Configure(project, _ =>
+            {
+                var label = new GitLabLabel
+                {
+                    Name = name,
+                    Color = color,
+                    Description = description,
+                    Group = false,
+                };
+
+                project.Labels.Add(label);
+            });
+        }
+
         public static GitLabProject WithMergeCommit(this GitLabProject project, string sourceBranch, string targetBranch = null, string user = null, Action<GitLabCommit> configure = null)
         {
             return WithCommit(project, commit =>
@@ -419,6 +435,11 @@ namespace NGitLab.Mock.Fluent
                 CreateCommit(server, prj, commit);
             }
 
+            foreach (var label in project.Labels)
+            {
+                CreateLabel(prj, label);
+            }
+
             foreach (var issue in project.Issues)
             {
                 CreateIssue(server, prj, issue);
@@ -462,8 +483,31 @@ namespace NGitLab.Mock.Fluent
             }
         }
 
+        private static void CreateLabel(Project project, GitLabLabel label)
+        {
+            var collection = label.Group ? project.Group.Labels : project.Labels;
+            collection.Add(label.Name, label.Color, label.Description);
+        }
+
+        private static void CreateLabel(Project project, string label)
+        {
+            var model = project.Labels.Concat(GetLabels(project.Group)).FirstOrDefault(x => string.Equals(x.Name, label, StringComparison.Ordinal));
+            if (model == null)
+                project.Labels.Add(label);
+
+            static IEnumerable<Label> GetLabels(Group group)
+            {
+                return group.Parent != null ? group.Labels.Concat(GetLabels(group.Parent)) : group.Labels;
+            }
+        }
+
         private static void CreateIssue(GitLabServer server, Project project, GitLabIssue issue)
         {
+            foreach (var label in issue.Labels)
+            {
+                CreateLabel(project, label);
+            }
+
             var issueAuthor = issue.Author;
             var issueAssignee = issue.Assignee;
             project.Issues.Add(new Issue
@@ -480,6 +524,11 @@ namespace NGitLab.Mock.Fluent
 
         private static void CreateMergeRequest(GitLabServer server, Project project, GitLabMergeRequest mergeRequest)
         {
+            foreach (var label in mergeRequest.Labels)
+            {
+                CreateLabel(project, label);
+            }
+
             var mergeRequestAuthor = mergeRequest.Author;
             var mergeRequestAssignee = mergeRequest.Assignee;
             var request = new MergeRequest

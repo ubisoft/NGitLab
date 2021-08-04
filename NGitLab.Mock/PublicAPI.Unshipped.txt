@@ -185,6 +185,17 @@ NGitLab.Mock.Fluent.GitLabIssue.Title.set -> void
 NGitLab.Mock.Fluent.GitLabIssue.UpdatedAt.get -> System.DateTime
 NGitLab.Mock.Fluent.GitLabIssue.UpdatedAt.set -> void
 NGitLab.Mock.Fluent.GitLabIssuesCollection
+NGitLab.Mock.Fluent.GitLabLabel
+NGitLab.Mock.Fluent.GitLabLabel.Color.get -> string
+NGitLab.Mock.Fluent.GitLabLabel.Color.set -> void
+NGitLab.Mock.Fluent.GitLabLabel.Description.get -> string
+NGitLab.Mock.Fluent.GitLabLabel.Description.set -> void
+NGitLab.Mock.Fluent.GitLabLabel.GitLabLabel() -> void
+NGitLab.Mock.Fluent.GitLabLabel.Group.get -> bool
+NGitLab.Mock.Fluent.GitLabLabel.Group.set -> void
+NGitLab.Mock.Fluent.GitLabLabel.Name.get -> string
+NGitLab.Mock.Fluent.GitLabLabel.Name.set -> void
+NGitLab.Mock.Fluent.GitLabLabelsCollection
 NGitLab.Mock.Fluent.GitLabMergeRequest
 NGitLab.Mock.Fluent.GitLabMergeRequest.Approvers.get -> System.Collections.Generic.IList<string>
 NGitLab.Mock.Fluent.GitLabMergeRequest.Assignee.get -> string
@@ -920,6 +931,7 @@ static NGitLab.Mock.Fluent.GitLabHelpers.WithIssue(this NGitLab.Mock.Fluent.GitL
 static NGitLab.Mock.Fluent.GitLabHelpers.WithIssue(this NGitLab.Mock.Fluent.GitLabProject project, string title, System.Action<NGitLab.Mock.Fluent.GitLabIssue> configure) -> NGitLab.Mock.Fluent.GitLabProject
 static NGitLab.Mock.Fluent.GitLabHelpers.WithLabel(this NGitLab.Mock.Fluent.GitLabIssue issue, string label) -> NGitLab.Mock.Fluent.GitLabIssue
 static NGitLab.Mock.Fluent.GitLabHelpers.WithLabel(this NGitLab.Mock.Fluent.GitLabMergeRequest mergeRequest, string label) -> NGitLab.Mock.Fluent.GitLabMergeRequest
+static NGitLab.Mock.Fluent.GitLabHelpers.WithLabel(this NGitLab.Mock.Fluent.GitLabProject project, string name, string color = null, string description = null, bool group = false) -> NGitLab.Mock.Fluent.GitLabProject
 static NGitLab.Mock.Fluent.GitLabHelpers.WithMergeCommit(this NGitLab.Mock.Fluent.GitLabProject project, string sourceBranch, string targetBranch = null, string user = null, System.Action<NGitLab.Mock.Fluent.GitLabCommit> configure = null) -> NGitLab.Mock.Fluent.GitLabProject
 static NGitLab.Mock.Fluent.GitLabHelpers.WithMergeRequest(this NGitLab.Mock.Fluent.GitLabProject project, string title, string sourceBranch, string targetBranch = null, string description = null, string author = null, string assignee = null, System.DateTime? createdAt = null, System.DateTime? updatedAt = null, System.DateTime? closedAt = null, System.DateTime? mergedAt = null, System.Collections.Generic.IEnumerable<string> approvers = null, System.Collections.Generic.IEnumerable<string> labels = null, System.Action<NGitLab.Mock.Fluent.GitLabMergeRequest> configure = null) -> NGitLab.Mock.Fluent.GitLabProject
 static NGitLab.Mock.Fluent.GitLabHelpers.WithMergeRequest(this NGitLab.Mock.Fluent.GitLabProject project, string title, string sourceBranch, System.Action<NGitLab.Mock.Fluent.GitLabMergeRequest> configure) -> NGitLab.Mock.Fluent.GitLabProject

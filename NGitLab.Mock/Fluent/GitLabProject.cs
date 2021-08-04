@@ -1,4 +1,5 @@
-﻿using NGitLab.Models;
+﻿using System.Collections.Generic;
+using NGitLab.Models;
 
 namespace NGitLab.Mock.Fluent
 {
@@ -10,6 +11,7 @@ namespace NGitLab.Mock.Fluent
             Issues = new GitLabIssuesCollection(this);
             MergeRequests = new GitLabMergeRequestsCollection(this);
             Permissions = new GitLabPermissionsCollection(this);
+            Labels = new GitLabLabelsCollection(this);
         }
 
         public string Name { get; set; }
@@ -31,6 +33,8 @@ namespace NGitLab.Mock.Fluent
         public GitLabMergeRequestsCollection MergeRequests { get; }
 
         public GitLabPermissionsCollection Permissions { get; }
+
+        public GitLabLabelsCollection Labels { get; }
     }
 
     public class GitLabProjectsCollection : GitLabCollection<GitLabProject, GitLabConfig>
