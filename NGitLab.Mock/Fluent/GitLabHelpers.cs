@@ -169,7 +169,7 @@ namespace NGitLab.Mock.Fluent
                     Name = name,
                     Color = color,
                     Description = description,
-                    Group = false,
+                    Group = group,
                 };
 
                 project.Labels.Add(label);
@@ -420,7 +420,7 @@ namespace NGitLab.Mock.Fluent
 
         private static void CreateProject(this GitLabServer server, GitLabProject project)
         {
-            var group = GetOrCreateGroup(server, project.Namespace ?? throw new ArgumentException(@"project.Namespace == null", nameof(project)));
+            var group = GetOrCreateGroup(server, project.Namespace ?? throw new ArgumentException(@"project.Namespace == null", nameof(project)), project.Visibility);
             var prj = new Project(project.Name ?? throw new ArgumentException(@"project.Name == null", nameof(project)))
             {
                 Description = project.Description,
@@ -561,9 +561,30 @@ namespace NGitLab.Mock.Fluent
 
         private static void CreatePermission(GitLabServer server, Project project, GitLabPermission permission)
         {
-            project.Permissions.Add(string.IsNullOrEmpty(permission.User)
-                ? new Permission(GetOrCreateGroup(server, permission.Group), permission.Level)
-                : new Permission(server.Users.First(x => string.Equals(x.UserName, permission.User, StringComparison.Ordinal)), permission.Level));
+            var p = string.IsNullOrEmpty(permission.User)
+                ? new Permission(GetOrCreateGroup(server, permission.Group, VisibilityLevel.Internal), permission.Level)
+                : new Permission(server.Users.First(x => string.Equals(x.UserName, permission.User, StringComparison.Ordinal)), permission.Level);
+
+            project.Permissions.Add(p);
+            if (project.Parent is Group group)
+                CreatePermission(group, p);
+        }
+
+        private static void CreatePermission(Group group, Permission permission)
+        {
+            var p = group.Permissions.FirstOrDefault(x => x.User == permission.User && x.Group == permission.Group);
+            if (p == null)
+            {
+                group.Permissions.Add(permission);
+            }
+            else if (p.AccessLevel < permission.AccessLevel)
+            {
+                group.Permissions.Remove(p);
+                group.Permissions.Add(permission);
+            }
+
+            if (group.Parent != null)
+                CreatePermission(group.Parent, permission);
         }
 
         private static IGitLabClient CreateClient(GitLabServer server, string username)
@@ -571,7 +592,7 @@ namespace NGitLab.Mock.Fluent
             return server.CreateClient(server.Users.First(x => string.Equals(x.UserName, username, StringComparison.Ordinal)));
         }
 
-        private static Group GetOrCreateGroup(GitLabServer server, string @namespace)
+        private static Group GetOrCreateGroup(GitLabServer server, string @namespace, VisibilityLevel visibility)
         {
             var names = @namespace.Split('/');
             var group = server.Users.FirstOrDefault(x => string.Equals(x.UserName, names[0], StringComparison.Ordinal))?.Namespace ??
@@ -583,10 +604,13 @@ namespace NGitLab.Mock.Fluent
                 server.Groups.Add(group);
             }
 
-            return GetOrCreateGroup(group, names.Skip(1).ToArray());
+            if (group.Visibility < visibility)
+                group.Visibility = visibility;
+
+            return GetOrCreateGroup(group, names.Skip(1).ToArray(), visibility);
         }
 
-        private static Group GetOrCreateGroup(Group parent, IReadOnlyList<string> names)
+        private static Group GetOrCreateGroup(Group parent, IReadOnlyList<string> names, VisibilityLevel visibility)
         {
             var name = names.FirstOrDefault();
             if (name == null)
@@ -599,7 +623,10 @@ namespace NGitLab.Mock.Fluent
                 parent.Groups.Add(group);
             }
 
-            return GetOrCreateGroup(group, names.Skip(1).ToArray());
+            if (group.Visibility < visibility)
+                group.Visibility = visibility;
+
+            return GetOrCreateGroup(group, names.Skip(1).ToArray(), visibility);
         }
     }
 }

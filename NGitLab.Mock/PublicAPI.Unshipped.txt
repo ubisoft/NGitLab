@@ -249,6 +249,7 @@ NGitLab.Mock.Fluent.GitLabProject.Description.get -> string
 NGitLab.Mock.Fluent.GitLabProject.Description.set -> void
 NGitLab.Mock.Fluent.GitLabProject.GitLabProject() -> void
 NGitLab.Mock.Fluent.GitLabProject.Issues.get -> NGitLab.Mock.Fluent.GitLabIssuesCollection
+NGitLab.Mock.Fluent.GitLabProject.Labels.get -> NGitLab.Mock.Fluent.GitLabLabelsCollection
 NGitLab.Mock.Fluent.GitLabProject.MergeRequests.get -> NGitLab.Mock.Fluent.GitLabMergeRequestsCollection
 NGitLab.Mock.Fluent.GitLabProject.Name.get -> string
 NGitLab.Mock.Fluent.GitLabProject.Name.set -> void
