@@ -118,7 +118,9 @@ namespace NGitLab.Mock.Config
         {
             return WithGroup(config, name, group =>
             {
-                group.Id = id;
+                if (id != default)
+                    group.Id = id;
+
                 group.Namespace = @namespace;
                 group.Description = description;
                 group.Visibility = visibility;
@@ -153,7 +155,9 @@ namespace NGitLab.Mock.Config
         {
             return WithProject(config, name, project =>
             {
-                project.Id = id;
+                if (id != default)
+                    project.Id = id;
+
                 project.Namespace = @namespace ?? throw new ArgumentNullException(nameof(@namespace));
                 project.Description = description;
                 project.DefaultBranch = defaultBranch;
@@ -287,7 +291,9 @@ namespace NGitLab.Mock.Config
         {
             return WithIssue(project, title, author, issue =>
             {
-                issue.Id = id;
+                if (id != default)
+                    issue.Id = id;
+
                 issue.Description = description;
                 issue.Assignee = assignee;
                 issue.CreatedAt = createdAt ?? DateTime.Now;
@@ -334,7 +340,9 @@ namespace NGitLab.Mock.Config
         {
             return WithMergeRequest(project, title, sourceBranch, author, mergeRequest =>
             {
-                mergeRequest.Id = id;
+                if (id != default)
+                    mergeRequest.Id = id;
+
                 mergeRequest.Description = description;
                 mergeRequest.Assignee = assignee;
                 mergeRequest.TargetBranch = targetBranch ?? mergeRequest.TargetBranch;
@@ -431,6 +439,36 @@ namespace NGitLab.Mock.Config
                 };
 
                 project.Permissions.Add(permission);
+            });
+        }
+
+        public static GitLabProject WithMilestone(this GitLabProject project, string title, Action<GitLabMilestone> configure)
+        {
+            return Configure(project, _ =>
+            {
+                var milestone = new GitLabMilestone
+                {
+                    Title = title ?? throw new ArgumentNullException(nameof(title)),
+                };
+
+                project.Milestones.Add(milestone);
+                configure(milestone);
+            });
+        }
+
+        public static GitLabProject WithMilestone(this GitLabProject project, string title, int id = default, string description = null, DateTime? dueDate = null, DateTime? startDate = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, Action<GitLabMilestone> configure = null)
+        {
+            return WithMilestone(project, title, milestone =>
+            {
+                if (id != default)
+                    milestone.Id = id;
+
+                milestone.Description = description;
+                milestone.DueDate = dueDate;
+                milestone.StartDate = startDate;
+                milestone.CreatedAt = createdAt ?? DateTime.Now;
+                milestone.UpdatedAt = updatedAt ?? DateTime.Now;
+                milestone.ClosedAt = closedAt;
             });
         }
 
@@ -596,6 +634,11 @@ namespace NGitLab.Mock.Config
                 CreateLabel(prj, label);
             }
 
+            foreach (var milestone in project.Milestones)
+            {
+                CreateMilestone(prj, milestone);
+            }
+
             foreach (var issue in project.Issues)
             {
                 CreateIssue(server, prj, issue);
@@ -688,6 +731,7 @@ namespace NGitLab.Mock.Config
                 Labels = issue.Labels.ToArray(),
                 Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, issueAuthor, StringComparison.Ordinal))),
                 Assignee = string.IsNullOrEmpty(issueAssignee) ? null : new UserRef(server.Users.First(x => string.Equals(x.UserName, issueAssignee, StringComparison.Ordinal))),
+                Milestone = string.IsNullOrEmpty(issue.Milestone) ? null : GetOrCreateMilestone(project, issue.Milestone),
                 UpdatedAt = issue.UpdatedAt,
                 ClosedAt = issue.ClosedAt,
             });
@@ -746,6 +790,36 @@ namespace NGitLab.Mock.Config
             return string.IsNullOrEmpty(permission.User)
                 ? new Permission(GetOrCreateGroup(server, permission.Group), permission.Level)
                 : new Permission(server.Users.First(x => string.Equals(x.UserName, permission.User, StringComparison.Ordinal)), permission.Level);
+        }
+
+        private static void CreateMilestone(Project project, GitLabMilestone milestone)
+        {
+            project.Milestones.Add(new Milestone
+            {
+                Id = milestone.Id,
+                Title = milestone.Title,
+                Description = milestone.Description,
+                DueDate = milestone.DueDate ?? DateTimeOffset.Now,
+                StartDate = milestone.StartDate ?? DateTimeOffset.Now,
+                UpdatedAt = milestone.UpdatedAt,
+                ClosedAt = milestone.ClosedAt,
+            });
+        }
+
+        private static Milestone GetOrCreateMilestone(Project project, string title)
+        {
+            var milestone = project.Milestones.FirstOrDefault(x => string.Equals(x.Title, title, StringComparison.OrdinalIgnoreCase));
+            if (milestone == null)
+            {
+                milestone = new Milestone
+                {
+                    Title = title,
+                };
+
+                project.Milestones.Add(milestone);
+            }
+
+            return milestone;
         }
 
         private static IGitLabClient CreateClient(GitLabServer server, string username)
@@ -835,6 +909,11 @@ namespace NGitLab.Mock.Config
                 prj.Labels.Add(ToConfig(label));
             }
 
+            foreach (var milestone in project.Milestones)
+            {
+                prj.Milestones.Add(ToConfig(milestone));
+            }
+
             foreach (var issue in project.Issues)
             {
                 prj.Issues.Add(ToConfig(issue));
@@ -870,6 +949,21 @@ namespace NGitLab.Mock.Config
                 User = permission.User?.UserName,
                 Group = permission.Group == null ? null : GetNamespace(permission.Group),
                 Level = permission.AccessLevel,
+            };
+        }
+
+        private static GitLabMilestone ToConfig(Milestone milestone)
+        {
+            return new GitLabMilestone
+            {
+                Id = milestone.Id,
+                Title = milestone.Title,
+                Description = milestone.Description,
+                DueDate = milestone.DueDate.Date,
+                StartDate = milestone.StartDate.Date,
+                CreatedAt = milestone.CreatedAt.Date,
+                UpdatedAt = milestone.UpdatedAt.Date,
+                ClosedAt = milestone.ClosedAt?.Date,
             };
         }
 

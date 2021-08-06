@@ -15,6 +15,8 @@ namespace NGitLab.Mock.Config
 
         public string Assignee { get; set; }
 
+        public string Milestone { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;

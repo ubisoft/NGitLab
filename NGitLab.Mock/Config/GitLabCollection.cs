@@ -5,7 +5,7 @@ namespace NGitLab.Mock.Config
     public class GitLabCollection<TItem> : System.Collections.ObjectModel.Collection<TItem>
         where TItem : GitLabObject
     {
-        private readonly object _parent;
+        internal readonly object _parent;
         private int _idIncrement;
 
         protected internal GitLabCollection(object parent)
@@ -25,7 +25,7 @@ namespace NGitLab.Mock.Config
             base.SetItem(index, item);
         }
 
-        private void SetItem(TItem item)
+        internal virtual void SetItem(TItem item)
         {
             if (item == null)
                 return;

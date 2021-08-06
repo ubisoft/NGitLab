@@ -11,6 +11,7 @@ namespace NGitLab.Mock.Config
             MergeRequests = new GitLabMergeRequestsCollection(this);
             Permissions = new GitLabPermissionsCollection(this);
             Labels = new GitLabLabelsCollection(this);
+            Milestones = new GitLabMilestonesCollection(this);
         }
 
         public string Name { get; set; }
@@ -34,6 +35,8 @@ namespace NGitLab.Mock.Config
         public GitLabPermissionsCollection Permissions { get; }
 
         public GitLabLabelsCollection Labels { get; }
+
+        public GitLabMilestonesCollection Milestones { get; }
     }
 
     public class GitLabProjectsCollection : GitLabCollection<GitLabProject, GitLabConfig>
