@@ -1,4 +1,4 @@
-﻿namespace NGitLab.Mock.Fluent
+﻿namespace NGitLab.Mock.Config
 {
     public class GitLabFileDescriptor
     {

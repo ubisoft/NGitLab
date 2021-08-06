@@ -1,8 +1,8 @@
 ﻿using NGitLab.Models;
 
-namespace NGitLab.Mock.Fluent
+namespace NGitLab.Mock.Config
 {
-    public class GitLabPermission : GitLabObject<GitLabProject>
+    public class GitLabPermission : GitLabObject
     {
         public string User { get; set; }
 
@@ -11,9 +11,14 @@ namespace NGitLab.Mock.Fluent
         public AccessLevel Level { get; set; } = AccessLevel.Developer;
     }
 
-    public class GitLabPermissionsCollection : GitLabCollection<GitLabPermission, GitLabProject>
+    public class GitLabPermissionsCollection : GitLabCollection<GitLabPermission>
     {
         internal GitLabPermissionsCollection(GitLabProject parent)
+            : base(parent)
+        {
+        }
+
+        internal GitLabPermissionsCollection(GitLabGroup parent)
             : base(parent)
         {
         }

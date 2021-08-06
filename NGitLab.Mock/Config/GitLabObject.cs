@@ -1,4 +1,6 @@
-﻿namespace NGitLab.Mock.Fluent
+﻿using YamlDotNet.Serialization;
+
+namespace NGitLab.Mock.Config
 {
     public abstract class GitLabObject
     {
@@ -8,7 +10,8 @@
 
         public int Id { get; set; }
 
-        public object Parent { get; protected set; }
+        [YamlIgnore]
+        public object Parent { get; internal set; }
     }
 
     public abstract class GitLabObject<TParent> : GitLabObject
@@ -17,6 +20,7 @@
         {
         }
 
+        [YamlIgnore]
         public new TParent Parent
         {
             get => (TParent)base.Parent;

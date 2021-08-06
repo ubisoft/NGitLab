@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NGitLab.Mock.Fluent
+namespace NGitLab.Mock.Config
 {
     public class GitLabMergeRequest : GitLabObject<GitLabProject>
     {

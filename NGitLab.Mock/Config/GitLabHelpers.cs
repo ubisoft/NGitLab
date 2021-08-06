@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using NGitLab.Models;
 
-namespace NGitLab.Mock.Fluent
+#pragma warning disable RS0026 // Adding optional parameters to public methods
+
+namespace NGitLab.Mock.Config
 {
     public static class GitLabHelpers
     {
@@ -19,6 +21,12 @@ namespace NGitLab.Mock.Fluent
         {
             configure(user);
             return user;
+        }
+
+        public static GitLabGroup Configure(this GitLabGroup group, Action<GitLabGroup> configure)
+        {
+            configure(group);
+            return group;
         }
 
         public static GitLabProject Configure(this GitLabProject project, Action<GitLabProject> configure)
@@ -51,7 +59,7 @@ namespace NGitLab.Mock.Fluent
             {
                 var user = new GitLabUser
                 {
-                    Username = username,
+                    Username = username ?? throw new ArgumentNullException(nameof(username)),
                 };
 
                 config.Users.Add(user);
@@ -59,7 +67,7 @@ namespace NGitLab.Mock.Fluent
             });
         }
 
-        public static GitLabConfig WithUser(this GitLabConfig config, string username, string name = "User", string email = "user@example.com", string avatarUrl = null, bool isAdmin = false, bool isCurrent = false, Action<GitLabUser> configure = null)
+        public static GitLabConfig WithUser(this GitLabConfig config, string username, string name = "User", string email = "user@example.com", string avatarUrl = null, bool isAdmin = false, bool asDefault = false, Action<GitLabUser> configure = null)
         {
             return WithUser(config, username, user =>
             {
@@ -67,28 +75,63 @@ namespace NGitLab.Mock.Fluent
                 user.Email = email;
                 user.AvatarUrl = avatarUrl;
                 user.IsAdmin = isAdmin;
-                if (isCurrent)
+                if (asDefault)
                 {
-                    user.AsCurrentUser();
+                    user.AsDefaultUser();
                 }
 
                 configure?.Invoke(user);
             });
         }
 
-        public static GitLabUser AsCurrentUser(this GitLabUser user)
+        public static GitLabUser AsDefaultUser(this GitLabUser user)
         {
             return Configure(user, _ =>
             {
-                user.Parent.CurrentUser = user.Username;
+                user.Parent.DefaultUser = user.Username;
             });
         }
 
-        public static GitLabConfig SetCurrentUser(this GitLabConfig config, string username)
+        public static GitLabConfig SetDefaultUser(this GitLabConfig config, string username)
         {
             return Configure(config, _ =>
             {
-                config.CurrentUser = username;
+                config.DefaultUser = username;
+            });
+        }
+
+        public static GitLabConfig WithGroup(this GitLabConfig config, string name, Action<GitLabGroup> configure)
+        {
+            return Configure(config, _ =>
+            {
+                var group = new GitLabGroup
+                {
+                    Name = name ?? throw new ArgumentNullException(nameof(name)),
+                };
+
+                config.Groups.Add(group);
+                configure(group);
+            });
+        }
+
+        public static GitLabConfig WithGroup(this GitLabConfig config, string name, int id = default, string @namespace = null, string description = null, VisibilityLevel visibility = VisibilityLevel.Internal, bool defaultAsMaintainer = false, Action<GitLabGroup> configure = null)
+        {
+            return WithGroup(config, name, group =>
+            {
+                group.Id = id;
+                group.Namespace = @namespace;
+                group.Description = description;
+                group.Visibility = visibility;
+
+                if (defaultAsMaintainer)
+                {
+                    if (string.IsNullOrEmpty(group.Parent.DefaultUser))
+                        throw new InvalidOperationException("Default user not configured");
+
+                    WithUserPermission(group, group.Parent.DefaultUser, AccessLevel.Maintainer);
+                }
+
+                configure?.Invoke(group);
             });
         }
 
@@ -98,7 +141,7 @@ namespace NGitLab.Mock.Fluent
             {
                 var project = new GitLabProject
                 {
-                    Name = name,
+                    Name = name ?? throw new ArgumentNullException(nameof(name)),
                 };
 
                 config.Projects.Add(project);
@@ -106,11 +149,12 @@ namespace NGitLab.Mock.Fluent
             });
         }
 
-        public static GitLabConfig WithProject(this GitLabConfig config, string name, string @namespace = "functional", string description = null, string defaultBranch = "main", VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false, bool currentAsMaintainer = false, string clonePath = null, Action<GitLabProject> configure = null)
+        public static GitLabConfig WithProject(this GitLabConfig config, string name, int id = default, string @namespace = "functional", string description = null, string defaultBranch = "main", VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false, bool defaultAsMaintainer = false, string clonePath = null, Action<GitLabProject> configure = null)
         {
             return WithProject(config, name, project =>
             {
-                project.Namespace = @namespace;
+                project.Id = id;
+                project.Namespace = @namespace ?? throw new ArgumentNullException(nameof(@namespace));
                 project.Description = description;
                 project.DefaultBranch = defaultBranch;
                 project.Visibility = visibility;
@@ -125,9 +169,12 @@ namespace NGitLab.Mock.Fluent
                     });
                 }
 
-                if (currentAsMaintainer)
+                if (defaultAsMaintainer)
                 {
-                    WithUserPermission(project, project.Parent.CurrentUser, AccessLevel.Maintainer);
+                    if (string.IsNullOrEmpty(project.Parent.DefaultUser))
+                        throw new InvalidOperationException("Default user not configured");
+
+                    WithUserPermission(project, project.Parent.DefaultUser, AccessLevel.Maintainer);
                 }
 
                 configure?.Invoke(project);
@@ -140,7 +187,7 @@ namespace NGitLab.Mock.Fluent
             {
                 var commit = new GitLabCommit
                 {
-                    User = project.Parent.CurrentUser,
+                    User = project.Parent.DefaultUser ?? throw new InvalidOperationException("User is required when user is not configured"),
                 };
 
                 project.Commits.Add(commit);
@@ -153,23 +200,37 @@ namespace NGitLab.Mock.Fluent
             return WithCommit(project, commit =>
             {
                 commit.Message = message;
-                commit.User = user ?? project.Parent.CurrentUser;
+                commit.User = user ?? project.Parent.DefaultUser ?? throw new InvalidOperationException("User is required when user is not configured");
                 commit.SourceBranch = sourceBranch;
                 commit.TargetBranch = targetBranch;
                 configure?.Invoke(commit);
             });
         }
 
-        public static GitLabProject WithLabel(this GitLabProject project, string name, string color = null, string description = null, bool group = false)
+        public static GitLabGroup WithLabel(this GitLabGroup group, string name, string color = null, string description = null)
+        {
+            return Configure(group, _ =>
+            {
+                var label = new GitLabLabel
+                {
+                    Name = name ?? throw new ArgumentNullException(nameof(name)),
+                    Color = color,
+                    Description = description,
+                };
+
+                group.Labels.Add(label);
+            });
+        }
+
+        public static GitLabProject WithLabel(this GitLabProject project, string name, string color = null, string description = null)
         {
             return Configure(project, _ =>
             {
                 var label = new GitLabLabel
                 {
-                    Name = name,
+                    Name = name ?? throw new ArgumentNullException(nameof(name)),
                     Color = color,
                     Description = description,
-                    Group = group,
                 };
 
                 project.Labels.Add(label);
@@ -180,8 +241,8 @@ namespace NGitLab.Mock.Fluent
         {
             return WithCommit(project, commit =>
             {
-                commit.User = user ?? project.Parent.CurrentUser;
-                commit.SourceBranch = sourceBranch;
+                commit.User = user ?? project.Parent.DefaultUser;
+                commit.SourceBranch = sourceBranch ?? throw new ArgumentNullException(nameof(sourceBranch));
                 commit.TargetBranch = targetBranch ?? project.DefaultBranch;
                 configure?.Invoke(commit);
             });
@@ -191,7 +252,7 @@ namespace NGitLab.Mock.Fluent
         {
             return Configure(commit, _ =>
             {
-                commit.Tags.Add(name);
+                commit.Tags.Add(name ?? throw new ArgumentNullException(nameof(name)));
             });
         }
 
@@ -201,20 +262,20 @@ namespace NGitLab.Mock.Fluent
             {
                 commit.Files.Add(new GitLabFileDescriptor
                 {
-                    Path = relativePath,
+                    Path = relativePath ?? throw new ArgumentNullException(nameof(relativePath)),
                     Content = content,
                 });
             });
         }
 
-        public static GitLabProject WithIssue(this GitLabProject project, string title, Action<GitLabIssue> configure)
+        public static GitLabProject WithIssue(this GitLabProject project, string title, string author, Action<GitLabIssue> configure)
         {
             return Configure(project, _ =>
             {
                 var issue = new GitLabIssue
                 {
-                    Title = title,
-                    Author = project.Parent.CurrentUser,
+                    Title = title ?? throw new ArgumentNullException(nameof(title)),
+                    Author = author ?? project.Parent.DefaultUser ?? throw new InvalidOperationException("User is required when user is not configured"),
                 };
 
                 project.Issues.Add(issue);
@@ -222,12 +283,12 @@ namespace NGitLab.Mock.Fluent
             });
         }
 
-        public static GitLabProject WithIssue(this GitLabProject project, string title, string description = null, string author = null, string assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, IEnumerable<string> labels = null, Action<GitLabIssue> configure = null)
+        public static GitLabProject WithIssue(this GitLabProject project, string title, int id = default, string description = null, string author = null, string assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, IEnumerable<string> labels = null, Action<GitLabIssue> configure = null)
         {
-            return WithIssue(project, title, issue =>
+            return WithIssue(project, title, author, issue =>
             {
+                issue.Id = id;
                 issue.Description = description;
-                issue.Author = author ?? project.Parent.CurrentUser;
                 issue.Assignee = assignee;
                 issue.CreatedAt = createdAt ?? DateTime.Now;
                 issue.UpdatedAt = updatedAt ?? DateTime.Now;
@@ -248,19 +309,19 @@ namespace NGitLab.Mock.Fluent
         {
             return Configure(issue, _ =>
             {
-                issue.Labels.Add(label);
+                issue.Labels.Add(label ?? throw new ArgumentNullException(nameof(label)));
             });
         }
 
-        public static GitLabProject WithMergeRequest(this GitLabProject project, string title, string sourceBranch, Action<GitLabMergeRequest> configure)
+        public static GitLabProject WithMergeRequest(this GitLabProject project, string title, string sourceBranch, string author, Action<GitLabMergeRequest> configure)
         {
             return Configure(project, _ =>
             {
                 var mergeRequest = new GitLabMergeRequest
                 {
-                    Title = title,
-                    Author = project.Parent.CurrentUser,
-                    SourceBranch = sourceBranch,
+                    Title = title ?? throw new ArgumentNullException(nameof(title)),
+                    Author = author ?? project.Parent.DefaultUser ?? throw new InvalidOperationException("User is required when user is not configured"),
+                    SourceBranch = sourceBranch ?? throw new ArgumentNullException(nameof(sourceBranch)),
                     TargetBranch = project.DefaultBranch,
                 };
 
@@ -269,12 +330,12 @@ namespace NGitLab.Mock.Fluent
             });
         }
 
-        public static GitLabProject WithMergeRequest(this GitLabProject project, string title, string sourceBranch, string targetBranch = null, string description = null, string author = null, string assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string> approvers = null, IEnumerable<string> labels = null, Action<GitLabMergeRequest> configure = null)
+        public static GitLabProject WithMergeRequest(this GitLabProject project, string title, string sourceBranch, int id = default, string targetBranch = null, string description = null, string author = null, string assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string> approvers = null, IEnumerable<string> labels = null, Action<GitLabMergeRequest> configure = null)
         {
-            return WithMergeRequest(project, title, sourceBranch, mergeRequest =>
+            return WithMergeRequest(project, title, sourceBranch, author, mergeRequest =>
             {
+                mergeRequest.Id = id;
                 mergeRequest.Description = description;
-                mergeRequest.Author = author ?? project.Parent.CurrentUser;
                 mergeRequest.Assignee = assignee;
                 mergeRequest.TargetBranch = targetBranch ?? mergeRequest.TargetBranch;
                 mergeRequest.CreatedAt = createdAt ?? DateTime.Now;
@@ -305,7 +366,7 @@ namespace NGitLab.Mock.Fluent
         {
             return Configure(mergeRequest, _ =>
             {
-                mergeRequest.Labels.Add(label);
+                mergeRequest.Labels.Add(label ?? throw new ArgumentNullException(nameof(label)));
             });
         }
 
@@ -313,7 +374,21 @@ namespace NGitLab.Mock.Fluent
         {
             return Configure(mergeRequest, _ =>
             {
-                mergeRequest.Approvers.Add(approver);
+                mergeRequest.Approvers.Add(approver ?? throw new ArgumentNullException(nameof(approver)));
+            });
+        }
+
+        public static GitLabGroup WithUserPermission(this GitLabGroup group, string user, AccessLevel level = AccessLevel.Developer)
+        {
+            return Configure(group, _ =>
+            {
+                var permission = new GitLabPermission
+                {
+                    User = user ?? throw new ArgumentNullException(nameof(user)),
+                    Level = level,
+                };
+
+                group.Permissions.Add(permission);
             });
         }
 
@@ -323,11 +398,25 @@ namespace NGitLab.Mock.Fluent
             {
                 var permission = new GitLabPermission
                 {
-                    User = user,
+                    User = user ?? throw new ArgumentNullException(nameof(user)),
                     Level = level,
                 };
 
                 project.Permissions.Add(permission);
+            });
+        }
+
+        public static GitLabGroup WithGroupPermission(this GitLabGroup grp, string group, AccessLevel level = AccessLevel.Developer)
+        {
+            return Configure(grp, _ =>
+            {
+                var permission = new GitLabPermission
+                {
+                    Group = group ?? throw new ArgumentNullException(nameof(group)),
+                    Level = level,
+                };
+
+                grp.Permissions.Add(permission);
             });
         }
 
@@ -337,7 +426,7 @@ namespace NGitLab.Mock.Fluent
             {
                 var permission = new GitLabPermission
                 {
-                    Group = group,
+                    Group = group ?? throw new ArgumentNullException(nameof(group)),
                     Level = level,
                 };
 
@@ -345,7 +434,7 @@ namespace NGitLab.Mock.Fluent
             });
         }
 
-        public static IGitLabClient ResolveClient(this GitLabConfig config)
+        public static GitLabServer ResolveServer(this GitLabConfig config)
         {
             var server = CreateServer();
             foreach (var user in config.Users)
@@ -353,12 +442,16 @@ namespace NGitLab.Mock.Fluent
                 CreateUser(server, user);
             }
 
+            foreach (var group in config.Groups.OrderBy(x =>
+                string.IsNullOrEmpty(x.Namespace) ? x.Name : $"{x.Namespace}/{x.Name}"))
+            {
+                CreateGroup(server, @group);
+            }
+
             foreach (var project in config.Projects)
             {
                 CreateProject(server, project);
             }
-
-            var client = CreateClient(server, config.CurrentUser ?? config.Users[0].Username);
 
             foreach (var project in config.Projects)
             {
@@ -367,7 +460,7 @@ namespace NGitLab.Mock.Fluent
 
                 var projectNamespace = project.Namespace;
                 var projectName = project.Name;
-                var remoteUrl = client.Projects[$"{projectNamespace}/{projectName}"].SshUrl;
+                var remoteUrl = server.AllProjects.FindProject($"{projectNamespace}/{projectName}").SshUrl;
 
                 var folderPath = Path.GetDirectoryName(Path.GetFullPath(project.ClonePath));
                 if (!Directory.Exists(folderPath))
@@ -395,7 +488,38 @@ namespace NGitLab.Mock.Fluent
                 }
             }
 
-            return client;
+            return server;
+        }
+
+        public static IGitLabClient ResolveClient(this GitLabConfig config, string username = null)
+        {
+            return ResolveClient(ResolveServer(config), username ?? config.DefaultUser ?? config.Users.FirstOrDefault()?.Username ?? throw new InvalidOperationException("No user configured"));
+        }
+
+        public static IGitLabClient ResolveClient(this GitLabServer server, string username = null)
+        {
+            return CreateClient(server, username ?? server.Users.FirstOrDefault()?.UserName ?? throw new InvalidOperationException("No user configured"));
+        }
+
+        public static GitLabConfig ToConfig(this GitLabServer server)
+        {
+            var config = new GitLabConfig();
+            foreach (var user in server.Users)
+            {
+                config.Users.Add(ToConfig(user));
+            }
+
+            foreach (var group in server.AllGroups)
+            {
+                config.Groups.Add(ToConfig(group));
+            }
+
+            foreach (var project in server.AllProjects)
+            {
+                config.Projects.Add(ToConfig(project));
+            }
+
+            return config;
         }
 
         private static GitLabServer CreateServer()
@@ -411,6 +535,7 @@ namespace NGitLab.Mock.Fluent
         {
             server.Users.Add(new User(user.Username ?? throw new ArgumentException(@"user.Username == null", nameof(user)))
             {
+                Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
                 AvatarUrl = user.AvatarUrl,
@@ -418,16 +543,47 @@ namespace NGitLab.Mock.Fluent
             });
         }
 
-        private static void CreateProject(this GitLabServer server, GitLabProject project)
+        private static void CreateGroup(GitLabServer server, GitLabGroup group)
         {
-            var group = GetOrCreateGroup(server, project.Namespace ?? throw new ArgumentException(@"project.Namespace == null", nameof(project)), project.Visibility);
+            var grp = new Group(group.Name ?? throw new ArgumentException(@"group.Name == null", nameof(group)))
+            {
+                Id = group.Id,
+                Description = group.Description,
+                Visibility = group.Visibility,
+            };
+
+            if (string.IsNullOrEmpty(group.Namespace))
+            {
+                server.Groups.Add(grp);
+            }
+            else
+            {
+                var parent = GetOrCreateGroup(server, group.Namespace);
+                parent.Groups.Add(grp);
+            }
+
+            foreach (var label in group.Labels)
+            {
+                CreateLabel(grp, label);
+            }
+
+            foreach (var permission in group.Permissions)
+            {
+                CreatePermission(server, grp, permission);
+            }
+        }
+
+        private static void CreateProject(GitLabServer server, GitLabProject project)
+        {
             var prj = new Project(project.Name ?? throw new ArgumentException(@"project.Name == null", nameof(project)))
             {
+                Id = project.Id,
                 Description = project.Description,
                 DefaultBranch = project.DefaultBranch,
                 Visibility = project.Visibility,
             };
 
+            var group = GetOrCreateGroup(server, project.Namespace ?? throw new ArgumentException(@"project.Namespace == null", nameof(project)));
             group.Projects.Add(prj);
 
             foreach (var commit in project.Commits)
@@ -483,10 +639,24 @@ namespace NGitLab.Mock.Fluent
             }
         }
 
+        private static void CreateLabel(Group group, GitLabLabel label)
+        {
+            group.Labels.Add(new Label
+            {
+                Name = label.Name ?? throw new ArgumentException(@"label.Name == null", nameof(label)),
+                Color = label.Color,
+                Description = label.Description,
+            });
+        }
+
         private static void CreateLabel(Project project, GitLabLabel label)
         {
-            var collection = label.Group ? project.Group.Labels : project.Labels;
-            collection.Add(label.Name, label.Color, label.Description);
+            project.Labels.Add(new Label
+            {
+                Name = label.Name ?? throw new ArgumentException(@"label.Name == null", nameof(label)),
+                Color = label.Color,
+                Description = label.Description,
+            });
         }
 
         private static void CreateLabel(Project project, string label)
@@ -512,6 +682,7 @@ namespace NGitLab.Mock.Fluent
             var issueAssignee = issue.Assignee;
             project.Issues.Add(new Issue
             {
+                Iid = issue.Id,
                 Title = issue.Title ?? throw new ArgumentException(@"issue.Title == null", nameof(issue)),
                 Description = issue.Description,
                 Labels = issue.Labels.ToArray(),
@@ -533,6 +704,7 @@ namespace NGitLab.Mock.Fluent
             var mergeRequestAssignee = mergeRequest.Assignee;
             var request = new MergeRequest
             {
+                Iid = mergeRequest.Id,
                 Title = mergeRequest.Title ?? throw new ArgumentException(@"mergeRequest.Title == null", nameof(mergeRequest)),
                 Description = mergeRequest.Description,
                 Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, mergeRequestAuthor, StringComparison.Ordinal))),
@@ -561,30 +733,19 @@ namespace NGitLab.Mock.Fluent
 
         private static void CreatePermission(GitLabServer server, Project project, GitLabPermission permission)
         {
-            var p = string.IsNullOrEmpty(permission.User)
-                ? new Permission(GetOrCreateGroup(server, permission.Group, VisibilityLevel.Internal), permission.Level)
-                : new Permission(server.Users.First(x => string.Equals(x.UserName, permission.User, StringComparison.Ordinal)), permission.Level);
-
-            project.Permissions.Add(p);
-            if (project.Parent is Group group)
-                CreatePermission(group, p);
+            project.Permissions.Add(CreatePermission(server, permission));
         }
 
-        private static void CreatePermission(Group group, Permission permission)
+        private static void CreatePermission(GitLabServer server, Group group, GitLabPermission permission)
         {
-            var p = group.Permissions.FirstOrDefault(x => x.User == permission.User && x.Group == permission.Group);
-            if (p == null)
-            {
-                group.Permissions.Add(permission);
-            }
-            else if (p.AccessLevel < permission.AccessLevel)
-            {
-                group.Permissions.Remove(p);
-                group.Permissions.Add(permission);
-            }
+            group.Permissions.Add(CreatePermission(server, permission));
+        }
 
-            if (group.Parent != null)
-                CreatePermission(group.Parent, permission);
+        private static Permission CreatePermission(GitLabServer server, GitLabPermission permission)
+        {
+            return string.IsNullOrEmpty(permission.User)
+                ? new Permission(GetOrCreateGroup(server, permission.Group), permission.Level)
+                : new Permission(server.Users.First(x => string.Equals(x.UserName, permission.User, StringComparison.Ordinal)), permission.Level);
         }
 
         private static IGitLabClient CreateClient(GitLabServer server, string username)
@@ -592,41 +753,181 @@ namespace NGitLab.Mock.Fluent
             return server.CreateClient(server.Users.First(x => string.Equals(x.UserName, username, StringComparison.Ordinal)));
         }
 
-        private static Group GetOrCreateGroup(GitLabServer server, string @namespace, VisibilityLevel visibility)
+        private static Group GetOrCreateGroup(GitLabServer server, string @namespace)
         {
             var names = @namespace.Split('/');
             var group = server.Users.FirstOrDefault(x => string.Equals(x.UserName, names[0], StringComparison.Ordinal))?.Namespace ??
                         server.Groups.FirstOrDefault(x => string.Equals(x.Name, names[0], StringComparison.Ordinal));
 
             if (group == null)
-            {
-                group = new Group(names[0]);
-                server.Groups.Add(group);
-            }
+                return GetOrCreateGroup(server.Groups, names.ToArray());
 
-            if (group.Visibility < visibility)
-                group.Visibility = visibility;
-
-            return GetOrCreateGroup(group, names.Skip(1).ToArray(), visibility);
+            return names.Length > 1 ? GetOrCreateGroup(group.Groups, names.Skip(1).ToArray()) : group;
         }
 
-        private static Group GetOrCreateGroup(Group parent, IReadOnlyList<string> names, VisibilityLevel visibility)
+        private static Group GetOrCreateGroup(GroupCollection parent, IReadOnlyList<string> names)
         {
-            var name = names.FirstOrDefault();
-            if (name == null)
-                return parent;
-
-            var group = parent.Groups.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
+            var group = parent.FirstOrDefault(x => string.Equals(x.Name, names[0], StringComparison.Ordinal));
             if (group == null)
             {
-                group = new Group(name);
-                parent.Groups.Add(group);
+                group = new Group(names[0])
+                {
+                    Visibility = VisibilityLevel.Internal,
+                };
+
+                parent.Add(group);
             }
 
-            if (group.Visibility < visibility)
-                group.Visibility = visibility;
+            return names.Count > 1 ? GetOrCreateGroup(group.Groups, names.Skip(1).ToArray()) : group;
+        }
 
-            return GetOrCreateGroup(group, names.Skip(1).ToArray(), visibility);
+        private static GitLabUser ToConfig(User user)
+        {
+            return new GitLabUser
+            {
+                Id = user.Id,
+                Username = user.UserName,
+                Name = user.Name,
+                Email = user.Email,
+                AvatarUrl = user.AvatarUrl,
+                IsAdmin = user.IsAdmin,
+            };
+        }
+
+        private static GitLabGroup ToConfig(Group group)
+        {
+            var grp = new GitLabGroup
+            {
+                Id = group.Id,
+                Name = group.Name,
+                Namespace = group.Parent == null ? null : GetNamespace(group.Parent),
+                Description = group.Description,
+                Visibility = group.Visibility,
+            };
+
+            foreach (var label in group.Labels)
+            {
+                grp.Labels.Add(ToConfig(label));
+            }
+
+            foreach (var permission in group.Permissions)
+            {
+                grp.Permissions.Add(ToConfig(permission));
+            }
+
+            return grp;
+        }
+
+        private static GitLabProject ToConfig(Project project)
+        {
+            var prj = new GitLabProject
+            {
+                Id = project.Id,
+                Name = project.Name,
+                Namespace = GetNamespace(project.Group),
+                Description = project.Description,
+                DefaultBranch = project.DefaultBranch,
+                Visibility = project.Visibility,
+            };
+
+            foreach (var label in project.Labels)
+            {
+                prj.Labels.Add(ToConfig(label));
+            }
+
+            foreach (var issue in project.Issues)
+            {
+                prj.Issues.Add(ToConfig(issue));
+            }
+
+            foreach (var mergeRequest in project.MergeRequests)
+            {
+                prj.MergeRequests.Add(ToConfig(mergeRequest));
+            }
+
+            foreach (var permission in project.Permissions)
+            {
+                prj.Permissions.Add(ToConfig(permission));
+            }
+
+            return prj;
+        }
+
+        private static GitLabLabel ToConfig(Label label)
+        {
+            return new GitLabLabel
+            {
+                Name = label.Name,
+                Color = label.Color,
+                Description = label.Description,
+            };
+        }
+
+        private static GitLabPermission ToConfig(Permission permission)
+        {
+            return new GitLabPermission
+            {
+                User = permission.User?.UserName,
+                Group = permission.Group == null ? null : GetNamespace(permission.Group),
+                Level = permission.AccessLevel,
+            };
+        }
+
+        private static GitLabIssue ToConfig(Issue issue)
+        {
+            var iss = new GitLabIssue
+            {
+                Id = issue.Iid,
+                Title = issue.Title,
+                Description = issue.Description,
+                Author = issue.Author.UserName,
+                Assignee = issue.Assignee?.UserName,
+                CreatedAt = issue.CreatedAt.DateTime,
+                UpdatedAt = issue.UpdatedAt.DateTime,
+                ClosedAt = issue.ClosedAt?.DateTime,
+            };
+
+            foreach (var label in issue.Labels)
+            {
+                iss.Labels.Add(label);
+            }
+
+            return iss;
+        }
+
+        private static GitLabMergeRequest ToConfig(MergeRequest mergeRequest)
+        {
+            var mrg = new GitLabMergeRequest
+            {
+                Id = mergeRequest.Iid,
+                Title = mergeRequest.Title,
+                Description = mergeRequest.Description,
+                Author = mergeRequest.Author.UserName,
+                Assignee = mergeRequest.Assignee?.UserName,
+                SourceBranch = mergeRequest.SourceBranch,
+                TargetBranch = mergeRequest.TargetBranch,
+                CreatedAt = mergeRequest.CreatedAt.DateTime,
+                UpdatedAt = mergeRequest.UpdatedAt.DateTime,
+                ClosedAt = mergeRequest.ClosedAt?.DateTime,
+                MergedAt = mergeRequest.MergedAt?.DateTime,
+            };
+
+            foreach (var label in mergeRequest.Labels)
+            {
+                mrg.Labels.Add(label);
+            }
+
+            foreach (var approver in mergeRequest.Approvers)
+            {
+                mrg.Approvers.Add(approver.UserName);
+            }
+
+            return mrg;
+        }
+
+        private static string GetNamespace(Group group)
+        {
+            return group.Parent == null ? group.Name : $"{GetNamespace(group.Parent)}/{group.Name}";
         }
     }
 }

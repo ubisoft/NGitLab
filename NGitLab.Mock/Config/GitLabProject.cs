@@ -1,6 +1,6 @@
 ﻿using NGitLab.Models;
 
-namespace NGitLab.Mock.Fluent
+namespace NGitLab.Mock.Config
 {
     public class GitLabProject : GitLabObject<GitLabConfig>
     {
