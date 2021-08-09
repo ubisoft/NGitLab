@@ -53,6 +53,12 @@ namespace NGitLab.Mock.Config
             return mergeRequest;
         }
 
+        /// <summary>
+        /// Add a user description in config
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="username">Username (required)</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabConfig WithUser(this GitLabConfig config, string username, Action<GitLabUser> configure)
         {
             return Configure(config, _ =>
@@ -67,6 +73,17 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add a user description in config
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="username">Username (required)</param>
+        /// <param name="name">Name.</param>
+        /// <param name="email">Email.</param>
+        /// <param name="avatarUrl">Avatar URL.</param>
+        /// <param name="isAdmin">Indicates if user is admin in GitLab server</param>
+        /// <param name="asDefault">Define as default user for next descriptions</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabConfig WithUser(this GitLabConfig config, string username, string name = "User", string email = "user@example.com", string avatarUrl = null, bool isAdmin = false, bool asDefault = false, Action<GitLabUser> configure = null)
         {
             return WithUser(config, username, user =>
@@ -84,6 +101,10 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Define a user as default for next descriptions
+        /// </summary>
+        /// <param name="user">User.</param>
         public static GitLabUser AsDefaultUser(this GitLabUser user)
         {
             return Configure(user, _ =>
@@ -92,6 +113,11 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Define a user as default for next descriptions
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="username">Username.</param>
         public static GitLabConfig SetDefaultUser(this GitLabConfig config, string username)
         {
             return Configure(config, _ =>
@@ -100,6 +126,12 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add an explicit group description in config
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="name">Name (required)</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabConfig WithGroup(this GitLabConfig config, string name, Action<GitLabGroup> configure)
         {
             return Configure(config, _ =>
@@ -114,6 +146,17 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add an explicit group description in config
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="name">Name (required)</param>
+        /// <param name="id">Explicit ID (config increment)</param>
+        /// <param name="namespace">Parent namespace.</param>
+        /// <param name="description">Description.</param>
+        /// <param name="visibility">Visibility.</param>
+        /// <param name="defaultAsMaintainer">Define default user as maintainer.</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabConfig WithGroup(this GitLabConfig config, string name, int id = default, string @namespace = null, string description = null, VisibilityLevel visibility = VisibilityLevel.Internal, bool defaultAsMaintainer = false, Action<GitLabGroup> configure = null)
         {
             return WithGroup(config, name, group =>
@@ -137,6 +180,12 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add a project description in config
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="name">Name (required)</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabConfig WithProject(this GitLabConfig config, string name, Action<GitLabProject> configure)
         {
             return Configure(config, _ =>
@@ -151,6 +200,20 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add a project description in config
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="name">Name (required)</param>
+        /// <param name="id">Explicit ID (config increment)</param>
+        /// <param name="namespace">Group fullname.</param>
+        /// <param name="description">Description.</param>
+        /// <param name="defaultBranch">Repository default branch.</param>
+        /// <param name="visibility">Visibility.</param>
+        /// <param name="initialCommit">Indicates if an initial commit is added.</param>
+        /// <param name="defaultAsMaintainer">Define default user as maintainer.</param>
+        /// <param name="clonePath">Path where to clone repository after server resolving</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabConfig WithProject(this GitLabConfig config, string name, int id = default, string @namespace = "functional", string description = null, string defaultBranch = "main", VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false, bool defaultAsMaintainer = false, string clonePath = null, Action<GitLabProject> configure = null)
         {
             return WithProject(config, name, project =>
@@ -160,15 +223,14 @@ namespace NGitLab.Mock.Config
 
                 project.Namespace = @namespace ?? throw new ArgumentNullException(nameof(@namespace));
                 project.Description = description;
-                project.DefaultBranch = defaultBranch;
+                project.DefaultBranch = defaultBranch ?? throw new ArgumentNullException(nameof(defaultBranch));
                 project.Visibility = visibility;
                 project.ClonePath = clonePath;
 
                 if (initialCommit)
                 {
-                    WithCommit(project, commit =>
+                    WithCommit(project, "Message", null, commit =>
                     {
-                        commit.Message = "Initial commit";
                         WithFile(commit, "README.md", $"# {name}{Environment.NewLine}");
                     });
                 }
@@ -185,6 +247,13 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add a group description in group
+        /// </summary>
+        /// <param name="group">Group.</param>
+        /// <param name="name">Name (required)</param>
+        /// <param name="color">Color in RGB hex format (example: #A1F8C3)</param>
+        /// <param name="description">Description.</param>
         public static GitLabGroup WithLabel(this GitLabGroup group, string name, string color = null, string description = null)
         {
             return Configure(group, _ =>
@@ -200,6 +269,13 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add a label description in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="name">Name (required)</param>
+        /// <param name="color">Color in RGB hex format (example: #A1F8C3)</param>
+        /// <param name="description">Description.</param>
         public static GitLabProject WithLabel(this GitLabProject project, string name, string color = null, string description = null)
         {
             return Configure(project, _ =>
@@ -215,13 +291,21 @@ namespace NGitLab.Mock.Config
             });
         }
 
-        public static GitLabProject WithCommit(this GitLabProject project, Action<GitLabCommit> configure)
+        /// <summary>
+        /// Add a commit description in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="message">Message (required)</param>
+        /// <param name="user">Author username (required if default user not defined)</param>
+        /// <param name="configure">Configuration method</param>
+        public static GitLabProject WithCommit(this GitLabProject project, string message, string user, Action<GitLabCommit> configure)
         {
             return Configure(project, _ =>
             {
                 var commit = new GitLabCommit
                 {
-                    User = project.Parent.DefaultUser ?? throw new InvalidOperationException("User is required when user is not configured"),
+                    Message = message,
+                    User = user ?? project.Parent.DefaultUser ?? throw new InvalidOperationException("User is required when user is not configured"),
                 };
 
                 project.Commits.Add(commit);
@@ -229,12 +313,20 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add a commit description in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="message">Message (required)</param>
+        /// <param name="user">Author username (required if default user not defined)</param>
+        /// <param name="sourceBranch">Source branch (required if checkout or merge)</param>
+        /// <param name="targetBranch">Target branch (required if merge)</param>
+        /// <param name="tags">Tags.</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabProject WithCommit(this GitLabProject project, string message, string user = null, string sourceBranch = null, string targetBranch = null, IEnumerable<string> tags = null, Action<GitLabCommit> configure = null)
         {
-            return WithCommit(project, commit =>
+            return WithCommit(project, message, user, commit =>
             {
-                commit.Message = message;
-                commit.User = user ?? project.Parent.DefaultUser ?? throw new InvalidOperationException("User is required when user is not configured");
                 commit.SourceBranch = sourceBranch;
                 commit.TargetBranch = targetBranch;
                 if (tags != null)
@@ -249,11 +341,19 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add a merge commit in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="sourceBranch">Source branch (required)</param>
+        /// <param name="targetBranch">Target branch</param>
+        /// <param name="user">Author username (required if default user not defined)</param>
+        /// <param name="tags">Tags.</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabProject WithMergeCommit(this GitLabProject project, string sourceBranch, string targetBranch = null, string user = null, IEnumerable<string> tags = null, Action<GitLabCommit> configure = null)
         {
-            return WithCommit(project, commit =>
+            return WithCommit(project, $"Merge '{sourceBranch}' into '{targetBranch ?? project.DefaultBranch}'", user, commit =>
             {
-                commit.User = user ?? project.Parent.DefaultUser;
                 commit.SourceBranch = sourceBranch ?? throw new ArgumentNullException(nameof(sourceBranch));
                 commit.TargetBranch = targetBranch ?? project.DefaultBranch;
                 if (tags != null)
@@ -268,6 +368,11 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add a tag description in commit
+        /// </summary>
+        /// <param name="commit">Commit.</param>
+        /// <param name="name">Name (required)</param>
         public static GitLabCommit WithTag(this GitLabCommit commit, string name)
         {
             return Configure(commit, _ =>
@@ -276,6 +381,12 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add a file description in commit
+        /// </summary>
+        /// <param name="commit">Commit.</param>
+        /// <param name="relativePath">Relative path (required)</param>
+        /// <param name="content">File Content</param>
         public static GitLabCommit WithFile(this GitLabCommit commit, string relativePath, string content = "")
         {
             return Configure(commit, _ =>
@@ -288,6 +399,13 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add an issue description in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="title">Title (required)</param>
+        /// <param name="author">Author username (required if default user not defined)</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabProject WithIssue(this GitLabProject project, string title, string author, Action<GitLabIssue> configure)
         {
             return Configure(project, _ =>
@@ -303,7 +421,22 @@ namespace NGitLab.Mock.Config
             });
         }
 
-        public static GitLabProject WithIssue(this GitLabProject project, string title, int id = default, string description = null, string author = null, string assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, IEnumerable<string> labels = null, Action<GitLabIssue> configure = null)
+        /// <summary>
+        /// Add an issue description in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="title">Title (required)</param>
+        /// <param name="id">Explicit ID (project increment)</param>
+        /// <param name="description">Description.</param>
+        /// <param name="author">Author username (required if default user nor defined)</param>
+        /// <param name="assignee">Assignee username.</param>
+        /// <param name="milestone">Milestone title (create it if not exists)</param>
+        /// <param name="createdAt">Creation date time.</param>
+        /// <param name="updatedAt">Update date time.</param>
+        /// <param name="closedAt">Close date time.</param>
+        /// <param name="labels">Labels names.</param>
+        /// <param name="configure">Configuration method</param>
+        public static GitLabProject WithIssue(this GitLabProject project, string title, int id = default, string description = null, string author = null, string assignee = null, string milestone = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, IEnumerable<string> labels = null, Action<GitLabIssue> configure = null)
         {
             return WithIssue(project, title, author, issue =>
             {
@@ -312,6 +445,7 @@ namespace NGitLab.Mock.Config
 
                 issue.Description = description;
                 issue.Assignee = assignee;
+                issue.Milestone = milestone;
                 issue.CreatedAt = createdAt ?? DateTime.Now;
                 issue.UpdatedAt = updatedAt ?? DateTime.Now;
                 issue.ClosedAt = closedAt;
@@ -327,6 +461,11 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add label in issue (create it if not exists)
+        /// </summary>
+        /// <param name="issue">Issue.</param>
+        /// <param name="label">Label name (required)</param>
         public static GitLabIssue WithLabel(this GitLabIssue issue, string label)
         {
             return Configure(issue, _ =>
@@ -335,6 +474,14 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add merge request description in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="title">Title (required)</param>
+        /// <param name="sourceBranch">Source branch (required)</param>
+        /// <param name="author">Author username (required if default user not defined)</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabProject WithMergeRequest(this GitLabProject project, string title, string sourceBranch, string author, Action<GitLabMergeRequest> configure)
         {
             return Configure(project, _ =>
@@ -352,6 +499,24 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add merge request description in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="title">Title (required)</param>
+        /// <param name="sourceBranch">Source branch (required)</param>
+        /// <param name="id">Explicit ID (project increment)</param>
+        /// <param name="targetBranch">Target branch (use default branch if null)</param>
+        /// <param name="description">Description.</param>
+        /// <param name="author">Author username (required if default user not defined)</param>
+        /// <param name="assignee">Assignee username.</param>
+        /// <param name="createdAt">Creation date time.</param>
+        /// <param name="updatedAt">Update date time.</param>
+        /// <param name="closedAt">Close date time.</param>
+        /// <param name="mergedAt">Merge date time.</param>
+        /// <param name="approvers">Approvers usernames.</param>
+        /// <param name="labels">Labels names.</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabProject WithMergeRequest(this GitLabProject project, string title, string sourceBranch, int id = default, string targetBranch = null, string description = null, string author = null, string assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string> approvers = null, IEnumerable<string> labels = null, Action<GitLabMergeRequest> configure = null)
         {
             return WithMergeRequest(project, title, sourceBranch, author, mergeRequest =>
@@ -386,6 +551,11 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add label in merge request (create it if not exists)
+        /// </summary>
+        /// <param name="mergeRequest">Merge request.</param>
+        /// <param name="label">Label name (required)</param>
         public static GitLabMergeRequest WithLabel(this GitLabMergeRequest mergeRequest, string label)
         {
             return Configure(mergeRequest, _ =>
@@ -394,6 +564,11 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add approver in merge request
+        /// </summary>
+        /// <param name="mergeRequest">Merge request.</param>
+        /// <param name="approver">Approver username (required)</param>
         public static GitLabMergeRequest WithApprover(this GitLabMergeRequest mergeRequest, string approver)
         {
             return Configure(mergeRequest, _ =>
@@ -402,6 +577,12 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add user permission in group
+        /// </summary>
+        /// <param name="group">Group.</param>
+        /// <param name="user">Username (required)</param>
+        /// <param name="level">Access level.</param>
         public static GitLabGroup WithUserPermission(this GitLabGroup group, string user, AccessLevel level = AccessLevel.Developer)
         {
             return Configure(group, _ =>
@@ -416,6 +597,12 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add user permission in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="user">Username (required)</param>
+        /// <param name="level">Access level.</param>
         public static GitLabProject WithUserPermission(this GitLabProject project, string user, AccessLevel level = AccessLevel.Developer)
         {
             return Configure(project, _ =>
@@ -430,6 +617,12 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add group permission in group
+        /// </summary>
+        /// <param name="grp">Group.</param>
+        /// <param name="group">Group fullname (required)</param>
+        /// <param name="level">Access level.</param>
         public static GitLabGroup WithGroupPermission(this GitLabGroup grp, string group, AccessLevel level = AccessLevel.Developer)
         {
             return Configure(grp, _ =>
@@ -444,6 +637,12 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add group permission in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="group">Group fullname (required)</param>
+        /// <param name="level">Access level.</param>
         public static GitLabProject WithGroupPermission(this GitLabProject project, string group, AccessLevel level = AccessLevel.Developer)
         {
             return Configure(project, _ =>
@@ -458,6 +657,12 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add milestone in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="title">Title (required)</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabProject WithMilestone(this GitLabProject project, string title, Action<GitLabMilestone> configure)
         {
             return Configure(project, _ =>
@@ -472,6 +677,19 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Add milestone in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="title">Title (required)</param>
+        /// <param name="id">Explicit ID (config increment)</param>
+        /// <param name="description">Description.</param>
+        /// <param name="dueDate">Due date time.</param>
+        /// <param name="startDate">Start date time.</param>
+        /// <param name="createdAt">Creation date time.</param>
+        /// <param name="updatedAt">Update date time.</param>
+        /// <param name="closedAt">Close date time.</param>
+        /// <param name="configure">Configuration method</param>
         public static GitLabProject WithMilestone(this GitLabProject project, string title, int id = default, string description = null, DateTime? dueDate = null, DateTime? startDate = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, Action<GitLabMilestone> configure = null)
         {
             return WithMilestone(project, title, milestone =>
@@ -488,6 +706,10 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        /// <summary>
+        /// Create and fill server from config
+        /// </summary>
+        /// <param name="config">Config.</param>
         public static GitLabServer ResolveServer(this GitLabConfig config)
         {
             var server = CreateServer();
@@ -545,16 +767,30 @@ namespace NGitLab.Mock.Config
             return server;
         }
 
+        /// <summary>
+        /// Create client from config
+        /// </summary>
+        /// <param name="config">Config.</param>
+        /// <param name="username">Username that use client (if not defined, use default user or the first in the list)</param>
         public static IGitLabClient ResolveClient(this GitLabConfig config, string username = null)
         {
             return ResolveClient(ResolveServer(config), username ?? config.DefaultUser ?? config.Users.FirstOrDefault()?.Username ?? throw new InvalidOperationException("No user configured"));
         }
 
+        /// <summary>
+        /// Create client from server
+        /// </summary>
+        /// <param name="server">Server.</param>
+        /// <param name="username">Username that use client (if not defined, use the first in the list)</param>
         public static IGitLabClient ResolveClient(this GitLabServer server, string username = null)
         {
             return CreateClient(server, username ?? server.Users.FirstOrDefault()?.UserName ?? throw new InvalidOperationException("No user configured"));
         }
 
+        /// <summary>
+        /// Create config from server
+        /// </summary>
+        /// <param name="server">Server.</param>
         public static GitLabConfig ToConfig(this GitLabServer server)
         {
             var config = new GitLabConfig();

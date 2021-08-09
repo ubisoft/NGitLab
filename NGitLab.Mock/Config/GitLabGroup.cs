@@ -2,6 +2,9 @@
 
 namespace NGitLab.Mock.Config
 {
+    /// <summary>
+    /// Describe a GitLab group
+    /// </summary>
     public class GitLabGroup : GitLabObject<GitLabConfig>
     {
         public GitLabGroup()
@@ -10,8 +13,14 @@ namespace NGitLab.Mock.Config
             Permissions = new GitLabPermissionsCollection(this);
         }
 
+        /// <summary>
+        /// Name (required)
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Parent namespace
+        /// </summary>
         public string Namespace { get; set; }
 
         public string Description { get; set; }

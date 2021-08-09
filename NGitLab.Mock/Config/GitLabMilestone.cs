@@ -2,8 +2,14 @@
 
 namespace NGitLab.Mock.Config
 {
+    /// <summary>
+    /// Describe a milestone in a GitLab project
+    /// </summary>
     public class GitLabMilestone : GitLabObject
     {
+        /// <summary>
+        /// Title (required)
+        /// </summary>
         public string Title { get; set; }
 
         public string Description { get; set; }

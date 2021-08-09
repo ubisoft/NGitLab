@@ -1,9 +1,15 @@
 ﻿namespace NGitLab.Mock.Config
 {
+    /// <summary>
+    /// Describe a label in a GitLab group/project
+    /// </summary>
     public class GitLabLabel : GitLabObject
     {
         public string Name { get; set; }
 
+        /// <summary>
+        /// Color in RGB hex format (example: #5884AD)
+        /// </summary>
         public string Color { get; set; } = "#d9534f";
 
         public string Description { get; set; }

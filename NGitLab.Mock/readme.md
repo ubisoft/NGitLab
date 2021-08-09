@@ -7,6 +7,30 @@ It allows to write simple unit tests on code that uses GitLab.
 
 # How to use it?
 
+## 1. With config (*RECOMMENDED*)
+
+First you need to instantiate and define your configuration
+
+```csharp
+var config = new GitLabConfig()
+    // Add a user
+    .WithUser("test")
+    // Add a new project in the user namespace and add commits
+    .WithProject("user-project", @namespace: "test", configure: project => project
+        .WithCommit("init", user: "test", tags: new[] { "v1.0.0" }))
+    // Add a project in a group
+    .WithProject("SampleProject", @namespace: "testgroup");
+```
+
+Finally, you can instance the server and the client
+
+```csharp
+var server = config.ResolveServer();
+var client = server.ResolveClient("test");
+```
+
+## 2. With models
+
 First you need to instantiate a server
 
 ```csharp
@@ -37,6 +61,8 @@ Finally, you can create an instance of `IGitLabClient` using `server.CreateClien
 ```csharp
 IGitLabClient client = server.CreateClient(user);
 ```
+
+---
 
 Don't forget to dispose the server after the test to clean up all resources such as git repositories
 

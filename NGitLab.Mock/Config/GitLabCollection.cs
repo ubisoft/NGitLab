@@ -1,12 +1,11 @@
-﻿using System.Threading;
+﻿using System.Linq;
 
 namespace NGitLab.Mock.Config
 {
-    public class GitLabCollection<TItem> : System.Collections.ObjectModel.Collection<TItem>
+    public abstract class GitLabCollection<TItem> : System.Collections.ObjectModel.Collection<TItem>
         where TItem : GitLabObject
     {
         internal readonly object _parent;
-        private int _idIncrement;
 
         protected internal GitLabCollection(object parent)
         {
@@ -33,11 +32,11 @@ namespace NGitLab.Mock.Config
             item.Parent = _parent;
 
             if (item.Id == default)
-                item.Id = Interlocked.Increment(ref _idIncrement);
+                item.Id = Items.Select(x => x.Id).DefaultIfEmpty().Max() + 1;
         }
     }
 
-    public class GitLabCollection<TItem, TParent> : GitLabCollection<TItem>
+    public abstract class GitLabCollection<TItem, TParent> : GitLabCollection<TItem>
         where TItem : GitLabObject<TParent>
     {
         protected internal GitLabCollection(TParent parent)

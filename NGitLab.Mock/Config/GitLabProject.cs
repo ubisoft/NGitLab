@@ -2,6 +2,9 @@
 
 namespace NGitLab.Mock.Config
 {
+    /// <summary>
+    /// Describe a GitLab project
+    /// </summary>
     public class GitLabProject : GitLabObject<GitLabConfig>
     {
         public GitLabProject()
@@ -14,6 +17,9 @@ namespace NGitLab.Mock.Config
             Milestones = new GitLabMilestonesCollection(this);
         }
 
+        /// <summary>
+        /// Name (required)
+        /// </summary>
         public string Name { get; set; }
 
         public string Namespace { get; set; } = "functional";
@@ -22,6 +28,9 @@ namespace NGitLab.Mock.Config
 
         public string Description { get; set; }
 
+        /// <summary>
+        /// Path where to clone repository after server resolving
+        /// </summary>
         public string ClonePath { get; set; }
 
         public VisibilityLevel Visibility { get; set; } = VisibilityLevel.Internal;

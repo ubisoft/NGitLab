@@ -1,7 +1,13 @@
 ﻿namespace NGitLab.Mock.Config
 {
+    /// <summary>
+    /// Describe a GitLab user
+    /// </summary>
     public class GitLabUser : GitLabObject<GitLabConfig>
     {
+        /// <summary>
+        /// Username (required)
+        /// </summary>
         public string Username { get; set; }
 
         public string Name { get; set; } = "User";
