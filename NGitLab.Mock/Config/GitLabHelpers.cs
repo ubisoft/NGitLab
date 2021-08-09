@@ -185,32 +185,6 @@ namespace NGitLab.Mock.Config
             });
         }
 
-        public static GitLabProject WithCommit(this GitLabProject project, Action<GitLabCommit> configure)
-        {
-            return Configure(project, _ =>
-            {
-                var commit = new GitLabCommit
-                {
-                    User = project.Parent.DefaultUser ?? throw new InvalidOperationException("User is required when user is not configured"),
-                };
-
-                project.Commits.Add(commit);
-                configure(commit);
-            });
-        }
-
-        public static GitLabProject WithCommit(this GitLabProject project, string message, string user = null, string sourceBranch = null, string targetBranch = null, Action<GitLabCommit> configure = null)
-        {
-            return WithCommit(project, commit =>
-            {
-                commit.Message = message;
-                commit.User = user ?? project.Parent.DefaultUser ?? throw new InvalidOperationException("User is required when user is not configured");
-                commit.SourceBranch = sourceBranch;
-                commit.TargetBranch = targetBranch;
-                configure?.Invoke(commit);
-            });
-        }
-
         public static GitLabGroup WithLabel(this GitLabGroup group, string name, string color = null, string description = null)
         {
             return Configure(group, _ =>
@@ -241,13 +215,55 @@ namespace NGitLab.Mock.Config
             });
         }
 
-        public static GitLabProject WithMergeCommit(this GitLabProject project, string sourceBranch, string targetBranch = null, string user = null, Action<GitLabCommit> configure = null)
+        public static GitLabProject WithCommit(this GitLabProject project, Action<GitLabCommit> configure)
+        {
+            return Configure(project, _ =>
+            {
+                var commit = new GitLabCommit
+                {
+                    User = project.Parent.DefaultUser ?? throw new InvalidOperationException("User is required when user is not configured"),
+                };
+
+                project.Commits.Add(commit);
+                configure(commit);
+            });
+        }
+
+        public static GitLabProject WithCommit(this GitLabProject project, string message, string user = null, string sourceBranch = null, string targetBranch = null, IEnumerable<string> tags = null, Action<GitLabCommit> configure = null)
+        {
+            return WithCommit(project, commit =>
+            {
+                commit.Message = message;
+                commit.User = user ?? project.Parent.DefaultUser ?? throw new InvalidOperationException("User is required when user is not configured");
+                commit.SourceBranch = sourceBranch;
+                commit.TargetBranch = targetBranch;
+                if (tags != null)
+                {
+                    foreach (var tag in tags)
+                    {
+                        commit.Tags.Add(tag);
+                    }
+                }
+
+                configure?.Invoke(commit);
+            });
+        }
+
+        public static GitLabProject WithMergeCommit(this GitLabProject project, string sourceBranch, string targetBranch = null, string user = null, IEnumerable<string> tags = null, Action<GitLabCommit> configure = null)
         {
             return WithCommit(project, commit =>
             {
                 commit.User = user ?? project.Parent.DefaultUser;
                 commit.SourceBranch = sourceBranch ?? throw new ArgumentNullException(nameof(sourceBranch));
                 commit.TargetBranch = targetBranch ?? project.DefaultBranch;
+                if (tags != null)
+                {
+                    foreach (var tag in tags)
+                    {
+                        commit.Tags.Add(tag);
+                    }
+                }
+
                 configure?.Invoke(commit);
             });
         }

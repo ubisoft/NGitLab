@@ -3,10 +3,10 @@ using NUnit.Framework;
 
 namespace NGitLab.Mock.Tests
 {
-    public class RepositoryMockTests
+    public class ProjectsMockTests
     {
         [Test]
-        public void Test_project_can_be_mocked()
+        public void Test_projects_created_can_be_found()
         {
             using var server = new GitLabConfig()
                 .WithUser("Test", asDefault: true)
