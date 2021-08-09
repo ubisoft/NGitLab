@@ -547,7 +547,7 @@ namespace NGitLab.Mock.Config
                 config.Users.Add(ToConfig(user));
             }
 
-            foreach (var group in server.AllGroups)
+            foreach (var group in server.AllGroups.Where(x => !x.IsUserNamespace))
             {
                 config.Groups.Add(ToConfig(group));
             }
@@ -974,7 +974,7 @@ namespace NGitLab.Mock.Config
                 Id = issue.Iid,
                 Title = issue.Title,
                 Description = issue.Description,
-                Author = issue.Author.UserName,
+                Author = issue.Author?.UserName ?? throw new InvalidOperationException($"Author required in issue '{issue.Title}'"),
                 Assignee = issue.Assignee?.UserName,
                 CreatedAt = issue.CreatedAt.DateTime,
                 UpdatedAt = issue.UpdatedAt.DateTime,
@@ -996,7 +996,7 @@ namespace NGitLab.Mock.Config
                 Id = mergeRequest.Iid,
                 Title = mergeRequest.Title,
                 Description = mergeRequest.Description,
-                Author = mergeRequest.Author.UserName,
+                Author = mergeRequest.Author?.UserName ?? throw new InvalidOperationException($"Author required in merge request '{mergeRequest.Title}'"),
                 Assignee = mergeRequest.Assignee?.UserName,
                 SourceBranch = mergeRequest.SourceBranch,
                 TargetBranch = mergeRequest.TargetBranch,

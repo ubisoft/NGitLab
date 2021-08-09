@@ -27,7 +27,10 @@ namespace NGitLab.Mock.Config
         public static string Serialize(GitLabConfig config)
         {
             var serializer = new SerializerBuilder().DisableAliases().Build();
-            return serializer.Serialize(config);
+            return serializer.Serialize(new Dictionary<string, GitLabConfig>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "gitlab", config },
+            });
         }
 
         public void Deserialize(string content)
@@ -231,7 +234,7 @@ namespace NGitLab.Mock.Config
 
             if (type == typeof(DateTime))
             {
-                if (valueObj is string valueString && DateTime.TryParseExact(valueString, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var valueDate))
+                if (valueObj is string valueString && (DateTime.TryParseExact(valueString, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var valueDate) || DateTime.TryParse(valueString, CultureInfo.InvariantCulture, DateTimeStyles.None, out valueDate)))
                 {
                     value = valueDate;
                     return true;
@@ -242,7 +245,7 @@ namespace NGitLab.Mock.Config
 
             if (type == typeof(DateTimeOffset))
             {
-                if (valueObj is string valueString && DateTimeOffset.TryParseExact(valueString, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var valueDate))
+                if (valueObj is string valueString && (DateTimeOffset.TryParseExact(valueString, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out var valueDate) || DateTimeOffset.TryParse(valueString, CultureInfo.InvariantCulture, DateTimeStyles.None, out valueDate)))
                 {
                     value = valueDate;
                     return true;
@@ -261,7 +264,7 @@ namespace NGitLab.Mock.Config
             if (type.IsGenericType)
             {
                 var genericArgs = type.GetGenericArguments();
-                if (genericArgs.Length == 1)
+                if (genericArgs.Length == 1 && genericArgs[0].IsValueType)
                 {
                     var nullableType = typeof(Nullable<>).MakeGenericType(genericArgs);
                     if (!type.IsAssignableFrom(nullableType))
