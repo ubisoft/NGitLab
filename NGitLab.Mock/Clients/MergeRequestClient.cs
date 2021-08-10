@@ -373,8 +373,8 @@ namespace NGitLab.Mock.Clients
 
                 if (query.AssigneeId != null)
                 {
-                    var assigneeId = int.Parse(query.AssigneeId.ToString());
-                    mergeRequests = mergeRequests.Where(mr => mr.Assignee.Id == assigneeId);
+                    var assigneeId = string.Equals(query.AssigneeId.ToString(), "None", StringComparison.OrdinalIgnoreCase) ? (int?)null : int.Parse(query.AssigneeId.ToString());
+                    mergeRequests = mergeRequests.Where(mr => mr.Assignee?.Id == assigneeId);
                 }
 
                 if (query.AuthorId != null)
@@ -416,7 +416,7 @@ namespace NGitLab.Mock.Clients
                             break;
                         case "assigned_to_me":
                         case "assigned-to-me":
-                            mergeRequests = mergeRequests.Where(mr => mr.Assignee.Id == userId);
+                            mergeRequests = mergeRequests.Where(mr => mr.Assignee?.Id == userId);
                             break;
                         case "all":
                             break;
