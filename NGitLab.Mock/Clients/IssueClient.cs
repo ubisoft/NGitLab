@@ -150,7 +150,7 @@ namespace NGitLab.Mock.Clients
 
             if (query.Milestone != null)
             {
-                issues = issues.Where(i => string.Equals(i.Milestone.Title, query.Milestone, StringComparison.Ordinal));
+                issues = issues.Where(i => string.Equals(i.Milestone?.Title, query.Milestone, StringComparison.Ordinal));
             }
 
             if (!string.IsNullOrEmpty(query.Labels))
