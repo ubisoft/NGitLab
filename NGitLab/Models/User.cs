@@ -40,6 +40,9 @@ namespace NGitLab.Models
         [DataMember(Name = "created_at")]
         public DateTime CreatedAt;
 
+        [DataMember(Name = "last_activity_on")]
+        public DateTime LastActivityOn;
+
         [DataMember(Name = "avatar_url")]
         public string AvatarURL;
 
