@@ -16,9 +16,9 @@ namespace NGitLab.Mock.Tests
                 .WithProject("Test", configure: project => project
                     .WithIssue("Issue 1", author: "user1", assignee: "user2")
                     .WithIssue("Issue 2", author: "user2", assignee: "user1"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient("user1");
+            var client = server.CreateClient("user1");
             var issues = client.Issues.Get(new IssueQuery { Scope = "created_by_me" }).ToArray();
 
             Assert.AreEqual(1, issues.Length, "Issues count is invalid");
@@ -34,9 +34,9 @@ namespace NGitLab.Mock.Tests
                 .WithProject("Test", configure: project => project
                     .WithIssue("Issue 1", author: "user1", assignee: "user2")
                     .WithIssue("Issue 2", author: "user2", assignee: "user1"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient("user1");
+            var client = server.CreateClient("user1");
             var issues = client.Issues.Get(new IssueQuery { Scope = "assigned_to_me" }).ToArray();
 
             Assert.AreEqual(1, issues.Length, "Issues count is invalid");
@@ -50,9 +50,9 @@ namespace NGitLab.Mock.Tests
                 .WithUser("user", asDefault: true)
                 .WithProject("Test", configure: project => project
                     .WithIssue("Issue title", author: "user"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             Assert.DoesNotThrow(() => client.Issues.Get(new IssueQuery { Scope = "assigned_to_me" }).ToArray());
         }
     }

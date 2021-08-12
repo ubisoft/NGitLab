@@ -16,9 +16,9 @@ namespace NGitLab.Mock.Tests
                 .WithProject("Test", id: 1, configure: project => project
                     .WithMilestone("Milestone 1")
                     .WithMilestone("Milestone 2"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             var milestones = client.GetMilestone(1).All.ToArray();
 
             Assert.AreEqual(2, milestones.Length, "Milestones count is invalid");
@@ -31,10 +31,10 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", asDefault: true)
-                .WithProject("Test", id: 1, defaultAsMaintainer: true)
-                .ResolveServer();
+                .WithProject("Test", id: 1, defaultUserAsMaintainer: true)
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             client.GetMilestone(1).Create(new MilestoneCreate { Title = "Milestone 1" });
             var milestones = client.GetMilestone(1).All.ToArray();
 
@@ -47,11 +47,11 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", asDefault: true)
-                .WithProject("Test", id: 1, defaultAsMaintainer: true, configure: project => project
+                .WithProject("Test", id: 1, defaultUserAsMaintainer: true, configure: project => project
                     .WithMilestone("Milestone 1", id: 1))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             client.GetMilestone(1).Update(1, new MilestoneUpdate { Title = "Milestone 2" });
             var milestones = client.GetMilestone(1).All.ToArray();
 
@@ -64,11 +64,11 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", asDefault: true)
-                .WithProject("Test", id: 1, defaultAsMaintainer: true, configure: project => project
+                .WithProject("Test", id: 1, defaultUserAsMaintainer: true, configure: project => project
                     .WithMilestone("Milestone 1", id: 1))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             client.GetMilestone(1).Delete(1);
             var milestones = client.GetMilestone(1).All.ToArray();
 
@@ -80,11 +80,11 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", asDefault: true)
-                .WithProject("Test", id: 1, defaultAsMaintainer: true, configure: project => project
+                .WithProject("Test", id: 1, defaultUserAsMaintainer: true, configure: project => project
                     .WithMilestone("Milestone 1", id: 1))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             client.GetMilestone(1).Close(1);
             var activeMilestones = client.GetMilestone(1).AllInState(Models.MilestoneState.active).ToArray();
             var closedMilestones = client.GetMilestone(1).AllInState(Models.MilestoneState.closed).ToArray();

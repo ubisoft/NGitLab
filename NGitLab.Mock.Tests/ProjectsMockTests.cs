@@ -10,10 +10,10 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabConfig()
                 .WithUser("Test", asDefault: true)
-                .WithProject("Test", @namespace: "testgroup", defaultAsMaintainer: true)
-                .ResolveServer();
+                .WithProject("Test", @namespace: "testgroup", defaultUserAsMaintainer: true)
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             var project = client.Projects["testgroup/Test"];
 
             Assert.IsNotNull(project);

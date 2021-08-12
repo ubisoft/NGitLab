@@ -130,7 +130,7 @@ namespace NGitLab.Mock.Config
         /// Add an explicit group description in config
         /// </summary>
         /// <param name="config">Config.</param>
-        /// <param name="name">Name (required)</param>
+        /// <param name="name">Name.</param>
         /// <param name="configure">Configuration method</param>
         public static GitLabConfig WithGroup(this GitLabConfig config, string name, Action<GitLabGroup> configure)
         {
@@ -138,7 +138,7 @@ namespace NGitLab.Mock.Config
             {
                 var group = new GitLabGroup
                 {
-                    Name = name ?? throw new ArgumentNullException(nameof(name)),
+                    Name = name ?? Guid.NewGuid().ToString("D"),
                 };
 
                 config.Groups.Add(group);
@@ -150,14 +150,14 @@ namespace NGitLab.Mock.Config
         /// Add an explicit group description in config
         /// </summary>
         /// <param name="config">Config.</param>
-        /// <param name="name">Name (required)</param>
+        /// <param name="name">Name.</param>
         /// <param name="id">Explicit ID (config increment)</param>
         /// <param name="namespace">Parent namespace.</param>
         /// <param name="description">Description.</param>
         /// <param name="visibility">Visibility.</param>
-        /// <param name="defaultAsMaintainer">Define default user as maintainer.</param>
+        /// <param name="defaultUserAsMaintainer">Define default user as maintainer.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabConfig WithGroup(this GitLabConfig config, string name, int id = default, string @namespace = null, string description = null, VisibilityLevel visibility = VisibilityLevel.Internal, bool defaultAsMaintainer = false, Action<GitLabGroup> configure = null)
+        public static GitLabConfig WithGroup(this GitLabConfig config, string name = null, int id = default, string @namespace = null, string description = null, VisibilityLevel visibility = VisibilityLevel.Internal, bool defaultUserAsMaintainer = false, Action<GitLabGroup> configure = null)
         {
             return WithGroup(config, name, group =>
             {
@@ -168,7 +168,7 @@ namespace NGitLab.Mock.Config
                 group.Description = description;
                 group.Visibility = visibility;
 
-                if (defaultAsMaintainer)
+                if (defaultUserAsMaintainer)
                 {
                     if (string.IsNullOrEmpty(group.Parent.DefaultUser))
                         throw new InvalidOperationException("Default user not configured");
@@ -184,7 +184,7 @@ namespace NGitLab.Mock.Config
         /// Add a project description in config
         /// </summary>
         /// <param name="config">Config.</param>
-        /// <param name="name">Name (required)</param>
+        /// <param name="name">Name.</param>
         /// <param name="configure">Configuration method</param>
         public static GitLabConfig WithProject(this GitLabConfig config, string name, Action<GitLabProject> configure)
         {
@@ -192,7 +192,7 @@ namespace NGitLab.Mock.Config
             {
                 var project = new GitLabProject
                 {
-                    Name = name ?? throw new ArgumentNullException(nameof(name)),
+                    Name = name ?? Guid.NewGuid().ToString("D"),
                 };
 
                 config.Projects.Add(project);
@@ -204,17 +204,17 @@ namespace NGitLab.Mock.Config
         /// Add a project description in config
         /// </summary>
         /// <param name="config">Config.</param>
-        /// <param name="name">Name (required)</param>
+        /// <param name="name">Name.</param>
         /// <param name="id">Explicit ID (config increment)</param>
         /// <param name="namespace">Group fullname.</param>
         /// <param name="description">Description.</param>
         /// <param name="defaultBranch">Repository default branch.</param>
         /// <param name="visibility">Visibility.</param>
         /// <param name="initialCommit">Indicates if an initial commit is added.</param>
-        /// <param name="defaultAsMaintainer">Define default user as maintainer.</param>
+        /// <param name="defaultUserAsMaintainer">Define default user as maintainer.</param>
         /// <param name="clonePath">Path where to clone repository after server resolving</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabConfig WithProject(this GitLabConfig config, string name, int id = default, string @namespace = "functional", string description = null, string defaultBranch = "main", VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false, bool defaultAsMaintainer = false, string clonePath = null, Action<GitLabProject> configure = null)
+        public static GitLabConfig WithProject(this GitLabConfig config, string name = null, int id = default, string @namespace = "unit-tests", string description = null, string defaultBranch = null, VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false, bool defaultUserAsMaintainer = false, string clonePath = null, Action<GitLabProject> configure = null)
         {
             return WithProject(config, name, project =>
             {
@@ -223,19 +223,19 @@ namespace NGitLab.Mock.Config
 
                 project.Namespace = @namespace ?? throw new ArgumentNullException(nameof(@namespace));
                 project.Description = description;
-                project.DefaultBranch = defaultBranch ?? throw new ArgumentNullException(nameof(defaultBranch));
+                project.DefaultBranch = defaultBranch ?? config.DefaultBranch ?? "main";
                 project.Visibility = visibility;
                 project.ClonePath = clonePath;
 
                 if (initialCommit)
                 {
-                    WithCommit(project, "Message", null, commit =>
+                    WithCommit(project, "Initial commit", null, commit =>
                     {
                         WithFile(commit, "README.md", $"# {name}{Environment.NewLine}");
                     });
                 }
 
-                if (defaultAsMaintainer)
+                if (defaultUserAsMaintainer)
                 {
                     if (string.IsNullOrEmpty(project.Parent.DefaultUser))
                         throw new InvalidOperationException("Default user not configured");
@@ -429,7 +429,7 @@ namespace NGitLab.Mock.Config
         /// <param name="id">Explicit ID (project increment)</param>
         /// <param name="description">Description.</param>
         /// <param name="author">Author username (required if default user nor defined)</param>
-        /// <param name="assignee">Assignee username.</param>
+        /// <param name="assignee">Assignee username (allow multiple separated by ',')</param>
         /// <param name="milestone">Milestone title (create it if not exists)</param>
         /// <param name="createdAt">Creation date time.</param>
         /// <param name="updatedAt">Update date time.</param>
@@ -446,8 +446,8 @@ namespace NGitLab.Mock.Config
                 issue.Description = description;
                 issue.Assignee = assignee;
                 issue.Milestone = milestone;
-                issue.CreatedAt = createdAt ?? DateTime.Now;
-                issue.UpdatedAt = updatedAt ?? DateTime.Now;
+                issue.CreatedAt = createdAt ?? DateTime.UtcNow;
+                issue.UpdatedAt = updatedAt ?? DateTime.UtcNow;
                 issue.ClosedAt = closedAt;
                 if (labels != null)
                 {
@@ -527,8 +527,8 @@ namespace NGitLab.Mock.Config
                 mergeRequest.Description = description;
                 mergeRequest.Assignee = assignee;
                 mergeRequest.TargetBranch = targetBranch ?? mergeRequest.TargetBranch;
-                mergeRequest.CreatedAt = createdAt ?? DateTime.Now;
-                mergeRequest.UpdatedAt = updatedAt ?? DateTime.Now;
+                mergeRequest.CreatedAt = createdAt ?? DateTime.UtcNow;
+                mergeRequest.UpdatedAt = updatedAt ?? DateTime.UtcNow;
                 mergeRequest.ClosedAt = closedAt;
                 mergeRequest.MergedAt = mergedAt;
                 if (labels != null)
@@ -700,8 +700,8 @@ namespace NGitLab.Mock.Config
                 milestone.Description = description;
                 milestone.DueDate = dueDate;
                 milestone.StartDate = startDate;
-                milestone.CreatedAt = createdAt ?? DateTime.Now;
-                milestone.UpdatedAt = updatedAt ?? DateTime.Now;
+                milestone.CreatedAt = createdAt ?? DateTime.UtcNow;
+                milestone.UpdatedAt = updatedAt ?? DateTime.UtcNow;
                 milestone.ClosedAt = closedAt;
             });
         }
@@ -710,9 +710,9 @@ namespace NGitLab.Mock.Config
         /// Create and fill server from config
         /// </summary>
         /// <param name="config">Config.</param>
-        public static GitLabServer ResolveServer(this GitLabConfig config)
+        public static GitLabServer BuildServer(this GitLabConfig config)
         {
-            var server = CreateServer();
+            var server = CreateServer(config);
             foreach (var user in config.Users)
             {
                 CreateUser(server, user);
@@ -772,9 +772,9 @@ namespace NGitLab.Mock.Config
         /// </summary>
         /// <param name="config">Config.</param>
         /// <param name="username">Username that use client (if not defined, use default user or the first in the list)</param>
-        public static IGitLabClient ResolveClient(this GitLabConfig config, string username = null)
+        public static IGitLabClient BuildClient(this GitLabConfig config, string username = null)
         {
-            return ResolveClient(ResolveServer(config), username ?? config.DefaultUser ?? config.Users.FirstOrDefault()?.Username ?? throw new InvalidOperationException("No user configured"));
+            return CreateClient(BuildServer(config), username ?? config.DefaultUser ?? config.Users.FirstOrDefault()?.Username ?? throw new InvalidOperationException("No user configured"));
         }
 
         /// <summary>
@@ -782,9 +782,10 @@ namespace NGitLab.Mock.Config
         /// </summary>
         /// <param name="server">Server.</param>
         /// <param name="username">Username that use client (if not defined, use the first in the list)</param>
-        public static IGitLabClient ResolveClient(this GitLabServer server, string username = null)
+        public static IGitLabClient CreateClient(this GitLabServer server, string username = null)
         {
-            return CreateClient(server, username ?? server.Users.FirstOrDefault()?.UserName ?? throw new InvalidOperationException("No user configured"));
+            username ??= server.Users.FirstOrDefault()?.UserName ?? throw new InvalidOperationException("No user configured");
+            return server.CreateClient(server.Users.First(x => string.Equals(x.UserName, username, StringComparison.Ordinal)));
         }
 
         /// <summary>
@@ -812,11 +813,11 @@ namespace NGitLab.Mock.Config
             return config;
         }
 
-        private static GitLabServer CreateServer()
+        private static GitLabServer CreateServer(GitLabConfig config)
         {
             return new GitLabServer
             {
-                DefaultBranchName = "main",
+                DefaultBranchName = config.DefaultBranch ?? "main",
                 Url = new Uri(Path.GetTempPath()),
             };
         }
@@ -869,7 +870,7 @@ namespace NGitLab.Mock.Config
             {
                 Id = project.Id,
                 Description = project.Description,
-                DefaultBranch = project.DefaultBranch,
+                DefaultBranch = project.DefaultBranch ?? server.DefaultBranchName,
                 Visibility = project.Visibility,
             };
 
@@ -982,7 +983,7 @@ namespace NGitLab.Mock.Config
                 Description = issue.Description,
                 Labels = issue.Labels.ToArray(),
                 Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, issueAuthor, StringComparison.Ordinal))),
-                Assignee = string.IsNullOrEmpty(issueAssignee) ? null : new UserRef(server.Users.First(x => string.Equals(x.UserName, issueAssignee, StringComparison.Ordinal))),
+                Assignees = string.IsNullOrEmpty(issueAssignee) ? Array.Empty<UserRef>() : issueAssignee.Split(',').Select(a => new UserRef(server.Users.First(x => string.Equals(x.UserName, a, StringComparison.Ordinal)))).ToArray(),
                 Milestone = string.IsNullOrEmpty(issue.Milestone) ? null : GetOrCreateMilestone(project, issue.Milestone),
                 UpdatedAt = issue.UpdatedAt,
                 ClosedAt = issue.ClosedAt,
@@ -1072,11 +1073,6 @@ namespace NGitLab.Mock.Config
             }
 
             return milestone;
-        }
-
-        private static IGitLabClient CreateClient(GitLabServer server, string username)
-        {
-            return server.CreateClient(server.Users.First(x => string.Equals(x.UserName, username, StringComparison.Ordinal)));
         }
 
         private static Group GetOrCreateGroup(GitLabServer server, string @namespace)

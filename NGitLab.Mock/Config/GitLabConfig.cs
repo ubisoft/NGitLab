@@ -17,6 +17,11 @@
         /// </summary>
         public string DefaultUser { get; set; }
 
+        /// <summary>
+        /// Branch name by default when not specified in extensions methods or deserialize
+        /// </summary>
+        public string DefaultBranch { get; set; }
+
         public GitLabUsersCollection Users { get; }
 
         /// <summary>

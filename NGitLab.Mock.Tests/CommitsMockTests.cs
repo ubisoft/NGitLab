@@ -14,9 +14,9 @@ namespace NGitLab.Mock.Tests
                 .WithProject("test-project", id: 1, configure: project => project
                     .WithCommit("Initial commit")
                     .WithCommit("Create branch", sourceBranch: "branch-01"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             var commit = client.GetCommits(1).GetCommit("branch-01");
 
             Assert.AreEqual("Create branch", commit.Message.TrimEnd('\r', '\n'));
@@ -30,9 +30,9 @@ namespace NGitLab.Mock.Tests
                 .WithProject("test-project", id: 1, configure: project => project
                     .WithCommit("Initial commit")
                     .WithCommit("Changes with tag", tags: new[] { "1.0.0" }))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             var commit = client.GetCommits(1).GetCommit("1.0.0");
 
             Assert.AreEqual("Changes with tag", commit.Message.TrimEnd('\r', '\n'));
@@ -43,12 +43,12 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", asDefault: true)
-                .WithProject("test-project", id: 1, defaultAsMaintainer: true, configure: project => project
+                .WithProject("test-project", id: 1, defaultUserAsMaintainer: true, configure: project => project
                     .WithCommit("Initial commit")
                     .WithCommit("Changes with tag", tags: new[] { "1.0.0" }))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             var tags = client.GetRepository(1).Tags.All.ToArray();
 
             Assert.That(tags, Has.One.Items);

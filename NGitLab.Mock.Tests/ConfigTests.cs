@@ -104,7 +104,7 @@ namespace NGitLab.Mock.Tests
             Assert.AreEqual("user1", config2.Projects[0].Permissions[0].User);
             Assert.AreEqual("project-2", config2.Projects[1].Name);
 
-            using var server = config2.ResolveServer();
+            using var server = config2.BuildServer();
             Assert.IsNotNull(server);
         }
     }

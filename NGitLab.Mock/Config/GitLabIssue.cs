@@ -26,7 +26,7 @@ namespace NGitLab.Mock.Config
         public string Author { get; set; }
 
         /// <summary>
-        /// Assignee username
+        /// Assignee username (allow multiple separated by ',')
         /// </summary>
         public string Assignee { get; set; }
 

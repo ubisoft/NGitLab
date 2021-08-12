@@ -16,9 +16,9 @@ namespace NGitLab.Mock.Tests
                 .WithProject("Test", id: 1, configure: project => project
                     .WithLabel("test1")
                     .WithLabel("test2"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             var labels = client.Labels.ForProject(1).ToArray();
 
             Assert.AreEqual(2, labels.Length, "Labels count is invalid");
@@ -31,10 +31,10 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", asDefault: true)
-                .WithProject("Test", id: 1, defaultAsMaintainer: true)
-                .ResolveServer();
+                .WithProject("Test", id: 1, defaultUserAsMaintainer: true)
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             client.Labels.Create(new LabelCreate { Id = 1, Name = "test1" });
             var labels = client.Labels.ForProject(1).ToArray();
 
@@ -47,11 +47,11 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", asDefault: true)
-                .WithProject("Test", id: 1, defaultAsMaintainer: true, configure: project => project
+                .WithProject("Test", id: 1, defaultUserAsMaintainer: true, configure: project => project
                     .WithLabel("test1"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             client.Labels.Edit(new LabelEdit { Id = 1, Name = "test1", NewName = "test2" });
             var labels = client.Labels.ForProject(1).ToArray();
 
@@ -64,11 +64,11 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", asDefault: true)
-                .WithProject("Test", id: 1, defaultAsMaintainer: true, configure: project => project
+                .WithProject("Test", id: 1, defaultUserAsMaintainer: true, configure: project => project
                     .WithLabel("test1"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             client.Labels.Delete(new LabelDelete { Id = 1, Name = "test1" });
             var labels = client.Labels.ForProject(1).ToArray();
 
@@ -83,9 +83,9 @@ namespace NGitLab.Mock.Tests
                 .WithGroup("Test", id: 2, configure: project => project
                     .WithLabel("test1")
                     .WithLabel("test2"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             var labels = client.Labels.ForGroup(2).ToArray();
 
             Assert.AreEqual(2, labels.Length, "Labels count is invalid");
@@ -98,10 +98,10 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", asDefault: true)
-                .WithGroup("Test", id: 2, defaultAsMaintainer: true)
-                .ResolveServer();
+                .WithGroup("Test", id: 2, defaultUserAsMaintainer: true)
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             client.Labels.CreateGroupLabel(new LabelCreate { Id = 2, Name = "test1" });
             var labels = client.Labels.ForGroup(2).ToArray();
 
@@ -114,11 +114,11 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", asDefault: true)
-                .WithGroup("Test", id: 2, defaultAsMaintainer: true, configure: project => project
+                .WithGroup("Test", id: 2, defaultUserAsMaintainer: true, configure: project => project
                     .WithLabel("test1"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient();
+            var client = server.CreateClient();
             client.Labels.EditGroupLabel(new LabelEdit { Id = 2, Name = "test1", NewName = "test2" });
             var labels = client.Labels.ForGroup(2).ToArray();
 

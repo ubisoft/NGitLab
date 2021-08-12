@@ -9,6 +9,9 @@ It allows to write simple unit tests on code that uses GitLab.
 
 ## 1. With config (*RECOMMENDED*)
 
+Build a mocked client from a `GitLabConfig` is the new recommended method because it's easy to setup with extension methods
+and support YAML serialization.
+
 First you need to instantiate and define your configuration
 
 ```csharp
@@ -25,8 +28,8 @@ var config = new GitLabConfig()
 Finally, you can instance the server and the client
 
 ```csharp
-var server = config.ResolveServer();
-var client = server.ResolveClient("test");
+var server = config.BuildServer();
+var client = server.CreateClient("test");
 ```
 
 ## 2. With models

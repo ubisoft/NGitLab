@@ -16,9 +16,9 @@ namespace NGitLab.Mock.Tests
                 .WithProject("Test", configure: project => project
                     .WithMergeRequest("Merge request 1", "branch-01", author: "user1", assignee: "user2")
                     .WithMergeRequest("Merge request 2", "branch-02", author: "user2", assignee: "user1"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient("user1");
+            var client = server.CreateClient("user1");
             var mergeRequests = client.MergeRequests.Get(new MergeRequestQuery { Scope = "created_by_me" }).ToArray();
 
             Assert.AreEqual(1, mergeRequests.Length, "Merge requests count is invalid");
@@ -34,9 +34,9 @@ namespace NGitLab.Mock.Tests
                 .WithProject("Test", configure: project => project
                     .WithMergeRequest("Merge request 1", "branch-01", author: "user1", assignee: "user2")
                     .WithMergeRequest("Merge request 2", "branch-02", author: "user2", assignee: "user1"))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient("user1");
+            var client = server.CreateClient("user1");
             var mergeRequests = client.MergeRequests.Get(new MergeRequestQuery { Scope = "assigned_to_me" }).ToArray();
 
             Assert.AreEqual(1, mergeRequests.Length, "Merge requests count is invalid");
@@ -52,9 +52,9 @@ namespace NGitLab.Mock.Tests
                 .WithProject("Test", configure: project => project
                     .WithMergeRequest("Merge request 1", "branch-01", author: "user1", approvers: new[] { "user2" })
                     .WithMergeRequest("Merge request 2", "branch-02", author: "user2", approvers: new[] { "user1" }))
-                .ResolveServer();
+                .BuildServer();
 
-            var client = server.ResolveClient("user1");
+            var client = server.CreateClient("user1");
             var mergeRequests = client.MergeRequests.Get(new MergeRequestQuery { ApproverIds = new[] { 1 } }).ToArray();
 
             Assert.AreEqual(1, mergeRequests.Length, "Merge requests count is invalid");
