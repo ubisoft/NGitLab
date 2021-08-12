@@ -794,6 +794,7 @@ NGitLab.ISnippetClient.Delete(int projectId, int snippetId) -> void
 NGitLab.ISnippetClient.Delete(int snippetId) -> void
 NGitLab.ISnippetClient.ForProject(int projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Snippet>
 NGitLab.ISnippetClient.Get(int projectId, int snippetId) -> NGitLab.Models.Snippet
+NGitLab.ISnippetClient.GetContent(int projectId, int snippetId, System.Action<System.IO.Stream> parser) -> void
 NGitLab.ISnippetClient.User.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Snippet>
 NGitLab.ISshKeyClient
 NGitLab.ISshKeyClient.Add(NGitLab.Models.SshKeyCreate key) -> NGitLab.Models.SshKey
