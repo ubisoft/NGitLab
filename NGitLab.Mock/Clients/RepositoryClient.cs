@@ -97,7 +97,8 @@ namespace NGitLab.Mock.Clients
         {
             throw new NotImplementedException();
         }
-        private Commit ConvertToNgitlabCommit(LibGit2Sharp.Commit commit, Project project)
+
+        private Commit ConvertToNGitLabCommit(LibGit2Sharp.Commit commit, Project project)
         {
             return commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal)));
         }
