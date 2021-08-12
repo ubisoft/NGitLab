@@ -13,11 +13,14 @@ namespace NGitLab.Mock.Config
         public string User { get; set; }
 
         /// <summary>
-        /// Group fullname (required is group permission)
+        /// Group fullname (required if group permission)
         /// </summary>
         public string Group { get; set; }
 
-        public AccessLevel Level { get; set; } = AccessLevel.Developer;
+        /// <summary>
+        /// Access level (required)
+        /// </summary>
+        public AccessLevel Level { get; set; }
     }
 
     public class GitLabPermissionsCollection : GitLabCollection<GitLabPermission>

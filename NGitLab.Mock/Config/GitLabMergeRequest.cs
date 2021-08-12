@@ -27,7 +27,7 @@ namespace NGitLab.Mock.Config
 
         public string SourceBranch { get; set; }
 
-        public string TargetBranch { get; set; } = "main";
+        public string TargetBranch { get; set; }
 
         /// <summary>
         /// Labels names
@@ -39,9 +39,9 @@ namespace NGitLab.Mock.Config
         /// </summary>
         public IList<string> Approvers { get; } = new List<string>();
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? CreatedAt { get; set; }
 
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
 
         public DateTime? MergedAt { get; set; }
 

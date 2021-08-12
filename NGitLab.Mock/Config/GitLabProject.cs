@@ -22,9 +22,9 @@ namespace NGitLab.Mock.Config
         /// </summary>
         public string Name { get; set; }
 
-        public string Namespace { get; set; } = "unit-tests";
+        public string Namespace { get; set; }
 
-        public string DefaultBranch { get; set; } = "main";
+        public string DefaultBranch { get; set; }
 
         public string Description { get; set; }
 

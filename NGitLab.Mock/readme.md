@@ -32,6 +32,12 @@ var server = config.BuildServer();
 var client = server.CreateClient("test");
 ```
 
+Don't forget to dispose the server after the test to clean up all resources such as git repositories
+
+```csharp
+server.Dispose();
+```
+
 ## 2. With models
 
 First you need to instantiate a server
@@ -65,10 +71,47 @@ Finally, you can create an instance of `IGitLabClient` using `server.CreateClien
 IGitLabClient client = server.CreateClient(user);
 ```
 
----
+## 3. With YAML file
 
-Don't forget to dispose the server after the test to clean up all resources such as git repositories
+You can define your setup configuration like in paragraph `1.` but in a YAML file...
+
+```yaml
+gitlab:
+  users:
+    - username: test
+  projects:
+    - name: user-project
+      namespace: test
+      commits:
+        - message: init
+          user: test
+          tags:
+            - v1.0.0
+    - name: SampleProject
+      namespace: testgroup
+```
+
+...and load it in code.
 
 ```csharp
-server.Dispose();
+var content = File.ReadAllText(filePath);
+var config = GitLabConfig.Deserialize(content);
 ```
+
+We extended YAML deserialization to support environment or custom variables
+
+```yaml
+variables:
+  repos_path: "%localappdata%\\ngitlab\\repos"
+gitlab:
+  users:
+    - username: user
+  projects:
+    - name: SampleProject
+      clonePath: "{repos_path}\\SampleProject"
+      commits:
+        - message: Initial commit
+          user: user
+```
+
+A predefined variable `new_guid` generate a new GUID at format `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`

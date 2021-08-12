@@ -10,7 +10,7 @@
         /// <summary>
         /// Color in RGB hex format (example: #5884AD)
         /// </summary>
-        public string Color { get; set; } = "#d9534f";
+        public string Color { get; set; }
 
         public string Description { get; set; }
     }
