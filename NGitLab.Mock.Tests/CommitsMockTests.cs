@@ -10,7 +10,7 @@ namespace NGitLab.Mock.Tests
         public void Test_commits_added_can_be_found()
         {
             using var server = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
+                .WithUser("user1", isDefault: true)
                 .WithProject("test-project", id: 1, configure: project => project
                     .WithCommit("Initial commit")
                     .WithCommit("Create branch", sourceBranch: "branch-01"))
@@ -26,7 +26,7 @@ namespace NGitLab.Mock.Tests
         public void Test_commits_with_tags_can_be_found()
         {
             using var server = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
+                .WithUser("user1", isDefault: true)
                 .WithProject("test-project", id: 1, configure: project => project
                     .WithCommit("Initial commit")
                     .WithCommit("Changes with tag", tags: new[] { "1.0.0" }))
@@ -42,8 +42,8 @@ namespace NGitLab.Mock.Tests
         public void Test_tags_from_commit_can_be_found()
         {
             using var server = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
-                .WithProject("test-project", id: 1, defaultUserAsMaintainer: true, configure: project => project
+                .WithUser("user1", isDefault: true)
+                .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
                     .WithCommit("Initial commit")
                     .WithCommit("Changes with tag", tags: new[] { "1.0.0" }))
                 .BuildServer();

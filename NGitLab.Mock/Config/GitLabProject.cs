@@ -33,7 +33,7 @@ namespace NGitLab.Mock.Config
         /// </summary>
         public string ClonePath { get; set; }
 
-        public VisibilityLevel Visibility { get; set; } = VisibilityLevel.Internal;
+        public VisibilityLevel? Visibility { get; set; }
 
         public GitLabCommitsCollection Commits { get; }
 

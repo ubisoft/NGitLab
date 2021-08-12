@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NGitLab.Mock.Config
 {
@@ -38,6 +40,22 @@ namespace NGitLab.Mock.Config
                 return;
 
             item.Parent = _parent;
+
+            if (item.Id == default)
+                item.Id = GetAllMilestones().Select(x => x.Id).DefaultIfEmpty().Max() + 1;
+        }
+
+        private IEnumerable<GitLabMilestone> GetAllMilestones()
+        {
+            var config = _parent switch
+            {
+                GitLabProject project => project.Parent,
+                _ => null,
+            };
+
+            return config == null
+                ? Enumerable.Empty<GitLabMilestone>()
+                : config.Projects.SelectMany(x => x.Milestones);
         }
     }
 }

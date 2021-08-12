@@ -1,4 +1,6 @@
-﻿namespace NGitLab.Mock.Config
+﻿using NGitLab.Models;
+
+namespace NGitLab.Mock.Config
 {
     /// <summary>
     /// Describe content of a GitLab server
@@ -21,6 +23,11 @@
         /// Branch name by default when not specified in extensions methods or deserialize
         /// </summary>
         public string DefaultBranch { get; set; }
+
+        /// <summary>
+        /// Groups and projects default visibility
+        /// </summary>
+        public VisibilityLevel DefaultVisibility { get; set; }
 
         public GitLabUsersCollection Users { get; }
 

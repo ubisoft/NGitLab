@@ -8,7 +8,7 @@ namespace NGitLab.Mock.Config
     public class GitLabCommit : GitLabObject<GitLabProject>
     {
         /// <summary>
-        /// Author username (required)
+        /// Author username (required if default user not defined)
         /// </summary>
         public string User { get; set; }
 

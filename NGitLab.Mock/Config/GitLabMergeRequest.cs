@@ -16,7 +16,7 @@ namespace NGitLab.Mock.Config
         public string Description { get; set; }
 
         /// <summary>
-        /// Author username (required)
+        /// Author username (required if default user not defined)
         /// </summary>
         public string Author { get; set; }
 

@@ -9,8 +9,8 @@ namespace NGitLab.Mock.Tests
         public void Test_projects_created_can_be_found()
         {
             using var server = new GitLabConfig()
-                .WithUser("Test", asDefault: true)
-                .WithProject("Test", @namespace: "testgroup", defaultUserAsMaintainer: true)
+                .WithUser("Test", isDefault: true)
+                .WithProject("Test", @namespace: "testgroup", addDefaultUserAsMaintainer: true)
                 .BuildServer();
 
             var client = server.CreateClient();

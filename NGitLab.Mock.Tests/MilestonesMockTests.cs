@@ -12,7 +12,7 @@ namespace NGitLab.Mock.Tests
         public void Test_milestones_can_be_found_from_project()
         {
             using var server = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
+                .WithUser("user1", isDefault: true)
                 .WithProject("Test", id: 1, configure: project => project
                     .WithMilestone("Milestone 1")
                     .WithMilestone("Milestone 2"))
@@ -30,8 +30,8 @@ namespace NGitLab.Mock.Tests
         public void Test_milestones_can_be_added_to_project()
         {
             using var server = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
-                .WithProject("Test", id: 1, defaultUserAsMaintainer: true)
+                .WithUser("user1", isDefault: true)
+                .WithProject("Test", id: 1, addDefaultUserAsMaintainer: true)
                 .BuildServer();
 
             var client = server.CreateClient();
@@ -46,8 +46,8 @@ namespace NGitLab.Mock.Tests
         public void Test_milestones_can_be_edited_from_project()
         {
             using var server = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
-                .WithProject("Test", id: 1, defaultUserAsMaintainer: true, configure: project => project
+                .WithUser("user1", isDefault: true)
+                .WithProject("Test", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
                     .WithMilestone("Milestone 1", id: 1))
                 .BuildServer();
 
@@ -63,8 +63,8 @@ namespace NGitLab.Mock.Tests
         public void Test_milestones_can_be_deleted_from_project()
         {
             using var server = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
-                .WithProject("Test", id: 1, defaultUserAsMaintainer: true, configure: project => project
+                .WithUser("user1", isDefault: true)
+                .WithProject("Test", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
                     .WithMilestone("Milestone 1", id: 1))
                 .BuildServer();
 
@@ -79,8 +79,8 @@ namespace NGitLab.Mock.Tests
         public void Test_milestones_can_be_closed_and_activated_from_project()
         {
             using var server = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
-                .WithProject("Test", id: 1, defaultUserAsMaintainer: true, configure: project => project
+                .WithUser("user1", isDefault: true)
+                .WithProject("Test", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
                     .WithMilestone("Milestone 1", id: 1))
                 .BuildServer();
 

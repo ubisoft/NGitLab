@@ -71,7 +71,7 @@ namespace NGitLab.Mock.Tests
         public void Test_config_can_be_serialized()
         {
             var config = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
+                .WithUser("user1", isDefault: true)
                 .WithProject("project-1", description: "Project #1", visibility: VisibilityLevel.Public,
                     configure: project => project
                         .WithCommit("Initial commit")

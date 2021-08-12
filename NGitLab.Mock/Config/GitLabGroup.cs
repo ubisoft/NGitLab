@@ -25,7 +25,7 @@ namespace NGitLab.Mock.Config
 
         public string Description { get; set; }
 
-        public VisibilityLevel Visibility { get; set; } = VisibilityLevel.Internal;
+        public VisibilityLevel? Visibility { get; set; }
 
         public GitLabLabelsCollection Labels { get; }
 

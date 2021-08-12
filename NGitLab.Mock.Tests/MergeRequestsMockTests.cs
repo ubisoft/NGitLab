@@ -11,7 +11,7 @@ namespace NGitLab.Mock.Tests
         public void Test_merge_requests_created_by_me_can_be_listed()
         {
             using var server = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
+                .WithUser("user1", isDefault: true)
                 .WithUser("user2")
                 .WithProject("Test", configure: project => project
                     .WithMergeRequest("Merge request 1", "branch-01", author: "user1", assignee: "user2")
@@ -29,7 +29,7 @@ namespace NGitLab.Mock.Tests
         public void Test_merge_requests_assigned_to_me_can_be_listed()
         {
             using var server = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
+                .WithUser("user1", isDefault: true)
                 .WithUser("user2")
                 .WithProject("Test", configure: project => project
                     .WithMergeRequest("Merge request 1", "branch-01", author: "user1", assignee: "user2")
@@ -47,7 +47,7 @@ namespace NGitLab.Mock.Tests
         public void Test_merge_requests_approvable_by_me_can_be_listed()
         {
             using var server = new GitLabConfig()
-                .WithUser("user1", asDefault: true)
+                .WithUser("user1", isDefault: true)
                 .WithUser("user2")
                 .WithProject("Test", configure: project => project
                     .WithMergeRequest("Merge request 1", "branch-01", author: "user1", approvers: new[] { "user2" })
