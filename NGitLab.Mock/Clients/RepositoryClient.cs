@@ -35,7 +35,7 @@ namespace NGitLab.Mock.Clients
                 using (Context.BeginOperationScope())
                 {
                     var project = GetProject(_projectId, ProjectPermission.View);
-                    return project.Repository.GetCommits().Select(commit => ConvertToNgitlabCommit(commit, project));
+                    return project.Repository.GetCommits().Select(commit => ConvertToNGitLabCommit(commit, project));
                 }
             }
         }
@@ -70,7 +70,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetCommits(refName).Select(commit => ConvertToNgitlabCommit(commit, project));
+                return project.Repository.GetCommits(refName).Select(commit => ConvertToNGitLabCommit(commit, project));
             }
         }
 
@@ -79,7 +79,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetCommits(request).Select(commit => ConvertToNgitlabCommit(commit, project));
+                return project.Repository.GetCommits(request).Select(commit => ConvertToNGitLabCommit(commit, project));
             }
         }
 
