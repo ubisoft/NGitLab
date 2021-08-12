@@ -323,6 +323,11 @@ namespace NGitLab.Mock
             }
         }
 
+        public IEnumerable<Commit> GetCommits()
+        {
+            return GetCommits(string.Empty);
+        }
+
         public IEnumerable<Commit> GetCommits(string @ref)
         {
             var filter = new CommitFilter
