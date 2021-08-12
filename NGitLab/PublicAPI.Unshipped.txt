@@ -619,6 +619,7 @@ NGitLab.Impl.SnippetClient.Delete(int projectId, int snippetId) -> void
 NGitLab.Impl.SnippetClient.Delete(int snippetId) -> void
 NGitLab.Impl.SnippetClient.ForProject(int projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Snippet>
 NGitLab.Impl.SnippetClient.Get(int projectId, int snippetId) -> NGitLab.Models.Snippet
+NGitLab.Impl.SnippetClient.GetContent(int projectId, int snippetId, System.Action<System.IO.Stream> parser) -> void
 NGitLab.Impl.SnippetClient.SnippetClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.SnippetClient.User.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Snippet>
 NGitLab.Impl.SshKeyClient
