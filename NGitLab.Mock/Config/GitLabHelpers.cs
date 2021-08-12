@@ -610,8 +610,8 @@ namespace NGitLab.Mock.Config
         /// </summary>
         /// <param name="group">Group.</param>
         /// <param name="user">Username (required)</param>
-        /// <param name="level">Access level.</param>
-        public static GitLabGroup WithUserPermission(this GitLabGroup group, string user, AccessLevel level = AccessLevel.Developer)
+        /// <param name="level">Access level (required)</param>
+        public static GitLabGroup WithUserPermission(this GitLabGroup group, string user, AccessLevel level)
         {
             return Configure(group, _ =>
             {
@@ -630,8 +630,8 @@ namespace NGitLab.Mock.Config
         /// </summary>
         /// <param name="project">Project.</param>
         /// <param name="user">Username (required)</param>
-        /// <param name="level">Access level.</param>
-        public static GitLabProject WithUserPermission(this GitLabProject project, string user, AccessLevel level = AccessLevel.Developer)
+        /// <param name="level">Access level (required)</param>
+        public static GitLabProject WithUserPermission(this GitLabProject project, string user, AccessLevel level)
         {
             return Configure(project, _ =>
             {
@@ -649,15 +649,15 @@ namespace NGitLab.Mock.Config
         /// Add group permission in group
         /// </summary>
         /// <param name="grp">Group.</param>
-        /// <param name="group">Group fullname (required)</param>
-        /// <param name="level">Access level.</param>
-        public static GitLabGroup WithGroupPermission(this GitLabGroup grp, string group, AccessLevel level = AccessLevel.Developer)
+        /// <param name="groupName">Group fullname (required)</param>
+        /// <param name="level">Access level (required)</param>
+        public static GitLabGroup WithGroupPermission(this GitLabGroup grp, string groupName, AccessLevel level)
         {
             return Configure(grp, _ =>
             {
                 var permission = new GitLabPermission
                 {
-                    Group = group ?? throw new ArgumentNullException(nameof(group)),
+                    Group = groupName ?? throw new ArgumentNullException(nameof(groupName)),
                     Level = level,
                 };
 
@@ -669,15 +669,15 @@ namespace NGitLab.Mock.Config
         /// Add group permission in project
         /// </summary>
         /// <param name="project">Project.</param>
-        /// <param name="group">Group fullname (required)</param>
-        /// <param name="level">Access level.</param>
-        public static GitLabProject WithGroupPermission(this GitLabProject project, string group, AccessLevel level = AccessLevel.Developer)
+        /// <param name="groupName">Group fullname (required)</param>
+        /// <param name="level">Access level (required)</param>
+        public static GitLabProject WithGroupPermission(this GitLabProject project, string groupName, AccessLevel level)
         {
             return Configure(project, _ =>
             {
                 var permission = new GitLabPermission
                 {
-                    Group = group ?? throw new ArgumentNullException(nameof(group)),
+                    Group = groupName ?? throw new ArgumentNullException(nameof(groupName)),
                     Level = level,
                 };
 
