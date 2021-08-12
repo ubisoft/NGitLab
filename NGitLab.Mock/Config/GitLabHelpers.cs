@@ -846,6 +846,7 @@ namespace NGitLab.Mock.Config
             return new GitLabServer
             {
                 DefaultBranchName = config.DefaultBranch ?? "main",
+                DefaultForkVisibilityLevel = config.DefaultVisibility,
                 Url = new Uri(Path.GetTempPath()),
             };
         }
