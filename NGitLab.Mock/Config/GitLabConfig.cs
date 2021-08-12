@@ -27,7 +27,7 @@ namespace NGitLab.Mock.Config
         /// <summary>
         /// Groups and projects default visibility
         /// </summary>
-        public VisibilityLevel DefaultVisibility { get; set; }
+        public VisibilityLevel DefaultVisibility { get; set; } = VisibilityLevel.Internal;
 
         public GitLabUsersCollection Users { get; }
 

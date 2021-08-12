@@ -220,7 +220,7 @@ namespace NGitLab.Mock.Config
             {
                 var project = new GitLabProject
                 {
-                    Name = name ?? Guid.NewGuid().ToString("D"),
+                    Name = name,
                 };
 
                 config.Projects.Add(project);
@@ -351,7 +351,7 @@ namespace NGitLab.Mock.Config
         /// <param name="targetBranch">Target branch (required if merge)</param>
         /// <param name="tags">Tags.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabProject WithCommit(this GitLabProject project, string message, string user = null, string sourceBranch = null, string targetBranch = null, IEnumerable<string> tags = null, Action<GitLabCommit> configure = null)
+        public static GitLabProject WithCommit(this GitLabProject project, string message = null, string user = null, string sourceBranch = null, string targetBranch = null, IEnumerable<string> tags = null, Action<GitLabCommit> configure = null)
         {
             return WithCommit(project, message, user, commit =>
             {
@@ -431,7 +431,7 @@ namespace NGitLab.Mock.Config
         /// Add an issue description in project
         /// </summary>
         /// <param name="project">Project.</param>
-        /// <param name="title">Title (required)</param>
+        /// <param name="title">Title.</param>
         /// <param name="author">Author username (required if default user not defined)</param>
         /// <param name="configure">Configuration method</param>
         public static GitLabProject WithIssue(this GitLabProject project, string title, string author, Action<GitLabIssue> configure)
@@ -440,7 +440,7 @@ namespace NGitLab.Mock.Config
             {
                 var issue = new GitLabIssue
                 {
-                    Title = title ?? throw new ArgumentNullException(nameof(title)),
+                    Title = title,
                     Author = author,
                 };
 
@@ -453,7 +453,7 @@ namespace NGitLab.Mock.Config
         /// Add an issue description in project
         /// </summary>
         /// <param name="project">Project.</param>
-        /// <param name="title">Title (required)</param>
+        /// <param name="title">Title.</param>
         /// <param name="id">Explicit ID (project increment)</param>
         /// <param name="description">Description.</param>
         /// <param name="author">Author username (required if default user nor defined)</param>
@@ -464,7 +464,7 @@ namespace NGitLab.Mock.Config
         /// <param name="closedAt">Close date time.</param>
         /// <param name="labels">Labels names.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabProject WithIssue(this GitLabProject project, string title, int id = default, string description = null, string author = null, string assignee = null, string milestone = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, IEnumerable<string> labels = null, Action<GitLabIssue> configure = null)
+        public static GitLabProject WithIssue(this GitLabProject project, string title = null, int id = default, string description = null, string author = null, string assignee = null, string milestone = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, IEnumerable<string> labels = null, Action<GitLabIssue> configure = null)
         {
             return WithIssue(project, title, author, issue =>
             {
@@ -506,7 +506,7 @@ namespace NGitLab.Mock.Config
         /// Add merge request description in project
         /// </summary>
         /// <param name="project">Project.</param>
-        /// <param name="title">Title (required)</param>
+        /// <param name="title">Title.</param>
         /// <param name="sourceBranch">Source branch (required)</param>
         /// <param name="author">Author username (required if default user not defined)</param>
         /// <param name="configure">Configuration method</param>
@@ -516,7 +516,7 @@ namespace NGitLab.Mock.Config
             {
                 var mergeRequest = new GitLabMergeRequest
                 {
-                    Title = title ?? throw new ArgumentNullException(nameof(title)),
+                    Title = title,
                     Author = author,
                     SourceBranch = sourceBranch ?? throw new ArgumentNullException(nameof(sourceBranch)),
                     TargetBranch = project.DefaultBranch,
@@ -531,8 +531,8 @@ namespace NGitLab.Mock.Config
         /// Add merge request description in project
         /// </summary>
         /// <param name="project">Project.</param>
-        /// <param name="title">Title (required)</param>
         /// <param name="sourceBranch">Source branch (required)</param>
+        /// <param name="title">Title.</param>
         /// <param name="id">Explicit ID (project increment)</param>
         /// <param name="targetBranch">Target branch (use default branch if null)</param>
         /// <param name="description">Description.</param>
@@ -545,7 +545,7 @@ namespace NGitLab.Mock.Config
         /// <param name="approvers">Approvers usernames.</param>
         /// <param name="labels">Labels names.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabProject WithMergeRequest(this GitLabProject project, string title, string sourceBranch, int id = default, string targetBranch = null, string description = null, string author = null, string assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string> approvers = null, IEnumerable<string> labels = null, Action<GitLabMergeRequest> configure = null)
+        public static GitLabProject WithMergeRequest(this GitLabProject project, string sourceBranch, string title = null, int id = default, string targetBranch = null, string description = null, string author = null, string assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string> approvers = null, IEnumerable<string> labels = null, Action<GitLabMergeRequest> configure = null)
         {
             return WithMergeRequest(project, title, sourceBranch, author, mergeRequest =>
             {
@@ -894,7 +894,7 @@ namespace NGitLab.Mock.Config
 
         private static void CreateProject(GitLabServer server, GitLabProject project)
         {
-            var prj = new Project(project.Name ?? throw new ArgumentException(@"project.Name == null", nameof(project)))
+            var prj = new Project(project.Name ?? Guid.NewGuid().ToString("D"))
             {
                 Id = project.Id,
                 Description = project.Description,
@@ -1030,7 +1030,7 @@ namespace NGitLab.Mock.Config
             var request = new MergeRequest
             {
                 Iid = mergeRequest.Id,
-                Title = mergeRequest.Title ?? throw new ArgumentException(@"mergeRequest.Title == null", nameof(mergeRequest)),
+                Title = mergeRequest.Title ?? Guid.NewGuid().ToString("D"),
                 Description = mergeRequest.Description,
                 Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, mergeRequestAuthor, StringComparison.Ordinal))),
                 Assignee = string.IsNullOrEmpty(mergeRequestAssignee) ? null : new UserRef(server.Users.First(x => string.Equals(x.UserName, mergeRequestAssignee, StringComparison.Ordinal))),

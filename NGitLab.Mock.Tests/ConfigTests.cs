@@ -77,8 +77,8 @@ namespace NGitLab.Mock.Tests
                         .WithCommit("Initial commit")
                         .WithCommit("Create branch", sourceBranch: "branch-01")
                         .WithIssue("Issue #1")
-                        .WithMergeRequest("Merge request #1", "branch-01")
-                        .WithUserPermission("user1"))
+                        .WithMergeRequest("branch-01", title: "Merge request #1")
+                        .WithUserPermission("user1", AccessLevel.Maintainer))
                 .WithProject("project-2");
 
             var content = config.Serialize();

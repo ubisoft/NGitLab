@@ -14,8 +14,8 @@ namespace NGitLab.Mock.Tests
                 .WithUser("user1", isDefault: true)
                 .WithUser("user2")
                 .WithProject("Test", configure: project => project
-                    .WithMergeRequest("Merge request 1", "branch-01", author: "user1", assignee: "user2")
-                    .WithMergeRequest("Merge request 2", "branch-02", author: "user2", assignee: "user1"))
+                    .WithMergeRequest("branch-01", title: "Merge request 1", author: "user1", assignee: "user2")
+                    .WithMergeRequest("branch-02", title: "Merge request 2", author: "user2", assignee: "user1"))
                 .BuildServer();
 
             var client = server.CreateClient("user1");
@@ -32,8 +32,8 @@ namespace NGitLab.Mock.Tests
                 .WithUser("user1", isDefault: true)
                 .WithUser("user2")
                 .WithProject("Test", configure: project => project
-                    .WithMergeRequest("Merge request 1", "branch-01", author: "user1", assignee: "user2")
-                    .WithMergeRequest("Merge request 2", "branch-02", author: "user2", assignee: "user1"))
+                    .WithMergeRequest("branch-01", title: "Merge request 1", author: "user1", assignee: "user2")
+                    .WithMergeRequest("branch-02", title: "Merge request 2", author: "user2", assignee: "user1"))
                 .BuildServer();
 
             var client = server.CreateClient("user1");
@@ -50,8 +50,8 @@ namespace NGitLab.Mock.Tests
                 .WithUser("user1", isDefault: true)
                 .WithUser("user2")
                 .WithProject("Test", configure: project => project
-                    .WithMergeRequest("Merge request 1", "branch-01", author: "user1", approvers: new[] { "user2" })
-                    .WithMergeRequest("Merge request 2", "branch-02", author: "user2", approvers: new[] { "user1" }))
+                    .WithMergeRequest("branch-01", title: "Merge request 1", author: "user1", approvers: new[] { "user2" })
+                    .WithMergeRequest("branch-02", title: "Merge request 2", author: "user2", approvers: new[] { "user1" }))
                 .BuildServer();
 
             var client = server.CreateClient("user1");
