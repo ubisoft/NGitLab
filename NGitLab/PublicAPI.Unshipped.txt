@@ -2677,6 +2677,7 @@ NGitLab.Models.User.ExternUid -> string
 NGitLab.Models.User.Id -> int
 NGitLab.Models.User.Identities -> NGitLab.Models.Identity[]
 NGitLab.Models.User.IsAdmin -> bool
+NGitLab.Models.User.LastActivityOn -> System.DateTime
 NGitLab.Models.User.Linkedin -> string
 NGitLab.Models.User.Name -> string
 NGitLab.Models.User.Provider -> string

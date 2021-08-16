@@ -28,7 +28,17 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Tree> Tree => throw new NotImplementedException();
 
-        public IEnumerable<Commit> Commits => throw new NotImplementedException();
+        public IEnumerable<Commit> Commits
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    var project = GetProject(_projectId, ProjectPermission.View);
+                    return project.Repository.GetCommits().Select(commit => ConvertToNGitLabCommit(commit, project));
+                }
+            }
+        }
 
         public IEnumerable<Tree> GetTree(string path)
         {
@@ -60,7 +70,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetCommits(refName).Select(commit => commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal)))).ToList();
+                return project.Repository.GetCommits(refName).Select(commit => ConvertToNGitLabCommit(commit, project));
             }
         }
 
@@ -69,7 +79,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetCommits(request).Select(commit => commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal))));
+                return project.Repository.GetCommits(request).Select(commit => ConvertToNGitLabCommit(commit, project));
             }
         }
 
@@ -86,6 +96,11 @@ namespace NGitLab.Mock.Clients
         public IEnumerable<Ref> GetCommitRefs(Sha1 sha, CommitRefType type = CommitRefType.All)
         {
             throw new NotImplementedException();
+        }
+
+        private Commit ConvertToNGitLabCommit(LibGit2Sharp.Commit commit, Project project)
+        {
+            return commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal)));
         }
     }
 }

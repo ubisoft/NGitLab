@@ -323,6 +323,11 @@ namespace NGitLab.Mock
             }
         }
 
+        public IEnumerable<Commit> GetCommits()
+        {
+            return GetCommits(string.Empty);
+        }
+
         public IEnumerable<Commit> GetCommits(string @ref)
         {
             var filter = new CommitFilter
@@ -355,7 +360,7 @@ namespace NGitLab.Mock
 
             var tag = repository.Tags[reference];
             if (tag?.PeeledTarget is Commit commit)
-                return branchTip;
+                return commit;
 
             return repository.Commits.SingleOrDefault(c => string.Equals(c.Sha, reference, StringComparison.Ordinal));
         }
