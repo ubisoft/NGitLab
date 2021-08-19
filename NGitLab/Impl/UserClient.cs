@@ -17,6 +17,8 @@ namespace NGitLab.Impl
 
         public IEnumerable<User> Search(string query) => _api.Get().GetAll<User>(User.Url + $"?search={query}");
 
+        public IEnumerable<User> Filter(string query) => _api.Get().GetAll<User>(User.Url + $"?{query}");
+
         public User this[int id] => _api.Get().To<User>(User.Url + "/" + id.ToStringInvariant());
 
         public IEnumerable<User> Get(string username) => _api.Get().GetAll<User>(User.Url + "?username=" + username);

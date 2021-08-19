@@ -9,6 +9,8 @@ namespace NGitLab
 
         IEnumerable<User> Search(string query);
 
+        IEnumerable<User> Filter(string query);
+
         User this[int id] { get; }
 
         User Create(UserUpsert user);
