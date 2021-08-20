@@ -127,14 +127,6 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public IEnumerable<Models.User> Filter(string query)
-        {
-            using (Context.BeginOperationScope())
-            {
-                return Server.Users.SearchByUsername(query).Select(user => user.ToClientUser()).ToList();
-            }
-        }
-
         public ISshKeyClient SShKeys(int userId)
         {
             throw new NotImplementedException();

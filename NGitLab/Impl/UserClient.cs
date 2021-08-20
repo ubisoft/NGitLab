@@ -17,8 +17,6 @@ namespace NGitLab.Impl
 
         public IEnumerable<User> Search(string query) => _api.Get().GetAll<User>(User.Url + $"?search={query}");
 
-        public IEnumerable<User> Filter(string query) => _api.Get().GetAll<User>(User.Url + $"?{query}");
-
         public User this[int id] => _api.Get().To<User>(User.Url + "/" + id.ToStringInvariant());
 
         public IEnumerable<User> Get(string username) => _api.Get().GetAll<User>(User.Url + "?username=" + username);
@@ -36,6 +34,12 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "per_page", query.PerPage);
             url = Utils.AddParameter(url, "order_by", query.OrderBy);
             url = Utils.AddParameter(url, "sort", query.Sort);
+            url = Utils.AddParameter(url, "extern_uid", query.ExternalUid);
+            url = Utils.AddParameter(url, "provider", query.Provider);
+            url = Utils.AddParameter(url, "without_projects", query.WithoutProjects);
+            url = Utils.AddParameter(url, "created_before", query.CreatedBefore);
+            url = Utils.AddParameter(url, "created_after", query.CreatedAfter);
+            url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
 
             return _api.Get().GetAll<User>(url);
         }
