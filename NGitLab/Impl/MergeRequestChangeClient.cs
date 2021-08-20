@@ -20,6 +20,6 @@ namespace NGitLab
             _changesPath = projectPath + "/merge_requests/" + iid + "/changes";
         }
 
-        public MergeRequestChange MergeRequestChange =>  _api.Get().To<MergeRequestChange>(_changesPath);
+        public MergeRequestChange MergeRequestChange => _api.Get().To<MergeRequestChange>(_changesPath);
     }
 }

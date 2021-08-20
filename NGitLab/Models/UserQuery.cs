@@ -50,9 +50,9 @@
         /// <summary>
         /// (Admin only) Search users based on external UID
         /// </summary>
-        public string ExternalUid {  get; set; }
+        public string ExternalUid { get; set; }
 
-        // <summary>
+        /// <summary>
         /// (Admin only) Search users based on Provider
         /// </summary>
         public string Provider { get; set; }
@@ -61,7 +61,6 @@
         /// (Admin only) Search for users without projects
         /// </summary>
         public bool? WithoutProjects { get; set; }
-
 
         /// <summary>
         /// (Admin only) Search for users created before specified date time
@@ -78,20 +77,17 @@
         /// <summary>
         /// (Admin only) Include the users custom attributes in the response
         /// </summary>
-        public bool? WithCustomAttributes {  get; set; }
-
+        public bool? WithCustomAttributes { get; set; }
 
         /// <summary>
         /// (Admin only) Gets users that have two factor either enabled or disabled
         /// Possible values: "enabled", "disabled"
         /// </summary>
-        public string TwoFactor { get; set;}
-
+        public string TwoFactor { get; set; }
 
         /// <summary>
         /// (Admin only)If true, get only users that are Admin
         /// </summary>
         public bool? IsAdmin { get; set; }
-
     }
 }

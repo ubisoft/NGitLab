@@ -15,6 +15,6 @@ namespace NGitLab.Models
         /// (optional) - Current user’s password. Required if Require user password to approve is enabled in the project settings.
         /// </summary>
         [DataMember(Name = "approval_password ")]
-        public string ApprovalPassword  { get; set; }
+        public string ApprovalPassword { get; set; }
     }
 }

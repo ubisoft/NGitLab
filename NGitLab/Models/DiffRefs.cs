@@ -6,7 +6,7 @@ namespace NGitLab.Models
     public class DiffRefs
     {
         [field: DataMember(Name = "base_sha")]
-        public string BaseSha { get; set;  }
+        public string BaseSha { get; set; }
 
         [DataMember(Name = "head_sha")]
         public string HeadSha { get; set; }

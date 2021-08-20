@@ -150,7 +150,5 @@ namespace NGitLab.Models
 
         [DataMember(Name = "provisioned_by_group_id")]
         public int ProvisionedByGroupId;
-
-
     }
 }
