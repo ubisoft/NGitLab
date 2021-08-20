@@ -1,4 +1,6 @@
-﻿namespace NGitLab
+using System;﻿
+
+namespace NGitLab
 {
     public class UserQuery
     {
