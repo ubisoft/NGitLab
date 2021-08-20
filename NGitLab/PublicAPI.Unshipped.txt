@@ -2823,9 +2823,9 @@ NGitLab.Sha1.Equals(NGitLab.Sha1 other) -> bool
 NGitLab.Sha1.Sha1() -> void
 NGitLab.Sha1.Sha1(string value) -> void
 NGitLab.UserQuery
-NGitLab.UserQuery.CreatedAfter.get -> string
+NGitLab.UserQuery.CreatedAfter.get -> System.DateTime?
 NGitLab.UserQuery.CreatedAfter.set -> void
-NGitLab.UserQuery.CreatedBefore.get -> string
+NGitLab.UserQuery.CreatedBefore.get -> System.DateTime?
 NGitLab.UserQuery.CreatedBefore.set -> void
 NGitLab.UserQuery.ExcludeExternal.get -> bool?
 NGitLab.UserQuery.ExcludeExternal.set -> void
