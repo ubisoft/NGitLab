@@ -40,6 +40,8 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "created_before", query.CreatedBefore);
             url = Utils.AddParameter(url, "created_after", query.CreatedAfter);
             url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
+            url = Utils.AddParameter(url, "two_factor", query.TwoFactor);
+            url = Utils.AddParameter(url, "admins", query.IsAdmin);
 
             return _api.Get().GetAll<User>(url);
         }

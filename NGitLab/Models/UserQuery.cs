@@ -80,5 +80,18 @@
         /// </summary>
         public bool? WithCustomAttributes {  get; set; }
 
+
+        /// <summary>
+        /// (Admin only) Gets users that have two factor either enabled or disabled
+        /// Possible values: "enabled", "disabled"
+        /// </summary>
+        public string TwoFactor { get; set;}
+
+
+        /// <summary>
+        /// (Admin only)If true, get only users that are Admin
+        /// </summary>
+        public bool? IsAdmin { get; set; }
+
     }
 }
