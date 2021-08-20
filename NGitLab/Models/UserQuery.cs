@@ -66,7 +66,7 @@
         /// (Admin only) Search for users created before specified date time
         /// Format: "YYYY-MM-DDThh:mm:ss.sTZD" eg. "2001-01-02T00:00:00.060Z"
         /// </summary>
-        public string CreatedBefore { get; set; }
+        public DateTime? CreatedBefore { get; set; }
 
         /// <summary>
         /// (Admin only) Search for users created after specified date time
