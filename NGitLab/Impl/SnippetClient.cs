@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -43,5 +45,8 @@ namespace NGitLab.Impl
         public void Delete(int snippetId) => _api.Delete().Execute($"{SnippetUrl}/{snippetId.ToStringInvariant()}");
 
         public void Delete(int projectId, int snippetId) => _api.Delete().Execute($"{ProjectUrl}/{projectId.ToStringInvariant()}/snippets/{snippetId.ToStringInvariant()}");
+
+        public void GetContent(int projectId, int snippetId, Action<Stream> parser)
+            => _api.Get().Stream($"{ProjectUrl}/{projectId.ToStringInvariant()}/snippets/{snippetId.ToStringInvariant()}/raw", parser);
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -10,38 +12,43 @@ namespace NGitLab.Mock.Clients
         {
         }
 
-        public IEnumerable<Snippet> All => throw new System.NotImplementedException();
+        public IEnumerable<Snippet> All => throw new NotImplementedException();
 
-        public IEnumerable<Snippet> User => throw new System.NotImplementedException();
+        public IEnumerable<Snippet> User => throw new NotImplementedException();
 
         public void Create(SnippetCreate snippet)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void Create(SnippetProjectCreate snippet)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void Delete(int snippetId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void Delete(int projectId, int snippetId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IEnumerable<Snippet> ForProject(int projectId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Snippet Get(int projectId, int snippetId)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+
+        public void GetContent(int projectId, int snippetId, Action<Stream> parser)
+        {
+            throw new NotImplementedException();
         }
     }
 }

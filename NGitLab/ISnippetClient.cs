@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -41,5 +43,10 @@ namespace NGitLab
         /// Delete a snippet linked to a project
         /// </summary>
         void Delete(int projectId, int snippetId);
+
+        /// <summary>
+        /// Get single snippet's content for a given project
+        /// </summary>
+        void GetContent(int projectId, int snippetId, Action<Stream> parser);
     }
 }
