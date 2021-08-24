@@ -1,5 +1,5 @@
 using System;
-using System.Runtime.Serialization;
+using NGitLab.Models;
 
 namespace NGitLab
 {
@@ -92,13 +92,5 @@ namespace NGitLab
         /// (Admin only)If true, get only users that are Admin
         /// </summary>
         public bool? IsAdmin { get; set; }
-
-        public enum TwoFactorState
-        {
-            [EnumMember(Value = "enabled")]
-            Enabled,
-            [EnumMember(Value = "disabled")]
-            Disabled,
-        }
     }
 }
