@@ -19,7 +19,7 @@ namespace NGitLab.Impl
             _releasesPath = projectPath + "/releases";
         }
 
-        public IEnumerable<ReleaseInfo> All  => _api.Get().GetAll<ReleaseInfo>(_releasesPath);
+        public IEnumerable<ReleaseInfo> All => _api.Get().GetAll<ReleaseInfo>(_releasesPath);
 
         public ReleaseInfo this[string tagName] => _api.Get().To<ReleaseInfo>($"{_releasesPath}/{Uri.EscapeDataString(tagName)}");
 

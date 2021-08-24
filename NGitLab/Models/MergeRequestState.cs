@@ -2,12 +2,12 @@
 {
     public enum MergeRequestState
     {
-// ReSharper disable InconsistentNaming
+        // ReSharper disable InconsistentNaming
         opened,
         closed,
         merged,
         locked,
 
-// ReSharper restore InconsistentNaming
+        // ReSharper restore InconsistentNaming
     }
 }

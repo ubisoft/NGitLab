@@ -10,5 +10,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "extern_uid")]
         public string ExternUid;
+
+        [DataMember(Name = "saml_provider_id")]
+        public int? SamlProviderId;
     }
 }

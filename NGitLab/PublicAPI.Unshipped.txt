@@ -1462,6 +1462,7 @@ NGitLab.Models.Identity
 NGitLab.Models.Identity.ExternUid -> string
 NGitLab.Models.Identity.Identity() -> void
 NGitLab.Models.Identity.Provider -> string
+NGitLab.Models.Identity.SamlProviderId -> int?
 NGitLab.Models.Issue
 NGitLab.Models.Issue.Assignee -> NGitLab.Models.Assignee
 NGitLab.Models.Issue.Assignees -> NGitLab.Models.Assignee[]
@@ -2654,6 +2655,9 @@ NGitLab.Models.Trigger.LastUsed -> System.DateTime
 NGitLab.Models.Trigger.Token -> string
 NGitLab.Models.Trigger.Trigger() -> void
 NGitLab.Models.Trigger.UpdatedAt -> System.DateTime
+NGitLab.Models.TwoFactorState
+NGitLab.Models.TwoFactorState.Disabled = 1 -> NGitLab.Models.TwoFactorState
+NGitLab.Models.TwoFactorState.Enabled = 0 -> NGitLab.Models.TwoFactorState
 NGitLab.Models.UploadedProjectFile
 NGitLab.Models.UploadedProjectFile.Alt.get -> string
 NGitLab.Models.UploadedProjectFile.Alt.set -> void
@@ -2667,27 +2671,51 @@ NGitLab.Models.UploadedProjectFile.Url.set -> void
 NGitLab.Models.User
 NGitLab.Models.User.AvatarURL -> string
 NGitLab.Models.User.Bio -> string
+NGitLab.Models.User.BioHtml -> string
 NGitLab.Models.User.Blocked -> bool
+NGitLab.Models.User.Bot -> bool
 NGitLab.Models.User.CanCreateGroup -> bool
 NGitLab.Models.User.CanCreateProject -> bool
 NGitLab.Models.User.ColorSchemeId -> int
+NGitLab.Models.User.CommitEmail -> string
+NGitLab.Models.User.ConfirmedAt -> System.DateTime
 NGitLab.Models.User.CreatedAt -> System.DateTime
+NGitLab.Models.User.CurrentSignIn -> System.DateTime
 NGitLab.Models.User.Email -> string
+NGitLab.Models.User.External -> bool
 NGitLab.Models.User.ExternUid -> string
+NGitLab.Models.User.ExtraSharedRunnersMinutesLimit -> int
+NGitLab.Models.User.Followers -> int
+NGitLab.Models.User.Following -> int
 NGitLab.Models.User.Id -> int
 NGitLab.Models.User.Identities -> NGitLab.Models.Identity[]
 NGitLab.Models.User.IsAdmin -> bool
+NGitLab.Models.User.IsAuditor -> bool
+NGitLab.Models.User.JobTitle -> string
 NGitLab.Models.User.LastActivityOn -> System.DateTime
+NGitLab.Models.User.LastSignIn -> System.DateTime
 NGitLab.Models.User.Linkedin -> string
+NGitLab.Models.User.Location -> string
 NGitLab.Models.User.Name -> string
+NGitLab.Models.User.Note -> string
+NGitLab.Models.User.Organization -> string
+NGitLab.Models.User.PrivateProfile -> bool
+NGitLab.Models.User.ProjectsLimit -> int
 NGitLab.Models.User.Provider -> string
+NGitLab.Models.User.ProvisionedByGroupId -> int
+NGitLab.Models.User.PublicEmail -> string
+NGitLab.Models.User.SharedRunnersMinutesLimit -> int
 NGitLab.Models.User.Skype -> string
 NGitLab.Models.User.State -> string
 NGitLab.Models.User.ThemeId -> int
 NGitLab.Models.User.Twitter -> string
+NGitLab.Models.User.TwoFactorEnabled -> bool
 NGitLab.Models.User.User() -> void
 NGitLab.Models.User.Username -> string
+NGitLab.Models.User.UsingLicenseSeat -> bool
 NGitLab.Models.User.WebsiteURL -> string
+NGitLab.Models.User.WebURL -> string
+NGitLab.Models.User.WorkInformation -> string
 NGitLab.Models.UserToken
 NGitLab.Models.UserToken.Active.get -> bool
 NGitLab.Models.UserToken.Active.set -> void
@@ -2799,10 +2827,18 @@ NGitLab.Sha1.Equals(NGitLab.Sha1 other) -> bool
 NGitLab.Sha1.Sha1() -> void
 NGitLab.Sha1.Sha1(string value) -> void
 NGitLab.UserQuery
+NGitLab.UserQuery.CreatedAfter.get -> System.DateTime?
+NGitLab.UserQuery.CreatedAfter.set -> void
+NGitLab.UserQuery.CreatedBefore.get -> System.DateTime?
+NGitLab.UserQuery.CreatedBefore.set -> void
 NGitLab.UserQuery.ExcludeExternal.get -> bool?
 NGitLab.UserQuery.ExcludeExternal.set -> void
+NGitLab.UserQuery.ExternalUid.get -> string
+NGitLab.UserQuery.ExternalUid.set -> void
 NGitLab.UserQuery.IsActive.get -> bool?
 NGitLab.UserQuery.IsActive.set -> void
+NGitLab.UserQuery.IsAdmin.get -> bool?
+NGitLab.UserQuery.IsAdmin.set -> void
 NGitLab.UserQuery.IsBlocked.get -> bool?
 NGitLab.UserQuery.IsBlocked.set -> void
 NGitLab.UserQuery.IsExternal.get -> bool?
@@ -2811,13 +2847,21 @@ NGitLab.UserQuery.OrderBy.get -> string
 NGitLab.UserQuery.OrderBy.set -> void
 NGitLab.UserQuery.PerPage.get -> int?
 NGitLab.UserQuery.PerPage.set -> void
+NGitLab.UserQuery.Provider.get -> string
+NGitLab.UserQuery.Provider.set -> void
 NGitLab.UserQuery.Search.get -> string
 NGitLab.UserQuery.Search.set -> void
 NGitLab.UserQuery.Sort.get -> string
 NGitLab.UserQuery.Sort.set -> void
+NGitLab.UserQuery.TwoFactor.get -> NGitLab.Models.TwoFactorState?
+NGitLab.UserQuery.TwoFactor.set -> void
 NGitLab.UserQuery.Username.get -> string
 NGitLab.UserQuery.Username.set -> void
 NGitLab.UserQuery.UserQuery() -> void
+NGitLab.UserQuery.WithCustomAttributes.get -> bool?
+NGitLab.UserQuery.WithCustomAttributes.set -> void
+NGitLab.UserQuery.WithoutProjects.get -> bool?
+NGitLab.UserQuery.WithoutProjects.set -> void
 override NGitLab.DynamicEnum<TEnum>.Equals(object obj) -> bool
 override NGitLab.DynamicEnum<TEnum>.GetHashCode() -> int
 override NGitLab.DynamicEnum<TEnum>.ToString() -> string
