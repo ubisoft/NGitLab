@@ -108,7 +108,6 @@ namespace NGitLab.Models
         [DataMember(Name = "extern_uid")]
         public string ExternUid;
 
-        [Obsolete("This does not match GitLab's Api. Use State instead")]
         [DataMember(Name = "blocked")]
         public bool Blocked;
 

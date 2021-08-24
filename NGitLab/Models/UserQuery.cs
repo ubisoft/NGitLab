@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace NGitLab
 {
@@ -85,11 +86,19 @@ namespace NGitLab
         /// (Admin only) Gets users that have two factor either enabled or disabled
         /// Possible values: "enabled", "disabled"
         /// </summary>
-        public string TwoFactor { get; set; }
+        public TwoFactorState? TwoFactor { get; set; }
 
         /// <summary>
         /// (Admin only)If true, get only users that are Admin
         /// </summary>
         public bool? IsAdmin { get; set; }
+
+        public enum TwoFactorState
+        {
+            [EnumMember(Value = "enabled")]
+            Enabled,
+            [EnumMember(Value = "disabled")]
+            Disabled,
+        }
     }
 }

@@ -2850,8 +2850,11 @@ NGitLab.UserQuery.Search.get -> string
 NGitLab.UserQuery.Search.set -> void
 NGitLab.UserQuery.Sort.get -> string
 NGitLab.UserQuery.Sort.set -> void
-NGitLab.UserQuery.TwoFactor.get -> string
+NGitLab.UserQuery.TwoFactor.get -> NGitLab.UserQuery.TwoFactorState?
 NGitLab.UserQuery.TwoFactor.set -> void
+NGitLab.UserQuery.TwoFactorState
+NGitLab.UserQuery.TwoFactorState.Disabled = 1 -> NGitLab.UserQuery.TwoFactorState
+NGitLab.UserQuery.TwoFactorState.Enabled = 0 -> NGitLab.UserQuery.TwoFactorState
 NGitLab.UserQuery.Username.get -> string
 NGitLab.UserQuery.Username.set -> void
 NGitLab.UserQuery.UserQuery() -> void
