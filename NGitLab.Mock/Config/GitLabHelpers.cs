@@ -760,41 +760,6 @@ namespace NGitLab.Mock.Config
                 CreateProject(server, project);
             }
 
-            foreach (var project in config.Projects)
-            {
-                if (string.IsNullOrEmpty(project.ClonePath))
-                    continue;
-
-                var projectNamespace = project.Namespace;
-                var projectName = project.Name;
-                var remoteUrl = server.AllProjects.FindProject($"{projectNamespace}/{projectName}").SshUrl;
-
-                var folderPath = Path.GetDirectoryName(Path.GetFullPath(project.ClonePath));
-                if (!Directory.Exists(folderPath))
-                    Directory.CreateDirectory(folderPath!);
-
-                // libgit2sharp cannot clone with an other folder name
-                using var process = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = "git",
-                        Arguments = $"clone \"{remoteUrl}\" \"{Path.GetFileName(project.ClonePath)}\"",
-                        RedirectStandardError = true,
-                        UseShellExecute = false,
-                        WorkingDirectory = folderPath,
-                    },
-                };
-
-                process.Start();
-                process.WaitForExit();
-                if (process.ExitCode != 0)
-                {
-                    var error = process.StandardError.ReadToEnd();
-                    throw new GitLabException($"Cannot clone '{projectNamespace}/{projectName}' in '{project.ClonePath}': {error}");
-                }
-            }
-
             return server;
         }
 
@@ -937,6 +902,34 @@ namespace NGitLab.Mock.Config
             foreach (var permission in project.Permissions)
             {
                 CreatePermission(server, prj, permission);
+            }
+
+            if (!string.IsNullOrEmpty(project.ClonePath))
+            {
+                var folderPath = Path.GetDirectoryName(Path.GetFullPath(project.ClonePath));
+                if (!Directory.Exists(folderPath))
+                    Directory.CreateDirectory(folderPath!);
+
+                // libgit2sharp cannot clone with an other folder name
+                using var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "git",
+                        Arguments = $"clone \"{prj.SshUrl}\" \"{Path.GetFileName(project.ClonePath)}\"",
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        WorkingDirectory = folderPath,
+                    },
+                };
+
+                process.Start();
+                process.WaitForExit();
+                if (process.ExitCode != 0)
+                {
+                    var error = process.StandardError.ReadToEnd();
+                    throw new GitLabException($"Cannot clone '{prj.PathWithNamespace}' in '{project.ClonePath}': {error}");
+                }
             }
         }
 
