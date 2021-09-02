@@ -379,14 +379,16 @@ namespace NGitLab.Mock.Config
         /// <param name="sourceBranch">Source branch (required)</param>
         /// <param name="targetBranch">Target branch</param>
         /// <param name="user">Author username (required if default user not defined)</param>
+        /// <param name="deleteSourceBranch">Indicates if source branch must be deleted after merge.</param>
         /// <param name="tags">Tags.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabProject WithMergeCommit(this GitLabProject project, string sourceBranch, string? targetBranch = null, string? user = null, IEnumerable<string>? tags = null, Action<GitLabCommit>? configure = null)
+        public static GitLabProject WithMergeCommit(this GitLabProject project, string sourceBranch, string? targetBranch = null, string? user = null, bool deleteSourceBranch = false, IEnumerable<string>? tags = null, Action<GitLabCommit>? configure = null)
         {
             return WithCommit(project, $"Merge '{sourceBranch}' into '{targetBranch ?? project.DefaultBranch}'", user, commit =>
             {
                 commit.SourceBranch = sourceBranch ?? throw new ArgumentNullException(nameof(sourceBranch));
                 commit.TargetBranch = targetBranch ?? project.DefaultBranch;
+                commit.DeleteSourceBranch = deleteSourceBranch;
                 if (tags != null)
                 {
                     foreach (var tag in tags)
@@ -952,6 +954,8 @@ namespace NGitLab.Mock.Config
             else
             {
                 prj.Repository.Merge(user, commit.SourceBranch, targetBranch);
+                if (commit.DeleteSourceBranch)
+                    prj.Repository.RemoveBranch(targetBranch);
             }
 
             foreach (var tag in commit.Tags)
