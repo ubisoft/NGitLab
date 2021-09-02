@@ -30,6 +30,11 @@ namespace NGitLab.Mock.Config
         /// Target branch for a merge commit (required for merge commit)
         /// </summary>
         public string TargetBranch { get; set; }
+
+        /// <summary>
+        /// Indicates if source branch must be deleted after merge
+        /// </summary>
+        public bool DeleteSourceBranch { get; set; }
     }
 
     public class GitLabCommitsCollection : GitLabCollection<GitLabCommit, GitLabProject>
