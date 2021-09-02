@@ -1040,6 +1040,13 @@ namespace NGitLab.Mock.Config
                 SourceProject = project,
             };
 
+            var endedAt = request.MergedAt ?? request.ClosedAt;
+            if (endedAt != null && mergeRequest.UpdatedAt == null && request.UpdatedAt > endedAt)
+                request.UpdatedAt = (DateTimeOffset)endedAt;
+
+            if (request.CreatedAt > request.UpdatedAt)
+                request.CreatedAt = request.UpdatedAt;
+
             foreach (var label in mergeRequest.Labels)
             {
                 request.Labels.Add(label);

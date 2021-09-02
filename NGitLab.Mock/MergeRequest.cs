@@ -159,6 +159,8 @@ namespace NGitLab.Mock
                 Author = Author.ToUserClient(),
                 CreatedAt = CreatedAt.UtcDateTime,
                 UpdatedAt = UpdatedAt.UtcDateTime,
+                MergedAt = MergedAt?.UtcDateTime,
+                ClosedAt = ClosedAt?.UtcDateTime,
                 Description = Description,
                 Id = Id,
                 Iid = Iid,
