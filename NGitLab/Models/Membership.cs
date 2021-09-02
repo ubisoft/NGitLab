@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
+#pragma warning disable RS0037 // Activate nullable values in public API
+#nullable enable
+
 namespace NGitLab.Models
 {
     [DataContract]
@@ -33,6 +36,9 @@ namespace NGitLab.Models
         [DataMember(Name = "state")]
         public string State;
 
+        /// <summary>
+        /// Membership creation date
+        /// </summary>
         [DataMember(Name = "created_at")]
         public DateTime CreatedAt;
 
@@ -41,5 +47,11 @@ namespace NGitLab.Models
         /// </summary>
         [DataMember(Name = "access_level")]
         public int AccessLevel;
+
+        /// <summary>
+        /// Membership expiration date
+        /// </summary>
+        [DataMember(Name = "expires_at")]
+        public DateTime? ExpiresAt;
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿#nullable enable
+
+using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
@@ -10,5 +12,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "access_level")]
         public AccessLevel AccessLevel;
+
+        [DataMember(Name = "expires_at")]
+        public string? ExpiresAt;
     }
 }
