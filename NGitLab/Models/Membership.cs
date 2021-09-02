@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-#pragma warning disable RS0037 // Activate nullable values in public API
-#nullable enable
-
 namespace NGitLab.Models
 {
     [DataContract]
