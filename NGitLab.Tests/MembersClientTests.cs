@@ -20,7 +20,7 @@ namespace NGitLab.Tests
             context.CreateNewUser(out var user);
             var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
 
-            var expiresAt = DateTime.UtcNow.AddDays(30).ToString("yyyy-MM-dd");
+            var expiresAt = DateTimeOffset.UtcNow.AddDays(30).ToString("yyyy-MM-dd");
             context.Client.Members.AddMemberToProject(projectId, new ProjectMemberCreate
             {
                 AccessLevel = AccessLevel.Developer,
