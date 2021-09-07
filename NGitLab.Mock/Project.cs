@@ -322,6 +322,7 @@ namespace NGitLab.Mock
             {
                 Id = Id,
                 Name = Name,
+                Description = Description,
                 Path = Path,
                 PathWithNamespace = PathWithNamespace,
                 ForkedFromProject = ForkedFrom?.ToClientProject(),
