@@ -33,6 +33,9 @@ namespace NGitLab.Models
         [DataMember(Name = "state")]
         public string State;
 
+        /// <summary>
+        /// Membership creation date
+        /// </summary>
         [DataMember(Name = "created_at")]
         public DateTime CreatedAt;
 
@@ -41,5 +44,11 @@ namespace NGitLab.Models
         /// </summary>
         [DataMember(Name = "access_level")]
         public int AccessLevel;
+
+        /// <summary>
+        /// Membership expiration date
+        /// </summary>
+        [DataMember(Name = "expires_at")]
+        public DateTime? ExpiresAt;
     }
 }

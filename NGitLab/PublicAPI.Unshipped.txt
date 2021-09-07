@@ -1646,6 +1646,7 @@ NGitLab.Models.Membership
 NGitLab.Models.Membership.AccessLevel -> int
 NGitLab.Models.Membership.AvatarURL -> string
 NGitLab.Models.Membership.CreatedAt -> System.DateTime
+NGitLab.Models.Membership.ExpiresAt -> System.DateTime?
 NGitLab.Models.Membership.Id -> int
 NGitLab.Models.Membership.Membership() -> void
 NGitLab.Models.Membership.Name -> string
@@ -2188,6 +2189,7 @@ NGitLab.Models.ProjectLinks.RepoBranches -> string
 NGitLab.Models.ProjectLinks.Self -> string
 NGitLab.Models.ProjectMemberCreate
 NGitLab.Models.ProjectMemberCreate.AccessLevel -> NGitLab.Models.AccessLevel
+NGitLab.Models.ProjectMemberCreate.ExpiresAt -> string
 NGitLab.Models.ProjectMemberCreate.ProjectMemberCreate() -> void
 NGitLab.Models.ProjectMemberCreate.UserId -> string
 NGitLab.Models.ProjectMemberUpdate
