@@ -10,5 +10,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "access_level")]
         public AccessLevel AccessLevel;
+
+        [DataMember(Name = "expires_at")]
+        public string ExpiresAt;
     }
 }
