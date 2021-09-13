@@ -152,7 +152,50 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Models.Project> Get(ProjectQuery query)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                if (query.MinAccessLevel != null
+                 || query.LastActivityAfter != null
+                 || query.OrderBy != null
+                 || query.PerPage != null
+                 || query.Search != null
+                 || query.Statistics != null
+                 || query.Ascending != null
+                 || query.Simple != null
+                 || query.UserId != null)
+                {
+                    throw new NotImplementedException();
+                }
+
+                var projects = Server.AllProjects;
+
+                if (query.Archived != null)
+                {
+                    projects = projects.Where(p => query.Archived == p.Archived);
+                }
+
+                if (query.Visibility != null)
+                {
+                    projects = projects.Where(p => query.Visibility == p.Visibility);
+                }
+
+                switch (query.Scope)
+                {
+                    case ProjectQueryScope.Accessible:
+                        projects = projects.Where(p => p.IsUserMember(Context.User));
+                        break;
+                    case ProjectQueryScope.Owned:
+                        projects = projects.Where(p => p.IsUserOwner(Context.User));
+                        break;
+                    case ProjectQueryScope.Visible:
+                        projects = projects.Where(p => p.CanUserViewProject(Context.User));
+                        break;
+                    case ProjectQueryScope.All:
+                        break;
+                }
+
+                return projects.Select(project => project.ToClientProject()).ToList();
+            }
         }
 
         public Models.Project GetById(int id, SingleProjectQuery query)
