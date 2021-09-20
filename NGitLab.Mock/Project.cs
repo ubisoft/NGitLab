@@ -67,6 +67,8 @@ namespace NGitLab.Mock
 
         public Project ForkedFrom { get; internal set; }
 
+        public RepositoryAccessLevel ForkingAccessLevel { get; set; }
+
         public string ImportStatus { get; set; }
 
         public TimeSpan BuildTimeout { get; set; } = TimeSpan.FromHours(1);
@@ -326,6 +328,7 @@ namespace NGitLab.Mock
                 Path = Path,
                 PathWithNamespace = PathWithNamespace,
                 ForkedFromProject = ForkedFrom?.ToClientProject(),
+                ForkingAccessLevel = ForkingAccessLevel,
                 ImportStatus = ImportStatus,
                 HttpUrl = HttpUrl,
                 SshUrl = SshUrl,

@@ -2065,6 +2065,7 @@ NGitLab.Models.Project.DefaultBranch -> string
 NGitLab.Models.Project.Description -> string
 NGitLab.Models.Project.EmptyRepo -> bool
 NGitLab.Models.Project.ForkedFromProject -> NGitLab.Models.Project
+NGitLab.Models.Project.ForkingAccessLevel -> NGitLab.Models.RepositoryAccessLevel
 NGitLab.Models.Project.ForksCount -> int
 NGitLab.Models.Project.HttpUrl -> string
 NGitLab.Models.Project.Id -> int

@@ -672,6 +672,8 @@ NGitLab.Mock.Project.EnabledRunners.get -> NGitLab.Mock.RunnerRefCollection
 NGitLab.Mock.Project.Fork(NGitLab.Mock.Group group, NGitLab.Mock.User user, string projectName) -> NGitLab.Mock.Project
 NGitLab.Mock.Project.Fork(NGitLab.Mock.User user) -> NGitLab.Mock.Project
 NGitLab.Mock.Project.ForkedFrom.get -> NGitLab.Mock.Project
+NGitLab.Mock.Project.ForkingAccessLevel.get -> NGitLab.Models.RepositoryAccessLevel
+NGitLab.Mock.Project.ForkingAccessLevel.set -> void
 NGitLab.Mock.Project.FullName.get -> string
 NGitLab.Mock.Project.GetEffectivePermissions() -> NGitLab.Mock.EffectivePermissions
 NGitLab.Mock.Project.Group.get -> NGitLab.Mock.Group

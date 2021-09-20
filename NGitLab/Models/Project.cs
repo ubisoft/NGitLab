@@ -135,6 +135,9 @@ namespace NGitLab.Models
         [DataMember(Name = "forks_count")]
         public int ForksCount;
 
+        [DataMember(Name = "forking_access_level")]
+        public RepositoryAccessLevel ForkingAccessLevel;
+
         [DataMember(Name = "runners_token")]
         public string RunnersToken;
 
