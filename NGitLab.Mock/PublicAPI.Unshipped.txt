@@ -131,6 +131,8 @@ NGitLab.Mock.Config.GitLabMilestone.UpdatedAt.get -> System.DateTime?
 NGitLab.Mock.Config.GitLabMilestone.UpdatedAt.set -> void
 NGitLab.Mock.Config.GitLabMilestonesCollection
 NGitLab.Mock.Config.GitLabObject.Parent.get -> object
+NGitLab.Mock.Config.GitLabProject.ForkingAccessLevel.get -> NGitLab.Models.RepositoryAccessLevel
+NGitLab.Mock.Config.GitLabProject.ForkingAccessLevel.set -> void
 NGitLab.Mock.Config.GitLabProject.Milestones.get -> NGitLab.Mock.Config.GitLabMilestonesCollection
 NGitLab.Mock.Config.GitLabProject.Visibility.get -> NGitLab.Models.VisibilityLevel?
 NGitLab.Mock.EffectivePermissions
