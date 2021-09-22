@@ -871,6 +871,7 @@ namespace NGitLab.Mock.Config
                 Description = project.Description,
                 DefaultBranch = project.DefaultBranch ?? server.DefaultBranchName,
                 Visibility = project.Visibility ?? project.Parent.DefaultVisibility,
+                ForkingAccessLevel = project.ForkingAccessLevel,
             };
 
             var group = GetOrCreateGroup(server, project.Namespace ?? Guid.NewGuid().ToString("D"));
