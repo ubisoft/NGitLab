@@ -28,6 +28,8 @@ namespace NGitLab.Mock.Config
 
         public string Description { get; set; }
 
+        public RepositoryAccessLevel ForkingAccessLevel { get; set; }
+
         /// <summary>
         /// Path where to clone repository after server resolving
         /// </summary>
