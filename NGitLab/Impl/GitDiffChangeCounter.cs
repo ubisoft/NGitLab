@@ -4,7 +4,7 @@ using NGitLab.Models;
 namespace NGitLab.Impl
 {
     /// <summary>
-    /// Since Gitlab API does not yet return the deleted, added and files count, we need a tool to circumvent that issue
+    /// Since GitLab API does not yet return the deleted, added and files count, we need a tool to circumvent that issue
     /// https://gitlab.com/gitlab-org/gitlab/-/issues/233052
     /// This implementation could be also replace by a git log command
     /// </summary>

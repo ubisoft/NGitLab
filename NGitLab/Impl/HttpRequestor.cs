@@ -11,7 +11,7 @@ using System.Reflection;
 namespace NGitLab.Impl
 {
     /// <summary>
-    /// The requestor is typically used for a single call to gitlab.
+    /// The requestor is typically used for a single call to GitLab.
     /// </summary>
     public partial class HttpRequestor : IHttpRequestor
     {

@@ -62,7 +62,7 @@ namespace NGitLab.Tests
 
             var listedNote = noteClient.ForIssue(issue.IssueId).ToList();
 
-            // Gitlab create additional issue notes about initial manipulation on the issue,
+            // GitLab create additional issue notes about initial manipulation on the issue,
             // so a starting count greater than one is expected.  Those issue notes have the 'system' boolean set to true.
             // We validate that there is only two issues that don't have the 'system' flag.
             Assert.That(listedNote.Where(x => !x.System).Count, Is.EqualTo(2));
