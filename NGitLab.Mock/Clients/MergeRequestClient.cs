@@ -181,7 +181,7 @@ namespace NGitLab.Mock.Clients
                 }
 
                 /* To be implemented
-                 * need get configuration for gitlab merge request approval: https://docs.gitlab.com/ee/api/merge_request_approvals.html)
+                 * need get configuration for GitLab merge request approval: https://docs.gitlab.com/ee/api/merge_request_approvals.html)
                  * 1) Check if project approval rules require password input
                  * 2) Check if project approval rules prevents merge request committers from approving
                  * 3) Check if project approval rules prevents merge request author from approving

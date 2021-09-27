@@ -26,14 +26,14 @@ namespace NGitLab.Models
         public int OpenIssuesCount;
 
         [DataMember(Name = "jobs_enabled")]
-        [Obsolete("Deprecated by Gitlab. Use BuildsAccessLevel instead")]
+        [Obsolete("Deprecated by GitLab. Use BuildsAccessLevel instead")]
         public bool JobEnabled;
 
         [DataMember(Name = "builds_access_level")]
         public string BuildsAccessLevel;
 
         [DataMember(Name = "snippets_enabled")]
-        [Obsolete("Deprecated by Gitlab. Use SnippetsAccessLevel instead")]
+        [Obsolete("Deprecated by GitLab. Use SnippetsAccessLevel instead")]
         public bool SnippetsEnabled;
 
         [DataMember(Name = "snippets_access_level")]
@@ -64,14 +64,14 @@ namespace NGitLab.Models
         public string PathWithNamespace;
 
         [DataMember(Name = "issues_enabled")]
-        [Obsolete("Deprecated by Gitlab. Use IssuesAccessLevel instead")]
+        [Obsolete("Deprecated by GitLab. Use IssuesAccessLevel instead")]
         public bool IssuesEnabled;
 
         [DataMember(Name = "issues_access_level")]
         public string IssuesAccessLevel;
 
         [DataMember(Name = "merge_requests_enabled")]
-        [Obsolete("Deprecated by Gitlab. Use MergeRequestsAccessLevel instead")]
+        [Obsolete("Deprecated by GitLab. Use MergeRequestsAccessLevel instead")]
         public bool MergeRequestsEnabled;
 
         [DataMember(Name = "merge_requests_access_level")]
@@ -87,7 +87,7 @@ namespace NGitLab.Models
         public bool WallEnabled;
 
         [DataMember(Name = "wiki_enabled")]
-        [Obsolete("Deprecated by Gitlab. Use WikiAccessLevel instead")]
+        [Obsolete("Deprecated by GitLab. Use WikiAccessLevel instead")]
         public bool WikiEnabled;
 
         [DataMember(Name = "wiki_access_level")]

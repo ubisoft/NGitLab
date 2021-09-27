@@ -50,7 +50,7 @@ namespace NGitLab.Models
         public PushData PushData { get; set; }
 
         /// <summary>
-        /// The target is either a gitlab object (like a merge request)
+        /// The target is either a GitLab object (like a merge request)
         /// or a commit object
         /// </summary>
         public string ResolvedTargetTitle

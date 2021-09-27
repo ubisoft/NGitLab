@@ -330,7 +330,7 @@ namespace NGitLab.Tests.Docker
 
                 // Get admin login cookie
                 // result.Cookie: experimentation_subject_id=XXX; _gitlab_session=XXXX; known_sign_in=XXXX
-                TestContext.Progress.WriteLine("Extracting gitlab session cookie");
+                TestContext.Progress.WriteLine("Extracting GitLab session cookie");
                 credentials.AdminCookies = result.Cookie.Split(';').Select(part => part.Trim()).Single(part => part.StartsWith("_gitlab_session=", StringComparison.Ordinal)).Substring("_gitlab_session=".Length);
 
                 Task<IDocument> SignIn(IBrowsingContext context)

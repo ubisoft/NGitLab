@@ -81,13 +81,13 @@ namespace NGitLab
             Epics = new EpicClient(_api);
         }
 
-        [Obsolete("Use gitlab client constructor instead")]
+        [Obsolete("Use GitLabClient constructor instead")]
         public static GitLabClient Connect(string hostUrl, string apiToken)
         {
             return new GitLabClient(hostUrl, apiToken);
         }
 
-        [Obsolete("Use gitlab client constructor instead")]
+        [Obsolete("Use GitLabClient constructor instead")]
         public static GitLabClient Connect(string hostUrl, string username, string password)
         {
             return new GitLabClient(hostUrl, username, password);

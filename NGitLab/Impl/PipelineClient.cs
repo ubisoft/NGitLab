@@ -41,7 +41,7 @@ namespace NGitLab.Impl
 
         public Job[] GetJobs(int pipelineId)
         {
-            // For some reason gitlab returns the jobs in the reverse order as
+            // For some reason GitLab returns the jobs in the reverse order as
             // they appear in their UI. Here we reverse them!
             var jobs = _api.Get().GetAll<Job>($"{_pipelinesPath}/{pipelineId.ToStringInvariant()}/jobs").Reverse().ToArray();
             return jobs;
@@ -53,7 +53,7 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "scope", query.Scope);
             url = Utils.AddParameter(url, "include_retried", query.IncludeRetried);
 
-            // For some reason gitlab returns the jobs in the reverse order as
+            // For some reason GitLab returns the jobs in the reverse order as
             // they appear in their UI. Here we reverse them!
             return _api.Get().GetAll<Job>(url).Reverse();
         }

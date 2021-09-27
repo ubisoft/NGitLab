@@ -10,7 +10,7 @@ namespace NGitLab.Impl
     public partial class HttpRequestor
     {
         /// <summary>
-        /// A single request to gitlab, that can be retried.
+        /// A single request to GitLab, that can be retried.
         /// </summary>
         private sealed class GitLabRequest
         {

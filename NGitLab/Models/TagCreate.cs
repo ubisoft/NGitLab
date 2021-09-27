@@ -31,7 +31,7 @@ namespace NGitLab.Models
         /// (optional) - Add release notes to the git tag and store it in the GitLab database.
         /// </summary>
         [DataMember(Name = "release_description")]
-        [ObsoleteAttribute("Starting in Gitlab 14 releases cannot be made trough tags. Use `Repository.Releases.Create` instead", false)]
+        [ObsoleteAttribute("Starting in GitLab 14, releases cannot be made through tags. Use `Repository.Releases.Create` instead", false)]
         public string ReleaseDescription;
     }
 }

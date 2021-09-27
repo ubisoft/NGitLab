@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace NGitLab.Models
 {
     /// <summary>
-    /// Allows to use more advanced gitlab queries for getting merge requests
+    /// Allows to use more advanced GitLab queries for getting merge requests
     /// </summary>
     [DataContract]
     public class MergeRequestQuery

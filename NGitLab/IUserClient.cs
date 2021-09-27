@@ -38,7 +38,7 @@ namespace NGitLab
         ISshKeyClient CurrentUserSShKeys { get; }
 
         /// <summary>
-        /// Allows to manipulate the ssh keys of a given user, needs gitlab admin rights.
+        /// Allows to manipulate the ssh keys of a given user, needs GitLab admin rights.
         /// </summary>
         ISshKeyClient SShKeys(int userId);
 
