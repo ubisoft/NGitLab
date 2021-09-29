@@ -17,9 +17,6 @@ namespace NGitLab.Models
         [DataMember(Name = "assignee_ids")]
         public int[] AssigneeIds;
 
-        [DataMember(Name = "reviewer_id")]
-        public int? ReviewerId;
-
         [DataMember(Name = "reviewer_ids")]
         public int[] ReviewerIds;
 
