@@ -177,7 +177,7 @@ namespace NGitLab.Tests
             var userId = context.Client.Users.Current.Id;
             mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { ReviewerIds = new int[] { userId } });
 
-            var mergeRequests = mergeRequestClient.Get(new MergeRequestQuery { ReviewerIds = new int[] { userId } }).ToList();
+            var mergeRequests = mergeRequestClient.Get(new MergeRequestQuery { ReviewerId = userId }).ToList();
             Assert.AreEqual(1, mergeRequests.Count, "The query retrieved all open merged requests that are assigned for a reviewer");
 
             var mergeRequestUpdated = mergeRequests.Single();

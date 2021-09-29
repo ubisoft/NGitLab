@@ -1829,8 +1829,8 @@ NGitLab.Models.MergeRequestQuery.OrderBy.get -> string
 NGitLab.Models.MergeRequestQuery.OrderBy.set -> void
 NGitLab.Models.MergeRequestQuery.PerPage.get -> int?
 NGitLab.Models.MergeRequestQuery.PerPage.set -> void
-NGitLab.Models.MergeRequestQuery.ReviewerIds.get -> int[]
-NGitLab.Models.MergeRequestQuery.ReviewerIds.set -> void
+NGitLab.Models.MergeRequestQuery.ReviewerId.get -> NGitLab.Models.QueryAssigneeId
+NGitLab.Models.MergeRequestQuery.ReviewerId.set -> void
 NGitLab.Models.MergeRequestQuery.Scope.get -> string
 NGitLab.Models.MergeRequestQuery.Scope.set -> void
 NGitLab.Models.MergeRequestQuery.Search.get -> string

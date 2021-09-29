@@ -77,7 +77,7 @@ namespace NGitLab.Models
         /// <summary>
         /// Returns the merge requests reviewer ids.
         /// </summary>
-        public int[] ReviewerIds { get; set; }
+        public QueryAssigneeId ReviewerId { get; set; }
 
         /// <summary>
         /// Returns merge requests which have specified all the users with the given ids as individual approvers.

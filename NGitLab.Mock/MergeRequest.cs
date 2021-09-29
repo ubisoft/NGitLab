@@ -27,6 +27,8 @@ namespace NGitLab.Mock
 
         public UserRef Assignee { get; set; }
 
+        public UserRef Reviewer { get; set; }
+
         public IList<UserRef> Reviewers { get; } = new List<UserRef>();
 
         public string SourceBranch { get; set; }
