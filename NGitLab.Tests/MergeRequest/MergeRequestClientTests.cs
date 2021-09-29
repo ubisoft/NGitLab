@@ -166,6 +166,25 @@ namespace NGitLab.Tests
             Assert.AreEqual(1, mergeRequests.Count, "The query retrieved all open merged requests that are unassigned");
         }
 
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_set_reviewers_merge_requests()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            context.CreateMergeRequest(); // Second MR to verify filter returns only one
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            var userId = context.Client.Users.Current.Id;
+            mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { ReviewerIds = new int[] { userId } });
+
+            var mergeRequests = mergeRequestClient.Get(new MergeRequestQuery { ReviewerIds = new int[] { userId } }).ToList();
+            Assert.AreEqual(1, mergeRequests.Count, "The query retrieved all open merged requests that are assigned for a reviewer");
+
+            var mergeRequestUpdated = mergeRequests.Single();
+            var reviewers = mergeRequestUpdated.Reviewers;
+            Assert.AreEqual(1, reviewers.Length);
+        }
+
         private static void ListMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest mergeRequest)
         {
             Assert.IsTrue(mergeRequestClient.All.Any(x => x.Id == mergeRequest.Id), "Test 'All' accessor returns the merge request");

@@ -377,6 +377,12 @@ namespace NGitLab.Mock.Clients
                     mergeRequests = mergeRequests.Where(mr => mr.Assignee?.Id == assigneeId);
                 }
 
+                if (query.ReviewerIds != null)
+                {
+                    var reviewerIds = query.ReviewerIds;
+                    mergeRequests = mergeRequests.Where(mr => mr.Reviewers.Any(x => reviewerIds.Contains(x.Id)));
+                }
+
                 if (query.AuthorId != null)
                 {
                     mergeRequests = mergeRequests.Where(mr => mr.Author.Id == query.AuthorId);
@@ -568,6 +574,24 @@ namespace NGitLab.Mock.Clients
                             throw new GitLabBadRequestException("user not found");
 
                         mergeRequest.Assignee = new UserRef(user);
+                    }
+                }
+
+                if (mergeRequestUpdate.ReviewerIds != null)
+                {
+                    var users = new List<UserRef>();
+
+                    foreach (var userId in mergeRequestUpdate.ReviewerIds)
+                    {
+                        users.Add(Server.Users.GetById(userId));
+                    }
+
+                    if (!users.Any())
+                        throw new GitLabBadRequestException("user not found");
+
+                    foreach (var reviewer in users)
+                    {
+                        mergeRequest.Reviewers.Add(reviewer);
                     }
                 }
 

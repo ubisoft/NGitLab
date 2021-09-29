@@ -114,6 +114,9 @@ namespace NGitLab.Models
         [DataMember(Name = "assignees")]
         public User[] Assignees;
 
+        [DataMember(Name = "reviewers")]
+        public User[] Reviewers;
+
         [DataMember(Name = "allow_collaboration")]
         public bool? AllowCollaboration;
 

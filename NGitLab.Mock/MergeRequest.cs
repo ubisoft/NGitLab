@@ -27,6 +27,8 @@ namespace NGitLab.Mock
 
         public UserRef Assignee { get; set; }
 
+        public IList<UserRef> Reviewers { get; } = new List<UserRef>();
+
         public string SourceBranch { get; set; }
 
         public string TargetBranch { get; set; }
@@ -183,7 +185,20 @@ namespace NGitLab.Mock
                 HeadPipeline = HeadPipeline?.ToPipelineClient(),
                 Labels = Labels.ToArray(),
                 RebaseInProgress = RebaseInProgress,
+                Reviewers = GetUsers(Reviewers),
             };
+        }
+
+        internal static Models.User[] GetUsers(IList<UserRef> userRefs)
+        {
+            var users = new List<Models.User>();
+            foreach(var userRef in userRefs)
+            {
+                var user = userRef.ToUserClient();
+                users.Add(user);
+            }
+
+            return users.ToArray();
         }
     }
 }

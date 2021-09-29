@@ -46,6 +46,7 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "author_id", query.AuthorId);
             url = Utils.AddParameter(url, "per_page", query.PerPage);
             url = Utils.AddParameter(url, "assignee_id", query.AssigneeId);
+            url = Utils.AddParameter(url, "reviewer_ids[]", query.ReviewerIds);
             url = Utils.AddParameter(url, "approver_ids[]", query.ApproverIds);
             url = Utils.AddParameter(url, "source_branch", query.SourceBranch);
             url = Utils.AddParameter(url, "target_branch", query.TargetBranch);
