@@ -377,7 +377,17 @@ namespace NGitLab.Mock.Clients
                     mergeRequests = mergeRequests.Where(mr => mr.Assignee?.Id == assigneeId);
                 }
 
-                if (query.ReviewerId != null)
+                if(query.ReviewerId.Equals(QueryAssigneeId.None))
+                {
+                    mergeRequests = mergeRequests.Where(mr => mr.Reviewers.Count.Equals(0));
+                }
+
+                if(query.ReviewerId.Equals(QueryAssigneeId.Any))
+                {
+                    mergeRequests = mergeRequests.Where(mr => mr.Reviewers.Any());
+                }
+
+                if(query.ReviewerId != null)
                 {
                     var reviewerId = string.Equals(query.ReviewerId.ToString(), "None", StringComparison.OrdinalIgnoreCase) ? (int?)null : int.Parse(query.ReviewerId.ToString());
                     mergeRequests = mergeRequests.Where(mr => mr.Reviewers.Any(x => reviewerId.Equals(x.Id)));
