@@ -586,7 +586,8 @@ namespace NGitLab.Mock.Clients
                         users.Add(Server.Users.GetById(userId));
                     }
 
-                    if (!users.Any())
+                    var user = Server.Users.GetById(mergeRequestUpdate.ReviewerId.Value);
+                    if (user == null)
                         throw new GitLabBadRequestException("user not found");
 
                     foreach (var reviewer in users)

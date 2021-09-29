@@ -1869,6 +1869,7 @@ NGitLab.Models.MergeRequestUpdate.Labels -> string
 NGitLab.Models.MergeRequestUpdate.MergeRequestUpdate() -> void
 NGitLab.Models.MergeRequestUpdate.MilestoneId -> int?
 NGitLab.Models.MergeRequestUpdate.NewState -> string
+NGitLab.Models.MergeRequestUpdate.ReviewerId -> int?
 NGitLab.Models.MergeRequestUpdate.ReviewerIds -> int[]
 NGitLab.Models.MergeRequestUpdate.SourceBranch -> string
 NGitLab.Models.MergeRequestUpdate.TargetBranch -> string
