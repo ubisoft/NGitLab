@@ -51,7 +51,8 @@ jobs:
         # Keep in sync with the version in GitLabDockerContainer.cs
         # Available tags: https://hub.docker.com/r/gitlab/gitlab-ee/tags
         gitlab: [
-          'gitlab/gitlab-ee:14.0.6-ee.0',
+          'gitlab/gitlab-ee:14.2.5-ee.0',
+          'gitlab/gitlab-ee:14.0.11-ee.0',
           'gitlab/gitlab-ee:13.10.3-ee.0'
         ]
         configuration: [ Release ]
