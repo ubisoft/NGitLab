@@ -1680,6 +1680,7 @@ NGitLab.Models.MergeRequest.MergeWhenPipelineSucceeds -> bool
 NGitLab.Models.MergeRequest.Milestone -> NGitLab.Models.Milestone
 NGitLab.Models.MergeRequest.ProjectId -> int
 NGitLab.Models.MergeRequest.RebaseInProgress -> bool
+NGitLab.Models.MergeRequest.Reviewers -> NGitLab.Models.User[]
 NGitLab.Models.MergeRequest.Sha -> string
 NGitLab.Models.MergeRequest.ShouldRemoveSourceBranch -> bool?
 NGitLab.Models.MergeRequest.SourceBranch -> string
@@ -1828,6 +1829,8 @@ NGitLab.Models.MergeRequestQuery.OrderBy.get -> string
 NGitLab.Models.MergeRequestQuery.OrderBy.set -> void
 NGitLab.Models.MergeRequestQuery.PerPage.get -> int?
 NGitLab.Models.MergeRequestQuery.PerPage.set -> void
+NGitLab.Models.MergeRequestQuery.ReviewerId.get -> NGitLab.Models.QueryAssigneeId
+NGitLab.Models.MergeRequestQuery.ReviewerId.set -> void
 NGitLab.Models.MergeRequestQuery.Scope.get -> string
 NGitLab.Models.MergeRequestQuery.Scope.set -> void
 NGitLab.Models.MergeRequestQuery.Search.get -> string
@@ -1866,6 +1869,7 @@ NGitLab.Models.MergeRequestUpdate.Labels -> string
 NGitLab.Models.MergeRequestUpdate.MergeRequestUpdate() -> void
 NGitLab.Models.MergeRequestUpdate.MilestoneId -> int?
 NGitLab.Models.MergeRequestUpdate.NewState -> string
+NGitLab.Models.MergeRequestUpdate.ReviewerIds -> int[]
 NGitLab.Models.MergeRequestUpdate.SourceBranch -> string
 NGitLab.Models.MergeRequestUpdate.TargetBranch -> string
 NGitLab.Models.MergeRequestUpdate.Title -> string
