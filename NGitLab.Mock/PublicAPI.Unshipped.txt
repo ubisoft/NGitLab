@@ -512,8 +512,6 @@ NGitLab.Mock.MergeRequest.Project.get -> NGitLab.Mock.Project
 NGitLab.Mock.MergeRequest.Rebase(NGitLab.Mock.User user) -> NGitLab.Models.RebaseResult
 NGitLab.Mock.MergeRequest.RebaseInProgress.get -> bool
 NGitLab.Mock.MergeRequest.RebaseInProgress.set -> void
-NGitLab.Mock.MergeRequest.Reviewer.get -> NGitLab.Mock.UserRef
-NGitLab.Mock.MergeRequest.Reviewer.set -> void
 NGitLab.Mock.MergeRequest.Reviewers.get -> System.Collections.Generic.IList<NGitLab.Mock.UserRef>
 NGitLab.Mock.MergeRequest.Sha.get -> NGitLab.Sha1
 NGitLab.Mock.MergeRequest.ShouldRemoveSourceBranch.get -> bool

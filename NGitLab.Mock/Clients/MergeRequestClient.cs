@@ -377,20 +377,21 @@ namespace NGitLab.Mock.Clients
                     mergeRequests = mergeRequests.Where(mr => mr.Assignee?.Id == assigneeId);
                 }
 
-                if(query.ReviewerId.Equals(QueryAssigneeId.None))
+                if (query.ReviewerId != null)
                 {
-                    mergeRequests = mergeRequests.Where(mr => mr.Reviewers.Count.Equals(0));
-                }
-
-                if(query.ReviewerId.Equals(QueryAssigneeId.Any))
-                {
-                    mergeRequests = mergeRequests.Where(mr => mr.Reviewers.Any());
-                }
-
-                if(query.ReviewerId != null)
-                {
-                    var reviewerId = string.Equals(query.ReviewerId.ToString(), "None", StringComparison.OrdinalIgnoreCase) ? (int?)null : int.Parse(query.ReviewerId.ToString());
-                    mergeRequests = mergeRequests.Where(mr => mr.Reviewers.Any(x => reviewerId.Equals(x.Id)));
+                    if (query.ReviewerId == QueryAssigneeId.None)
+                    {
+                        mergeRequests = mergeRequests.Where(mr => mr.Reviewers == null || mr.Reviewers.Count == 0);
+                    }
+                    else if (query.ReviewerId == QueryAssigneeId.Any)
+                    {
+                        mergeRequests = mergeRequests.Where(mr => mr.Reviewers != null || mr.Reviewers.Any());
+                    }
+                    else
+                    {
+                        var reviewerId = int.Parse(query.ReviewerId.ToString());
+                        mergeRequests = mergeRequests.Where(mr => mr.Reviewers.Any(x => reviewerId.Equals(x.Id)));
+                    }
                 }
 
                 if (query.AuthorId != null)
@@ -589,18 +590,12 @@ namespace NGitLab.Mock.Clients
 
                 if (mergeRequestUpdate.ReviewerIds != null)
                 {
-                    var users = new List<UserRef>();
-
                     foreach (var userId in mergeRequestUpdate.ReviewerIds)
                     {
-                        if (Server.Users.GetById(userId) == null)
+                        var reviewer = Server.Users.GetById(userId);
+                        if (reviewer == null)
                             throw new GitLabBadRequestException("user not found");
 
-                        users.Add(Server.Users.GetById(userId));
-                    }
-
-                    foreach (var reviewer in users)
-                    {
                         mergeRequest.Reviewers.Add(reviewer);
                     }
                 }
