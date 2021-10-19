@@ -817,7 +817,7 @@ namespace NGitLab.Mock.Config
             {
                 DefaultBranchName = config.DefaultBranch ?? "main",
                 DefaultForkVisibilityLevel = config.DefaultVisibility,
-                Url = new Uri(Path.GetTempPath()),
+                Url = new Uri(config.Url ?? Path.GetTempPath()),
             };
         }
 
