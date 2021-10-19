@@ -38,7 +38,7 @@ namespace NGitLab.Mock
 
         public DateTimeOffset? ClosedAt { get; set; }
 
-        public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/issues/{Id.ToString(CultureInfo.InvariantCulture)}");
+        public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/issues/{Iid.ToString(CultureInfo.InvariantCulture)}");
 
         public IssueState State
         {
