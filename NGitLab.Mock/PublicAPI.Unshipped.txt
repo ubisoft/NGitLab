@@ -106,6 +106,8 @@ NGitLab.Mock.Config.GitLabConfig.DefaultUser.set -> void
 NGitLab.Mock.Config.GitLabConfig.DefaultVisibility.get -> NGitLab.Models.VisibilityLevel
 NGitLab.Mock.Config.GitLabConfig.DefaultVisibility.set -> void
 NGitLab.Mock.Config.GitLabConfig.Serialize() -> string
+NGitLab.Mock.Config.GitLabConfig.Url.get -> string
+NGitLab.Mock.Config.GitLabConfig.Url.set -> void
 NGitLab.Mock.Config.GitLabGroup.Visibility.get -> NGitLab.Models.VisibilityLevel?
 NGitLab.Mock.Config.GitLabIssue.CreatedAt.get -> System.DateTime?
 NGitLab.Mock.Config.GitLabIssue.Milestone.get -> string
