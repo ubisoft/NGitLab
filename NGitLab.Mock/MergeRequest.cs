@@ -57,7 +57,7 @@ namespace NGitLab.Mock
 
         public bool RebaseInProgress { get; set; }
 
-        public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/merge_requests/{Id.ToString(CultureInfo.InvariantCulture)}");
+        public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/merge_requests/{Iid.ToString(CultureInfo.InvariantCulture)}");
 
         public Pipeline HeadPipeline => Project.Pipelines
                   .Where(p => p.Sha.Equals(Sha))
