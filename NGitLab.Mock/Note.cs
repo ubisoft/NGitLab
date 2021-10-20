@@ -34,6 +34,8 @@ namespace NGitLab.Mock
 
         public bool Resolved { get; set; }
 
+        public bool Confidential { get; set; }
+
         public Models.Note ToClientEvent()
         {
             return new Models.Note
@@ -46,6 +48,7 @@ namespace NGitLab.Mock
                 System = System,
                 Resolved = Resolved,
                 UpdatedAt = UpdatedAt.UtcDateTime,
+                Confidential = Confidential,
             };
         }
     }

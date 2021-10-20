@@ -38,5 +38,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "resolvable")]
         public bool Resolvable;
+
+        [DataMember(Name = "confidential")]
+        public bool Confidential;
     }
 }

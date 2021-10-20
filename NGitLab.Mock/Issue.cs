@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -37,6 +38,10 @@ namespace NGitLab.Mock
         public DateTimeOffset UpdatedAt { get; set; }
 
         public DateTimeOffset? ClosedAt { get; set; }
+
+        public bool Confidential { get; set; }
+
+        public IList<ProjectIssueNote> Notes { get; set; }
 
         public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/issues/{Iid.ToString(CultureInfo.InvariantCulture)}");
 
@@ -87,6 +92,7 @@ namespace NGitLab.Mock
                 CreatedAt = CreatedAt.UtcDateTime,
                 UpdatedAt = UpdatedAt.UtcDateTime,
                 WebUrl = WebUrl,
+                Confidential = Confidential,
             };
         }
     }
