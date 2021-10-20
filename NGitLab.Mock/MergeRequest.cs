@@ -27,6 +27,8 @@ namespace NGitLab.Mock
 
         public UserRef Assignee { get; set; }
 
+        public IList<UserRef> Assignees { get; } = new List<UserRef>();
+
         public IList<UserRef> Reviewers { get; } = new List<UserRef>();
 
         public string SourceBranch { get; set; }
@@ -158,6 +160,7 @@ namespace NGitLab.Mock
             return new Models.MergeRequest
             {
                 Assignee = Assignee?.ToUserClient(),
+                Assignees = GetUsers(Assignees),
                 Author = Author.ToUserClient(),
                 CreatedAt = CreatedAt.UtcDateTime,
                 UpdatedAt = UpdatedAt.UtcDateTime,
