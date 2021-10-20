@@ -1467,6 +1467,7 @@ NGitLab.Models.Issue
 NGitLab.Models.Issue.Assignee -> NGitLab.Models.Assignee
 NGitLab.Models.Issue.Assignees -> NGitLab.Models.Assignee[]
 NGitLab.Models.Issue.Author -> NGitLab.Models.Author
+NGitLab.Models.Issue.Confidential -> bool
 NGitLab.Models.Issue.CreatedAt -> System.DateTime
 NGitLab.Models.Issue.Description -> string
 NGitLab.Models.Issue.DueDate -> System.DateTime?
@@ -1485,6 +1486,7 @@ NGitLab.Models.Issue.UpdatedAt -> System.DateTime
 NGitLab.Models.Issue.WebUrl -> string
 NGitLab.Models.IssueCreate
 NGitLab.Models.IssueCreate.AssigneeId -> int?
+NGitLab.Models.IssueCreate.Confidential -> bool
 NGitLab.Models.IssueCreate.Description -> string
 NGitLab.Models.IssueCreate.Id -> int
 NGitLab.Models.IssueCreate.IssueCreate() -> void
@@ -1937,6 +1939,7 @@ NGitLab.Models.Note
 NGitLab.Models.Note.Author.get -> NGitLab.Models.User
 NGitLab.Models.Note.Author.set -> void
 NGitLab.Models.Note.Body -> string
+NGitLab.Models.Note.Confidential -> bool
 NGitLab.Models.Note.CreatedAt -> System.DateTime
 NGitLab.Models.Note.Id -> long
 NGitLab.Models.Note.Note() -> void
@@ -2165,6 +2168,7 @@ NGitLab.Models.ProjectIssueNote
 NGitLab.Models.ProjectIssueNote.Attachment -> string
 NGitLab.Models.ProjectIssueNote.Author -> NGitLab.Models.Author
 NGitLab.Models.ProjectIssueNote.Body -> string
+NGitLab.Models.ProjectIssueNote.Confidential -> bool
 NGitLab.Models.ProjectIssueNote.CreatedAt -> System.DateTime
 NGitLab.Models.ProjectIssueNote.NoteableId -> int
 NGitLab.Models.ProjectIssueNote.NoteableType -> string
@@ -2176,6 +2180,7 @@ NGitLab.Models.ProjectIssueNote.System -> bool
 NGitLab.Models.ProjectIssueNote.UpdatedAt -> System.DateTime
 NGitLab.Models.ProjectIssueNoteCreate
 NGitLab.Models.ProjectIssueNoteCreate.Body -> string
+NGitLab.Models.ProjectIssueNoteCreate.Confidential -> bool
 NGitLab.Models.ProjectIssueNoteCreate.IssueId -> int
 NGitLab.Models.ProjectIssueNoteCreate.ProjectIssueNoteCreate() -> void
 NGitLab.Models.ProjectIssueNoteEdit
