@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using NGitLab.Models;
@@ -20,8 +19,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Contribute);
-                var issue = project.Issues.First(iss => iss.Id == create.IssueId);
+                var issue = GetIssue(create.IssueId);
 
                 var projectIssueNote = new ProjectIssueNote
                 {
@@ -39,9 +37,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Contribute);
-                var issue = project.Issues.First(iss => iss.Id == edit.IssueId);
-                var note = issue.Notes.First(n => (int)n.Id == edit.NoteId);
+                var note = GetIssueNote(edit.IssueId, edit.NoteId);
 
                 note.Body = edit.Body;
 
@@ -53,10 +49,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Contribute);
-                var issue = project.Issues.First(iss => iss.Id == issueId);
-
-                return issue.Notes.Select(n => n.ToProjectIssueNote());
+                return GetIssue(issueId).Notes.Select(n => n.ToProjectIssueNote());
             }
         }
 
@@ -64,11 +57,34 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Contribute);
-                var issue = project.Issues.First(iss => iss.Id == issueId);
-
-                return issue.Notes.First(n => (int)n.Id == noteId).ToProjectIssueNote();
+                return GetIssueNote(issueId, noteId).ToProjectIssueNote();
             }
+        }
+
+        private Issue GetIssue(int issueId)
+        {
+            var project = GetProject(_projectId, ProjectPermission.Contribute);
+            var issue = project.Issues.FirstOrDefault(iss => iss.Id == issueId);
+
+            if (issue == null)
+            {
+                throw new GitLabNotFoundException("Issue does not exist.");
+            }
+
+            return issue;
+        }
+
+        private ProjectIssueNote GetIssueNote(int issueId, int issueNoteId)
+        {
+            var issue = GetIssue(issueId);
+            var note = issue.Notes.FirstOrDefault(n => (int)n.Id == issueNoteId);
+
+            if (note == null)
+            {
+                throw new GitLabNotFoundException("Issue Note does not exist.");
+            }
+
+            return note;
         }
     }
 }
