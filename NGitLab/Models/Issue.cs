@@ -56,5 +56,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "epic")]
         public IssueEpic Epic;
+
+        [DataMember(Name = "confidential")]
+        public bool Confidential;
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -14,24 +16,59 @@ namespace NGitLab.Mock.Clients
             _projectId = projectId;
         }
 
-        public ProjectIssueNote Create(ProjectIssueNoteCreate create)
+        public Models.ProjectIssueNote Create(ProjectIssueNoteCreate create)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var issue = project.Issues.First(iss => iss.Id == create.IssueId);
+
+                var projectIssueNote = new ProjectIssueNote
+                {
+                    Body = create.Body,
+                    Confidential = create.Confidential,
+                    Author = Context.User,
+                };
+                issue.Notes.Add(projectIssueNote);
+
+                return projectIssueNote.ToProjectIssueNote();
+            }
         }
 
-        public ProjectIssueNote Edit(ProjectIssueNoteEdit edit)
+        public Models.ProjectIssueNote Edit(ProjectIssueNoteEdit edit)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var issue = project.Issues.First(iss => iss.Id == edit.IssueId);
+                var note = issue.Notes.First(n => (int)n.Id == edit.NoteId);
+
+                note.Body = edit.Body;
+
+                return note.ToProjectIssueNote();
+            }
         }
 
-        public IEnumerable<ProjectIssueNote> ForIssue(int issueId)
+        public IEnumerable<Models.ProjectIssueNote> ForIssue(int issueId)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var issue = project.Issues.First(iss => iss.Id == issueId);
+
+                return issue.Notes.Select(n => n.ToProjectIssueNote());
+            }
         }
 
-        public ProjectIssueNote Get(int issueId, int noteId)
+        public Models.ProjectIssueNote Get(int issueId, int noteId)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var issue = project.Issues.First(iss => iss.Id == issueId);
+
+                return issue.Notes.First(n => (int)n.Id == noteId).ToProjectIssueNote();
+            }
         }
     }
 }

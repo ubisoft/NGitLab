@@ -38,6 +38,7 @@ namespace NGitLab.Mock.Clients
                     Description = issueCreate.Description,
                     Title = issueCreate.Title,
                     Author = Context.User,
+                    Confidential = issueCreate.Confidential,
                 };
 
                 if (!string.IsNullOrEmpty(issueCreate.Labels))
