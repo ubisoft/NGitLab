@@ -489,6 +489,8 @@ NGitLab.Mock.MergeRequest.Accept(NGitLab.Mock.User user) -> void
 NGitLab.Mock.MergeRequest.Approvers.get -> System.Collections.Generic.IList<NGitLab.Mock.UserRef>
 NGitLab.Mock.MergeRequest.Assignee.get -> NGitLab.Mock.UserRef
 NGitLab.Mock.MergeRequest.Assignee.set -> void
+NGitLab.Mock.MergeRequest.Assignees.get -> System.Collections.Generic.Ilist<NGitLab.Mock.UserRef>
+NGitLab.Mock.MergeRequest.Assignees.set -> void
 NGitLab.Mock.MergeRequest.Author.get -> NGitLab.Mock.UserRef
 NGitLab.Mock.MergeRequest.Author.set -> void
 NGitLab.Mock.MergeRequest.Changes.get -> NGitLab.Mock.MergeRequestChangeCollection
