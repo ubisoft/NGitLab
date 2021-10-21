@@ -8,6 +8,11 @@ namespace NGitLab.Mock.Config
     /// </summary>
     public class GitLabMergeRequest : GitLabObject<GitLabProject>
     {
+        public GitLabMergeRequest()
+        {
+            Comments = new GitLabCommentsCollection(this);
+        }
+
         /// <summary>
         /// Title (required)
         /// </summary>
@@ -38,6 +43,8 @@ namespace NGitLab.Mock.Config
         /// Approvers usernames
         /// </summary>
         public IList<string> Approvers { get; } = new List<string>();
+
+        public GitLabCommentsCollection Comments { get; }
 
         public DateTime? CreatedAt { get; set; }
 
