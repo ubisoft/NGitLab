@@ -115,7 +115,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(projectId, ProjectPermission.View);
-                return project.Issues.FirstOrDefault(i => i.Iid == issueId).ToClientIssue() ?? throw new GitLabNotFoundException();
+                return project.Issues.FirstOrDefault(i => i.Iid == issueId)?.ToClientIssue() ?? throw new GitLabNotFoundException();
             }
         }
 
