@@ -1456,12 +1456,12 @@ namespace NGitLab.Mock.Config
                 ClosedAt = issue.ClosedAt?.DateTime,
             };
 
-            foreach (var label in issue.Labels)
+            foreach (var label in issue.Labels ?? Enumerable.Empty<string>())
             {
                 iss.Labels.Add(label);
             }
 
-            foreach (var comment in issue.Notes)
+            foreach (var comment in issue.Notes ?? Enumerable.Empty<ProjectIssueNote>())
             {
                 iss.Comments.Add(ToConfig(comment));
             }
