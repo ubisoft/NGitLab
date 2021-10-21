@@ -1150,7 +1150,7 @@ namespace NGitLab.Mock.Config
 
             var issueAuthor = issue.Author ?? issue.Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
             var issueAssignee = issue.Assignee;
-            project.Issues.Add(new Issue
+            var iss = new Issue
             {
                 Iid = issue.Id,
                 Title = issue.Title ?? Guid.NewGuid().ToString("D"),
@@ -1161,7 +1161,14 @@ namespace NGitLab.Mock.Config
                 Milestone = string.IsNullOrEmpty(issue.Milestone) ? null : GetOrCreateMilestone(project, issue.Milestone),
                 UpdatedAt = issue.UpdatedAt ?? DateTimeOffset.UtcNow,
                 ClosedAt = issue.ClosedAt,
-            });
+            };
+
+            foreach (var comment in issue.Comments)
+            {
+                CreateComment(server, iss, comment);
+            }
+
+            project.Issues.Add(iss);
         }
 
         private static void CreateMergeRequest(GitLabServer server, Project project, GitLabMergeRequest mergeRequest)
@@ -1247,7 +1254,19 @@ namespace NGitLab.Mock.Config
 
         private static void CreateComment(GitLabServer server, Issue issue, GitLabComment comment)
         {
-            // TODO: Add comments support for issues
+            var commentAuthor = comment.Author ?? ((GitLabIssue)comment.Parent).Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
+            issue.Notes.Add(new ProjectIssueNote
+            {
+                Id = comment.Id,
+                Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, commentAuthor, StringComparison.Ordinal))),
+                Body = comment.Message,
+                System = comment.System,
+                CreatedAt = comment.CreatedAt ?? DateTimeOffset.Now,
+                UpdatedAt = comment.UpdatedAt ?? DateTimeOffset.Now,
+                ThreadId = comment.Thread,
+                Resolvable = comment.Resolvable,
+                Resolved = comment.Resolved,
+            });
         }
 
         private static void CreateComment(GitLabServer server, MergeRequest mergeRequest, GitLabComment comment)
@@ -1442,6 +1461,11 @@ namespace NGitLab.Mock.Config
                 iss.Labels.Add(label);
             }
 
+            foreach (var comment in issue.Notes)
+            {
+                iss.Comments.Add(ToConfig(comment));
+            }
+
             return iss;
         }
 
@@ -1478,6 +1502,22 @@ namespace NGitLab.Mock.Config
             }
 
             return mrg;
+        }
+
+        private static GitLabComment ToConfig(ProjectIssueNote comment)
+        {
+            return new GitLabComment
+            {
+                Id = (int)comment.Id,
+                Author = comment.Author?.UserName,
+                Message = comment.Body,
+                System = comment.System,
+                CreatedAt = comment.CreatedAt.DateTime,
+                UpdatedAt = comment.UpdatedAt.DateTime,
+                Thread = comment.ThreadId,
+                Resolvable = comment.Resolvable,
+                Resolved = comment.Resolved,
+            };
         }
 
         private static GitLabComment ToConfig(MergeRequestComment comment)
