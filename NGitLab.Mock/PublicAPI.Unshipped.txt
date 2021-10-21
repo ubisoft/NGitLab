@@ -161,6 +161,7 @@ NGitLab.Mock.Config.GitLabPipelinesCollection
 NGitLab.Mock.Config.GitLabProject.ForkingAccessLevel.get -> NGitLab.Models.RepositoryAccessLevel
 NGitLab.Mock.Config.GitLabProject.ForkingAccessLevel.set -> void
 NGitLab.Mock.Config.GitLabProject.Milestones.get -> NGitLab.Mock.Config.GitLabMilestonesCollection
+NGitLab.Mock.Config.GitLabProject.Pipelines.get -> NGitLab.Mock.Config.GitLabPipelinesCollection
 NGitLab.Mock.Config.GitLabProject.Visibility.get -> NGitLab.Models.VisibilityLevel?
 NGitLab.Mock.EffectivePermissions
 NGitLab.Mock.EffectivePermissions.GetAccessLevel(NGitLab.Mock.User user) -> NGitLab.Models.AccessLevel?
