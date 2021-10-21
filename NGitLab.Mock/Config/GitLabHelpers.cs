@@ -56,6 +56,12 @@ namespace NGitLab.Mock.Config
             return mergeRequest;
         }
 
+        public static GitLabPipeline Configure(this GitLabPipeline pipeline, Action<GitLabPipeline> configure)
+        {
+            configure(pipeline);
+            return pipeline;
+        }
+
         /// <summary>
         /// Add a user description in config
         /// </summary>
@@ -740,6 +746,58 @@ namespace NGitLab.Mock.Config
         }
 
         /// <summary>
+        /// Add pipeline in project
+        /// </summary>
+        /// <param name="project">Project.</param>
+        /// <param name="ref">Commit alias reference.</param>
+        /// <param name="configure">Configuration method</param>
+        public static GitLabProject WithPipeline(this GitLabProject project, string @ref, Action<GitLabPipeline> configure)
+        {
+            return Configure(project, _ =>
+            {
+                var pipeline = new GitLabPipeline
+                {
+                    Commit = @ref ?? throw new ArgumentNullException(nameof(@ref)),
+                };
+
+                project.Pipelines.Add(pipeline);
+                configure(pipeline);
+            });
+        }
+
+        /// <summary>
+        /// Add job in pipeline
+        /// </summary>
+        /// <param name="pipeline">Pipeline.</param>
+        /// <param name="name">Name.</param>
+        /// <param name="stage">Stage (build by default)</param>
+        /// <param name="status">Status (Manual by default)</param>
+        /// <param name="createdAt">Creation date time.</param>
+        /// <param name="startedAt">Start date time.</param>
+        /// <param name="finishedAt">Finish date time.</param>
+        /// <param name="allowFailure">Indicates if failure is allowed.</param>
+        /// <param name="configure">Configuration method</param>
+        public static GitLabPipeline WithJob(this GitLabPipeline pipeline, string? name = null, string? stage = null, JobStatus status = JobStatus.Unknown, DateTime? createdAt = null, DateTime? startedAt = null, DateTime? finishedAt = null, bool allowFailure = false, Action<GitLabJob>? configure = null)
+        {
+            return Configure(pipeline, _ =>
+            {
+                var job = new GitLabJob
+                {
+                    Name = name,
+                    Stage = stage,
+                    Status = status,
+                    CreatedAt = createdAt,
+                    StartedAt = startedAt,
+                    FinishedAt = finishedAt,
+                    AllowFailure = allowFailure,
+                };
+
+                pipeline.Jobs.Add(job);
+                configure?.Invoke(job);
+            });
+        }
+
+        /// <summary>
         /// Create and fill server from config
         /// </summary>
         /// <param name="config">Config.</param>
@@ -877,9 +935,12 @@ namespace NGitLab.Mock.Config
             var group = GetOrCreateGroup(server, project.Namespace ?? Guid.NewGuid().ToString("D"));
             group.Projects.Add(prj);
 
+            var aliases = new Dictionary<string, LibGit2Sharp.Commit>(StringComparer.Ordinal);
             foreach (var commit in project.Commits)
             {
-                CreateCommit(server, prj, commit);
+                var cmt = CreateCommit(server, prj, commit);
+                if (!string.IsNullOrEmpty(commit.Alias))
+                    aliases[commit.Alias] = cmt;
             }
 
             foreach (var label in project.Labels)
@@ -905,6 +966,11 @@ namespace NGitLab.Mock.Config
             foreach (var permission in project.Permissions)
             {
                 CreatePermission(server, prj, permission);
+            }
+
+            foreach (var pipeline in project.Pipelines)
+            {
+                CreatePipeline(server, prj, pipeline, aliases);
             }
 
             if (!string.IsNullOrEmpty(project.ClonePath))
@@ -936,11 +1002,12 @@ namespace NGitLab.Mock.Config
             }
         }
 
-        private static void CreateCommit(GitLabServer server, Project prj, GitLabCommit commit)
+        private static LibGit2Sharp.Commit CreateCommit(GitLabServer server, Project prj, GitLabCommit commit)
         {
             var username = commit.User ?? commit.Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
             var user = server.Users.First(x => string.Equals(x.UserName, username, StringComparison.Ordinal));
             var targetBranch = commit.TargetBranch;
+            LibGit2Sharp.Commit cmt;
             if (string.IsNullOrEmpty(targetBranch))
             {
                 var branchExists = string.IsNullOrEmpty(commit.SourceBranch) || prj.Repository.GetAllBranches().Any(x => string.Equals(x.FriendlyName, commit.SourceBranch, StringComparison.Ordinal));
@@ -950,11 +1017,11 @@ namespace NGitLab.Mock.Config
                 var files = commit.Files.Count == 0
                     ? new[] { File.CreateFromText("test.txt", Guid.NewGuid().ToString()) }
                     : commit.Files.Select(x => File.CreateFromText(x.Path, x.Content ?? string.Empty));
-                prj.Repository.Commit(user, commit.Message ?? Guid.NewGuid().ToString("D"), commit.SourceBranch, files);
+                cmt = prj.Repository.Commit(user, commit.Message ?? Guid.NewGuid().ToString("D"), commit.SourceBranch, files);
             }
             else
             {
-                prj.Repository.Merge(user, commit.SourceBranch, targetBranch);
+                cmt = prj.Repository.Merge(user, commit.SourceBranch, targetBranch);
                 if (commit.DeleteSourceBranch)
                     prj.Repository.RemoveBranch(targetBranch);
             }
@@ -963,6 +1030,8 @@ namespace NGitLab.Mock.Config
             {
                 prj.Repository.CreateTag(tag);
             }
+
+            return cmt;
         }
 
         private static void CreateLabel(Group group, GitLabLabel label)
@@ -1096,6 +1165,52 @@ namespace NGitLab.Mock.Config
             });
         }
 
+        private static void CreatePipeline(GitLabServer server, Project project, GitLabPipeline pipeline, Dictionary<string, LibGit2Sharp.Commit> aliases)
+        {
+            if (!aliases.TryGetValue(pipeline.Commit ?? throw new ArgumentException("pipeline.Commit == null", nameof(pipeline)), out var commit))
+                throw new InvalidOperationException($"Cannot find commit from alias '{pipeline.Commit}'");
+
+            var ppl = new Pipeline(commit.Sha)
+            {
+                Id = pipeline.Id,
+                User = server.Users.First(x => string.Equals(x.Email, commit.Author.Email, StringComparison.Ordinal)),
+                CommittedAt = commit.Author.When,
+            };
+
+            project.Pipelines.Add(ppl);
+
+            var jobs = new List<Job>();
+            foreach (var job in pipeline.Jobs)
+            {
+                jobs.Add(CreateJob(ppl, job));
+            }
+
+            ppl.CreatedAt = jobs.Select(x => x.CreatedAt).DefaultIfEmpty(DateTime.Now).Min();
+            var dateTimes = jobs.Where(x => x.StartedAt != default).Select(x => x.StartedAt).ToArray();
+            ppl.StartedAt = dateTimes.Length == 0 ? null : dateTimes.Min();
+            ppl.FinishedAt = jobs.Any(x => x.Status is JobStatus.Created or JobStatus.Pending or JobStatus.Preparing or JobStatus.WaitingForResource or JobStatus.Running)
+                ? null
+                : jobs.Where(x => x.FinishedAt != default).Select(x => (DateTimeOffset)x.FinishedAt).DefaultIfEmpty(ppl.CreatedAt).Max();
+        }
+
+        private static Job CreateJob(Pipeline pipeline, GitLabJob job)
+        {
+            var jb = new Job
+            {
+                Id = job.Id,
+                Name = job.Name ?? Guid.NewGuid().ToString("D"),
+                Stage = job.Stage ?? "build",
+                Status = job.Status == JobStatus.Unknown ? JobStatus.Manual : job.Status,
+                CreatedAt = job.CreatedAt ?? DateTime.Now,
+                StartedAt = job.StartedAt ?? default,
+                FinishedAt = job.FinishedAt ?? default,
+                AllowFailure = job.AllowFailure,
+                User = pipeline.User,
+            };
+            pipeline.AddJob(pipeline.Parent, jb);
+            return jb;
+        }
+
         private static Milestone GetOrCreateMilestone(Project project, string title)
         {
             var milestone = project.Milestones.FirstOrDefault(x => string.Equals(x.Title, title, StringComparison.OrdinalIgnoreCase));
@@ -1194,6 +1309,11 @@ namespace NGitLab.Mock.Config
                 prj.Labels.Add(ToConfig(label));
             }
 
+            foreach (var commit in project.Repository.GetCommits())
+            {
+                prj.Commits.Add(ToConfig(commit));
+            }
+
             foreach (var milestone in project.Milestones)
             {
                 prj.Milestones.Add(ToConfig(milestone));
@@ -1214,6 +1334,11 @@ namespace NGitLab.Mock.Config
                 prj.Permissions.Add(ToConfig(permission));
             }
 
+            foreach (var pipeline in project.Pipelines)
+            {
+                prj.Pipelines.Add(ToConfig(pipeline));
+            }
+
             return prj;
         }
 
@@ -1224,6 +1349,16 @@ namespace NGitLab.Mock.Config
                 Name = label.Name,
                 Color = label.Color,
                 Description = label.Description,
+            };
+        }
+
+        private static GitLabCommit ToConfig(LibGit2Sharp.Commit commit)
+        {
+            return new GitLabCommit
+            {
+                User = commit.Author.Name,
+                Message = commit.Message,
+                Alias = commit.Sha,
             };
         }
 
@@ -1302,6 +1437,37 @@ namespace NGitLab.Mock.Config
             }
 
             return mrg;
+        }
+
+        private static GitLabPipeline ToConfig(Pipeline pipeline)
+        {
+            var ppl = new GitLabPipeline
+            {
+                Id = pipeline.Id,
+                Commit = pipeline.Ref,
+            };
+
+            foreach (var job in pipeline.Parent.Jobs.Where(x => x.Pipeline.Id == pipeline.Id))
+            {
+                ppl.Jobs.Add(ToConfig(job));
+            }
+
+            return ppl;
+        }
+
+        private static GitLabJob ToConfig(Job job)
+        {
+            return new GitLabJob
+            {
+                Id = job.Id,
+                Name = job.Name,
+                Stage = job.Stage,
+                Status = job.Status,
+                CreatedAt = job.CreatedAt,
+                StartedAt = job.StartedAt == default ? null : job.StartedAt,
+                FinishedAt = job.FinishedAt == default ? null : job.FinishedAt,
+                AllowFailure = job.AllowFailure,
+            };
         }
 
         private static string GetNamespace(Group group)

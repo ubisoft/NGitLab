@@ -15,6 +15,11 @@ namespace NGitLab.Mock.Config
         public string Message { get; set; }
 
         /// <summary>
+        /// Alias to reference it in pipeline
+        /// </summary>
+        public string Alias { get; set; }
+
+        /// <summary>
         /// Files in the repository at this commit
         /// </summary>
         public IList<GitLabFileDescriptor> Files { get; } = new List<GitLabFileDescriptor>();
