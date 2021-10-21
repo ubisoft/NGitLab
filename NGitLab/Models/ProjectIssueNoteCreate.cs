@@ -11,5 +11,8 @@ namespace NGitLab.Models
         [Required]
         [DataMember(Name = "body")]
         public string Body;
+
+        [DataMember(Name = "confidential")]
+        public bool Confidential;
     }
 }
