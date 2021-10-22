@@ -342,7 +342,7 @@ namespace NGitLab.Mock
 
             try
             {
-                return _repository.Commits.QueryBy(filter).ToList();
+                return _repository?.Commits.QueryBy(filter).ToList() ?? Enumerable.Empty<Commit>();
             }
             catch (NotFoundException)
             {
@@ -405,7 +405,7 @@ namespace NGitLab.Mock
 
             try
             {
-                return _repository.Commits.QueryBy(filter).ToList();
+                return _repository?.Commits.QueryBy(filter).ToList() ?? Enumerable.Empty<Commit>();
             }
             catch (NotFoundException)
             {
