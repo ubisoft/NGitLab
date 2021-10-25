@@ -572,24 +572,6 @@ namespace NGitLab.Mock.Clients
                 if (mergeRequest == null)
                     throw new GitLabNotFoundException();
 
-                if (mergeRequestUpdate.AssigneeId != null)
-                {
-                    mergeRequest.Assignees.Clear();
-                    if (mergeRequestUpdate.AssigneeId.Value == 0)
-                    {
-                        mergeRequest.Assignee = null;
-                    }
-                    else
-                    {
-                        var user = Server.Users.GetById(mergeRequestUpdate.AssigneeId.Value);
-                        if (user == null)
-                            throw new GitLabBadRequestException("user not found");
-
-                        mergeRequest.Assignee = new UserRef(user);
-                        mergeRequest.Assignees.Add(new UserRef(user));
-                    }
-                }
-
                 if (mergeRequestUpdate.AssigneeIds != null)
                 {
                     mergeRequest.Assignees.Clear();
@@ -609,6 +591,23 @@ namespace NGitLab.Mock.Clients
                         }
 
                         mergeRequest.Assignee = mergeRequest.Assignees.First();
+                    }
+                }
+                else if (mergeRequestUpdate.AssigneeId != null)
+                {
+                    mergeRequest.Assignees.Clear();
+                    if (mergeRequestUpdate.AssigneeId.Value == 0)
+                    {
+                        mergeRequest.Assignee = null;
+                    }
+                    else
+                    {
+                        var user = Server.Users.GetById(mergeRequestUpdate.AssigneeId.Value);
+                        if (user == null)
+                            throw new GitLabBadRequestException("user not found");
+
+                        mergeRequest.Assignee = new UserRef(user);
+                        mergeRequest.Assignees.Add(new UserRef(user));
                     }
                 }
 
