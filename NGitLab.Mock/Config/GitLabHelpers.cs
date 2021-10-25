@@ -1084,8 +1084,7 @@ namespace NGitLab.Mock.Config
         {
             var username = commit.User ?? commit.Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
             var user = server.Users.First(x => string.Equals(x.UserName, username, StringComparison.Ordinal));
-            var targetBranch = commit.TargetBranch;
-            if (string.IsNullOrEmpty(targetBranch))
+            if (string.IsNullOrEmpty(commit.TargetBranch))
             {
                 var branchExists = string.IsNullOrEmpty(commit.SourceBranch) || prj.Repository.GetAllBranches().Any(x => string.Equals(x.FriendlyName, commit.SourceBranch, StringComparison.Ordinal));
                 if (!branchExists)
@@ -1098,9 +1097,9 @@ namespace NGitLab.Mock.Config
             }
             else
             {
-                prj.Repository.Merge(user, commit.SourceBranch, targetBranch);
+                prj.Repository.Merge(user, commit.SourceBranch, commit.TargetBranch);
                 if (commit.DeleteSourceBranch)
-                    prj.Repository.RemoveBranch(targetBranch);
+                    prj.Repository.RemoveBranch(commit.SourceBranch);
             }
 
             foreach (var tag in commit.Tags)

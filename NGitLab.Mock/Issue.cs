@@ -41,7 +41,7 @@ namespace NGitLab.Mock
 
         public bool Confidential { get; set; }
 
-        public IList<ProjectIssueNote> Notes { get; set; }
+        public IList<ProjectIssueNote> Notes { get; set; } = new List<ProjectIssueNote>();
 
         public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/issues/{Iid.ToString(CultureInfo.InvariantCulture)}");
 
