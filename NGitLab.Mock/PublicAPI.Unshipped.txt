@@ -510,6 +510,8 @@ NGitLab.Mock.MergeRequest.Accept(NGitLab.Mock.User user) -> void
 NGitLab.Mock.MergeRequest.Approvers.get -> System.Collections.Generic.IList<NGitLab.Mock.UserRef>
 NGitLab.Mock.MergeRequest.Assignee.get -> NGitLab.Mock.UserRef
 NGitLab.Mock.MergeRequest.Assignee.set -> void
+NGitLab.Mock.MergeRequest.Assignees.get -> System.Collections.Generic.IList<NGitLab.Mock.UserRef>
+NGitLab.Mock.MergeRequest.Assignees.set -> void
 NGitLab.Mock.MergeRequest.Author.get -> NGitLab.Mock.UserRef
 NGitLab.Mock.MergeRequest.Author.set -> void
 NGitLab.Mock.MergeRequest.Changes.get -> NGitLab.Mock.MergeRequestChangeCollection
@@ -540,6 +542,7 @@ NGitLab.Mock.MergeRequest.Rebase(NGitLab.Mock.User user) -> NGitLab.Models.Rebas
 NGitLab.Mock.MergeRequest.RebaseInProgress.get -> bool
 NGitLab.Mock.MergeRequest.RebaseInProgress.set -> void
 NGitLab.Mock.MergeRequest.Reviewers.get -> System.Collections.Generic.IList<NGitLab.Mock.UserRef>
+NGitLab.Mock.MergeRequest.Reviewers.set -> void
 NGitLab.Mock.MergeRequest.Sha.get -> NGitLab.Sha1
 NGitLab.Mock.MergeRequest.ShouldRemoveSourceBranch.get -> bool
 NGitLab.Mock.MergeRequest.ShouldRemoveSourceBranch.set -> void
