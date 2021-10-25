@@ -445,12 +445,14 @@ namespace NGitLab.Mock
             var repo = GetGitRepository();
             Commands.Checkout(repo, Project.DefaultBranch);
 
-            foreach(var fileSystemEntry in Directory.EnumerateFileSystemEntries(FullPath))
+            foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(FullPath))
             {
+                var fileAttribute = System.IO.File.GetAttributes(fileSystemEntry);
                 yield return new Models.Tree
                 {
                     Name = Path.GetFileName(fileSystemEntry),
                     Path = Path.GetFileName(fileSystemEntry),
+                    Type = fileAttribute == FileAttributes.Directory ? Models.ObjectType.tree : Models.ObjectType.blob,
                 };
             }
         }
