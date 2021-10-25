@@ -8,6 +8,11 @@ namespace NGitLab.Mock.Config
     /// </summary>
     public class GitLabIssue : GitLabObject<GitLabProject>
     {
+        public GitLabIssue()
+        {
+            Comments = new GitLabCommentsCollection(this);
+        }
+
         /// <summary>
         /// Title (required)
         /// </summary>
@@ -34,6 +39,8 @@ namespace NGitLab.Mock.Config
         /// Milestone title
         /// </summary>
         public string Milestone { get; set; }
+
+        public GitLabCommentsCollection Comments { get; }
 
         public DateTime? CreatedAt { get; set; }
 
