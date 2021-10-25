@@ -106,6 +106,8 @@ NGitLab.Mock.Config.GitLabConfig.DefaultUser.set -> void
 NGitLab.Mock.Config.GitLabConfig.DefaultVisibility.get -> NGitLab.Models.VisibilityLevel
 NGitLab.Mock.Config.GitLabConfig.DefaultVisibility.set -> void
 NGitLab.Mock.Config.GitLabConfig.Serialize() -> string
+NGitLab.Mock.Config.GitLabConfig.Url.get -> string
+NGitLab.Mock.Config.GitLabConfig.Url.set -> void
 NGitLab.Mock.Config.GitLabGroup.Visibility.get -> NGitLab.Models.VisibilityLevel?
 NGitLab.Mock.Config.GitLabIssue.CreatedAt.get -> System.DateTime?
 NGitLab.Mock.Config.GitLabIssue.Milestone.get -> string
@@ -389,6 +391,8 @@ NGitLab.Mock.Issue.Author.get -> NGitLab.Mock.UserRef
 NGitLab.Mock.Issue.Author.set -> void
 NGitLab.Mock.Issue.ClosedAt.get -> System.DateTimeOffset?
 NGitLab.Mock.Issue.ClosedAt.set -> void
+NGitLab.Mock.Issue.Confidential.get -> bool
+NGitLab.Mock.Issue.Confidential.set -> void
 NGitLab.Mock.Issue.CreatedAt.get -> System.DateTimeOffset
 NGitLab.Mock.Issue.Description.get -> string
 NGitLab.Mock.Issue.Description.set -> void
@@ -401,6 +405,8 @@ NGitLab.Mock.Issue.Labels.get -> string[]
 NGitLab.Mock.Issue.Labels.set -> void
 NGitLab.Mock.Issue.Milestone.get -> NGitLab.Mock.Milestone
 NGitLab.Mock.Issue.Milestone.set -> void
+NGitLab.Mock.Issue.Notes.get -> System.Collections.Generic.IList<NGitLab.Mock.ProjectIssueNote>
+NGitLab.Mock.Issue.Notes.set -> void
 NGitLab.Mock.Issue.Project.get -> NGitLab.Mock.Project
 NGitLab.Mock.Issue.ProjectId.get -> int
 NGitLab.Mock.Issue.State.get -> NGitLab.Mock.IssueState
@@ -578,6 +584,8 @@ NGitLab.Mock.Note.Author.get -> NGitLab.Mock.UserRef
 NGitLab.Mock.Note.Author.set -> void
 NGitLab.Mock.Note.Body.get -> string
 NGitLab.Mock.Note.Body.set -> void
+NGitLab.Mock.Note.Confidential.get -> bool
+NGitLab.Mock.Note.Confidential.set -> void
 NGitLab.Mock.Note.CreatedAt.get -> System.DateTimeOffset
 NGitLab.Mock.Note.CreatedAt.set -> void
 NGitLab.Mock.Note.Id.get -> long
@@ -751,6 +759,9 @@ NGitLab.Mock.ProjectHook.WikiPagesEvents.get -> bool
 NGitLab.Mock.ProjectHook.WikiPagesEvents.set -> void
 NGitLab.Mock.ProjectHookCollection
 NGitLab.Mock.ProjectHookCollection.ProjectHookCollection(NGitLab.Mock.GitLabObject container) -> void
+NGitLab.Mock.ProjectIssueNote
+NGitLab.Mock.ProjectIssueNote.ProjectIssueNote() -> void
+NGitLab.Mock.ProjectIssueNote.Parent.get -> NGitLab.Mock.Issue
 NGitLab.Mock.ReleaseCollection
 NGitLab.Mock.ReleaseCollection.Add(string tagName, string name, string description, NGitLab.Mock.User user) -> NGitLab.Mock.ReleaseInfo
 NGitLab.Mock.ReleaseCollection.Add(string tagName, string name, string reference, string description, NGitLab.Mock.User user) -> NGitLab.Mock.ReleaseInfo
@@ -947,6 +958,9 @@ override NGitLab.Mock.NoteCollection<T>.Add(T item) -> void
 override NGitLab.Mock.PipelineCollection.Add(NGitLab.Mock.Pipeline pipeline) -> void
 override NGitLab.Mock.ProjectCollection.Add(NGitLab.Mock.Project project) -> void
 override NGitLab.Mock.ProjectHookCollection.Add(NGitLab.Mock.ProjectHook item) -> void
+override NGitLab.Mock.ProjectIssueNote.NoteableType.get -> string
+override NGitLab.Mock.ProjectIssueNote.NoticableId.get -> int
+override NGitLab.Mock.ProjectIssueNote.NoticableIid.get -> int
 override NGitLab.Mock.ReleaseCollection.Add(NGitLab.Mock.ReleaseInfo release) -> void
 override NGitLab.Mock.RunnerCollection.Add(NGitLab.Mock.Runner item) -> void
 override NGitLab.Mock.RunnerRef.Equals(object obj) -> bool

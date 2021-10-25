@@ -25,5 +25,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "labels")]
         public string Labels;
+
+        [DataMember(Name = "confidential")]
+        public bool Confidential;
     }
 }
