@@ -583,7 +583,7 @@ namespace NGitLab.Mock.Clients
                     {
                         foreach (var assigneeId in mergeRequestUpdate.AssigneeIds)
                         {
-                            var user = Server.Users.GetById(mergeRequestUpdate.AssigneeId.Value);
+                            var user = Server.Users.GetById(assigneeId);
                             if (user == null)
                                 throw new GitLabBadRequestException("user not found");
 
@@ -613,9 +613,9 @@ namespace NGitLab.Mock.Clients
 
                 if (mergeRequestUpdate.ReviewerIds != null)
                 {
-                    foreach (var userId in mergeRequestUpdate.ReviewerIds)
+                    foreach (var reviewerId in mergeRequestUpdate.ReviewerIds)
                     {
-                        var reviewer = Server.Users.GetById(userId);
+                        var reviewer = Server.Users.GetById(reviewerId);
                         if (reviewer == null)
                             throw new GitLabBadRequestException("user not found");
 
