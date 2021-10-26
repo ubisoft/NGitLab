@@ -1375,7 +1375,7 @@ namespace NGitLab.Mock.Config
                 jobs.Add(CreateJob(ppl, job));
             }
 
-            ppl.CreatedAt = jobs.Select(x => x.CreatedAt).DefaultIfEmpty(DateTime.Now).Min();
+            ppl.CreatedAt = jobs.Select(x => x.CreatedAt).DefaultIfEmpty(DateTime.UtcNow).Min();
             var dateTimes = jobs.Where(x => x.StartedAt != default).Select(x => x.StartedAt).ToArray();
             ppl.StartedAt = dateTimes.Length == 0 ? null : dateTimes.Min();
             ppl.FinishedAt = jobs.Any(x => x.Status is JobStatus.Created or JobStatus.Pending or JobStatus.Preparing or JobStatus.WaitingForResource or JobStatus.Running)
