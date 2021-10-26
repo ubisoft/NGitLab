@@ -15,6 +15,7 @@ namespace NGitLab.Mock.Config
             Permissions = new GitLabPermissionsCollection(this);
             Labels = new GitLabLabelsCollection(this);
             Milestones = new GitLabMilestonesCollection(this);
+            Pipelines = new GitLabPipelinesCollection(this);
         }
 
         /// <summary>
@@ -48,6 +49,8 @@ namespace NGitLab.Mock.Config
         public GitLabLabelsCollection Labels { get; }
 
         public GitLabMilestonesCollection Milestones { get; }
+
+        public GitLabPipelinesCollection Pipelines { get; }
     }
 
     public class GitLabProjectsCollection : GitLabCollection<GitLabProject, GitLabConfig>
