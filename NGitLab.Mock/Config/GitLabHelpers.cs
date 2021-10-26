@@ -22,35 +22,36 @@ namespace NGitLab.Mock.Config
 
         public static GitLabUser Configure(this GitLabUser user, Action<GitLabUser> configure)
         {
-            configure(user);
-            return user;
+            return Configure<GitLabUser>(user, configure);
         }
 
         public static GitLabGroup Configure(this GitLabGroup group, Action<GitLabGroup> configure)
         {
-            configure(group);
-            return group;
+            return Configure<GitLabGroup>(group, configure);
         }
 
         public static GitLabProject Configure(this GitLabProject project, Action<GitLabProject> configure)
         {
-            configure(project);
-            return project;
+            return Configure<GitLabProject>(project, configure);
         }
 
         public static GitLabCommit Configure(this GitLabCommit commit, Action<GitLabCommit> configure)
         {
-            configure(commit);
-            return commit;
+            return Configure<GitLabCommit>(commit, configure);
         }
 
         public static GitLabIssue Configure(this GitLabIssue issue, Action<GitLabIssue> configure)
         {
-            configure(issue);
-            return issue;
+            return Configure<GitLabIssue>(issue, configure);
         }
 
         public static GitLabMergeRequest Configure(this GitLabMergeRequest mergeRequest, Action<GitLabMergeRequest> configure)
+        {
+            return Configure<GitLabMergeRequest>(mergeRequest, configure);
+        }
+
+        private static T Configure<T>(this T mergeRequest, Action<T> configure)
+            where T : GitLabObject
         {
             configure(mergeRequest);
             return mergeRequest;
@@ -746,6 +747,149 @@ namespace NGitLab.Mock.Config
         }
 
         /// <summary>
+        /// Add comment in issue
+        /// </summary>
+        /// <param name="issue">Issue.</param>
+        /// <param name="message">Message (required)</param>
+        /// <param name="configure">Configuration method</param>
+        public static GitLabIssue WithComment(this GitLabIssue issue, string message, Action<GitLabComment> configure)
+        {
+            return WithComment<GitLabIssue>(issue, message, configure);
+        }
+
+        /// <summary>
+        /// Add comment in merge request
+        /// </summary>
+        /// <param name="mergeRequest">Merge request.</param>
+        /// <param name="message">Message (required)</param>
+        /// <param name="configure">Configuration method</param>
+        public static GitLabMergeRequest WithComment(this GitLabMergeRequest mergeRequest, string message, Action<GitLabComment> configure)
+        {
+            return WithComment<GitLabMergeRequest>(mergeRequest, message, configure);
+        }
+
+        private static T WithComment<T>(this T obj, string message, Action<GitLabComment> configure)
+            where T : GitLabObject
+        {
+            return Configure(obj, _ =>
+            {
+                var comment = new GitLabComment
+                {
+                    Message = message ?? throw new ArgumentNullException(nameof(message)),
+                };
+
+                switch (obj)
+                {
+                    case GitLabIssue issue:
+                        issue.Comments.Add(comment);
+                        break;
+                    case GitLabMergeRequest mergeRequest:
+                        mergeRequest.Comments.Add(comment);
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Cannot add comment in {typeof(T).Name}");
+                }
+
+                configure(comment);
+            });
+        }
+
+        /// <summary>
+        /// Add comment in issue
+        /// </summary>
+        /// <param name="issue">Issue.</param>
+        /// <param name="message">Message (required)</param>
+        /// <param name="id">Explicit ID (issue increment)</param>
+        /// <param name="author">Author username (required if default user not defined)</param>
+        /// <param name="system">Indicates if comment is from GitLab system.</param>
+        /// <param name="createdAt">Creation date time.</param>
+        /// <param name="updatedAt">Update date time.</param>
+        /// <param name="thread">Comment thread (all comments with same thread are grouped)</param>
+        /// <param name="resolvable">Indicates if comment is resolvable.</param>
+        /// <param name="resolved">Indicates if comment is resolved.</param>
+        /// <param name="configure">Configuration method</param>
+        public static GitLabIssue WithComment(this GitLabIssue issue, string message, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
+        {
+            return WithComment<GitLabIssue>(issue, message, id, author, system, createdAt, updatedAt, thread, resolvable, resolved, configure);
+        }
+
+        /// <summary>
+        /// Add comment in issue
+        /// </summary>
+        /// <param name="mergeRequest">Merge request.</param>
+        /// <param name="message">Message (required)</param>
+        /// <param name="id">Explicit ID (merge request increment)</param>
+        /// <param name="author">Author username (required if default user not defined)</param>
+        /// <param name="system">Indicates if comment is from GitLab system.</param>
+        /// <param name="createdAt">Creation date time.</param>
+        /// <param name="updatedAt">Update date time.</param>
+        /// <param name="thread">Comment thread (all comments with same thread are grouped)</param>
+        /// <param name="resolvable">Indicates if comment is resolvable.</param>
+        /// <param name="resolved">Indicates if comment is resolved.</param>
+        /// <param name="configure">Configuration method</param>
+        public static GitLabMergeRequest WithComment(this GitLabMergeRequest mergeRequest, string message, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
+        {
+            return WithComment<GitLabMergeRequest>(mergeRequest, message, id, author, system, createdAt, updatedAt, thread, resolvable, resolved, configure);
+        }
+
+        private static T WithComment<T>(this T obj, string message, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
+            where T : GitLabObject
+        {
+            return WithComment(obj, message, comment =>
+            {
+                if (id != default)
+                    comment.Id = id;
+
+                comment.Author = author;
+                comment.System = system;
+                comment.CreatedAt = createdAt;
+                comment.UpdatedAt = updatedAt;
+                comment.Thread = thread;
+                comment.Resolvable = resolvable;
+                comment.Resolved = resolved;
+
+                configure?.Invoke(comment);
+            });
+        }
+
+        /// <summary>
+        /// Add commit mention comment in issue
+        /// </summary>
+        /// <param name="issue">Issue.</param>
+        /// <param name="message">Message.</param>
+        /// <param name="innerHtml">Inner HTML.</param>
+        /// <param name="id">Explicit ID (issue increment)</param>
+        /// <param name="author">Author username (required if default user not defined)</param>
+        /// <param name="createdAt">Creation date time.</param>
+        /// <param name="updatedAt">Update date time.</param>
+        public static GitLabIssue WithSystemComment(this GitLabIssue issue, string message, string? innerHtml = null, int id = default, string? author = null, DateTime? createdAt = null, DateTime? updatedAt = null)
+        {
+            return WithSystemComment<GitLabIssue>(issue, message, innerHtml, id, author, createdAt, updatedAt);
+        }
+
+        /// <summary>
+        /// Add commit mention comment in merge request
+        /// </summary>
+        /// <param name="mergeRequest">Merge request.</param>
+        /// <param name="message">Message.</param>
+        /// <param name="innerHtml">Inner HTML.</param>
+        /// <param name="id">Explicit ID (merge request increment)</param>
+        /// <param name="author">Author username (required if default user not defined)</param>
+        /// <param name="createdAt">Creation date time.</param>
+        /// <param name="updatedAt">Update date time.</param>
+        public static GitLabMergeRequest WithSystemComment(this GitLabMergeRequest mergeRequest, string message, string? innerHtml = null, int id = default, string? author = null, DateTime? createdAt = null, DateTime? updatedAt = null)
+        {
+            return WithSystemComment<GitLabMergeRequest>(mergeRequest, message, innerHtml, id, author, createdAt, updatedAt);
+        }
+
+        private static T WithSystemComment<T>(this T obj, string message, string? innerHtml, int id, string? author, DateTime? createdAt, DateTime? updatedAt)
+            where T : GitLabObject
+        {
+            var body = innerHtml == null ? message : $"{message}\n\n{innerHtml}";
+            return WithComment(obj, body, id: id, author: author, system: true, createdAt: createdAt, updatedAt: updatedAt);
+        }
+
+        /// <summary>
         /// Add pipeline in project
         /// </summary>
         /// <param name="project">Project.</param>
@@ -1023,7 +1167,7 @@ namespace NGitLab.Mock.Config
             {
                 cmt = prj.Repository.Merge(user, commit.SourceBranch, targetBranch);
                 if (commit.DeleteSourceBranch)
-                    prj.Repository.RemoveBranch(targetBranch);
+                    prj.Repository.RemoveBranch(commit.SourceBranch);
             }
 
             foreach (var tag in commit.Tags)
@@ -1075,7 +1219,7 @@ namespace NGitLab.Mock.Config
 
             var issueAuthor = issue.Author ?? issue.Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
             var issueAssignee = issue.Assignee;
-            project.Issues.Add(new Issue
+            var iss = new Issue
             {
                 Iid = issue.Id,
                 Title = issue.Title ?? Guid.NewGuid().ToString("D"),
@@ -1086,7 +1230,14 @@ namespace NGitLab.Mock.Config
                 Milestone = string.IsNullOrEmpty(issue.Milestone) ? null : GetOrCreateMilestone(project, issue.Milestone),
                 UpdatedAt = issue.UpdatedAt ?? DateTimeOffset.UtcNow,
                 ClosedAt = issue.ClosedAt,
-            });
+            };
+
+            foreach (var comment in issue.Comments)
+            {
+                CreateComment(server, iss, comment);
+            }
+
+            project.Issues.Add(iss);
         }
 
         private static void CreateMergeRequest(GitLabServer server, Project project, GitLabMergeRequest mergeRequest)
@@ -1131,6 +1282,11 @@ namespace NGitLab.Mock.Config
                 request.Approvers.Add(new UserRef(server.Users.First(x => string.Equals(x.UserName, approver, StringComparison.Ordinal))));
             }
 
+            foreach (var comment in mergeRequest.Comments)
+            {
+                CreateComment(server, request, comment);
+            }
+
             project.MergeRequests.Add(request);
         }
 
@@ -1162,6 +1318,40 @@ namespace NGitLab.Mock.Config
                 StartDate = milestone.StartDate ?? DateTimeOffset.Now,
                 UpdatedAt = milestone.UpdatedAt ?? DateTimeOffset.UtcNow,
                 ClosedAt = milestone.ClosedAt,
+            });
+        }
+
+        private static void CreateComment(GitLabServer server, Issue issue, GitLabComment comment)
+        {
+            var commentAuthor = comment.Author ?? ((GitLabIssue)comment.Parent).Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
+            issue.Notes.Add(new ProjectIssueNote
+            {
+                Id = comment.Id,
+                Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, commentAuthor, StringComparison.Ordinal))),
+                Body = comment.Message,
+                System = comment.System,
+                CreatedAt = comment.CreatedAt ?? DateTimeOffset.Now,
+                UpdatedAt = comment.UpdatedAt ?? DateTimeOffset.Now,
+                ThreadId = comment.Thread,
+                Resolvable = comment.Resolvable,
+                Resolved = comment.Resolved,
+            });
+        }
+
+        private static void CreateComment(GitLabServer server, MergeRequest mergeRequest, GitLabComment comment)
+        {
+            var commentAuthor = comment.Author ?? ((GitLabMergeRequest)comment.Parent).Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
+            mergeRequest.Comments.Add(new MergeRequestComment
+            {
+                Id = comment.Id,
+                Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, commentAuthor, StringComparison.Ordinal))),
+                Body = comment.Message,
+                System = comment.System,
+                CreatedAt = comment.CreatedAt ?? DateTimeOffset.Now,
+                UpdatedAt = comment.UpdatedAt ?? DateTimeOffset.Now,
+                ThreadId = comment.Thread,
+                Resolvable = comment.Resolvable,
+                Resolved = comment.Resolved,
             });
         }
 
@@ -1401,9 +1591,14 @@ namespace NGitLab.Mock.Config
                 ClosedAt = issue.ClosedAt?.DateTime,
             };
 
-            foreach (var label in issue.Labels)
+            foreach (var label in issue.Labels ?? Enumerable.Empty<string>())
             {
                 iss.Labels.Add(label);
+            }
+
+            foreach (var comment in issue.Notes ?? Enumerable.Empty<ProjectIssueNote>())
+            {
+                iss.Comments.Add(ToConfig(comment));
             }
 
             return iss;
@@ -1434,6 +1629,11 @@ namespace NGitLab.Mock.Config
             foreach (var approver in mergeRequest.Approvers)
             {
                 mrg.Approvers.Add(approver.UserName);
+            }
+
+            foreach (var comment in mergeRequest.Comments)
+            {
+                mrg.Comments.Add(ToConfig(comment));
             }
 
             return mrg;
@@ -1467,6 +1667,38 @@ namespace NGitLab.Mock.Config
                 StartedAt = job.StartedAt == default ? null : job.StartedAt,
                 FinishedAt = job.FinishedAt == default ? null : job.FinishedAt,
                 AllowFailure = job.AllowFailure,
+            };
+        }
+
+        private static GitLabComment ToConfig(ProjectIssueNote comment)
+        {
+            return new GitLabComment
+            {
+                Id = (int)comment.Id,
+                Author = comment.Author?.UserName,
+                Message = comment.Body,
+                System = comment.System,
+                CreatedAt = comment.CreatedAt.DateTime,
+                UpdatedAt = comment.UpdatedAt.DateTime,
+                Thread = comment.ThreadId,
+                Resolvable = comment.Resolvable,
+                Resolved = comment.Resolved,
+            };
+        }
+
+        private static GitLabComment ToConfig(MergeRequestComment comment)
+        {
+            return new GitLabComment
+            {
+                Id = (int)comment.Id,
+                Author = comment.Author?.UserName,
+                Message = comment.Body,
+                System = comment.System,
+                CreatedAt = comment.CreatedAt.DateTime,
+                UpdatedAt = comment.UpdatedAt.DateTime,
+                Thread = comment.ThreadId,
+                Resolvable = comment.Resolvable,
+                Resolved = comment.Resolved,
             };
         }
 

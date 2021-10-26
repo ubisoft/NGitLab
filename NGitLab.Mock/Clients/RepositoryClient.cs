@@ -26,7 +26,17 @@ namespace NGitLab.Mock.Clients
 
         public IContributorClient Contributors => new ContributorClient(Context, _projectId);
 
-        public IEnumerable<Tree> Tree => throw new NotImplementedException();
+        public IEnumerable<Tree> Tree
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    var project = GetProject(_projectId, ProjectPermission.View);
+                    return project.Repository.GetTree();
+                }
+            }
+        }
 
         public IEnumerable<Commit> Commits
         {

@@ -440,6 +440,23 @@ namespace NGitLab.Mock
             };
         }
 
+        internal IEnumerable<Models.Tree> GetTree()
+        {
+            var repo = GetGitRepository();
+            Commands.Checkout(repo, Project.DefaultBranch);
+
+            foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(FullPath))
+            {
+                var fileAttribute = System.IO.File.GetAttributes(fileSystemEntry);
+                yield return new Models.Tree
+                {
+                    Name = Path.GetFileName(fileSystemEntry),
+                    Path = Path.GetFileName(fileSystemEntry),
+                    Type = fileAttribute == FileAttributes.Directory ? Models.ObjectType.tree : Models.ObjectType.blob,
+                };
+            }
+        }
+
         public Commit Merge(User user, string sourceBranch, string targetBranch, Project targetProject)
         {
             // If it's on the same project just merge branch
