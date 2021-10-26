@@ -1391,7 +1391,7 @@ namespace NGitLab.Mock.Config
                 Name = job.Name ?? Guid.NewGuid().ToString("D"),
                 Stage = job.Stage ?? "build",
                 Status = job.Status == JobStatus.Unknown ? JobStatus.Manual : job.Status,
-                CreatedAt = job.CreatedAt ?? DateTime.Now,
+                CreatedAt = job.CreatedAt ?? DateTime.UtcNow,
                 StartedAt = job.StartedAt ?? default,
                 FinishedAt = job.FinishedAt ?? default,
                 AllowFailure = job.AllowFailure,
