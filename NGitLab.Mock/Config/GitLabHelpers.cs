@@ -1365,6 +1365,7 @@ namespace NGitLab.Mock.Config
                 Id = pipeline.Id,
                 User = server.Users.First(x => string.Equals(x.Email, commit.Author.Email, StringComparison.Ordinal)),
                 CommittedAt = commit.Author.When,
+                Status = pipeline.Jobs.Count == 0 ? JobStatus.NoBuild : JobStatus.Success,
             };
 
             project.Pipelines.Add(ppl);
@@ -1374,6 +1375,17 @@ namespace NGitLab.Mock.Config
             {
                 jobs.Add(CreateJob(ppl, job));
             }
+
+            var statuses = pipeline.Jobs
+                .GroupBy(x => $"{x.Stage}:{x.Name}")
+                .Select(x => x.OrderByDescending(j => j.CreatedAt).First().Status)
+                .ToList();
+            if (statuses.Contains(JobStatus.Created) || statuses.Contains(JobStatus.Running) || statuses.Contains(JobStatus.Pending))
+                ppl.Status = JobStatus.Running;
+            else if (statuses.Contains(JobStatus.Canceled))
+                ppl.Status = JobStatus.Canceled;
+            else if (statuses.Contains(JobStatus.Failed))
+                ppl.Status = JobStatus.Failed;
 
             ppl.CreatedAt = jobs.Select(x => x.CreatedAt).DefaultIfEmpty(DateTime.UtcNow).Min();
             var dateTimes = jobs.Where(x => x.StartedAt != default).Select(x => x.StartedAt).ToArray();
