@@ -1255,7 +1255,7 @@ namespace NGitLab.Mock.Config
                 Title = mergeRequest.Title ?? Guid.NewGuid().ToString("D"),
                 Description = mergeRequest.Description,
                 Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, mergeRequestAuthor, StringComparison.Ordinal))),
-                Assignees = string.IsNullOrEmpty(mergeRequestAssignee) ? Array.Empty<UserRef>() : mergeRequestAssignee.Split(',').Select(a => new UserRef(server.Users.First(x => string.Equals(x.UserName, a.Trim(' '), StringComparison.Ordinal)))).ToArray(),
+                Assignees = string.IsNullOrEmpty(mergeRequestAssignee) ? Array.Empty<UserRef>() : mergeRequestAssignee.Split(',').Select(a => new UserRef(server.Users.First(x => string.Equals(x.UserName, a.Trim(), StringComparison.Ordinal)))).ToArray(),
                 SourceBranch = mergeRequest.SourceBranch,
                 TargetBranch = mergeRequest.TargetBranch ?? server.DefaultBranchName,
                 CreatedAt = mergeRequest.CreatedAt ?? DateTimeOffset.UtcNow,
