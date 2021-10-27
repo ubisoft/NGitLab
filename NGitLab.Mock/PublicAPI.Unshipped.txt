@@ -980,6 +980,7 @@ NGitLab.Mock.UserCollection.GetById(string id) -> NGitLab.Mock.User
 NGitLab.Mock.UserCollection.UserCollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.UserRef
 NGitLab.Mock.UserRef.Email.get -> string
+NGitLab.Mock.UserRef.Equals(NGitLab.Mock.UserRef other) -> bool
 NGitLab.Mock.UserRef.Id.get -> int
 NGitLab.Mock.UserRef.Name.get -> string
 NGitLab.Mock.UserRef.ToClientAssignee() -> NGitLab.Models.Assignee
@@ -1019,6 +1020,8 @@ override NGitLab.Mock.SystemHookCollection.Add(NGitLab.Mock.SystemHook item) -> 
 override NGitLab.Mock.TextFile.Content.get -> byte[]
 override NGitLab.Mock.User.ToString() -> string
 override NGitLab.Mock.UserCollection.Add(NGitLab.Mock.User user) -> void
+override NGitLab.Mock.UserRef.Equals(object obj) -> bool
+override NGitLab.Mock.UserRef.GetHashCode() -> int
 static NGitLab.Mock.Clients.LibGit2SharpExtensions.ToBranchClient(this LibGit2Sharp.Branch branch, NGitLab.Mock.Project project) -> NGitLab.Models.Branch
 static NGitLab.Mock.Clients.LibGit2SharpExtensions.ToCommitClient(this LibGit2Sharp.Commit commit, NGitLab.Mock.CommitInfo commitInfo = null) -> NGitLab.Models.Commit
 static NGitLab.Mock.Clients.LibGit2SharpExtensions.ToCommitInfo(this LibGit2Sharp.Commit commit) -> NGitLab.Models.CommitInfo

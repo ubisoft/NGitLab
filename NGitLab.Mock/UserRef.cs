@@ -2,7 +2,7 @@
 
 namespace NGitLab.Mock
 {
-    public sealed class UserRef
+    public sealed class UserRef : IEquatable<UserRef>
     {
         private readonly User _user;
 
@@ -62,6 +62,22 @@ namespace NGitLab.Mock
                 Name = Name,
                 State = _user.State.ToString(),
             };
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as UserRef);
+        }
+
+        public bool Equals(UserRef other)
+        {
+            return other != null &&
+                   Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return 2108858624 + Id.GetHashCode();
         }
     }
 }

@@ -157,10 +157,19 @@ namespace NGitLab.Mock
 
         internal Models.MergeRequest ToMergeRequestClient()
         {
+            var allAssignees = new List<UserRef>();
+            if (Assignee != null)
+            {
+                allAssignees.Add(Assignee);
+            }
+
+            allAssignees.AddRange(Assignees);
+            var assignees = GetUsers(allAssignees.Distinct());
+
             return new Models.MergeRequest
             {
-                Assignee = Assignee?.ToUserClient(),
-                Assignees = GetUsers(Assignees),
+                Assignee = assignees.FirstOrDefault(),
+                Assignees = assignees,
                 Author = Author.ToUserClient(),
                 CreatedAt = CreatedAt.UtcDateTime,
                 UpdatedAt = UpdatedAt.UtcDateTime,
@@ -192,10 +201,10 @@ namespace NGitLab.Mock
             };
         }
 
-        internal static Models.User[] GetUsers(IList<UserRef> userRefs)
+        internal static Models.User[] GetUsers(IEnumerable<UserRef> userRefs)
         {
             var users = new List<Models.User>();
-            foreach(var userRef in userRefs)
+            foreach (var userRef in userRefs)
             {
                 var user = userRef.ToUserClient();
                 users.Add(user);
