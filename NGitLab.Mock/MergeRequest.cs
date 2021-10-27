@@ -28,7 +28,14 @@ namespace NGitLab.Mock
         public UserRef Assignee
         {
             get => Assignees?.FirstOrDefault();
-            set => Assignees = (value != null) ? new[] { value } : null;
+            set
+            {
+                Assignees.Clear();
+                if (value != null)
+                {
+                    Assignees.Add(value);
+                }
+            }
         }
 
         public IList<UserRef> Assignees { get; set; } = new List<UserRef>();
@@ -199,7 +206,7 @@ namespace NGitLab.Mock
         internal static Models.User[] GetUsers(IList<UserRef> userRefs)
         {
             var users = new List<Models.User>();
-            foreach(var userRef in userRefs)
+            foreach (var userRef in userRefs)
             {
                 var user = userRef.ToUserClient();
                 users.Add(user);
