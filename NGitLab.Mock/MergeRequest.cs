@@ -25,7 +25,11 @@ namespace NGitLab.Mock
 
         public UserRef Author { get; set; }
 
-        public UserRef Assignee { get; set; }
+        public UserRef Assignee
+        {
+            get => Assignees?.FirstOrDefault();
+            set => Assignees = (value != null) ? new[] { value } : null;
+        }
 
         public IList<UserRef> Assignees { get; set; } = new List<UserRef>();
 
