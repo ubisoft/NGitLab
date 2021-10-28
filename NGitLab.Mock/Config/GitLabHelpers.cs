@@ -520,11 +520,11 @@ namespace NGitLab.Mock.Config
         /// Add merge request description in project
         /// </summary>
         /// <param name="project">Project.</param>
-        /// <param name="sourceBranch">Source branch (required)</param>
+        /// <param name="sourceBranch">Source branch.</param>
         /// <param name="title">Title.</param>
         /// <param name="author">Author username (required if default user not defined)</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabProject WithMergeRequest(this GitLabProject project, string sourceBranch, string? title, string? author, Action<GitLabMergeRequest> configure)
+        public static GitLabProject WithMergeRequest(this GitLabProject project, string? sourceBranch, string? title, string? author, Action<GitLabMergeRequest> configure)
         {
             return Configure(project, _ =>
             {
@@ -532,7 +532,7 @@ namespace NGitLab.Mock.Config
                 {
                     Title = title,
                     Author = author,
-                    SourceBranch = sourceBranch ?? throw new ArgumentNullException(nameof(sourceBranch)),
+                    SourceBranch = sourceBranch,
                     TargetBranch = project.DefaultBranch,
                 };
 
@@ -559,7 +559,7 @@ namespace NGitLab.Mock.Config
         /// <param name="approvers">Approvers usernames.</param>
         /// <param name="labels">Labels names.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabProject WithMergeRequest(this GitLabProject project, string sourceBranch, string? title = null, int id = default, string? targetBranch = null, string? description = null, string? author = null, string? assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string>? approvers = null, IEnumerable<string>? labels = null, Action<GitLabMergeRequest>? configure = null)
+        public static GitLabProject WithMergeRequest(this GitLabProject project, string? sourceBranch = null, string? title = null, int id = default, string? targetBranch = null, string? description = null, string? author = null, string? assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string>? approvers = null, IEnumerable<string>? labels = null, Action<GitLabMergeRequest>? configure = null)
         {
             return WithMergeRequest(project, sourceBranch, title, author, mergeRequest =>
             {
@@ -752,9 +752,9 @@ namespace NGitLab.Mock.Config
         /// Add comment in issue
         /// </summary>
         /// <param name="issue">Issue.</param>
-        /// <param name="message">Message (required)</param>
+        /// <param name="message">Message.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabIssue WithComment(this GitLabIssue issue, string message, Action<GitLabComment> configure)
+        public static GitLabIssue WithComment(this GitLabIssue issue, string? message, Action<GitLabComment> configure)
         {
             return WithComment<GitLabIssue>(issue, message, configure);
         }
@@ -763,21 +763,21 @@ namespace NGitLab.Mock.Config
         /// Add comment in merge request
         /// </summary>
         /// <param name="mergeRequest">Merge request.</param>
-        /// <param name="message">Message (required)</param>
+        /// <param name="message">Message.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabMergeRequest WithComment(this GitLabMergeRequest mergeRequest, string message, Action<GitLabComment> configure)
+        public static GitLabMergeRequest WithComment(this GitLabMergeRequest mergeRequest, string? message, Action<GitLabComment> configure)
         {
             return WithComment<GitLabMergeRequest>(mergeRequest, message, configure);
         }
 
-        private static T WithComment<T>(this T obj, string message, Action<GitLabComment> configure)
+        private static T WithComment<T>(this T obj, string? message, Action<GitLabComment> configure)
             where T : GitLabObject
         {
             return Configure(obj, _ =>
             {
                 var comment = new GitLabComment
                 {
-                    Message = message ?? throw new ArgumentNullException(nameof(message)),
+                    Message = message,
                 };
 
                 switch (obj)
@@ -810,7 +810,7 @@ namespace NGitLab.Mock.Config
         /// <param name="resolvable">Indicates if comment is resolvable.</param>
         /// <param name="resolved">Indicates if comment is resolved.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabIssue WithComment(this GitLabIssue issue, string message, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
+        public static GitLabIssue WithComment(this GitLabIssue issue, string? message = null, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
         {
             return WithComment<GitLabIssue>(issue, message, id, author, system, createdAt, updatedAt, thread, resolvable, resolved, configure);
         }
@@ -829,12 +829,12 @@ namespace NGitLab.Mock.Config
         /// <param name="resolvable">Indicates if comment is resolvable.</param>
         /// <param name="resolved">Indicates if comment is resolved.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabMergeRequest WithComment(this GitLabMergeRequest mergeRequest, string message, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
+        public static GitLabMergeRequest WithComment(this GitLabMergeRequest mergeRequest, string? message = null, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
         {
             return WithComment<GitLabMergeRequest>(mergeRequest, message, id, author, system, createdAt, updatedAt, thread, resolvable, resolved, configure);
         }
 
-        private static T WithComment<T>(this T obj, string message, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
+        private static T WithComment<T>(this T obj, string? message, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
             where T : GitLabObject
         {
             return WithComment(obj, message, comment =>
@@ -864,7 +864,7 @@ namespace NGitLab.Mock.Config
         /// <param name="author">Author username (required if default user not defined)</param>
         /// <param name="createdAt">Creation date time.</param>
         /// <param name="updatedAt">Update date time.</param>
-        public static GitLabIssue WithSystemComment(this GitLabIssue issue, string message, string? innerHtml = null, int id = default, string? author = null, DateTime? createdAt = null, DateTime? updatedAt = null)
+        public static GitLabIssue WithSystemComment(this GitLabIssue issue, string? message = null, string? innerHtml = null, int id = default, string? author = null, DateTime? createdAt = null, DateTime? updatedAt = null)
         {
             return WithSystemComment<GitLabIssue>(issue, message, innerHtml, id, author, createdAt, updatedAt);
         }
@@ -879,12 +879,12 @@ namespace NGitLab.Mock.Config
         /// <param name="author">Author username (required if default user not defined)</param>
         /// <param name="createdAt">Creation date time.</param>
         /// <param name="updatedAt">Update date time.</param>
-        public static GitLabMergeRequest WithSystemComment(this GitLabMergeRequest mergeRequest, string message, string? innerHtml = null, int id = default, string? author = null, DateTime? createdAt = null, DateTime? updatedAt = null)
+        public static GitLabMergeRequest WithSystemComment(this GitLabMergeRequest mergeRequest, string? message = null, string? innerHtml = null, int id = default, string? author = null, DateTime? createdAt = null, DateTime? updatedAt = null)
         {
             return WithSystemComment<GitLabMergeRequest>(mergeRequest, message, innerHtml, id, author, createdAt, updatedAt);
         }
 
-        private static T WithSystemComment<T>(this T obj, string message, string? innerHtml, int id, string? author, DateTime? createdAt, DateTime? updatedAt)
+        private static T WithSystemComment<T>(this T obj, string? message, string? innerHtml, int id, string? author, DateTime? createdAt, DateTime? updatedAt)
             where T : GitLabObject
         {
             var body = innerHtml == null ? message : $"{message}\n\n{innerHtml}";
@@ -1280,7 +1280,7 @@ namespace NGitLab.Mock.Config
                 Description = mergeRequest.Description,
                 Author = new UserRef(GetOrCreateUser(server, mergeRequestAuthor)),
                 Assignees = string.IsNullOrEmpty(mergeRequestAssignee) ? Array.Empty<UserRef>() : mergeRequestAssignee.Split(',').Select(a => new UserRef(GetOrCreateUser(server, a.Trim()))).ToArray(),
-                SourceBranch = mergeRequest.SourceBranch,
+                SourceBranch = mergeRequest.SourceBranch ?? Guid.NewGuid().ToString("D"),
                 TargetBranch = mergeRequest.TargetBranch ?? server.DefaultBranchName,
                 CreatedAt = createdAt,
                 UpdatedAt = updatedAt,
@@ -1364,7 +1364,7 @@ namespace NGitLab.Mock.Config
             {
                 Id = comment.Id,
                 Author = new UserRef(GetOrCreateUser(server, commentAuthor)),
-                Body = comment.Message,
+                Body = comment.Message ?? Guid.NewGuid().ToString("D"),
                 System = comment.System,
                 CreatedAt = comment.CreatedAt ?? DateTimeOffset.Now,
                 UpdatedAt = comment.UpdatedAt ?? DateTimeOffset.Now,
@@ -1385,7 +1385,7 @@ namespace NGitLab.Mock.Config
             {
                 Id = comment.Id,
                 Author = new UserRef(GetOrCreateUser(server, commentAuthor)),
-                Body = comment.Message,
+                Body = comment.Message ?? Guid.NewGuid().ToString("D"),
                 System = comment.System,
                 CreatedAt = comment.CreatedAt ?? maxCreatedAt,
                 UpdatedAt = comment.UpdatedAt ?? maxCreatedAt,
