@@ -1229,6 +1229,12 @@ namespace NGitLab.Mock.Config
 
             var issueAuthor = issue.Author ?? issue.Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
             var issueAssignee = issue.Assignee;
+            var updatedAt = issue.UpdatedAt ?? issue.Comments
+                .SelectMany(x => new[] { x.CreatedAt ?? default, x.UpdatedAt ?? default })
+                .Where(x => x != default)
+                .DefaultIfEmpty(DateTime.UtcNow)
+                .Max();
+
             var iss = new Issue
             {
                 Iid = issue.Id,
@@ -1238,7 +1244,7 @@ namespace NGitLab.Mock.Config
                 Author = new UserRef(GetOrCreateUser(server, issueAuthor)),
                 Assignees = string.IsNullOrEmpty(issueAssignee) ? Array.Empty<UserRef>() : issueAssignee.Split(',').Select(a => new UserRef(GetOrCreateUser(server, a.Trim()))).ToArray(),
                 Milestone = string.IsNullOrEmpty(issue.Milestone) ? null : GetOrCreateMilestone(project, issue.Milestone),
-                UpdatedAt = issue.UpdatedAt ?? DateTimeOffset.UtcNow,
+                UpdatedAt = updatedAt,
                 ClosedAt = issue.ClosedAt,
             };
 
@@ -1367,7 +1373,7 @@ namespace NGitLab.Mock.Config
                 Body = comment.Message ?? Guid.NewGuid().ToString("D"),
                 System = comment.System,
                 CreatedAt = comment.CreatedAt ?? DateTimeOffset.Now,
-                UpdatedAt = comment.UpdatedAt ?? DateTimeOffset.Now,
+                UpdatedAt = comment.UpdatedAt ?? comment.CreatedAt ?? DateTimeOffset.Now,
                 ThreadId = comment.Thread,
                 Resolvable = comment.Resolvable,
                 Resolved = comment.Resolved,
@@ -1388,7 +1394,7 @@ namespace NGitLab.Mock.Config
                 Body = comment.Message ?? Guid.NewGuid().ToString("D"),
                 System = comment.System,
                 CreatedAt = comment.CreatedAt ?? maxCreatedAt,
-                UpdatedAt = comment.UpdatedAt ?? maxCreatedAt,
+                UpdatedAt = comment.UpdatedAt ?? comment.CreatedAt ?? maxCreatedAt,
                 ThreadId = comment.Thread,
                 Resolvable = comment.Resolvable,
                 Resolved = comment.Resolved,
