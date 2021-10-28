@@ -1102,9 +1102,17 @@ namespace NGitLab.Mock.Config
                 CreateIssue(server, prj, issue);
             }
 
-            foreach (var mergeRequest in project.MergeRequests)
+            for (var i = 0; i < project.MergeRequests.Count; i++)
             {
-                CreateMergeRequest(server, prj, mergeRequest);
+                var mergeRequest = project.MergeRequests[i];
+                var maxCreatedAt = project.MergeRequests
+                    .Skip(i + 1)
+                    .SelectMany(x => new[] { x.CreatedAt ?? default, x.UpdatedAt ?? default, x.MergedAt ?? default, x.ClosedAt ?? default }
+                        .Concat(x.Comments.SelectMany(c => new[] { c.CreatedAt ?? default, c.UpdatedAt ?? default })))
+                    .Where(x => x != default)
+                    .DefaultIfEmpty(DateTime.UtcNow).Min();
+
+                CreateMergeRequest(server, prj, mergeRequest, maxCreatedAt);
             }
 
             foreach (var permission in project.Permissions)
@@ -1149,7 +1157,7 @@ namespace NGitLab.Mock.Config
         private static LibGit2Sharp.Commit CreateCommit(GitLabServer server, Project prj, GitLabCommit commit)
         {
             var username = commit.User ?? commit.Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
-            var user = server.Users.First(x => string.Equals(x.UserName, username, StringComparison.Ordinal));
+            var user = GetOrCreateUser(server, username);
             var targetBranch = commit.TargetBranch;
             LibGit2Sharp.Commit cmt;
             if (string.IsNullOrEmpty(targetBranch))
@@ -1225,12 +1233,15 @@ namespace NGitLab.Mock.Config
                 Title = issue.Title ?? Guid.NewGuid().ToString("D"),
                 Description = issue.Description,
                 Labels = issue.Labels.ToArray(),
-                Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, issueAuthor, StringComparison.Ordinal))),
-                Assignees = string.IsNullOrEmpty(issueAssignee) ? Array.Empty<UserRef>() : issueAssignee.Split(',').Select(a => new UserRef(server.Users.First(x => string.Equals(x.UserName, a, StringComparison.Ordinal)))).ToArray(),
+                Author = new UserRef(GetOrCreateUser(server, issueAuthor)),
+                Assignees = string.IsNullOrEmpty(issueAssignee) ? Array.Empty<UserRef>() : issueAssignee.Split(',').Select(a => new UserRef(GetOrCreateUser(server, a.Trim()))).ToArray(),
                 Milestone = string.IsNullOrEmpty(issue.Milestone) ? null : GetOrCreateMilestone(project, issue.Milestone),
                 UpdatedAt = issue.UpdatedAt ?? DateTimeOffset.UtcNow,
                 ClosedAt = issue.ClosedAt,
             };
+
+            if (iss.ClosedAt != null && iss.UpdatedAt > iss.ClosedAt)
+                iss.UpdatedAt = (DateTimeOffset)iss.ClosedAt;
 
             foreach (var comment in issue.Comments)
             {
@@ -1240,7 +1251,7 @@ namespace NGitLab.Mock.Config
             project.Issues.Add(iss);
         }
 
-        private static void CreateMergeRequest(GitLabServer server, Project project, GitLabMergeRequest mergeRequest)
+        private static void CreateMergeRequest(GitLabServer server, Project project, GitLabMergeRequest mergeRequest, DateTime maxCreatedAt)
         {
             foreach (var label in mergeRequest.Labels)
             {
@@ -1249,17 +1260,28 @@ namespace NGitLab.Mock.Config
 
             var mergeRequestAuthor = mergeRequest.Author ?? mergeRequest.Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
             var mergeRequestAssignee = mergeRequest.Assignee;
+            var createdAt = mergeRequest.CreatedAt ?? mergeRequest.Comments
+                .SelectMany(x => new[] { x.CreatedAt ?? default, x.UpdatedAt ?? default })
+                .Where(x => x != default)
+                .DefaultIfEmpty(maxCreatedAt)
+                .Min();
+            var updatedAt = mergeRequest.UpdatedAt ?? mergeRequest.Comments
+                .SelectMany(x => new[] { x.CreatedAt ?? default, x.UpdatedAt ?? default })
+                .Where(x => x != default)
+                .DefaultIfEmpty(maxCreatedAt)
+                .Max();
+
             var request = new MergeRequest
             {
                 Iid = mergeRequest.Id,
                 Title = mergeRequest.Title ?? Guid.NewGuid().ToString("D"),
                 Description = mergeRequest.Description,
-                Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, mergeRequestAuthor, StringComparison.Ordinal))),
-                Assignees = string.IsNullOrEmpty(mergeRequestAssignee) ? Array.Empty<UserRef>() : mergeRequestAssignee.Split(',').Select(a => new UserRef(server.Users.First(x => string.Equals(x.UserName, a.Trim(), StringComparison.Ordinal)))).ToArray(),
+                Author = new UserRef(GetOrCreateUser(server, mergeRequestAuthor)),
+                Assignees = string.IsNullOrEmpty(mergeRequestAssignee) ? Array.Empty<UserRef>() : mergeRequestAssignee.Split(',').Select(a => new UserRef(GetOrCreateUser(server, a.Trim()))).ToArray(),
                 SourceBranch = mergeRequest.SourceBranch,
                 TargetBranch = mergeRequest.TargetBranch ?? server.DefaultBranchName,
-                CreatedAt = mergeRequest.CreatedAt ?? DateTimeOffset.UtcNow,
-                UpdatedAt = mergeRequest.UpdatedAt ?? DateTimeOffset.UtcNow,
+                CreatedAt = createdAt,
+                UpdatedAt = updatedAt,
                 ClosedAt = mergeRequest.ClosedAt,
                 MergedAt = mergeRequest.MergedAt,
                 SourceProject = project,
@@ -1279,12 +1301,20 @@ namespace NGitLab.Mock.Config
 
             foreach (var approver in mergeRequest.Approvers)
             {
-                request.Approvers.Add(new UserRef(server.Users.First(x => string.Equals(x.UserName, approver, StringComparison.Ordinal))));
+                request.Approvers.Add(new UserRef(GetOrCreateUser(server, approver)));
             }
 
-            foreach (var comment in mergeRequest.Comments)
+            for (var i = 0; i < mergeRequest.Comments.Count; i++)
             {
-                CreateComment(server, request, comment);
+                var comment = mergeRequest.Comments[i];
+                var maxCommentCreatedAt = mergeRequest.Comments
+                    .Skip(i + 1)
+                    .SelectMany(x => new[] { x.CreatedAt ?? default, x.UpdatedAt ?? default })
+                    .Where(x => x != default)
+                    .DefaultIfEmpty(updatedAt)
+                    .Min();
+
+                CreateComment(server, request, comment, maxCommentCreatedAt);
             }
 
             project.MergeRequests.Add(request);
@@ -1304,12 +1334,12 @@ namespace NGitLab.Mock.Config
         {
             return string.IsNullOrEmpty(permission.User)
                 ? new Permission(GetOrCreateGroup(server, permission.Group), permission.Level)
-                : new Permission(server.Users.First(x => string.Equals(x.UserName, permission.User, StringComparison.Ordinal)), permission.Level);
+                : new Permission(GetOrCreateUser(server, permission.User), permission.Level);
         }
 
         private static void CreateMilestone(Project project, GitLabMilestone milestone)
         {
-            project.Milestones.Add(new Milestone
+            var mlt = new Milestone
             {
                 Id = milestone.Id,
                 Title = milestone.Title,
@@ -1318,16 +1348,20 @@ namespace NGitLab.Mock.Config
                 StartDate = milestone.StartDate ?? DateTimeOffset.Now,
                 UpdatedAt = milestone.UpdatedAt ?? DateTimeOffset.UtcNow,
                 ClosedAt = milestone.ClosedAt,
-            });
+            };
+            project.Milestones.Add(mlt);
+
+            if (mlt.ClosedAt != null && mlt.UpdatedAt > mlt.ClosedAt)
+                mlt.UpdatedAt = (DateTimeOffset)mlt.ClosedAt;
         }
 
         private static void CreateComment(GitLabServer server, Issue issue, GitLabComment comment)
         {
             var commentAuthor = comment.Author ?? ((GitLabIssue)comment.Parent).Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
-            issue.Notes.Add(new ProjectIssueNote
+            var cmt = new ProjectIssueNote
             {
                 Id = comment.Id,
-                Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, commentAuthor, StringComparison.Ordinal))),
+                Author = new UserRef(GetOrCreateUser(server, commentAuthor)),
                 Body = comment.Message,
                 System = comment.System,
                 CreatedAt = comment.CreatedAt ?? DateTimeOffset.Now,
@@ -1335,24 +1369,32 @@ namespace NGitLab.Mock.Config
                 ThreadId = comment.Thread,
                 Resolvable = comment.Resolvable,
                 Resolved = comment.Resolved,
-            });
+            };
+            issue.Notes.Add(cmt);
+
+            if (cmt.CreatedAt > cmt.UpdatedAt)
+                cmt.CreatedAt = cmt.UpdatedAt;
         }
 
-        private static void CreateComment(GitLabServer server, MergeRequest mergeRequest, GitLabComment comment)
+        private static void CreateComment(GitLabServer server, MergeRequest mergeRequest, GitLabComment comment, DateTimeOffset maxCreatedAt)
         {
             var commentAuthor = comment.Author ?? ((GitLabMergeRequest)comment.Parent).Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
-            mergeRequest.Comments.Add(new MergeRequestComment
+            var cmt = new MergeRequestComment
             {
                 Id = comment.Id,
-                Author = new UserRef(server.Users.First(x => string.Equals(x.UserName, commentAuthor, StringComparison.Ordinal))),
+                Author = new UserRef(GetOrCreateUser(server, commentAuthor)),
                 Body = comment.Message,
                 System = comment.System,
-                CreatedAt = comment.CreatedAt ?? DateTimeOffset.Now,
-                UpdatedAt = comment.UpdatedAt ?? DateTimeOffset.Now,
+                CreatedAt = comment.CreatedAt ?? maxCreatedAt,
+                UpdatedAt = comment.UpdatedAt ?? maxCreatedAt,
                 ThreadId = comment.Thread,
                 Resolvable = comment.Resolvable,
                 Resolved = comment.Resolved,
-            });
+            };
+            mergeRequest.Comments.Add(cmt);
+
+            if (cmt.CreatedAt > cmt.UpdatedAt)
+                cmt.CreatedAt = cmt.UpdatedAt;
         }
 
         private static void CreatePipeline(GitLabServer server, Project project, GitLabPipeline pipeline, Dictionary<string, LibGit2Sharp.Commit> aliases)
@@ -1365,6 +1407,7 @@ namespace NGitLab.Mock.Config
                 Id = pipeline.Id,
                 User = server.Users.First(x => string.Equals(x.Email, commit.Author.Email, StringComparison.Ordinal)),
                 CommittedAt = commit.Author.When,
+                Status = pipeline.Jobs.Count == 0 ? JobStatus.NoBuild : JobStatus.Success,
             };
 
             project.Pipelines.Add(ppl);
@@ -1375,12 +1418,29 @@ namespace NGitLab.Mock.Config
                 jobs.Add(CreateJob(ppl, job));
             }
 
+            var statuses = jobs
+                .GroupBy(x => $"{x.Stage}:{x.Name}", StringComparer.Ordinal)
+                .Select(x => x.OrderByDescending(j => j.CreatedAt).First().Status)
+                .ToList();
+            if (statuses.Contains(JobStatus.Created) || statuses.Contains(JobStatus.Running) || statuses.Contains(JobStatus.Pending))
+                ppl.Status = JobStatus.Running;
+            else if (statuses.Contains(JobStatus.Canceled))
+                ppl.Status = JobStatus.Canceled;
+            else if (statuses.Contains(JobStatus.Failed))
+                ppl.Status = JobStatus.Failed;
+
             ppl.CreatedAt = jobs.Select(x => x.CreatedAt).DefaultIfEmpty(DateTime.UtcNow).Min();
             var dateTimes = jobs.Where(x => x.StartedAt != default).Select(x => x.StartedAt).ToArray();
             ppl.StartedAt = dateTimes.Length == 0 ? null : dateTimes.Min();
             ppl.FinishedAt = jobs.Any(x => x.Status is JobStatus.Created or JobStatus.Pending or JobStatus.Preparing or JobStatus.WaitingForResource or JobStatus.Running)
                 ? null
                 : jobs.Where(x => x.FinishedAt != default).Select(x => (DateTimeOffset)x.FinishedAt).DefaultIfEmpty(ppl.CreatedAt).Max();
+
+            if (ppl.FinishedAt != null && (ppl.StartedAt == null || ppl.StartedAt > ppl.FinishedAt))
+                ppl.StartedAt = ppl.FinishedAt;
+
+            if (ppl.StartedAt != null && ppl.CreatedAt > ppl.StartedAt)
+                ppl.CreatedAt = (DateTimeOffset)ppl.StartedAt;
         }
 
         private static Job CreateJob(Pipeline pipeline, GitLabJob job)
@@ -1398,7 +1458,19 @@ namespace NGitLab.Mock.Config
                 User = pipeline.User,
             };
             pipeline.AddJob(pipeline.Parent, jb);
+
+            if (jb.FinishedAt != default && (jb.StartedAt == default || jb.StartedAt > jb.FinishedAt))
+                jb.StartedAt = jb.FinishedAt;
+
+            if (jb.StartedAt != default && jb.CreatedAt > jb.StartedAt)
+                jb.CreatedAt = jb.StartedAt;
+
             return jb;
+        }
+
+        private static User GetOrCreateUser(GitLabServer server, string username)
+        {
+            return server.Users.FirstOrDefault(x => string.Equals(x.UserName, username, StringComparison.Ordinal)) ?? server.Users.AddNew(username);
         }
 
         private static Milestone GetOrCreateMilestone(Project project, string title)

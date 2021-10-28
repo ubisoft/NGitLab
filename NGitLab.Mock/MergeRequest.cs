@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using NGitLab.Models;
 
 namespace NGitLab.Mock
@@ -158,12 +160,42 @@ namespace NGitLab.Mock
 
         public IEnumerable<MergeRequestDiscussion> GetDiscussions()
         {
-            return Comments.GroupBy(c => c.ThreadId, StringComparer.Ordinal).Select(g => new MergeRequestDiscussion
+            var sha1 = SHA1.Create();
+            var i = 0;
+            var discussions = new List<MergeRequestDiscussion>();
+            foreach (var comment in Comments)
             {
-                Id = g.Key,
-                IndividualNote = string.IsNullOrEmpty(g.Key),
-                Notes = g.Select(n => n.ToMergeRequestCommentClient()).ToArray(),
-            });
+                if (string.IsNullOrEmpty(comment.ThreadId))
+                {
+                    discussions.Add(new MergeRequestDiscussion
+                    {
+                        Id = Convert.ToBase64String(sha1.ComputeHash(Encoding.UTF8.GetBytes($"{Iid}:{i}"))),
+                        IndividualNote = true,
+                        Notes = new[] { comment.ToMergeRequestCommentClient() },
+                    });
+                }
+                else
+                {
+                    var discussion = discussions.Find(x => string.Equals(x.Id, comment.ThreadId, StringComparison.Ordinal));
+                    if (discussion == null)
+                    {
+                        discussions.Add(new MergeRequestDiscussion
+                        {
+                            Id = comment.ThreadId,
+                            IndividualNote = false,
+                            Notes = new[] { comment.ToMergeRequestCommentClient() },
+                        });
+                    }
+                    else
+                    {
+                        discussion.Notes = discussion.Notes.Concat(new[] { comment.ToMergeRequestCommentClient() }).ToArray();
+                    }
+                }
+
+                i++;
+            }
+
+            return discussions;
         }
 
         internal Models.MergeRequest ToMergeRequestClient()
