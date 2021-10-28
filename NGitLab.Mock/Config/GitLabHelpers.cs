@@ -1413,9 +1413,20 @@ namespace NGitLab.Mock.Config
             project.Pipelines.Add(ppl);
 
             var jobs = new List<Job>();
-            foreach (var job in pipeline.Jobs)
+            for (var i = 0; i < pipeline.Jobs.Count; i++)
             {
-                jobs.Add(CreateJob(ppl, job));
+                var job = pipeline.Jobs[i];
+                var maxCreatedAt = string.IsNullOrEmpty(job.Name)
+                    ? DateTime.UtcNow
+                    : pipeline.Jobs
+                        .Skip(i + 1)
+                        .Where(x => string.Equals(x.Name, job.Name, StringComparison.Ordinal) && string.Equals(x.Stage, job.Stage, StringComparison.Ordinal))
+                        .SelectMany(x => new[] { x.CreatedAt ?? default, x.StartedAt ?? default, x.FinishedAt ?? default })
+                        .Where(x => x != default)
+                        .DefaultIfEmpty(DateTime.UtcNow)
+                        .Min();
+
+                jobs.Add(CreateJob(ppl, job, maxCreatedAt));
             }
 
             var statuses = jobs
@@ -1443,7 +1454,7 @@ namespace NGitLab.Mock.Config
                 ppl.CreatedAt = (DateTimeOffset)ppl.StartedAt;
         }
 
-        private static Job CreateJob(Pipeline pipeline, GitLabJob job)
+        private static Job CreateJob(Pipeline pipeline, GitLabJob job, DateTime maxCreatedAt)
         {
             var jb = new Job
             {
@@ -1451,9 +1462,9 @@ namespace NGitLab.Mock.Config
                 Name = job.Name ?? Guid.NewGuid().ToString("D"),
                 Stage = job.Stage ?? "build",
                 Status = job.Status == JobStatus.Unknown ? JobStatus.Manual : job.Status,
-                CreatedAt = job.CreatedAt ?? DateTime.UtcNow,
-                StartedAt = job.StartedAt ?? default,
-                FinishedAt = job.FinishedAt ?? default,
+                CreatedAt = job.CreatedAt ?? maxCreatedAt,
+                StartedAt = job.StartedAt ?? (job.Status is JobStatus.Success or JobStatus.Failed or JobStatus.Canceled or JobStatus.Running ? maxCreatedAt : default),
+                FinishedAt = job.FinishedAt ?? (job.Status is JobStatus.Success or JobStatus.Failed or JobStatus.Canceled ? maxCreatedAt : default),
                 AllowFailure = job.AllowFailure,
                 User = pipeline.User,
             };
