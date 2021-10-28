@@ -1377,7 +1377,7 @@ namespace NGitLab.Mock.Config
             }
 
             var statuses = pipeline.Jobs
-                .GroupBy(x => $"{x.Stage}:{x.Name}")
+                .GroupBy(x => $"{x.Stage}:{x.Name}", StringComparer.Ordinal)
                 .Select(x => x.OrderByDescending(j => j.CreatedAt).First().Status)
                 .ToList();
             if (statuses.Contains(JobStatus.Created) || statuses.Contains(JobStatus.Running) || statuses.Contains(JobStatus.Pending))
