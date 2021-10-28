@@ -19,6 +19,8 @@
                 CreatedAt = CreatedAt.UtcDateTime,
                 UpdatedAt = UpdatedAt.UtcDateTime,
                 Resolved = Resolved,
+                Resolvable = Resolvable,
+                System = System,
                 Type = NoteableType,
                 Author = Author.ToUserClient(),
             };
