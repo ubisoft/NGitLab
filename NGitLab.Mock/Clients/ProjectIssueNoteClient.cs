@@ -63,7 +63,7 @@ namespace NGitLab.Mock.Clients
 
         private Issue GetIssue(int issueId)
         {
-            var project = GetProject(_projectId, ProjectPermission.Contribute);
+            var project = GetProject(_projectId, ProjectPermission.View);
             var issue = project.Issues.FirstOrDefault(iss => iss.Id == issueId);
 
             if (issue == null)
