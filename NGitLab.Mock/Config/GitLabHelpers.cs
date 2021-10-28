@@ -360,13 +360,15 @@ namespace NGitLab.Mock.Config
         /// <param name="sourceBranch">Source branch (required if checkout or merge)</param>
         /// <param name="targetBranch">Target branch (required if merge)</param>
         /// <param name="tags">Tags.</param>
+        /// <param name="alias">Alias to reference it in pipeline.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabProject WithCommit(this GitLabProject project, string? message = null, string? user = null, string? sourceBranch = null, string? targetBranch = null, IEnumerable<string>? tags = null, Action<GitLabCommit>? configure = null)
+        public static GitLabProject WithCommit(this GitLabProject project, string? message = null, string? user = null, string? sourceBranch = null, string? targetBranch = null, IEnumerable<string>? tags = null, string? alias = null, Action<GitLabCommit>? configure = null)
         {
             return WithCommit(project, message, user, commit =>
             {
                 commit.SourceBranch = sourceBranch;
                 commit.TargetBranch = targetBranch;
+                commit.Alias = alias;
                 if (tags != null)
                 {
                     foreach (var tag in tags)
