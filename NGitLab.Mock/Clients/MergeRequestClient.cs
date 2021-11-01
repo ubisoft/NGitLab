@@ -589,13 +589,10 @@ namespace NGitLab.Mock.Clients
 
                             mergeRequest.Assignees.Add(new UserRef(user));
                         }
-
-                        mergeRequest.Assignee = mergeRequest.Assignees.First();
                     }
                 }
                 else if (mergeRequestUpdate.AssigneeId != null)
                 {
-                    mergeRequest.Assignees.Clear();
                     if (mergeRequestUpdate.AssigneeId.Value == 0)
                     {
                         mergeRequest.Assignee = null;
@@ -607,7 +604,6 @@ namespace NGitLab.Mock.Clients
                             throw new GitLabBadRequestException("user not found");
 
                         mergeRequest.Assignee = new UserRef(user);
-                        mergeRequest.Assignees.Add(new UserRef(user));
                     }
                 }
 

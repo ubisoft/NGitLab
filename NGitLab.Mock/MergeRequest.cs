@@ -202,7 +202,6 @@ namespace NGitLab.Mock
         {
             return new Models.MergeRequest
             {
-                Assignee = Assignee?.ToUserClient(),
                 Assignees = GetUsers(Assignees),
                 Author = Author.ToUserClient(),
                 CreatedAt = CreatedAt.UtcDateTime,
