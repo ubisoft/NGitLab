@@ -447,14 +447,33 @@ namespace NGitLab.Mock
 
             foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(FullPath))
             {
-                var fileAttribute = System.IO.File.GetAttributes(fileSystemEntry);
-                yield return new Models.Tree
-                {
-                    Name = Path.GetFileName(fileSystemEntry),
-                    Path = Path.GetFileName(fileSystemEntry),
-                    Type = fileAttribute == FileAttributes.Directory ? Models.ObjectType.tree : Models.ObjectType.blob,
-                };
+                yield return GetTreeItem(fileSystemEntry);
             }
+        }
+
+        internal IEnumerable<Models.Tree> GetTree(Models.RepositoryGetTreeOptions repositoryGetTreeOptions)
+        {
+            var repo = GetGitRepository();
+            var commitOrBranch = string.IsNullOrEmpty(repositoryGetTreeOptions.Ref) ? Project.DefaultBranch : repositoryGetTreeOptions.Ref;
+            Commands.Checkout(repo, commitOrBranch);
+
+            var searchOption = repositoryGetTreeOptions.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            var fullPath = string.IsNullOrEmpty(repositoryGetTreeOptions.Path) ? FullPath : Path.Combine(FullPath, repositoryGetTreeOptions.Path);
+            foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(fullPath, "*", searchOption))
+            {
+                yield return GetTreeItem(fileSystemEntry);
+            }
+        }
+
+        private Models.Tree GetTreeItem(string filePath)
+        {
+            var fileAttribute = System.IO.File.GetAttributes(filePath);
+            return new Models.Tree
+            {
+                Name = Path.GetFileName(filePath),
+                Path = Path.GetFileName(filePath),
+                Type = fileAttribute == FileAttributes.Directory ? Models.ObjectType.tree : Models.ObjectType.blob,
+            };
         }
 
         public Commit Merge(User user, string sourceBranch, string targetBranch, Project targetProject)
