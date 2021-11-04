@@ -231,6 +231,11 @@ namespace NGitLab.Mock.Clients
                 issues = issues.Where(i => string.Equals(i.Milestone?.Title, query.Milestone, StringComparison.Ordinal));
             }
 
+            if (query.Confidential != null)
+            {
+                issues = issues.Where(i => query.Confidential.Value || !i.Confidential);
+            }
+
             if (query.Search != null)
             {
                 issues = issues
