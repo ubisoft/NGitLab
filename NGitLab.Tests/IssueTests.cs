@@ -68,6 +68,41 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
+        public async Task Test_get_confidential_issues_with_IssueQuery()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var issuesClient = context.Client.Issues;
+            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", Confidential = true });
+            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2" });
+
+            var issues = issuesClient.Get(new IssueQuery
+            {
+                Confidential = true,
+            }).Where(i => i.ProjectId == project.Id).ToList();
+
+            Assert.AreEqual(2, issues.Count);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_issues_without_confidential_with_IssueQuery()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var issuesClient = context.Client.Issues;
+            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", Confidential = true });
+            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2" });
+
+            var issues = issuesClient.Get(new IssueQuery
+            {
+            }).Where(i => i.ProjectId == project.Id).ToList();
+
+            Assert.AreEqual(1, issues.Count);
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task Test_get_assigned_issues_with_IssueQuery_and_project_id()
         {
             using var context = await GitLabTestContext.CreateAsync();

@@ -55,6 +55,11 @@ namespace NGitLab.Models
         public DateTime? UpdatedBefore { get; set; }
 
         /// <summary>
+        /// Return issues that are flagged as confidential
+        /// </summary>
+        public bool Confidential { get; set; }
+
+        /// <summary>
         /// Return issues for the given scope: created_by_me, assigned_to_me or all. Defaults to created_by_me
         /// </summary>
         public string Scope { get; set; }

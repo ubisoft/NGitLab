@@ -1520,6 +1520,8 @@ NGitLab.Models.IssueQuery.AssigneeId.get -> NGitLab.Models.QueryAssigneeId
 NGitLab.Models.IssueQuery.AssigneeId.set -> void
 NGitLab.Models.IssueQuery.AuthorId.get -> int?
 NGitLab.Models.IssueQuery.AuthorId.set -> void
+NGitLab.Models.IssueQuery.Confidential.get -> bool
+NGitLab.Models.IssueQuery.Confidential.set -> void
 NGitLab.Models.IssueQuery.CreatedAfter.get -> System.DateTime?
 NGitLab.Models.IssueQuery.CreatedAfter.set -> void
 NGitLab.Models.IssueQuery.CreatedBefore.get -> System.DateTime?
