@@ -457,9 +457,9 @@ namespace NGitLab.Mock
             var commitOrBranch = string.IsNullOrEmpty(repositoryGetTreeOptions.Ref) ? Project.DefaultBranch : repositoryGetTreeOptions.Ref;
             Commands.Checkout(repo, commitOrBranch);
 
-            var recursive = repositoryGetTreeOptions.Recursive;
+            var recursive = repositoryGetTreeOptions.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
             var fullPath = string.IsNullOrEmpty(repositoryGetTreeOptions.Path) ? FullPath : Path.Combine(FullPath, repositoryGetTreeOptions.Path);
-            foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(fullPath, "*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
+            foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(fullPath, "*", recursive))
             {
                 yield return GetTreeItem(fileSystemEntry);
             }
