@@ -203,6 +203,18 @@ namespace NGitLab.Mock
             return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Maintainer;
         }
 
+        public bool CanUserViewConfidentialIssues(User user)
+        {
+            if (user == null)
+                return false;
+
+            if (user.IsAdmin)
+                return true;
+
+            var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
+            return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Reporter;
+        }
+
         public bool CanUserDeleteProject(User user)
         {
             if (user.IsAdmin)
