@@ -436,6 +436,7 @@ NGitLab.Mock.Issue.Assignees.get -> NGitLab.Mock.UserRef[]
 NGitLab.Mock.Issue.Assignees.set -> void
 NGitLab.Mock.Issue.Author.get -> NGitLab.Mock.UserRef
 NGitLab.Mock.Issue.Author.set -> void
+NGitLab.Mock.Issue.CanUserViewIssue(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Issue.ClosedAt.get -> System.DateTimeOffset?
 NGitLab.Mock.Issue.ClosedAt.set -> void
 NGitLab.Mock.Issue.Confidential.get -> bool

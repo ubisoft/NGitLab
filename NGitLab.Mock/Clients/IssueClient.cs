@@ -21,7 +21,7 @@ namespace NGitLab.Mock.Clients
                 {
                     var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(Context.User));
                     var allIssues = viewableProjects.SelectMany(p => p.Issues);
-                    var assignedOrAuthoredIssues = allIssues.Where(i => i.Author.Id == Context.User.Id || i.Assignee.Id == Context.User.Id);
+                    var assignedOrAuthoredIssues = allIssues.Where(i => i.CanUserViewIssue(Context.User));
                     return assignedOrAuthoredIssues.Select(i => i.ToClientIssue()).ToList();
                 }
             }
@@ -111,8 +111,7 @@ namespace NGitLab.Mock.Clients
                 return project
                     .Issues
                     .Where(i => project.CanUserViewConfidentialIssues(Context.User)
-                        || i.Author.Id == Context.User.Id
-                        || i.Assignee.Id == Context.User.Id)
+                        || i.CanUserViewIssue(Context.User))
                     .Select(i => i.ToClientIssue())
                     .ToList();
             }
@@ -125,8 +124,7 @@ namespace NGitLab.Mock.Clients
                 var project = GetProject(projectId, ProjectPermission.View);
                 return project.Issues.FirstOrDefault(i => i.Iid == issueId &&
                         (project.CanUserViewConfidentialIssues(Context.User)
-                        || i.Author.Id == Context.User.Id
-                        || i.Assignee.Id == Context.User.Id))?
+                        || i.CanUserViewIssue(Context.User)))?
                         .ToClientIssue() ?? throw new GitLabNotFoundException();
             }
         }
@@ -137,8 +135,7 @@ namespace NGitLab.Mock.Clients
             {
                 var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(Context.User));
                 var issues = viewableProjects.SelectMany(p => p.Issues.Where(i => p.CanUserViewConfidentialIssues(Context.User)
-                        || i.Author.Id == Context.User.Id
-                        || i.Assignee.Id == Context.User.Id));
+                        || i.CanUserViewIssue(Context.User)));
                 return FilterByQuery(issues, query).Select(i => i.ToClientIssue()).ToList();
             }
         }
@@ -149,8 +146,7 @@ namespace NGitLab.Mock.Clients
             {
                 var project = GetProject(projectId, ProjectPermission.View);
                 var issues = project.Issues.Where(i => project.CanUserViewConfidentialIssues(Context.User)
-                                                    || i.Author.Id == Context.User.Id
-                                                    || i.Assignee.Id == Context.User.Id);
+                                                    || i.CanUserViewIssue(Context.User));
                 return FilterByQuery(issues, query).Select(i => i.ToClientIssue()).ToList();
             }
         }
