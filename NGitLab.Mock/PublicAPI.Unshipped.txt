@@ -721,6 +721,7 @@ NGitLab.Mock.Project.BuildTimeout.set -> void
 NGitLab.Mock.Project.CanUserContributeToProject(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Project.CanUserDeleteProject(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Project.CanUserEditProject(NGitLab.Mock.User user) -> bool
+NGitLab.Mock.Project.CanUserViewConfidentialIssues(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Project.CanUserViewProject(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Project.CommitInfos.get -> NGitLab.Mock.CommitInfoCollection
 NGitLab.Mock.Project.CommitStatuses.get -> NGitLab.Mock.CommitStatusCollection

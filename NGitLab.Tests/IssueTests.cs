@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -74,7 +75,8 @@ namespace NGitLab.Tests
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
             var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", Confidential = true });
-            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2" });
+            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2", Confidential = true });
+            var issue3 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title3" });
 
             var issues = issuesClient.Get(new IssueQuery
             {
@@ -86,19 +88,39 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
-        public async Task Test_get_issues_without_confidential_with_IssueQuery()
+        public async Task Test_get_non_confidential_issues_with_IssueQuery()
         {
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
             var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", Confidential = true });
-            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2" });
+            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2", Confidential = true });
+            var issue3 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title3" });
+
+            var issues = issuesClient.Get(new IssueQuery
+            {
+                Confidential = false,
+            }).Where(i => i.ProjectId == project.Id).ToList();
+
+            Assert.AreEqual(1, issues.Count);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_issues_no_confidential_filter_with_IssueQuery()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var issuesClient = context.Client.Issues;
+            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", Confidential = true });
+            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2", Confidential = true });
+            var issue3 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title3" });
 
             var issues = issuesClient.Get(new IssueQuery
             {
             }).Where(i => i.ProjectId == project.Id).ToList();
 
-            Assert.AreEqual(1, issues.Count);
+            Assert.AreEqual(3, issues.Count);
         }
 
         [Test]
