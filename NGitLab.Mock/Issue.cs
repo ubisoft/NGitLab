@@ -98,7 +98,7 @@ namespace NGitLab.Mock
 
         public bool CanUserViewIssue(User user)
         {
-            return !Confidential || Author.Id == user.Id;
+            return !Confidential || Author.Id == user.Id || Project.CanUserViewConfidentialIssues(user);
         }
     }
 }

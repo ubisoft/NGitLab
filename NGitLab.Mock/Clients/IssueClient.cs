@@ -110,8 +110,7 @@ namespace NGitLab.Mock.Clients
 
                 return project
                     .Issues
-                    .Where(i => project.CanUserViewConfidentialIssues(Context.User)
-                        || i.CanUserViewIssue(Context.User))
+                    .Where(i => i.CanUserViewIssue(Context.User))
                     .Select(i => i.ToClientIssue())
                     .ToList();
             }
@@ -123,8 +122,7 @@ namespace NGitLab.Mock.Clients
             {
                 var project = GetProject(projectId, ProjectPermission.View);
                 return project.Issues.FirstOrDefault(i => i.Iid == issueId &&
-                        (project.CanUserViewConfidentialIssues(Context.User)
-                        || i.CanUserViewIssue(Context.User)))?
+                        i.CanUserViewIssue(Context.User))?
                         .ToClientIssue() ?? throw new GitLabNotFoundException();
             }
         }
@@ -134,8 +132,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(Context.User));
-                var issues = viewableProjects.SelectMany(p => p.Issues.Where(i => p.CanUserViewConfidentialIssues(Context.User)
-                        || i.CanUserViewIssue(Context.User)));
+                var issues = viewableProjects.SelectMany(p => p.Issues.Where(i => i.CanUserViewIssue(Context.User)));
                 return FilterByQuery(issues, query).Select(i => i.ToClientIssue()).ToList();
             }
         }
@@ -145,8 +142,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(projectId, ProjectPermission.View);
-                var issues = project.Issues.Where(i => project.CanUserViewConfidentialIssues(Context.User)
-                                                    || i.CanUserViewIssue(Context.User));
+                var issues = project.Issues.Where(i => i.CanUserViewIssue(Context.User));
                 return FilterByQuery(issues, query).Select(i => i.ToClientIssue()).ToList();
             }
         }
