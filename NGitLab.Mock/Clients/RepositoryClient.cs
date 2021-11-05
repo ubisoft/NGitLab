@@ -62,7 +62,11 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                return project.Repository.GetTree(options);
+            }
         }
 
         public void GetRawBlob(string sha, Action<Stream> parser)
