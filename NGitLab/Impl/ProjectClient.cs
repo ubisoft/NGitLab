@@ -50,6 +50,11 @@ namespace NGitLab.Impl
                 url = $"/users/{query.UserId.Value.ToStringInvariant()}/projects";
             }
 
+            if (query.GroupID != string.Empty)
+            {
+                url = $"/groups/{query.GroupID}/search?scope=projects";
+            }
+
             if (query.LastActivityAfter.HasValue)
             {
                 url = Utils.AddParameter(url, "last_activity_after", query.LastActivityAfter.Value.UtcDateTime.ToString("O"));

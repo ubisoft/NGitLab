@@ -57,6 +57,11 @@ namespace NGitLab.Models
         public int? UserId;
 
         /// <summary>
+        /// Project visible by group
+        /// </summary>
+        public string GroupID;
+
+        /// <summary>
         /// Limit to projects where current user has at least this access level
         /// (optional)
         /// </summary>

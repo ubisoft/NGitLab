@@ -2212,6 +2212,7 @@ NGitLab.Models.ProjectMemberUpdate.UserId -> string
 NGitLab.Models.ProjectQuery
 NGitLab.Models.ProjectQuery.Archived -> bool?
 NGitLab.Models.ProjectQuery.Ascending -> bool?
+NGitLab.Models.ProjectQuery.GroupID -> string
 NGitLab.Models.ProjectQuery.LastActivityAfter -> System.DateTimeOffset?
 NGitLab.Models.ProjectQuery.MinAccessLevel -> NGitLab.Models.AccessLevel?
 NGitLab.Models.ProjectQuery.OrderBy -> string
