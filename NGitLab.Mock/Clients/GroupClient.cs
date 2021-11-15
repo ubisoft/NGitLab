@@ -127,6 +127,11 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public IEnumerable<Models.Project> SearchProjects(string groupId, string search, GroupQueryScope scope)
+        {
+            throw new NotImplementedException();
+        }
+
         public Models.Group Update(int id, GroupUpdate groupUpdate)
         {
             using (Context.BeginOperationScope())

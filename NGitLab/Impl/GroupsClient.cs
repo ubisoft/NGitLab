@@ -91,6 +91,16 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Project>(url);
         }
 
+        // implementation according to https://docs.gitlab.com/ee/api/search.html#scope-projects-1
+        public IEnumerable<Project> SearchProjects(string groupId, string search, GroupQueryScope scope)
+        {
+            var url = Url + "/" + Uri.EscapeDataString(groupId.ToString(CultureInfo.InvariantCulture)) + "/search";
+            url = Utils.AddParameter(url, "scope", Enum.GetName(typeof(GroupQueryScope), scope).ToLower());
+            url = Utils.AddParameter(url, "search", search);
+            url = Utils.AddOrderBy(url);
+            return _api.Get().GetAll<Project>(url);
+        }
+
         public Group Create(GroupCreate group) => _api.Post().With(group).To<Group>(Url);
 
         public void Delete(int id)
