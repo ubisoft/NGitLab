@@ -63,8 +63,29 @@ namespace NGitLab.Models
         /// (optional)
         /// </summary>
         public AccessLevel? MinAccessLevel;
+    }
 
-        public GroupQueryScope Scope = GroupQueryScope.Projects;
+    /// <summary>
+    /// Allows to use more advanced GitLab queries for getting project IDs (based on v4 GitLab API).
+    /// https://docs.gitlab.com/ee/api/groups.html
+    /// </summary>
+    [DataContract]
+    public class SearchProjectQuery
+    {
+        /// <summary>
+        /// Specifiy group id to look into as string
+        /// </summary>
+        public string GroupId;
+
+        /// <summary>
+        /// Specify project name to search for as string
+        /// </summary>
+        public string Search;
+
+        /// <summary>
+        /// Specify project scope defined by GroupQueryScope
+        /// </summary>
+        public GroupQueryScope Scope;
     }
 
     // implementation according to https://docs.gitlab.com/ee/api/search.html#scope-projects-1
