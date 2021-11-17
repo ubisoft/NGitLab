@@ -127,7 +127,7 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Models.Project> SearchProjects(string groupId, string search, GroupQueryScope scope)
+        public IEnumerable<Models.Project> SearchProjects(SearchProjectQuery query)
         {
             throw new NotImplementedException();
         }
