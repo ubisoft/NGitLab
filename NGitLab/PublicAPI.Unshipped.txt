@@ -182,7 +182,7 @@ NGitLab.IGroupsClient.Get(NGitLab.Models.GroupQuery query) -> System.Collections
 NGitLab.IGroupsClient.Restore(int id) -> void
 NGitLab.IGroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.IGroupsClient.SearchProjects(int groupId, string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
-NGitLab.IGroupsClient.SearchProjects(string groupId, string search, NGitLab.Models.GroupQueryScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
+NGitLab.IGroupsClient.SearchProjects(NGitLab.Models.SearchProjectQuery searchProjectQuery) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IGroupsClient.this[int id].get -> NGitLab.Models.Group
 NGitLab.IGroupsClient.this[string fullPath].get -> NGitLab.Models.Group
 NGitLab.IGroupsClient.Update(int id, NGitLab.Models.GroupUpdate groupUpdate) -> NGitLab.Models.Group
@@ -377,7 +377,7 @@ NGitLab.Impl.GroupsClient.GroupsClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.GroupsClient.Restore(int id) -> void
 NGitLab.Impl.GroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.SearchProjects(int groupId, string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
-NGitLab.Impl.GroupsClient.SearchProjects(string groupId, string search, NGitLab.Models.GroupQueryScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
+NGitLab.Impl.GroupsClient.SearchProjects(NGitLab.Models.SearchProjectQuery searchProjectQuery) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.GroupsClient.this[int id].get -> NGitLab.Models.Group
 NGitLab.Impl.GroupsClient.this[string fullPath].get -> NGitLab.Models.Group
 NGitLab.Impl.GroupsClient.Update(int id, NGitLab.Models.GroupUpdate groupUpdate) -> NGitLab.Models.Group
@@ -1437,7 +1437,6 @@ NGitLab.Models.GroupQuery.GroupQuery() -> void
 NGitLab.Models.GroupQuery.MinAccessLevel -> NGitLab.Models.AccessLevel?
 NGitLab.Models.GroupQuery.OrderBy -> string
 NGitLab.Models.GroupQuery.Owned -> bool?
-NGitLab.Models.GroupQuery.Scope -> NGitLab.Models.GroupQueryScope
 NGitLab.Models.GroupQuery.Search -> string
 NGitLab.Models.GroupQuery.SkipGroups -> int[]
 NGitLab.Models.GroupQuery.Sort -> string
@@ -2532,6 +2531,11 @@ NGitLab.Models.RunnerUpdate.Locked -> bool?
 NGitLab.Models.RunnerUpdate.RunnerUpdate() -> void
 NGitLab.Models.RunnerUpdate.RunUntagged -> bool?
 NGitLab.Models.RunnerUpdate.TagList -> string[]
+NGitLab.Models.SearchProjectQuery
+NGitLab.Models.SearchProjectQuery.GroupId -> string
+NGitLab.Models.SearchProjectQuery.Scope -> NGitLab.Models.GroupQueryScope
+NGitLab.Models.SearchProjectQuery.Search -> string
+NGitLab.Models.SearchProjectQuery.SearchProjectQuery() -> void
 NGitLab.Models.Session
 NGitLab.Models.Session.PrivateToken -> string
 NGitLab.Models.Session.Session() -> void
