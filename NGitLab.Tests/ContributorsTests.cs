@@ -48,7 +48,7 @@ namespace NGitLab.Tests
                 Skype = "skype",
                 Twitter = "twitter",
                 Username = $"ngitlabtestcontributor{randomString}",
-                WebsiteURL = "example.com",
+                WebsiteURL = "https://www.example.com",
             };
 
             var user = context.AdminClient.Users.Create(userUpsert);
