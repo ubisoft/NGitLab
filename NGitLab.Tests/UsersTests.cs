@@ -140,7 +140,7 @@ namespace NGitLab.Tests
                 Skype = "skype",
                 Twitter = "twitter",
                 Username = $"ngitlabtestuser{randomNumber}",
-                WebsiteURL = "wp.pl",
+                WebsiteURL = "https://www.example.com",
             });
         }
 
