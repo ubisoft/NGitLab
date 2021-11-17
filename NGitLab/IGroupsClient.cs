@@ -29,7 +29,7 @@ namespace NGitLab
 
         IEnumerable<Project> SearchProjects(int groupId, string search);
 
-        IEnumerable<Project> SearchProjects(string groupId, string search, GroupQueryScope scope);
+        IEnumerable<Project> SearchProjects(SearchProjectQuery searchProjectQuery);
 
         void Delete(int id);
 
