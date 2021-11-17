@@ -140,7 +140,7 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
-        public async Task Test_get_by_group_query_SearchProjects_returns_group()
+        public async Task Test_get_by_group_SearchProjectsQuery_returns_project()
         {
             using var context = await GitLabTestContext.CreateAsync();
             var groupClient = context.Client.Groups;
@@ -148,7 +148,7 @@ namespace NGitLab.Tests
             var project = context.Client.Projects.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture), Path = "testgroup" });
 
             // Act
-            var result = groupClient.SearchProjects(groupId: group.Name, search: "test", scope: GroupQueryScope.Projects);
+            var result = groupClient.SearchProjects(new SearchProjectQuery { GroupId = group.Name, Search = "test", Scope = GroupQueryScope.Projects });
 
             // Assert
             Assert.IsNotNull(result);
