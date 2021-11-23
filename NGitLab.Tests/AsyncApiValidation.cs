@@ -38,7 +38,7 @@ namespace NGitLab.Tests
 
                         if (!string.Equals(parameterInfo.Name, "cancellationToken", System.StringComparison.Ordinal))
                         {
-                            Assert.Fail($"The parameter '{parameterInfo.Name}' of '{method}' of must be named 'cancellationToken'");
+                            Assert.Fail($"The parameter '{parameterInfo.Name}' of '{method}' must be named 'cancellationToken'");
                         }
 
                         // Ensure the parameter is optional
