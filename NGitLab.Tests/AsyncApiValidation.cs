@@ -33,7 +33,7 @@ namespace NGitLab.Tests
 
                         if (parameterInfo.ParameterType != typeof(CancellationToken))
                         {
-                            Assert.Fail($"The parameter '{parameterInfo.Name}' of '{method}' of must be of type 'CancellationToken'");
+                           Assert.Fail($"The last parameter of method '{method}' must be of type 'CancellationToken' and named 'cancellationToken'");
                         }
 
                         if (!string.Equals(parameterInfo.Name, "cancellationToken", System.StringComparison.Ordinal))
