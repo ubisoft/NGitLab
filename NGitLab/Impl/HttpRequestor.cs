@@ -55,9 +55,9 @@ namespace NGitLab.Impl
             Stream(tailAPIUrl, parser: null);
         }
 
-        public virtual async Task ExecuteAsync(string tailAPIUrl, CancellationToken cancellationToken)
+        public virtual Task ExecuteAsync(string tailAPIUrl, CancellationToken cancellationToken)
         {
-            await StreamAsync(tailAPIUrl, parser: null, cancellationToken).ConfigureAwait(false);
+            return StreamAsync(tailAPIUrl, parser: null, cancellationToken);
         }
 
         public virtual T To<T>(string tailAPIUrl)
