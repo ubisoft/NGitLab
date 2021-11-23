@@ -19,6 +19,11 @@ namespace NGitLab.Tests
                 {
                     if (typeof(Task).IsAssignableFrom(method.ReturnType))
                     {
+                        if (!method.Name.EndsWith("Async", System.StringComparison.Ordinal))
+                        {
+                            Assert.Fail($"The method '{method}' must end with 'Async'");
+                        }
+
                         // Ensure method that returns a Task takes a CancellationToken
                         var parameterInfo = method.GetParameters().LastOrDefault();
                         if (parameterInfo is null)
@@ -41,6 +46,14 @@ namespace NGitLab.Tests
                         if (attr is null)
                         {
                             Assert.Fail($"The parameter '{parameterInfo.Name}' of '{method}' must be optional");
+                        }
+                    }
+
+                    if (method.ReturnType.IsGenericType && typeof(GitLabCollectionResponse<>).IsAssignableFrom(method.ReturnType.GetGenericTypeDefinition()))
+                    {
+                        if (!method.Name.EndsWith("Async", System.StringComparison.Ordinal))
+                        {
+                            Assert.Fail($"The method '{method}' must end with 'Async'");
                         }
                     }
                 }
