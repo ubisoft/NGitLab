@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 #if NET45
 using System.Reflection;
 #endif
@@ -54,6 +55,11 @@ namespace NGitLab.Impl
             Stream(tailAPIUrl, parser: null);
         }
 
+        public virtual async Task ExecuteAsync(string tailAPIUrl, CancellationToken cancellationToken)
+        {
+            await StreamAsync(tailAPIUrl, parser: null, cancellationToken).ConfigureAwait(false);
+        }
+
         public virtual T To<T>(string tailAPIUrl)
         {
             var result = default(T);
@@ -62,6 +68,17 @@ namespace NGitLab.Impl
                 var json = new StreamReader(s).ReadToEnd();
                 result = SimpleJson.DeserializeObject<T>(json);
             });
+            return result;
+        }
+
+        public virtual async Task<T> ToAsync<T>(string tailAPIUrl, CancellationToken cancellationToken)
+        {
+            var result = default(T);
+            await StreamAsync(tailAPIUrl, async s =>
+            {
+                var json = await new StreamReader(s).ReadToEndAsync().ConfigureAwait(false);
+                result = SimpleJson.DeserializeObject<T>(json);
+            }, cancellationToken).ConfigureAwait(false);
             return result;
         }
 
@@ -97,100 +114,91 @@ namespace NGitLab.Impl
             }
         }
 
+        public virtual async Task StreamAsync(string tailAPIUrl, Func<Stream, Task> parser, CancellationToken cancellationToken)
+        {
+            var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options.Sudo);
+
+            using var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false);
+            if (parser != null)
+            {
+                using var stream = response.GetResponseStream();
+                await parser(stream).ConfigureAwait(false);
+            }
+        }
+
         public virtual IEnumerable<T> GetAll<T>(string tailUrl)
         {
             return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options);
         }
 
-        private sealed class Enumerable<T> : IEnumerable<T>
+        public virtual GitLabCollectionResponse<T> GetAllAsync<T>(string tailUrl)
+        {
+            return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options);
+        }
+
+        internal sealed class Enumerable<T> : GitLabCollectionResponse<T>
         {
             private readonly string _apiToken;
             private readonly RequestOptions _options;
             private readonly Uri _startUrl;
 
-            public Enumerable(string apiToken, Uri startUrl, RequestOptions options)
+            internal Enumerable(string apiToken, Uri startUrl, RequestOptions options)
             {
                 _apiToken = apiToken;
                 _startUrl = startUrl;
                 _options = options;
             }
 
-            public IEnumerator<T> GetEnumerator()
+            public override async IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
             {
-                return new Enumerator(_apiToken, _startUrl, _options);
+                var nextUrlToLoad = _startUrl;
+                while (nextUrlToLoad != null)
+                {
+                    var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
+                    using var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false);
+                    nextUrlToLoad = GetNextPageUrl(response);
+
+                    var stream = response.GetResponseStream();
+                    using var streamReader = new StreamReader(stream);
+                    var responseText = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+                    var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
+                    foreach (var item in deserialized)
+                        yield return item;
+                }
             }
 
-            IEnumerator IEnumerable.GetEnumerator()
+            public override IEnumerator<T> GetEnumerator()
             {
-                return GetEnumerator();
+                var nextUrlToLoad = _startUrl;
+                while (nextUrlToLoad != null)
+                {
+                    var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
+                    using var response = request.GetResponse(_options);
+                    nextUrlToLoad = GetNextPageUrl(response);
+
+                    var stream = response.GetResponseStream();
+                    using var streamReader = new StreamReader(stream);
+                    var responseText = streamReader.ReadToEnd();
+                    var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
+                    foreach (var item in deserialized)
+                        yield return item;
+                }
             }
 
-            private sealed class Enumerator : IEnumerator<T>
+            private static Uri GetNextPageUrl(WebResponse response)
             {
-                private readonly string _apiToken;
-                private readonly RequestOptions _options;
-                private readonly List<T> _buffer = new();
+                // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
+                var link = response.Headers["Link"] ?? response.Headers["Links"];
 
-                private Uri _nextUrlToLoad;
-                private int _index;
-
-                public Enumerator(string apiToken, Uri startUrl, RequestOptions options)
+                string[] nextLink = null;
+                if (!string.IsNullOrEmpty(link))
                 {
-                    _apiToken = apiToken;
-                    _nextUrlToLoad = startUrl;
-                    _options = options;
+                    nextLink = link.Split(',')
+                       .Select(l => l.Split(';'))
+                       .FirstOrDefault(pair => pair[1].Contains("next"));
                 }
 
-                public void Dispose()
-                {
-                }
-
-                public bool MoveNext()
-                {
-                    if (++_index < _buffer.Count)
-                        return true;
-
-                    if (_nextUrlToLoad == null)
-                        return false;
-
-                    // Empty the buffer and get next batch from GitLab, if any
-                    _index = 0;
-                    _buffer.Clear();
-
-                    var request = new GitLabRequest(_nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
-                    using (var response = request.GetResponse(_options))
-                    {
-                        // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
-                        var link = response.Headers["Link"] ?? response.Headers["Links"];
-
-                        string[] nextLink = null;
-                        if (!string.IsNullOrEmpty(link))
-                        {
-                            nextLink = link.Split(',')
-                               .Select(l => l.Split(';'))
-                               .FirstOrDefault(pair => pair[1].Contains("next"));
-                        }
-
-                        _nextUrlToLoad = (nextLink != null) ? new Uri(nextLink[0].Trim('<', '>', ' ')) : null;
-
-                        var stream = response.GetResponseStream();
-                        var responseText = new StreamReader(stream).ReadToEnd();
-                        var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
-
-                        _buffer.AddRange(deserialized);
-                    }
-
-                    return _buffer.Count > 0;
-                }
-
-                public void Reset()
-                {
-                    throw new NotSupportedException();
-                }
-
-                public T Current => _buffer[_index];
-
-                object IEnumerator.Current => Current;
+                return nextLink != null ? new Uri(nextLink[0].Trim('<', '>', ' ')) : null;
             }
         }
     }
