@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -25,6 +27,8 @@ namespace NGitLab
         /// </summary>
         IEnumerable<Project> Get(ProjectQuery query);
 
+        GitLabCollectionResponse<Project> GetAsync(ProjectQuery query);
+
         Project this[int id] { get; }
 
         /// <summary>
@@ -49,6 +53,8 @@ namespace NGitLab
         UploadedProjectFile UploadFile(string id, FormDataContent data);
 
         Project GetById(int id, SingleProjectQuery query);
+
+        Task<Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default);
 
         Project Fork(string id, ForkProject forkProject);
 

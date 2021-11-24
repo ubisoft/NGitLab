@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -11,6 +12,35 @@ namespace NGitLab.Tests
 {
     public class ProjectsTests
     {
+        [Test]
+        [NGitLabRetry]
+        public async Task GetProjectByIdAsync()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectClient = context.Client.Projects;
+
+            var projectResult = await projectClient.GetByIdAsync(project.Id, new SingleProjectQuery(), CancellationToken.None);
+            Assert.AreEqual(project.Id, projectResult.Id);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task GetProjectsAsync()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectClient = context.Client.Projects;
+
+            var projects = new List<Project>();
+            await foreach (var item in projectClient.GetAsync(new ProjectQuery()))
+            {
+                projects.Add(item);
+            }
+
+            CollectionAssert.IsNotEmpty(projects);
+        }
+
         [Test]
         [NGitLabRetry]
         public async Task GetOwnedProjects()

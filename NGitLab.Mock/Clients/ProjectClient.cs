@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -206,6 +210,13 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<Models.Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return GetById(id, query);
+        }
+
         public IEnumerable<Models.Project> GetForks(string id, ForkedProjectQuery query)
         {
             using (Context.BeginOperationScope())
@@ -278,6 +289,11 @@ namespace NGitLab.Mock.Clients
         public UploadedProjectFile UploadFile(string id, FormDataContent data)
         {
             throw new NotImplementedException();
+        }
+
+        public GitLabCollectionResponse<Models.Project> GetAsync(ProjectQuery query)
+        {
+            return GitLabCollectionResponse.Create(Get(query));
         }
     }
 }

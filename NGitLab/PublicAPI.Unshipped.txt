@@ -1,4 +1,6 @@
-﻿const NGitLab.Impl.GroupsClient.Url = "/groups" -> string
+﻿abstract NGitLab.GitLabCollectionResponse<T>.GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerator<T>
+abstract NGitLab.GitLabCollectionResponse<T>.GetEnumerator() -> System.Collections.Generic.IEnumerator<T>
+const NGitLab.Impl.GroupsClient.Url = "/groups" -> string
 const NGitLab.Impl.LabelClient.GroupLabelUrl = "/groups/{0}/labels" -> string
 const NGitLab.Impl.LabelClient.ProjectLabelUrl = "/projects/{0}/labels" -> string
 const NGitLab.Impl.NamespacesClient.Url = "/namespaces" -> string
@@ -75,6 +77,8 @@ NGitLab.GitLabClient.Snippets.get -> NGitLab.ISnippetClient
 NGitLab.GitLabClient.SystemHooks.get -> NGitLab.ISystemHookClient
 NGitLab.GitLabClient.Users.get -> NGitLab.IUserClient
 NGitLab.GitLabClient.Version.get -> NGitLab.IVersionClient
+NGitLab.GitLabCollectionResponse<T>
+NGitLab.GitLabCollectionResponse<T>.GitLabCollectionResponse() -> void
 NGitLab.GitLabException
 NGitLab.GitLabException.ErrorMessage.get -> string
 NGitLab.GitLabException.ErrorMessage.set -> void
@@ -193,9 +197,13 @@ NGitLab.IGroupVariableClient.this[string key].get -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
 NGitLab.IHttpRequestor
 NGitLab.IHttpRequestor.Execute(string tailAPIUrl) -> void
+NGitLab.IHttpRequestor.ExecuteAsync(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 NGitLab.IHttpRequestor.GetAll<T>(string tailUrl) -> System.Collections.Generic.IEnumerable<T>
+NGitLab.IHttpRequestor.GetAllAsync<T>(string tailUrl) -> NGitLab.GitLabCollectionResponse<T>
 NGitLab.IHttpRequestor.Stream(string tailAPIUrl, System.Action<System.IO.Stream> parser) -> void
+NGitLab.IHttpRequestor.StreamAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 NGitLab.IHttpRequestor.To<T>(string tailAPIUrl) -> T
+NGitLab.IHttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<T>
 NGitLab.IHttpRequestor.With(object data) -> NGitLab.IHttpRequestor
 NGitLab.IIssueClient
 NGitLab.IIssueClient.ClosedBy(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
@@ -547,7 +555,9 @@ NGitLab.Impl.ProjectClient.Create(NGitLab.Models.ProjectCreate project) -> NGitL
 NGitLab.Impl.ProjectClient.Delete(int id) -> void
 NGitLab.Impl.ProjectClient.Fork(string id, NGitLab.Models.ForkProject forkProject) -> NGitLab.Models.Project
 NGitLab.Impl.ProjectClient.Get(NGitLab.Models.ProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
+NGitLab.Impl.ProjectClient.GetAsync(NGitLab.Models.ProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetById(int id, NGitLab.Models.SingleProjectQuery query) -> NGitLab.Models.Project
+NGitLab.Impl.ProjectClient.GetByIdAsync(int id, NGitLab.Models.SingleProjectQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetForks(string id, NGitLab.Models.ForkedProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetLanguages(string id) -> System.Collections.Generic.Dictionary<string, double>
 NGitLab.Impl.ProjectClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
@@ -703,7 +713,9 @@ NGitLab.IProjectClient.Create(NGitLab.Models.ProjectCreate project) -> NGitLab.M
 NGitLab.IProjectClient.Delete(int id) -> void
 NGitLab.IProjectClient.Fork(string id, NGitLab.Models.ForkProject forkProject) -> NGitLab.Models.Project
 NGitLab.IProjectClient.Get(NGitLab.Models.ProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
+NGitLab.IProjectClient.GetAsync(NGitLab.Models.ProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetById(int id, NGitLab.Models.SingleProjectQuery query) -> NGitLab.Models.Project
+NGitLab.IProjectClient.GetByIdAsync(int id, NGitLab.Models.SingleProjectQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetForks(string id, NGitLab.Models.ForkedProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetLanguages(string id) -> System.Collections.Generic.Dictionary<string, double>
 NGitLab.IProjectClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
@@ -2905,8 +2917,13 @@ static NGitLab.Models.QueryAssigneeId.None.get -> NGitLab.Models.QueryAssigneeId
 static NGitLab.RequestOptions.Default.get -> NGitLab.RequestOptions
 virtual NGitLab.Impl.API.CreateRequestor(NGitLab.Impl.MethodType methodType) -> NGitLab.IHttpRequestor
 virtual NGitLab.Impl.HttpRequestor.Execute(string tailAPIUrl) -> void
+virtual NGitLab.Impl.HttpRequestor.ExecuteAsync(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 virtual NGitLab.Impl.HttpRequestor.GetAll<T>(string tailUrl) -> System.Collections.Generic.IEnumerable<T>
+virtual NGitLab.Impl.HttpRequestor.GetAllAsync<T>(string tailUrl) -> NGitLab.GitLabCollectionResponse<T>
 virtual NGitLab.Impl.HttpRequestor.Stream(string tailAPIUrl, System.Action<System.IO.Stream> parser) -> void
+virtual NGitLab.Impl.HttpRequestor.StreamAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 virtual NGitLab.Impl.HttpRequestor.To<T>(string tailAPIUrl) -> T
+virtual NGitLab.Impl.HttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<T>
 virtual NGitLab.RequestOptions.GetResponse(System.Net.HttpWebRequest request) -> System.Net.WebResponse
+virtual NGitLab.RequestOptions.GetResponseAsync(System.Net.HttpWebRequest request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.WebResponse>
 virtual NGitLab.RequestOptions.ShouldRetry(System.Exception ex, int retryNumber) -> bool

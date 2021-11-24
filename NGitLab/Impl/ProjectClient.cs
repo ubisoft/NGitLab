@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -41,7 +42,7 @@ namespace NGitLab.Impl
             return string.IsNullOrEmpty(query.Search);
         }
 
-        public IEnumerable<Project> Get(ProjectQuery query)
+        private static string CreateGetUrl(ProjectQuery query)
         {
             var url = Project.Url;
 
@@ -95,7 +96,19 @@ namespace NGitLab.Impl
                 url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel.Value);
             }
 
+            return url;
+        }
+
+        public IEnumerable<Project> Get(ProjectQuery query)
+        {
+            var url = CreateGetUrl(query);
             return _api.Get().GetAll<Project>(url);
+        }
+
+        public GitLabCollectionResponse<Project> GetAsync(ProjectQuery query)
+        {
+            var url = CreateGetUrl(query);
+            return _api.Get().GetAllAsync<Project>(url);
         }
 
         public Project GetById(int id, SingleProjectQuery query)
@@ -104,6 +117,14 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "statistics", query.Statistics);
 
             return _api.Get().To<Project>(url);
+        }
+
+        public async Task<Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default)
+        {
+            var url = Project.Url + "/" + id.ToStringInvariant();
+            url = Utils.AddParameter(url, "statistics", query.Statistics);
+
+            return await _api.Get().ToAsync<Project>(url, cancellationToken).ConfigureAwait(false);
         }
 
         public Project Fork(string id, ForkProject forkProject)
