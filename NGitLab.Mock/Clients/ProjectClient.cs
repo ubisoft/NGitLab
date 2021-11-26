@@ -295,5 +295,17 @@ namespace NGitLab.Mock.Clients
         {
             return GitLabCollectionResponse.Create(Get(query));
         }
+
+        [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<Models.Project> ForkAsync(string id, ForkProject forkProject, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return Fork(id, forkProject);
+        }
+
+        public GitLabCollectionResponse<Models.Project> GetForksAsync(string id, ForkedProjectQuery query)
+        {
+            return GitLabCollectionResponse.Create(GetForks(id, query));
+        }
     }
 }

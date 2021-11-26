@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -17,10 +19,14 @@ namespace NGitLab
         /// <returns></returns>
         Pipeline this[int id] { get; }
 
+        Task<Pipeline> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+
         /// <summary>
         /// Get all jobs in a project
         /// </summary>
         IEnumerable<Job> AllJobs { get; }
+
+        GitLabCollectionResponse<Job> GetAllJobsAsync();
 
         /// <summary>
         /// Get jobs in a project meeting the scope
@@ -39,6 +45,8 @@ namespace NGitLab
         /// </summary>
         IEnumerable<Job> GetJobs(PipelineJobQuery query);
 
+        GitLabCollectionResponse<Job> GetJobsAsync(PipelineJobQuery query);
+
         /// <summary>
         /// Create a new pipeline.
         /// </summary>
@@ -50,6 +58,8 @@ namespace NGitLab
         /// </summary>
         /// <param name="createOptions">Pipeline create options</param>
         Pipeline Create(PipelineCreate createOptions);
+
+        Task<Pipeline> CreateAsync(PipelineCreate createOptions, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Trigger a pipeline and send some info with a custom variable
@@ -67,6 +77,8 @@ namespace NGitLab
         /// <returns>Returns a list of pipelines (<see cref="PipelineBasic"/>) using the query</returns>
         IEnumerable<PipelineBasic> Search(PipelineQuery query);
 
+        GitLabCollectionResponse<PipelineBasic> SearchAsync(PipelineQuery query);
+
         /// <summary>
         /// Delete a pipeline.
         /// </summary>
@@ -78,6 +90,8 @@ namespace NGitLab
         /// </summary>
         /// <param name="pipelineId">ID of the pipeline</param>
         IEnumerable<PipelineVariable> GetVariables(int pipelineId);
+
+        GitLabCollectionResponse<PipelineVariable> GetVariablesAsync(int pipelineId);
 
         /// <summary>
         /// Get test reports for a pipeline.

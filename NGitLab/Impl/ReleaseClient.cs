@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -24,6 +26,8 @@ namespace NGitLab.Impl
         public ReleaseInfo this[string tagName] => _api.Get().To<ReleaseInfo>($"{_releasesPath}/{Uri.EscapeDataString(tagName)}");
 
         public ReleaseInfo Create(ReleaseCreate data) => _api.Post().With(data).To<ReleaseInfo>(_releasesPath);
+
+        public Task<ReleaseInfo> CreateAsync(ReleaseCreate data, CancellationToken cancellationToken = default) => _api.Post().With(data).ToAsync<ReleaseInfo>(_releasesPath, cancellationToken);
 
         public ReleaseInfo Update(ReleaseUpdate data) => _api.Put().With(data).To<ReleaseInfo>($"{_releasesPath}/{Uri.EscapeDataString(data.TagName)}");
 

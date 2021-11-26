@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -10,6 +12,8 @@ namespace NGitLab
         IEnumerable<User> Search(string query);
 
         User this[int id] { get; }
+
+        Task<User> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 
         User Create(UserUpsert user);
 
@@ -30,6 +34,8 @@ namespace NGitLab
         void Deactivate(int id);
 
         Session Current { get; }
+
+        Task<Session> GetCurrentUserAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Allows to manipulate the ssh keys of the currently logged user.

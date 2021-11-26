@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -18,6 +20,11 @@ namespace NGitLab.Impl
         public IEnumerable<User> Search(string query) => _api.Get().GetAll<User>(User.Url + $"?search={query}");
 
         public User this[int id] => _api.Get().To<User>(User.Url + "/" + id.ToStringInvariant());
+
+        public Task<User> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<User>(User.Url + "/" + id.ToStringInvariant(), cancellationToken);
+        }
 
         public IEnumerable<User> Get(string username) => _api.Get().GetAll<User>(User.Url + "?username=" + username);
 
@@ -53,6 +60,11 @@ namespace NGitLab.Impl
         public User Update(int id, UserUpsert user) => _api.Put().With(user).To<User>(User.Url + "/" + id.ToStringInvariant());
 
         public Session Current => _api.Get().To<Session>("/user");
+
+        public Task<Session> GetCurrentUserAsync(CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<Session>("/user", cancellationToken);
+        }
 
         public ISshKeyClient CurrentUserSShKeys => new SshKeyClient(_api, userId: null);
 

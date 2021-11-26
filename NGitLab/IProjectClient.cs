@@ -58,7 +58,11 @@ namespace NGitLab
 
         Project Fork(string id, ForkProject forkProject);
 
+        Task<Project> ForkAsync(string id, ForkProject forkProject, CancellationToken cancellationToken = default);
+
         IEnumerable<Project> GetForks(string id, ForkedProjectQuery query);
+
+        GitLabCollectionResponse<Project> GetForksAsync(string id, ForkedProjectQuery query);
 
         Dictionary<string, double> GetLanguages(string id);
     }
