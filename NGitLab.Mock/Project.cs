@@ -77,6 +77,8 @@ namespace NGitLab.Mock
 
         public bool Archived { get; set; }
 
+        public string[] Tags { get; set; } = Array.Empty<string>();
+
         public RepositoryAccessLevel RepositoryAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
 
         public PermissionCollection Permissions { get; }
@@ -355,6 +357,7 @@ namespace NGitLab.Mock
                 ApprovalsBeforeMerge = ApprovalsBeforeMerge,
                 MergeMethod = MergeMethod,
                 Statistics = Statistics,
+                TagList = Tags,
             };
         }
     }

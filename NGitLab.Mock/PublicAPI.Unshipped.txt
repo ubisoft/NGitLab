@@ -774,6 +774,8 @@ NGitLab.Mock.Project.RepositoryAccessLevel.set -> void
 NGitLab.Mock.Project.SshUrl.get -> string
 NGitLab.Mock.Project.Statistics.get -> NGitLab.Models.ProjectStatistics
 NGitLab.Mock.Project.Statistics.set -> void
+NGitLab.Mock.Project.Tags.get -> string[]
+NGitLab.Mock.Project.Tags.set -> void
 NGitLab.Mock.Project.ToClientProject() -> NGitLab.Models.Project
 NGitLab.Mock.Project.Visibility.get -> NGitLab.Models.VisibilityLevel
 NGitLab.Mock.Project.Visibility.set -> void

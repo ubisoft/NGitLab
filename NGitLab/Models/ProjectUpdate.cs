@@ -88,5 +88,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "build_timeout")]
         public int? BuildTimeout;
+
+        [DataMember(Name = "tag_list")]
+        public string[] TagList;
     }
 }
