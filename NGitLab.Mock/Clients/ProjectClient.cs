@@ -282,6 +282,11 @@ namespace NGitLab.Mock.Clients
                     project.LfsEnabled = projectUpdate.LfsEnabled.Value;
                 }
 
+                if (projectUpdate.TagList != null)
+                {
+                    project.Tags = projectUpdate.TagList.Where(t => !string.IsNullOrEmpty(t)).Distinct(StringComparer.Ordinal).ToArray();
+                }
+
                 return project.ToClientProject();
             }
         }

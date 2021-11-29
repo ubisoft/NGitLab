@@ -246,8 +246,9 @@ namespace NGitLab.Tests
             Assert.AreEqual(RepositoryAccessLevel.Enabled, createdProject.RepositoryAccessLevel);
 
             // Update
-            var updatedProject = projectClient.Update(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ProjectUpdate { Visibility = VisibilityLevel.Private });
+            var updatedProject = projectClient.Update(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ProjectUpdate { Visibility = VisibilityLevel.Private, TagList = new[] { "Tag-3" } });
             Assert.AreEqual(VisibilityLevel.Private, updatedProject.VisibilityLevel);
+            Assert.AreEqual(new[] { "Tag-3" }, updatedProject.TagList);
 
             var updatedProject2 = projectClient.Update(createdProject.PathWithNamespace, new ProjectUpdate { Visibility = VisibilityLevel.Internal });
             Assert.AreEqual(VisibilityLevel.Internal, updatedProject2.VisibilityLevel);

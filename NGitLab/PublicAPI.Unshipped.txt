@@ -2343,6 +2343,7 @@ NGitLab.Models.ProjectUpdate.SnippetsAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.SnippetsAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.SnippetsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.SnippetsEnabled.set -> void
+NGitLab.Models.ProjectUpdate.TagList -> string[]
 NGitLab.Models.ProjectUpdate.Visibility.get -> NGitLab.Models.VisibilityLevel?
 NGitLab.Models.ProjectUpdate.Visibility.set -> void
 NGitLab.Models.ProjectUpdate.WikiAccessLevel.get -> string
