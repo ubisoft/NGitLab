@@ -132,7 +132,24 @@ namespace NGitLab.Impl
             return _api.Post().With(forkProject).To<Project>(Project.Url + "/" + id + "/fork");
         }
 
+        public Task<Project> ForkAsync(string id, ForkProject forkProject, CancellationToken cancellationToken = default)
+        {
+            return _api.Post().With(forkProject).ToAsync<Project>(Project.Url + "/" + id + "/fork", cancellationToken);
+        }
+
         public IEnumerable<Project> GetForks(string id, ForkedProjectQuery query)
+        {
+            var url = CreateGetForksUrl(id, query);
+            return _api.Get().GetAll<Project>(url);
+        }
+
+        public GitLabCollectionResponse<Project> GetForksAsync(string id, ForkedProjectQuery query)
+        {
+            var url = CreateGetForksUrl(id, query);
+            return _api.Get().GetAllAsync<Project>(url);
+        }
+
+        private static string CreateGetForksUrl(string id, ForkedProjectQuery query)
         {
             var url = Project.Url + "/" + id + "/forks";
 
@@ -158,7 +175,7 @@ namespace NGitLab.Impl
                 }
             }
 
-            return _api.Get().GetAll<Project>(url);
+            return url;
         }
 
         public Dictionary<string, double> GetLanguages(string id)

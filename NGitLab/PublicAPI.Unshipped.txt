@@ -134,6 +134,7 @@ NGitLab.IFilesClient.Create(NGitLab.Models.FileUpsert file) -> void
 NGitLab.IFilesClient.Delete(NGitLab.Models.FileDelete file) -> void
 NGitLab.IFilesClient.FileExists(string filePath, string ref) -> bool
 NGitLab.IFilesClient.Get(string filePath, string ref) -> NGitLab.Models.FileData
+NGitLab.IFilesClient.GetAsync(string filePath, string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.FileData>
 NGitLab.IFilesClient.Update(NGitLab.Models.FileUpsert file) -> void
 NGitLab.IGitLabClient
 NGitLab.IGitLabClient.Deployments.get -> NGitLab.IDeploymentClient
@@ -181,14 +182,21 @@ NGitLab.IGroupBadgeClient.Update(int id, NGitLab.Models.BadgeUpdate badge) -> NG
 NGitLab.IGroupsClient
 NGitLab.IGroupsClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.IGroupsClient.Create(NGitLab.Models.GroupCreate group) -> NGitLab.Models.Group
+NGitLab.IGroupsClient.CreateAsync(NGitLab.Models.GroupCreate group, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.IGroupsClient.Delete(int id) -> void
+NGitLab.IGroupsClient.DeleteAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IGroupsClient.Get(NGitLab.Models.GroupQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
+NGitLab.IGroupsClient.GetAsync(NGitLab.Models.GroupQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
+NGitLab.IGroupsClient.GetByFullPathAsync(string fullPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
+NGitLab.IGroupsClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.IGroupsClient.Restore(int id) -> void
 NGitLab.IGroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
+NGitLab.IGroupsClient.SearchAsync(string search) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.IGroupsClient.SearchProjects(int groupId, string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IGroupsClient.this[int id].get -> NGitLab.Models.Group
 NGitLab.IGroupsClient.this[string fullPath].get -> NGitLab.Models.Group
 NGitLab.IGroupsClient.Update(int id, NGitLab.Models.GroupUpdate groupUpdate) -> NGitLab.Models.Group
+NGitLab.IGroupsClient.UpdateAsync(int id, NGitLab.Models.GroupUpdate groupUpdate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.IGroupVariableClient
 NGitLab.IGroupVariableClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Variable>
 NGitLab.IGroupVariableClient.Create(NGitLab.Models.VariableCreate model) -> NGitLab.Models.Variable
@@ -218,11 +226,15 @@ NGitLab.IIssueClient.RelatedTo(int projectId, int issueIid) -> System.Collection
 NGitLab.IIssueClient.ResourceLabelEvents(int projectId, int issueId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ResourceLabelEvent>
 NGitLab.IJobClient
 NGitLab.IJobClient.Get(int jobId) -> NGitLab.Models.Job
+NGitLab.IJobClient.GetAsync(int jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.IJobClient.GetJobArtifacts(int jobId) -> byte[]
 NGitLab.IJobClient.GetJobs(NGitLab.Models.JobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IJobClient.GetJobs(NGitLab.Models.JobScopeMask scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
+NGitLab.IJobClient.GetJobsAsync(NGitLab.Models.JobQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
 NGitLab.IJobClient.GetTrace(int jobId) -> string
+NGitLab.IJobClient.GetTraceAsync(int jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string>
 NGitLab.IJobClient.RunAction(int jobId, NGitLab.Models.JobAction action) -> NGitLab.Models.Job
+NGitLab.IJobClient.RunActionAsync(int jobId, NGitLab.Models.JobAction action, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.ILabelClient
 NGitLab.ILabelClient.Create(NGitLab.Models.LabelCreate label) -> NGitLab.Models.Label
 NGitLab.ILabelClient.CreateGroupLabel(NGitLab.Models.LabelCreate label) -> NGitLab.Models.Label
@@ -361,6 +373,7 @@ NGitLab.Impl.FilesClient.Delete(NGitLab.Models.FileDelete file) -> void
 NGitLab.Impl.FilesClient.FileExists(string filePath, string ref) -> bool
 NGitLab.Impl.FilesClient.FilesClient(NGitLab.Impl.API api, string repoPath) -> void
 NGitLab.Impl.FilesClient.Get(string filePath, string ref) -> NGitLab.Models.FileData
+NGitLab.Impl.FilesClient.GetAsync(string filePath, string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.FileData>
 NGitLab.Impl.FilesClient.Update(NGitLab.Models.FileUpsert file) -> void
 NGitLab.Impl.GitLabChangeDiffCounter
 NGitLab.Impl.GitLabChangeDiffCounter.Compute(NGitLab.Models.MergeRequestChange mergeRequestChange) -> NGitLab.Impl.DiffStats
@@ -378,15 +391,22 @@ NGitLab.Impl.GitLabCredentials.UserName.set -> void
 NGitLab.Impl.GroupsClient
 NGitLab.Impl.GroupsClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.Create(NGitLab.Models.GroupCreate group) -> NGitLab.Models.Group
+NGitLab.Impl.GroupsClient.CreateAsync(NGitLab.Models.GroupCreate group, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.Delete(int id) -> void
+NGitLab.Impl.GroupsClient.DeleteAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.GroupsClient.Get(NGitLab.Models.GroupQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
+NGitLab.Impl.GroupsClient.GetAsync(NGitLab.Models.GroupQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
+NGitLab.Impl.GroupsClient.GetByFullPathAsync(string fullPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
+NGitLab.Impl.GroupsClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.GroupsClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.GroupsClient.Restore(int id) -> void
 NGitLab.Impl.GroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
+NGitLab.Impl.GroupsClient.SearchAsync(string search) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.SearchProjects(int groupId, string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.GroupsClient.this[int id].get -> NGitLab.Models.Group
 NGitLab.Impl.GroupsClient.this[string fullPath].get -> NGitLab.Models.Group
 NGitLab.Impl.GroupsClient.Update(int id, NGitLab.Models.GroupUpdate groupUpdate) -> NGitLab.Models.Group
+NGitLab.Impl.GroupsClient.UpdateAsync(int id, NGitLab.Models.GroupUpdate groupUpdate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.Impl.HttpRequestor
 NGitLab.Impl.HttpRequestor.GetAPIUrl(string tailAPIUrl) -> System.Uri
 NGitLab.Impl.HttpRequestor.GetUrl(string tailAPIUrl) -> System.Uri
@@ -409,12 +429,16 @@ NGitLab.Impl.IssueClient.RelatedTo(int projectId, int issueIid) -> System.Collec
 NGitLab.Impl.IssueClient.ResourceLabelEvents(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ResourceLabelEvent>
 NGitLab.Impl.JobClient
 NGitLab.Impl.JobClient.Get(int jobId) -> NGitLab.Models.Job
+NGitLab.Impl.JobClient.GetAsync(int jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.Impl.JobClient.GetJobArtifacts(int jobId) -> byte[]
 NGitLab.Impl.JobClient.GetJobs(NGitLab.Models.JobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.JobClient.GetJobs(NGitLab.Models.JobScopeMask scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
+NGitLab.Impl.JobClient.GetJobsAsync(NGitLab.Models.JobQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
 NGitLab.Impl.JobClient.GetTrace(int jobId) -> string
+NGitLab.Impl.JobClient.GetTraceAsync(int jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string>
 NGitLab.Impl.JobClient.JobClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.JobClient.RunAction(int jobId, NGitLab.Models.JobAction action) -> NGitLab.Models.Job
+NGitLab.Impl.JobClient.RunActionAsync(int jobId, NGitLab.Models.JobAction action, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.Impl.JsonArray
 NGitLab.Impl.JsonArray.JsonArray() -> void
 NGitLab.Impl.JsonArray.JsonArray(int capacity) -> void
@@ -538,15 +562,21 @@ NGitLab.Impl.PipelineClient.All.get -> System.Collections.Generic.IEnumerable<NG
 NGitLab.Impl.PipelineClient.AllJobs.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.PipelineClient.Create(NGitLab.Models.PipelineCreate createOptions) -> NGitLab.Models.Pipeline
 NGitLab.Impl.PipelineClient.Create(string ref) -> NGitLab.Models.Pipeline
+NGitLab.Impl.PipelineClient.CreateAsync(NGitLab.Models.PipelineCreate createOptions, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.Impl.PipelineClient.CreatePipelineWithTrigger(string token, string ref, System.Collections.Generic.Dictionary<string, string> variables) -> NGitLab.Models.Pipeline
 NGitLab.Impl.PipelineClient.Delete(int pipelineId) -> void
+NGitLab.Impl.PipelineClient.GetAllJobsAsync() -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
+NGitLab.Impl.PipelineClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.Impl.PipelineClient.GetJobs(int pipelineId) -> NGitLab.Models.Job[]
 NGitLab.Impl.PipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
+NGitLab.Impl.PipelineClient.GetJobsAsync(NGitLab.Models.PipelineJobQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
 NGitLab.Impl.PipelineClient.GetJobsInProject(NGitLab.Models.JobScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.PipelineClient.GetTestReports(int pipelineId) -> NGitLab.Models.TestReport
 NGitLab.Impl.PipelineClient.GetVariables(int pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
+NGitLab.Impl.PipelineClient.GetVariablesAsync(int pipelineId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineVariable>
 NGitLab.Impl.PipelineClient.PipelineClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.PipelineClient.Search(NGitLab.Models.PipelineQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
+NGitLab.Impl.PipelineClient.SearchAsync(NGitLab.Models.PipelineQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
 NGitLab.Impl.PipelineClient.this[int id].get -> NGitLab.Models.Pipeline
 NGitLab.Impl.ProjectClient
 NGitLab.Impl.ProjectClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
@@ -554,11 +584,13 @@ NGitLab.Impl.ProjectClient.Archive(int id) -> void
 NGitLab.Impl.ProjectClient.Create(NGitLab.Models.ProjectCreate project) -> NGitLab.Models.Project
 NGitLab.Impl.ProjectClient.Delete(int id) -> void
 NGitLab.Impl.ProjectClient.Fork(string id, NGitLab.Models.ForkProject forkProject) -> NGitLab.Models.Project
+NGitLab.Impl.ProjectClient.ForkAsync(string id, NGitLab.Models.ForkProject forkProject, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.Get(NGitLab.Models.ProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetAsync(NGitLab.Models.ProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetById(int id, NGitLab.Models.SingleProjectQuery query) -> NGitLab.Models.Project
 NGitLab.Impl.ProjectClient.GetByIdAsync(int id, NGitLab.Models.SingleProjectQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetForks(string id, NGitLab.Models.ForkedProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
+NGitLab.Impl.ProjectClient.GetForksAsync(string id, NGitLab.Models.ForkedProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetLanguages(string id) -> System.Collections.Generic.Dictionary<string, double>
 NGitLab.Impl.ProjectClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.ProjectClient(NGitLab.Impl.API api) -> void
@@ -613,10 +645,12 @@ NGitLab.Impl.RunnerClient.Delete(int runnerId) -> void
 NGitLab.Impl.RunnerClient.Delete(NGitLab.Models.Runner runner) -> void
 NGitLab.Impl.RunnerClient.DisableRunner(int projectId, NGitLab.Models.RunnerId runnerId) -> void
 NGitLab.Impl.RunnerClient.EnableRunner(int projectId, NGitLab.Models.RunnerId runnerId) -> NGitLab.Models.Runner
+NGitLab.Impl.RunnerClient.EnableRunnerAsync(int projectId, NGitLab.Models.RunnerId runnerId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Runner>
 NGitLab.Impl.RunnerClient.GetAllRunnersWithScope(NGitLab.Models.RunnerScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.Impl.RunnerClient.GetJobs(int runnerId, NGitLab.JobStatus? status = null) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.RunnerClient.GetJobs(int runnerId, NGitLab.Models.JobScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.RunnerClient.OfProject(int projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
+NGitLab.Impl.RunnerClient.OfProjectAsync(int projectId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Runner>
 NGitLab.Impl.RunnerClient.Register(NGitLab.Models.RunnerRegister request) -> NGitLab.Models.Runner
 NGitLab.Impl.RunnerClient.RunnerClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.RunnerClient.this[int id].get -> NGitLab.Models.Runner
@@ -665,6 +699,8 @@ NGitLab.Impl.UserClient.Deactivate(int userId) -> void
 NGitLab.Impl.UserClient.Delete(int userId) -> void
 NGitLab.Impl.UserClient.Get(NGitLab.UserQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.Impl.UserClient.Get(string username) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
+NGitLab.Impl.UserClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.User>
+NGitLab.Impl.UserClient.GetCurrentUserAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Session>
 NGitLab.Impl.UserClient.Search(string query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.Impl.UserClient.SShKeys(int userId) -> NGitLab.ISshKeyClient
 NGitLab.Impl.UserClient.this[int id].get -> NGitLab.Models.User
@@ -690,14 +726,20 @@ NGitLab.IPipelineClient.All.get -> System.Collections.Generic.IEnumerable<NGitLa
 NGitLab.IPipelineClient.AllJobs.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IPipelineClient.Create(NGitLab.Models.PipelineCreate createOptions) -> NGitLab.Models.Pipeline
 NGitLab.IPipelineClient.Create(string ref) -> NGitLab.Models.Pipeline
+NGitLab.IPipelineClient.CreateAsync(NGitLab.Models.PipelineCreate createOptions, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.IPipelineClient.CreatePipelineWithTrigger(string token, string ref, System.Collections.Generic.Dictionary<string, string> variables) -> NGitLab.Models.Pipeline
 NGitLab.IPipelineClient.Delete(int pipelineId) -> void
+NGitLab.IPipelineClient.GetAllJobsAsync() -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
+NGitLab.IPipelineClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.IPipelineClient.GetJobs(int pipelineId) -> NGitLab.Models.Job[]
 NGitLab.IPipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
+NGitLab.IPipelineClient.GetJobsAsync(NGitLab.Models.PipelineJobQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
 NGitLab.IPipelineClient.GetJobsInProject(NGitLab.Models.JobScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IPipelineClient.GetTestReports(int pipelineId) -> NGitLab.Models.TestReport
 NGitLab.IPipelineClient.GetVariables(int pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
+NGitLab.IPipelineClient.GetVariablesAsync(int pipelineId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineVariable>
 NGitLab.IPipelineClient.Search(NGitLab.Models.PipelineQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
+NGitLab.IPipelineClient.SearchAsync(NGitLab.Models.PipelineQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
 NGitLab.IPipelineClient.this[int id].get -> NGitLab.Models.Pipeline
 NGitLab.IProjectBadgeClient
 NGitLab.IProjectBadgeClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Badge>
@@ -712,11 +754,13 @@ NGitLab.IProjectClient.Archive(int id) -> void
 NGitLab.IProjectClient.Create(NGitLab.Models.ProjectCreate project) -> NGitLab.Models.Project
 NGitLab.IProjectClient.Delete(int id) -> void
 NGitLab.IProjectClient.Fork(string id, NGitLab.Models.ForkProject forkProject) -> NGitLab.Models.Project
+NGitLab.IProjectClient.ForkAsync(string id, NGitLab.Models.ForkProject forkProject, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.IProjectClient.Get(NGitLab.Models.ProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetAsync(NGitLab.Models.ProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetById(int id, NGitLab.Models.SingleProjectQuery query) -> NGitLab.Models.Project
 NGitLab.IProjectClient.GetByIdAsync(int id, NGitLab.Models.SingleProjectQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetForks(string id, NGitLab.Models.ForkedProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
+NGitLab.IProjectClient.GetForksAsync(string id, NGitLab.Models.ForkedProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetLanguages(string id) -> System.Collections.Generic.Dictionary<string, double>
 NGitLab.IProjectClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IProjectClient.this[int id].get -> NGitLab.Models.Project
@@ -755,6 +799,7 @@ NGitLab.IProtectedBranchClient.UnprotectBranch(string branchName) -> void
 NGitLab.IReleaseClient
 NGitLab.IReleaseClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.ReleaseInfo>
 NGitLab.IReleaseClient.Create(NGitLab.Models.ReleaseCreate data) -> NGitLab.Models.ReleaseInfo
+NGitLab.IReleaseClient.CreateAsync(NGitLab.Models.ReleaseCreate data, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.ReleaseInfo>
 NGitLab.IReleaseClient.Delete(string tagName) -> void
 NGitLab.IReleaseClient.ReleaseLinks(string tagName) -> NGitLab.IReleaseLinkClient
 NGitLab.IReleaseClient.this[string tagName].get -> NGitLab.Models.ReleaseInfo
@@ -790,11 +835,13 @@ NGitLab.IRunnerClient.Delete(int runnerId) -> void
 NGitLab.IRunnerClient.Delete(NGitLab.Models.Runner runner) -> void
 NGitLab.IRunnerClient.DisableRunner(int projectId, NGitLab.Models.RunnerId runnerId) -> void
 NGitLab.IRunnerClient.EnableRunner(int projectId, NGitLab.Models.RunnerId runnerId) -> NGitLab.Models.Runner
+NGitLab.IRunnerClient.EnableRunnerAsync(int projectId, NGitLab.Models.RunnerId runnerId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.GetAllRunnersWithScope(NGitLab.Models.RunnerScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.GetAvailableRunners(int projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.GetJobs(int runnerId, NGitLab.JobStatus? status = null) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IRunnerClient.GetJobs(int runnerId, NGitLab.Models.JobScope jobScope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IRunnerClient.OfProject(int projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
+NGitLab.IRunnerClient.OfProjectAsync(int projectId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.Register(NGitLab.Models.RunnerRegister request) -> NGitLab.Models.Runner
 NGitLab.IRunnerClient.this[int id].get -> NGitLab.Models.Runner
 NGitLab.IRunnerClient.Update(int runnerId, NGitLab.Models.RunnerUpdate runnerUpdate) -> NGitLab.Models.Runner
@@ -837,6 +884,8 @@ NGitLab.IUserClient.Deactivate(int id) -> void
 NGitLab.IUserClient.Delete(int id) -> void
 NGitLab.IUserClient.Get(NGitLab.UserQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.IUserClient.Get(string username) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
+NGitLab.IUserClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.User>
+NGitLab.IUserClient.GetCurrentUserAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Session>
 NGitLab.IUserClient.Search(string query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.IUserClient.SShKeys(int userId) -> NGitLab.ISshKeyClient
 NGitLab.IUserClient.this[int id].get -> NGitLab.Models.User

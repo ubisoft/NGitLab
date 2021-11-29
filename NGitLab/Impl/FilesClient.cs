@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -36,7 +38,12 @@ namespace NGitLab.Impl
 
         public FileData Get(string filePath, string @ref)
         {
-            return _api.Get().To<FileData>(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={@ref}");
+            return _api.Get().To<FileData>(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={Uri.EscapeDataString(@ref)}");
+        }
+
+        public Task<FileData> GetAsync(string filePath, string @ref, CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<FileData>(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={Uri.EscapeDataString(@ref)}", cancellationToken);
         }
 
         public bool FileExists(string filePath, string @ref)
