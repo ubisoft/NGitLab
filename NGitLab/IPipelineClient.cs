@@ -45,6 +45,10 @@ namespace NGitLab
         /// </summary>
         IEnumerable<Job> GetJobs(PipelineJobQuery query);
 
+        /// <summary>
+        /// Returns the jobs of a pipeline.
+        /// </summary>
+        /// <remarks>Unlike <see cref="GetJobs(PipelineJobQuery)"/>, this method returns jobs in the same order as sent by the GitLab API</remarks>
         GitLabCollectionResponse<Job> GetJobsAsync(PipelineJobQuery query);
 
         /// <summary>
