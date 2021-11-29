@@ -104,7 +104,8 @@ namespace NGitLab.Impl
 
         public Task<Runner> EnableRunnerAsync(int projectId, RunnerId runnerId, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var url = $"{Project.Url}/{projectId.ToStringInvariant()}/runners";
+            return _api.Post().With(runnerId).ToAsync<Runner>(url, cancellationToken);
         }
     }
 }
