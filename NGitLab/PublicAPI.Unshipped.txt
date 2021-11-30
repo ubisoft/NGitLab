@@ -2150,6 +2150,7 @@ NGitLab.Models.Project.Links -> NGitLab.Models.ProjectLinks
 NGitLab.Models.Project.MergeMethod -> string
 NGitLab.Models.Project.MergeRequestsAccessLevel -> string
 NGitLab.Models.Project.MergeRequestsEnabled -> bool
+NGitLab.Models.Project.Mirror -> bool
 NGitLab.Models.Project.Name -> string
 NGitLab.Models.Project.Namespace -> NGitLab.Models.Namespace
 NGitLab.Models.Project.NameWithNamespace -> string

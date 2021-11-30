@@ -182,5 +182,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "empty_repo")]
         public bool EmptyRepo;
+
+        [DataMember(Name = "mirror")]
+        public bool Mirror;
     }
 }
