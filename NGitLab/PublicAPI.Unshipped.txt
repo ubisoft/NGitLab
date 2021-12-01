@@ -2151,11 +2151,15 @@ NGitLab.Models.Project.MergeMethod -> string
 NGitLab.Models.Project.MergeRequestsAccessLevel -> string
 NGitLab.Models.Project.MergeRequestsEnabled -> bool
 NGitLab.Models.Project.Mirror -> bool
+NGitLab.Models.Project.MirrorOverwritesDivergedBranches -> bool
+NGitLab.Models.Project.MirrorTriggerBuilds -> bool
+NGitLab.Models.Project.MirrorUserId -> int
 NGitLab.Models.Project.Name -> string
 NGitLab.Models.Project.Namespace -> NGitLab.Models.Namespace
 NGitLab.Models.Project.NameWithNamespace -> string
 NGitLab.Models.Project.OnlyAllowMergeIfDiscussionsAreResolved -> bool
 NGitLab.Models.Project.OnlyAllowMergeIfPipelineSucceeds -> bool
+NGitLab.Models.Project.OnlyMirrorProtectedBranch -> bool
 NGitLab.Models.Project.OpenIssuesCount -> int
 NGitLab.Models.Project.Owner -> NGitLab.Models.User
 NGitLab.Models.Project.Path -> string

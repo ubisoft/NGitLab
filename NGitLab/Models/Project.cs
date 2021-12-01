@@ -185,5 +185,17 @@ namespace NGitLab.Models
 
         [DataMember(Name = "mirror")]
         public bool Mirror;
+
+        [DataMember(Name = "mirror_user_id")]
+        public int MirrorUserId;
+
+        [DataMember(Name = "mirror_trigger_builds")]
+        public bool MirrorTriggerBuilds;
+
+        [DataMember(Name = "only_mirror_protected_branches")]
+        public bool OnlyMirrorProtectedBranch;
+
+        [DataMember(Name = "mirror_overwrites_diverged_branches")]
+        public bool MirrorOverwritesDivergedBranches;
     }
 }

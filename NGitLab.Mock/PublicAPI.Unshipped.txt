@@ -759,8 +759,16 @@ NGitLab.Mock.Project.MergeRequests.get -> NGitLab.Mock.MergeRequestCollection
 NGitLab.Mock.Project.Milestones.get -> NGitLab.Mock.MilestoneCollection
 NGitLab.Mock.Project.Mirror.get -> bool
 NGitLab.Mock.Project.Mirror.set -> void
+NGitLab.Mock.Project.MirrorOverwritesDivergedBranches.get -> bool
+NGitLab.Mock.Project.MirrorOverwritesDivergedBranches.set -> void
+NGitLab.Mock.Project.MirrorTriggerBuilds.get -> bool
+NGitLab.Mock.Project.MirrorTriggerBuilds.set -> void
+NGitLab.Mock.Project.MirrorUserId.get -> int
+NGitLab.Mock.Project.MirrorUserId.set -> void
 NGitLab.Mock.Project.Name.get -> string
 NGitLab.Mock.Project.Name.set -> void
+NGitLab.Mock.Project.OnlyMirrorProtectedBranch.get -> bool
+NGitLab.Mock.Project.OnlyMirrorProtectedBranch.set -> void
 NGitLab.Mock.Project.Path.get -> string
 NGitLab.Mock.Project.PathWithNamespace.get -> string
 NGitLab.Mock.Project.Permissions.get -> NGitLab.Mock.PermissionCollection
