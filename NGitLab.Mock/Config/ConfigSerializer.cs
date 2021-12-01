@@ -11,13 +11,13 @@ using YamlDotNet.Serialization;
 
 namespace NGitLab.Mock.Config
 {
-    internal class ConfigSerializer
+    internal sealed class ConfigSerializer
     {
-        private static readonly Regex s_variableTemplateRegex = new Regex(@"{{|}}|{[a-zA-Z_][\w\.-]+}", RegexOptions.Compiled);
+        private static readonly Regex s_variableTemplateRegex = new(@"{{|}}|{[a-zA-Z_][\w\.-]+}", RegexOptions.Compiled);
 
-        private readonly Dictionary<string, object> _configs = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-        private readonly Dictionary<string, object> _variables = new Dictionary<string, object>(StringComparer.Ordinal);
-        private readonly Dictionary<string, object> _resolvedDictionary = new Dictionary<string, object>(StringComparer.Ordinal);
+        private readonly Dictionary<string, object> _configs = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, object> _variables = new(StringComparer.Ordinal);
+        private readonly Dictionary<string, object> _resolvedDictionary = new(StringComparer.Ordinal);
 
         public void DefineVariable(string name, object value)
         {
@@ -41,12 +41,12 @@ namespace NGitLab.Mock.Config
             {
                 if (string.Equals(config.Key, "variables", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (!(config.Value is Dictionary<object, object> dict))
+                    if (config.Value is not Dictionary<object, object> dict)
                         throw new InvalidOperationException("Variables config is invalid, expected dictionary");
 
                     foreach (var pair in dict)
                     {
-                        if (!(pair.Key is string key))
+                        if (pair.Key is not string key)
                             throw new InvalidOperationException("Variables config is invalid, expected keys as string");
 
                         DefineVariable(key, pair.Value);
@@ -294,7 +294,7 @@ namespace NGitLab.Mock.Config
                 if (itf != null)
                 {
                     var args = itf.GetGenericArguments();
-                    if (args.Length != 2 || args[0] != typeof(string) || !(valueObj is Dictionary<object, object> valueDict))
+                    if (args.Length != 2 || args[0] != typeof(string) || valueObj is not Dictionary<object, object> valueDict)
                         return false;
 
                     var itemType = args[1];
@@ -329,7 +329,7 @@ namespace NGitLab.Mock.Config
                         return false;
 
                     var itemType = type.GetElementType();
-                    if (itemType == null || !(valueObj is List<object> valueArr))
+                    if (itemType == null || valueObj is not List<object> valueArr)
                         return false;
 
                     var arr = Array.CreateInstance(itemType, valueArr.Count);
@@ -353,7 +353,7 @@ namespace NGitLab.Mock.Config
                 if (itf != null)
                 {
                     var args = itf.GetGenericArguments();
-                    if (args.Length != 1 || !(valueObj is List<object> valueArr))
+                    if (args.Length != 1 || valueObj is not List<object> valueArr)
                         return false;
 
                     var itemType = args[0];
@@ -383,7 +383,7 @@ namespace NGitLab.Mock.Config
 
             if (type.IsClass)
             {
-                if (!(valueObj is Dictionary<object, object> tempDict))
+                if (valueObj is not Dictionary<object, object> tempDict)
                     return success;
 
                 var valueDict = tempDict.ToDictionary(x => (string)x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase);
@@ -413,7 +413,7 @@ namespace NGitLab.Mock.Config
         {
             try
             {
-                result = Enum.Parse(type, value, true);
+                result = Enum.Parse(type, value, ignoreCase: true);
                 return true;
             }
             catch

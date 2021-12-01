@@ -267,7 +267,7 @@ namespace NGitLab.Mock.Config
 
                 if (initialCommit)
                 {
-                    WithCommit(project, "Initial commit", null, commit =>
+                    WithCommit(project, "Initial commit", user: null, commit =>
                     {
                         WithFile(commit, "README.md", $"# {name}{Environment.NewLine}");
                     });
