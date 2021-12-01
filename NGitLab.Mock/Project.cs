@@ -79,6 +79,16 @@ namespace NGitLab.Mock
 
         public string[] Tags { get; set; } = Array.Empty<string>();
 
+        public bool Mirror { get; set; }
+
+        public int MirrorUserId { get; set; }
+
+        public bool MirrorTriggerBuilds { get; set; }
+
+        public bool OnlyMirrorProtectedBranch { get; set; }
+
+        public bool MirrorOverwritesDivergedBranches { get; set; }
+
         public RepositoryAccessLevel RepositoryAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
 
         public PermissionCollection Permissions { get; }
@@ -358,6 +368,11 @@ namespace NGitLab.Mock
                 MergeMethod = MergeMethod,
                 Statistics = Statistics,
                 TagList = Tags,
+                Mirror = Mirror,
+                MirrorUserId = MirrorUserId,
+                MirrorTriggerBuilds = MirrorTriggerBuilds,
+                OnlyMirrorProtectedBranch = OnlyMirrorProtectedBranch,
+                MirrorOverwritesDivergedBranches = MirrorOverwritesDivergedBranches,
             };
         }
     }
