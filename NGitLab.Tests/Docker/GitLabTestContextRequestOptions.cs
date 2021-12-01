@@ -180,7 +180,7 @@ namespace NGitLab.Tests.Docker
         internal override Stream GetRequestStream(HttpWebRequest request)
         {
             var stream = new LoggableRequestStream(request.GetRequestStream());
-            _pendingRequest.AddOrUpdate(request, stream, (_, s) => s);
+            _pendingRequest.AddOrUpdate(request, stream, (_, _) => stream);
             return stream;
         }
 
