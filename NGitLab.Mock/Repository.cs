@@ -465,7 +465,7 @@ namespace NGitLab.Mock
             }
         }
 
-        private Models.Tree GetTreeItem(string filePath)
+        private static Models.Tree GetTreeItem(string filePath)
         {
             var fileAttribute = System.IO.File.GetAttributes(filePath);
             return new Models.Tree
