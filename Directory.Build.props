@@ -5,6 +5,7 @@
     <Copyright>Copyright © $([System.DateTime]::UtcNow.Year) $(Company)</Copyright>
     <Description>GitLab REST API .NET Client Library</Description>
     <Product>NGitLab</Product>
+    <Authors>$(Company), NGitLab contributors</Authors>
 
     <!-- Compile Options -->
     <LangVersion>9.0</LangVersion>
