@@ -482,7 +482,7 @@ NGitLab.Mock.Job.Coverage.get -> double?
 NGitLab.Mock.Job.Coverage.set -> void
 NGitLab.Mock.Job.CreatedAt.get -> System.DateTime
 NGitLab.Mock.Job.CreatedAt.set -> void
-NGitLab.Mock.Job.Duration.get -> decimal?
+NGitLab.Mock.Job.Duration.get -> float?
 NGitLab.Mock.Job.Duration.set -> void
 NGitLab.Mock.Job.FinishedAt.get -> System.DateTime
 NGitLab.Mock.Job.FinishedAt.set -> void
