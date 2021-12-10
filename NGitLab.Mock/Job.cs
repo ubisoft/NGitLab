@@ -46,7 +46,7 @@ namespace NGitLab.Mock
 
         public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/jobs/{Id.ToString(CultureInfo.InvariantCulture)}");
 
-        public decimal? Duration { get; set; }
+        public float? Duration { get; set; }
 
         public decimal? QueuedDuration { get; set; }
 
