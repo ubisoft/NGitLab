@@ -61,7 +61,7 @@ namespace NGitLab.Models
         public string WebUrl;
 
         [DataMember(Name = "duration")]
-        public decimal? Duration;
+        public float? Duration;
 
         [DataMember(Name = "queued_duration")]
         public float? QueuedDuration;
