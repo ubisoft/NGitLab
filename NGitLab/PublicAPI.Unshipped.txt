@@ -2176,6 +2176,7 @@ NGitLab.Models.Project.RunnersToken -> string
 NGitLab.Models.Project.SharedRunnersEnabled -> bool
 NGitLab.Models.Project.SnippetsAccessLevel -> string
 NGitLab.Models.Project.SnippetsEnabled -> bool
+NGitLab.Models.Project.SquashOption -> string
 NGitLab.Models.Project.SshUrl -> string
 NGitLab.Models.Project.StarCount -> int
 NGitLab.Models.Project.Statistics -> NGitLab.Models.ProjectStatistics
