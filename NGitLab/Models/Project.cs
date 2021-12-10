@@ -197,5 +197,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "mirror_overwrites_diverged_branches")]
         public bool MirrorOverwritesDivergedBranches;
+
+        [DataMember(Name = "squash_option")]
+        public string SquashOption;
     }
 }
