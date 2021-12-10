@@ -48,7 +48,7 @@ namespace NGitLab.Mock
 
         public float? Duration { get; set; }
 
-        public decimal? QueuedDuration { get; set; }
+        public float? QueuedDuration { get; set; }
 
         internal Models.Job ToJobClient()
         {
