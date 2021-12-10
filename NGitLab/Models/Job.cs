@@ -64,7 +64,7 @@ namespace NGitLab.Models
         public decimal? Duration;
 
         [DataMember(Name = "queued_duration")]
-        public decimal? QueuedDuration;
+        public float? QueuedDuration;
 
         [DataContract]
         public class JobRunner
