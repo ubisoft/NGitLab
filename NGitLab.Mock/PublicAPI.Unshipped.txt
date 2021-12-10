@@ -495,7 +495,7 @@ NGitLab.Mock.Job.Pipeline.get -> NGitLab.Models.Job.JobPipeline
 NGitLab.Mock.Job.Pipeline.set -> void
 NGitLab.Mock.Job.Project.get -> NGitLab.Models.Job.JobProject
 NGitLab.Mock.Job.Project.set -> void
-NGitLab.Mock.Job.QueuedDuration.get -> decimal?
+NGitLab.Mock.Job.QueuedDuration.get -> float?
 NGitLab.Mock.Job.QueuedDuration.set -> void
 NGitLab.Mock.Job.Ref.get -> string
 NGitLab.Mock.Job.Ref.set -> void
