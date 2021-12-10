@@ -1617,6 +1617,7 @@ NGitLab.Models.Job.Artifacts -> NGitLab.Models.Job.JobArtifact
 NGitLab.Models.Job.Commit -> NGitLab.Models.Commit
 NGitLab.Models.Job.Coverage -> double?
 NGitLab.Models.Job.CreatedAt -> System.DateTime
+NGitLab.Models.Job.Duration -> float?
 NGitLab.Models.Job.FinishedAt -> System.DateTime
 NGitLab.Models.Job.Id -> int
 NGitLab.Models.Job.Job() -> void
@@ -1645,6 +1646,7 @@ NGitLab.Models.Job.JobRunner.Name -> string
 NGitLab.Models.Job.Name -> string
 NGitLab.Models.Job.Pipeline -> NGitLab.Models.Job.JobPipeline
 NGitLab.Models.Job.Project -> NGitLab.Models.Job.JobProject
+NGitLab.Models.Job.QueuedDuration -> float?
 NGitLab.Models.Job.Ref -> string
 NGitLab.Models.Job.Runner -> NGitLab.Models.Job.JobRunner
 NGitLab.Models.Job.Stage -> string

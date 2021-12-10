@@ -60,6 +60,12 @@ namespace NGitLab.Models
         [DataMember(Name = "web_url")]
         public string WebUrl;
 
+        [DataMember(Name = "duration")]
+        public float? Duration;
+
+        [DataMember(Name = "queued_duration")]
+        public float? QueuedDuration;
+
         [DataContract]
         public class JobRunner
         {

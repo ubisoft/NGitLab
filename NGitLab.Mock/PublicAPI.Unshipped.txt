@@ -482,6 +482,8 @@ NGitLab.Mock.Job.Coverage.get -> double?
 NGitLab.Mock.Job.Coverage.set -> void
 NGitLab.Mock.Job.CreatedAt.get -> System.DateTime
 NGitLab.Mock.Job.CreatedAt.set -> void
+NGitLab.Mock.Job.Duration.get -> float?
+NGitLab.Mock.Job.Duration.set -> void
 NGitLab.Mock.Job.FinishedAt.get -> System.DateTime
 NGitLab.Mock.Job.FinishedAt.set -> void
 NGitLab.Mock.Job.Id.get -> int
@@ -493,6 +495,8 @@ NGitLab.Mock.Job.Pipeline.get -> NGitLab.Models.Job.JobPipeline
 NGitLab.Mock.Job.Pipeline.set -> void
 NGitLab.Mock.Job.Project.get -> NGitLab.Models.Job.JobProject
 NGitLab.Mock.Job.Project.set -> void
+NGitLab.Mock.Job.QueuedDuration.get -> float?
+NGitLab.Mock.Job.QueuedDuration.set -> void
 NGitLab.Mock.Job.Ref.get -> string
 NGitLab.Mock.Job.Ref.set -> void
 NGitLab.Mock.Job.Runner.get -> NGitLab.Models.Job.JobRunner
