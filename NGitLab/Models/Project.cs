@@ -199,6 +199,6 @@ namespace NGitLab.Models
         public bool MirrorOverwritesDivergedBranches;
 
         [DataMember(Name = "squash_option")]
-        public string SquashOption;
+        public DynamicEnum<SquashOption> SquashOption;
     }
 }
