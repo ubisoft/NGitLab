@@ -153,7 +153,30 @@ namespace NGitLab.Mock.Clients
 
                 if (query.Scope.HasValue)
                 {
-                    throw new NotImplementedException();
+                    if (query.Scope.Value == PipelineScope.tags)
+                    {
+                        pipelines = pipelines.Where(p => p.Tag);
+                    }
+                    else if (query.Scope.Value == PipelineScope.branches)
+                    {
+                        pipelines = pipelines.Where(p => !p.Tag);
+                    }
+                    else if (query.Scope.Value == PipelineScope.running)
+                    {
+                        pipelines = pipelines.Where(p => p.Status == JobStatus.Running);
+                    }
+                    else if (query.Scope.Value == PipelineScope.pending)
+                    {
+                        pipelines = pipelines.Where(p => p.Status == JobStatus.Pending);
+                    }
+                    else if (query.Scope.Value == PipelineScope.finished)
+                    {
+                        pipelines = pipelines.Where(p => p.FinishedAt.HasValue);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
                 }
 
                 if (query.Status.HasValue)
