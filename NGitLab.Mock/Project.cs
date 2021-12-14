@@ -91,6 +91,8 @@ namespace NGitLab.Mock
 
         public RepositoryAccessLevel RepositoryAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
 
+        public bool IsEmpty { get; set; }
+
         public PermissionCollection Permissions { get; }
 
         public Repository Repository { get; }
@@ -349,6 +351,7 @@ namespace NGitLab.Mock
                 Id = Id,
                 Name = Name,
                 Description = Description,
+                EmptyRepo = IsEmpty,
                 Path = Path,
                 PathWithNamespace = PathWithNamespace,
                 ForkedFromProject = ForkedFrom?.ToClientProject(),
