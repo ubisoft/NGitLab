@@ -33,7 +33,7 @@ namespace NGitLab.Mock.Clients
                 using (Context.BeginOperationScope())
                 {
                     var project = GetProject(_projectId, ProjectPermission.View);
-                    return project.Repository.GetTree();
+                    return project.Repository.GetTree().ToList();
                 }
             }
         }
@@ -45,7 +45,7 @@ namespace NGitLab.Mock.Clients
                 using (Context.BeginOperationScope())
                 {
                     var project = GetProject(_projectId, ProjectPermission.View);
-                    return project.Repository.GetCommits().Select(commit => ConvertToNGitLabCommit(commit, project));
+                    return project.Repository.GetCommits().Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
                 }
             }
         }
@@ -65,7 +65,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetTree(options);
+                return project.Repository.GetTree(options).ToList();
             }
         }
 
@@ -84,7 +84,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetCommits(refName).Select(commit => ConvertToNGitLabCommit(commit, project));
+                return project.Repository.GetCommits(refName).Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
             }
         }
 
@@ -93,7 +93,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetCommits(request).Select(commit => ConvertToNGitLabCommit(commit, project));
+                return project.Repository.GetCommits(request).Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
             }
         }
 
