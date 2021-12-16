@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using NGitLab.Extensions;
@@ -113,19 +112,10 @@ namespace NGitLab.Impl
         private string BuildGetTreeUrl(RepositoryGetTreeOptions options)
         {
             var url = $"{_repoPath}/tree";
-
-            var args = new List<string>(4);
-            if (!string.IsNullOrEmpty(options.Path))
-                args.Add($"path={options.Path}");
-            if (!string.IsNullOrEmpty(options.Ref))
-                args.Add($"ref={Uri.EscapeDataString(options.Ref)}");
-            if (options.Recursive)
-                args.Add("recursive=true");
-            if (options.PerPage.HasValue)
-                args.Add($"per_page={options.PerPage.Value.ToString(CultureInfo.InvariantCulture)}");
-
-            if (args.Count > 0)
-                url += "?" + string.Join("&", args);
+            url = Utils.AddParameter(url, "path", options.Path);
+            url = Utils.AddParameter(url, "ref", options.Ref);
+            url = Utils.AddParameter(url, "recursive", options.Recursive);
+            url = Utils.AddParameter(url, "per_page", options.PerPage);
 
             return url;
         }

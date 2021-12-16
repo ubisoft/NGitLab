@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -62,7 +63,7 @@ namespace NGitLab.Mock.Clients
 
         public GitLabCollectionResponse<Tree> GetTreeAsync(RepositoryGetTreeOptions options)
         {
-            throw new NotImplementedException();
+            return GitLabCollectionResponse.Create(GetTree(options));
         }
 
         public IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options)

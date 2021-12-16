@@ -52,6 +52,9 @@ namespace NGitLab.Impl
 
         private static string AddParameterInternal(string url, string parameterName, string stringValue)
         {
+            if (string.IsNullOrEmpty(stringValue))
+                return url;
+
             var @operator = !url.Contains("?") ? "?" : "&";
             var formattedValue = WebUtility.UrlEncode(stringValue);
             var parameter = $"{@operator}{parameterName}={formattedValue}";
