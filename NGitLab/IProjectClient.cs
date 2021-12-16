@@ -56,6 +56,8 @@ namespace NGitLab
 
         Task<Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default);
 
+        Task<Project> GetByFullNameAsync(string fullName, SingleProjectQuery query = null, CancellationToken cancellationToken = default);
+
         Project Fork(string id, ForkProject forkProject);
 
         Task<Project> ForkAsync(string id, ForkProject forkProject, CancellationToken cancellationToken = default);

@@ -60,6 +60,11 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public GitLabCollectionResponse<Tree> GetTreeAsync(RepositoryGetTreeOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options)
         {
             using (Context.BeginOperationScope())

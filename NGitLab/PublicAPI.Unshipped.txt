@@ -587,6 +587,7 @@ NGitLab.Impl.ProjectClient.Fork(string id, NGitLab.Models.ForkProject forkProjec
 NGitLab.Impl.ProjectClient.ForkAsync(string id, NGitLab.Models.ForkProject forkProject, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.Get(NGitLab.Models.ProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetAsync(NGitLab.Models.ProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
+NGitLab.Impl.ProjectClient.GetByFullNameAsync(string fullName, NGitLab.Models.SingleProjectQuery query = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetById(int id, NGitLab.Models.SingleProjectQuery query) -> NGitLab.Models.Project
 NGitLab.Impl.ProjectClient.GetByIdAsync(int id, NGitLab.Models.SingleProjectQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetForks(string id, NGitLab.Models.ForkedProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
@@ -634,6 +635,7 @@ NGitLab.Impl.RepositoryClient.GetRawBlob(string sha, System.Action<System.IO.Str
 NGitLab.Impl.RepositoryClient.GetTree(NGitLab.Models.RepositoryGetTreeOptions options) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
 NGitLab.Impl.RepositoryClient.GetTree(string path) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
 NGitLab.Impl.RepositoryClient.GetTree(string path, string ref, bool recursive) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
+NGitLab.Impl.RepositoryClient.GetTreeAsync(NGitLab.Models.RepositoryGetTreeOptions options) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Tree>
 NGitLab.Impl.RepositoryClient.ProjectHooks.get -> NGitLab.IProjectHooksClient
 NGitLab.Impl.RepositoryClient.RepositoryClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.RepositoryClient.Tags.get -> NGitLab.ITagClient
@@ -757,6 +759,7 @@ NGitLab.IProjectClient.Fork(string id, NGitLab.Models.ForkProject forkProject) -
 NGitLab.IProjectClient.ForkAsync(string id, NGitLab.Models.ForkProject forkProject, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.IProjectClient.Get(NGitLab.Models.ProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetAsync(NGitLab.Models.ProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
+NGitLab.IProjectClient.GetByFullNameAsync(string fullName, NGitLab.Models.SingleProjectQuery query = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetById(int id, NGitLab.Models.SingleProjectQuery query) -> NGitLab.Models.Project
 NGitLab.IProjectClient.GetByIdAsync(int id, NGitLab.Models.SingleProjectQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetForks(string id, NGitLab.Models.ForkedProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
@@ -825,6 +828,7 @@ NGitLab.IRepositoryClient.GetRawBlob(string sha, System.Action<System.IO.Stream>
 NGitLab.IRepositoryClient.GetTree(NGitLab.Models.RepositoryGetTreeOptions options) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
 NGitLab.IRepositoryClient.GetTree(string path) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
 NGitLab.IRepositoryClient.GetTree(string path, string ref, bool recursive) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
+NGitLab.IRepositoryClient.GetTreeAsync(NGitLab.Models.RepositoryGetTreeOptions options) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Tree>
 NGitLab.IRepositoryClient.ProjectHooks.get -> NGitLab.IProjectHooksClient
 NGitLab.IRepositoryClient.Tags.get -> NGitLab.ITagClient
 NGitLab.IRepositoryClient.Tree.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>

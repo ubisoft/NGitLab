@@ -17,6 +17,8 @@ namespace NGitLab
 
         IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options);
 
+        GitLabCollectionResponse<Tree> GetTreeAsync(RepositoryGetTreeOptions options);
+
         void GetRawBlob(string sha, Action<Stream> parser);
 
         void GetArchive(Action<Stream> parser);

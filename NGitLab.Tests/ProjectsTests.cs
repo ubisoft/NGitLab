@@ -26,6 +26,18 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
+        public async Task GetProjectByNameAsync()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var projectClient = context.Client.Projects;
+
+            var projectResult = await projectClient.GetByFullNameAsync(project.PathWithNamespace, new SingleProjectQuery(), CancellationToken.None);
+            Assert.AreEqual(project.Id, projectResult.Id);
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task GetProjectsAsync()
         {
             using var context = await GitLabTestContext.CreateAsync();
