@@ -217,14 +217,10 @@ namespace NGitLab.Mock.Clients
             return GetById(id, query);
         }
 
-        public async Task<Models.Project> GetByFullNameAsync(string fullName, SingleProjectQuery query = null, CancellationToken cancellationToken = default)
+        public async Task<Models.Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default)
         {
             await Task.Yield();
-            using (Context.BeginOperationScope())
-            {
-                var project = GetProject(fullName, ProjectPermission.View);
-                return project.ToClientProject();
-            }
+            return this[path];
         }
 
         public IEnumerable<Models.Project> GetForks(string id, ForkedProjectQuery query)

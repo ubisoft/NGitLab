@@ -26,13 +26,13 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
-        public async Task GetProjectByNameAsync()
+        public async Task GetByNamespacedPathAsync()
         {
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var projectClient = context.Client.Projects;
 
-            var projectResult = await projectClient.GetByFullNameAsync(project.PathWithNamespace, new SingleProjectQuery(), CancellationToken.None);
+            var projectResult = await projectClient.GetByNamespacedPathAsync(project.PathWithNamespace, new SingleProjectQuery(), CancellationToken.None);
             Assert.AreEqual(project.Id, projectResult.Id);
         }
 
