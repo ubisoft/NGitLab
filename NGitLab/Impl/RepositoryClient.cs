@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using NGitLab.Extensions;
@@ -35,22 +34,14 @@ namespace NGitLab.Impl
 
         public IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options)
         {
-            var args = new List<string>(4);
+            var url = BuildGetTreeUrl(options);
+            return _api.Get().GetAll<Tree>(url);
+        }
 
-            var uri = $"{_repoPath}/tree";
-            if (!string.IsNullOrEmpty(options.Path))
-                args.Add($"path={options.Path}");
-            if (!string.IsNullOrEmpty(options.Ref))
-                args.Add($"ref={Uri.EscapeDataString(options.Ref)}");
-            if (options.Recursive)
-                args.Add("recursive=true");
-            if (options.PerPage.HasValue)
-                args.Add($"per_page={options.PerPage.Value.ToString(CultureInfo.InvariantCulture)}");
-
-            if (args.Count > 0)
-                uri += "?" + string.Join("&", args);
-
-            return _api.Get().GetAll<Tree>(uri);
+        public GitLabCollectionResponse<Tree> GetTreeAsync(RepositoryGetTreeOptions options)
+        {
+            var url = BuildGetTreeUrl(options);
+            return _api.Get().GetAllAsync<Tree>(url);
         }
 
         public void GetRawBlob(string sha, Action<Stream> parser)
@@ -117,5 +108,16 @@ namespace NGitLab.Impl
         public IBranchClient Branches => new BranchClient(_api, _repoPath);
 
         public IProjectHooksClient ProjectHooks => new ProjectHooksClient(_api, _projectPath);
+
+        private string BuildGetTreeUrl(RepositoryGetTreeOptions options)
+        {
+            var url = $"{_repoPath}/tree";
+            url = Utils.AddParameter(url, "path", options.Path);
+            url = Utils.AddParameter(url, "ref", options.Ref);
+            url = Utils.AddParameter(url, "recursive", options.Recursive);
+            url = Utils.AddParameter(url, "per_page", options.PerPage);
+
+            return url;
+        }
     }
 }

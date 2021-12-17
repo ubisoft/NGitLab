@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,7 +56,10 @@ namespace NGitLab.Tests.RepositoryClient
                             {
                                 Action = "create",
                                 Content = $"test",
-                                FilePath = $"test{i.ToString(CultureInfo.InvariantCulture)}.md",
+                                FilePath =  // Spread files among the root directory and its 'subfolder'
+                                    i % 2 == 0 ?
+                                    $"test{i.ToString(CultureInfo.InvariantCulture)}.md" :
+                                    $"subfolder/test{i.ToString(CultureInfo.InvariantCulture)}.md",
                             },
                         },
                     });
@@ -69,11 +73,13 @@ namespace NGitLab.Tests.RepositoryClient
         [NGitLabRetry]
         public async Task GetAllCommits()
         {
-            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+            const int commitCount = 5;
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount);
+
             var commits = context.RepositoryClient.Commits.ToArray();
-            Assert.AreEqual(2, commits.Length);
-            Assert.AreEqual(context.Commits[1].Message, commits[0].Message);
-            Assert.AreEqual(context.Commits[0].Message, commits[1].Message);
+
+            Assert.AreEqual(commitCount, commits.Length);
+            CollectionAssert.AreEqual(context.Commits.Select(c => c.Message).Reverse(), commits.Select(c => c.Message));
         }
 
         [Test]
@@ -130,54 +136,86 @@ namespace NGitLab.Tests.RepositoryClient
             CollectionAssert.IsNotEmpty(context.RepositoryClient.GetCommitDiff(context.RepositoryClient.Commits.First().Id).ToArray());
         }
 
-        [Test]
+        [TestCase(4)]
+        [TestCase(11)]
         [NGitLabRetry]
-        public async Task GetAllTreeInPath()
+        public async Task GetAllTreeObjectsAtRoot(int commitCount)
         {
-            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount);
 
-            var tree = context.RepositoryClient.GetTree(string.Empty);
-            Assert.IsNotEmpty(tree);
+            var treeObjects = context.RepositoryClient.GetTree(string.Empty).ToList();
+
+            var expectedFileCount = (int)Math.Ceiling(commitCount / 2.0);
+            var expectedDirCount = 1;
+
+            Assert.AreEqual(expectedFileCount, treeObjects.Count(t => t.Type == ObjectType.blob));
+            Assert.AreEqual(expectedDirCount, treeObjects.Count(t => t.Type == ObjectType.tree));
+        }
+
+        [TestCase(4)]
+        [TestCase(11)]
+        [NGitLabRetry]
+        public async Task GetAllTreeObjectsRecursivelyFromRoot(int commitCount)
+        {
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount);
+
+            var treeObjects = context.RepositoryClient.GetTree(string.Empty, @ref: null, recursive: true).ToList();
+
+            var expectedFileCount = commitCount;
+            var expectedDirCount = 1;
+
+            Assert.AreEqual(expectedFileCount, treeObjects.Count(t => t.Type == ObjectType.blob));
+            Assert.AreEqual(expectedDirCount, treeObjects.Count(t => t.Type == ObjectType.tree));
+        }
+
+        [TestCase(4)]
+        [TestCase(11)]
+        [NGitLabRetry]
+        public async Task GetAllTreeObjectsRecursivelyFromRootAsync(int commitCount)
+        {
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount);
+
+            var treeObjects = new List<Tree>();
+            await foreach (var item in context.RepositoryClient.GetTreeAsync(new RepositoryGetTreeOptions { Path = string.Empty, Ref = null, Recursive = true }))
+            {
+                treeObjects.Add(item);
+            }
+
+            var expectedFileCount = commitCount;
+            var expectedDirCount = 1;
+
+            Assert.AreEqual(expectedFileCount, treeObjects.Count(t => t.Type == ObjectType.blob));
+            Assert.AreEqual(expectedDirCount, treeObjects.Count(t => t.Type == ObjectType.tree));
         }
 
         [Test]
         [NGitLabRetry]
-        public async Task GetAllTreeInPathRecursively()
+        public async Task GetAllTreeObjectsInPathOnRef()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
 
-            var tree = context.RepositoryClient.GetTree(string.Empty, @ref: null, recursive: true);
-            Assert.IsNotEmpty(tree);
+            var treeObjects = context.RepositoryClient.GetTree(string.Empty, context.Project.DefaultBranch, recursive: false);
+            Assert.IsNotEmpty(treeObjects);
         }
 
         [Test]
         [NGitLabRetry]
-        public async Task GetAllTreeInPathOnRef()
+        public async Task GetAllTreeObjectsInPathWith100ElementsByPage()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
 
-            var tree = context.RepositoryClient.GetTree(string.Empty, context.Project.DefaultBranch, recursive: false);
-            Assert.IsNotEmpty(tree);
+            var treeObjects = context.RepositoryClient.GetTree(new RepositoryGetTreeOptions { Path = string.Empty, PerPage = 100 });
+            Assert.IsNotEmpty(treeObjects);
         }
 
         [Test]
         [NGitLabRetry]
-        public async Task GetAllTreeInPathWith100ElementsByPage()
+        public async Task GetAllTreeObjectsAtInvalidPath()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
 
-            var tree = context.RepositoryClient.GetTree(new RepositoryGetTreeOptions { Path = string.Empty, PerPage = 100 });
-            Assert.IsNotEmpty(tree);
-        }
-
-        [Test]
-        [NGitLabRetry]
-        public async Task GetAllTreeInNotGoodPath()
-        {
-            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
-
-            var tree = context.RepositoryClient.GetTree("Fakepath");
-            Assert.IsEmpty(tree);
+            var treeObjects = context.RepositoryClient.GetTree("Fakepath");
+            Assert.IsEmpty(treeObjects);
         }
 
         [TestCase(CommitRefType.All)]

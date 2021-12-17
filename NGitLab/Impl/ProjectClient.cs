@@ -127,6 +127,14 @@ namespace NGitLab.Impl
             return await _api.Get().ToAsync<Project>(url, cancellationToken).ConfigureAwait(false);
         }
 
+        public async Task<Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default)
+        {
+            var url = Project.Url + "/" + WebUtility.UrlEncode(path);
+            url = Utils.AddParameter(url, "statistics", query?.Statistics);
+
+            return await _api.Get().ToAsync<Project>(url, cancellationToken).ConfigureAwait(false);
+        }
+
         public Project Fork(string id, ForkProject forkProject)
         {
             return _api.Post().With(forkProject).To<Project>(Project.Url + "/" + id + "/fork");
