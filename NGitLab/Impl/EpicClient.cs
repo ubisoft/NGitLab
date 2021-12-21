@@ -27,9 +27,9 @@ namespace NGitLab.Impl
             return _api.Get().To<Epic>(string.Format(CultureInfo.InvariantCulture, SingleEpiceUrl, groupId, epicId));
         }
 
-        public IEnumerable<Issue> GetIssues(int groupId, int epicId)
+        public GitLabCollectionResponse<Issue> GetIssuesAsync(int groupId, int epicId)
         {
-            return _api.Get().GetAll<Issue>(string.Format(CultureInfo.InvariantCulture, GroupEpicIssuesUrl, groupId, epicId));
+            return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, GroupEpicIssuesUrl, groupId, epicId));
         }
 
         private IEnumerable<Epic> Get(string url, EpicQuery query)

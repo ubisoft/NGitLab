@@ -26,7 +26,7 @@ namespace NGitLab
         /// </summary>
         /// <param name="groupId">Group ID</param>
         /// <param name="epicId">Epic ID</param>
-        IEnumerable<Issue> GetIssues(int groupId, int epicId);
+        GitLabCollectionResponse<Issue> GetIssuesAsync(int groupId, int epicId);
 
         /// <summary>
         /// Create an epic
