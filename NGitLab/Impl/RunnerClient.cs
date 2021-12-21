@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -31,6 +33,11 @@ namespace NGitLab.Impl
         public IEnumerable<Runner> OfProject(int projectId)
         {
             return _api.Get().GetAll<Runner>(Project.Url + $"/{projectId.ToStringInvariant()}" + Runner.Url);
+        }
+
+        public GitLabCollectionResponse<Runner> OfProjectAsync(int projectId)
+        {
+            return _api.Get().GetAllAsync<Runner>(Project.Url + $"/{projectId.ToStringInvariant()}" + Runner.Url);
         }
 
         public void Delete(Runner runner) => Delete(runner.Id);
@@ -93,6 +100,12 @@ namespace NGitLab.Impl
         public Runner Register(RunnerRegister request)
         {
             return _api.Post().With(request).To<Runner>(Runner.Url);
+        }
+
+        public Task<Runner> EnableRunnerAsync(int projectId, RunnerId runnerId, CancellationToken cancellationToken = default)
+        {
+            var url = $"{Project.Url}/{projectId.ToStringInvariant()}/runners";
+            return _api.Post().With(runnerId).ToAsync<Runner>(url, cancellationToken);
         }
     }
 }

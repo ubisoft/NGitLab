@@ -342,7 +342,7 @@ namespace NGitLab.Mock
 
             try
             {
-                return _repository.Commits.QueryBy(filter).ToList();
+                return _repository?.Commits.QueryBy(filter).ToList() ?? Enumerable.Empty<Commit>();
             }
             catch (NotFoundException)
             {
@@ -405,7 +405,7 @@ namespace NGitLab.Mock
 
             try
             {
-                return _repository.Commits.QueryBy(filter).ToList();
+                return _repository?.Commits.QueryBy(filter).ToList() ?? Enumerable.Empty<Commit>();
             }
             catch (NotFoundException)
             {
@@ -437,6 +437,42 @@ namespace NGitLab.Mock
                 BlobId = ((Blob)commit[filePath].Target).Id.ToString(),
                 CommitId = commit.Sha,
                 LastCommitId = repo.GetLastCommitForFileChanges(filePath).Sha,
+            };
+        }
+
+        internal IEnumerable<Models.Tree> GetTree()
+        {
+            var repo = GetGitRepository();
+            Commands.Checkout(repo, Project.DefaultBranch);
+
+            foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(FullPath))
+            {
+                yield return GetTreeItem(fileSystemEntry);
+            }
+        }
+
+        internal IEnumerable<Models.Tree> GetTree(Models.RepositoryGetTreeOptions repositoryGetTreeOptions)
+        {
+            var repo = GetGitRepository();
+            var commitOrBranch = string.IsNullOrEmpty(repositoryGetTreeOptions.Ref) ? Project.DefaultBranch : repositoryGetTreeOptions.Ref;
+            Commands.Checkout(repo, commitOrBranch);
+
+            var searchOption = repositoryGetTreeOptions.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            var fullPath = string.IsNullOrEmpty(repositoryGetTreeOptions.Path) ? FullPath : Path.Combine(FullPath, repositoryGetTreeOptions.Path);
+            foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(fullPath, "*", searchOption))
+            {
+                yield return GetTreeItem(fileSystemEntry);
+            }
+        }
+
+        private static Models.Tree GetTreeItem(string filePath)
+        {
+            var fileAttribute = System.IO.File.GetAttributes(filePath);
+            return new Models.Tree
+            {
+                Name = Path.GetFileName(filePath),
+                Path = Path.GetFileName(filePath),
+                Type = fileAttribute == FileAttributes.Directory ? Models.ObjectType.tree : Models.ObjectType.blob,
             };
         }
 

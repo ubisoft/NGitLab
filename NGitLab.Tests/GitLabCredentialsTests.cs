@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
-    public class GitlabCredentialsTests
+    public class GitLabCredentialsTests
     {
         [TestCase("https://test/api/v3")]
         [TestCase("https://test/api/v3/")]

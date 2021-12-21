@@ -46,6 +46,10 @@ namespace NGitLab.Mock
 
         public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/jobs/{Id.ToString(CultureInfo.InvariantCulture)}");
 
+        public float? Duration { get; set; }
+
+        public float? QueuedDuration { get; set; }
+
         internal Models.Job ToJobClient()
         {
             return new Models.Job
@@ -68,6 +72,8 @@ namespace NGitLab.Mock
                 Tag = Tag,
                 User = User.ToClientUser(),
                 WebUrl = WebUrl,
+                Duration = Duration,
+                QueuedDuration = QueuedDuration,
             };
         }
 
@@ -91,6 +97,8 @@ namespace NGitLab.Mock
                 Status = Status,
                 Tag = Tag,
                 User = User,
+                Duration = Duration,
+                QueuedDuration = QueuedDuration,
             };
         }
     }

@@ -3,7 +3,7 @@
 namespace NGitLab.Models
 {
     /// <summary>
-    /// Allows to use more advanced gitlab queries for getting deployments
+    /// Allows to use more advanced GitLab queries for getting deployments
     /// </summary>
     public class EpicQuery
     {

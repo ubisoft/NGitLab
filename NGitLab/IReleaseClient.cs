@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -10,6 +12,8 @@ namespace NGitLab
         ReleaseInfo this[string tagName] { get; }
 
         ReleaseInfo Create(ReleaseCreate data);
+
+        Task<ReleaseInfo> CreateAsync(ReleaseCreate data, CancellationToken cancellationToken = default);
 
         ReleaseInfo Update(ReleaseUpdate data);
 

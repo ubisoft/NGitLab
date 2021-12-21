@@ -84,5 +84,25 @@ namespace NGitLab.Mock.Tests
             Assert.AreEqual(1, mergeRequests.Length, "Merge requests count is invalid");
             Assert.AreEqual("Merge request 2", mergeRequests[0].Title, "Merge request found is invalid");
         }
+
+        [Test]
+        public void Test_merge_requests_assignee_should_update_assignees_and_vice_versa()
+        {
+            var user1 = new User("user1");
+            var user2 = new User("user2");
+
+            var mergeRequestSingle = new MergeRequest
+            {
+                Assignee = new UserRef(user1),
+            };
+
+            var mergeRequestTwo = new MergeRequest
+            {
+                Assignees = new[] { new UserRef(user1), new UserRef(user2) },
+            };
+
+            Assert.AreEqual(1, mergeRequestSingle.Assignees.Count, "Merge request assignees count invalid");
+            Assert.AreEqual("user1", mergeRequestTwo.Assignee.UserName, "Merge request assignee is invalid");
+        }
     }
 }

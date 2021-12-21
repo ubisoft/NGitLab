@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -27,6 +30,11 @@ namespace NGitLab.Mock.Clients
 
                 return job.ToJobClient();
             }
+        }
+
+        public Task<Models.Job> GetAsync(int jobId, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
 
         public byte[] GetJobArtifacts(int jobId)
@@ -62,9 +70,21 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public GitLabCollectionResponse<Models.Job> GetJobsAsync(JobQuery query)
+        {
+            return GitLabCollectionResponse.Create(GetJobs(query));
+        }
+
         public string GetTrace(int jobId)
         {
             throw new System.NotImplementedException();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<string> GetTraceAsync(int jobId, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return GetTrace(jobId);
         }
 
         public Models.Job RunAction(int jobId, JobAction action)
@@ -94,6 +114,13 @@ namespace NGitLab.Mock.Clients
 
                 return job.ToJobClient();
             }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<Models.Job> RunActionAsync(int jobId, JobAction action, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return RunAction(jobId, action);
         }
     }
 }

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using NGitLab.Models;
 
 namespace NGitLab.Mock
@@ -25,7 +27,22 @@ namespace NGitLab.Mock
 
         public UserRef Author { get; set; }
 
-        public UserRef Assignee { get; set; }
+        public UserRef Assignee
+        {
+            get => Assignees?.FirstOrDefault();
+            set
+            {
+                Assignees.Clear();
+                if (value != null)
+                {
+                    Assignees.Add(value);
+                }
+            }
+        }
+
+        public IList<UserRef> Assignees { get; set; } = new List<UserRef>();
+
+        public IList<UserRef> Reviewers { get; set; } = new List<UserRef>();
 
         public string SourceBranch { get; set; }
 
@@ -55,7 +72,7 @@ namespace NGitLab.Mock
 
         public bool RebaseInProgress { get; set; }
 
-        public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/merge_requests/{Id.ToString(CultureInfo.InvariantCulture)}");
+        public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/merge_requests/{Iid.ToString(CultureInfo.InvariantCulture)}");
 
         public Pipeline HeadPipeline => Project.Pipelines
                   .Where(p => p.Sha.Equals(Sha))
@@ -141,21 +158,51 @@ namespace NGitLab.Mock
             return new RebaseResult { RebaseInProgress = true };
         }
 
-        public IEnumerable<Models.MergeRequestDiscussion> GetDiscussions()
+        public IEnumerable<MergeRequestDiscussion> GetDiscussions()
         {
-            return Comments.GroupBy(c => c.ThreadId, StringComparer.Ordinal).Select(g => new MergeRequestDiscussion
+            var sha1 = SHA1.Create();
+            var i = 0;
+            var discussions = new List<MergeRequestDiscussion>();
+            foreach (var comment in Comments)
             {
-                Id = g.Key,
-                IndividualNote = g.Take(2).Count() == 1,
-                Notes = g.Select(n => n.ToMergeRequestCommentClient()).ToArray(),
-            });
+                if (string.IsNullOrEmpty(comment.ThreadId))
+                {
+                    discussions.Add(new MergeRequestDiscussion
+                    {
+                        Id = Convert.ToBase64String(sha1.ComputeHash(Encoding.UTF8.GetBytes($"{Iid}:{i}"))),
+                        IndividualNote = true,
+                        Notes = new[] { comment.ToMergeRequestCommentClient() },
+                    });
+                }
+                else
+                {
+                    var discussion = discussions.Find(x => string.Equals(x.Id, comment.ThreadId, StringComparison.Ordinal));
+                    if (discussion == null)
+                    {
+                        discussions.Add(new MergeRequestDiscussion
+                        {
+                            Id = comment.ThreadId,
+                            IndividualNote = false,
+                            Notes = new[] { comment.ToMergeRequestCommentClient() },
+                        });
+                    }
+                    else
+                    {
+                        discussion.Notes = discussion.Notes.Concat(new[] { comment.ToMergeRequestCommentClient() }).ToArray();
+                    }
+                }
+
+                i++;
+            }
+
+            return discussions;
         }
 
         internal Models.MergeRequest ToMergeRequestClient()
         {
             return new Models.MergeRequest
             {
-                Assignee = Assignee?.ToUserClient(),
+                Assignees = GetUsers(Assignees),
                 Author = Author.ToUserClient(),
                 CreatedAt = CreatedAt.UtcDateTime,
                 UpdatedAt = UpdatedAt.UtcDateTime,
@@ -183,7 +230,20 @@ namespace NGitLab.Mock
                 HeadPipeline = HeadPipeline?.ToPipelineClient(),
                 Labels = Labels.ToArray(),
                 RebaseInProgress = RebaseInProgress,
+                Reviewers = GetUsers(Reviewers),
             };
+        }
+
+        internal static Models.User[] GetUsers(IList<UserRef> userRefs)
+        {
+            var users = new List<Models.User>();
+            foreach (var userRef in userRefs)
+            {
+                var user = userRef.ToUserClient();
+                users.Add(user);
+            }
+
+            return users.ToArray();
         }
     }
 }

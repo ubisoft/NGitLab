@@ -5,6 +5,7 @@
     <Copyright>Copyright © $([System.DateTime]::UtcNow.Year) $(Company)</Copyright>
     <Description>GitLab REST API .NET Client Library</Description>
     <Product>NGitLab</Product>
+    <Authors>$(Company), NGitLab contributors</Authors>
 
     <!-- Compile Options -->
     <LangVersion>9.0</LangVersion>
@@ -27,7 +28,7 @@
 
     <PackageReference Include="MinVer" PrivateAssets="All" Version="2.5.0" />
 
-    <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.66">
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -35,17 +36,17 @@
 
   <!-- Analyzers (Roslyn, Meziantou, StyleCop, ...) -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 
-    <PackageReference Include="Meziantou.Analyzer" Version="1.0.670">
+    <PackageReference Include="Meziantou.Analyzer" Version="1.0.681">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.333">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

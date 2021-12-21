@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -25,6 +27,8 @@ namespace NGitLab
         /// </summary>
         IEnumerable<Project> Get(ProjectQuery query);
 
+        GitLabCollectionResponse<Project> GetAsync(ProjectQuery query);
+
         Project this[int id] { get; }
 
         /// <summary>
@@ -50,9 +54,17 @@ namespace NGitLab
 
         Project GetById(int id, SingleProjectQuery query);
 
+        Task<Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default);
+
+        Task<Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default);
+
         Project Fork(string id, ForkProject forkProject);
 
+        Task<Project> ForkAsync(string id, ForkProject forkProject, CancellationToken cancellationToken = default);
+
         IEnumerable<Project> GetForks(string id, ForkedProjectQuery query);
+
+        GitLabCollectionResponse<Project> GetForksAsync(string id, ForkedProjectQuery query);
 
         Dictionary<string, double> GetLanguages(string id);
     }

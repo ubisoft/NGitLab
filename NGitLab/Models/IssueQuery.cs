@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace NGitLab.Models
 {
     /// <summary>
-    /// Allows to use more advanced gitlab queries for getting issues
+    /// Allows to use more advanced GitLab queries for getting issues
     /// </summary>
     [DataContract]
     public class IssueQuery
@@ -53,6 +53,11 @@ namespace NGitLab.Models
         /// Return issues updated on or before the given time
         /// </summary>
         public DateTime? UpdatedBefore { get; set; }
+
+        /// <summary>
+        /// Return issues that are flagged as confidential
+        /// </summary>
+        public bool? Confidential { get; set; }
 
         /// <summary>
         /// Return issues for the given scope: created_by_me, assigned_to_me or all. Defaults to created_by_me

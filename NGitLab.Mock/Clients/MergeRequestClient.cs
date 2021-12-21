@@ -181,7 +181,7 @@ namespace NGitLab.Mock.Clients
                 }
 
                 /* To be implemented
-                 * need get configuration for gitlab merge request approval: https://docs.gitlab.com/ee/api/merge_request_approvals.html)
+                 * need get configuration for GitLab merge request approval: https://docs.gitlab.com/ee/api/merge_request_approvals.html)
                  * 1) Check if project approval rules require password input
                  * 2) Check if project approval rules prevents merge request committers from approving
                  * 3) Check if project approval rules prevents merge request author from approving
@@ -377,6 +377,23 @@ namespace NGitLab.Mock.Clients
                     mergeRequests = mergeRequests.Where(mr => mr.Assignee?.Id == assigneeId);
                 }
 
+                if (query.ReviewerId != null)
+                {
+                    if (query.ReviewerId == QueryAssigneeId.None)
+                    {
+                        mergeRequests = mergeRequests.Where(mr => mr.Reviewers == null || mr.Reviewers.Count == 0);
+                    }
+                    else if (query.ReviewerId == QueryAssigneeId.Any)
+                    {
+                        mergeRequests = mergeRequests.Where(mr => mr.Reviewers != null || mr.Reviewers.Any());
+                    }
+                    else
+                    {
+                        var reviewerId = int.Parse(query.ReviewerId.ToString());
+                        mergeRequests = mergeRequests.Where(mr => mr.Reviewers.Any(x => reviewerId.Equals(x.Id)));
+                    }
+                }
+
                 if (query.AuthorId != null)
                 {
                     mergeRequests = mergeRequests.Where(mr => mr.Author.Id == query.AuthorId);
@@ -555,7 +572,26 @@ namespace NGitLab.Mock.Clients
                 if (mergeRequest == null)
                     throw new GitLabNotFoundException();
 
-                if (mergeRequestUpdate.AssigneeId != null)
+                if (mergeRequestUpdate.AssigneeIds != null)
+                {
+                    mergeRequest.Assignees.Clear();
+                    if (mergeRequestUpdate.AssigneeIds.Length == 0)
+                    {
+                        mergeRequest.Assignee = null;
+                    }
+                    else
+                    {
+                        foreach (var assigneeId in mergeRequestUpdate.AssigneeIds)
+                        {
+                            var user = Server.Users.GetById(assigneeId);
+                            if (user == null)
+                                throw new GitLabBadRequestException("user not found");
+
+                            mergeRequest.Assignees.Add(new UserRef(user));
+                        }
+                    }
+                }
+                else if (mergeRequestUpdate.AssigneeId != null)
                 {
                     if (mergeRequestUpdate.AssigneeId.Value == 0)
                     {
@@ -568,6 +604,18 @@ namespace NGitLab.Mock.Clients
                             throw new GitLabBadRequestException("user not found");
 
                         mergeRequest.Assignee = new UserRef(user);
+                    }
+                }
+
+                if (mergeRequestUpdate.ReviewerIds != null)
+                {
+                    foreach (var reviewerId in mergeRequestUpdate.ReviewerIds)
+                    {
+                        var reviewer = Server.Users.GetById(reviewerId);
+                        if (reviewer == null)
+                            throw new GitLabBadRequestException("user not found");
+
+                        mergeRequest.Reviewers.Add(reviewer);
                     }
                 }
 

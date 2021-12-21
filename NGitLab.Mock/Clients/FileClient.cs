@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -118,6 +120,13 @@ namespace NGitLab.Mock.Clients
 
                 project.Repository.Commit(commitCreate);
             }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<FileData> GetAsync(string filePath, string @ref, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return Get(filePath, @ref);
         }
     }
 }

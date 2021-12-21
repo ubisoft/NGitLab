@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -150,7 +153,30 @@ namespace NGitLab.Mock.Clients
 
                 if (query.Scope.HasValue)
                 {
-                    throw new NotImplementedException();
+                    if (query.Scope.Value == PipelineScope.tags)
+                    {
+                        pipelines = pipelines.Where(p => p.Tag);
+                    }
+                    else if (query.Scope.Value == PipelineScope.branches)
+                    {
+                        pipelines = pipelines.Where(p => !p.Tag);
+                    }
+                    else if (query.Scope.Value == PipelineScope.running)
+                    {
+                        pipelines = pipelines.Where(p => p.Status == JobStatus.Running);
+                    }
+                    else if (query.Scope.Value == PipelineScope.pending)
+                    {
+                        pipelines = pipelines.Where(p => p.Status == JobStatus.Pending);
+                    }
+                    else if (query.Scope.Value == PipelineScope.finished)
+                    {
+                        pipelines = pipelines.Where(p => p.FinishedAt.HasValue);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
                 }
 
                 if (query.Status.HasValue)
@@ -198,6 +224,39 @@ namespace NGitLab.Mock.Clients
                 return pipelines.OrderByDescending(expression);
 
             return pipelines.OrderBy(expression);
+        }
+
+        public async Task<Models.Pipeline> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return this[id];
+        }
+
+        public GitLabCollectionResponse<Models.Job> GetAllJobsAsync()
+        {
+            return GitLabCollectionResponse.Create(AllJobs);
+        }
+
+        public GitLabCollectionResponse<Models.Job> GetJobsAsync(PipelineJobQuery query)
+        {
+            return GitLabCollectionResponse.Create(GetJobs(query));
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<Models.Pipeline> CreateAsync(PipelineCreate createOptions, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return Create(createOptions);
+        }
+
+        public GitLabCollectionResponse<PipelineBasic> SearchAsync(PipelineQuery query)
+        {
+            return GitLabCollectionResponse.Create(Search(query));
+        }
+
+        public GitLabCollectionResponse<PipelineVariable> GetVariablesAsync(int pipelineId)
+        {
+            return GitLabCollectionResponse.Create(GetVariables(pipelineId));
         }
     }
 }

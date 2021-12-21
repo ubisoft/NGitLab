@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -14,24 +15,76 @@ namespace NGitLab.Mock.Clients
             _projectId = projectId;
         }
 
-        public ProjectIssueNote Create(ProjectIssueNoteCreate create)
+        public Models.ProjectIssueNote Create(ProjectIssueNoteCreate create)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var issue = GetIssue(create.IssueId);
+
+                var projectIssueNote = new ProjectIssueNote
+                {
+                    Body = create.Body,
+                    Confidential = create.Confidential,
+                    Author = Context.User,
+                };
+                issue.Notes.Add(projectIssueNote);
+
+                return projectIssueNote.ToProjectIssueNote();
+            }
         }
 
-        public ProjectIssueNote Edit(ProjectIssueNoteEdit edit)
+        public Models.ProjectIssueNote Edit(ProjectIssueNoteEdit edit)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var note = GetIssueNote(edit.IssueId, edit.NoteId);
+
+                note.Body = edit.Body;
+
+                return note.ToProjectIssueNote();
+            }
         }
 
-        public IEnumerable<ProjectIssueNote> ForIssue(int issueId)
+        public IEnumerable<Models.ProjectIssueNote> ForIssue(int issueId)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                return GetIssue(issueId).Notes.Select(n => n.ToProjectIssueNote());
+            }
         }
 
-        public ProjectIssueNote Get(int issueId, int noteId)
+        public Models.ProjectIssueNote Get(int issueId, int noteId)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                return GetIssueNote(issueId, noteId).ToProjectIssueNote();
+            }
+        }
+
+        private Issue GetIssue(int issueId)
+        {
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var issue = project.Issues.FirstOrDefault(iss => iss.Id == issueId);
+
+            if (issue == null)
+            {
+                throw new GitLabNotFoundException("Issue does not exist.");
+            }
+
+            return issue;
+        }
+
+        private ProjectIssueNote GetIssueNote(int issueId, int issueNoteId)
+        {
+            var issue = GetIssue(issueId);
+            var note = issue.Notes.FirstOrDefault(n => (int)n.Id == issueNoteId);
+
+            if (note == null)
+            {
+                throw new GitLabNotFoundException("Issue Note does not exist.");
+            }
+
+            return note;
         }
     }
 }

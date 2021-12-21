@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NGitLab
 {
@@ -72,6 +74,19 @@ namespace NGitLab
         public virtual WebResponse GetResponse(HttpWebRequest request)
         {
             return request.GetResponse();
+        }
+
+        public virtual async Task<WebResponse> GetResponseAsync(HttpWebRequest request, CancellationToken cancellationToken)
+        {
+            CancellationTokenRegistration cancellationTokenRegistration = default;
+            if (cancellationToken.CanBeCanceled)
+            {
+                cancellationTokenRegistration = cancellationToken.Register(() => request.Abort());
+            }
+
+            var result = await request.GetResponseAsync().ConfigureAwait(false);
+            cancellationTokenRegistration.Dispose();
+            return result;
         }
 
         internal virtual Stream GetRequestStream(HttpWebRequest request)

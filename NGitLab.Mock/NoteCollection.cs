@@ -27,22 +27,12 @@ namespace NGitLab.Mock
                 throw new GitLabException("Note already exists");
             }
 
-            if (item.ThreadId == default)
-            {
-                item.ThreadId = GetNewThreadId();
-            }
-
             base.Add(item);
         }
 
         private long GetNewId()
         {
             return this.Select(note => note.Id).DefaultIfEmpty().Max() + 1;
-        }
-
-        private static string GetNewThreadId()
-        {
-            return Guid.NewGuid().ToString("N");
         }
     }
 }

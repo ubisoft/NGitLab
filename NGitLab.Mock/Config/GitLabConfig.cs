@@ -15,6 +15,11 @@ namespace NGitLab.Mock.Config
         }
 
         /// <summary>
+        /// Server url
+        /// </summary>
+        public string Url { get; set; }
+
+        /// <summary>
         /// User used by default when not specified in extensions methods
         /// </summary>
         public string DefaultUser { get; set; }

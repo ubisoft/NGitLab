@@ -30,7 +30,7 @@ namespace NGitLab.Tests.Docker
         public const string ImageName = "gitlab/gitlab-ee";
 
         // https://hub.docker.com/r/gitlab/gitlab-ee/tags/
-        public const string GitLabDockerVersion = "14.0.6-ee.0"; // Keep in sync with .github/workflows/ci.yml
+        public const string GitLabDockerVersion = "14.2.5-ee.0"; // Keep in sync with .github/workflows/ci.yml
 
         private static string s_creationErrorMessage;
         private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
@@ -330,8 +330,8 @@ namespace NGitLab.Tests.Docker
 
                 // Get admin login cookie
                 // result.Cookie: experimentation_subject_id=XXX; _gitlab_session=XXXX; known_sign_in=XXXX
-                TestContext.Progress.WriteLine("Extracting gitlab session cookie");
-                credentials.AdminCookies = result.Cookie.Split(';').Select(part => part.Trim()).Single(part => part.StartsWith("_gitlab_session=", StringComparison.Ordinal)).Substring("_gitlab_session=".Length);
+                TestContext.Progress.WriteLine("Extracting GitLab session cookie");
+                credentials.AdminCookies = result.Cookie.Split(';').Select(part => part.Trim()).Single(part => part.StartsWith("_gitlab_session=", StringComparison.Ordinal))["_gitlab_session=".Length..];
 
                 Task<IDocument> SignIn(IBrowsingContext context)
                 {
@@ -418,7 +418,7 @@ namespace NGitLab.Tests.Docker
                             if (tokenElement == null)
                                 throw new InvalidOperationException("Cannot find X-Profile-Token in the page:\n" + result.ToHtml());
 
-                            credentials.ProfileToken = tokenElement.TextContent.Trim().Substring("X-Profile-Token:".Length).Trim();
+                            credentials.ProfileToken = tokenElement.TextContent.Trim()["X-Profile-Token:".Length..].Trim();
                             return result;
                         });
                 }

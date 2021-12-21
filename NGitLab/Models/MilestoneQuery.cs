@@ -3,7 +3,7 @@
 namespace NGitLab.Models
 {
     /// <summary>
-    /// Allows to use more advanced gitlab queries for getting milestones
+    /// Allows to use more advanced GitLab queries for getting milestones
     /// </summary>
     [DataContract]
     public class MilestoneQuery

@@ -70,6 +70,47 @@ namespace NGitLab.Tests.Docker
             return response;
         }
 
+        public override async Task<WebResponse> GetResponseAsync(HttpWebRequest request, CancellationToken cancellationToken)
+        {
+            lock (_allRequests)
+            {
+                _allRequests.Add(request);
+            }
+
+            WebResponse response = null;
+
+            // GitLab is unstable, so let's make sure we don't overload it with many concurrent requests
+            await s_semaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                try
+                {
+                    response = await base.GetResponseAsync(request, cancellationToken).ConfigureAwait(false);
+                }
+                catch (WebException exception)
+                {
+                    response = exception.Response;
+                    if (response is HttpWebResponse webResponse)
+                    {
+                        response = new LoggableHttpWebResponse(webResponse);
+                        throw new WebException(exception.Message, exception, exception.Status, response);
+                    }
+
+                    throw;
+                }
+                finally
+                {
+                    response = LogRequest(request, response);
+                }
+            }
+            finally
+            {
+                s_semaphoreSlim.Release();
+            }
+
+            return response;
+        }
+
         private WebResponse LogRequest(HttpWebRequest request, WebResponse response)
         {
             byte[] requestContent = null;

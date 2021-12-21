@@ -53,6 +53,7 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "created_before", query.CreatedBefore);
             url = Utils.AddParameter(url, "updated_after", query.UpdatedAfter);
             url = Utils.AddParameter(url, "updated_before", query.UpdatedBefore);
+            url = Utils.AddParameter(url, "confidential", query.Confidential);
             url = Utils.AddParameter(url, "scope", query.Scope);
             url = Utils.AddParameter(url, "author_id", query.AuthorId);
             url = Utils.AddParameter(url, "per_page", query.PerPage);

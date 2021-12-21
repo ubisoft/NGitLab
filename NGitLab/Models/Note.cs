@@ -32,5 +32,8 @@ namespace NGitLab.Models
 
         [DataMember(Name = "system")]
         public bool System;
+
+        [DataMember(Name = "confidential")]
+        public bool Confidential;
     }
 }

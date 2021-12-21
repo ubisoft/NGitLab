@@ -2,6 +2,8 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -10,7 +12,7 @@ namespace NGitLab.Impl
     public partial class HttpRequestor
     {
         /// <summary>
-        /// A single request to gitlab, that can be retried.
+        /// A single request to GitLab, that can be retried.
         /// </summary>
         private sealed class GitLabRequest
         {
@@ -66,6 +68,16 @@ namespace NGitLab.Impl
                     options.IsIncremental);
             }
 
+            public Task<WebResponse> GetResponseAsync(RequestOptions options, CancellationToken cancellationToken)
+            {
+                Func<Task<WebResponse>> getResponseImpl = () => GetResponseImplAsync(options, cancellationToken);
+
+                return getResponseImpl.RetryAsync(options.ShouldRetry,
+                    options.RetryInterval,
+                    options.RetryCount,
+                    options.IsIncremental);
+            }
+
             private WebResponse GetResponseImpl(RequestOptions options)
             {
                 try
@@ -76,36 +88,57 @@ namespace NGitLab.Impl
                 catch (WebException wex)
                 {
                     if (wex.Response == null)
-                    {
                         throw;
-                    }
 
-                    using var errorResponse = (HttpWebResponse)wex.Response;
-                    string jsonString;
-                    using (var reader = new StreamReader(errorResponse.GetResponseStream()))
-                    {
-                        jsonString = reader.ReadToEnd();
-                    }
-
-                    var errorMessage = ExtractErrorMessage(jsonString, out var parsedError);
-                    var exceptionMessage =
-                        $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
-                        $"Original call: {Method} {Url}";
-
-                    if (JsonData != null)
-                    {
-                        exceptionMessage += $". With data {JsonData}";
-                    }
-
-                    throw new GitLabException(exceptionMessage)
-                    {
-                        OriginalCall = Url,
-                        ErrorObject = parsedError,
-                        StatusCode = errorResponse.StatusCode,
-                        ErrorMessage = errorMessage,
-                        MethodType = Method,
-                    };
+                    HandleWebException(wex);
+                    throw;
                 }
+            }
+
+            private async Task<WebResponse> GetResponseImplAsync(RequestOptions options, CancellationToken cancellationToken)
+            {
+                try
+                {
+                    var request = CreateRequest(options);
+                    return await options.GetResponseAsync(request, cancellationToken).ConfigureAwait(false);
+                }
+                catch (WebException wex)
+                {
+                    if (wex.Response == null)
+                        throw;
+
+                    HandleWebException(wex);
+                    throw;
+                }
+            }
+
+            private void HandleWebException(WebException ex)
+            {
+                using var errorResponse = (HttpWebResponse)ex.Response;
+                string jsonString;
+                using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                {
+                    jsonString = reader.ReadToEnd();
+                }
+
+                var errorMessage = ExtractErrorMessage(jsonString, out var parsedError);
+                var exceptionMessage =
+                    $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
+                    $"Original call: {Method} {Url}";
+
+                if (JsonData != null)
+                {
+                    exceptionMessage += $". With data {JsonData}";
+                }
+
+                throw new GitLabException(exceptionMessage)
+                {
+                    OriginalCall = Url,
+                    ErrorObject = parsedError,
+                    StatusCode = errorResponse.StatusCode,
+                    ErrorMessage = errorMessage,
+                    MethodType = Method,
+                };
             }
 
             private HttpWebRequest CreateRequest(RequestOptions options)
