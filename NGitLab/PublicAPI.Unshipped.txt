@@ -122,6 +122,7 @@ NGitLab.IEpicClient.Create(int groupId, NGitLab.Models.EpicCreate epic) -> NGitL
 NGitLab.IEpicClient.Edit(int groupId, NGitLab.Models.EpicEdit epicEdit) -> NGitLab.Models.Epic
 NGitLab.IEpicClient.Get(int groupId, int epicId) -> NGitLab.Models.Epic
 NGitLab.IEpicClient.Get(int groupId, NGitLab.Models.EpicQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Epic>
+NGitLab.IEpicClient.GetIssues(int groupId, int epicId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.IEventClient
 NGitLab.IEventClient.Get(NGitLab.Models.EventQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Event>
 NGitLab.IFilesClient
@@ -343,6 +344,7 @@ NGitLab.Impl.EpicClient.Edit(int groupId, NGitLab.Models.EpicEdit epicEdit) -> N
 NGitLab.Impl.EpicClient.EpicClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.EpicClient.Get(int groupId, int epicId) -> NGitLab.Models.Epic
 NGitLab.Impl.EpicClient.Get(int groupId, NGitLab.Models.EpicQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Epic>
+NGitLab.Impl.EpicClient.GetIssues(int groupId, int epicId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.EventClient
 NGitLab.Impl.EventClient.EventClient(NGitLab.Impl.API api, string baseUrl) -> void
 NGitLab.Impl.EventClient.Get(NGitLab.Models.EventQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Event>
