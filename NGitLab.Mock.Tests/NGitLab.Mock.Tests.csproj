@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.1.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.0" />
   </ItemGroup>
   <Import Project="$([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.Tests.after.props'))" Condition="$(SolutionFileName.EndsWith('.SwitchToSource.sln', StringComparison.OrdinalIgnoreCase)) And Exists($([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.Tests.after.props')))" />
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
