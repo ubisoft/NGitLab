@@ -179,6 +179,8 @@ NGitLab.Mock.Config.GitLabPipeline.Commit.set -> void
 NGitLab.Mock.Config.GitLabPipeline.GitLabPipeline() -> void
 NGitLab.Mock.Config.GitLabPipeline.Jobs.get -> NGitLab.Mock.Config.GitLabJobsCollection
 NGitLab.Mock.Config.GitLabPipelinesCollection
+NGitLab.Mock.Config.GitLabProject.CloneParameters.get -> string
+NGitLab.Mock.Config.GitLabProject.CloneParameters.set -> void
 NGitLab.Mock.Config.GitLabProject.ForkingAccessLevel.get -> NGitLab.Models.RepositoryAccessLevel
 NGitLab.Mock.Config.GitLabProject.ForkingAccessLevel.set -> void
 NGitLab.Mock.Config.GitLabProject.Milestones.get -> NGitLab.Mock.Config.GitLabMilestonesCollection
