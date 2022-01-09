@@ -2,9 +2,11 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Extensions;
+using NGitLab.Impl.Json;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -54,7 +56,7 @@ namespace NGitLab.Impl
                 }
                 else if (data != null)
                 {
-                    JsonData = SimpleJson.SerializeObject(data);
+                    JsonData = SystemTextJsonSerializer.SerializeObject(data);
                 }
             }
 
@@ -121,7 +123,7 @@ namespace NGitLab.Impl
                     jsonString = reader.ReadToEnd();
                 }
 
-                var errorMessage = ExtractErrorMessage(jsonString, out var parsedError);
+                var errorMessage = ExtractErrorMessage(jsonString);
                 var exceptionMessage =
                     $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
                     $"Original call: {Method} {Url}";
@@ -134,7 +136,6 @@ namespace NGitLab.Impl
                 throw new GitLabException(exceptionMessage)
                 {
                     OriginalCall = Url,
-                    ErrorObject = parsedError,
                     StatusCode = errorResponse.StatusCode,
                     ErrorMessage = errorMessage,
                     MethodType = Method,
@@ -200,23 +201,28 @@ namespace NGitLab.Impl
             /// Here we try to be generic.
             /// </summary>
             /// <param name="json"></param>
-            /// <param name="parsedError"></param>
-            /// <returns></returns>
-            private static string ExtractErrorMessage(string json, out JsonObject parsedError)
+            /// <returns>Parsed error message</returns>
+            private static string ExtractErrorMessage(string json)
             {
                 if (string.IsNullOrEmpty(json))
                 {
-                    parsedError = null;
                     return "Empty Response";
                 }
 
-                SimpleJson.TryDeserializeObject(json, out var errorObject);
+                SystemTextJsonSerializer.TryDeserializeObject(json, out var errorObject);
 
-                parsedError = errorObject as JsonObject;
                 object messageObject = null;
-                if (parsedError?.TryGetValue("message", out messageObject) != true)
+                if (errorObject is JsonElement jsonElement)
                 {
-                    parsedError?.TryGetValue("error", out messageObject);
+                    if (!jsonElement.TryGetProperty("message", out var messageElement))
+                    {
+                        jsonElement.TryGetProperty("error", out messageElement);
+                    }
+
+                    if (messageElement.ValueKind != JsonValueKind.Undefined)
+                    {
+                        messageObject = messageElement.ToString();
+                    }
                 }
 
                 if (messageObject == null)
@@ -229,7 +235,7 @@ namespace NGitLab.Impl
                     return str;
                 }
 
-                return SimpleJson.SerializeObject(messageObject);
+                return SystemTextJsonSerializer.SerializeObject(messageObject);
             }
         }
     }

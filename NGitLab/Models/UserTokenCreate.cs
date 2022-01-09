@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
@@ -8,14 +9,19 @@ namespace NGitLab.Models
     public class UserTokenCreate
     {
         [DataMember(Name = "user_id")]
+        [JsonPropertyName("user_id")]
         public int UserId { get; set; }
 
         [DataMember(Name = "name")]
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
+        [JsonInclude]
         [DataMember(Name = "expires_at")]
-        private string ExpiresAtStr { get; set; }
+        [JsonPropertyName("expires_at")]
+        public string ExpiresAtStr { get; private set; }
 
+        [JsonIgnore]
         public DateTime? ExpiresAt
         {
             get
@@ -32,6 +38,7 @@ namespace NGitLab.Models
         }
 
         [DataMember(Name = "scopes")]
+        [JsonPropertyName("scopes")]
         public string[] Scopes { get; set; }
     }
 }

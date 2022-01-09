@@ -41,7 +41,8 @@ namespace NGitLab
 
         public bool Equals(DynamicEnum<TEnum> other)
         {
-            return EqualityComparer<TEnum?>.Default.Equals(EnumValue, other.EnumValue);
+            return EqualityComparer<TEnum?>.Default.Equals(EnumValue, other.EnumValue) &&
+                   StringComparer.OrdinalIgnoreCase.Equals(StringValue, other.StringValue);
         }
 
         public override bool Equals(object obj)

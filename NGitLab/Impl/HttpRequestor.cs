@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Impl.Json;
 #if NET45
 using System.Reflection;
 #endif
@@ -66,7 +67,7 @@ namespace NGitLab.Impl
             Stream(tailAPIUrl, s =>
             {
                 var json = new StreamReader(s).ReadToEnd();
-                result = SimpleJson.DeserializeObject<T>(json);
+                result = SystemTextJsonSerializer.DeserializeObject<T>(json);
             });
             return result;
         }
@@ -77,7 +78,7 @@ namespace NGitLab.Impl
             await StreamAsync(tailAPIUrl, async s =>
             {
                 var json = await new StreamReader(s).ReadToEndAsync().ConfigureAwait(false);
-                result = SimpleJson.DeserializeObject<T>(json);
+                result = SystemTextJsonSerializer.DeserializeObject<T>(json);
             }, cancellationToken).ConfigureAwait(false);
             return result;
         }
@@ -165,7 +166,7 @@ namespace NGitLab.Impl
                         responseText = await streamReader.ReadToEndAsync().ConfigureAwait(false);
                     }
 
-                    var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
+                    var deserialized = SystemTextJsonSerializer.DeserializeObject<T[]>(responseText);
                     foreach (var item in deserialized)
                         yield return item;
                 }
@@ -187,7 +188,7 @@ namespace NGitLab.Impl
                         responseText = streamReader.ReadToEnd();
                     }
 
-                    var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
+                    var deserialized = SystemTextJsonSerializer.DeserializeObject<T[]>(responseText);
                     foreach (var item in deserialized)
                         yield return item;
                 }

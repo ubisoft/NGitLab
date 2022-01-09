@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
@@ -11,10 +12,12 @@ namespace NGitLab.Models
 
         [Required]
         [DataMember(Name = "branch")]
+        [JsonPropertyName("branch")]
         public string Branch;
 
         [Required]
         [DataMember(Name = "commit_message")]
+        [JsonPropertyName("commit_message")]
         public string CommitMessage;
     }
 }

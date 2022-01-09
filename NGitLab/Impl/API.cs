@@ -64,7 +64,6 @@ namespace NGitLab.Impl
                 {
                     OriginalCall = new Uri(ex.OriginalCall.OriginalString.Replace(_credentials.Password, hiddenPassword)),
                     StatusCode = ex.StatusCode,
-                    ErrorObject = ex.ErrorObject,
                     MethodType = ex.MethodType,
                 };
 

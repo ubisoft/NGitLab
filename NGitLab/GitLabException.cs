@@ -37,8 +37,6 @@ namespace NGitLab
         /// </summary>
         public HttpStatusCode StatusCode { get; set; }
 
-        public JsonObject ErrorObject { get; set; }
-
         /// <summary>
         /// The extracted message from the error object.
         /// </summary>
