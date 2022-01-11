@@ -54,7 +54,7 @@ namespace NGitLab
         /// <summary>
         /// Create a new pipeline.
         /// </summary>
-        /// <param name="ref">Reference to commit</param>
+        /// <param name="ref">Branch or tag</param>
         Pipeline Create(string @ref);
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace NGitLab
         /// Trigger a pipeline and send some info with a custom variable
         /// </summary>
         /// <param name="token">Token of the trigger</param>
-        /// <param name="ref">Reference to commit for the pipeline to start on</param>
+        /// <param name="ref">Branch or tag for the pipeline to start on</param>
         /// <param name="variables">Names and values of the custom variables</param>
         /// <returns></returns>
         Pipeline CreatePipelineWithTrigger(string token, string @ref, Dictionary<string, string> variables);
