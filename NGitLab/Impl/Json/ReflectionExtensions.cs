@@ -28,8 +28,9 @@ namespace NGitLab.Impl.Json
 
     internal struct EnumMapping
     {
-        public Enum EnumValue;
-        public string StringValue;
+        public Enum EnumValue { get; }
+
+        public string StringValue { get; }
 
         public EnumMapping(Enum enumValue, string stringValue)
         {
