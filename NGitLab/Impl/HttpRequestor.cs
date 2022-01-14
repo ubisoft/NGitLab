@@ -152,6 +152,7 @@ namespace NGitLab.Impl
             public override async IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
             {
                 var nextUrlToLoad = _startUrl;
+                var buffer = new List<T>();
                 while (nextUrlToLoad != null)
                 {
                     var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
@@ -162,14 +163,17 @@ namespace NGitLab.Impl
                     using var streamReader = new StreamReader(stream);
                     var responseText = await streamReader.ReadToEndAsync().ConfigureAwait(false);
                     var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
-                    foreach (var item in deserialized)
-                        yield return item;
+                    buffer.AddRange(deserialized);
                 }
+
+                foreach (var item in buffer)
+                    yield return item;
             }
 
             public override IEnumerator<T> GetEnumerator()
             {
                 var nextUrlToLoad = _startUrl;
+                var buffer = new List<T>();
                 while (nextUrlToLoad != null)
                 {
                     var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
@@ -180,9 +184,11 @@ namespace NGitLab.Impl
                     using var streamReader = new StreamReader(stream);
                     var responseText = streamReader.ReadToEnd();
                     var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
-                    foreach (var item in deserialized)
-                        yield return item;
+                    buffer.AddRange(deserialized);
                 }
+
+                foreach (var item in buffer)
+                    yield return item;
             }
 
             private static Uri GetNextPageUrl(WebResponse response)
