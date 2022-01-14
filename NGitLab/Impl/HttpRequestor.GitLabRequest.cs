@@ -56,7 +56,7 @@ namespace NGitLab.Impl
                 }
                 else if (data != null)
                 {
-                    JsonData = SystemTextJsonSerializer.SerializeObject(data);
+                    JsonData = Serializer.Serialize(data);
                 }
             }
 
@@ -209,7 +209,7 @@ namespace NGitLab.Impl
                     return "Empty Response";
                 }
 
-                SystemTextJsonSerializer.TryDeserializeObject(json, out var errorObject);
+                Serializer.TryDeserializeObject(json, out var errorObject);
 
                 object messageObject = null;
                 if (errorObject is JsonElement jsonElement)
@@ -235,7 +235,7 @@ namespace NGitLab.Impl
                     return str;
                 }
 
-                return SystemTextJsonSerializer.SerializeObject(messageObject);
+                return Serializer.Serialize(messageObject);
             }
         }
     }

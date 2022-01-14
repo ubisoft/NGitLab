@@ -67,7 +67,7 @@ namespace NGitLab.Impl
             Stream(tailAPIUrl, s =>
             {
                 var json = new StreamReader(s).ReadToEnd();
-                result = SystemTextJsonSerializer.DeserializeObject<T>(json);
+                result = Serializer.Deserialize<T>(json);
             });
             return result;
         }
@@ -78,7 +78,7 @@ namespace NGitLab.Impl
             await StreamAsync(tailAPIUrl, async s =>
             {
                 var json = await new StreamReader(s).ReadToEndAsync().ConfigureAwait(false);
-                result = SystemTextJsonSerializer.DeserializeObject<T>(json);
+                result = Serializer.Deserialize<T>(json);
             }, cancellationToken).ConfigureAwait(false);
             return result;
         }
@@ -166,7 +166,7 @@ namespace NGitLab.Impl
                         responseText = await streamReader.ReadToEndAsync().ConfigureAwait(false);
                     }
 
-                    var deserialized = SystemTextJsonSerializer.DeserializeObject<T[]>(responseText);
+                    var deserialized = Serializer.Deserialize<T[]>(responseText);
                     foreach (var item in deserialized)
                         yield return item;
                 }
@@ -188,7 +188,7 @@ namespace NGitLab.Impl
                         responseText = streamReader.ReadToEnd();
                     }
 
-                    var deserialized = SystemTextJsonSerializer.DeserializeObject<T[]>(responseText);
+                    var deserialized = Serializer.Deserialize<T[]>(responseText);
                     foreach (var item in deserialized)
                         yield return item;
                 }

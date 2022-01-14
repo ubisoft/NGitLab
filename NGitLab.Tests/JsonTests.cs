@@ -23,24 +23,24 @@ namespace NGitLab.Tests
         [TestCase("value2", TestEnum.Value2)]
         public void DeserializeEnumWithEnumMemberAttribute_Ok(string value, TestEnum expectedValue)
         {
-            var parsedValue = SystemTextJsonSerializer.DeserializeObject<TestEnum>('"' + value + '"');
+            var parsedValue = Serializer.Deserialize<TestEnum>('"' + value + '"');
             Assert.AreEqual(expectedValue, parsedValue);
         }
 
         [TestCase("dfsf")]
         public void DeserializeEnumWithEnumMemberAttribute_UnknownValues(string value)
         {
-            Assert.That(() => SystemTextJsonSerializer.DeserializeObject<TestEnum>('"' + value + '"'), Throws.Exception);
+            Assert.That(() => Serializer.Deserialize<TestEnum>('"' + value + '"'), Throws.Exception);
         }
 
         [Test]
         public void DeserializeNewerContract_Ok()
         {
             var newContractObject = new TestContractV2 { Id = 100, Title = "Newer Contract" };
-            var newContractJson = SystemTextJsonSerializer.SerializeObject(newContractObject);
+            var newContractJson = Serializer.Serialize(newContractObject);
 
             TestContractV1 oldContractObject = null;
-            Assert.DoesNotThrow(() => oldContractObject = SystemTextJsonSerializer.DeserializeObject<TestContractV1>(newContractJson));
+            Assert.DoesNotThrow(() => oldContractObject = Serializer.Deserialize<TestContractV1>(newContractJson));
             Assert.NotNull(oldContractObject);
         }
 
@@ -48,10 +48,10 @@ namespace NGitLab.Tests
         public void DeserializeOlderContract_Ok()
         {
             var oldContractObject = new TestContractV1 { Title = "Older Contract" };
-            var oldContractJson = SystemTextJsonSerializer.SerializeObject(oldContractObject);
+            var oldContractJson = Serializer.Serialize(oldContractObject);
 
             TestContractV2 newContractObject = null;
-            Assert.DoesNotThrow(() => newContractObject = SystemTextJsonSerializer.DeserializeObject<TestContractV2>(oldContractJson));
+            Assert.DoesNotThrow(() => newContractObject = Serializer.Deserialize<TestContractV2>(oldContractJson));
             Assert.NotNull(newContractObject);
         }
 

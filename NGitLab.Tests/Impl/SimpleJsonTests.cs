@@ -34,7 +34,7 @@ namespace NGitLab.Tests.Impl
 
         private static MockModel Load(string json)
         {
-            return SystemTextJsonSerializer.DeserializeObject<MockModel>(json);
+            return Serializer.Deserialize<MockModel>(json);
         }
 
         [SuppressMessage("Design", "CA1812: Avoid uninstantiated internal classes", Justification = "The class is instantiated dynamically using SystemTextJsonSerializer")]

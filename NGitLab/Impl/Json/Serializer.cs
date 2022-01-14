@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace NGitLab.Impl.Json
 {
-    internal static class SystemTextJsonSerializer
+    internal static class Serializer
     {
         private static readonly JsonSerializerOptions _options = new()
         {
@@ -20,7 +20,7 @@ namespace NGitLab.Impl.Json
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         };
 
-        public static T DeserializeObject<T>(string json)
+        public static T Deserialize<T>(string json)
         {
             var obj = JsonSerializer.Deserialize<T>(json, _options);
             return obj ?? throw new InvalidOperationException($"Could not deserialize: {json}");
@@ -30,7 +30,7 @@ namespace NGitLab.Impl.Json
         {
             try
             {
-                obj = DeserializeObject<object>(json);
+                obj = Deserialize<object>(json);
                 return true;
             }
             catch (Exception /*ex*/)
@@ -40,7 +40,7 @@ namespace NGitLab.Impl.Json
             }
         }
 
-        public static string SerializeObject<T>(T obj)
+        public static string Serialize<T>(T obj)
         {
             var str = JsonSerializer.Serialize(obj, _options);
             return str;
