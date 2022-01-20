@@ -26,7 +26,7 @@ namespace NGitLab.Tests
             Assert.LessOrEqual(7, commit.ShortId.Length);
 
             var fiveMinutesAgo = DateTime.UtcNow - TimeSpan.FromMinutes(5);
-            Assert.Less(fiveMinutesAgo, commit.CreatedAt.ToUniversalTime());
+            Assert.Less(fiveMinutesAgo, commit.CreatedAt);
 
             Assert.LessOrEqual(1, commit.Parents.Length);
 
@@ -35,11 +35,11 @@ namespace NGitLab.Tests
 
             Assert.AreEqual(currentUser.Name, commit.AuthorName);
             Assert.AreEqual(currentUser.Email, commit.AuthorEmail);
-            Assert.Less(fiveMinutesAgo, commit.AuthoredDate.ToUniversalTime());
+            Assert.Less(fiveMinutesAgo, commit.AuthoredDate);
 
             Assert.AreEqual(currentUser.Name, commit.CommitterName);
             Assert.AreEqual(currentUser.Email, commit.CommitterEmail);
-            Assert.Less(fiveMinutesAgo, commit.CommittedDate.ToUniversalTime());
+            Assert.Less(fiveMinutesAgo, commit.CommittedDate);
 
             Assert.IsTrue(Uri.TryCreate(commit.WebUrl, UriKind.Absolute, out _));
         }

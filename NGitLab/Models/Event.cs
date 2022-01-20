@@ -37,7 +37,7 @@ namespace NGitLab.Models
 
         [DataMember(Name = "target_type")]
         [JsonPropertyName("target_type")]
-        public DynamicEnum<EventTargetType>? TargetType { get; set; }
+        public DynamicEnum<EventTargetType> TargetType { get; set; }
 
         [DataMember(Name = "target_title")]
         [JsonPropertyName("target_title")]

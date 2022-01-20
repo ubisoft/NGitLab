@@ -8,14 +8,18 @@ namespace NGitLab.Impl.Json
     {
         private static readonly JsonSerializerOptions _options = new()
         {
-            // Change.AMode & BMode are integers, but deserialized from strings.
-            NumberHandling = JsonNumberHandling.AllowReadingFromString,
             IncludeFields = true,
             Converters =
             {
+                new BooleanConverter(),
+                new DateTimeConverter(),
+                new DateTimeOffsetConverter(),
+                new DoubleConverter(),
+                new DynamicEnumConverterFactory(),
+                new EnumConverterFactory(),
+                new Int32Converter(),
+                new Int64Converter(),
                 new Sha1Converter(),
-                new EnumConverter(),
-                new DynamicEnumConverter(),
             },
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         };
@@ -33,7 +37,7 @@ namespace NGitLab.Impl.Json
                 obj = Deserialize<object>(json);
                 return true;
             }
-            catch (Exception /*ex*/)
+            catch
             {
                 obj = null;
                 return false;

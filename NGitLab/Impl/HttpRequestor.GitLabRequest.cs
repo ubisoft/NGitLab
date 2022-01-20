@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -123,7 +124,7 @@ namespace NGitLab.Impl
                     jsonString = reader.ReadToEnd();
                 }
 
-                var errorMessage = ExtractErrorMessage(jsonString);
+                var errorMessage = ExtractErrorMessage(jsonString, out var errorDetails);
                 var exceptionMessage =
                     $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
                     $"Original call: {Method} {Url}";
@@ -136,6 +137,7 @@ namespace NGitLab.Impl
                 throw new GitLabException(exceptionMessage)
                 {
                     OriginalCall = Url,
+                    ErrorObject = errorDetails,
                     StatusCode = errorResponse.StatusCode,
                     ErrorMessage = errorMessage,
                     MethodType = Method,
@@ -200,42 +202,38 @@ namespace NGitLab.Impl
             /// Parse the error that GitLab returns. GitLab returns structured errors but has a lot of them
             /// Here we try to be generic.
             /// </summary>
-            /// <param name="json"></param>
+            /// <param name="json">JSON description of the error</param>
+            /// <param name="errorDetails">Dictionary of JSON properties</param>
             /// <returns>Parsed error message</returns>
-            private static string ExtractErrorMessage(string json)
+            private static string ExtractErrorMessage(string json, out IDictionary<string, object> errorDetails)
             {
+                errorDetails = null;
                 if (string.IsNullOrEmpty(json))
-                {
                     return "Empty Response";
-                }
 
-                Serializer.TryDeserializeObject(json, out var errorObject);
+                if (!Serializer.TryDeserializeObject(json, out var errorObject))
+                    return $"Response cannot be deserialized ({json})";
 
-                object messageObject = null;
-                if (errorObject is JsonElement jsonElement)
+                string message = null;
+                var details = new Dictionary<string, object>(StringComparer.Ordinal);
+                if (errorObject is JsonElement jsonElement && jsonElement.ValueKind == JsonValueKind.Object)
                 {
-                    if (!jsonElement.TryGetProperty("message", out var messageElement))
+                    var objectEnumerator = jsonElement.EnumerateObject();
+                    foreach (var property in objectEnumerator)
                     {
-                        jsonElement.TryGetProperty("error", out messageElement);
+                        details[property.Name] = property.Value;
                     }
 
-                    if (messageElement.ValueKind != JsonValueKind.Undefined)
+                    if (!details.TryGetValue("message", out var messageValue))
                     {
-                        messageObject = messageElement.ToString();
+                        details.TryGetValue("error", out messageValue);
                     }
+
+                    errorDetails = details;
+                    message = messageValue?.ToString();
                 }
 
-                if (messageObject == null)
-                {
-                    return $"Error message cannot be parsed ({json})";
-                }
-
-                if (messageObject is string str)
-                {
-                    return str;
-                }
-
-                return Serializer.Serialize(messageObject);
+                return message ?? $"Error message cannot be parsed ({json})";
             }
         }
     }

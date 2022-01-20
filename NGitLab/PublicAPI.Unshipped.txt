@@ -82,6 +82,8 @@ NGitLab.GitLabCollectionResponse<T>.GitLabCollectionResponse() -> void
 NGitLab.GitLabException
 NGitLab.GitLabException.ErrorMessage.get -> string
 NGitLab.GitLabException.ErrorMessage.set -> void
+NGitLab.GitLabException.ErrorObject.get -> System.Collections.Generic.IDictionary<string, object>
+NGitLab.GitLabException.ErrorObject.set -> void
 NGitLab.GitLabException.GitLabException() -> void
 NGitLab.GitLabException.GitLabException(string message) -> void
 NGitLab.GitLabException.GitLabException(string message, System.Exception inner) -> void
@@ -1335,7 +1337,7 @@ NGitLab.Models.Event.TargetIId.get -> long?
 NGitLab.Models.Event.TargetIId.set -> void
 NGitLab.Models.Event.TargetTitle.get -> string
 NGitLab.Models.Event.TargetTitle.set -> void
-NGitLab.Models.Event.TargetType.get -> NGitLab.DynamicEnum<NGitLab.Models.EventTargetType>?
+NGitLab.Models.Event.TargetType.get -> NGitLab.DynamicEnum<NGitLab.Models.EventTargetType>
 NGitLab.Models.Event.TargetType.set -> void
 NGitLab.Models.Event.Title.get -> string
 NGitLab.Models.Event.Title.set -> void
@@ -1601,7 +1603,7 @@ NGitLab.Models.Job.Commit -> NGitLab.Models.Commit
 NGitLab.Models.Job.Coverage -> double?
 NGitLab.Models.Job.CreatedAt -> System.DateTime
 NGitLab.Models.Job.Duration -> float?
-NGitLab.Models.Job.FinishedAt -> System.DateTime?
+NGitLab.Models.Job.FinishedAt -> System.DateTime
 NGitLab.Models.Job.Id -> int
 NGitLab.Models.Job.Job() -> void
 NGitLab.Models.Job.JobArtifact
@@ -1633,7 +1635,7 @@ NGitLab.Models.Job.QueuedDuration -> float?
 NGitLab.Models.Job.Ref -> string
 NGitLab.Models.Job.Runner -> NGitLab.Models.Job.JobRunner
 NGitLab.Models.Job.Stage -> string
-NGitLab.Models.Job.StartedAt -> System.DateTime?
+NGitLab.Models.Job.StartedAt -> System.DateTime
 NGitLab.Models.Job.Status -> NGitLab.JobStatus
 NGitLab.Models.Job.Tag -> bool
 NGitLab.Models.Job.User -> NGitLab.Models.User
@@ -2006,18 +2008,18 @@ NGitLab.Models.PersonInfo.Name -> string
 NGitLab.Models.PersonInfo.PersonInfo() -> void
 NGitLab.Models.Pipeline
 NGitLab.Models.Pipeline.BeforeSha -> NGitLab.Sha1
-NGitLab.Models.Pipeline.CommittedAt -> System.DateTime?
-NGitLab.Models.Pipeline.Coverage -> double?
+NGitLab.Models.Pipeline.CommittedAt -> System.DateTime
+NGitLab.Models.Pipeline.Coverage -> double
 NGitLab.Models.Pipeline.CreatedAt -> System.DateTime
 NGitLab.Models.Pipeline.DetailedStatus.get -> NGitLab.Models.PipelineDetailedStatus
 NGitLab.Models.Pipeline.DetailedStatus.set -> void
 NGitLab.Models.Pipeline.Duration -> long?
-NGitLab.Models.Pipeline.FinishedAt -> System.DateTime?
+NGitLab.Models.Pipeline.FinishedAt -> System.DateTime
 NGitLab.Models.Pipeline.Id -> int
 NGitLab.Models.Pipeline.Pipeline() -> void
 NGitLab.Models.Pipeline.Ref -> string
 NGitLab.Models.Pipeline.Sha -> NGitLab.Sha1
-NGitLab.Models.Pipeline.StartedAt -> System.DateTime?
+NGitLab.Models.Pipeline.StartedAt -> System.DateTime
 NGitLab.Models.Pipeline.Status -> NGitLab.JobStatus
 NGitLab.Models.Pipeline.Tag -> bool
 NGitLab.Models.Pipeline.UpdatedAt -> System.DateTime
@@ -2527,14 +2529,14 @@ NGitLab.Models.ResourceLabelEventAction.Add = 0 -> NGitLab.Models.ResourceLabelE
 NGitLab.Models.ResourceLabelEventAction.Remove = 1 -> NGitLab.Models.ResourceLabelEventAction
 NGitLab.Models.Runner
 NGitLab.Models.Runner.Active -> bool
-NGitLab.Models.Runner.ContactedAt -> System.DateTime?
+NGitLab.Models.Runner.ContactedAt -> System.DateTime
 NGitLab.Models.Runner.Description -> string
 NGitLab.Models.Runner.Id -> int
 NGitLab.Models.Runner.IpAddress -> string
 NGitLab.Models.Runner.IsShared -> bool
 NGitLab.Models.Runner.Locked -> bool
 NGitLab.Models.Runner.Name -> string
-NGitLab.Models.Runner.Online -> bool?
+NGitLab.Models.Runner.Online -> bool
 NGitLab.Models.Runner.Projects -> NGitLab.Models.Project[]
 NGitLab.Models.Runner.Runner() -> void
 NGitLab.Models.Runner.RunUntagged -> bool
@@ -2723,7 +2725,7 @@ NGitLab.Models.Trigger
 NGitLab.Models.Trigger.CreatedAt -> System.DateTime
 NGitLab.Models.Trigger.Description -> string
 NGitLab.Models.Trigger.Id -> int
-NGitLab.Models.Trigger.LastUsed -> System.DateTime?
+NGitLab.Models.Trigger.LastUsed -> System.DateTime
 NGitLab.Models.Trigger.Token -> string
 NGitLab.Models.Trigger.Trigger() -> void
 NGitLab.Models.Trigger.UpdatedAt -> System.DateTime
@@ -2750,13 +2752,13 @@ NGitLab.Models.User.CanCreateGroup -> bool
 NGitLab.Models.User.CanCreateProject -> bool
 NGitLab.Models.User.ColorSchemeId -> int
 NGitLab.Models.User.CommitEmail -> string
-NGitLab.Models.User.ConfirmedAt -> System.DateTime?
+NGitLab.Models.User.ConfirmedAt -> System.DateTime
 NGitLab.Models.User.CreatedAt -> System.DateTime
-NGitLab.Models.User.CurrentSignIn -> System.DateTime?
+NGitLab.Models.User.CurrentSignIn -> System.DateTime
 NGitLab.Models.User.Email -> string
 NGitLab.Models.User.External -> bool
 NGitLab.Models.User.ExternUid -> string
-NGitLab.Models.User.ExtraSharedRunnersMinutesLimit -> int?
+NGitLab.Models.User.ExtraSharedRunnersMinutesLimit -> int
 NGitLab.Models.User.Followers -> int
 NGitLab.Models.User.Following -> int
 NGitLab.Models.User.Id -> int
@@ -2764,8 +2766,8 @@ NGitLab.Models.User.Identities -> NGitLab.Models.Identity[]
 NGitLab.Models.User.IsAdmin -> bool
 NGitLab.Models.User.IsAuditor -> bool
 NGitLab.Models.User.JobTitle -> string
-NGitLab.Models.User.LastActivityOn -> System.DateTime?
-NGitLab.Models.User.LastSignIn -> System.DateTime?
+NGitLab.Models.User.LastActivityOn -> System.DateTime
+NGitLab.Models.User.LastSignIn -> System.DateTime
 NGitLab.Models.User.Linkedin -> string
 NGitLab.Models.User.Location -> string
 NGitLab.Models.User.Name -> string
@@ -2776,7 +2778,7 @@ NGitLab.Models.User.ProjectsLimit -> int
 NGitLab.Models.User.Provider -> string
 NGitLab.Models.User.ProvisionedByGroupId -> int
 NGitLab.Models.User.PublicEmail -> string
-NGitLab.Models.User.SharedRunnersMinutesLimit -> int?
+NGitLab.Models.User.SharedRunnersMinutesLimit -> int
 NGitLab.Models.User.Skype -> string
 NGitLab.Models.User.State -> string
 NGitLab.Models.User.ThemeId -> int
@@ -2795,7 +2797,6 @@ NGitLab.Models.UserToken.CreatedAt.get -> System.DateTime
 NGitLab.Models.UserToken.CreatedAt.set -> void
 NGitLab.Models.UserToken.ExpiresAt.get -> System.DateTime?
 NGitLab.Models.UserToken.ExpiresAt.set -> void
-NGitLab.Models.UserToken.ExpiresAtStr.get -> string
 NGitLab.Models.UserToken.Id.get -> int
 NGitLab.Models.UserToken.Id.set -> void
 NGitLab.Models.UserToken.Impersonation.get -> bool
@@ -2812,7 +2813,6 @@ NGitLab.Models.UserToken.UserToken() -> void
 NGitLab.Models.UserTokenCreate
 NGitLab.Models.UserTokenCreate.ExpiresAt.get -> System.DateTime?
 NGitLab.Models.UserTokenCreate.ExpiresAt.set -> void
-NGitLab.Models.UserTokenCreate.ExpiresAtStr.get -> string
 NGitLab.Models.UserTokenCreate.Name.get -> string
 NGitLab.Models.UserTokenCreate.Name.set -> void
 NGitLab.Models.UserTokenCreate.Scopes.get -> string[]

@@ -97,15 +97,15 @@ namespace NGitLab.Models
 
         [DataMember(Name = "last_sign_in_at")]
         [JsonPropertyName("last_sign_in_at")]
-        public DateTime? LastSignIn;
+        public DateTime LastSignIn;
 
         [DataMember(Name = "confirmed_at")]
         [JsonPropertyName("confirmed_at")]
-        public DateTime? ConfirmedAt;
+        public DateTime ConfirmedAt;
 
         [DataMember(Name = "last_activity_on")]
         [JsonPropertyName("last_activity_on")]
-        public DateTime? LastActivityOn;
+        public DateTime LastActivityOn;
 
         [DataMember(Name = "email")]
         [JsonPropertyName("email")]
@@ -125,7 +125,7 @@ namespace NGitLab.Models
 
         [DataMember(Name = "current_sign_in_at")]
         [JsonPropertyName("current_sign_in_at")]
-        public DateTime? CurrentSignIn;
+        public DateTime CurrentSignIn;
 
         [DataMember(Name = "identities")]
         [JsonPropertyName("identities")]
@@ -171,11 +171,11 @@ namespace NGitLab.Models
 
         [DataMember(Name = "shared_runners_minutes_limit")]
         [JsonPropertyName("shared_runners_minutes_limit")]
-        public int? SharedRunnersMinutesLimit;
+        public int SharedRunnersMinutesLimit;
 
         [DataMember(Name = "extra_shared_runners_minutes_limit")]
         [JsonPropertyName("extra_shared_runners_minutes_limit")]
-        public int? ExtraSharedRunnersMinutesLimit;
+        public int ExtraSharedRunnersMinutesLimit;
 
         [DataMember(Name = "is_admin")]
         [JsonPropertyName("is_admin")]

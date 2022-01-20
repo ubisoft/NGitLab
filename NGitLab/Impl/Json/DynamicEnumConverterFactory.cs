@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using NGitLab.Models;
 
 namespace NGitLab.Impl.Json
 {
-    internal sealed class DynamicEnumConverter : JsonConverterFactory
+    internal sealed class DynamicEnumConverterFactory : JsonConverterFactory
     {
         public override bool CanConvert(Type type)
         {
@@ -16,20 +17,23 @@ namespace NGitLab.Impl.Json
         {
             var enumType = type.GenericTypeArguments[0];
 
+            if (enumType == typeof(EventTargetType))
+                return new DynamicEventTargetTypeConverter(options);
+
             var converter = (JsonConverter)Activator.CreateInstance(
-                typeof(DynamicEnumConverterInner<>).MakeGenericType(enumType),
+                typeof(DynamicEnumConverter<>).MakeGenericType(enumType),
                 options);
 
             return converter;
         }
 
-        private sealed class DynamicEnumConverterInner<TEnum> : JsonConverter<DynamicEnum<TEnum>>
+        private class DynamicEnumConverter<TEnum> : JsonConverter<DynamicEnum<TEnum>>
             where TEnum : struct, Enum
         {
             private readonly JsonConverter<TEnum> _enumConverter;
             private readonly Type _enumType;
 
-            public DynamicEnumConverterInner(JsonSerializerOptions options)
+            public DynamicEnumConverter(JsonSerializerOptions options)
             {
                 // For performance, use the existing converter if available
                 _enumConverter = (JsonConverter<TEnum>)options.GetConverter(typeof(TEnum));
@@ -74,6 +78,22 @@ namespace NGitLab.Impl.Json
                 {
                     writer.WriteStringValue(dynamicEnum.StringValue);
                 }
+            }
+        }
+
+        private sealed class DynamicEventTargetTypeConverter : DynamicEnumConverter<EventTargetType>
+        {
+            public DynamicEventTargetTypeConverter(JsonSerializerOptions options)
+                : base(options)
+            {
+            }
+
+            public override DynamicEnum<EventTargetType> Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions options)
+            {
+                if (reader.TokenType == JsonTokenType.Null)
+                    return new DynamicEnum<EventTargetType>(EventTargetType.None);
+
+                return base.Read(ref reader, type, options);
             }
         }
     }

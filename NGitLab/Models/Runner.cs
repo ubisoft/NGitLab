@@ -25,7 +25,7 @@ namespace NGitLab.Models
 
         [DataMember(Name = "online")]
         [JsonPropertyName("online")]
-        public bool? Online;
+        public bool Online;
 
         [DataMember(Name = "description")]
         [JsonPropertyName("description")]
@@ -37,7 +37,7 @@ namespace NGitLab.Models
 
         [DataMember(Name = "contacted_at")]
         [JsonPropertyName("contacted_at")]
-        public DateTime? ContactedAt;
+        public DateTime ContactedAt;
 
         [DataMember(Name = "projects")]
         [JsonPropertyName("projects")]

@@ -51,15 +51,15 @@ namespace NGitLab.Models
 
         [DataMember(Name = "started_at")]
         [JsonPropertyName("started_at")]
-        public DateTime? StartedAt;
+        public DateTime StartedAt;
 
         [DataMember(Name = "finished_at")]
         [JsonPropertyName("finished_at")]
-        public DateTime? FinishedAt;
+        public DateTime FinishedAt;
 
         [DataMember(Name = "committed_at")]
         [JsonPropertyName("committed_at")]
-        public DateTime? CommittedAt;
+        public DateTime CommittedAt;
 
         /// <summary>
         /// Duration in seconds.
@@ -70,7 +70,7 @@ namespace NGitLab.Models
 
         [DataMember(Name = "coverage")]
         [JsonPropertyName("coverage")]
-        public double? Coverage;
+        public double Coverage;
 
         [DataMember(Name = "web_url")]
         [JsonPropertyName("web_url")]

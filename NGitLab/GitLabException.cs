@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
 using NGitLab.Impl;
@@ -36,6 +37,11 @@ namespace NGitLab
         /// The error code returned from the server.
         /// </summary>
         public HttpStatusCode StatusCode { get; set; }
+
+        /// <summary>
+        /// Dictionary of JSON properties providing further details about the GitLab error.
+        /// </summary>
+        public IDictionary<string, object> ErrorObject { get; set; }
 
         /// <summary>
         /// The extracted message from the error object.

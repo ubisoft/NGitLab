@@ -26,7 +26,7 @@ namespace NGitLab.Impl.Json
         }
     }
 
-    internal struct EnumMapping
+    internal readonly struct EnumMapping
     {
         public Enum EnumValue { get; }
 

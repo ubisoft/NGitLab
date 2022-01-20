@@ -7,7 +7,7 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl.Json
 {
-    internal sealed class EnumConverter : JsonConverterFactory
+    internal sealed class EnumConverterFactory : JsonConverterFactory
     {
         public override bool CanConvert(Type type)
         {
@@ -18,11 +18,11 @@ namespace NGitLab.Impl.Json
         public override JsonConverter CreateConverter(Type type, JsonSerializerOptions options)
         {
             var converter = (JsonConverter)Activator.CreateInstance(
-                typeof(EnumConverterInner<>).MakeGenericType(type));
+                typeof(EnumConverter<>).MakeGenericType(type));
             return converter;
         }
 
-        private sealed class EnumConverterInner<TEnum> : JsonConverter<TEnum>
+        private sealed class EnumConverter<TEnum> : JsonConverter<TEnum>
             where TEnum : struct, Enum
         {
             private readonly Type _enumType = typeof(TEnum);
@@ -30,7 +30,7 @@ namespace NGitLab.Impl.Json
             private readonly Dictionary<string, TEnum> _stringToEnumValues;
             private readonly Dictionary<TEnum, string> _enumToStringValues;
 
-            public EnumConverterInner()
+            public EnumConverter()
             {
                 var enumValues = new List<TEnum>();
                 var stringValues = new List<string>();

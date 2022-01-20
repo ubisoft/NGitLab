@@ -29,11 +29,11 @@ namespace NGitLab.Models
 
         [DataMember(Name = "started_at")]
         [JsonPropertyName("started_at")]
-        public DateTime? StartedAt;
+        public DateTime StartedAt;
 
         [DataMember(Name = "finished_at")]
         [JsonPropertyName("finished_at")]
-        public DateTime? FinishedAt;
+        public DateTime FinishedAt;
 
         [DataMember(Name = "stage")]
         [JsonPropertyName("stage")]

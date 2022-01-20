@@ -40,25 +40,8 @@ namespace NGitLab.Models
         [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; set; }
 
-        [JsonInclude]
         [DataMember(Name = "expires_at")]
         [JsonPropertyName("expires_at")]
-        public string ExpiresAtStr { get; private set; }
-
-        [JsonIgnore]
-        public DateTime? ExpiresAt
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(ExpiresAtStr) &&
-                    DateTime.TryParseExact(ExpiresAtStr, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var expiresAt))
-                {
-                    return expiresAt;
-                }
-
-                return null;
-            }
-            set => ExpiresAtStr = value?.ToString("yyyy-MM-dd");
-        }
+        public DateTime? ExpiresAt { get; set; }
     }
 }

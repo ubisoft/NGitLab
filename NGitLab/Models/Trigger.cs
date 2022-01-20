@@ -21,7 +21,7 @@ namespace NGitLab.Models
 
         [DataMember(Name = "last_used")]
         [JsonPropertyName("last_used")]
-        public DateTime? LastUsed;
+        public DateTime LastUsed;
 
         [DataMember(Name = "token")]
         [JsonPropertyName("token")]
