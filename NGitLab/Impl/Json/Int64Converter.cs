@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -18,7 +19,7 @@ namespace NGitLab.Impl.Json
             if (reader.TokenType == JsonTokenType.String)
             {
                 var stringValue = reader.GetString();
-                if (long.TryParse(stringValue, out var value))
+                if (long.TryParse(stringValue, NumberStyles.None, CultureInfo.InvariantCulture, out var value))
                     return value;
             }
 
