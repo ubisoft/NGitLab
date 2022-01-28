@@ -12,16 +12,17 @@ namespace NGitLab.Mock
     /// </summary>
     public sealed class GitLabServer : GitLabObject, IDisposable
     {
-        private int _lastProjectId;
-        private int _lastGroupId;
-        private int _lastMergeRequestId = 1000;
-        private int _lastRunnerId;
-        private int _lastIssueId;
-        private int _lastMilestoneId;
-        private int _lastPipelineId;
-        private int _lastJobId;
-        private int _lastBadgeId;
-        private int _lastLabelId;
+        // Setting to a 'magic' high value to avoid having equalities between IDs and IiDs
+        private int _lastProjectId = 10000;
+        private int _lastGroupId = 10000;
+        private int _lastMergeRequestId = 10000;
+        private int _lastRunnerId = 10000;
+        private int _lastIssueId = 10000;
+        private int _lastMilestoneId = 10000;
+        private int _lastPipelineId = 10000;
+        private int _lastJobId = 10000;
+        private int _lastBadgeId = 10000;
+        private int _lastLabelId = 10000;
 
         public GitLabServer()
         {
