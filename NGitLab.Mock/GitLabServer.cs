@@ -14,7 +14,7 @@ namespace NGitLab.Mock
     {
         private int _lastProjectId;
         private int _lastGroupId;
-        private int _lastMergeRequestId;
+        private int _lastMergeRequestId = 1000;
         private int _lastRunnerId;
         private int _lastIssueId;
         private int _lastMilestoneId;

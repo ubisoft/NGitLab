@@ -45,7 +45,7 @@ namespace NGitLab.Mock
 
             if (mergeRequest.Iid == default)
             {
-                mergeRequest.Iid = Server.GetNewMergeRequestId();
+                mergeRequest.Iid = GetNewIid();
             }
             else if (GetByIid(mergeRequest.Iid) != null)
             {
@@ -85,6 +85,11 @@ namespace NGitLab.Mock
             mergeRequest.UpdateSha();
             Add(mergeRequest);
             return mergeRequest;
+        }
+
+        private int GetNewIid()
+        {
+            return this.Select(mr => mr.Iid).DefaultIfEmpty().Max() + 1;
         }
     }
 }
