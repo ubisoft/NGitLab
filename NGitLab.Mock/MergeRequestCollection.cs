@@ -45,7 +45,7 @@ namespace NGitLab.Mock
 
             if (mergeRequest.Iid == default)
             {
-                mergeRequest.Iid = GetNewIid();
+                mergeRequest.Iid = Server.GetNewMergeRequestId();
             }
             else if (GetByIid(mergeRequest.Iid) != null)
             {
@@ -63,7 +63,7 @@ namespace NGitLab.Mock
         public MergeRequest Add(Project sourceProject, string sourceBranch, string targetBranch, string title, User user)
         {
             if (sourceProject is null)
-                throw new ArgumentNullException(nameof(sourceProject));
+                throw new ArgumentNullException(nameof(sourceProject)); 
             if (sourceBranch is null)
                 throw new ArgumentNullException(nameof(sourceBranch));
             if (targetBranch is null)
@@ -85,11 +85,6 @@ namespace NGitLab.Mock
             mergeRequest.UpdateSha();
             Add(mergeRequest);
             return mergeRequest;
-        }
-
-        private int GetNewIid()
-        {
-            return this.Select(mr => mr.Iid).DefaultIfEmpty().Max() + 1;
         }
     }
 }
