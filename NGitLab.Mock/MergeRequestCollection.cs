@@ -63,7 +63,7 @@ namespace NGitLab.Mock
         public MergeRequest Add(Project sourceProject, string sourceBranch, string targetBranch, string title, User user)
         {
             if (sourceProject is null)
-                throw new ArgumentNullException(nameof(sourceProject)); 
+                throw new ArgumentNullException(nameof(sourceProject));
             if (sourceBranch is null)
                 throw new ArgumentNullException(nameof(sourceBranch));
             if (targetBranch is null)
