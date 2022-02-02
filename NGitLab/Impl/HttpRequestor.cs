@@ -154,13 +154,17 @@ namespace NGitLab.Impl
                 var nextUrlToLoad = _startUrl;
                 while (nextUrlToLoad != null)
                 {
+                    string responseText;
                     var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
-                    using var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false);
-                    nextUrlToLoad = GetNextPageUrl(response);
+                    using (var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false))
+                    {
+                        nextUrlToLoad = GetNextPageUrl(response);
 
-                    var stream = response.GetResponseStream();
-                    using var streamReader = new StreamReader(stream);
-                    var responseText = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+                        var stream = response.GetResponseStream();
+                        using var streamReader = new StreamReader(stream);
+                        responseText = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+                    }
+
                     var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
                     foreach (var item in deserialized)
                         yield return item;
@@ -172,13 +176,17 @@ namespace NGitLab.Impl
                 var nextUrlToLoad = _startUrl;
                 while (nextUrlToLoad != null)
                 {
+                    string responseText;
                     var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
-                    using var response = request.GetResponse(_options);
-                    nextUrlToLoad = GetNextPageUrl(response);
+                    using (var response = request.GetResponse(_options))
+                    {
+                        nextUrlToLoad = GetNextPageUrl(response);
 
-                    var stream = response.GetResponseStream();
-                    using var streamReader = new StreamReader(stream);
-                    var responseText = streamReader.ReadToEnd();
+                        using var stream = response.GetResponseStream();
+                        using var streamReader = new StreamReader(stream);
+                        responseText = streamReader.ReadToEnd();
+                    }
+
                     var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
                     foreach (var item in deserialized)
                         yield return item;
