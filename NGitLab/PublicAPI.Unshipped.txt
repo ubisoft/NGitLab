@@ -250,6 +250,7 @@ NGitLab.IMembersClient
 NGitLab.IMembersClient.AddMemberToProject(string projectId, NGitLab.Models.ProjectMemberCreate user) -> NGitLab.Models.Membership
 NGitLab.IMembersClient.GetMemberOfGroup(string groupId, string userId) -> NGitLab.Models.Membership
 NGitLab.IMembersClient.GetMemberOfProject(string projectId, string userId) -> NGitLab.Models.Membership
+NGitLab.IMembersClient.GetMemberOfProject(string projectId, string userId, bool includeInheritedMembers) -> NGitLab.Models.Membership
 NGitLab.IMembersClient.OfGroup(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfGroup(string groupId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfNamespace(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
@@ -479,6 +480,7 @@ NGitLab.Impl.MembersClient
 NGitLab.Impl.MembersClient.AddMemberToProject(string projectId, NGitLab.Models.ProjectMemberCreate user) -> NGitLab.Models.Membership
 NGitLab.Impl.MembersClient.GetMemberOfGroup(string groupId, string userId) -> NGitLab.Models.Membership
 NGitLab.Impl.MembersClient.GetMemberOfProject(string projectId, string userId) -> NGitLab.Models.Membership
+NGitLab.Impl.MembersClient.GetMemberOfProject(string projectId, string userId, bool includeInheritedMembers) -> NGitLab.Models.Membership
 NGitLab.Impl.MembersClient.MembersClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.MembersClient.OfGroup(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfGroup(string groupId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
