@@ -53,15 +53,16 @@ namespace NGitLab.Tests.Impl
             Assert.AreEqual(1234L, obj.SomeInt64);
         }
 
-        [TestCase("2022-01-12")]
-        [TestCase("2022-01-12T22:49:21.552Z")]
-        [TestCase("2022-01-12T22:49:21.552+00:00")]
-        public void Test_DeserializeStringToDateTime_SupportsMultipleFormats(string input)
+        [TestCase("2022-01-12", DateTimeKind.Unspecified)]
+        [TestCase("2022-01-12T22:49:21.552Z", DateTimeKind.Utc)]
+        [TestCase("2022-01-12T22:49:21.552+00:00", DateTimeKind.Utc)]
+        public void Test_DeserializeStringToDateTime_SupportsMultipleFormats(string input, DateTimeKind kind)
         {
             var json = $@"{{ ""a_date_time"": ""{input}"" }}";
             var obj = Serializer.Deserialize<MyDataContract>(json);
             Assert.NotNull(obj);
-            Assert.AreEqual(DateTimeKind.Utc, obj.SomeDateTime.Kind);
+            Assert.AreEqual(kind, obj.SomeDateTime.Kind);
+            Assert.AreEqual(new DateTime(2022, 1, 12).Date, obj.SomeDateTime.Date);
         }
 
         public class MyDataContract

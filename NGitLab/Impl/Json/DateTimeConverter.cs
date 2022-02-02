@@ -13,19 +13,12 @@ namespace NGitLab.Impl.Json
                 return DateTime.MinValue;
 
             var str = reader.GetString();
-            return DateTime.ParseExact(
-                str,
-                GitLabTimeSettings.Iso8601Formats,
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+            return str.TryParseAsDateOnly(out DateTime dateOnly) ? dateOnly : str.ParseIso8601DateTime();
         }
 
         public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
         {
-            var str = value.ToUniversalTime().ToString(
-                GitLabTimeSettings.Iso8601Formats[0],
-                CultureInfo.InvariantCulture);
-            writer.WriteStringValue(str);
+            writer.WriteStringValue(value.ToIso8601String());
         }
     }
 
@@ -37,32 +30,72 @@ namespace NGitLab.Impl.Json
                 return DateTimeOffset.MinValue;
 
             var str = reader.GetString();
-            return DateTimeOffset.ParseExact(
-                str,
-                GitLabTimeSettings.Iso8601Formats,
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+            return str.TryParseAsDateOnly(out DateTimeOffset dateOnly) ? dateOnly : str.ParseIso8601DateTimeOffset();
         }
 
         public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
         {
-            var str = value.ToUniversalTime().ToString(
-                GitLabTimeSettings.Iso8601Formats[0],
-                CultureInfo.InvariantCulture);
-            writer.WriteStringValue(str);
+            writer.WriteStringValue(value.ToIso8601String());
         }
     }
 
-    internal static class GitLabTimeSettings
+    internal static class DateTimeFormatter
     {
-        public static readonly string[] Iso8601Formats = new string[]
+        private const string DateOnlyFormat = "yyyy-MM-dd";
+        private const string Iso8601Format = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
+
+        public static bool TryParseAsDateOnly(this string str, out DateTime dateOnly)
         {
-            @"yyyy-MM-dd\THH:mm:ss.FFFFFFFK",
-            @"yyyy-MM-dd\THH:mm:ss.FFFFFFF\Z",
-            @"yyyy-MM-dd\THH:mm:ss\Z",
-            @"yyyy-MM-dd\THH:mm:ssK",
-            @"yyyy-MM-ddK",
-            @"yyyy-MM-dd\Z",
-        };
+            return DateTime.TryParseExact(
+                str,
+                DateOnlyFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out dateOnly);
+        }
+
+        public static bool TryParseAsDateOnly(this string str, out DateTimeOffset dateOnly)
+        {
+            return DateTimeOffset.TryParseExact(
+                str,
+                DateOnlyFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out dateOnly);
+        }
+
+        public static DateTime ParseIso8601DateTime(this string str)
+        {
+            return DateTime.ParseExact(
+                str,
+                Iso8601Format,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+        }
+
+        public static DateTimeOffset ParseIso8601DateTimeOffset(this string str)
+        {
+            return DateTimeOffset.ParseExact(
+                str,
+                Iso8601Format,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+        }
+
+        public static string ToIso8601String(this DateTime value)
+        {
+            var str = value.ToUniversalTime().ToString(
+                Iso8601Format,
+                CultureInfo.InvariantCulture);
+            return str;
+        }
+
+        public static string ToIso8601String(this DateTimeOffset value)
+        {
+            var str = value.ToUniversalTime().ToString(
+                Iso8601Format,
+                CultureInfo.InvariantCulture);
+            return str;
+        }
     }
 }
