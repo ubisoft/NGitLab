@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
@@ -8,30 +9,39 @@ namespace NGitLab.Models
     public sealed class BlameCommit : IEquatable<BlameCommit>
     {
         [DataMember(Name = "id")]
+        [JsonPropertyName("id")]
         public Sha1 Id { get; set; }
 
         [DataMember(Name = "message")]
+        [JsonPropertyName("message")]
         public string Message { get; set; }
 
         [DataMember(Name = "parent_ids")]
+        [JsonPropertyName("parent_ids")]
         public Sha1[] Parents { get; set; }
 
         [DataMember(Name = "authored_date")]
+        [JsonPropertyName("authored_date")]
         public DateTime AuthoredDate { get; set; }
 
         [DataMember(Name = "author_name")]
+        [JsonPropertyName("author_name")]
         public string AuthorName { get; set; }
 
         [DataMember(Name = "author_email")]
+        [JsonPropertyName("author_email")]
         public string AuthorEmail { get; set; }
 
         [DataMember(Name = "committed_date")]
+        [JsonPropertyName("committed_date")]
         public DateTime CommittedDate { get; set; }
 
         [DataMember(Name = "committer_name")]
+        [JsonPropertyName("committer_name")]
         public string CommitterName { get; set; }
 
         [DataMember(Name = "committer_email")]
+        [JsonPropertyName("committer_email")]
         public string CommitterEmail { get; set; }
 
         public bool Equals(BlameCommit other)

@@ -82,7 +82,7 @@ NGitLab.GitLabCollectionResponse<T>.GitLabCollectionResponse() -> void
 NGitLab.GitLabException
 NGitLab.GitLabException.ErrorMessage.get -> string
 NGitLab.GitLabException.ErrorMessage.set -> void
-NGitLab.GitLabException.ErrorObject.get -> NGitLab.Impl.JsonObject
+NGitLab.GitLabException.ErrorObject.get -> System.Collections.Generic.IDictionary<string, object>
 NGitLab.GitLabException.ErrorObject.set -> void
 NGitLab.GitLabException.GitLabException() -> void
 NGitLab.GitLabException.GitLabException(string message) -> void
@@ -442,29 +442,6 @@ NGitLab.Impl.JobClient.GetTraceAsync(int jobId, System.Threading.CancellationTok
 NGitLab.Impl.JobClient.JobClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.JobClient.RunAction(int jobId, NGitLab.Models.JobAction action) -> NGitLab.Models.Job
 NGitLab.Impl.JobClient.RunActionAsync(int jobId, NGitLab.Models.JobAction action, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
-NGitLab.Impl.JsonArray
-NGitLab.Impl.JsonArray.JsonArray() -> void
-NGitLab.Impl.JsonArray.JsonArray(int capacity) -> void
-NGitLab.Impl.JsonObject
-NGitLab.Impl.JsonObject.Add(string key, object value) -> void
-NGitLab.Impl.JsonObject.Add(System.Collections.Generic.KeyValuePair<string, object> item) -> void
-NGitLab.Impl.JsonObject.Clear() -> void
-NGitLab.Impl.JsonObject.Contains(System.Collections.Generic.KeyValuePair<string, object> item) -> bool
-NGitLab.Impl.JsonObject.ContainsKey(string key) -> bool
-NGitLab.Impl.JsonObject.CopyTo(System.Collections.Generic.KeyValuePair<string, object>[] array, int arrayIndex) -> void
-NGitLab.Impl.JsonObject.Count.get -> int
-NGitLab.Impl.JsonObject.GetEnumerator() -> System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, object>>
-NGitLab.Impl.JsonObject.IsReadOnly.get -> bool
-NGitLab.Impl.JsonObject.JsonObject() -> void
-NGitLab.Impl.JsonObject.JsonObject(System.Collections.Generic.IEqualityComparer<string> comparer) -> void
-NGitLab.Impl.JsonObject.Keys.get -> System.Collections.Generic.ICollection<string>
-NGitLab.Impl.JsonObject.Remove(string key) -> bool
-NGitLab.Impl.JsonObject.Remove(System.Collections.Generic.KeyValuePair<string, object> item) -> bool
-NGitLab.Impl.JsonObject.this[int index].get -> object
-NGitLab.Impl.JsonObject.this[string key].get -> object
-NGitLab.Impl.JsonObject.this[string key].set -> void
-NGitLab.Impl.JsonObject.TryGetValue(string key, out object value) -> bool
-NGitLab.Impl.JsonObject.Values.get -> System.Collections.Generic.ICollection<object>
 NGitLab.Impl.LabelClient
 NGitLab.Impl.LabelClient.Create(NGitLab.Models.LabelCreate label) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.CreateGroupLabel(NGitLab.Models.LabelCreate label) -> NGitLab.Models.Label
@@ -2962,8 +2939,6 @@ NGitLab.UserQuery.WithoutProjects.set -> void
 override NGitLab.DynamicEnum<TEnum>.Equals(object obj) -> bool
 override NGitLab.DynamicEnum<TEnum>.GetHashCode() -> int
 override NGitLab.DynamicEnum<TEnum>.ToString() -> string
-override NGitLab.Impl.JsonArray.ToString() -> string
-override NGitLab.Impl.JsonObject.ToString() -> string
 override NGitLab.Models.Blame.Equals(object obj) -> bool
 override NGitLab.Models.Blame.GetHashCode() -> int
 override NGitLab.Models.BlameCommit.Equals(object obj) -> bool

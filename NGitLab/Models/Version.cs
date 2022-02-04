@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
@@ -8,9 +9,11 @@ namespace NGitLab.Models
     public class GitLabVersion
     {
         [DataMember(Name = "version")]
+        [JsonPropertyName("version")]
         public string Version { get; set; }
 
         [DataMember(Name = "revision")]
+        [JsonPropertyName("revision")]
         public string Revision { get; set; }
     }
 }

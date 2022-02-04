@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
@@ -6,6 +7,7 @@ namespace NGitLab.Models
     public class MergeRequestApprover
     {
         [DataMember(Name = "user")]
+        [JsonPropertyName("user")]
         public User User;
     }
 }

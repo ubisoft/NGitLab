@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using NGitLab.Extensions;
 
 namespace NGitLab.Models
@@ -11,42 +12,55 @@ namespace NGitLab.Models
     public class Event
     {
         [DataMember(Name = "id")]
+        [JsonPropertyName("id")]
         public int Id { get; set; }
 
         [DataMember(Name = "title")]
+        [JsonPropertyName("title")]
         public string Title { get; set; }
 
         [DataMember(Name = "project_id")]
+        [JsonPropertyName("project_id")]
         public int ProjectId { get; set; }
 
         [DataMember(Name = "action_name")]
+        [JsonPropertyName("action_name")]
         public DynamicEnum<EventAction> Action { get; set; }
 
         [DataMember(Name = "target_id")]
+        [JsonPropertyName("target_id")]
         public long? TargetId { get; set; }
 
         [DataMember(Name = "target_iid")]
+        [JsonPropertyName("target_iid")]
         public long? TargetIId { get; set; }
 
         [DataMember(Name = "target_type")]
+        [JsonPropertyName("target_type")]
         public DynamicEnum<EventTargetType> TargetType { get; set; }
 
         [DataMember(Name = "target_title")]
+        [JsonPropertyName("target_title")]
         public string TargetTitle { get; set; }
 
         [DataMember(Name = "author_id")]
+        [JsonPropertyName("author_id")]
         public int AuthorId { get; set; }
 
         [DataMember(Name = "author_username")]
+        [JsonPropertyName("author_username")]
         public string AuthorUserName { get; set; }
 
         [DataMember(Name = "created_at")]
+        [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; set; }
 
         [DataMember(Name = "note")]
+        [JsonPropertyName("note")]
         public Note Note { get; set; }
 
         [DataMember(Name = "push_data")]
+        [JsonPropertyName("push_data")]
         public PushData PushData { get; set; }
 
         /// <summary>

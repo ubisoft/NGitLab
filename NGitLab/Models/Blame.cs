@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
@@ -8,9 +9,11 @@ namespace NGitLab.Models
     public sealed class Blame : IEquatable<Blame>
     {
         [DataMember(Name = "commit")]
+        [JsonPropertyName("commit")]
         public BlameCommit Commit { get; set; }
 
         [DataMember(Name = "lines")]
+        [JsonPropertyName("lines")]
         public string[] Lines { get; set; }
 
         public bool Equals(Blame other)
