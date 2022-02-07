@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -23,6 +25,18 @@ namespace NGitLab.Impl
         public IEnumerable<Group> Accessible => _api.Get().GetAll<Group>(Utils.AddOrderBy(Url));
 
         public IEnumerable<Group> Get(GroupQuery query)
+        {
+            var url = CreateGetUrl(query);
+            return _api.Get().GetAll<Group>(url);
+        }
+
+        public GitLabCollectionResponse<Group> GetAsync(GroupQuery query)
+        {
+            var url = CreateGetUrl(query);
+            return _api.Get().GetAllAsync<Group>(url);
+        }
+
+        private static string CreateGetUrl(GroupQuery query)
         {
             var url = Group.Url;
 
@@ -71,7 +85,7 @@ namespace NGitLab.Impl
                 url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
             }
 
-            return _api.Get().GetAll<Group>(url);
+            return url;
         }
 
         public IEnumerable<Group> Search(string search)
@@ -79,9 +93,24 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Group>(Utils.AddOrderBy(Url + $"?search={Uri.EscapeDataString(search)}"));
         }
 
+        public GitLabCollectionResponse<Group> SearchAsync(string search)
+        {
+            return _api.Get().GetAllAsync<Group>(Utils.AddOrderBy(Url + $"?search={Uri.EscapeDataString(search)}"));
+        }
+
         public Group this[int id] => _api.Get().To<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
 
+        public Task<Group> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)), cancellationToken);
+        }
+
         public Group this[string fullPath] => _api.Get().To<Group>(Url + "/" + Uri.EscapeDataString(fullPath));
+
+        public Task<Group> GetByFullPathAsync(string fullPath, CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<Group>(Url + "/" + Uri.EscapeDataString(fullPath), cancellationToken);
+        }
 
         public IEnumerable<Project> SearchProjects(int groupId, string search)
         {
@@ -103,12 +132,27 @@ namespace NGitLab.Impl
 
         public Group Create(GroupCreate group) => _api.Post().With(group).To<Group>(Url);
 
+        public Task<Group> CreateAsync(GroupCreate group, CancellationToken cancellationToken = default)
+        {
+            return _api.Post().With(group).ToAsync<Group>(Url, cancellationToken);
+        }
+
         public void Delete(int id)
         {
             _api.Delete().Execute(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
         }
 
+        public Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return _api.Delete().ExecuteAsync(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)), cancellationToken);
+        }
+
         public Group Update(int id, GroupUpdate groupUpdate) => _api.Put().With(groupUpdate).To<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
+
+        public Task<Group> UpdateAsync(int id, GroupUpdate groupUpdate, CancellationToken cancellationToken = default)
+        {
+            return _api.Put().With(groupUpdate).ToAsync<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)), cancellationToken);
+        }
 
         public void Restore(int id) => _api.Post().Execute(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)) + "/restore");
     }

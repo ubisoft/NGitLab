@@ -42,7 +42,7 @@ namespace NGitLab.Tests.Docker
 
         public string AdminUserName { get; } = "root";
 
-        public string AdminPassword
+        public static string AdminPassword
         {
             get
             {
@@ -112,7 +112,7 @@ namespace NGitLab.Tests.Docker
             }
             catch (Exception ex)
             {
-                s_creationErrorMessage = "The docker service is not accessible. Be sure to start docker on your machine before starting tests.\nDetails: " + ex.ToString();
+                s_creationErrorMessage = "Cannot connect to Docker service. Make sure it's running on your machine before launching any tests.\nDetails: " + ex.ToString();
                 Assert.Fail(s_creationErrorMessage);
             }
         }
@@ -159,17 +159,17 @@ namespace NGitLab.Tests.Docker
             using var client = conf.CreateClient();
             await ValidateDockerIsEnabled(client);
 
-            TestContext.Progress.WriteLine("Searching existing GitLab docker image");
+            TestContext.Progress.WriteLine("Looking up GitLab Docker containers");
             var containers = await client.Containers.ListContainersAsync(new ContainersListParameters() { All = true }).ConfigureAwait(false);
             var container = containers.FirstOrDefault(c => c.Names.Contains("/" + ContainerName, StringComparer.Ordinal));
             if (container != null)
             {
-                TestContext.Progress.WriteLine("Validating existing GitLab docker image");
+                TestContext.Progress.WriteLine("Verifying if the GitLab Docker container is using the right image");
                 var inspect = await client.Containers.InspectContainerAsync(container.ID).ConfigureAwait(false);
                 var inspectImage = await client.Images.InspectImageAsync(ImageName + ":" + GitLabDockerVersion).ConfigureAwait(false);
                 if (inspect.Image != inspectImage.ID)
                 {
-                    TestContext.Progress.WriteLine("Removing existing GitLab docker image");
+                    TestContext.Progress.WriteLine("Ending GitLab Docker container, as it's using the wrong image");
                     await client.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters() { Force = true }).ConfigureAwait(false);
                     container = null;
                 }
@@ -178,11 +178,11 @@ namespace NGitLab.Tests.Docker
             if (container == null)
             {
                 // Download GitLab images
-                TestContext.Progress.WriteLine("Downloading GitLab docker image");
+                TestContext.Progress.WriteLine("Making sure the right GitLab Docker image is available locally");
                 await client.Images.CreateImageAsync(new ImagesCreateParameters() { FromImage = ImageName, Tag = GitLabDockerVersion }, new AuthConfig() { }, new Progress<JSONMessage>()).ConfigureAwait(false);
 
                 // Create the container
-                TestContext.Progress.WriteLine("Creating GitLab docker instance");
+                TestContext.Progress.WriteLine("Creating the GitLab Docker container");
                 var hostConfig = new HostConfig()
                 {
                     PortBindings = new Dictionary<string, IList<PortBinding>>(StringComparer.Ordinal)
@@ -216,11 +216,11 @@ namespace NGitLab.Tests.Docker
             // Start the container
             if (container.State != "running")
             {
-                TestContext.Progress.WriteLine("Starting GitLab docker image");
+                TestContext.Progress.WriteLine("Starting the GitLab Docker container");
                 var started = await client.Containers.StartContainerAsync(container.ID, new ContainerStartParameters()).ConfigureAwait(false);
                 if (!started)
                 {
-                    Assert.Fail("Cannot start the docker container");
+                    Assert.Fail("Cannot start the Docker container");
                 }
             }
 
@@ -228,7 +228,7 @@ namespace NGitLab.Tests.Docker
             var stopwatch = Stopwatch.StartNew();
             while (true)
             {
-                TestContext.Progress.WriteLine($"Waiting for GitLab instance to be ready ({stopwatch.Elapsed})");
+                TestContext.Progress.WriteLine($"Waiting for the GitLab Docker container to be ready ({stopwatch.Elapsed})");
                 var status = await client.Containers.InspectContainerAsync(container.ID);
                 if (!status.State.Running)
                     throw new InvalidOperationException($"Container '{status.ID}' is not running");
@@ -262,7 +262,7 @@ namespace NGitLab.Tests.Docker
                 }
             }
 
-            TestContext.Progress.WriteLine("GitLab docker instance is ready");
+            TestContext.Progress.WriteLine("GitLab Docker container is ready");
         }
 
         private async Task GenerateCredentialsAsync()
@@ -331,7 +331,7 @@ namespace NGitLab.Tests.Docker
                 // Get admin login cookie
                 // result.Cookie: experimentation_subject_id=XXX; _gitlab_session=XXXX; known_sign_in=XXXX
                 TestContext.Progress.WriteLine("Extracting GitLab session cookie");
-                credentials.AdminCookies = result.Cookie.Split(';').Select(part => part.Trim()).Single(part => part.StartsWith("_gitlab_session=", StringComparison.Ordinal)).Substring("_gitlab_session=".Length);
+                credentials.AdminCookies = result.Cookie.Split(';').Select(part => part.Trim()).Single(part => part.StartsWith("_gitlab_session=", StringComparison.Ordinal))["_gitlab_session=".Length..];
 
                 Task<IDocument> SignIn(IBrowsingContext context)
                 {
@@ -418,7 +418,7 @@ namespace NGitLab.Tests.Docker
                             if (tokenElement == null)
                                 throw new InvalidOperationException("Cannot find X-Profile-Token in the page:\n" + result.ToHtml());
 
-                            credentials.ProfileToken = tokenElement.TextContent.Trim().Substring("X-Profile-Token:".Length).Trim();
+                            credentials.ProfileToken = tokenElement.TextContent.Trim()["X-Profile-Token:".Length..].Trim();
                             return result;
                         });
                 }

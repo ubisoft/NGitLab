@@ -1,4 +1,6 @@
-﻿using NGitLab.Models;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using NGitLab.Models;
 
 namespace NGitLab
 {
@@ -11,6 +13,8 @@ namespace NGitLab
         void Delete(FileDelete file);
 
         FileData Get(string filePath, string @ref);
+
+        Task<FileData> GetAsync(string filePath, string @ref, CancellationToken cancellationToken = default);
 
         bool FileExists(string filePath, string @ref);
 

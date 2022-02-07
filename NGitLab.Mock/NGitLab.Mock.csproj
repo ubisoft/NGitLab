@@ -1,10 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project>
-  <Import Project="$([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.before.props'))" Condition="$(SolutionFileName.EndsWith('.SwitchToSource.sln', StringComparison.OrdinalIgnoreCase)) And Exists($([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.before.props')))" />
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
     <NoWarn>$(NoWarn);NU5104</NoWarn>
+    <Description>GitLab REST API .NET Client Mock Library</Description>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\NGitLab\NGitLab.csproj" />
@@ -24,6 +22,4 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  <Import Project="$([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.after.props'))" Condition="$(SolutionFileName.EndsWith('.SwitchToSource.sln', StringComparison.OrdinalIgnoreCase)) And Exists($([System.IO.Path]::Combine($(SolutionDir), '.SwitchToSource', $(SolutionFileName.Replace('.SwitchToSource.sln', '.sln')), 'import', 'NGitLab.Mock.after.props')))" />
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

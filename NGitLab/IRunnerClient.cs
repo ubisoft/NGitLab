@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -47,6 +49,8 @@ namespace NGitLab
         /// <returns>the list of runners associated with the project</returns>
         IEnumerable<Runner> OfProject(int projectId);
 
+        GitLabCollectionResponse<Runner> OfProjectAsync(int projectId);
+
         /// <summary>
         /// List all jobs of the given runner that meet the specified scope
         /// </summary>
@@ -78,6 +82,8 @@ namespace NGitLab
         /// <param name="projectId"></param>
         /// <param name="runnerId"></param>
         Runner EnableRunner(int projectId, RunnerId runnerId);
+
+        Task<Runner> EnableRunnerAsync(int projectId, RunnerId runnerId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Disable a specific runner from the project. It works only if the project isn't the only project associated with the specified runner. If so, an error is returned. Use the Remove a runner call instead.

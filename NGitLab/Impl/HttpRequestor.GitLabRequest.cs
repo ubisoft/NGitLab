@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Extensions;
+using NGitLab.Impl.Json;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -52,7 +57,7 @@ namespace NGitLab.Impl
                 }
                 else if (data != null)
                 {
-                    JsonData = SimpleJson.SerializeObject(data);
+                    JsonData = Serializer.Serialize(data);
                 }
             }
 
@@ -61,6 +66,16 @@ namespace NGitLab.Impl
                 Func<WebResponse> getResponseImpl = () => GetResponseImpl(options);
 
                 return getResponseImpl.Retry(options.ShouldRetry,
+                    options.RetryInterval,
+                    options.RetryCount,
+                    options.IsIncremental);
+            }
+
+            public Task<WebResponse> GetResponseAsync(RequestOptions options, CancellationToken cancellationToken)
+            {
+                Func<Task<WebResponse>> getResponseImpl = () => GetResponseImplAsync(options, cancellationToken);
+
+                return getResponseImpl.RetryAsync(options.ShouldRetry,
                     options.RetryInterval,
                     options.RetryCount,
                     options.IsIncremental);
@@ -76,36 +91,57 @@ namespace NGitLab.Impl
                 catch (WebException wex)
                 {
                     if (wex.Response == null)
-                    {
                         throw;
-                    }
 
-                    using var errorResponse = (HttpWebResponse)wex.Response;
-                    string jsonString;
-                    using (var reader = new StreamReader(errorResponse.GetResponseStream()))
-                    {
-                        jsonString = reader.ReadToEnd();
-                    }
-
-                    var errorMessage = ExtractErrorMessage(jsonString, out var parsedError);
-                    var exceptionMessage =
-                        $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
-                        $"Original call: {Method} {Url}";
-
-                    if (JsonData != null)
-                    {
-                        exceptionMessage += $". With data {JsonData}";
-                    }
-
-                    throw new GitLabException(exceptionMessage)
-                    {
-                        OriginalCall = Url,
-                        ErrorObject = parsedError,
-                        StatusCode = errorResponse.StatusCode,
-                        ErrorMessage = errorMessage,
-                        MethodType = Method,
-                    };
+                    HandleWebException(wex);
+                    throw;
                 }
+            }
+
+            private async Task<WebResponse> GetResponseImplAsync(RequestOptions options, CancellationToken cancellationToken)
+            {
+                try
+                {
+                    var request = CreateRequest(options);
+                    return await options.GetResponseAsync(request, cancellationToken).ConfigureAwait(false);
+                }
+                catch (WebException wex)
+                {
+                    if (wex.Response == null)
+                        throw;
+
+                    HandleWebException(wex);
+                    throw;
+                }
+            }
+
+            private void HandleWebException(WebException ex)
+            {
+                using var errorResponse = (HttpWebResponse)ex.Response;
+                string jsonString;
+                using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+                {
+                    jsonString = reader.ReadToEnd();
+                }
+
+                var errorMessage = ExtractErrorMessage(jsonString, out var errorDetails);
+                var exceptionMessage =
+                    $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
+                    $"Original call: {Method} {Url}";
+
+                if (JsonData != null)
+                {
+                    exceptionMessage += $". With data {JsonData}";
+                }
+
+                throw new GitLabException(exceptionMessage)
+                {
+                    OriginalCall = Url,
+                    ErrorObject = errorDetails,
+                    StatusCode = errorResponse.StatusCode,
+                    ErrorMessage = errorMessage,
+                    MethodType = Method,
+                };
             }
 
             private HttpWebRequest CreateRequest(RequestOptions options)
@@ -166,37 +202,38 @@ namespace NGitLab.Impl
             /// Parse the error that GitLab returns. GitLab returns structured errors but has a lot of them
             /// Here we try to be generic.
             /// </summary>
-            /// <param name="json"></param>
-            /// <param name="parsedError"></param>
-            /// <returns></returns>
-            private static string ExtractErrorMessage(string json, out JsonObject parsedError)
+            /// <param name="json">JSON description of the error</param>
+            /// <param name="errorDetails">Dictionary of JSON properties</param>
+            /// <returns>Parsed error message</returns>
+            private static string ExtractErrorMessage(string json, out IDictionary<string, object> errorDetails)
             {
+                errorDetails = null;
                 if (string.IsNullOrEmpty(json))
-                {
-                    parsedError = null;
                     return "Empty Response";
-                }
 
-                SimpleJson.TryDeserializeObject(json, out var errorObject);
+                if (!Serializer.TryDeserializeObject(json, out var errorObject))
+                    return $"Response cannot be deserialized ({json})";
 
-                parsedError = errorObject as JsonObject;
-                object messageObject = null;
-                if (parsedError?.TryGetValue("message", out messageObject) != true)
+                string message = null;
+                var details = new Dictionary<string, object>(StringComparer.Ordinal);
+                if (errorObject is JsonElement jsonElement && jsonElement.ValueKind == JsonValueKind.Object)
                 {
-                    parsedError?.TryGetValue("error", out messageObject);
+                    var objectEnumerator = jsonElement.EnumerateObject();
+                    foreach (var property in objectEnumerator)
+                    {
+                        details[property.Name] = property.Value;
+                    }
+
+                    if (!details.TryGetValue("message", out var messageValue))
+                    {
+                        details.TryGetValue("error", out messageValue);
+                    }
+
+                    errorDetails = details;
+                    message = messageValue?.ToString();
                 }
 
-                if (messageObject == null)
-                {
-                    return $"Error message cannot be parsed ({json})";
-                }
-
-                if (messageObject is string str)
-                {
-                    return str;
-                }
-
-                return SimpleJson.SerializeObject(messageObject);
+                return message ?? $"Error message cannot be parsed ({json})";
             }
         }
     }

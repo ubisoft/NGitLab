@@ -59,9 +59,9 @@ namespace NGitLab.Mock
 
         public string WebUrl => Server.MakeUrl(PathWithNamespace);
 
-        public string SshUrl => Repository.FullPath;
+        public string SshUrl => $"file://{Repository.FullPath}";
 
-        public string HttpUrl => Repository.FullPath;
+        public string HttpUrl => $"file://{Repository.FullPath}";
 
         public VisibilityLevel Visibility { get; set; }
 
@@ -77,7 +77,21 @@ namespace NGitLab.Mock
 
         public bool Archived { get; set; }
 
+        public string[] Tags { get; set; } = Array.Empty<string>();
+
+        public bool Mirror { get; set; }
+
+        public int MirrorUserId { get; set; }
+
+        public bool MirrorTriggerBuilds { get; set; }
+
+        public bool OnlyMirrorProtectedBranch { get; set; }
+
+        public bool MirrorOverwritesDivergedBranches { get; set; }
+
         public RepositoryAccessLevel RepositoryAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
+
+        public bool IsEmpty { get; set; }
 
         public PermissionCollection Permissions { get; }
 
@@ -337,6 +351,7 @@ namespace NGitLab.Mock
                 Id = Id,
                 Name = Name,
                 Description = Description,
+                EmptyRepo = IsEmpty,
                 Path = Path,
                 PathWithNamespace = PathWithNamespace,
                 ForkedFromProject = ForkedFrom?.ToClientProject(),
@@ -355,6 +370,12 @@ namespace NGitLab.Mock
                 ApprovalsBeforeMerge = ApprovalsBeforeMerge,
                 MergeMethod = MergeMethod,
                 Statistics = Statistics,
+                TagList = Tags,
+                Mirror = Mirror,
+                MirrorUserId = MirrorUserId,
+                MirrorTriggerBuilds = MirrorTriggerBuilds,
+                OnlyMirrorProtectedBranch = OnlyMirrorProtectedBranch,
+                MirrorOverwritesDivergedBranches = MirrorOverwritesDivergedBranches,
             };
         }
     }

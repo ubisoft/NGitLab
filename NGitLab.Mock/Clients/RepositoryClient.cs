@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -33,7 +34,7 @@ namespace NGitLab.Mock.Clients
                 using (Context.BeginOperationScope())
                 {
                     var project = GetProject(_projectId, ProjectPermission.View);
-                    return project.Repository.GetTree();
+                    return project.Repository.GetTree().ToList();
                 }
             }
         }
@@ -45,7 +46,7 @@ namespace NGitLab.Mock.Clients
                 using (Context.BeginOperationScope())
                 {
                     var project = GetProject(_projectId, ProjectPermission.View);
-                    return project.Repository.GetCommits().Select(commit => ConvertToNGitLabCommit(commit, project));
+                    return project.Repository.GetCommits().Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
                 }
             }
         }
@@ -60,12 +61,17 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public GitLabCollectionResponse<Tree> GetTreeAsync(RepositoryGetTreeOptions options)
+        {
+            return GitLabCollectionResponse.Create(GetTree(options));
+        }
+
         public IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options)
         {
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetTree(options);
+                return project.Repository.GetTree(options).ToList();
             }
         }
 
@@ -84,7 +90,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetCommits(refName).Select(commit => ConvertToNGitLabCommit(commit, project));
+                return project.Repository.GetCommits(refName).Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
             }
         }
 
@@ -93,7 +99,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetCommits(request).Select(commit => ConvertToNGitLabCommit(commit, project));
+                return project.Repository.GetCommits(request).Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
             }
         }
 
@@ -112,7 +118,7 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
-        private Commit ConvertToNGitLabCommit(LibGit2Sharp.Commit commit, Project project)
+        private static Commit ConvertToNGitLabCommit(LibGit2Sharp.Commit commit, Project project)
         {
             return commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal)));
         }

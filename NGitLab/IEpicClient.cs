@@ -22,6 +22,13 @@ namespace NGitLab
         Epic Get(int groupId, int epicId);
 
         /// <summary>
+        /// Return all issues that are assigned to an epic
+        /// </summary>
+        /// <param name="groupId">Group ID</param>
+        /// <param name="epicId">Epic ID</param>
+        GitLabCollectionResponse<Issue> GetIssuesAsync(int groupId, int epicId);
+
+        /// <summary>
         /// Create an epic
         /// </summary>
         /// <param name="groupId">Group ID</param>

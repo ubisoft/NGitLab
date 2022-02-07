@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using NGitLab.Impl;
+using NGitLab.Impl.Json;
 using NUnit.Framework;
 
 namespace NGitLab.Tests.Impl
@@ -34,10 +34,10 @@ namespace NGitLab.Tests.Impl
 
         private static MockModel Load(string json)
         {
-            return SimpleJson.DeserializeObject<MockModel>(json);
+            return Serializer.Deserialize<MockModel>(json);
         }
 
-        [SuppressMessage("Design", "CA1812: Avoid uninstantiated internal classes", Justification = "The class is instantiated dynamically using SimpleJson")]
+        [SuppressMessage("Design", "CA1812: Avoid uninstantiated internal classes", Justification = "The class is instantiated dynamically using Serializer")]
         private sealed class MockModel
         {
             public string BasicField { get; set; }

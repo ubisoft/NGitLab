@@ -8,6 +8,7 @@ namespace NGitLab.Impl
     {
         private const string GroupEpicsUrl = "/groups/{0}/epics";
         private const string SingleEpiceUrl = "/groups/{0}/epics/{1}";
+        private const string GroupEpicIssuesUrl = "/groups/{0}/epics/{1}/issues";
 
         private readonly API _api;
 
@@ -24,6 +25,11 @@ namespace NGitLab.Impl
         public Epic Get(int groupId, int epicId)
         {
             return _api.Get().To<Epic>(string.Format(CultureInfo.InvariantCulture, SingleEpiceUrl, groupId, epicId));
+        }
+
+        public GitLabCollectionResponse<Issue> GetIssuesAsync(int groupId, int epicId)
+        {
+            return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, GroupEpicIssuesUrl, groupId, epicId));
         }
 
         private IEnumerable<Epic> Get(string url, EpicQuery query)

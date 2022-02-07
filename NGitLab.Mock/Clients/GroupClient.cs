@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -92,6 +95,13 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<Models.Group> CreateAsync(GroupCreate group, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return Create(group);
+        }
+
         public void Delete(int id)
         {
             using (Context.BeginOperationScope())
@@ -107,9 +117,33 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            Delete(id);
+        }
+
         public IEnumerable<Models.Group> Get(GroupQuery query)
         {
             throw new NotImplementedException();
+        }
+
+        public GitLabCollectionResponse<Models.Group> GetAsync(GroupQuery query)
+        {
+            return GitLabCollectionResponse.Create(Get(query));
+        }
+
+        public async Task<Models.Group> GetByFullPathAsync(string fullPath, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return this[fullPath];
+        }
+
+        public async Task<Models.Group> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return this[id];
         }
 
         public void Restore(int id)
@@ -120,6 +154,11 @@ namespace NGitLab.Mock.Clients
         public IEnumerable<Models.Group> Search(string search)
         {
             throw new NotImplementedException();
+        }
+
+        public GitLabCollectionResponse<Models.Group> SearchAsync(string search)
+        {
+            return GitLabCollectionResponse.Create(Search(search));
         }
 
         public IEnumerable<Models.Project> SearchProjects(int groupId, string search)
@@ -185,6 +224,13 @@ namespace NGitLab.Mock.Clients
 
                 return group.ToClientGroup();
             }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<Models.Group> UpdateAsync(int id, GroupUpdate groupUpdate, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return Update(id, groupUpdate);
         }
     }
 }

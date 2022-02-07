@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -24,6 +26,11 @@ namespace NGitLab.Impl
 
         public IEnumerable<Job> AllJobs => _api.Get().GetAll<Job>($"{_projectPath}/jobs");
 
+        public GitLabCollectionResponse<Job> GetAllJobsAsync()
+        {
+            return _api.Get().GetAllAsync<Job>($"{_projectPath}/jobs");
+        }
+
         [Obsolete("Use JobClient.GetJobs() instead")]
         public IEnumerable<Job> GetJobsInProject(JobScope scope)
         {
@@ -39,6 +46,11 @@ namespace NGitLab.Impl
 
         public Pipeline this[int id] => _api.Get().To<Pipeline>($"{_pipelinesPath}/{id.ToStringInvariant()}");
 
+        public Task<Pipeline> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<Pipeline>($"{_pipelinesPath}/{id.ToStringInvariant()}", cancellationToken);
+        }
+
         public Job[] GetJobs(int pipelineId)
         {
             // For some reason GitLab returns the jobs in the reverse order as
@@ -49,13 +61,25 @@ namespace NGitLab.Impl
 
         public IEnumerable<Job> GetJobs(PipelineJobQuery query)
         {
-            var url = $"{_pipelinesPath}/{query.PipelineId.ToStringInvariant()}/jobs";
-            url = Utils.AddParameter(url, "scope", query.Scope);
-            url = Utils.AddParameter(url, "include_retried", query.IncludeRetried);
+            var url = CreateGetJobsUrl(query);
 
             // For some reason GitLab returns the jobs in the reverse order as
             // they appear in their UI. Here we reverse them!
             return _api.Get().GetAll<Job>(url).Reverse();
+        }
+
+        public GitLabCollectionResponse<Job> GetJobsAsync(PipelineJobQuery query)
+        {
+            var url = CreateGetJobsUrl(query);
+            return _api.Get().GetAllAsync<Job>(url);
+        }
+
+        private string CreateGetJobsUrl(PipelineJobQuery query)
+        {
+            var url = $"{_pipelinesPath}/{query.PipelineId.ToStringInvariant()}/jobs";
+            url = Utils.AddParameter(url, "scope", query.Scope);
+            url = Utils.AddParameter(url, "include_retried", query.IncludeRetried);
+            return url;
         }
 
         public Pipeline Create(string @ref)
@@ -64,6 +88,18 @@ namespace NGitLab.Impl
         }
 
         public Pipeline Create(PipelineCreate createOptions)
+        {
+            var url = CreateCreateUrl(createOptions);
+            return _api.Post().To<Pipeline>(url);
+        }
+
+        public Task<Pipeline> CreateAsync(PipelineCreate createOptions, CancellationToken cancellationToken = default)
+        {
+            var url = CreateCreateUrl(createOptions);
+            return _api.Post().ToAsync<Pipeline>(url, cancellationToken);
+        }
+
+        private string CreateCreateUrl(PipelineCreate createOptions)
         {
             var variables = new StringBuilder();
             foreach (var variable in createOptions.Variables)
@@ -74,7 +110,7 @@ namespace NGitLab.Impl
                     .Append("&variables[][value]=").Append(Uri.EscapeDataString(variable.Value));
             }
 
-            return _api.Post().To<Pipeline>($"{_projectPath}/pipeline?ref={Uri.EscapeDataString(createOptions.Ref)}{variables}");
+            return $"{_projectPath}/pipeline?ref={Uri.EscapeDataString(createOptions.Ref)}{variables}";
         }
 
         public Pipeline CreatePipelineWithTrigger(string token, string @ref, Dictionary<string, string> variables)
@@ -89,6 +125,18 @@ namespace NGitLab.Impl
         }
 
         public IEnumerable<PipelineBasic> Search(PipelineQuery query)
+        {
+            var url = CreateSearchUrl(query);
+            return _api.Get().GetAll<PipelineBasic>(url);
+        }
+
+        public GitLabCollectionResponse<PipelineBasic> SearchAsync(PipelineQuery query)
+        {
+            var url = CreateSearchUrl(query);
+            return _api.Get().GetAllAsync<PipelineBasic>(url);
+        }
+
+        private string CreateSearchUrl(PipelineQuery query)
         {
             if (query == null)
                 throw new ArgumentNullException(nameof(query));
@@ -118,7 +166,8 @@ namespace NGitLab.Impl
                 queryEntries.Add("sort", query.Sort.Value.ToString());
 
             var stringQuery = string.Join("&", queryEntries.Select(kp => $"{kp.Key}={kp.Value}"));
-            return _api.Get().GetAll<PipelineBasic>($"{_projectPath}/pipelines{(queryEntries.Any() ? $"?{stringQuery}" : string.Empty)}");
+            var url = $"{_projectPath}/pipelines{(queryEntries.Any() ? $"?{stringQuery}" : string.Empty)}";
+            return url;
         }
 
         public void Delete(int pipelineId)
@@ -129,6 +178,11 @@ namespace NGitLab.Impl
         public IEnumerable<PipelineVariable> GetVariables(int pipelineId)
         {
             return _api.Get().GetAll<PipelineVariable>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/variables");
+        }
+
+        public GitLabCollectionResponse<PipelineVariable> GetVariablesAsync(int pipelineId)
+        {
+            return _api.Get().GetAllAsync<PipelineVariable>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/variables");
         }
 
         public TestReport GetTestReports(int pipelineId)

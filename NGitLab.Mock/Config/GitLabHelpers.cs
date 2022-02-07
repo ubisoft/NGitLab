@@ -251,8 +251,11 @@ namespace NGitLab.Mock.Config
         /// <param name="initialCommit">Indicates if an initial commit is added.</param>
         /// <param name="addDefaultUserAsMaintainer">Define default user as maintainer.</param>
         /// <param name="clonePath">Path where to clone repository after server resolving</param>
+        /// <param name="cloneParameters">Parameters passed to clone command</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabConfig WithProject(this GitLabConfig config, string? name = null, int id = default, string? @namespace = null, string? description = null, string? defaultBranch = null, VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false, bool addDefaultUserAsMaintainer = false, string? clonePath = null, Action<GitLabProject>? configure = null)
+        public static GitLabConfig WithProject(this GitLabConfig config, string? name = null, int id = default, string? @namespace = null, string? description = null,
+                                               string? defaultBranch = null, VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false,
+                                               bool addDefaultUserAsMaintainer = false, string? clonePath = null, string? cloneParameters = null, Action<GitLabProject>? configure = null)
         {
             return WithProject(config, name, project =>
             {
@@ -264,10 +267,11 @@ namespace NGitLab.Mock.Config
                 project.DefaultBranch = defaultBranch ?? config.DefaultBranch ?? "main";
                 project.Visibility = visibility;
                 project.ClonePath = clonePath;
+                project.CloneParameters = cloneParameters;
 
                 if (initialCommit)
                 {
-                    WithCommit(project, "Initial commit", null, commit =>
+                    WithCommit(project, "Initial commit", user: null, commit =>
                     {
                         WithFile(commit, "README.md", $"# {name}{Environment.NewLine}");
                     });
@@ -1139,7 +1143,7 @@ namespace NGitLab.Mock.Config
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "git",
-                        Arguments = $"clone \"{prj.SshUrl}\" \"{Path.GetFileName(project.ClonePath)}\"",
+                        Arguments = $"clone {project.CloneParameters} \"{prj.SshUrl}\" \"{Path.GetFileName(project.ClonePath)}\"",
                         RedirectStandardError = true,
                         UseShellExecute = false,
                         WorkingDirectory = folderPath,

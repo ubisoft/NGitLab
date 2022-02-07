@@ -64,6 +64,15 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
+        public async Task Test_merge_request_id_is_not_equal_to_iid()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var (_, mergeRequest) = context.CreateMergeRequest();
+            Assert.AreNotEqual(mergeRequest.Id, mergeRequest.Iid);
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task Test_gitlab_returns_an_error_when_trying_to_create_a_request_with_same_source_and_destination()
         {
             using var context = await GitLabTestContext.CreateAsync();

@@ -24,6 +24,8 @@ namespace NGitLab
 
         Membership GetMemberOfProject(string projectId, string userId);
 
+        Membership GetMemberOfProject(string projectId, string userId, bool includeInheritedMembers);
+
         Membership AddMemberToProject(string projectId, ProjectMemberCreate user);
 
         Membership UpdateMemberOfProject(string projectId, ProjectMemberUpdate user);

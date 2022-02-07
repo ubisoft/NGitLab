@@ -22,7 +22,11 @@ namespace NGitLab.Mock.Clients
                 using (Context.BeginOperationScope())
                 {
                     var project = GetProject(_projectId, ProjectPermission.View);
-                    return project.Repository.GetBranch(name).ToBranchClient(project);
+                    var branch = project.Repository.GetBranch(name);
+                    if (branch == null)
+                        throw new GitLabNotFoundException();
+
+                    return branch.ToBranchClient(project);
                 }
             }
         }

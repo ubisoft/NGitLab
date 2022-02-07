@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -80,6 +83,11 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public GitLabCollectionResponse<Models.Runner> OfProjectAsync(int projectId)
+        {
+            return GitLabCollectionResponse.Create(OfProject(projectId));
+        }
+
         public IEnumerable<Models.Job> GetJobs(int runnerId, JobScope jobScope)
         {
             throw new NotImplementedException();
@@ -118,6 +126,13 @@ namespace NGitLab.Mock.Clients
                 project.EnabledRunners.Add(runnerReference);
                 return runner.ToClientRunner();
             }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<Models.Runner> EnableRunnerAsync(int projectId, RunnerId runnerId, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return EnableRunner(projectId, runnerId);
         }
 
         public void DisableRunner(int projectId, RunnerId runnerId)
