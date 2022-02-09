@@ -2738,7 +2738,15 @@ NGitLab.Models.TestSuites.TotalCount.set -> void
 NGitLab.Models.TestSuites.TotalTime.get -> int
 NGitLab.Models.TestSuites.TotalTime.set -> void
 NGitLab.Models.TimeStats
+NGitLab.Models.TimeStats.HumanTimeEstimate.get -> string
+NGitLab.Models.TimeStats.HumanTimeEstimate.set -> void
+NGitLab.Models.TimeStats.HumanTotalTimeSpent.get -> string
+NGitLab.Models.TimeStats.HumanTotalTimeSpent.set -> void
+NGitLab.Models.TimeStats.TimeEstimateInSec.get -> long
+NGitLab.Models.TimeStats.TimeEstimateInSec.set -> void
 NGitLab.Models.TimeStats.TimeStats() -> void
+NGitLab.Models.TimeStats.TotalTimeSpentInSec.get -> long
+NGitLab.Models.TimeStats.TotalTimeSpentInSec.set -> void
 NGitLab.Models.Tree
 NGitLab.Models.Tree.Id -> NGitLab.Sha1
 NGitLab.Models.Tree.Mode -> string
