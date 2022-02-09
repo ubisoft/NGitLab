@@ -94,6 +94,6 @@ namespace NGitLab
         /// <param name="projectId">The project id.</param>
         /// <param name="issueIid">The id of the issue in the project's scope.</param>
         /// <returns>The time tracking statistics of the issue.</returns>
-        Task<TimeStats> TimeStats(int projectId, int issueIid, CancellationToken cancellationToken = default);
+        Task<TimeStats> TimeStatsAsync(int projectId, int issueIid, CancellationToken cancellationToken = default);
     }
 }

@@ -104,7 +104,7 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
-        public Task<TimeStats> TimeStats(int projectId, int issueIid, CancellationToken cancellationToken = default)
+        public Task<TimeStats> TimeStatsAsync(int projectId, int issueIid, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

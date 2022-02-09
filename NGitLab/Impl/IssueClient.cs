@@ -91,7 +91,7 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<MergeRequest>(string.Format(CultureInfo.InvariantCulture, ClosedByUrl, projectId, issueIid));
         }
 
-        public Task<TimeStats> TimeStats(int projectId, int issueIid, CancellationToken cancellationToken = default)
+        public Task<TimeStats> TimeStatsAsync(int projectId, int issueIid, CancellationToken cancellationToken = default)
         {
             return _api.Get().ToAsync<TimeStats>(string.Format(CultureInfo.InvariantCulture, TimeStatsUrl, projectId, issueIid), cancellationToken);
         }
