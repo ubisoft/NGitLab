@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
@@ -6,9 +7,11 @@ namespace NGitLab.Models
     public class ReleaseAssetSource
     {
         [DataMember(Name = "format")]
+        [JsonPropertyName("format")]
         public string Format { get; set; }
 
         [DataMember(Name = "url")]
+        [JsonPropertyName("url")]
         public string Url { get; set; }
     }
 }

@@ -54,6 +54,12 @@ namespace NGitLab.Mock.Clients
                 .FirstOrDefault(u => string.Equals(u.Id.ToString(CultureInfo.InvariantCulture), userId, StringComparison.Ordinal));
         }
 
+        public Membership GetMemberOfProject(string projectId, string userId, bool includeInheritedMembers)
+        {
+            return OfProject(projectId, includeInheritedMembers)
+               .FirstOrDefault(u => string.Equals(u.Id.ToString(CultureInfo.InvariantCulture), userId, StringComparison.Ordinal));
+        }
+
         public IEnumerable<Membership> OfGroup(string groupId)
         {
             return OfGroup(groupId, includeInheritedMembers: false);

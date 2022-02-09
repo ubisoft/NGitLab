@@ -36,6 +36,11 @@ namespace NGitLab.Mock.Config
         /// </summary>
         public string ClonePath { get; set; }
 
+        /// <summary>
+        /// Parameters used when cloning the local repository (for instance you can specify `--filter=blob:none` to do a blobless clone)
+        /// </summary>
+        public string CloneParameters { get; set; }
+
         public VisibilityLevel? Visibility { get; set; }
 
         public GitLabCommitsCollection Commits { get; }

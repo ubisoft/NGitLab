@@ -59,9 +59,9 @@ namespace NGitLab.Mock
 
         public string WebUrl => Server.MakeUrl(PathWithNamespace);
 
-        public string SshUrl => Repository.FullPath;
+        public string SshUrl => $"file://{Repository.FullPath}";
 
-        public string HttpUrl => Repository.FullPath;
+        public string HttpUrl => $"file://{Repository.FullPath}";
 
         public VisibilityLevel Visibility { get; set; }
 

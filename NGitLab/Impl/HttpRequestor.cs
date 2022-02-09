@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Impl.Json;
 #if NET45
 using System.Reflection;
 #endif
@@ -66,7 +67,7 @@ namespace NGitLab.Impl
             Stream(tailAPIUrl, s =>
             {
                 var json = new StreamReader(s).ReadToEnd();
-                result = SimpleJson.DeserializeObject<T>(json);
+                result = Serializer.Deserialize<T>(json);
             });
             return result;
         }
@@ -77,7 +78,7 @@ namespace NGitLab.Impl
             await StreamAsync(tailAPIUrl, async s =>
             {
                 var json = await new StreamReader(s).ReadToEndAsync().ConfigureAwait(false);
-                result = SimpleJson.DeserializeObject<T>(json);
+                result = Serializer.Deserialize<T>(json);
             }, cancellationToken).ConfigureAwait(false);
             return result;
         }
@@ -154,14 +155,18 @@ namespace NGitLab.Impl
                 var nextUrlToLoad = _startUrl;
                 while (nextUrlToLoad != null)
                 {
+                    string responseText;
                     var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
-                    using var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false);
-                    nextUrlToLoad = GetNextPageUrl(response);
+                    using (var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false))
+                    {
+                        nextUrlToLoad = GetNextPageUrl(response);
 
-                    var stream = response.GetResponseStream();
-                    using var streamReader = new StreamReader(stream);
-                    var responseText = await streamReader.ReadToEndAsync().ConfigureAwait(false);
-                    var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
+                        var stream = response.GetResponseStream();
+                        using var streamReader = new StreamReader(stream);
+                        responseText = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+                    }
+
+                    var deserialized = Serializer.Deserialize<T[]>(responseText);
                     foreach (var item in deserialized)
                         yield return item;
                 }
@@ -172,14 +177,18 @@ namespace NGitLab.Impl
                 var nextUrlToLoad = _startUrl;
                 while (nextUrlToLoad != null)
                 {
+                    string responseText;
                     var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
-                    using var response = request.GetResponse(_options);
-                    nextUrlToLoad = GetNextPageUrl(response);
+                    using (var response = request.GetResponse(_options))
+                    {
+                        nextUrlToLoad = GetNextPageUrl(response);
 
-                    var stream = response.GetResponseStream();
-                    using var streamReader = new StreamReader(stream);
-                    var responseText = streamReader.ReadToEnd();
-                    var deserialized = SimpleJson.DeserializeObject<T[]>(responseText);
+                        using var stream = response.GetResponseStream();
+                        using var streamReader = new StreamReader(stream);
+                        responseText = streamReader.ReadToEnd();
+                    }
+
+                    var deserialized = Serializer.Deserialize<T[]>(responseText);
                     foreach (var item in deserialized)
                         yield return item;
                 }
