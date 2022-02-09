@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -12,6 +14,7 @@ namespace NGitLab.Impl
         private const string ResourceLabelEventUrl = "/projects/{0}/issues/{1}/resource_label_events";
         private const string RelatedToUrl = "/projects/{0}/issues/{1}/related_merge_requests";
         private const string ClosedByUrl = "/projects/{0}/issues/{1}/closed_by";
+        private const string TimeStatsUrl = "/projects/{0}/issues/{1}/time_stats";
 
         private readonly API _api;
 
@@ -86,6 +89,11 @@ namespace NGitLab.Impl
         public IEnumerable<MergeRequest> ClosedBy(int projectId, int issueIid)
         {
             return _api.Get().GetAll<MergeRequest>(string.Format(CultureInfo.InvariantCulture, ClosedByUrl, projectId, issueIid));
+        }
+
+        public Task<TimeStats> TimeStats(int projectId, int issueIid, CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<TimeStats>(string.Format(CultureInfo.InvariantCulture, TimeStatsUrl, projectId, issueIid), cancellationToken);
         }
     }
 }

@@ -225,6 +225,7 @@ NGitLab.IIssueClient.Get(NGitLab.Models.IssueQuery query) -> System.Collections.
 NGitLab.IIssueClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.IIssueClient.RelatedTo(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.IIssueClient.ResourceLabelEvents(int projectId, int issueId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ResourceLabelEvent>
+NGitLab.IIssueClient.TimeStats(int projectId, int issueIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
 NGitLab.IJobClient
 NGitLab.IJobClient.Get(int jobId) -> NGitLab.Models.Job
 NGitLab.IJobClient.GetAsync(int jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
@@ -429,6 +430,7 @@ NGitLab.Impl.IssueClient.IssueClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.IssueClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.RelatedTo(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.Impl.IssueClient.ResourceLabelEvents(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ResourceLabelEvent>
+NGitLab.Impl.IssueClient.TimeStats(int projectId, int issueIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
 NGitLab.Impl.JobClient
 NGitLab.Impl.JobClient.Get(int jobId) -> NGitLab.Models.Job
 NGitLab.Impl.JobClient.GetAsync(int jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
@@ -2735,6 +2737,8 @@ NGitLab.Models.TestSuites.TotalCount.get -> int
 NGitLab.Models.TestSuites.TotalCount.set -> void
 NGitLab.Models.TestSuites.TotalTime.get -> int
 NGitLab.Models.TestSuites.TotalTime.set -> void
+NGitLab.Models.TimeStats
+NGitLab.Models.TimeStats.TimeStats() -> void
 NGitLab.Models.Tree
 NGitLab.Models.Tree.Id -> NGitLab.Sha1
 NGitLab.Models.Tree.Mode -> string
