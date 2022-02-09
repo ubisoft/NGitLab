@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -85,5 +87,13 @@ namespace NGitLab
         /// <param name="issueIid">The id of the issue in the project's scope.</param>
         /// <returns>The list of MR that closed this issue.</returns>
         IEnumerable<MergeRequest> ClosedBy(int projectId, int issueIid);
+
+        /// <summary>
+        /// Get time tracking statistics
+        /// </summary>
+        /// <param name="projectId">The project id.</param>
+        /// <param name="issueIid">The id of the issue in the project's scope.</param>
+        /// <returns>The time tracking statistics of the issue.</returns>
+        Task<TimeStats> TimeStatsAsync(int projectId, int issueIid, CancellationToken cancellationToken = default);
     }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -98,6 +100,11 @@ namespace NGitLab.Mock.Clients
         }
 
         public IEnumerable<Models.MergeRequest> ClosedBy(int projectId, int issueId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TimeStats> TimeStatsAsync(int projectId, int issueIid, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
