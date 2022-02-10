@@ -75,9 +75,9 @@ namespace NGitLab.Impl
         {
             url = url.TrimEnd('/');
             if (url.EndsWith("/api/v4", StringComparison.OrdinalIgnoreCase))
-                return url;
+                return url.Substring(0, url.Length - "/api/v4".Length);
 
-            return url + "/api/v4";
+            return url;
         }
     }
 }

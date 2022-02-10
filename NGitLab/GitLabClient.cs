@@ -36,6 +36,8 @@ namespace NGitLab
 
         public IEpicClient Epics { get; }
 
+        public IGraphQLClient GraphQL { get; }
+
         public RequestOptions Options
         {
             get => _api.RequestOptions;
@@ -79,6 +81,7 @@ namespace NGitLab
             SystemHooks = new SystemHookClient(_api);
             Deployments = new DeploymentClient(_api);
             Epics = new EpicClient(_api);
+            GraphQL = new GraphQLClient(_api);
         }
 
         [Obsolete("Use GitLabClient constructor instead")]

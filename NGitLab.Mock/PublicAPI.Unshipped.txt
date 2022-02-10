@@ -365,6 +365,7 @@ NGitLab.Mock.Config.GitLabUser.Name.set -> void
 NGitLab.Mock.Config.GitLabUser.Username.get -> string
 NGitLab.Mock.Config.GitLabUser.Username.set -> void
 NGitLab.Mock.Config.GitLabUsersCollection
+NGitLab.Mock.GitLabClientMockExtensions
 NGitLab.Mock.GitLabObject
 NGitLab.Mock.GitLabObject.GitLabObject() -> void
 NGitLab.Mock.GitLabObject.Parent.get -> NGitLab.Mock.GitLabObject
@@ -1097,6 +1098,7 @@ static NGitLab.Mock.Config.GitLabHelpers.WithLabel(this NGitLab.Mock.Config.GitL
 static NGitLab.Mock.Config.GitLabHelpers.WithProject(this NGitLab.Mock.Config.GitLabConfig config, string name, System.Action<NGitLab.Mock.Config.GitLabProject> configure) -> NGitLab.Mock.Config.GitLabConfig
 static NGitLab.Mock.Config.GitLabHelpers.WithTag(this NGitLab.Mock.Config.GitLabCommit commit, string name) -> NGitLab.Mock.Config.GitLabCommit
 static NGitLab.Mock.Config.GitLabHelpers.WithUser(this NGitLab.Mock.Config.GitLabConfig config, string username, System.Action<NGitLab.Mock.Config.GitLabUser> configure) -> NGitLab.Mock.Config.GitLabConfig
+static NGitLab.Mock.GitLabClientMockExtensions.WithGraphQLClient(this NGitLab.IGitLabClient client, NGitLab.IGraphQLClient graphQLClient) -> NGitLab.IGitLabClient
 static NGitLab.Mock.GroupExtensions.FindGroup(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Group> groups, string idOrPathWithNamespace) -> NGitLab.Mock.Group
 static NGitLab.Mock.GroupExtensions.FindGroupById(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Group> groups, int id) -> NGitLab.Mock.Group
 static NGitLab.Mock.ProjectExtensions.FindById(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Project> projects, int id) -> NGitLab.Mock.Project

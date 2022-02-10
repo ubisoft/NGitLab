@@ -90,6 +90,11 @@ namespace NGitLab.Impl
                 tailAPIUrl = "/" + tailAPIUrl;
             }
 
+            if (!tailAPIUrl.StartsWith("/api", StringComparison.Ordinal))
+            {
+                tailAPIUrl = "/api/v4" + tailAPIUrl;
+            }
+
             return UriFix.Build(_hostUrl + tailAPIUrl);
         }
 

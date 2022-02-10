@@ -64,6 +64,8 @@
 
         IEpicClient Epics { get; }
 
+        IGraphQLClient GraphQL { get; }
+
         IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId);
 
         IEnvironmentClient GetEnvironmentClient(int projectId);
