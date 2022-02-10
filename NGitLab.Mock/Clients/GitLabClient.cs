@@ -37,6 +37,8 @@
 
         public IMergeRequestClient MergeRequests => new MergeRequestClient(Context);
 
+        public IGraphQLClient GraphQL => new GraphQLClient(Context);
+
         public IEventClient GetEvents() => new EventClient(Context);
 
         public IEventClient GetUserEvents(int userId) => new EventClient(Context, userId: userId);

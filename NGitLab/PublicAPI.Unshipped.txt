@@ -63,6 +63,7 @@ NGitLab.GitLabClient.GitLabClient(string hostUrl, string apiToken) -> void
 NGitLab.GitLabClient.GitLabClient(string hostUrl, string apiToken, NGitLab.RequestOptions options) -> void
 NGitLab.GitLabClient.GitLabClient(string hostUrl, string userName, string password) -> void
 NGitLab.GitLabClient.GitLabClient(string hostUrl, string userName, string password, NGitLab.RequestOptions options) -> void
+NGitLab.GitLabClient.GraphQL.get -> NGitLab.IGraphQLClient
 NGitLab.GitLabClient.Groups.get -> NGitLab.IGroupsClient
 NGitLab.GitLabClient.Issues.get -> NGitLab.IIssueClient
 NGitLab.GitLabClient.Labels.get -> NGitLab.ILabelClient
@@ -162,6 +163,7 @@ NGitLab.IGitLabClient.GetRepository(int projectId) -> NGitLab.IRepositoryClient
 NGitLab.IGitLabClient.GetTriggers(int projectId) -> NGitLab.ITriggerClient
 NGitLab.IGitLabClient.GetUserEvents(int userId) -> NGitLab.IEventClient
 NGitLab.IGitLabClient.GetWikiClient(int projectId) -> NGitLab.IWikiClient
+NGitLab.IGitLabClient.GraphQL.get -> NGitLab.IGraphQLClient
 NGitLab.IGitLabClient.Groups.get -> NGitLab.IGroupsClient
 NGitLab.IGitLabClient.Issues.get -> NGitLab.IIssueClient
 NGitLab.IGitLabClient.Labels.get -> NGitLab.ILabelClient
@@ -174,6 +176,8 @@ NGitLab.IGitLabClient.Snippets.get -> NGitLab.ISnippetClient
 NGitLab.IGitLabClient.SystemHooks.get -> NGitLab.ISystemHookClient
 NGitLab.IGitLabClient.Users.get -> NGitLab.IUserClient
 NGitLab.IGitLabClient.Version.get -> NGitLab.IVersionClient
+NGitLab.IGraphQLClient
+NGitLab.IGraphQLClient.ExecuteAsync<T>(NGitLab.Models.GraphQLQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<T>
 NGitLab.IGroupBadgeClient
 NGitLab.IGroupBadgeClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Badge>
 NGitLab.IGroupBadgeClient.Create(NGitLab.Models.BadgeCreate badge) -> NGitLab.Models.Badge
@@ -1447,6 +1451,13 @@ NGitLab.Models.GitLabVersion.Revision.get -> string
 NGitLab.Models.GitLabVersion.Revision.set -> void
 NGitLab.Models.GitLabVersion.Version.get -> string
 NGitLab.Models.GitLabVersion.Version.set -> void
+NGitLab.Models.GraphQLQuery
+NGitLab.Models.GraphQLQuery.GraphQLQuery() -> void
+NGitLab.Models.GraphQLQuery.OperationName.get -> string
+NGitLab.Models.GraphQLQuery.OperationName.set -> void
+NGitLab.Models.GraphQLQuery.Query.get -> string
+NGitLab.Models.GraphQLQuery.Query.set -> void
+NGitLab.Models.GraphQLQuery.Variables.get -> System.Collections.Generic.IDictionary<string, object>
 NGitLab.Models.Group
 NGitLab.Models.Group.AvatarUrl -> string
 NGitLab.Models.Group.Description -> string

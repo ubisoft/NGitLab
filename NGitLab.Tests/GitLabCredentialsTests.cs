@@ -13,10 +13,10 @@ namespace NGitLab.Tests
             Assert.Throws<ArgumentException>(() => new GitLabCredentials(url, "my_token"));
         }
 
-        [TestCase("https://test", "https://test/api/v4")]
-        [TestCase("https://test/", "https://test/api/v4")]
-        [TestCase("https://test/api/v4", "https://test/api/v4")]
-        [TestCase("https://test/api/v4/", "https://test/api/v4")]
+        [TestCase("https://test", "https://test")]
+        [TestCase("https://test/", "https://test")]
+        [TestCase("https://test/api/v4", "https://test")]
+        [TestCase("https://test/api/v4/", "https://test")]
         public void Constructor_should_complete_api_version_when_not_set(string url, string expectedUrl)
         {
             var gitLabCredentials = new GitLabCredentials(url, "my_token");
