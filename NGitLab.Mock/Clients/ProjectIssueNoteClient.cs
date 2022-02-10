@@ -45,26 +45,26 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public IEnumerable<Models.ProjectIssueNote> ForIssue(int issueId)
+        public IEnumerable<Models.ProjectIssueNote> ForIssue(int issueIid)
         {
             using (Context.BeginOperationScope())
             {
-                return GetIssue(issueId).Notes.Select(n => n.ToProjectIssueNote());
+                return GetIssue(issueIid).Notes.Select(n => n.ToProjectIssueNote());
             }
         }
 
-        public Models.ProjectIssueNote Get(int issueId, int noteId)
+        public Models.ProjectIssueNote Get(int issueIid, int noteId)
         {
             using (Context.BeginOperationScope())
             {
-                return GetIssueNote(issueId, noteId).ToProjectIssueNote();
+                return GetIssueNote(issueIid, noteId).ToProjectIssueNote();
             }
         }
 
-        private Issue GetIssue(int issueId)
+        private Issue GetIssue(int issueIid)
         {
             var project = GetProject(_projectId, ProjectPermission.View);
-            var issue = project.Issues.FirstOrDefault(iss => iss.Id == issueId);
+            var issue = project.Issues.FirstOrDefault(iss => iss.Iid == issueIid);
 
             if (issue == null)
             {
@@ -74,10 +74,10 @@ namespace NGitLab.Mock.Clients
             return issue;
         }
 
-        private ProjectIssueNote GetIssueNote(int issueId, int issueNoteId)
+        private ProjectIssueNote GetIssueNote(int issueIid, int issueNoteId)
         {
-            var issue = GetIssue(issueId);
-            var note = issue.Notes.FirstOrDefault(n => (int)n.Id == issueNoteId);
+            var issue = GetIssue(issueIid);
+            var note = issue.Notes.FirstOrDefault(n => n.Id == (long)issueNoteId);
 
             if (note == null)
             {
