@@ -2,6 +2,8 @@
 {
     internal sealed class GitLabClient : ClientBase, IGitLabClient
     {
+        private IGraphQLClient _overrideGraphQLClient;
+
         public GitLabClient(ClientContext context)
             : base(context)
         {
@@ -37,7 +39,11 @@
 
         public IMergeRequestClient MergeRequests => new MergeRequestClient(Context);
 
-        public IGraphQLClient GraphQL => new GraphQLClient(Context);
+        public IGraphQLClient GraphQL
+        {
+            get => _overrideGraphQLClient ?? new GraphQLClient(Context);
+            internal set => _overrideGraphQLClient = value;
+        }
 
         public IEventClient GetEvents() => new EventClient(Context);
 
