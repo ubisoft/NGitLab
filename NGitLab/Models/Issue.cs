@@ -78,5 +78,9 @@ namespace NGitLab.Models
         [DataMember(Name = "confidential")]
         [JsonPropertyName("confidential")]
         public bool Confidential;
+
+        [DataMember(Name = "weight")]
+        [JsonPropertyName("weight")]
+        public int? Weight { get; set; }
     }
 }

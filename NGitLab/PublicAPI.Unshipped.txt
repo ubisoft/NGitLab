@@ -1543,6 +1543,8 @@ NGitLab.Models.Issue.State -> string
 NGitLab.Models.Issue.Title -> string
 NGitLab.Models.Issue.UpdatedAt -> System.DateTime
 NGitLab.Models.Issue.WebUrl -> string
+NGitLab.Models.Issue.Weight.get -> int?
+NGitLab.Models.Issue.Weight.set -> void
 NGitLab.Models.IssueCreate
 NGitLab.Models.IssueCreate.AssigneeId -> int?
 NGitLab.Models.IssueCreate.Confidential -> bool
