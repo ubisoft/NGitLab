@@ -379,6 +379,8 @@ NGitLab.Mock.GitLabServer.DefaultBranchName.get -> string
 NGitLab.Mock.GitLabServer.DefaultBranchName.set -> void
 NGitLab.Mock.GitLabServer.DefaultForkVisibilityLevel.get -> NGitLab.Models.VisibilityLevel
 NGitLab.Mock.GitLabServer.DefaultForkVisibilityLevel.set -> void
+NGitLab.Mock.GitLabServer.DefaultGraphQLClient.get -> NGitLab.IGraphQLClient
+NGitLab.Mock.GitLabServer.DefaultGraphQLClient.set -> void
 NGitLab.Mock.GitLabServer.Dispose() -> void
 NGitLab.Mock.GitLabServer.Events.get -> NGitLab.Mock.EventCollection
 NGitLab.Mock.GitLabServer.GitLabServer() -> void

@@ -48,6 +48,8 @@ namespace NGitLab.Mock
 
         public VisibilityLevel DefaultForkVisibilityLevel { get; set; } = VisibilityLevel.Private;
 
+        public IGraphQLClient DefaultGraphQLClient { get; set; }
+
         public IGitLabClient CreateClient(User user)
         {
             if (!Users.Contains(user))
