@@ -14,7 +14,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
 
-            var exception = Assert.ThrowsAsync<GitLabException>(() => context.Client.GraphQL.ExecuteAsync<ProjectReponse>(new Models.GraphQLQuery
+            var exception = Assert.ThrowsAsync<GitLabException>(() => context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new Models.GraphQLQuery
             {
                 Query = @"
 {
@@ -34,7 +34,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
 
-            var response = await context.Client.GraphQL.ExecuteAsync<ProjectReponse>(new Models.GraphQLQuery
+            var response = await context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new Models.GraphQLQuery
             {
                 Query = @"
 query($path: ID!)
@@ -52,7 +52,7 @@ query($path: ID!)
             Assert.AreEqual("gid://gitlab/Project/" + project.Id, response.Project.Id);
         }
 
-        private sealed class ProjectReponse
+        private sealed class ProjectResponse
         {
             [JsonPropertyName("project")]
             public ProjecInfoResponse Project { get; set; }
