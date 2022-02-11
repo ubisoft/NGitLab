@@ -41,7 +41,7 @@
 
         public IGraphQLClient GraphQL
         {
-            get => _overrideGraphQLClient ?? new GraphQLClient(Context);
+            get => _overrideGraphQLClient ?? Server.DefaultGraphQLClient ?? new GraphQLClient(Context);
             internal set => _overrideGraphQLClient = value;
         }
 
