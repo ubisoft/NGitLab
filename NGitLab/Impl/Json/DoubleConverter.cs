@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -10,6 +11,12 @@ namespace NGitLab.Impl.Json
         {
             if (reader.TokenType == JsonTokenType.Null)
                 return 0.0;
+
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                if (double.TryParse(reader.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var d))
+                    return (int)d;
+            }
 
             return reader.GetDouble();
         }
