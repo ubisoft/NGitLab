@@ -21,34 +21,6 @@ namespace NGitLab.Impl.Json
                 if (double.TryParse(reader.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var d))
                     return (int)d;
             }
-
-            return reader.GetInt32();
-        }
-
-        public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
-        {
-            writer.WriteNumberValue(value);
-        }
-    }
-
-    internal sealed class NullableInt32Converter : JsonConverter<int?>
-    {
-        public override bool HandleNull => true;
-
-        public override int? Read(ref Utf8JsonReader reader, Type type, JsonSerializerOptions options)
-        {
-            if (reader.TokenType == JsonTokenType.Null)
-                return null;
-
-            if (reader.TokenType == JsonTokenType.String)
-            {
-                if (int.TryParse(reader.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var i))
-                    return i;
-
-                // pipeline.coverage is a float, but the model is a int...
-                if (double.TryParse(reader.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var d))
-                    return (int)d;
-            }
             else if (reader.TokenType == JsonTokenType.Number)
             {
                 // commitstatus.coverage is a float, but the model is a int...
@@ -61,16 +33,9 @@ namespace NGitLab.Impl.Json
             return reader.GetInt32();
         }
 
-        public override void Write(Utf8JsonWriter writer, int? value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
         {
-            if (value is null)
-            {
-                writer.WriteNullValue();
-            }
-            else
-            {
-                writer.WriteNumberValue(value.Value);
-            }
+            writer.WriteNumberValue(value);
         }
     }
 }
