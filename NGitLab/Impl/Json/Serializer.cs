@@ -18,7 +18,6 @@ namespace NGitLab.Impl.Json
                 new DynamicEnumConverterFactory(),
                 new EnumConverterFactory(),
                 new Int32Converter(),
-                new NullableInt32Converter(),
                 new Int64Converter(),
                 new Sha1Converter(),
             },
