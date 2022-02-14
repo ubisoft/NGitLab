@@ -29,6 +29,38 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
+        public async Task Test_can_get_coverage()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var pipelineClient = context.Client.GetPipelines(project.Id);
+            JobTests.AddGitLabCiFile(context.Client, project);
+            PipelineBasic pipeline;
+            using (await context.StartRunnerForOneJobAsync(project.Id))
+            {
+                pipeline = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All.FirstOrDefault(), p => p != null, TimeSpan.FromSeconds(120));
+            }
+
+            context.Client.GetCommitStatus(project.Id).AddOrUpdate(new CommitStatusCreate
+            {
+                CommitSha = pipeline.Sha.ToString(),
+                Ref = pipeline.Ref,
+                PipelineId = pipeline.Id,
+                Name = "test",
+                ProjectId = project.Id,
+                Coverage = 50,
+                Description = "descr",
+                Status = "success",
+                State = "success",
+                TargetUrl = "https://example.com",
+            });
+
+            var pipelineFull = pipelineClient[pipeline.Id];
+            Assert.AreEqual(50, pipelineFull.Coverage);
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task Test_can_list_all_jobs_from_project()
         {
             using var context = await GitLabTestContext.CreateAsync();
