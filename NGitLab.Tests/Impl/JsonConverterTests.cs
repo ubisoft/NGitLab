@@ -48,10 +48,19 @@ namespace NGitLab.Tests.Impl
         [Test]
         public void Test_DeserializeStringToInt64_Succeeds()
         {
-            var json = @"{ ""an_int64"": ""1234"" }";
+            var json = @"{ ""an_int64"": ""-1234"" }";
             var obj = Serializer.Deserialize<MyDataContract>(json);
             Assert.NotNull(obj);
-            Assert.AreEqual(1234L, obj.SomeInt64);
+            Assert.AreEqual(-1234L, obj.SomeInt64);
+        }
+
+        [Test]
+        public void Test_DeserializeStringToDouble_Succeeds()
+        {
+            var json = @"{ ""a_double"": ""-1234.5"" }";
+            var obj = Serializer.Deserialize<MyDataContract>(json);
+            Assert.NotNull(obj);
+            Assert.AreEqual(-1234.5d, obj.SomeDouble);
         }
 
         [TestCase("2022-01-12", DateTimeKind.Unspecified)]
