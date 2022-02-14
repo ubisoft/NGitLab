@@ -32,9 +32,11 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public Task<Models.Job> GetAsync(int jobId, CancellationToken cancellationToken = default)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<Models.Job> GetAsync(int jobId, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+            return Get(jobId);
         }
 
         public byte[] GetJobArtifacts(int jobId)
