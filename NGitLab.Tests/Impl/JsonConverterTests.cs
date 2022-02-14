@@ -37,11 +37,12 @@ namespace NGitLab.Tests.Impl
         }
 
         [Test]
-        public void Test_DeserializeStringToInt32_Throws()
+        public void Test_DeserializeStringToInt32()
         {
             var json = @"{ ""an_int32"": ""1234"" }";
-            var ex = Assert.Throws<JsonException>(() => Serializer.Deserialize<MyDataContract>(json));
-            StringAssert.StartsWith("The JSON value could not be converted to System.Int32.", ex.Message);
+            var obj = Serializer.Deserialize<MyDataContract>(json);
+            Assert.NotNull(obj);
+            Assert.AreEqual(1234, obj.SomeInt32);
         }
 
         [Test]
