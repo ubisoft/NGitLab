@@ -15,7 +15,7 @@ namespace NGitLab.Impl.Json
             if (reader.TokenType == JsonTokenType.String)
             {
                 if (double.TryParse(reader.GetString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var d))
-                    return (int)d;
+                    return d;
             }
 
             return reader.GetDouble();
