@@ -496,10 +496,9 @@ NGitLab.Mock.Job.Id.set -> void
 NGitLab.Mock.Job.Job() -> void
 NGitLab.Mock.Job.Name.get -> string
 NGitLab.Mock.Job.Name.set -> void
-NGitLab.Mock.Job.Pipeline.get -> NGitLab.Models.Job.JobPipeline
+NGitLab.Mock.Job.Pipeline.get -> NGitLab.Mock.Pipeline
 NGitLab.Mock.Job.Pipeline.set -> void
-NGitLab.Mock.Job.Project.get -> NGitLab.Models.Job.JobProject
-NGitLab.Mock.Job.Project.set -> void
+NGitLab.Mock.Job.Project.get -> NGitLab.Mock.Project
 NGitLab.Mock.Job.QueuedDuration.get -> float?
 NGitLab.Mock.Job.QueuedDuration.set -> void
 NGitLab.Mock.Job.Ref.get -> string
@@ -514,6 +513,8 @@ NGitLab.Mock.Job.Status.get -> NGitLab.JobStatus
 NGitLab.Mock.Job.Status.set -> void
 NGitLab.Mock.Job.Tag.get -> bool
 NGitLab.Mock.Job.Tag.set -> void
+NGitLab.Mock.Job.Trace.get -> string
+NGitLab.Mock.Job.Trace.set -> void
 NGitLab.Mock.Job.User.get -> NGitLab.Mock.User
 NGitLab.Mock.Job.User.set -> void
 NGitLab.Mock.Job.WebUrl.get -> string
@@ -676,8 +677,10 @@ NGitLab.Mock.Permission.User.get -> NGitLab.Mock.User
 NGitLab.Mock.PermissionCollection
 NGitLab.Mock.PermissionCollection.PermissionCollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.Pipeline
+NGitLab.Mock.Pipeline.AddJob(NGitLab.Mock.Job job) -> NGitLab.Mock.Job
 NGitLab.Mock.Pipeline.AddJob(NGitLab.Mock.Project project, NGitLab.Mock.Job job) -> NGitLab.Mock.Job
 NGitLab.Mock.Pipeline.AddNewJob(NGitLab.Mock.Project project) -> NGitLab.Mock.Job
+NGitLab.Mock.Pipeline.AddNewJob(string name, NGitLab.JobStatus status, NGitLab.Mock.User user = null) -> NGitLab.Mock.Job
 NGitLab.Mock.Pipeline.BeforeSha.get -> NGitLab.Sha1
 NGitLab.Mock.Pipeline.BeforeSha.set -> void
 NGitLab.Mock.Pipeline.CommittedAt.get -> System.DateTimeOffset
@@ -803,6 +806,7 @@ NGitLab.Mock.Project.Visibility.set -> void
 NGitLab.Mock.Project.WebUrl.get -> string
 NGitLab.Mock.ProjectCollection
 NGitLab.Mock.ProjectCollection.AddNew() -> NGitLab.Mock.Project
+NGitLab.Mock.ProjectCollection.AddNew(System.Action<NGitLab.Mock.Project> configure) -> NGitLab.Mock.Project
 NGitLab.Mock.ProjectCollection.ProjectCollection(NGitLab.Mock.Group group) -> void
 NGitLab.Mock.ProjectExtensions
 NGitLab.Mock.ProjectHook

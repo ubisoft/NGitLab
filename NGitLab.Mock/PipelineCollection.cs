@@ -34,6 +34,8 @@ namespace NGitLab.Mock
             {
                 Status = status,
                 User = user,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
             };
 
             Add(pipeline);
