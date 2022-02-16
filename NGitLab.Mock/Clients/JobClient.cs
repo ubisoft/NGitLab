@@ -79,7 +79,16 @@ namespace NGitLab.Mock.Clients
 
         public string GetTrace(int jobId)
         {
-            throw new System.NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var job = project.Jobs.GetById(jobId);
+
+                if (job == null)
+                    throw new GitLabNotFoundException();
+
+                return job.Trace;
+            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
@@ -103,6 +112,7 @@ namespace NGitLab.Mock.Clients
                         break;
                     case JobAction.Erase:
                         job.Artifacts = null;
+                        job.Trace = null;
                         break;
                     case JobAction.Play:
                         job.Status = JobStatus.Running;
@@ -110,7 +120,7 @@ namespace NGitLab.Mock.Clients
                     case JobAction.Retry:
                         var retryJob = job.Clone();
                         retryJob.Status = JobStatus.Running;
-                        project.Jobs.Add(retryJob, project.Pipelines.GetById((int)job.Pipeline.Id));
+                        project.Jobs.Add(retryJob, project.Pipelines.GetById(job.Pipeline.Id));
                         return retryJob.ToJobClient();
                 }
 
