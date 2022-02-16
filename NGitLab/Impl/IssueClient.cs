@@ -52,7 +52,7 @@ namespace NGitLab.Impl
 
         public GitLabCollectionResponse<Issue> GetAsync(int projectId, IssueQuery query)
         {
-            return GetAsync(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId), query);
+            return Get(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId), query);
         }
 
         public IEnumerable<Issue> Get(IssueQuery query)
@@ -62,7 +62,7 @@ namespace NGitLab.Impl
 
         public GitLabCollectionResponse<Issue> GetAsync(IssueQuery query)
         {
-            return GetAsync(IssuesUrl, query);
+            return Get(IssuesUrl, query);
         }
 
         public Issue Create(IssueCreate issueCreate)
@@ -120,13 +120,7 @@ namespace NGitLab.Impl
             return _api.Get().ToAsync<TimeStats>(string.Format(CultureInfo.InvariantCulture, TimeStatsUrl, projectId, issueIid), cancellationToken);
         }
 
-        private IEnumerable<Issue> Get(string url, IssueQuery query)
-        {
-            url = AddIssueQueryParameters(url, query);
-            return _api.Get().GetAll<Issue>(url);
-        }
-
-        private GitLabCollectionResponse<Issue> GetAsync(string url, IssueQuery query)
+        private GitLabCollectionResponse<Issue> Get(string url, IssueQuery query)
         {
             url = AddIssueQueryParameters(url, query);
             return _api.Get().GetAllAsync<Issue>(url);
