@@ -679,6 +679,7 @@ NGitLab.Mock.PermissionCollection.PermissionCollection(NGitLab.Mock.GitLabObject
 NGitLab.Mock.Pipeline
 NGitLab.Mock.Pipeline.AddJob(NGitLab.Mock.Job job) -> NGitLab.Mock.Job
 NGitLab.Mock.Pipeline.AddJob(NGitLab.Mock.Project project, NGitLab.Mock.Job job) -> NGitLab.Mock.Job
+NGitLab.Mock.Pipeline.AddNewJob(NGitLab.JobStatus status) -> NGitLab.Mock.Job
 NGitLab.Mock.Pipeline.AddNewJob(NGitLab.Mock.Project project) -> NGitLab.Mock.Job
 NGitLab.Mock.Pipeline.AddNewJob(string name, NGitLab.JobStatus status, NGitLab.Mock.User user = null) -> NGitLab.Mock.Job
 NGitLab.Mock.Pipeline.BeforeSha.get -> NGitLab.Sha1

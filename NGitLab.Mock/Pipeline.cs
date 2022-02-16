@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using NGitLab.Models;
 
 namespace NGitLab.Mock
@@ -53,15 +54,35 @@ namespace NGitLab.Mock
             return AddJob(project, new Job());
         }
 
+        public Job AddNewJob(JobStatus status)
+        {
+            var job = AddNewJob(name: "temp", status);
+            job.Name = "Job" + job.Id.ToString(CultureInfo.InvariantCulture);
+            return job;
+        }
+
         public Job AddNewJob(string name, JobStatus status, User user = null)
         {
-            return AddJob(new Job
+            var job = AddJob(new Job
             {
                 Name = name,
                 Pipeline = this,
                 Status = status,
                 User = user ?? User,
+                CreatedAt = DateTime.UtcNow,
             });
+
+            if (status is JobStatus.Running or JobStatus.Success or JobStatus.Failed or JobStatus.Canceled)
+            {
+                job.StartedAt = DateTime.UtcNow;
+            }
+
+            if (status is JobStatus.Success or JobStatus.Failed or JobStatus.Canceled)
+            {
+                job.FinishedAt = DateTime.UtcNow;
+            }
+
+            return job;
         }
 
         [Obsolete("Use other overloads")]
