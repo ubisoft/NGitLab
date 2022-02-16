@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -58,6 +59,13 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<Models.Issue> CreateAsync(IssueCreate issueCreate, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return Create(issueCreate);
+        }
+
         public Models.Issue Edit(IssueEdit issueEdit)
         {
             using (Context.BeginOperationScope())
@@ -89,7 +97,19 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<Models.Issue> EditAsync(IssueEdit issueEdit, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return Edit(issueEdit);
+        }
+
         public IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int issueId)
         {
             throw new NotImplementedException();
         }
@@ -99,7 +119,17 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public GitLabCollectionResponse<Models.MergeRequest> RelatedToAsync(int projectId, int issueIid)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Models.MergeRequest> ClosedBy(int projectId, int issueId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GitLabCollectionResponse<Models.MergeRequest> ClosedByAsync(int projectId, int issueIid)
         {
             throw new NotImplementedException();
         }
@@ -123,6 +153,11 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public GitLabCollectionResponse<Models.Issue> ForProjectAsync(int projectId)
+        {
+            return GitLabCollectionResponse.Create(ForProject(projectId));
+        }
+
         public Models.Issue Get(int projectId, int issueId)
         {
             using (Context.BeginOperationScope())
@@ -132,6 +167,13 @@ namespace NGitLab.Mock.Clients
                         i.CanUserViewIssue(Context.User))?
                         .ToClientIssue() ?? throw new GitLabNotFoundException();
             }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        public async Task<Models.Issue> GetAsync(int projectId, int issueId, CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            return Get(projectId, issueId);
         }
 
         public IEnumerable<Models.Issue> Get(IssueQuery query)
@@ -144,6 +186,11 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public GitLabCollectionResponse<Models.Issue> GetAsync(IssueQuery query)
+        {
+            return GitLabCollectionResponse.Create(Get(query));
+        }
+
         public IEnumerable<Models.Issue> Get(int projectId, IssueQuery query)
         {
             using (Context.BeginOperationScope())
@@ -152,6 +199,11 @@ namespace NGitLab.Mock.Clients
                 var issues = project.Issues.Where(i => i.CanUserViewIssue(Context.User));
                 return FilterByQuery(issues, query).Select(i => i.ToClientIssue()).ToList();
             }
+        }
+
+        public GitLabCollectionResponse<Models.Issue> GetAsync(int projectId, IssueQuery query)
+        {
+            return GitLabCollectionResponse.Create(Get(projectId, query));
         }
 
         private IEnumerable<Issue> FilterByQuery(IEnumerable<Issue> issues, IssueQuery query)
