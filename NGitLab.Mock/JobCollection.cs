@@ -31,7 +31,7 @@ namespace NGitLab.Mock
         public Job Add(Job job, Pipeline pipeline)
         {
             Add(job);
-            job.Pipeline = pipeline.ToJobPipeline();
+            job.Pipeline = pipeline;
             return job;
         }
 
@@ -46,8 +46,9 @@ namespace NGitLab.Mock
         {
             var job = new Job
             {
-                Pipeline = pipeline.ToJobPipeline(),
+                Pipeline = pipeline,
             };
+
             Add(job);
             return job;
         }

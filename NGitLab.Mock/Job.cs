@@ -32,9 +32,9 @@ namespace NGitLab.Mock
 
         public Models.Job.JobRunner Runner { get; set; }
 
-        public Models.Job.JobPipeline Pipeline { get; set; }
+        public Pipeline Pipeline { get; set; }
 
-        public Models.Job.JobProject Project { get; set; }
+        public Project Project => Pipeline.Parent;
 
         public JobStatus Status { get; set; }
 
@@ -49,6 +49,8 @@ namespace NGitLab.Mock
         public float? Duration { get; set; }
 
         public float? QueuedDuration { get; set; }
+
+        public string Trace { get; set; }
 
         internal Models.Job ToJobClient()
         {
@@ -65,12 +67,23 @@ namespace NGitLab.Mock
                 Coverage = Coverage,
                 Artifacts = Artifacts,
                 Runner = Runner,
-                Pipeline = Pipeline,
-                Project = Project,
+                Pipeline = new Models.Job.JobPipeline
+                {
+                    Id = Pipeline.Id,
+                    Ref = Pipeline.Ref,
+                    Sha = Pipeline.Sha,
+                    Status = Pipeline.Status,
+                },
+                Project = new Models.Job.JobProject
+                {
+                    Id = Project.Id,
+                    Name = Project.Name,
+                    PathWithNamespace = Project.PathWithNamespace,
+                },
                 Status = Status,
                 AllowFailure = AllowFailure,
                 Tag = Tag,
-                User = User.ToClientUser(),
+                User = User?.ToClientUser(),
                 WebUrl = WebUrl,
                 Duration = Duration,
                 QueuedDuration = QueuedDuration,
@@ -93,7 +106,6 @@ namespace NGitLab.Mock
                 Artifacts = Artifacts,
                 Runner = Runner,
                 Pipeline = Pipeline,
-                Project = Project,
                 Status = Status,
                 Tag = Tag,
                 User = User,

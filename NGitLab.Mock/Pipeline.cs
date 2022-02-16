@@ -47,14 +47,32 @@ namespace NGitLab.Mock
 
         public TestReport TestReports { get; set; }
 
+        [Obsolete("Use other overloads")]
         public Job AddNewJob(Project project)
         {
             return AddJob(project, new Job());
         }
 
+        public Job AddNewJob(string name, JobStatus status, User user = null)
+        {
+            return AddJob(new Job
+            {
+                Name = name,
+                Pipeline = this,
+                Status = status,
+                User = user ?? User,
+            });
+        }
+
+        [Obsolete("Use other overloads")]
         public Job AddJob(Project project, Job job)
         {
             return project.Jobs.Add(job, this);
+        }
+
+        public Job AddJob(Job job)
+        {
+            return Parent.Jobs.Add(job, this);
         }
 
         internal Models.Job.JobPipeline ToJobPipeline()
