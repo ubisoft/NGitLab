@@ -261,6 +261,7 @@ NGitLab.ILabelClient.ForProject(int projectId) -> System.Collections.Generic.IEn
 NGitLab.ILabelClient.GetGroupLabel(int groupId, string name) -> NGitLab.Models.Label
 NGitLab.ILabelClient.GetLabel(int projectId, string name) -> NGitLab.Models.Label
 NGitLab.IMembersClient
+NGitLab.IMembersClient.AddMemberToGroup(string groupId, NGitLab.Models.GroupMemberCreate user) -> NGitLab.Models.Membership
 NGitLab.IMembersClient.AddMemberToProject(string projectId, NGitLab.Models.ProjectMemberCreate user) -> NGitLab.Models.Membership
 NGitLab.IMembersClient.GetMemberOfGroup(string groupId, string userId) -> NGitLab.Models.Membership
 NGitLab.IMembersClient.GetMemberOfProject(string projectId, string userId) -> NGitLab.Models.Membership
@@ -270,6 +271,7 @@ NGitLab.IMembersClient.OfGroup(string groupId, bool includeInheritedMembers) -> 
 NGitLab.IMembersClient.OfNamespace(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
+NGitLab.IMembersClient.UpdateMemberOfGroup(string groupId, NGitLab.Models.GroupMemberUpdate user) -> NGitLab.Models.Membership
 NGitLab.IMembersClient.UpdateMemberOfProject(string projectId, NGitLab.Models.ProjectMemberUpdate user) -> NGitLab.Models.Membership
 NGitLab.IMergeRequestApprovalClient
 NGitLab.IMergeRequestApprovalClient.Approvals.get -> NGitLab.Models.MergeRequestApprovals
@@ -1506,6 +1508,16 @@ NGitLab.Models.GroupCreate.RequestAccessEnabled -> bool
 NGitLab.Models.GroupCreate.SharedRunnersMinutesLimit.get -> int?
 NGitLab.Models.GroupCreate.SharedRunnersMinutesLimit.set -> void
 NGitLab.Models.GroupCreate.Visibility -> NGitLab.Models.VisibilityLevel
+NGitLab.Models.GroupMemberCreate
+NGitLab.Models.GroupMemberCreate.AccessLevel -> NGitLab.Models.AccessLevel
+NGitLab.Models.GroupMemberCreate.ExpiresAt -> string
+NGitLab.Models.GroupMemberCreate.GroupMemberCreate() -> void
+NGitLab.Models.GroupMemberCreate.UserId -> string
+NGitLab.Models.GroupMemberUpdate
+NGitLab.Models.GroupMemberUpdate.AccessLevel -> NGitLab.Models.AccessLevel
+NGitLab.Models.GroupMemberUpdate.ExpiresAt -> string
+NGitLab.Models.GroupMemberUpdate.GroupMemberUpdate() -> void
+NGitLab.Models.GroupMemberUpdate.UserId -> string
 NGitLab.Models.GroupQuery
 NGitLab.Models.GroupQuery.AllAvailable -> bool?
 NGitLab.Models.GroupQuery.GroupQuery() -> void

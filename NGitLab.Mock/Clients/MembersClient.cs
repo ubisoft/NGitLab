@@ -42,6 +42,34 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public Membership AddMemberToGroup(string groupId, GroupMemberCreate groupMemberCreate)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var @group = GetGroup(groupId, GroupPermission.Edit);
+                var user = Server.Users.GetById(groupMemberCreate.UserId);
+
+                CheckUserPermissionOfGroup(groupMemberCreate.AccessLevel, user, @group);
+
+                var permission = new Permission(user, groupMemberCreate.AccessLevel);
+                @group.Permissions.Add(permission);
+
+                return @group.GetEffectivePermissions().GetEffectivePermission(user).ToMembershipClient();
+            }
+        }
+
+        public Membership UpdateMemberOfGroup(string groupId, GroupMemberUpdate groupMemberUpdate)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var @group = GetGroup(groupId, GroupPermission.Edit);
+                var user = Server.Users.GetById(groupMemberUpdate.UserId);
+
+                CheckUserPermissionOfGroup(groupMemberUpdate.AccessLevel, user, @group);
+                return @group.GetEffectivePermissions().GetEffectivePermission(user).ToMembershipClient();
+            }
+        }
+
         public Membership GetMemberOfGroup(string groupId, string userId)
         {
             return OfGroup(groupId, includeInheritedMembers: false)
@@ -93,6 +121,26 @@ namespace NGitLab.Mock.Clients
         private static void CheckUserPermissionOfProject(AccessLevel accessLevel, User user, Project project)
         {
             var existingPermission = project.GetEffectivePermissions().GetEffectivePermission(user);
+            if (existingPermission != null)
+            {
+                if (existingPermission.AccessLevel > accessLevel)
+                {
+                    throw new GitLabException($"{{\"access_level\":[\"should be greater than or equal to Owner inherited membership from group Runners\"]}}.")
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                    };
+                }
+
+                if (existingPermission.AccessLevel == accessLevel)
+                {
+                    throw new GitLabException { StatusCode = HttpStatusCode.Conflict };
+                }
+            }
+        }
+
+        private static void CheckUserPermissionOfGroup(AccessLevel accessLevel, User user, Group @group)
+        {
+            var existingPermission = @group.GetEffectivePermissions().GetEffectivePermission(user);
             if (existingPermission != null)
             {
                 if (existingPermission.AccessLevel > accessLevel)

@@ -77,5 +77,15 @@ namespace NGitLab.Impl
         {
             return _api.Put().With(user).To<Membership>(Project.Url + "/" + WebUtility.UrlEncode(projectId) + "/members/" + WebUtility.UrlEncode(user.UserId));
         }
+
+        public Membership AddMemberToGroup(string groupId, GroupMemberCreate user)
+        {
+            return _api.Post().With(user).To<Membership>(Group.Url + "/" + WebUtility.UrlEncode(groupId) + "/members");
+        }
+
+        public Membership UpdateMemberOfGroup(string groupId, GroupMemberUpdate user)
+        {
+            return _api.Put().With(user).To<Membership>(Group.Url + "/" + WebUtility.UrlEncode(groupId) + "/members/" + WebUtility.UrlEncode(user.UserId));
+        }
     }
 }
