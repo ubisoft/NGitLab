@@ -22,6 +22,10 @@ namespace NGitLab.Models
         [JsonPropertyName("assignee_ids")]
         public int[] AssigneeIds;
 
+        [DataMember(Name = "reviewer_ids")]
+        [JsonPropertyName("reviewer_ids")]
+        public int[] ReviewerIds;
+
         [DataMember(Name = "title")]
         [JsonPropertyName("title")]
         public string Title;
