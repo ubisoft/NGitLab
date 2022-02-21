@@ -53,6 +53,6 @@ namespace NGitLab.Models
 
         [DataMember(Name = "noteable_type")]
         [JsonPropertyName("noteable_type")]
-        public EventTargetType NoteableType { get; set; }
+        public NGitLab.DynamicEnum<NoteableType> NoteableType { get; set; }
     }
 }
