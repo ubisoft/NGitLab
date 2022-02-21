@@ -46,5 +46,13 @@ namespace NGitLab.Models
         [DataMember(Name = "confidential")]
         [JsonPropertyName("confidential")]
         public bool Confidential;
+
+        [DataMember(Name = "noteable_iid")]
+        [JsonPropertyName("noteable_iid")]
+        public long NoteableIid { get; set; }
+
+        [DataMember(Name = "noteable_type")]
+        [JsonPropertyName("noteable_type")]
+        public EventTargetType NoteableType { get; set; }
     }
 }

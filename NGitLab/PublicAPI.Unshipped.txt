@@ -2027,6 +2027,10 @@ NGitLab.Models.Note.Confidential -> bool
 NGitLab.Models.Note.CreatedAt -> System.DateTime
 NGitLab.Models.Note.Id -> long
 NGitLab.Models.Note.Note() -> void
+NGitLab.Models.Note.NoteableIid.get -> long
+NGitLab.Models.Note.NoteableIid.set -> void
+NGitLab.Models.Note.NoteableType.get -> NGitLab.Models.EventTargetType
+NGitLab.Models.Note.NoteableType.set -> void
 NGitLab.Models.Note.Resolvable -> bool
 NGitLab.Models.Note.Resolved -> bool
 NGitLab.Models.Note.System -> bool
