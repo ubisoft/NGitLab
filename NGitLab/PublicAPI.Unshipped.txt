@@ -2027,11 +2027,22 @@ NGitLab.Models.Note.Confidential -> bool
 NGitLab.Models.Note.CreatedAt -> System.DateTime
 NGitLab.Models.Note.Id -> long
 NGitLab.Models.Note.Note() -> void
+NGitLab.Models.Note.NoteableIid.get -> long
+NGitLab.Models.Note.NoteableIid.set -> void
+NGitLab.Models.Note.NoteableType.get -> NGitLab.DynamicEnum<NGitLab.Models.NoteableType>
+NGitLab.Models.Note.NoteableType.set -> void
 NGitLab.Models.Note.Resolvable -> bool
 NGitLab.Models.Note.Resolved -> bool
 NGitLab.Models.Note.System -> bool
 NGitLab.Models.Note.Type -> string
 NGitLab.Models.Note.UpdatedAt -> System.DateTime
+NGitLab.Models.NoteableType
+NGitLab.Models.NoteableType.None = 0 -> NGitLab.Models.NoteableType
+NGitLab.Models.NoteableType.Issue = 1 -> NGitLab.Models.NoteableType
+NGitLab.Models.NoteableType.MergeRequest = 2 -> NGitLab.Models.NoteableType
+NGitLab.Models.NoteableType.Snippet = 3 -> NGitLab.Models.NoteableType
+NGitLab.Models.NoteableType.Commit = 4 -> NGitLab.Models.NoteableType
+NGitLab.Models.NoteableType.Epic = 5 -> NGitLab.Models.NoteableType
 NGitLab.Models.ObjectType
 NGitLab.Models.ObjectType.blob = 0 -> NGitLab.Models.ObjectType
 NGitLab.Models.ObjectType.commit = 2 -> NGitLab.Models.ObjectType
