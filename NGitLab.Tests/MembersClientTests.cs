@@ -127,7 +127,7 @@ namespace NGitLab.Tests
                 AccessLevel = AccessLevel.Maintainer,
                 UserId = user.Id.ToString(CultureInfo.InvariantCulture),
             });
-            groupUser = context.Client.Members.OfProject(groupId).Single(u => u.Id == user.Id);
+            groupUser = context.Client.Members.OfGroup(groupId).Single(u => u.Id == user.Id);
             Assert.AreEqual(AccessLevel.Maintainer, (AccessLevel)groupUser.AccessLevel);
         }
 
@@ -147,7 +147,7 @@ namespace NGitLab.Tests
             });
 
             // Get
-            var groupUser = context.Client.Members.GetMemberOfProject(groupId, user.Id.ToString(CultureInfo.InvariantCulture));
+            var groupUser = context.Client.Members.GetMemberOfGroup(groupId, user.Id.ToString(CultureInfo.InvariantCulture));
             Assert.AreEqual(AccessLevel.Developer, (AccessLevel)groupUser.AccessLevel);
         }
     }
