@@ -480,6 +480,7 @@ NGitLab.Impl.LabelClient.GetGroupLabel(int groupId, string name) -> NGitLab.Mode
 NGitLab.Impl.LabelClient.GetLabel(int projectId, string name) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.LabelClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.MembersClient
+NGitLab.Impl.MembersClient.AddMemberToGroup(string groupId, NGitLab.Models.GroupMemberCreate user) -> NGitLab.Models.Membership
 NGitLab.Impl.MembersClient.AddMemberToProject(string projectId, NGitLab.Models.ProjectMemberCreate user) -> NGitLab.Models.Membership
 NGitLab.Impl.MembersClient.GetMemberOfGroup(string groupId, string userId) -> NGitLab.Models.Membership
 NGitLab.Impl.MembersClient.GetMemberOfProject(string projectId, string userId) -> NGitLab.Models.Membership
@@ -490,6 +491,7 @@ NGitLab.Impl.MembersClient.OfGroup(string groupId, bool includeInheritedMembers)
 NGitLab.Impl.MembersClient.OfNamespace(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
+NGitLab.Impl.MembersClient.UpdateMemberOfGroup(string groupId, NGitLab.Models.GroupMemberUpdate user) -> NGitLab.Models.Membership
 NGitLab.Impl.MembersClient.UpdateMemberOfProject(string projectId, NGitLab.Models.ProjectMemberUpdate user) -> NGitLab.Models.Membership
 NGitLab.Impl.MergeRequestApprovalClient
 NGitLab.Impl.MergeRequestApprovalClient.Approvals.get -> NGitLab.Models.MergeRequestApprovals
