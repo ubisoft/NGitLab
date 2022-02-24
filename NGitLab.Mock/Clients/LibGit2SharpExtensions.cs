@@ -1,12 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LibGit2Sharp;
 
 namespace NGitLab.Mock.Clients
 {
     public static class LibGit2SharpExtensions
     {
-        public static Models.Commit ToCommitClient(this LibGit2Sharp.Commit commit, CommitInfo commitInfo = null)
+        public static Models.Commit ToCommitClient(this LibGit2Sharp.Commit commit, Project project)
         {
+            var commitInfo = project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal));
             return new Models.Commit
             {
                 AuthoredDate = commit.Author.When.UtcDateTime,
@@ -22,6 +24,7 @@ namespace NGitLab.Mock.Clients
                 Title = commit.MessageShort,
                 Parents = commit.Parents.Select(p => new Sha1(p.Sha)).ToArray(),
                 Status = commitInfo?.Status ?? "success",
+                WebUrl = $"{project.WebUrl}/-/commits/{commit.Sha}",
             };
         }
 

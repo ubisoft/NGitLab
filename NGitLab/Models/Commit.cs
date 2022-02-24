@@ -64,5 +64,9 @@ namespace NGitLab.Models
         [DataMember(Name = "stats")]
         [JsonPropertyName("stats")]
         public CommitStats Stats;
+
+        [DataMember(Name = "web_url")]
+        [JsonPropertyName("web_url")]
+        public string WebUrl;
     }
 }

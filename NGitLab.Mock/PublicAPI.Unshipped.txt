@@ -1050,7 +1050,7 @@ override NGitLab.Mock.TextFile.Content.get -> byte[]
 override NGitLab.Mock.User.ToString() -> string
 override NGitLab.Mock.UserCollection.Add(NGitLab.Mock.User user) -> void
 static NGitLab.Mock.Clients.LibGit2SharpExtensions.ToBranchClient(this LibGit2Sharp.Branch branch, NGitLab.Mock.Project project) -> NGitLab.Models.Branch
-static NGitLab.Mock.Clients.LibGit2SharpExtensions.ToCommitClient(this LibGit2Sharp.Commit commit, NGitLab.Mock.CommitInfo commitInfo = null) -> NGitLab.Models.Commit
+static NGitLab.Mock.Clients.LibGit2SharpExtensions.ToCommitClient(this LibGit2Sharp.Commit commit, NGitLab.Mock.Project project) -> NGitLab.Models.Commit
 static NGitLab.Mock.Clients.LibGit2SharpExtensions.ToCommitInfo(this LibGit2Sharp.Commit commit) -> NGitLab.Models.CommitInfo
 static NGitLab.Mock.Config.GitLabConfig.Deserialize(string content) -> NGitLab.Mock.Config.GitLabConfig
 static NGitLab.Mock.Config.GitLabHelpers.AsDefaultUser(this NGitLab.Mock.Config.GitLabUser user) -> NGitLab.Mock.Config.GitLabUser

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace NGitLab.Mock.Clients
 {
@@ -20,7 +19,7 @@ namespace NGitLab.Mock.Clients
                 var project = GetProject(commit.ProjectId, ProjectPermission.Contribute);
                 var gitCommit = project.Repository.Commit(commit);
 
-                return gitCommit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, gitCommit.Sha, StringComparison.Ordinal)));
+                return gitCommit.ToCommitClient(project);
             }
         }
 
@@ -31,7 +30,7 @@ namespace NGitLab.Mock.Clients
                 var project = GetProject(_projectId, ProjectPermission.View);
                 var commit = project.Repository.GetCommit(@ref);
 
-                return commit?.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal)));
+                return commit?.ToCommitClient(project);
             }
         }
 
