@@ -44,7 +44,7 @@ namespace NGitLab.Tests
                 Password = "!@#$QWDRQW@",
                 ProjectsLimit = 1000,
                 Provider = "provider",
-                ExternalUid = "external_uid",
+                ExternalUid = "external_uid_" + randomString,
                 Skype = "skype",
                 Twitter = "twitter",
                 Username = $"ngitlabtestcontributor{randomString}",
