@@ -107,6 +107,8 @@ namespace NGitLab.Tests.RepositoryClient
             var commit = context.RepositoryClient.GetCommit(sha1);
             Assert.AreEqual(sha1, commit.Id);
             Assert.AreEqual(context.Commits[0].Message, commit.Message);
+            Assert.AreEqual(context.Commits[0].WebUrl, commit.WebUrl);
+            Assert.NotNull(commit.WebUrl);
         }
 
         [Test]

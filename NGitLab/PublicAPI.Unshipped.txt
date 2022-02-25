@@ -1140,6 +1140,7 @@ NGitLab.Models.Commit.ShortId -> string
 NGitLab.Models.Commit.Stats -> NGitLab.Models.CommitStats
 NGitLab.Models.Commit.Status -> string
 NGitLab.Models.Commit.Title -> string
+NGitLab.Models.Commit.WebUrl -> string
 NGitLab.Models.CommitCreate
 NGitLab.Models.CommitCreate.Actions -> System.Collections.Generic.IList<NGitLab.Models.CreateCommitAction>
 NGitLab.Models.CommitCreate.AuthorEmail -> string

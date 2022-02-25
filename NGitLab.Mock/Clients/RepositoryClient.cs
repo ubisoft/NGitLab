@@ -120,7 +120,7 @@ namespace NGitLab.Mock.Clients
 
         private static Commit ConvertToNGitLabCommit(LibGit2Sharp.Commit commit, Project project)
         {
-            return commit.ToCommitClient(project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal)));
+            return commit.ToCommitClient(project);
         }
     }
 }
