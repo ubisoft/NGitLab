@@ -712,6 +712,7 @@ NGitLab.Impl.UserClient.Get(NGitLab.UserQuery query) -> System.Collections.Gener
 NGitLab.Impl.UserClient.Get(string username) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.Impl.UserClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.User>
 NGitLab.Impl.UserClient.GetCurrentUserAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Session>
+NGitLab.Impl.UserClient.GetLastActivityDates(System.DateTimeOffset? from = null) -> System.Collections.Generic.IEnumerable<NGitLab.Models.LastActivityDate>
 NGitLab.Impl.UserClient.Search(string query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.Impl.UserClient.SShKeys(int userId) -> NGitLab.ISshKeyClient
 NGitLab.Impl.UserClient.this[int id].get -> NGitLab.Models.User
@@ -899,6 +900,7 @@ NGitLab.IUserClient.Get(NGitLab.UserQuery query) -> System.Collections.Generic.I
 NGitLab.IUserClient.Get(string username) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.IUserClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.User>
 NGitLab.IUserClient.GetCurrentUserAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Session>
+NGitLab.IUserClient.GetLastActivityDates(System.DateTimeOffset? from = null) -> System.Collections.Generic.IEnumerable<NGitLab.Models.LastActivityDate>
 NGitLab.IUserClient.Search(string query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.IUserClient.SShKeys(int userId) -> NGitLab.ISshKeyClient
 NGitLab.IUserClient.this[int id].get -> NGitLab.Models.User
@@ -1742,6 +1744,12 @@ NGitLab.Models.LabelEdit.LabelEdit() -> void
 NGitLab.Models.LabelEdit.LabelEdit(int projectId, NGitLab.Models.Label label) -> void
 NGitLab.Models.LabelEdit.Name -> string
 NGitLab.Models.LabelEdit.NewName -> string
+NGitLab.Models.LastActivityDate
+NGitLab.Models.LastActivityDate.LastActivityDate() -> void
+NGitLab.Models.LastActivityDate.LastActivityOn.get -> System.DateTimeOffset
+NGitLab.Models.LastActivityDate.LastActivityOn.set -> void
+NGitLab.Models.LastActivityDate.Username.get -> string
+NGitLab.Models.LastActivityDate.Username.set -> void
 NGitLab.Models.Membership
 NGitLab.Models.Membership.AccessLevel -> int
 NGitLab.Models.Membership.AvatarURL -> string

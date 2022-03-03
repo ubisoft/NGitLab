@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Extensions;
@@ -83,6 +84,14 @@ namespace NGitLab.Impl
         public void Deactivate(int userId)
         {
             _api.Post().Execute($"{User.Url}/{userId.ToStringInvariant()}/deactivate");
+        }
+
+        public IEnumerable<LastActivityDate> GetLastActivityDates(DateTimeOffset? from = null)
+        {
+            var url = "/user/activities";
+            if (from is not null)
+                url = Utils.AddParameter(url, "from", from.Value.ToString("yyyy-MM-dd"));
+            return _api.Get().GetAll<LastActivityDate>(url);
         }
     }
 }
