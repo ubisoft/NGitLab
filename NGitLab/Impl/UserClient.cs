@@ -86,12 +86,12 @@ namespace NGitLab.Impl
             _api.Post().Execute($"{User.Url}/{userId.ToStringInvariant()}/deactivate");
         }
 
-        public IEnumerable<LastActivityDate> GetLastActivityDates(DateTimeOffset? from = null)
+        public GitLabCollectionResponse<LastActivityDate> GetLastActivityDatesAsync(DateTimeOffset? from = null)
         {
             var url = "/user/activities";
             if (from is not null)
                 url = Utils.AddParameter(url, "from", from.Value.ToString("yyyy-MM-dd"));
-            return _api.Get().GetAll<LastActivityDate>(url);
+            return _api.Get().GetAllAsync<LastActivityDate>(url);
         }
     }
 }

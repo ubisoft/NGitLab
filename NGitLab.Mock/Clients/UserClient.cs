@@ -163,7 +163,7 @@ namespace NGitLab.Mock.Clients
             return Current;
         }
 
-        public IEnumerable<LastActivityDate> GetLastActivityDates(DateTimeOffset? from = null)
+        public GitLabCollectionResponse<LastActivityDate> GetLastActivityDatesAsync(DateTimeOffset? from = null)
         {
             throw new NotImplementedException();
         }

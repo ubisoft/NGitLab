@@ -61,6 +61,7 @@ namespace NGitLab
 
         /// <summary>
         /// Gets the last activity date for all users, sorted from oldest to newest
+        /// (<seealso href="https://docs.gitlab.com/ee/api/users.html#get-user-activities-admin-only">GitLab documentation</seealso>).
         /// </summary>
         /// <param name="from">Date from which activities will be considered. If unspecified, will look back over the last 6 months.</param>
         /// <remarks>
@@ -73,6 +74,6 @@ namespace NGitLab
         /// <item><description>User using the GraphQL API</description></item>
         /// </list>
         /// </remarks>
-        IEnumerable<LastActivityDate> GetLastActivityDates(DateTimeOffset? from = null);
+        GitLabCollectionResponse<LastActivityDate> GetLastActivityDatesAsync(DateTimeOffset? from = null);
     }
 }

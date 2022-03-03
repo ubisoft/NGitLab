@@ -128,7 +128,7 @@ namespace NGitLab.Tests
         public async Task GetLastActivityDates()
         {
             using var context = await GitLabTestContext.CreateAsync();
-            var activities = context.AdminClient.Users.GetLastActivityDates().ToArray();
+            var activities = context.AdminClient.Users.GetLastActivityDatesAsync().ToArray();
             CollectionAssert.IsNotEmpty(activities.Where(a => string.Equals(a.Username, context.AdminClient.Users.Current.Username, StringComparison.Ordinal)));
         }
 
@@ -138,7 +138,7 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var yesterday = DateTimeOffset.UtcNow.AddDays(-1);
-            var activities = context.AdminClient.Users.GetLastActivityDates(from: yesterday).ToArray();
+            var activities = context.AdminClient.Users.GetLastActivityDatesAsync(from: yesterday).ToArray();
             CollectionAssert.IsNotEmpty(activities);
         }
 
@@ -148,7 +148,7 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var tomorrow = DateTimeOffset.UtcNow.AddDays(1);
-            var activities = context.AdminClient.Users.GetLastActivityDates(from: tomorrow).ToArray();
+            var activities = context.AdminClient.Users.GetLastActivityDatesAsync(from: tomorrow).ToArray();
             CollectionAssert.IsEmpty(activities);
         }
 
@@ -156,7 +156,7 @@ namespace NGitLab.Tests
         public async Task GetLastActivityDates_UsingNonAdminCredentials_ThrowsForbidden()
         {
             using var context = await GitLabTestContext.CreateAsync();
-            var exception = Assert.Throws<GitLabException>(() => context.Client.Users.GetLastActivityDates().ToArray());
+            var exception = Assert.Throws<GitLabException>(() => context.Client.Users.GetLastActivityDatesAsync().ToArray());
             Assert.AreEqual(HttpStatusCode.Forbidden, exception.StatusCode);
         }
 
