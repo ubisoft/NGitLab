@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -120,6 +121,43 @@ namespace NGitLab.Tests
 
             Assert.IsNotEmpty(tokenResult.Token);
             Assert.AreEqual(tokenRequest.Name, tokenResult.Name);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task GetLastActivityDates()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var activities = context.AdminClient.Users.GetLastActivityDatesAsync().ToArray();
+            CollectionAssert.IsNotEmpty(activities.Where(a => string.Equals(a.Username, context.AdminClient.Users.Current.Username, StringComparison.Ordinal)));
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task GetLastActivityDatesSinceYesterday()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var yesterday = DateTimeOffset.UtcNow.AddDays(-1);
+            var activities = context.AdminClient.Users.GetLastActivityDatesAsync(from: yesterday).ToArray();
+            CollectionAssert.IsNotEmpty(activities);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task GetLastActivityDatesFromTheFuture()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var tomorrow = DateTimeOffset.UtcNow.AddDays(1);
+            var activities = context.AdminClient.Users.GetLastActivityDatesAsync(from: tomorrow).ToArray();
+            CollectionAssert.IsEmpty(activities);
+        }
+
+        [Test]
+        public async Task GetLastActivityDates_UsingNonAdminCredentials_ThrowsForbidden()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var exception = Assert.Throws<GitLabException>(() => context.Client.Users.GetLastActivityDatesAsync().ToArray());
+            Assert.AreEqual(HttpStatusCode.Forbidden, exception.StatusCode);
         }
 
         private static User CreateNewUser(GitLabTestContext context)

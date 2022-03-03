@@ -162,5 +162,10 @@ namespace NGitLab.Mock.Clients
             await Task.Yield();
             return Current;
         }
+
+        public GitLabCollectionResponse<LastActivityDate> GetLastActivityDatesAsync(DateTimeOffset? from = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

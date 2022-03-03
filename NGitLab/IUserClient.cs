@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -57,5 +58,22 @@ namespace NGitLab
         /// Get a list of users that match the query.
         /// </summary>
         IEnumerable<User> Get(UserQuery query);
+
+        /// <summary>
+        /// Gets the last activity date for all users, sorted from oldest to newest
+        /// (<seealso href="https://docs.gitlab.com/ee/api/users.html#get-user-activities-admin-only">GitLab documentation</seealso>).
+        /// </summary>
+        /// <param name="from">Date from which activities will be considered. If unspecified, will look back over the last 6 months.</param>
+        /// <remarks>
+        /// The activities that update the timestamp are:
+        /// <list type="bullet">
+        /// <item><description>Git HTTP/SSH activities (such as clone, push)</description></item>
+        /// <item><description>User logging in to GitLab</description></item>
+        /// <item><description>User visiting pages related to dashboards, projects, issues, and merge requests (introduced in GitLab 11.8)</description></item>
+        /// <item><description>User using the API</description></item>
+        /// <item><description>User using the GraphQL API</description></item>
+        /// </list>
+        /// </remarks>
+        GitLabCollectionResponse<LastActivityDate> GetLastActivityDatesAsync(DateTimeOffset? from = null);
     }
 }
