@@ -6,9 +6,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Impl.Json;
-#if NET45
-using System.Reflection;
-#endif
 
 namespace NGitLab.Impl
 {
@@ -95,7 +92,7 @@ namespace NGitLab.Impl
                 tailAPIUrl = "/api/v4" + tailAPIUrl;
             }
 
-            return UriFix.Build(_hostUrl + tailAPIUrl);
+            return new Uri(_hostUrl + tailAPIUrl);
         }
 
         public Uri GetUrl(string tailAPIUrl)
@@ -105,7 +102,7 @@ namespace NGitLab.Impl
                 tailAPIUrl = "/" + tailAPIUrl;
             }
 
-            return UriFix.Build(_hostUrl + tailAPIUrl);
+            return new Uri(_hostUrl + tailAPIUrl);
         }
 
         public virtual void Stream(string tailAPIUrl, Action<Stream> parser)
@@ -214,50 +211,6 @@ namespace NGitLab.Impl
 
                 return nextLink != null ? new Uri(nextLink[0].Trim('<', '>', ' ')) : null;
             }
-        }
-    }
-
-    /// <summary>
-    /// .Net framework has a bug which converts the escaped / into normal slashes
-    /// This is not equivalent and fails when retrieving a project with its full name for example.
-    /// There is an ugly workaround which involves reflection but it better than nothing.
-    /// </summary>
-    /// <remarks>
-    /// http://stackoverflow.com/questions/2320533/system-net-uri-with-urlencoded-characters/
-    /// </remarks>
-    internal static class UriFix
-    {
-        static UriFix()
-        {
-            LeaveDotsAndSlashesEscaped();
-        }
-
-        public static Uri Build(string asString)
-        {
-            return new Uri(asString);
-        }
-
-        public static void LeaveDotsAndSlashesEscaped()
-        {
-#if NET45
-            var getSyntaxMethod =
-                typeof(UriParser).GetMethod("GetSyntax", BindingFlags.Static | BindingFlags.NonPublic);
-            if (getSyntaxMethod == null)
-            {
-                throw new MissingMethodException("UriParser", "GetSyntax");
-            }
-
-            var uriParser = getSyntaxMethod.Invoke(null, new object[] { "https" });
-
-            var setUpdatableFlagsMethod =
-                uriParser.GetType().GetMethod("SetUpdatableFlags", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (setUpdatableFlagsMethod == null)
-            {
-                throw new MissingMethodException("UriParser", "SetUpdatableFlags");
-            }
-
-            setUpdatableFlagsMethod.Invoke(uriParser, new object[] { 0 });
-#endif
         }
     }
 }
