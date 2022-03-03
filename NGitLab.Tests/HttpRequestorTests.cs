@@ -35,16 +35,6 @@ namespace NGitLab.Tests
             Assert.IsNull(requestOptions.HttpRequestSudoHeader);
         }
 
-        [TestCase("http://feedbooks.com/type/Crime%2FMystery/books/top")]
-        [TestCase("http://feedbooks.com/type/Crime%252FMystery/books/top")]
-        [TestCase("https://dummy.org/api/v4/projects/42400/environments?name=env_test_name_with_url&external_url=https%3A%2F%2Fdummy2.org")]
-        public void Test_UriFix(string str)
-        {
-            var uri = UriFix.Build(str);
-
-            Assert.That(uri.AbsoluteUri, Is.EqualTo(str));
-        }
-
         [Test]
         [NGitLabRetry]
         public async Task Test_the_timeout_can_be_overridden_in_the_request_options()
