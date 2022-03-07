@@ -41,6 +41,8 @@ namespace NGitLab
 
         IEnumerable<Project> SearchProjects(int groupId, string search);
 
+        IEnumerable<Project> SearchProjects(SearchProjectQuery searchProjectQuery);
+
         void Delete(int id);
 
         Task DeleteAsync(int id, CancellationToken cancellationToken = default);

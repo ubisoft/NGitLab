@@ -140,6 +140,26 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
+        public async Task Test_get_by_group_SearchProjectsQuery_returns_project()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+            var project = context.Client.Projects.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture), Path = "testgroup" });
+
+            // Act
+            var result = groupClient.SearchProjects(new SearchProjectQuery { GroupId = group.Name, Search = "test", Scope = GroupQueryScope.Projects });
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsNotEmpty(result);
+            Assert.AreEqual(project.Name, result.FirstOrDefault().Name);
+            Assert.AreEqual(project.Id, result.FirstOrDefault().Id);
+            Assert.AreEqual(project.Path, result.FirstOrDefault().Path);
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task Test_get_by_group_query_groupQuery_AllAvailable_returns_groups()
         {
             using var context = await GitLabTestContext.CreateAsync();

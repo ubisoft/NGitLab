@@ -63,4 +63,76 @@ namespace NGitLab.Models
         /// </summary>
         public AccessLevel? MinAccessLevel;
     }
+
+    /// <summary>
+    /// Allows to use more advanced GitLab queries for getting project IDs (based on v4 GitLab API).
+    /// https://docs.gitlab.com/ee/api/groups.html
+    /// </summary>
+    [DataContract]
+    public class SearchProjectQuery
+    {
+        /// <summary>
+        /// Specifiy group id to look into as string
+        /// </summary>
+        public string GroupId;
+
+        /// <summary>
+        /// Specify project name to search for as string
+        /// </summary>
+        public string Search;
+
+        /// <summary>
+        /// Specify project scope defined by GroupQueryScope
+        /// </summary>
+        public GroupQueryScope Scope;
+    }
+
+    // implementation according to https://docs.gitlab.com/ee/api/search.html#scope-projects-1
+    public enum GroupQueryScope
+    {
+        /// <summary>
+        /// The response depends on the requested scope project
+        /// </summary>
+        Projects,
+
+        /// <summary>
+        /// The response depends on the requested scope issues
+        /// </summary>
+        Issues,
+
+        /// <summary>
+        /// The response depends on the requested scope merge_requests
+        /// </summary>
+        Merge_requests,
+
+        /// <summary>
+        /// The response depends on the requested scope milestones
+        /// </summary>
+        Milestones,
+
+        /// <summary>
+        /// The response depends on the requested scope wiki_blobs
+        /// </summary>
+        Wiki_blobs,
+
+        /// <summary>
+        /// The response depends on the requested scope commits
+        /// </summary>
+        Commits,
+
+        /// <summary>
+        /// The response depends on the requested scope blobs
+        /// </summary>
+        Blobs,
+
+        /// <summary>
+        /// The response depends on the requested scope notes
+        /// </summary>
+        Notes,
+
+        /// <summary>
+        /// The response depends on the requested scope users
+        /// </summary>
+        Users,
+    }
 }
