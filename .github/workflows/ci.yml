@@ -23,7 +23,7 @@ jobs:
   create_nuget:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # Get all the history so MinGit can compute the version
     - name: Setup .NET Core (latest)
@@ -65,7 +65,7 @@ jobs:
           GITLAB_OMNIBUS_CONFIG: "external_url 'http://localhost:48624/'"
           GITLAB_ROOT_PASSWORD: "Pa$$w0rd"
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET Core (latest)
       uses: actions/setup-dotnet@v2
     - run: |
