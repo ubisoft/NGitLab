@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Net;
+using System.Web;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -32,6 +34,11 @@ namespace NGitLab.Impl
             return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueId));
         }
 
+        public Issue Get(string projectId, int issueId)
+        {
+            return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, WebUtility.UrlEncode(projectId), issueId));
+        }
+
         public IEnumerable<Issue> Get(int projectId, IssueQuery query)
         {
             return Get(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId), query);
@@ -42,7 +49,7 @@ namespace NGitLab.Impl
             return Get(IssuesUrl, query);
         }
 
-        private IEnumerable<Issue> Get(string url, IssueQuery query)
+        public IEnumerable<Issue> Get(string url, IssueQuery query)
         {
             url = Utils.AddParameter(url, "state", query.State);
             url = Utils.AddParameter(url, "order_by", query.OrderBy);

@@ -18,11 +18,21 @@ namespace NGitLab
         /// <summary>
         ///     <para>Return a single issue for a project given project.</para>
         ///     <para>url like GET /projects/:id/issues/:issue_id</para>
+        ///     <para>url like GET /projects/:id/issues/:issue_id</para>
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="issueId"></param>
         /// <returns>The issue that corresponds to the project id and issue id</returns>
         Issue Get(int projectId, int issueId);
+
+        /// <summary>
+        ///     <para>Return a single issue for a project given project.</para>
+        ///     <para>url like GET /projects/:id/issues/:issue_id</para>
+        /// </summary>
+        /// <param name="projectId">The project id, which will be URL encoded.</param>
+        /// <param name="issueId">The id of the issue in the project's scope.</param>
+        /// <returns>The issue that corresponds to the project id and issue id</returns>
+        Issue Get(string projectId, int issueId);
 
         /// <summary>
         /// Return issues for a given query.
@@ -45,6 +55,16 @@ namespace NGitLab
         /// <returns>the query's related issues</returns>
         IEnumerable<Issue> Get(int projectId, IssueQuery query);
 
+        /// <summary>
+        /// Return project issues for a given query.
+        ///
+        /// url like GET /projects/:id/issues?<parameter_name>=<value>
+        ///
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="query"></param>
+        /// <returns>the query's related issues</returns>
+        IEnumerable<Issue> Get(string projectId, IssueQuery query);
         /// <summary>
         /// Add an issue witht he proposed title to the GitLab list for the selected proejct id.
         /// </summary>

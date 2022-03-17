@@ -428,6 +428,8 @@ NGitLab.Impl.IssueClient.ForProject(int projectId) -> System.Collections.Generic
 NGitLab.Impl.IssueClient.Get(int projectId, int issueId) -> NGitLab.Models.Issue
 NGitLab.Impl.IssueClient.Get(int projectId, NGitLab.Models.IssueQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.Get(NGitLab.Models.IssueQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
+NGitLab.Impl.IssueClient.Get(string projectId, int issueId) -> NGitLab.Models.Issue
+NGitLab.Impl.IssueClient.Get(string url, NGitLab.Models.IssueQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.IssueClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.IssueClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.RelatedTo(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
