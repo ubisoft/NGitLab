@@ -59,6 +59,14 @@ namespace NGitLab.Models
         [JsonPropertyName("updated_at")]
         public DateTime UpdatedAt;
 
+        [DataMember(Name = "closed_at")]
+        [JsonPropertyName("closed_at")]
+        public DateTime ClosedAt { get; set; }
+
+        [DataMember(Name = "closed_by")]
+        [JsonPropertyName("closed_by")]
+        public User ClosedBy { get; set; }
+
         [DataMember(Name = "due_date")]
         [JsonPropertyName("due_date")]
         public DateTime? DueDate;
