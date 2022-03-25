@@ -1561,6 +1561,10 @@ NGitLab.Models.Issue
 NGitLab.Models.Issue.Assignee -> NGitLab.Models.Assignee
 NGitLab.Models.Issue.Assignees -> NGitLab.Models.Assignee[]
 NGitLab.Models.Issue.Author -> NGitLab.Models.Author
+NGitLab.Models.Issue.ClosedAt.get -> System.DateTime
+NGitLab.Models.Issue.ClosedAt.set -> void
+NGitLab.Models.Issue.ClosedBy.get -> NGitLab.Models.User
+NGitLab.Models.Issue.ClosedBy.set -> void
 NGitLab.Models.Issue.Confidential -> bool
 NGitLab.Models.Issue.CreatedAt -> System.DateTime
 NGitLab.Models.Issue.Description -> string
