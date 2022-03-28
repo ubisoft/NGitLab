@@ -102,5 +102,18 @@ namespace NGitLab
         /// </summary>
         /// <param name="pipelineId">ID of the pipeline</param>
         TestReport GetTestReports(int pipelineId);
+
+        /// <summary>
+        /// Returns the bridges of a pipeline.
+        /// </summary>
+        /// <param name="query"></param>
+        IEnumerable<Bridge> GetBridges(PipelineJobQuery query);
+
+
+        /// <summary>
+        /// Returns the bridges of a pipeline.
+        /// </summary>
+        /// <param name="query"></param>
+        GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineJobQuery query);
     }
 }
