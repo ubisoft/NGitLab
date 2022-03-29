@@ -196,7 +196,7 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<Bridge>(url);
         }
 
-        public GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineJobQuery query)
+        public GitLabCollectionResponse<Bridge> GetBridgesAsyncOrNot(PipelineJobQuery query)
         {
             var url = CreateGetBridgesUrl(query);
             return _api.Get().GetAllAsync<Bridge>(url);

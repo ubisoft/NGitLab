@@ -107,13 +107,6 @@ namespace NGitLab
         /// Returns the bridges of a pipeline.
         /// </summary>
         /// <param name="query"></param>
-        IEnumerable<Bridge> GetBridges(PipelineJobQuery query);
-
-
-        /// <summary>
-        /// Returns the bridges of a pipeline.
-        /// </summary>
-        /// <param name="query"></param>
-        GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineJobQuery query);
+        GitLabCollectionResponse<Bridge> GetBridgesAsyncOrNot(PipelineJobQuery query);
     }
 }
