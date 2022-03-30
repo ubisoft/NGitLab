@@ -575,7 +575,6 @@ NGitLab.Impl.PipelineClient.CreateAsync(NGitLab.Models.PipelineCreate createOpti
 NGitLab.Impl.PipelineClient.CreatePipelineWithTrigger(string token, string ref, System.Collections.Generic.Dictionary<string, string> variables) -> NGitLab.Models.Pipeline
 NGitLab.Impl.PipelineClient.Delete(int pipelineId) -> void
 NGitLab.Impl.PipelineClient.GetAllJobsAsync() -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
-NGitLab.Impl.PipelineClient.GetBridges(NGitLab.Models.PipelineBridgeQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Bridge>
 NGitLab.Impl.PipelineClient.GetBridgesAsync(NGitLab.Models.PipelineBridgeQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Bridge>
 NGitLab.Impl.PipelineClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.Impl.PipelineClient.GetJobs(int pipelineId) -> NGitLab.Models.Job[]
