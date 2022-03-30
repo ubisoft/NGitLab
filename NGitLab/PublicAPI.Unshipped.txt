@@ -575,6 +575,7 @@ NGitLab.Impl.PipelineClient.CreateAsync(NGitLab.Models.PipelineCreate createOpti
 NGitLab.Impl.PipelineClient.CreatePipelineWithTrigger(string token, string ref, System.Collections.Generic.Dictionary<string, string> variables) -> NGitLab.Models.Pipeline
 NGitLab.Impl.PipelineClient.Delete(int pipelineId) -> void
 NGitLab.Impl.PipelineClient.GetAllJobsAsync() -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
+NGitLab.Impl.PipelineClient.GetBridgesAsync(NGitLab.Models.PipelineBridgeQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Bridge>
 NGitLab.Impl.PipelineClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.Impl.PipelineClient.GetJobs(int pipelineId) -> NGitLab.Models.Job[]
 NGitLab.Impl.PipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
@@ -742,6 +743,7 @@ NGitLab.IPipelineClient.CreateAsync(NGitLab.Models.PipelineCreate createOptions,
 NGitLab.IPipelineClient.CreatePipelineWithTrigger(string token, string ref, System.Collections.Generic.Dictionary<string, string> variables) -> NGitLab.Models.Pipeline
 NGitLab.IPipelineClient.Delete(int pipelineId) -> void
 NGitLab.IPipelineClient.GetAllJobsAsync() -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
+NGitLab.IPipelineClient.GetBridgesAsync(NGitLab.Models.PipelineBridgeQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Bridge>
 NGitLab.IPipelineClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.IPipelineClient.GetJobs(int pipelineId) -> NGitLab.Models.Job[]
 NGitLab.IPipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
@@ -1102,6 +1104,10 @@ NGitLab.Models.BranchProtect.PushAccessLevel.get -> NGitLab.Models.AccessLevel?
 NGitLab.Models.BranchProtect.PushAccessLevel.set -> void
 NGitLab.Models.BranchProtect.UnprotectAccessLevel.get -> NGitLab.Models.AccessLevel?
 NGitLab.Models.BranchProtect.UnprotectAccessLevel.set -> void
+NGitLab.Models.Bridge
+NGitLab.Models.Bridge.Bridge() -> void
+NGitLab.Models.Bridge.DownstreamPipeline.get -> NGitLab.Models.JobBasic.JobPipeline
+NGitLab.Models.Bridge.DownstreamPipeline.set -> void
 NGitLab.Models.Change
 NGitLab.Models.Change.AMode.get -> long
 NGitLab.Models.Change.AMode.set -> void
@@ -1651,54 +1657,90 @@ NGitLab.Models.IssueState
 NGitLab.Models.IssueState.closed = 1 -> NGitLab.Models.IssueState
 NGitLab.Models.IssueState.opened = 0 -> NGitLab.Models.IssueState
 NGitLab.Models.Job
-NGitLab.Models.Job.AllowFailure -> bool
-NGitLab.Models.Job.Artifacts -> NGitLab.Models.Job.JobArtifact
-NGitLab.Models.Job.Commit -> NGitLab.Models.Commit
-NGitLab.Models.Job.Coverage -> double?
-NGitLab.Models.Job.CreatedAt -> System.DateTime
-NGitLab.Models.Job.Duration -> float?
-NGitLab.Models.Job.FinishedAt -> System.DateTime
-NGitLab.Models.Job.Id -> int
+NGitLab.Models.Job.Artifacts.get -> NGitLab.Models.Job.JobArtifact
+NGitLab.Models.Job.Artifacts.set -> void
 NGitLab.Models.Job.Job() -> void
-NGitLab.Models.Job.JobArtifact
-NGitLab.Models.Job.JobArtifact.Filename -> string
 NGitLab.Models.Job.JobArtifact.JobArtifact() -> void
-NGitLab.Models.Job.JobArtifact.Size -> long
-NGitLab.Models.Job.JobPipeline
-NGitLab.Models.Job.JobPipeline.Id -> long
-NGitLab.Models.Job.JobPipeline.JobPipeline() -> void
-NGitLab.Models.Job.JobPipeline.Ref -> string
-NGitLab.Models.Job.JobPipeline.Sha -> NGitLab.Sha1
-NGitLab.Models.Job.JobPipeline.Status -> NGitLab.JobStatus
-NGitLab.Models.Job.JobProject
-NGitLab.Models.Job.JobProject.Id -> int
 NGitLab.Models.Job.JobProject.JobProject() -> void
-NGitLab.Models.Job.JobProject.Name -> string
-NGitLab.Models.Job.JobProject.PathWithNamespace -> string
-NGitLab.Models.Job.JobRunner
-NGitLab.Models.Job.JobRunner.Active -> bool
-NGitLab.Models.Job.JobRunner.Description -> string
-NGitLab.Models.Job.JobRunner.Id -> int
-NGitLab.Models.Job.JobRunner.IsShared -> bool
+NGitLab.Models.Job.JobRunner.IsShared.get -> bool
+NGitLab.Models.Job.JobRunner.IsShared.set -> void
 NGitLab.Models.Job.JobRunner.JobRunner() -> void
-NGitLab.Models.Job.JobRunner.Name -> string
-NGitLab.Models.Job.Name -> string
-NGitLab.Models.Job.Pipeline -> NGitLab.Models.Job.JobPipeline
-NGitLab.Models.Job.Project -> NGitLab.Models.Job.JobProject
-NGitLab.Models.Job.QueuedDuration -> float?
-NGitLab.Models.Job.Ref -> string
-NGitLab.Models.Job.Runner -> NGitLab.Models.Job.JobRunner
-NGitLab.Models.Job.Stage -> string
-NGitLab.Models.Job.StartedAt -> System.DateTime
-NGitLab.Models.Job.Status -> NGitLab.JobStatus
-NGitLab.Models.Job.Tag -> bool
-NGitLab.Models.Job.User -> NGitLab.Models.User
-NGitLab.Models.Job.WebUrl -> string
+NGitLab.Models.Job.Project.get -> NGitLab.Models.Job.JobProject
+NGitLab.Models.Job.Project.set -> void
+NGitLab.Models.Job.Runner.get -> NGitLab.Models.Job.JobRunner
+NGitLab.Models.Job.Runner.set -> void
+NGitLab.Models.Job.JobArtifact
+NGitLab.Models.Job.JobArtifact.Filename.get -> string
+NGitLab.Models.Job.JobArtifact.Filename.set -> void
+NGitLab.Models.Job.JobArtifact.Size.get -> long
+NGitLab.Models.Job.JobArtifact.Size.set -> void
+NGitLab.Models.Job.JobProject
+NGitLab.Models.Job.JobProject.Id.get -> int
+NGitLab.Models.Job.JobProject.Id.set -> void
+NGitLab.Models.Job.JobProject.Name.get -> string
+NGitLab.Models.Job.JobProject.Name.set -> void
+NGitLab.Models.Job.JobProject.PathWithNamespace.get -> string
+NGitLab.Models.Job.JobProject.PathWithNamespace.set -> void
+NGitLab.Models.Job.JobRunner
+NGitLab.Models.Job.JobRunner.Active.get -> bool
+NGitLab.Models.Job.JobRunner.Active.set -> void
+NGitLab.Models.Job.JobRunner.Description.get -> string
+NGitLab.Models.Job.JobRunner.Description.set -> void
+NGitLab.Models.Job.JobRunner.Id.get -> int
+NGitLab.Models.Job.JobRunner.Id.set -> void
+NGitLab.Models.Job.JobRunner.Name.get -> string
+NGitLab.Models.Job.JobRunner.Name.set -> void
 NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Cancel = 0 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Erase = 2 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Play = 3 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Retry = 1 -> NGitLab.Models.JobAction
+NGitLab.Models.JobBasic
+NGitLab.Models.JobBasic.Commit.get -> NGitLab.Models.Commit
+NGitLab.Models.JobBasic.JobBasic() -> void
+NGitLab.Models.JobBasic.JobPipeline.JobPipeline() -> void
+NGitLab.Models.JobBasic.Name.get -> string
+NGitLab.Models.JobBasic.Name.set -> void
+NGitLab.Models.JobBasic.Id.get -> int
+NGitLab.Models.JobBasic.Id.set -> void
+NGitLab.Models.JobBasic.Ref.get -> string
+NGitLab.Models.JobBasic.Ref.set -> void
+NGitLab.Models.JobBasic.Commit.set -> void
+NGitLab.Models.JobBasic.CreatedAt.get -> System.DateTime
+NGitLab.Models.JobBasic.CreatedAt.set -> void
+NGitLab.Models.JobBasic.StartedAt.get -> System.DateTime
+NGitLab.Models.JobBasic.StartedAt.set -> void
+NGitLab.Models.JobBasic.FinishedAt.get -> System.DateTime
+NGitLab.Models.JobBasic.FinishedAt.set -> void
+NGitLab.Models.JobBasic.Stage.get -> string
+NGitLab.Models.JobBasic.Stage.set -> void
+NGitLab.Models.JobBasic.Coverage.get -> double?
+NGitLab.Models.JobBasic.Coverage.set -> void
+NGitLab.Models.JobBasic.Status.get -> NGitLab.JobStatus
+NGitLab.Models.JobBasic.Status.set -> void
+NGitLab.Models.JobBasic.Tag.get -> bool
+NGitLab.Models.JobBasic.Tag.set -> void
+NGitLab.Models.JobBasic.AllowFailure.get -> bool
+NGitLab.Models.JobBasic.AllowFailure.set -> void
+NGitLab.Models.JobBasic.User.get -> NGitLab.Models.User
+NGitLab.Models.JobBasic.User.set -> void
+NGitLab.Models.JobBasic.Pipeline.get -> NGitLab.Models.JobBasic.JobPipeline
+NGitLab.Models.JobBasic.Pipeline.set -> void
+NGitLab.Models.JobBasic.WebUrl.get -> string
+NGitLab.Models.JobBasic.WebUrl.set -> void
+NGitLab.Models.JobBasic.Duration.get -> float?
+NGitLab.Models.JobBasic.Duration.set -> void
+NGitLab.Models.JobBasic.QueuedDuration.get -> float?
+NGitLab.Models.JobBasic.QueuedDuration.set -> void
+NGitLab.Models.JobBasic.JobPipeline
+NGitLab.Models.JobBasic.JobPipeline.Id.get -> int
+NGitLab.Models.JobBasic.JobPipeline.Id.set -> void
+NGitLab.Models.JobBasic.JobPipeline.Ref.get -> string
+NGitLab.Models.JobBasic.JobPipeline.Ref.set -> void
+NGitLab.Models.JobBasic.JobPipeline.Sha.get -> NGitLab.Sha1
+NGitLab.Models.JobBasic.JobPipeline.Sha.set -> void
+NGitLab.Models.JobBasic.JobPipeline.Status.get -> NGitLab.JobStatus
+NGitLab.Models.JobBasic.JobPipeline.Status.set -> void
 NGitLab.Models.JobQuery
 NGitLab.Models.JobQuery.JobQuery() -> void
 NGitLab.Models.JobQuery.PerPage.get -> int?
@@ -2104,6 +2146,12 @@ NGitLab.Models.PipelineBasic.PipelineBasic() -> void
 NGitLab.Models.PipelineBasic.Ref -> string
 NGitLab.Models.PipelineBasic.Sha -> NGitLab.Sha1
 NGitLab.Models.PipelineBasic.Status -> NGitLab.JobStatus
+NGitLab.Models.PipelineBridgeQuery
+NGitLab.Models.PipelineBridgeQuery.PipelineBridgeQuery() -> void
+NGitLab.Models.PipelineBridgeQuery.PipelineId.get -> int
+NGitLab.Models.PipelineBridgeQuery.PipelineId.set -> void
+NGitLab.Models.PipelineBridgeQuery.Scope.get -> string[]
+NGitLab.Models.PipelineBridgeQuery.Scope.set -> void
 NGitLab.Models.PipelineCreate
 NGitLab.Models.PipelineCreate.PipelineCreate() -> void
 NGitLab.Models.PipelineCreate.Ref.get -> string

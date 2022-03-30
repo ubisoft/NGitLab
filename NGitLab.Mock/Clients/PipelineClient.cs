@@ -106,6 +106,11 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineBridgeQuery query)
+        {
+            throw new NotImplementedException();
+        }
+
         public Models.Job[] GetJobs(int pipelineId)
         {
             using (Context.BeginOperationScope())
