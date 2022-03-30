@@ -106,7 +106,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineJobQuery query)
+        public GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineBridgeQuery query)
         {
             throw new NotImplementedException();
         }

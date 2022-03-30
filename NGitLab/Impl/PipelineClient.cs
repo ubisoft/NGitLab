@@ -190,23 +190,22 @@ namespace NGitLab.Impl
             return _api.Get().To<TestReport>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/test_report");
         }
 
-        public IEnumerable<Bridge> GetBridges(PipelineJobQuery query)
+        public IEnumerable<Bridge> GetBridges(PipelineBridgeQuery query)
         {
             var url = CreateGetBridgesUrl(query);
             return _api.Get().GetAll<Bridge>(url);
         }
 
-        public GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineJobQuery query)
+        public GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineBridgeQuery query)
         {
             var url = CreateGetBridgesUrl(query);
             return _api.Get().GetAllAsync<Bridge>(url);
         }
 
-        private string CreateGetBridgesUrl(PipelineJobQuery query)
+        private string CreateGetBridgesUrl(PipelineBridgeQuery query)
         {
             var url = $"{_pipelinesPath}/{query.PipelineId}/bridges";
             url = Utils.AddParameter(url, "scope", query.Scope);
-            url = Utils.AddParameter(url, "include_retried", query.IncludeRetried);
             return url;
         }
     }
