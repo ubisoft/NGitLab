@@ -575,6 +575,8 @@ NGitLab.Impl.PipelineClient.CreateAsync(NGitLab.Models.PipelineCreate createOpti
 NGitLab.Impl.PipelineClient.CreatePipelineWithTrigger(string token, string ref, System.Collections.Generic.Dictionary<string, string> variables) -> NGitLab.Models.Pipeline
 NGitLab.Impl.PipelineClient.Delete(int pipelineId) -> void
 NGitLab.Impl.PipelineClient.GetAllJobsAsync() -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
+NGitLab.Impl.PipelineClient.GetBridges(NGitLab.Models.PipelineBridgeQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Bridge>
+NGitLab.Impl.PipelineClient.GetBridgesAsync(NGitLab.Models.PipelineBridgeQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Bridge>
 NGitLab.Impl.PipelineClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.Impl.PipelineClient.GetJobs(int pipelineId) -> NGitLab.Models.Job[]
 NGitLab.Impl.PipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
@@ -742,6 +744,7 @@ NGitLab.IPipelineClient.CreateAsync(NGitLab.Models.PipelineCreate createOptions,
 NGitLab.IPipelineClient.CreatePipelineWithTrigger(string token, string ref, System.Collections.Generic.Dictionary<string, string> variables) -> NGitLab.Models.Pipeline
 NGitLab.IPipelineClient.Delete(int pipelineId) -> void
 NGitLab.IPipelineClient.GetAllJobsAsync() -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
+NGitLab.IPipelineClient.GetBridgesAsync(NGitLab.Models.PipelineBridgeQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Bridge>
 NGitLab.IPipelineClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.IPipelineClient.GetJobs(int pipelineId) -> NGitLab.Models.Job[]
 NGitLab.IPipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
@@ -1660,6 +1663,8 @@ NGitLab.Models.Job.Artifacts.set -> void
 NGitLab.Models.Job.Job() -> void
 NGitLab.Models.Job.JobArtifact.JobArtifact() -> void
 NGitLab.Models.Job.JobProject.JobProject() -> void
+NGitLab.Models.Job.JobRunner.IsShared.get -> bool
+NGitLab.Models.Job.JobRunner.IsShared.set -> void
 NGitLab.Models.Job.JobRunner.JobRunner() -> void
 NGitLab.Models.Job.Project.get -> NGitLab.Models.Job.JobProject
 NGitLab.Models.Job.Project.set -> void
@@ -1692,6 +1697,7 @@ NGitLab.Models.JobAction.Erase = 2 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Play = 3 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Retry = 1 -> NGitLab.Models.JobAction
 NGitLab.Models.JobBasic
+NGitLab.Models.JobBasic.Commit.get -> NGitLab.Models.Commit
 NGitLab.Models.JobBasic.JobBasic() -> void
 NGitLab.Models.JobBasic.JobPipeline.JobPipeline() -> void
 NGitLab.Models.JobBasic.Name.get -> string
@@ -1717,6 +1723,7 @@ NGitLab.Models.JobBasic.Tag.get -> bool
 NGitLab.Models.JobBasic.Tag.set -> void
 NGitLab.Models.JobBasic.AllowFailure.get -> bool
 NGitLab.Models.JobBasic.AllowFailure.set -> void
+NGitLab.Models.JobBasic.User.get -> NGitLab.Models.User
 NGitLab.Models.JobBasic.User.set -> void
 NGitLab.Models.JobBasic.Pipeline.get -> NGitLab.Models.JobBasic.JobPipeline
 NGitLab.Models.JobBasic.Pipeline.set -> void

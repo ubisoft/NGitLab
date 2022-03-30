@@ -190,12 +190,6 @@ namespace NGitLab.Impl
             return _api.Get().To<TestReport>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/test_report");
         }
 
-        public IEnumerable<Bridge> GetBridges(PipelineBridgeQuery query)
-        {
-            var url = CreateGetBridgesUrl(query);
-            return _api.Get().GetAll<Bridge>(url);
-        }
-
         public GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineBridgeQuery query)
         {
             var url = CreateGetBridgesUrl(query);
