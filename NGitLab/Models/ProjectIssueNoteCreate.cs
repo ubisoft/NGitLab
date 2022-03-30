@@ -11,11 +11,9 @@ namespace NGitLab.Models
         public int IssueId;
 
         [Required]
-        [DataMember(Name = "body")]
         [JsonPropertyName("body")]
         public string Body;
 
-        [DataMember(Name = "confidential")]
         [JsonPropertyName("confidential")]
         public bool Confidential;
     }

@@ -15,7 +15,6 @@ namespace NGitLab.Models
             Id = id;
         }
 
-        [DataMember(Name = "runner_id")]
         [JsonPropertyName("runner_id")]
         public int Id;
     }

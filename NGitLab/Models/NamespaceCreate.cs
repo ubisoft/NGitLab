@@ -8,16 +8,13 @@ namespace NGitLab.Models
     public class NamespaceCreate
     {
         [Required]
-        [DataMember(Name = "name")]
         [JsonPropertyName("name")]
         public string Name;
 
         [Required]
-        [DataMember(Name = "path")]
         [JsonPropertyName("path")]
         public string Path;
 
-        [DataMember(Name = "description")]
         [JsonPropertyName("description")]
         public string Description;
     }

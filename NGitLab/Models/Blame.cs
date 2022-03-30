@@ -8,11 +8,9 @@ namespace NGitLab.Models
     [DataContract]
     public sealed class Blame : IEquatable<Blame>
     {
-        [DataMember(Name = "commit")]
         [JsonPropertyName("commit")]
         public BlameCommit Commit { get; set; }
 
-        [DataMember(Name = "lines")]
         [JsonPropertyName("lines")]
         public string[] Lines { get; set; }
 

@@ -10,11 +10,9 @@ namespace NGitLab.Models
     public class PipelineCreate
     {
         [Required]
-        [DataMember(Name = "ref")]
         [JsonPropertyName("ref")]
         public string Ref { get; set; }
 
-        [DataMember(Name = "variables")]
         [JsonPropertyName("variables")]
         public IDictionary<string, string> Variables { get; } = new Dictionary<string, string>(StringComparer.Ordinal);
     }

@@ -8,11 +8,9 @@ namespace NGitLab.Models
     [DataContract]
     public class GitLabVersion
     {
-        [DataMember(Name = "version")]
         [JsonPropertyName("version")]
         public string Version { get; set; }
 
-        [DataMember(Name = "revision")]
         [JsonPropertyName("revision")]
         public string Revision { get; set; }
     }

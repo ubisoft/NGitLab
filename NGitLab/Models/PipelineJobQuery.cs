@@ -8,7 +8,6 @@ namespace NGitLab.Models
     public class PipelineJobQuery
     {
         [Required]
-        [DataMember(Name = "id")]
         [JsonPropertyName("id")]
         public int PipelineId { get; set; }
 

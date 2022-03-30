@@ -58,7 +58,6 @@ namespace NGitLab.Tests
         [DataContract]
         public class TestContractV1
         {
-            [DataMember(Name = "title")]
             [JsonPropertyName("title")]
             public string Title;
         }
@@ -66,11 +65,9 @@ namespace NGitLab.Tests
         [DataContract]
         public class TestContractV2
         {
-            [DataMember(Name = "title")]
             [JsonPropertyName("title")]
             public string Title;
 
-            [DataMember(Name = "id")]
             [JsonPropertyName("id")]
             public int Id;
         }

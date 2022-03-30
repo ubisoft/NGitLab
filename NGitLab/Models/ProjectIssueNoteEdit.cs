@@ -14,7 +14,6 @@ namespace NGitLab.Models
         public int NoteId;
 
         [Required]
-        [DataMember(Name = "body")]
         [JsonPropertyName("body")]
         public string Body;
     }

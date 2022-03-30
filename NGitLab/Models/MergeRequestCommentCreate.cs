@@ -7,11 +7,9 @@ namespace NGitLab.Models
     [DataContract]
     public class MergeRequestCommentCreate
     {
-        [DataMember(Name = "body")]
         [JsonPropertyName("body")]
         public string Body;
 
-        [DataMember(Name = "created_at")]
         [JsonPropertyName("created_at")]
         public DateTime? CreatedAt;
     }
