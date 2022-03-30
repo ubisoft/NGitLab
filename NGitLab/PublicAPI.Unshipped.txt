@@ -108,6 +108,7 @@ NGitLab.ICommitClient
 NGitLab.ICommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.Models.Commit
 NGitLab.ICommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
 NGitLab.ICommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
+NGitLab.ICommitClient.GetRelatedMergeRequests(NGitLab.Sha1 sha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.ICommitStatusClient
 NGitLab.ICommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
 NGitLab.ICommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
@@ -354,6 +355,7 @@ NGitLab.Impl.CommitClient.CommitClient(NGitLab.Impl.API api, int projectId) -> v
 NGitLab.Impl.CommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
+NGitLab.Impl.CommitClient.GetRelatedMergeRequests(NGitLab.Sha1 sha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.Impl.CommitStatusClient
 NGitLab.Impl.CommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
 NGitLab.Impl.CommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>

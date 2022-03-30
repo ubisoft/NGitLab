@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NGitLab.Mock.Clients
 {
@@ -37,6 +39,21 @@ namespace NGitLab.Mock.Clients
         public JobStatus GetJobStatus(string branchName)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<Models.MergeRequest> GetRelatedMergeRequests(Sha1 sha)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+
+                var mergeRequests = project.MergeRequests.Where(mr =>
+                {
+                    return mr.Commits.SingleOrDefault(commit => commit.Sha.Equals(sha.ToString(), StringComparison.OrdinalIgnoreCase)) == null;
+                });
+
+                return mergeRequests?.Select(mr => mr.ToMergeRequestClient());
+            }
         }
     }
 }

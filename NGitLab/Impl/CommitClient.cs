@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using NGitLab.Extensions;
 using NGitLab.Models;
@@ -47,5 +48,10 @@ namespace NGitLab.Impl
         }
 
         public Commit Create(CommitCreate commit) => _api.Post().With(commit).To<Commit>(_repoPath + "/commits");
+
+        public IEnumerable<MergeRequest> GetRelatedMergeRequests(Sha1 sha)
+        {
+            return _api.Get().GetAll<MergeRequest>(_repoPath + $"/commits/{sha}/merge_requests");
+        }
     }
 }

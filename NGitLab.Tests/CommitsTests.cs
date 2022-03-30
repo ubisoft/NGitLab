@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -45,6 +46,17 @@ namespace NGitLab.Tests
             Assert.AreEqual(4, commit.Stats.Additions);
             Assert.AreEqual(1, commit.Stats.Deletions);
             Assert.AreEqual(5, commit.Stats.Total);
+        }
+
+        [Test]
+        public async Task Test_can_get_merge_request_assiciated_to_commit()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true, initializeWithMergeRequest: true);
+
+            var mergeRequests = context.Client.GetMergeRequest(project.Id).All;
+            Assert.IsNotEmpty(mergeRequests);
+            Assert.True(mergeRequests.Count() == 1, "At least one merge request should exist.");
         }
     }
 }

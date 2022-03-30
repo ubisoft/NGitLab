@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -21,5 +22,10 @@ namespace NGitLab
         /// Get a specific commit identified by the commit hash or name of a branch or tag.
         /// </summary>
         Commit GetCommit(string @ref);
+
+        /// <summary>
+        /// Get merge requests associated to a commit
+        /// </summary>
+        IEnumerable<MergeRequest> GetRelatedMergeRequests(Sha1 sha);
     }
 }
