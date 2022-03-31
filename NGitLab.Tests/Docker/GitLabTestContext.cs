@@ -111,7 +111,7 @@ namespace NGitLab.Tests.Docker
             return CreateClient(token.Token);
         }
 
-        public Project CreateProject(Action<ProjectCreate> configure = null, bool initializeWithCommits = false, bool initializeWithMergeRequest = false)
+        public Project CreateProject(Action<ProjectCreate> configure = null, bool initializeWithCommits = false)
         {
             var client = Client;
             var defaultBranch = "main";
@@ -153,11 +153,6 @@ namespace NGitLab.Tests.Docker
 
                     return client.Projects.Update(project.Id.ToString(CultureInfo.InvariantCulture), projectUpdate);
                 });
-            }
-
-            if (initializeWithMergeRequest)
-            {
-                CreateMergeRequest();
             }
 
             return project;

@@ -52,11 +52,29 @@ namespace NGitLab.Tests
         public async Task Test_can_get_merge_request_assiciated_to_commit()
         {
             using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject(initializeWithCommits: true, initializeWithMergeRequest: true);
+            var project = context.CreateProject();
 
-            var mergeRequests = context.Client.GetMergeRequest(project.Id).All;
-            Assert.IsNotEmpty(mergeRequests);
-            Assert.True(mergeRequests.Count() == 1, "At least one merge request should exist.");
+            context.Client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = "test-mr", Ref = project.DefaultBranch });
+
+            var commit = context.Client.GetCommits(project.Id).Create(new CommitCreate
+            {
+                ProjectId = project.Id,
+                Branch = "test-mr",
+                CommitMessage = "Test to retrieve MR from commit sha",
+            });
+
+            var mergeRequestTitle = "Test to retrieve MR from commit sha";
+            context.Client.GetMergeRequest(project.Id).Create(new MergeRequestCreate
+            {
+                SourceBranch = "test-mr",
+                TargetBranch = project.DefaultBranch,
+                Title = mergeRequestTitle,
+            });
+
+            var mergeRequests = context.Client.GetCommits(project.Id).GetRelatedMergeRequestsAsync(new RelatedMergeRequestsQuery { Sha = commit.Id });
+
+            var mergeRequest = mergeRequests.Single();
+            Assert.AreEqual(mergeRequestTitle, mergeRequest.Title);
         }
     }
 }
