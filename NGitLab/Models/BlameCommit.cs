@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public sealed class BlameCommit : IEquatable<BlameCommit>
     {
         [JsonPropertyName("id")]

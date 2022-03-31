@@ -1,10 +1,8 @@
 ﻿using System.Diagnostics;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     [DebuggerDisplay("{Path} ({Type})")]
     public class Tree
     {

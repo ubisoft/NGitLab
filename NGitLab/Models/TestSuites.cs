@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public class TestSuites
     {
         [JsonPropertyName("name")]

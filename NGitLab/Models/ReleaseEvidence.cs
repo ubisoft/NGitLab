@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public class ReleaseEvidence
     {
         [JsonPropertyName("sha")]

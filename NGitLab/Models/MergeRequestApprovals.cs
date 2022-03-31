@@ -1,9 +1,7 @@
-﻿using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public class MergeRequestApprovals
     {
         [JsonPropertyName("approvers")]
@@ -22,7 +20,6 @@ namespace NGitLab.Models
         public bool UserCanApprove { get; set; }
     }
 
-    [DataContract]
     public class MergeRequestApproversChange
     {
         private static readonly int[] EmptyIntArray = new int[0];
@@ -34,7 +31,6 @@ namespace NGitLab.Models
         public int[] ApproverGroups = EmptyIntArray;
     }
 
-    [DataContract]
     public class MergeRequestApproveRequest
     {
         [JsonPropertyName("sha")]

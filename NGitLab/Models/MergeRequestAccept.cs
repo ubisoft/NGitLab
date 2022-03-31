@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     [Obsolete("You should use MergeRequestMerge instead of MergeRequestAccept")]
     public class MergeRequestAccept
     {

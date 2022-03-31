@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     [DebuggerDisplay("{" + nameof(PathWithNamespace) + "}")]
     public class Project
     {

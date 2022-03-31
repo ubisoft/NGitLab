@@ -55,14 +55,12 @@ namespace NGitLab.Tests
             Assert.NotNull(newContractObject);
         }
 
-        [DataContract]
         public class TestContractV1
         {
             [JsonPropertyName("title")]
             public string Title;
         }
 
-        [DataContract]
         public class TestContractV2
         {
             [JsonPropertyName("title")]

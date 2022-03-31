@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public class CommitCreate
     {
         [Required]
@@ -35,7 +33,6 @@ namespace NGitLab.Models
         public bool? Force;
     }
 
-    [DataContract]
     public class CreateCommitAction
     {
         [JsonPropertyName("action")]

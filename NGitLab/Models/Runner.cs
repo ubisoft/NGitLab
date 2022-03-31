@@ -1,12 +1,10 @@
 using System;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
     [DebuggerDisplay("{Description}")]
-    [DataContract]
     public class Runner
     {
         public const string Url = "/runners";

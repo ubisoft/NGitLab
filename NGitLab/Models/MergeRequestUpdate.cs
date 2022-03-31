@@ -1,9 +1,7 @@
-﻿using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public class MergeRequestUpdate
     {
         [JsonPropertyName("source_branch")]
@@ -40,7 +38,6 @@ namespace NGitLab.Models
         public bool? AllowCollaboration;
     }
 
-    [DataContract]
     public class MergeRequestUpdateState
     {
         [JsonPropertyName("state_event")]

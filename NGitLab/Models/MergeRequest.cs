@@ -1,11 +1,9 @@
 using System;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using NGitLab.Extensions;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public class MergeRequest
     {
         public const string Url = "/merge_requests";

@@ -1,9 +1,7 @@
-﻿using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public class MilestoneUpdate
     {
         [JsonPropertyName("title")]
@@ -19,7 +17,6 @@ namespace NGitLab.Models
         public string StartDate;
     }
 
-    [DataContract]
     public class MilestoneUpdateState
     {
         [JsonPropertyName("state_event")]

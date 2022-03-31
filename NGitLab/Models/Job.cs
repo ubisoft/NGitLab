@@ -1,9 +1,7 @@
-﻿using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public class Job : JobBasic
     {
         [JsonPropertyName("artifacts_file")]
@@ -15,7 +13,6 @@ namespace NGitLab.Models
         [JsonPropertyName("project")]
         public JobProject Project { get; set; }
 
-        [DataContract]
         public class JobRunner
         {
             [JsonPropertyName("id")]
@@ -34,7 +31,6 @@ namespace NGitLab.Models
             public bool IsShared { get; set; }
         }
 
-        [DataContract]
         public class JobArtifact
         {
             [JsonPropertyName("filename")]
@@ -44,7 +40,6 @@ namespace NGitLab.Models
             public long Size { get; set; }
         }
 
-        [DataContract]
         public class JobProject
         {
             [JsonPropertyName("id")]

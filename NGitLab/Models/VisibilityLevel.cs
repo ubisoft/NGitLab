@@ -2,7 +2,6 @@
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public enum VisibilityLevel
     {
         [EnumMember(Value = "private")]

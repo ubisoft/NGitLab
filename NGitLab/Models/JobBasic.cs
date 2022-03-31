@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public class JobBasic
     {
         [JsonPropertyName("name")]
@@ -58,7 +56,6 @@ namespace NGitLab.Models
         [JsonPropertyName("queued_duration")]
         public float? QueuedDuration { get; set; }
 
-        [DataContract]
         public class JobPipeline
         {
             [JsonPropertyName("id")]

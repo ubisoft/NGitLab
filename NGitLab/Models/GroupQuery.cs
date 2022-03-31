@@ -1,12 +1,9 @@
-﻿using System.Runtime.Serialization;
-
-namespace NGitLab.Models
+﻿namespace NGitLab.Models
 {
     /// <summary>
     /// Allows to use more advanced GitLab queries for getting groups (based on v4 GitLab API).
     /// https://docs.gitlab.com/ee/api/groups.html
     /// </summary>
-    [DataContract]
     public class GroupQuery
     {
         /// <summary>

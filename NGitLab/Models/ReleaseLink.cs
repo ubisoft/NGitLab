@@ -16,7 +16,6 @@ namespace NGitLab.Models
         Package,
     }
 
-    [DataContract]
     public class ReleaseLink
     {
         [JsonPropertyName("id")]

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
     /// <summary>
     /// Allows to use more advanced GitLab queries for getting projects.
     /// </summary>
-    [DataContract]
     public class ProjectQuery
     {
         public ProjectQueryScope Scope = ProjectQueryScope.Accessible;

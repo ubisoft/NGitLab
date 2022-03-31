@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using NGitLab.Extensions;
 
@@ -8,7 +7,6 @@ namespace NGitLab.Models
     /// <summary>
     /// Events are user activity such as commenting a merge request.
     /// </summary>
-    [DataContract]
     public class Event
     {
         [JsonPropertyName("id")]

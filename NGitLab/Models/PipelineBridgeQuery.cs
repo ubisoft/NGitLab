@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public class PipelineBridgeQuery
     {
         [Required]
