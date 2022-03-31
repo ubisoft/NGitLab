@@ -157,7 +157,7 @@ namespace NGitLab.Tests.Docker
 
             if (initializeWithMergeRequest)
             {
-                AddMergeRequest();
+                CreateMergeRequest();
             }
 
             return project;
@@ -184,30 +184,6 @@ namespace NGitLab.Tests.Docker
                             RawContent = "this project should only live during the unit tests, you can delete if you find some",
                         }));
                 }
-            }
-
-            void AddMergeRequest()
-            {
-                s_gitlabRetryPolicy.Execute(() =>
-                    client.GetRepository(project.Id).Files.Create(new FileUpsert
-                    {
-                        Branch = "test-mr",
-                        CommitMessage = "add readme",
-                        Path = "README.md",
-                        RawContent = "this project should only live during the unit tests, you can delete if you find some",
-                    }));
-
-                s_gitlabRetryPolicy.Execute(() =>
-                    client.GetMergeRequest(project.Id).Create(new MergeRequestCreate
-                    {
-                        TargetProjectId = project.Id,
-                        SourceBranch = "test-mr",
-                        TargetBranch = "main",
-                        Title = "Test MR",
-                        Description = "Test to create a MR",
-                        RemoveSourceBranch = true,
-                        Squash = true,
-                    }));
             }
         }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NGitLab.Mock.Internals;
+using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
 {
@@ -41,7 +43,7 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Models.MergeRequest> GetRelatedMergeRequests(Sha1 sha)
+        public GitLabCollectionResponse<Models.MergeRequest> GetRelatedMergeRequestsAsync(RelatedMergeRequestsQuery query)
         {
             using (Context.BeginOperationScope())
             {
@@ -49,10 +51,12 @@ namespace NGitLab.Mock.Clients
 
                 var mergeRequests = project.MergeRequests.Where(mr =>
                 {
-                    return mr.Commits.SingleOrDefault(commit => commit.Sha.Equals(sha.ToString(), StringComparison.OrdinalIgnoreCase)) == null;
+                    return mr.Commits.SingleOrDefault(commit => commit.Sha.Equals(query.Sha.ToString(), StringComparison.OrdinalIgnoreCase)) == null;
                 });
 
-                return mergeRequests?.Select(mr => mr.ToMergeRequestClient());
+                var relatedMerqueRequests = mergeRequests?.Select(mr => mr.ToMergeRequestClient());
+
+                return GitLabCollectionResponse.Create(relatedMerqueRequests);
             }
         }
     }

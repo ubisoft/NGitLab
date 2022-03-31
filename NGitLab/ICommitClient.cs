@@ -24,8 +24,8 @@ namespace NGitLab
         Commit GetCommit(string @ref);
 
         /// <summary>
-        /// Get merge requests associated to a commit
+        /// Get merge requests related to a commit
         /// </summary>
-        IEnumerable<MergeRequest> GetRelatedMergeRequests(Sha1 sha);
+        GitLabCollectionResponse<MergeRequest> GetRelatedMergeRequestsAsync(RelatedMergeRequestsQuery query);
     }
 }
