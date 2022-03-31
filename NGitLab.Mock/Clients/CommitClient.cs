@@ -49,10 +49,8 @@ namespace NGitLab.Mock.Clients
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
 
-                var mergeRequests = project.MergeRequests.Where(mr =>
-                {
-                    return mr.Commits.SingleOrDefault(commit => commit.Sha.Equals(query.Sha.ToString(), StringComparison.OrdinalIgnoreCase)) == null;
-                });
+                var mergeRequests = project.MergeRequests.Where(mr => mr.Commits.SingleOrDefault(
+                        commit => commit.Sha.Equals(query.Sha.ToString(), StringComparison.OrdinalIgnoreCase)) != null);
 
                 var relatedMerqueRequests = mergeRequests?.Select(mr => mr.ToMergeRequestClient());
 
