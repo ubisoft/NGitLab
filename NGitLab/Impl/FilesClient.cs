@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -23,17 +19,20 @@ namespace NGitLab.Impl
 
         public void Create(FileUpsert file)
         {
-            _api.Post().With(file).Execute(_repoPath + $"/files/{EncodeFilePath(file.Path)}?{SerializeUrlEncoded(file)}");
+            var url = AppendQueryParams($"{_repoPath}/files/{EncodeFilePath(file.Path)}", file);
+            _api.Post().With(file).Execute(url);
         }
 
         public void Update(FileUpsert file)
         {
-            _api.Put().With(file).Execute(_repoPath + $"/files/{EncodeFilePath(file.Path)}?{SerializeUrlEncoded(file)}");
+            var url = AppendQueryParams($"{_repoPath}/files/{EncodeFilePath(file.Path)}", file);
+            _api.Put().With(file).Execute(url);
         }
 
         public void Delete(FileDelete file)
         {
-            _api.Delete().Execute(_repoPath + $"/files/{EncodeFilePath(file.Path)}?{SerializeUrlEncoded(file)}");
+            var url = AppendQueryParams($"{_repoPath}/files/{EncodeFilePath(file.Path)}", file);
+            _api.Delete().Execute(url);
         }
 
         public FileData Get(string filePath, string @ref)
@@ -69,47 +68,20 @@ namespace NGitLab.Impl
             return Uri.EscapeDataString(path);
         }
 
-        private static string SerializeUrlEncoded(object obj)
+        private static string AppendQueryParams(string url, FileUpsert fileUpsert)
         {
-            if (obj == null)
-                return null;
-
-            var dict = new Dictionary<string, object>(StringComparer.Ordinal);
-            var fields = obj.GetType().GetFields();
-            foreach (var field in fields)
-            {
-                var attribute = field.GetCustomAttributes(typeof(DataMemberAttribute), inherit: true).OfType<DataMemberAttribute>().FirstOrDefault();
-                if (attribute == null)
-                    continue;
-
-                dict[attribute.Name ?? field.Name] = field.GetValue(obj);
-            }
-
-            return SerializeUrlEncoded(dict);
+            url = Utils.AddParameter(url, "branch", fileUpsert.Branch);
+            url = Utils.AddParameter(url, "encoding", fileUpsert.Encoding);
+            url = Utils.AddParameter(url, "content", fileUpsert.Content);
+            url = Utils.AddParameter(url, "commit_message", fileUpsert.CommitMessage);
+            return url;
         }
 
-        private static string SerializeUrlEncoded(IDictionary<string, object> dict)
+        private static string AppendQueryParams(string url, FileDelete fileDelete)
         {
-            if (dict == null)
-                return null;
-
-            var sb = new StringBuilder();
-            foreach (var kvp in dict)
-            {
-                if (kvp.Value == null)
-                    continue;
-
-                if (sb.Length > 0)
-                {
-                    sb.Append('&');
-                }
-
-                sb.Append(kvp.Key);
-                sb.Append('=');
-                sb.Append(Uri.EscapeDataString($"{kvp.Value}"));
-            }
-
-            return sb.ToString();
+            url = Utils.AddParameter(url, "branch", fileDelete.Branch);
+            url = Utils.AddParameter(url, "commit_message", fileDelete.CommitMessage);
+            return url;
         }
     }
 }
