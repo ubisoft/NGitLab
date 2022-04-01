@@ -108,6 +108,7 @@ NGitLab.ICommitClient
 NGitLab.ICommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.Models.Commit
 NGitLab.ICommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
 NGitLab.ICommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
+NGitLab.ICommitClient.GetRelatedMergeRequestsAsync(NGitLab.Models.RelatedMergeRequestsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
 NGitLab.ICommitStatusClient
 NGitLab.ICommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
 NGitLab.ICommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
@@ -354,6 +355,7 @@ NGitLab.Impl.CommitClient.CommitClient(NGitLab.Impl.API api, int projectId) -> v
 NGitLab.Impl.CommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
+NGitLab.Impl.CommitClient.GetRelatedMergeRequestsAsync(NGitLab.Models.RelatedMergeRequestsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
 NGitLab.Impl.CommitStatusClient
 NGitLab.Impl.CommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
 NGitLab.Impl.CommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
@@ -2501,6 +2503,10 @@ NGitLab.Models.Ref
 NGitLab.Models.Ref.Name -> string
 NGitLab.Models.Ref.Ref() -> void
 NGitLab.Models.Ref.Type -> string
+NGitLab.Models.RelatedMergeRequestsQuery
+NGitLab.Models.RelatedMergeRequestsQuery.RelatedMergeRequestsQuery() -> void
+NGitLab.Models.RelatedMergeRequestsQuery.Sha.get -> NGitLab.Sha1
+NGitLab.Models.RelatedMergeRequestsQuery.Sha.set -> void
 NGitLab.Models.ReleaseAssetsInfo
 NGitLab.Models.ReleaseAssetsInfo.Count.get -> int?
 NGitLab.Models.ReleaseAssetsInfo.Count.set -> void

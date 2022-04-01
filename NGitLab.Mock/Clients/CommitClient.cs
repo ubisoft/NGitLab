@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using NGitLab.Mock.Internals;
+using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
 {
@@ -37,6 +41,21 @@ namespace NGitLab.Mock.Clients
         public JobStatus GetJobStatus(string branchName)
         {
             throw new NotImplementedException();
+        }
+
+        public GitLabCollectionResponse<Models.MergeRequest> GetRelatedMergeRequestsAsync(RelatedMergeRequestsQuery query)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+
+                var mergeRequests = project.MergeRequests.Where(mr => mr.Commits.SingleOrDefault(
+                        commit => commit.Sha.Equals(query.Sha.ToString(), StringComparison.OrdinalIgnoreCase)) != null);
+
+                var relatedMerqueRequests = mergeRequests.Select(mr => mr.ToMergeRequestClient());
+
+                return GitLabCollectionResponse.Create(relatedMerqueRequests);
+            }
         }
     }
 }
