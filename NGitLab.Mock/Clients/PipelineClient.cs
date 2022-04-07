@@ -108,7 +108,17 @@ namespace NGitLab.Mock.Clients
 
         public GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineBridgeQuery query)
         {
-            throw new NotImplementedException();
+            return GitLabCollectionResponse.Create(GetBridges(query));
+        }
+
+        public IEnumerable<Models.Bridge> GetBridges(PipelineBridgeQuery query)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = Context.Server.AllProjects.FindById(_projectId);
+                var bridges = project.Jobs.Where(j => j.Pipeline.Id == query.PipelineId && j.DownstreamPipeline != null).Select(j => j.ToBridgeClient());
+                return (query.Scope == null || !query.Scope.Any()) ? bridges : bridges.Where(j => query.Scope.Contains(j.Status.ToString(), StringComparer.Ordinal));
+            }
         }
 
         public Models.Job[] GetJobs(int pipelineId)
@@ -216,7 +226,7 @@ namespace NGitLab.Mock.Clients
                     pipelines = QuerySort(pipelines, query.Sort, p => p.UpdatedAt);
                 }
 
-                return pipelines.Select(pipeline => pipeline.ToPipelineBasicClient()).ToList();
+                return pipelines.Where(p => !p.IsParentAPipeline).Select(pipeline => pipeline.ToPipelineBasicClient()).ToList();
             }
         }
 
