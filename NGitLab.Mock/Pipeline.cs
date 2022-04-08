@@ -12,7 +12,9 @@ namespace NGitLab.Mock
             Ref = @ref;
         }
 
-        public new Project Parent => (Project)base.Parent;
+        public Project Project => (Project)Parent;
+
+        internal bool IsDownStreamPipeline { get; set; }
 
         public int Id { get; set; }
 
@@ -93,7 +95,7 @@ namespace NGitLab.Mock
 
         public Job AddJob(Job job)
         {
-            return Parent.Jobs.Add(job, this);
+            return Project.Jobs.Add(job, this);
         }
 
         internal Models.Job.JobPipeline ToJobPipeline()
@@ -136,7 +138,7 @@ namespace NGitLab.Mock
                 FinishedAt = FinishedAt.HasValue ? FinishedAt.Value.UtcDateTime : default,
                 Duration = Duration.HasValue ? Duration.Value.Ticks : 0,
                 Coverage = Coverage,
-                WebUrl = Parent?.WebUrl + "/-/pipelines/" + Id.ToString(CultureInfo.InvariantCulture),
+                WebUrl = Project?.WebUrl + "/-/pipelines/" + Id.ToString(CultureInfo.InvariantCulture),
             };
         }
     }

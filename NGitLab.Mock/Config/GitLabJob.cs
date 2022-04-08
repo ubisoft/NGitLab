@@ -19,6 +19,8 @@ namespace NGitLab.Mock.Config
         public DateTime? StartedAt { get; set; }
 
         public DateTime? FinishedAt { get; set; }
+
+        public GitLabPipeline DownstreamPipeline { get; set; }
     }
 
     public class GitLabJobsCollection : GitLabCollection<GitLabJob, GitLabPipeline>

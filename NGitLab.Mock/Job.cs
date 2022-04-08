@@ -34,7 +34,7 @@ namespace NGitLab.Mock
 
         public Pipeline Pipeline { get; set; }
 
-        public Project Project => Pipeline.Parent;
+        public Project Project => Pipeline.Project;
 
         public JobStatus Status { get; set; }
 
@@ -51,6 +51,39 @@ namespace NGitLab.Mock
         public float? QueuedDuration { get; set; }
 
         public string Trace { get; set; }
+
+        public Pipeline DownstreamPipeline { get; set; }
+
+        internal Models.Bridge ToBridgeClient()
+        {
+            return new Models.Bridge
+            {
+                Name = Name,
+                Id = Id,
+                Ref = Ref,
+                Commit = Commit,
+                CreatedAt = CreatedAt,
+                StartedAt = StartedAt,
+                FinishedAt = FinishedAt,
+                Stage = Stage,
+                Coverage = Coverage,
+                Pipeline = new Models.Job.JobPipeline
+                {
+                    Id = Pipeline.Id,
+                    Ref = Pipeline.Ref,
+                    Sha = Pipeline.Sha,
+                    Status = Pipeline.Status,
+                },
+                DownstreamPipeline = DownstreamPipeline?.ToJobPipeline(),
+                Status = Status,
+                AllowFailure = AllowFailure,
+                Tag = Tag,
+                User = User?.ToClientUser(),
+                WebUrl = WebUrl,
+                Duration = Duration,
+                QueuedDuration = QueuedDuration,
+            };
+        }
 
         internal Models.Job ToJobClient()
         {

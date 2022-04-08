@@ -926,8 +926,9 @@ namespace NGitLab.Mock.Config
         /// <param name="startedAt">Start date time.</param>
         /// <param name="finishedAt">Finish date time.</param>
         /// <param name="allowFailure">Indicates if failure is allowed.</param>
+        /// <param name="downstreamPipeline">Downstream pipeline.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabPipeline WithJob(this GitLabPipeline pipeline, string? name = null, string? stage = null, JobStatus status = JobStatus.Unknown, DateTime? createdAt = null, DateTime? startedAt = null, DateTime? finishedAt = null, bool allowFailure = false, Action<GitLabJob>? configure = null)
+        public static GitLabPipeline WithJob(this GitLabPipeline pipeline, string? name = null, string? stage = null, JobStatus status = JobStatus.Unknown, DateTime? createdAt = null, DateTime? startedAt = null, DateTime? finishedAt = null, bool allowFailure = false, GitLabPipeline? downstreamPipeline = null, Action<GitLabJob>? configure = null)
         {
             return Configure(pipeline, _ =>
             {
@@ -940,6 +941,7 @@ namespace NGitLab.Mock.Config
                     StartedAt = startedAt,
                     FinishedAt = finishedAt,
                     AllowFailure = allowFailure,
+                    DownstreamPipeline = downstreamPipeline,
                 };
 
                 pipeline.Jobs.Add(job);
@@ -1409,7 +1411,7 @@ namespace NGitLab.Mock.Config
                 cmt.CreatedAt = cmt.UpdatedAt;
         }
 
-        private static void CreatePipeline(GitLabServer server, Project project, GitLabPipeline pipeline, Dictionary<string, LibGit2Sharp.Commit> aliases)
+        private static Pipeline CreatePipeline(GitLabServer server, Mock.GitLabObject parent, GitLabPipeline pipeline, Dictionary<string, LibGit2Sharp.Commit> aliases)
         {
             if (!aliases.TryGetValue(pipeline.Commit ?? throw new ArgumentException("pipeline.Commit == null", nameof(pipeline)), out var commit))
                 throw new InvalidOperationException($"Cannot find commit from alias '{pipeline.Commit}'");
@@ -1422,7 +1424,15 @@ namespace NGitLab.Mock.Config
                 Status = pipeline.Jobs.Count == 0 ? JobStatus.NoBuild : JobStatus.Success,
             };
 
-            project.Pipelines.Add(ppl);
+            if (parent is Project project)
+            {
+                project.Pipelines.Add(ppl);
+            }
+            else if (parent is Pipeline parentPipeline)
+            {
+                ppl.IsDownStreamPipeline = true;
+                parentPipeline.Project.Pipelines.Add(ppl);
+            }
 
             var jobs = new List<Job>();
             for (var i = 0; i < pipeline.Jobs.Count; i++)
@@ -1438,7 +1448,7 @@ namespace NGitLab.Mock.Config
                         .DefaultIfEmpty(DateTime.UtcNow)
                         .Min();
 
-                jobs.Add(CreateJob(ppl, job, maxCreatedAt));
+                jobs.Add(CreateJob(server, ppl, job, maxCreatedAt, aliases));
             }
 
             var statuses = jobs
@@ -1464,9 +1474,11 @@ namespace NGitLab.Mock.Config
 
             if (ppl.StartedAt != null && ppl.CreatedAt > ppl.StartedAt)
                 ppl.CreatedAt = (DateTimeOffset)ppl.StartedAt;
+
+            return ppl;
         }
 
-        private static Job CreateJob(Pipeline pipeline, GitLabJob job, DateTime maxCreatedAt)
+        private static Job CreateJob(GitLabServer server, Pipeline pipeline, GitLabJob job, DateTime maxCreatedAt, Dictionary<string, LibGit2Sharp.Commit> aliases)
         {
             var jb = new Job
             {
@@ -1479,8 +1491,18 @@ namespace NGitLab.Mock.Config
                 FinishedAt = job.FinishedAt ?? (job.Status is JobStatus.Success or JobStatus.Failed or JobStatus.Canceled ? maxCreatedAt : default),
                 AllowFailure = job.AllowFailure,
                 User = pipeline.User,
+                DownstreamPipeline = job.DownstreamPipeline == null ? null : CreatePipeline(server, pipeline, job.DownstreamPipeline, aliases),
             };
-            pipeline.AddJob(pipeline.Parent, jb);
+
+            if (pipeline.Parent is Pipeline ppl)
+            {
+                ppl.AddJob(jb);
+            }
+            else
+            {
+                jb.Pipeline = pipeline;
+                pipeline.Project.Jobs.Add(jb);
+            }
 
             if (jb.FinishedAt != default && (jb.StartedAt == default || jb.StartedAt > jb.FinishedAt))
                 jb.StartedAt = jb.FinishedAt;
@@ -1742,7 +1764,7 @@ namespace NGitLab.Mock.Config
                 Commit = pipeline.Ref,
             };
 
-            foreach (var job in pipeline.Parent.Jobs.Where(x => x.Pipeline.Id == pipeline.Id))
+            foreach (var job in pipeline.Project.Jobs.Where(x => x.Pipeline.Id == pipeline.Id))
             {
                 ppl.Jobs.Add(ToConfig(job));
             }
