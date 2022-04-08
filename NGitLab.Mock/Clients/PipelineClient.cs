@@ -226,7 +226,7 @@ namespace NGitLab.Mock.Clients
                     pipelines = QuerySort(pipelines, query.Sort, p => p.UpdatedAt);
                 }
 
-                return pipelines.Where(p => !p.IsParentAPipeline).Select(pipeline => pipeline.ToPipelineBasicClient()).ToList();
+                return pipelines.Where(p => !p.IsDownStreamPipeline).Select(pipeline => pipeline.ToPipelineBasicClient()).ToList();
             }
         }
 

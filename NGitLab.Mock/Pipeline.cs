@@ -12,9 +12,9 @@ namespace NGitLab.Mock
             Ref = @ref;
         }
 
-        public Project Project => Parent is Pipeline pipeline ? pipeline.Project : (Project)Parent;
+        public Project Project => (Project)Parent;
 
-        public bool IsParentAPipeline { get; set; }
+        internal bool IsDownStreamPipeline { get; set; }
 
         public int Id { get; set; }
 

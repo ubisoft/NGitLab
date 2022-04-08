@@ -1430,8 +1430,7 @@ namespace NGitLab.Mock.Config
             }
             else if (parent is Pipeline parentPipeline)
             {
-                ppl.Parent = parentPipeline;
-                ppl.IsParentAPipeline = true;
+                ppl.IsDownStreamPipeline = true;
                 parentPipeline.Project.Pipelines.Add(ppl);
             }
 

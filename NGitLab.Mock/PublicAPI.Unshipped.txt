@@ -700,8 +700,6 @@ NGitLab.Mock.Pipeline.FinishedAt.get -> System.DateTimeOffset?
 NGitLab.Mock.Pipeline.FinishedAt.set -> void
 NGitLab.Mock.Pipeline.Id.get -> int
 NGitLab.Mock.Pipeline.Id.set -> void
-NGitLab.Mock.Pipeline.IsParentAPipeline.get -> bool
-NGitLab.Mock.Pipeline.IsParentAPipeline.set -> void
 NGitLab.Mock.Pipeline.Pipeline(string ref) -> void
 NGitLab.Mock.Pipeline.Project.get -> NGitLab.Mock.Project
 NGitLab.Mock.Pipeline.Ref.get -> string
