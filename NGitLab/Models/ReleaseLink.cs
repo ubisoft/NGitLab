@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract(Name = "ReleaseLinkType")]
     public enum ReleaseLinkType
     {
         [EnumMember(Value = "other")]
