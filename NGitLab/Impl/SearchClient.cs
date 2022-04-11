@@ -67,7 +67,7 @@ namespace NGitLab.Impl
                 if (!string.Equals(query.Sort, "asc", StringComparison.Ordinal) &&
                     !string.Equals(query.Sort, "desc", StringComparison.Ordinal))
                 {
-                    throw new NotSupportedException("Only allowed values for Sort are 'asc' and 'desc'");
+                    throw new NotSupportedException("Only allowed values for Sort are 'asc' or 'desc'");
                 }
             }
 
