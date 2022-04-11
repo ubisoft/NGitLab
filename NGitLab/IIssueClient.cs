@@ -56,6 +56,16 @@ namespace NGitLab
         GitLabCollectionResponse<Issue> GetAsync(int projectId, IssueQuery query);
 
         /// <summary>
+        ///     <para>Return a single issue, only for administrators.</para>
+        ///     <para>url like GET /issues/:id</para>
+        /// </summary>
+        /// <param name="issueId"></param>
+        /// <returns>The issue that corresponds to the issue id</returns>
+        Issue GetById(int issueId);
+
+        Task<Issue> GetByIdAsync(int issueId, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Add an issue witht he proposed title to the GitLab list for the selected proejct id.
         /// </summary>
         /// <param name="issueCreate"></param>

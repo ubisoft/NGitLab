@@ -206,6 +206,16 @@ namespace NGitLab.Mock.Clients
             return GitLabCollectionResponse.Create(Get(projectId, query));
         }
 
+        public Task<Models.Issue> GetByIdAsync(int issueId, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Models.Issue GetById(int issueId)
+        {
+            throw new NotImplementedException();
+        }
+
         private IEnumerable<Issue> FilterByQuery(IEnumerable<Issue> issues, IssueQuery query)
         {
             if (query.State != null)
