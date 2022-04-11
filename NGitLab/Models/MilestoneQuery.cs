@@ -1,11 +1,8 @@
-﻿using System.Runtime.Serialization;
-
-namespace NGitLab.Models
+﻿namespace NGitLab.Models
 {
     /// <summary>
     /// Allows to use more advanced GitLab queries for getting milestones
     /// </summary>
-    [DataContract]
     public class MilestoneQuery
     {
         /// <summary>

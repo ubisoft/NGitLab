@@ -1,9 +1,7 @@
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract]
     public class RunnerId
     {
         public RunnerId()
@@ -15,7 +13,6 @@ namespace NGitLab.Models
             Id = id;
         }
 
-        [DataMember(Name = "runner_id")]
         [JsonPropertyName("runner_id")]
         public int Id;
     }
