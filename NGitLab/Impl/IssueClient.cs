@@ -9,6 +9,7 @@ namespace NGitLab.Impl
     public class IssueClient : IIssueClient
     {
         private const string IssuesUrl = "/issues";
+        private const string IssueByIdUrl = "/issues/{0}";
         private const string ProjectIssuesUrl = "/projects/{0}/issues";
         private const string SingleIssueUrl = "/projects/{0}/issues/{1}";
         private const string ResourceLabelEventUrl = "/projects/{0}/issues/{1}/resource_label_events";
@@ -35,14 +36,14 @@ namespace NGitLab.Impl
             return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId));
         }
 
-        public Issue Get(int projectId, int issueId)
+        public Issue Get(int projectId, int issueIid)
         {
-            return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueId));
+            return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueIid));
         }
 
-        public Task<Issue> GetAsync(int projectId, int issueId, CancellationToken cancellationToken = default)
+        public Task<Issue> GetAsync(int projectId, int issueIid, CancellationToken cancellationToken = default)
         {
-            return _api.Get().ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueId), cancellationToken);
+            return _api.Get().ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueIid), cancellationToken);
         }
 
         public IEnumerable<Issue> Get(int projectId, IssueQuery query)
@@ -63,6 +64,16 @@ namespace NGitLab.Impl
         public GitLabCollectionResponse<Issue> GetAsync(IssueQuery query)
         {
             return Get(IssuesUrl, query);
+        }
+
+        public Issue GetById(int issueId)
+        {
+            return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, IssueByIdUrl, issueId));
+        }
+
+        public Task<Issue> GetByIdAsync(int issueId, CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, IssueByIdUrl, issueId), cancellationToken);
         }
 
         public Issue Create(IssueCreate issueCreate)

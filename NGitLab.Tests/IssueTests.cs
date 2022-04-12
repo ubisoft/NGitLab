@@ -28,6 +28,23 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
+        public async Task Test_get_issue_by_id()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var issuesClient = context.Client.Issues;
+            var adminIssuesClient = context.AdminClient.Issues;
+
+            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1" });
+
+            var issue = adminIssuesClient.GetById(issue1.Id);
+
+            Assert.AreEqual(issue1.Id, issue.Id);
+            Assert.AreEqual(issue1.IssueId, issue.IssueId);
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task Test_get_unassigned_issues_with_IssueQuery()
         {
             using var context = await GitLabTestContext.CreateAsync();
