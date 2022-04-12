@@ -206,14 +206,22 @@ namespace NGitLab.Mock.Clients
             return GitLabCollectionResponse.Create(Get(projectId, query));
         }
 
-        public Task<Models.Issue> GetByIdAsync(int issueId, CancellationToken cancellationToken = default)
+        public async Task<Models.Issue> GetByIdAsync(int issueId, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            await Task.Yield();
+            return GetById(issueId);
         }
 
         public Models.Issue GetById(int issueId)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var viewableProjects = Server.AllProjects.Where(p => p.CanUserViewProject(Context.User));
+                return viewableProjects
+                    .SelectMany(p => p.Issues.Where(i => i.CanUserViewIssue(Context.User) && i.Id == issueId))
+                    .FirstOrDefault()?
+                    .ToClientIssue() ?? throw new GitLabNotFoundException();
+            }
         }
 
         private IEnumerable<Issue> FilterByQuery(IEnumerable<Issue> issues, IssueQuery query)

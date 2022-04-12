@@ -55,5 +55,21 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient();
             Assert.DoesNotThrow(() => client.Issues.Get(new IssueQuery { Scope = "assigned_to_me" }).ToArray());
         }
+
+        [Test]
+        public void Test_issue_by_id_can_be_found()
+        {
+            using var server = new GitLabConfig()
+                .WithUser("user", isDefault: true, isAdmin: true)
+                .WithProject("Test", configure: project => project
+                    .WithIssue("Issue title", author: "user", id: 5))
+                .BuildServer();
+
+            var client = server.CreateClient();
+
+            var issue = client.Issues.GetById(10001);
+            Assert.AreEqual(5, issue.IssueId);
+            Assert.AreEqual("Issue title", issue.Title);
+        }
     }
 }
