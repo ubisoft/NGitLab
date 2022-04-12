@@ -45,6 +45,8 @@
             internal set => _graphQLClient = value;
         }
 
+        public ISearchClient AdvancedSearch => new AdvancedSearchClient(Context);
+
         public IEventClient GetEvents() => new EventClient(Context);
 
         public IEventClient GetUserEvents(int userId) => new EventClient(Context, userId: userId);
@@ -89,5 +91,9 @@
         {
             throw new System.NotImplementedException();
         }
+
+        public ISearchClient GetGroupSearchClient(int groupId) => new GroupSearchClient(Context, groupId);
+
+        public ISearchClient GetProjectSearchClient(int projectId) => new ProjectSearchClient(Context, projectId);
     }
 }

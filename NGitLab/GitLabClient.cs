@@ -38,6 +38,8 @@ namespace NGitLab
 
         public IGraphQLClient GraphQL { get; }
 
+        public ISearchClient AdvancedSearch { get; }
+
         public RequestOptions Options
         {
             get => _api.RequestOptions;
@@ -82,6 +84,7 @@ namespace NGitLab
             Deployments = new DeploymentClient(_api);
             Epics = new EpicClient(_api);
             GraphQL = new GraphQLClient(_api);
+            AdvancedSearch = new SearchClient(_api, "/search");
         }
 
         [Obsolete("Use GitLabClient constructor instead")]
@@ -203,5 +206,11 @@ namespace NGitLab
 
         public IProtectedBranchClient GetProtectedBranchClient(int projectId)
             => new ProtectedBranchClient(_api, projectId);
+
+        public ISearchClient GetGroupSearchClient(int groupId)
+            => new SearchClient(_api, $"/groups/{groupId}/search");
+
+        public ISearchClient GetProjectSearchClient(int projectId)
+            => new SearchClient(_api, $"/projects/{projectId}/search");
     }
 }

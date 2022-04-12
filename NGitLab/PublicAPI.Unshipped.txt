@@ -35,6 +35,7 @@ NGitLab.GetCommitsRequest.PerPage.set -> void
 NGitLab.GetCommitsRequest.RefName.get -> string
 NGitLab.GetCommitsRequest.RefName.set -> void
 NGitLab.GitLabClient
+NGitLab.GitLabClient.AdvancedSearch.get -> NGitLab.ISearchClient
 NGitLab.GitLabClient.Deployments.get -> NGitLab.IDeploymentClient
 NGitLab.GitLabClient.Epics.get -> NGitLab.IEpicClient
 NGitLab.GitLabClient.GetClusterClient(int projectId) -> NGitLab.IClusterClient
@@ -43,6 +44,7 @@ NGitLab.GitLabClient.GetCommitStatus(int projectId) -> NGitLab.ICommitStatusClie
 NGitLab.GitLabClient.GetEnvironmentClient(int projectId) -> NGitLab.IEnvironmentClient
 NGitLab.GitLabClient.GetEvents() -> NGitLab.IEventClient
 NGitLab.GitLabClient.GetGroupBadgeClient(int groupId) -> NGitLab.IGroupBadgeClient
+NGitLab.GitLabClient.GetGroupSearchClient(int groupId) -> NGitLab.ISearchClient
 NGitLab.GitLabClient.GetGroupVariableClient(int groupId) -> NGitLab.IGroupVariableClient
 NGitLab.GitLabClient.GetJobs(int projectId) -> NGitLab.IJobClient
 NGitLab.GitLabClient.GetMergeRequest(int projectId) -> NGitLab.IMergeRequestClient
@@ -52,6 +54,7 @@ NGitLab.GitLabClient.GetProjectBadgeClient(int projectId) -> NGitLab.IProjectBad
 NGitLab.GitLabClient.GetProjectEvents(int projectId) -> NGitLab.IEventClient
 NGitLab.GitLabClient.GetProjectIssueNoteClient(int projectId) -> NGitLab.IProjectIssueNoteClient
 NGitLab.GitLabClient.GetProjectLevelApprovalRulesClient(int projectId) -> NGitLab.IProjectLevelApprovalRulesClient
+NGitLab.GitLabClient.GetProjectSearchClient(int projectId) -> NGitLab.ISearchClient
 NGitLab.GitLabClient.GetProjectVariableClient(int projectId) -> NGitLab.IProjectVariableClient
 NGitLab.GitLabClient.GetProtectedBranchClient(int projectId) -> NGitLab.IProtectedBranchClient
 NGitLab.GitLabClient.GetReleases(int projectId) -> NGitLab.IReleaseClient
@@ -140,6 +143,7 @@ NGitLab.IFilesClient.Get(string filePath, string ref) -> NGitLab.Models.FileData
 NGitLab.IFilesClient.GetAsync(string filePath, string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.FileData>
 NGitLab.IFilesClient.Update(NGitLab.Models.FileUpsert file) -> void
 NGitLab.IGitLabClient
+NGitLab.IGitLabClient.AdvancedSearch.get -> NGitLab.ISearchClient
 NGitLab.IGitLabClient.Deployments.get -> NGitLab.IDeploymentClient
 NGitLab.IGitLabClient.Epics.get -> NGitLab.IEpicClient
 NGitLab.IGitLabClient.GetClusterClient(int projectId) -> NGitLab.IClusterClient
@@ -148,6 +152,7 @@ NGitLab.IGitLabClient.GetCommitStatus(int projectId) -> NGitLab.ICommitStatusCli
 NGitLab.IGitLabClient.GetEnvironmentClient(int projectId) -> NGitLab.IEnvironmentClient
 NGitLab.IGitLabClient.GetEvents() -> NGitLab.IEventClient
 NGitLab.IGitLabClient.GetGroupBadgeClient(int groupId) -> NGitLab.IGroupBadgeClient
+NGitLab.IGitLabClient.GetGroupSearchClient(int groupId) -> NGitLab.ISearchClient
 NGitLab.IGitLabClient.GetGroupVariableClient(int groupId) -> NGitLab.IGroupVariableClient
 NGitLab.IGitLabClient.GetJobs(int projectId) -> NGitLab.IJobClient
 NGitLab.IGitLabClient.GetMergeRequest(int projectId) -> NGitLab.IMergeRequestClient
@@ -157,6 +162,7 @@ NGitLab.IGitLabClient.GetProjectBadgeClient(int projectId) -> NGitLab.IProjectBa
 NGitLab.IGitLabClient.GetProjectEvents(int projectId) -> NGitLab.IEventClient
 NGitLab.IGitLabClient.GetProjectIssueNoteClient(int projectId) -> NGitLab.IProjectIssueNoteClient
 NGitLab.IGitLabClient.GetProjectLevelApprovalRulesClient(int projectId) -> NGitLab.IProjectLevelApprovalRulesClient
+NGitLab.IGitLabClient.GetProjectSearchClient(int projectId) -> NGitLab.ISearchClient
 NGitLab.IGitLabClient.GetProjectVariableClient(int projectId) -> NGitLab.IProjectVariableClient
 NGitLab.IGitLabClient.GetProtectedBranchClient(int projectId) -> NGitLab.IProtectedBranchClient
 NGitLab.IGitLabClient.GetReleases(int projectId) -> NGitLab.IReleaseClient
@@ -867,6 +873,8 @@ NGitLab.IRunnerClient.OfProjectAsync(int projectId) -> NGitLab.GitLabCollectionR
 NGitLab.IRunnerClient.Register(NGitLab.Models.RunnerRegister request) -> NGitLab.Models.Runner
 NGitLab.IRunnerClient.this[int id].get -> NGitLab.Models.Runner
 NGitLab.IRunnerClient.Update(int runnerId, NGitLab.Models.RunnerUpdate runnerUpdate) -> NGitLab.Models.Runner
+NGitLab.ISearchClient
+NGitLab.ISearchClient.GetBlobsAsync(NGitLab.SearchQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.SearchBlob>
 NGitLab.ISnippetClient
 NGitLab.ISnippetClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Snippet>
 NGitLab.ISnippetClient.Create(NGitLab.Models.SnippetCreate snippet) -> void
@@ -2704,6 +2712,22 @@ NGitLab.Models.RunnerUpdate.Locked -> bool?
 NGitLab.Models.RunnerUpdate.RunnerUpdate() -> void
 NGitLab.Models.RunnerUpdate.RunUntagged -> bool?
 NGitLab.Models.RunnerUpdate.TagList -> string[]
+NGitLab.Models.SearchBlob
+NGitLab.Models.SearchBlob.BaseName.get -> string
+NGitLab.Models.SearchBlob.BaseName.set -> void
+NGitLab.Models.SearchBlob.Data.get -> string
+NGitLab.Models.SearchBlob.Data.set -> void
+NGitLab.Models.SearchBlob.FileName.get -> string
+NGitLab.Models.SearchBlob.FileName.set -> void
+NGitLab.Models.SearchBlob.Path.get -> string
+NGitLab.Models.SearchBlob.Path.set -> void
+NGitLab.Models.SearchBlob.ProjectId.get -> int
+NGitLab.Models.SearchBlob.ProjectId.set -> void
+NGitLab.Models.SearchBlob.Ref.get -> NGitLab.Sha1
+NGitLab.Models.SearchBlob.Ref.set -> void
+NGitLab.Models.SearchBlob.SearchBlob() -> void
+NGitLab.Models.SearchBlob.StartLine.get -> int
+NGitLab.Models.SearchBlob.StartLine.set -> void
 NGitLab.Models.Session
 NGitLab.Models.Session.PrivateToken -> string
 NGitLab.Models.Session.Session() -> void
@@ -3036,6 +3060,20 @@ NGitLab.RequestOptions.RetryInterval.get -> System.TimeSpan
 NGitLab.RequestOptions.RetryInterval.set -> void
 NGitLab.RequestOptions.Sudo.get -> string
 NGitLab.RequestOptions.Sudo.set -> void
+NGitLab.SearchQuery
+NGitLab.SearchQuery.Confidential.get -> bool?
+NGitLab.SearchQuery.Confidential.set -> void
+NGitLab.SearchQuery.OrderBy.get -> string
+NGitLab.SearchQuery.OrderBy.set -> void
+NGitLab.SearchQuery.PerPage.get -> int?
+NGitLab.SearchQuery.PerPage.set -> void
+NGitLab.SearchQuery.Search.get -> string
+NGitLab.SearchQuery.Search.set -> void
+NGitLab.SearchQuery.SearchQuery() -> void
+NGitLab.SearchQuery.Sort.get -> string
+NGitLab.SearchQuery.Sort.set -> void
+NGitLab.SearchQuery.State.get -> string
+NGitLab.SearchQuery.State.set -> void
 NGitLab.Sha1
 NGitLab.Sha1.Equals(NGitLab.Sha1 other) -> bool
 NGitLab.Sha1.Sha1() -> void
