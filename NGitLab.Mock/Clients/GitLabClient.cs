@@ -1,6 +1,4 @@
-﻿using NGitLab.Impl;
-
-namespace NGitLab.Mock.Clients
+﻿namespace NGitLab.Mock.Clients
 {
     internal sealed class GitLabClient : ClientBase, IGitLabClient
     {

@@ -675,11 +675,8 @@ NGitLab.Impl.RunnerClient.Register(NGitLab.Models.RunnerRegister request) -> NGi
 NGitLab.Impl.RunnerClient.RunnerClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.RunnerClient.this[int id].get -> NGitLab.Models.Runner
 NGitLab.Impl.RunnerClient.Update(int runnerId, NGitLab.Models.RunnerUpdate runnerUpdate) -> NGitLab.Models.Runner
-NGitLab.Impl.SearchClient
 NGitLab.Impl.SearchClient.GetBlobs(NGitLab.SearchQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.SearchBlob>
-NGitLab.Impl.SearchClient.SearchClient(NGitLab.Impl.API api, string baseUrl) -> void
 NGitLab.Impl.SnippetClient
-NGitLab.Impl.SnippetClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Snippet>
 NGitLab.Impl.SnippetClient.Create(NGitLab.Models.SnippetCreate snippet) -> void
 NGitLab.Impl.SnippetClient.Create(NGitLab.Models.SnippetProjectCreate snippet) -> void
 NGitLab.Impl.SnippetClient.Delete(int projectId, int snippetId) -> void
