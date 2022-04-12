@@ -1,6 +1,6 @@
 ﻿namespace NGitLab
 {
-    public class SearchQuery
+    public sealed class SearchQuery
     {
         /// <summary>
         /// The search query

@@ -14,7 +14,7 @@ namespace NGitLab.Mock.Clients
             _groupId = groupId;
         }
 
-        public GitLabCollectionResponse<SearchBlob> GetBlobs(SearchQuery query)
+        public GitLabCollectionResponse<SearchBlob> GetBlobsAsync(SearchQuery query)
         {
             throw new NotImplementedException();
         }

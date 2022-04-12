@@ -12,7 +12,7 @@ namespace NGitLab.Mock.Clients
             _context = context;
         }
 
-        public GitLabCollectionResponse<SearchBlob> GetBlobs(SearchQuery query)
+        public GitLabCollectionResponse<SearchBlob> GetBlobsAsync(SearchQuery query)
         {
             throw new NotImplementedException();
         }

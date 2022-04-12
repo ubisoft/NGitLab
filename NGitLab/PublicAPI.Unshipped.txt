@@ -873,7 +873,7 @@ NGitLab.IRunnerClient.Register(NGitLab.Models.RunnerRegister request) -> NGitLab
 NGitLab.IRunnerClient.this[int id].get -> NGitLab.Models.Runner
 NGitLab.IRunnerClient.Update(int runnerId, NGitLab.Models.RunnerUpdate runnerUpdate) -> NGitLab.Models.Runner
 NGitLab.ISearchClient
-NGitLab.ISearchClient.GetBlobs(NGitLab.SearchQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.SearchBlob>
+NGitLab.ISearchClient.GetBlobsAsync(NGitLab.SearchQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.SearchBlob>
 NGitLab.ISnippetClient
 NGitLab.ISnippetClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Snippet>
 NGitLab.ISnippetClient.Create(NGitLab.Models.SnippetCreate snippet) -> void

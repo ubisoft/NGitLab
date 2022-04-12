@@ -3,7 +3,7 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
-    public class SearchClient : ISearchClient
+    internal sealed class SearchClient : ISearchClient
     {
         private readonly API _api;
         private readonly string _baseUrl;
@@ -14,7 +14,7 @@ namespace NGitLab.Impl
             _baseUrl = baseUrl;
         }
 
-        public GitLabCollectionResponse<SearchBlob> GetBlobs(SearchQuery query)
+        public GitLabCollectionResponse<SearchBlob> GetBlobsAsync(SearchQuery query)
         {
             var url = CreateGetUrl("blobs", query);
             return _api.Get().GetAllAsync<SearchBlob>(url);
@@ -34,41 +34,22 @@ namespace NGitLab.Impl
 
             if (query.Confidential.HasValue)
             {
-                if (!string.Equals(scope, "issues", StringComparison.Ordinal))
-                {
-                    throw new NotSupportedException("Confidential is only supported for 'issues' scope");
-                }
-
                 url = Utils.AddParameter(url, "confidential", query.Confidential);
             }
 
             if (!string.IsNullOrEmpty(query.State))
             {
-                if (string.Equals(scope, "issues", StringComparison.Ordinal) || string.Equals(scope, "merge_requests", StringComparison.Ordinal))
-                {
-                    throw new NotSupportedException("State is only supported for 'issues' or 'merge_requests' scope");
-                }
-
                 url = Utils.AddParameter(url, "state", query.State);
             }
 
             if (!string.IsNullOrEmpty(query.OrderBy))
             {
-                if (!string.Equals(query.OrderBy, "created_at", StringComparison.Ordinal))
-                {
-                    throw new NotSupportedException("Only allowed value for OrderBy is 'created_at'");
-                }
-
                 url = Utils.AddOrderBy(url, query.OrderBy);
             }
 
             if (!string.IsNullOrEmpty(query.Sort))
             {
-                if (!string.Equals(query.Sort, "asc", StringComparison.Ordinal) &&
-                    !string.Equals(query.Sort, "desc", StringComparison.Ordinal))
-                {
-                    throw new NotSupportedException("Only allowed values for Sort are 'asc' or 'desc'");
-                }
+                url = Utils.AddParameter(url, "sort", query.Sort);
             }
 
             return url;
