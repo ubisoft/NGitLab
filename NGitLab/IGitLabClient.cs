@@ -66,6 +66,8 @@
 
         IGraphQLClient GraphQL { get; }
 
+        ISearchClient AdvancedSearch { get; }
+
         IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId);
 
         IEnvironmentClient GetEnvironmentClient(int projectId);
@@ -85,5 +87,9 @@
         IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId);
 
         IProtectedBranchClient GetProtectedBranchClient(int projectId);
+
+        public ISearchClient GetGroupSearchClient(int groupId);
+
+        public ISearchClient GetProjectSearchClient(int projectId);
     }
 }
