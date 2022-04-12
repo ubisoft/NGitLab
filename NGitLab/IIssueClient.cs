@@ -24,11 +24,11 @@ namespace NGitLab
         ///     <para>url like GET /projects/:id/issues/:issue_id</para>
         /// </summary>
         /// <param name="projectId"></param>
-        /// <param name="issueId"></param>
+        /// <param name="issueIid"></param>
         /// <returns>The issue that corresponds to the project id and issue id</returns>
-        Issue Get(int projectId, int issueId);
+        Issue Get(int projectId, int issueIid);
 
-        Task<Issue> GetAsync(int projectId, int issueId, CancellationToken cancellationToken = default);
+        Task<Issue> GetAsync(int projectId, int issueIid, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Return issues for a given query.

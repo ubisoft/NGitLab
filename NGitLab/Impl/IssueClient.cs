@@ -36,14 +36,14 @@ namespace NGitLab.Impl
             return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId));
         }
 
-        public Issue Get(int projectId, int issueId)
+        public Issue Get(int projectId, int issueIid)
         {
-            return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueId));
+            return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueIid));
         }
 
-        public Task<Issue> GetAsync(int projectId, int issueId, CancellationToken cancellationToken = default)
+        public Task<Issue> GetAsync(int projectId, int issueIid, CancellationToken cancellationToken = default)
         {
-            return _api.Get().ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueId), cancellationToken);
+            return _api.Get().ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueIid), cancellationToken);
         }
 
         public IEnumerable<Issue> Get(int projectId, IssueQuery query)
