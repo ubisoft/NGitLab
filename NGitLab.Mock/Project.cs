@@ -87,6 +87,8 @@ namespace NGitLab.Mock
 
         public bool OnlyMirrorProtectedBranch { get; set; }
 
+        public bool AccessibleMergeRequests { get; set; } = true;
+
         public bool MirrorOverwritesDivergedBranches { get; set; }
 
         public RepositoryAccessLevel RepositoryAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
