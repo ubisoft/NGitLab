@@ -727,6 +727,8 @@ NGitLab.Mock.PipelineCollection.Add(string ref, NGitLab.JobStatus status, NGitLa
 NGitLab.Mock.PipelineCollection.GetById(int id) -> NGitLab.Mock.Pipeline
 NGitLab.Mock.PipelineCollection.PipelineCollection(NGitLab.Mock.GitLabObject parent) -> void
 NGitLab.Mock.Project
+NGitLab.Mock.Project.AccessibleMergeRequests.get -> bool
+NGitLab.Mock.Project.AccessibleMergeRequests.set -> void
 NGitLab.Mock.Project.AddRunner(string name, string description, bool active, bool locked, bool isShared) -> NGitLab.Mock.Runner
 NGitLab.Mock.Project.AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged, int id) -> NGitLab.Mock.Runner
 NGitLab.Mock.Project.ApprovalsBeforeMerge.get -> int
