@@ -1663,6 +1663,8 @@ NGitLab.Models.IssueQuery.Sort.get -> string
 NGitLab.Models.IssueQuery.Sort.set -> void
 NGitLab.Models.IssueQuery.State.get -> NGitLab.Models.IssueState?
 NGitLab.Models.IssueQuery.State.set -> void
+NGitLab.Models.IssueQuery.Type.get -> NGitLab.Models.IssueType?
+NGitLab.Models.IssueQuery.Type.set -> void
 NGitLab.Models.IssueQuery.UpdatedAfter.get -> System.DateTime?
 NGitLab.Models.IssueQuery.UpdatedAfter.set -> void
 NGitLab.Models.IssueQuery.UpdatedBefore.get -> System.DateTime?
@@ -1670,6 +1672,10 @@ NGitLab.Models.IssueQuery.UpdatedBefore.set -> void
 NGitLab.Models.IssueState
 NGitLab.Models.IssueState.closed = 1 -> NGitLab.Models.IssueState
 NGitLab.Models.IssueState.opened = 0 -> NGitLab.Models.IssueState
+NGitLab.Models.IssueType
+NGitLab.Models.IssueType.incident = 1 -> NGitLab.Models.IssueType
+NGitLab.Models.IssueType.issue = 0 -> NGitLab.Models.IssueType
+NGitLab.Models.IssueType.test_case = 2 -> NGitLab.Models.IssueType
 NGitLab.Models.Job
 NGitLab.Models.Job.Artifacts.get -> NGitLab.Models.Job.JobArtifact
 NGitLab.Models.Job.Artifacts.set -> void
