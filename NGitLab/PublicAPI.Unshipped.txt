@@ -1593,6 +1593,7 @@ NGitLab.Models.Issue.Epic -> NGitLab.Models.IssueEpic
 NGitLab.Models.Issue.Id -> int
 NGitLab.Models.Issue.Issue() -> void
 NGitLab.Models.Issue.IssueId -> int
+NGitLab.Models.Issue.IssueType -> string
 NGitLab.Models.Issue.Labels -> string[]
 NGitLab.Models.Issue.MergeRequestsCount.get -> int
 NGitLab.Models.Issue.MergeRequestsCount.set -> void
