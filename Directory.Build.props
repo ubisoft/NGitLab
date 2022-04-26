@@ -12,7 +12,7 @@
     <Deterministic>true</Deterministic>
     <Features>strict</Features>
     <TreatWarningsAsErrors Condition="'$(Configuration)' != 'Debug'">true</TreatWarningsAsErrors>
-
+    <NoWarn>$(NoWarn);SYSLIB0014</NoWarn>
     <RestoreUseStaticGraphEvaluation>true</RestoreUseStaticGraphEvaluation>
 
     <!-- Package info -->
