@@ -67,5 +67,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("weight")]
         public int? Weight { get; set; }
+
+        [JsonPropertyName("issue_type")]
+        public string IssueType;
     }
 }
