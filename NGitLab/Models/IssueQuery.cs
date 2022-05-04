@@ -13,6 +13,11 @@ namespace NGitLab.Models
         public IssueState? State { get; set; }
 
         /// <summary>
+        /// Return all issues or just those that are of type issue, incident or test_case
+        /// </summary>
+        public IssueType? Type { get; set; }
+
+        /// <summary>
         /// Return requests ordered by created_at or updated_at fields. Default is created_at
         /// </summary>
         public string OrderBy { get; set; }

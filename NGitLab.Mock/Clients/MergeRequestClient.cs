@@ -234,6 +234,15 @@ namespace NGitLab.Mock.Clients
                 }
 
                 var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
+
+                if (!project.AccessibleMergeRequests)
+                {
+                    throw new GitLabException("403 Forbidden")
+                    {
+                        StatusCode = HttpStatusCode.Forbidden,
+                    };
+                }
+
                 return project.MergeRequests.Where(mr => mr.State == state).Select(mr => mr.ToMergeRequestClient()).ToList();
             }
         }

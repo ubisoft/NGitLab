@@ -140,6 +140,7 @@ namespace NGitLab.Impl
         private static string AddIssueQueryParameters(string url, IssueQuery query)
         {
             url = Utils.AddParameter(url, "state", query.State);
+            url = Utils.AddParameter(url, "issue_type", query.Type);
             url = Utils.AddParameter(url, "order_by", query.OrderBy);
             url = Utils.AddParameter(url, "sort", query.Sort);
             url = Utils.AddParameter(url, "milestone", query.Milestone);
