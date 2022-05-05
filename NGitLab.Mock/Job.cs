@@ -70,6 +70,7 @@ namespace NGitLab.Mock
                 Pipeline = new Models.Job.JobPipeline
                 {
                     Id = Pipeline.Id,
+                    ProjectId = DownstreamPipeline.ProjectId,
                     Ref = Pipeline.Ref,
                     Sha = Pipeline.Sha,
                     Status = Pipeline.Status,
@@ -103,6 +104,7 @@ namespace NGitLab.Mock
                 Pipeline = new Models.Job.JobPipeline
                 {
                     Id = Pipeline.Id,
+                    ProjectId = Pipeline.ProjectId,
                     Ref = Pipeline.Ref,
                     Sha = Pipeline.Sha,
                     Status = Pipeline.Status,

@@ -18,6 +18,8 @@ namespace NGitLab.Mock
 
         public int Id { get; set; }
 
+        public int ProjectId { get; set; }
+
         public JobStatus Status { get; set; }
 
         public string Ref { get; set; }

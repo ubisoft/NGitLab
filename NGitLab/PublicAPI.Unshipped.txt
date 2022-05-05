@@ -1720,6 +1720,8 @@ NGitLab.Models.JobBasic
 NGitLab.Models.JobBasic.Commit.get -> NGitLab.Models.Commit
 NGitLab.Models.JobBasic.JobBasic() -> void
 NGitLab.Models.JobBasic.JobPipeline.JobPipeline() -> void
+NGitLab.Models.JobBasic.JobPipeline.ProjectId.get -> int
+NGitLab.Models.JobBasic.JobPipeline.ProjectId.set -> void
 NGitLab.Models.JobBasic.Name.get -> string
 NGitLab.Models.JobBasic.Name.set -> void
 NGitLab.Models.JobBasic.Id.get -> int

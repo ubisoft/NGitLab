@@ -61,6 +61,9 @@ namespace NGitLab.Models
             [JsonPropertyName("id")]
             public int Id { get; set; }
 
+            [JsonPropertyName("project_id")]
+            public int ProjectId { get; set; }
+
             [JsonPropertyName("ref")]
             public string Ref { get; set; }
 
