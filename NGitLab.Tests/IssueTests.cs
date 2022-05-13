@@ -235,15 +235,13 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
-            const string formatString = "yyyy-MM-dd";
 
-            var initialDueDate = DateTime.Now.AddDays(3).ToString(formatString);
+            var initialDueDate = new DateTime(2022, 1, 1);
             var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", DueDate = initialDueDate });
             var issue = issuesClient.Get(project.Id, issue1.IssueId);
-            Assert.IsNotNull(issue.DueDate);
-            Assert.AreEqual(initialDueDate, issue.DueDate?.ToString(formatString));
+            Assert.AreEqual(initialDueDate, issue1.DueDate);
 
-            var updatedDueDate = DateTime.Now.AddDays(5).ToString(formatString);
+            var updatedDueDate = new DateTime(2022, 2, 1);
             var updatedIssue = issuesClient.Edit(new IssueEdit()
             {
                 Id = project.Id,
@@ -251,8 +249,7 @@ namespace NGitLab.Tests
                 DueDate = updatedDueDate,
             });
 
-            Assert.IsNotNull(updatedIssue.DueDate);
-            Assert.AreEqual(updatedDueDate, updatedIssue.DueDate?.ToString(formatString));
+            Assert.AreEqual(updatedDueDate, updatedIssue.DueDate);
         }
     }
 }
