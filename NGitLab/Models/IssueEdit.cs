@@ -30,5 +30,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("state_event")]
         public string State;
+
+        [JsonPropertyName("due_date")]
+        public string DueDate;
     }
 }

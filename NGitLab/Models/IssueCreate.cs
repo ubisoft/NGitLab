@@ -27,5 +27,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("confidential")]
         public bool Confidential;
+
+        [JsonPropertyName("due_date")]
+        public string DueDate;
     }
 }
