@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -225,6 +226,33 @@ namespace NGitLab.Tests
             var removeLabelEvent = resourceLabelEvents.First(e => e.Action == ResourceLabelEventAction.Remove);
             Assert.AreEqual(testLabel, removeLabelEvent.Label.Name);
             Assert.AreEqual(ResourceLabelEventAction.Remove, removeLabelEvent.Action);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_new_and_updated_issue_with_duedate()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var issuesClient = context.Client.Issues;
+            const string formatString = "yyyy-MM-dd";
+
+            var initialDueDate = DateTime.Now.AddDays(3).ToString(formatString);
+            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", DueDate = initialDueDate });
+            var issue = issuesClient.Get(project.Id, issue1.IssueId);
+            Assert.IsNotNull(issue.DueDate);
+            Assert.AreEqual(initialDueDate, issue.DueDate?.ToString(formatString));
+
+            var updatedDueDate = DateTime.Now.AddDays(5).ToString(formatString);
+            var updatedIssue = issuesClient.Edit(new IssueEdit()
+            {
+                Id = project.Id,
+                IssueId = issue.IssueId,
+                DueDate = updatedDueDate,
+            });
+
+            Assert.IsNotNull(updatedIssue.DueDate);
+            Assert.AreEqual(updatedDueDate, updatedIssue.DueDate?.ToString(formatString));
         }
     }
 }
