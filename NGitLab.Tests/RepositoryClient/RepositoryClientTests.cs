@@ -13,6 +13,8 @@ namespace NGitLab.Tests.RepositoryClient
     {
         private sealed class RepositoryClientTestsContext : IDisposable
         {
+            public const string SubfolderName = "subfolder";
+
             public RepositoryClientTestsContext(GitLabTestContext context, Project project, Commit[] commits, IRepositoryClient repositoryClient)
             {
                 Context = context;
@@ -59,7 +61,7 @@ namespace NGitLab.Tests.RepositoryClient
                                 FilePath =  // Spread files among the root directory and its 'subfolder'
                                     i % 2 == 0 ?
                                     $"test{i.ToString(CultureInfo.InvariantCulture)}.md" :
-                                    $"subfolder/test{i.ToString(CultureInfo.InvariantCulture)}.md",
+                                    $"{SubfolderName}/test{i.ToString(CultureInfo.InvariantCulture)}.md",
                             },
                         },
                     });
@@ -152,6 +154,7 @@ namespace NGitLab.Tests.RepositoryClient
 
             Assert.AreEqual(expectedFileCount, treeObjects.Count(t => t.Type == ObjectType.blob));
             Assert.AreEqual(expectedDirCount, treeObjects.Count(t => t.Type == ObjectType.tree));
+            Assert.IsTrue(treeObjects.All(t => string.Equals(t.Path, t.Name, StringComparison.Ordinal)));
         }
 
         [TestCase(4)]
@@ -188,6 +191,22 @@ namespace NGitLab.Tests.RepositoryClient
 
             Assert.AreEqual(expectedFileCount, treeObjects.Count(t => t.Type == ObjectType.blob));
             Assert.AreEqual(expectedDirCount, treeObjects.Count(t => t.Type == ObjectType.tree));
+        }
+
+        [TestCase(4)]
+        [TestCase(11)]
+        [NGitLabRetry]
+        public async Task GetAllTreeObjectsRecursivelyFromSubfolderAsync(int commitCount)
+        {
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount);
+
+            var treeObjects = new List<Tree>();
+            await foreach (var item in context.RepositoryClient.GetTreeAsync(new RepositoryGetTreeOptions { Path = RepositoryClientTestsContext.SubfolderName, Ref = null, Recursive = true }))
+            {
+                treeObjects.Add(item);
+            }
+
+            Assert.True(treeObjects.All(t => t.Path.StartsWith(RepositoryClientTestsContext.SubfolderName, StringComparison.OrdinalIgnoreCase)));
         }
 
         [Test]
