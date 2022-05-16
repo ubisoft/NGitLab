@@ -479,11 +479,9 @@ namespace NGitLab.Mock
 
             string GetTreeRelativePath(string fileFullPath)
             {
-                if (!repositoryPath.EndsWith("\\", StringComparison.Ordinal))
-                    repositoryPath += "\\";
-
-                if (fileAttribute.HasFlag(FileAttributes.Directory))
-                    fileFullPath += "\\";
+                // Directories needs to end with a separator to be considered as one for a Uri
+                if (!repositoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                    repositoryPath += Path.DirectorySeparatorChar;
 
                 return GetRelativePath(repositoryPath, fileFullPath);
             }
