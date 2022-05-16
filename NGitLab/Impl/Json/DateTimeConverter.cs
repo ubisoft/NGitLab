@@ -39,6 +39,23 @@ namespace NGitLab.Impl.Json
         }
     }
 
+    internal sealed class DateOnlyConverter : JsonConverter<DateTime>
+    {
+        public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType == JsonTokenType.Null)
+                return DateTime.MinValue;
+
+            var str = reader.GetString();
+            return str.TryParseAsDateOnly(out DateTime dateOnly) ? dateOnly : str.ParseIso8601DateTime();
+        }
+
+        public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+        {
+            writer.WriteStringValue(value.ToDateOnlyString());
+        }
+    }
+
     internal static class DateTimeFormatter
     {
         private const string DateOnlyFormat = "yyyy-MM-dd";
@@ -96,6 +113,11 @@ namespace NGitLab.Impl.Json
                 Iso8601Format,
                 CultureInfo.InvariantCulture);
             return str;
+        }
+
+        public static string ToDateOnlyString(this DateTime value)
+        {
+            return value.ToString(DateOnlyFormat, CultureInfo.InvariantCulture);
         }
     }
 }

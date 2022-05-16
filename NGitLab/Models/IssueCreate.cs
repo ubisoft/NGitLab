@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using NGitLab.Impl.Json;
 
 namespace NGitLab.Models
 {
@@ -27,5 +29,9 @@ namespace NGitLab.Models
 
         [JsonPropertyName("confidential")]
         public bool Confidential;
+
+        [JsonPropertyName("due_date")]
+        [JsonConverter(typeof(DateOnlyConverter))]
+        public DateTime? DueDate;
     }
 }
