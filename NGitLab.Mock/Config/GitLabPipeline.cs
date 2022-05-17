@@ -16,6 +16,8 @@ namespace NGitLab.Mock.Config
         public string Commit { get; set; }
 
         public GitLabJobsCollection Jobs { get; }
+
+        public int ProjectId { get; set; }
     }
 
     public class GitLabPipelinesCollection : GitLabCollection<GitLabPipeline, GitLabProject>
@@ -34,6 +36,8 @@ namespace NGitLab.Mock.Config
 
             if (item.Id == default)
                 item.Id = GetAllPipelines().Select(x => x.Id).DefaultIfEmpty().Max() + 1;
+
+            item.ProjectId = item.Parent.Id;
         }
 
         private IEnumerable<GitLabPipeline> GetAllPipelines()
