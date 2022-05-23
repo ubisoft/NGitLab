@@ -83,7 +83,9 @@ namespace NGitLab.Mock
 
         public NoteCollection<MergeRequestComment> Comments { get; }
 
-        public bool WorkInProgress => Title?.StartsWith("WIP:", StringComparison.OrdinalIgnoreCase) == true;
+        public bool WorkInProgress => Title is not null &&
+            (Title.StartsWith("WIP:", StringComparison.OrdinalIgnoreCase) ||
+             Title.StartsWith("Draft:", StringComparison.OrdinalIgnoreCase));
 
         public IList<UserRef> Approvers { get; } = new List<UserRef>();
 
