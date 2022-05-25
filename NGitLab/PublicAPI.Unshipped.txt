@@ -1598,6 +1598,7 @@ NGitLab.Models.Issue.Labels -> string[]
 NGitLab.Models.Issue.MergeRequestsCount.get -> int
 NGitLab.Models.Issue.MergeRequestsCount.set -> void
 NGitLab.Models.Issue.Milestone -> NGitLab.Models.Milestone
+NGitLab.Models.Issue.MovedToId -> int?
 NGitLab.Models.Issue.ProjectId -> int
 NGitLab.Models.Issue.State -> string
 NGitLab.Models.Issue.Title -> string
