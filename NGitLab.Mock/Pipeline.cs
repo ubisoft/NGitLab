@@ -105,6 +105,7 @@ namespace NGitLab.Mock
             return new Models.Job.JobPipeline
             {
                 Id = Id,
+                ProjectId = Project.Id,
                 Ref = Ref,
                 Sha = Sha,
                 Status = Status,

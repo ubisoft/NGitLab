@@ -449,7 +449,7 @@ namespace NGitLab.Mock
 
             foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(FullPath))
             {
-                yield return GetTreeItem(fileSystemEntry);
+                yield return GetTreeItem(FullPath, fileSystemEntry);
             }
         }
 
@@ -463,19 +463,46 @@ namespace NGitLab.Mock
             var fullPath = string.IsNullOrEmpty(repositoryGetTreeOptions.Path) ? FullPath : Path.Combine(FullPath, repositoryGetTreeOptions.Path);
             foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(fullPath, "*", searchOption))
             {
-                yield return GetTreeItem(fileSystemEntry);
+                yield return GetTreeItem(FullPath, fileSystemEntry);
             }
         }
 
-        private static Models.Tree GetTreeItem(string filePath)
+        private static Models.Tree GetTreeItem(string repositoryPath, string filePath)
         {
             var fileAttribute = System.IO.File.GetAttributes(filePath);
             return new Models.Tree
             {
                 Name = Path.GetFileName(filePath),
-                Path = Path.GetFileName(filePath),
-                Type = fileAttribute == FileAttributes.Directory ? Models.ObjectType.tree : Models.ObjectType.blob,
+                Path = GetTreeRelativePath(filePath),
+                Type = fileAttribute.HasFlag(FileAttributes.Directory) ? Models.ObjectType.tree : Models.ObjectType.blob,
             };
+
+            string GetTreeRelativePath(string fileFullPath)
+            {
+                // Directories needs to end with a separator to be considered as one for a Uri
+                if (!repositoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                    repositoryPath += Path.DirectorySeparatorChar;
+
+                return GetRelativePath(repositoryPath, fileFullPath);
+            }
+        }
+
+        private static string GetRelativePath(string path, string relativeTo)
+        {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
+
+            if (string.IsNullOrEmpty(relativeTo))
+                throw new ArgumentNullException(nameof(relativeTo));
+
+            if (!Uri.TryCreate(path, UriKind.Absolute, out var pathUri) || !Uri.TryCreate(relativeTo, UriKind.Absolute, out var relativeToUri))
+                throw new GitLabException($"Failed to get Uri out of '{path}' or '{relativeTo}'");
+
+            if (!string.Equals(pathUri.Scheme, relativeToUri.Scheme, StringComparison.OrdinalIgnoreCase))
+                return relativeTo;
+
+            var relativeUri = pathUri.MakeRelativeUri(relativeToUri);
+            return Uri.UnescapeDataString(relativeUri.ToString())!;
         }
 
         public Commit Merge(User user, string sourceBranch, string targetBranch, Project targetProject)
