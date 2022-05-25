@@ -70,5 +70,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("issue_type")]
         public string IssueType;
+
+        [JsonPropertyName("moved_to_id")]
+        public int? MovedToId;
     }
 }
