@@ -325,9 +325,6 @@ namespace NGitLab.Tests.Docker
                     result = await GeneratePersonalAccessToken(credentials, context).ConfigureAwait(false);
                 }
 
-                // Get X-Profile-Token
-                result = await GenerateXProfileToken(credentials, context, result).ConfigureAwait(false);
-
                 // Get admin login cookie
                 // result.Cookie: experimentation_subject_id=XXX; _gitlab_session=XXXX; known_sign_in=XXXX
                 TestContext.Progress.WriteLine("Extracting GitLab session cookie");
@@ -399,28 +396,6 @@ namespace NGitLab.Tests.Docker
                              credentials.AdminUserToken = personalAccessTokenElement.GetAttribute("value");
                              return result;
                          });
-                }
-
-                Task<IDocument> GenerateXProfileToken(GitLabCredential credentials, IBrowsingContext context, IDocument result)
-                {
-                    return Policy.Handle<InvalidOperationException>()
-                        .WaitAndRetryAsync(10, i => TimeSpan.FromSeconds(1))
-                        .ExecuteAsync(async () =>
-                        {
-                            TestContext.Progress.WriteLine("Generating request profiles token");
-                            result = await context.OpenAsync(GitLabUrl + "/admin/requests_profiles").ConfigureAwait(false);
-                            TestContext.Progress.WriteLine("Navigating to " + result.Location);
-                            if (result.StatusCode == HttpStatusCode.BadGateway)
-                                throw new InvalidOperationException("Cannot navigate to admin/requests_profiles:\n" + result.ToHtml());
-
-                            var codeElements = result.QuerySelectorAll("code").ToList();
-                            var tokenElement = codeElements.SingleOrDefault(n => n.TextContent.Trim().StartsWith("X-Profile-Token:", StringComparison.Ordinal));
-                            if (tokenElement == null)
-                                throw new InvalidOperationException("Cannot find X-Profile-Token in the page:\n" + result.ToHtml());
-
-                            credentials.ProfileToken = tokenElement.TextContent.Trim()["X-Profile-Token:".Length..].Trim();
-                            return result;
-                        });
                 }
             }
 
