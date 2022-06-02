@@ -107,7 +107,7 @@ namespace NGitLab.Impl
 
         public virtual void Stream(string tailAPIUrl, Action<Stream> parser)
         {
-            var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options.Sudo);
+            var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options);
 
             using var response = request.GetResponse(_options);
             if (parser != null)
@@ -119,7 +119,7 @@ namespace NGitLab.Impl
 
         public virtual async Task StreamAsync(string tailAPIUrl, Func<Stream, Task> parser, CancellationToken cancellationToken)
         {
-            var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options.Sudo);
+            var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options);
 
             using var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false);
             if (parser != null)
@@ -158,7 +158,7 @@ namespace NGitLab.Impl
                 while (nextUrlToLoad != null)
                 {
                     string responseText;
-                    var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
+                    var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options);
                     using (var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false))
                     {
                         nextUrlToLoad = GetNextPageUrl(response);
@@ -180,7 +180,7 @@ namespace NGitLab.Impl
                 while (nextUrlToLoad != null)
                 {
                     string responseText;
-                    var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options.Sudo);
+                    var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options);
                     using (var response = request.GetResponse(_options))
                     {
                         nextUrlToLoad = GetNextPageUrl(response);

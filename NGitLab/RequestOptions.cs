@@ -30,6 +30,8 @@ namespace NGitLab
         /// </summary>
         public TimeSpan HttpClientTimeout { get; set; } = TimeSpan.FromMinutes(5);
 
+        public string UserAgent { get; set; }
+
         public RequestOptions(int retryCount, TimeSpan retryInterval, bool isIncremental = true)
         {
             RetryCount = retryCount;

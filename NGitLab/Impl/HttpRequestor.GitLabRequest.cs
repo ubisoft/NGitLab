@@ -35,20 +35,25 @@ namespace NGitLab.Impl
                 => (Method == MethodType.Delete || Method == MethodType.Post || Method == MethodType.Put)
                     && Data != null;
 
-            public GitLabRequest(Uri url, MethodType method, object data, string apiToken, string sudo = null)
+            public GitLabRequest(Uri url, MethodType method, object data, string apiToken, RequestOptions options = null)
             {
                 Method = method;
                 Url = url;
                 Data = data;
                 Headers.Add("Accept-Encoding", "gzip");
-                if (!string.IsNullOrEmpty(sudo))
+                if (!string.IsNullOrEmpty(options?.Sudo))
                 {
-                    Headers.Add("Sudo", sudo);
+                    Headers.Add("Sudo", options.Sudo);
                 }
 
                 if (apiToken != null)
                 {
                     Headers.Add("Private-Token", apiToken);
+                }
+
+                if (!string.IsNullOrEmpty(options?.UserAgent))
+                {
+                    Headers.Add("User-Agent", options.UserAgent);
                 }
 
                 if (data is FormDataContent formData)
