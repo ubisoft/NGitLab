@@ -27,6 +27,7 @@ namespace NGitLab.Tests.Docker
         public GitLabTestContextRequestOptions()
             : base(retryCount: 0, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
         {
+            UserAgent = "NGitLab.Tests/1.0.0";
         }
 
         public override WebResponse GetResponse(HttpWebRequest request)
