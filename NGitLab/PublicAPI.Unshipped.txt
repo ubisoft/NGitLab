@@ -3072,6 +3072,8 @@ NGitLab.RequestOptions.RetryInterval.get -> System.TimeSpan
 NGitLab.RequestOptions.RetryInterval.set -> void
 NGitLab.RequestOptions.Sudo.get -> string
 NGitLab.RequestOptions.Sudo.set -> void
+NGitLab.RequestOptions.UserAgent.get -> string
+NGitLab.RequestOptions.UserAgent.set -> void
 NGitLab.SearchQuery
 NGitLab.SearchQuery.Confidential.get -> bool?
 NGitLab.SearchQuery.Confidential.set -> void
