@@ -20,6 +20,8 @@ namespace NGitLab.Mock.Config
 
         public DateTime? FinishedAt { get; set; }
 
+        public string[] TagList { get; set; }
+
         public GitLabPipeline DownstreamPipeline { get; set; }
     }
 
