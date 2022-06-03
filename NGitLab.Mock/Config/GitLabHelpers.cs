@@ -1490,6 +1490,7 @@ namespace NGitLab.Mock.Config
                 StartedAt = job.StartedAt ?? (job.Status is JobStatus.Success or JobStatus.Failed or JobStatus.Canceled or JobStatus.Running ? maxCreatedAt : default),
                 FinishedAt = job.FinishedAt ?? (job.Status is JobStatus.Success or JobStatus.Failed or JobStatus.Canceled ? maxCreatedAt : default),
                 AllowFailure = job.AllowFailure,
+                TagList = job.TagList ?? Array.Empty<string>(),
                 User = pipeline.User,
                 DownstreamPipeline = job.DownstreamPipeline == null ? null : CreatePipeline(server, pipeline, job.DownstreamPipeline, aliases),
             };
@@ -1784,6 +1785,7 @@ namespace NGitLab.Mock.Config
                 StartedAt = job.StartedAt == default ? null : job.StartedAt,
                 FinishedAt = job.FinishedAt == default ? null : job.FinishedAt,
                 AllowFailure = job.AllowFailure,
+                TagList = job.TagList,
             };
         }
 

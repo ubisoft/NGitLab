@@ -153,6 +153,8 @@ NGitLab.Mock.Config.GitLabJob.StartedAt.get -> System.DateTime?
 NGitLab.Mock.Config.GitLabJob.StartedAt.set -> void
 NGitLab.Mock.Config.GitLabJob.Status.get -> NGitLab.JobStatus
 NGitLab.Mock.Config.GitLabJob.Status.set -> void
+NGitLab.Mock.Config.GitLabJob.TagList.get -> string[]
+NGitLab.Mock.Config.GitLabJob.TagList.set -> void
 NGitLab.Mock.Config.GitLabJobsCollection
 NGitLab.Mock.Config.GitLabMergeRequest.Comments.get -> NGitLab.Mock.Config.GitLabCommentsCollection
 NGitLab.Mock.Config.GitLabMergeRequest.CreatedAt.get -> System.DateTime?

@@ -52,6 +52,8 @@ namespace NGitLab.Mock
 
         public string Trace { get; set; }
 
+        public string[] TagList { get; set; } = Array.Empty<string>();
+
         public Pipeline DownstreamPipeline { get; set; }
 
         internal Models.Bridge ToBridgeClient()
@@ -82,6 +84,7 @@ namespace NGitLab.Mock
                 User = User?.ToClientUser(),
                 WebUrl = WebUrl,
                 Duration = Duration,
+                TagList = TagList,
                 QueuedDuration = QueuedDuration,
             };
         }
@@ -121,6 +124,7 @@ namespace NGitLab.Mock
                 User = User?.ToClientUser(),
                 WebUrl = WebUrl,
                 Duration = Duration,
+                TagList = TagList,
                 QueuedDuration = QueuedDuration,
             };
         }
@@ -145,6 +149,7 @@ namespace NGitLab.Mock
                 Tag = Tag,
                 User = User,
                 Duration = Duration,
+                TagList = TagList,
                 QueuedDuration = QueuedDuration,
             };
         }

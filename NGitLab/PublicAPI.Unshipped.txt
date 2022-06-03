@@ -1748,6 +1748,8 @@ NGitLab.Models.JobBasic.Tag.get -> bool
 NGitLab.Models.JobBasic.Tag.set -> void
 NGitLab.Models.JobBasic.AllowFailure.get -> bool
 NGitLab.Models.JobBasic.AllowFailure.set -> void
+NGitLab.Models.JobBasic.TagList.get -> string[]
+NGitLab.Models.JobBasic.TagList.set -> void
 NGitLab.Models.JobBasic.User.get -> NGitLab.Models.User
 NGitLab.Models.JobBasic.User.set -> void
 NGitLab.Models.JobBasic.Pipeline.get -> NGitLab.Models.JobBasic.JobPipeline

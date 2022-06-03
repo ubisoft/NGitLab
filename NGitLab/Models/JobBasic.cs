@@ -56,6 +56,9 @@ namespace NGitLab.Models
         [JsonPropertyName("queued_duration")]
         public float? QueuedDuration { get; set; }
 
+        [JsonPropertyName("tag_list")]
+        public string[] TagList { get; set; }
+
         public class JobPipeline
         {
             [JsonPropertyName("id")]
