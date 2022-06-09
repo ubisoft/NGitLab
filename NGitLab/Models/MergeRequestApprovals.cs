@@ -7,6 +7,12 @@ namespace NGitLab.Models
         [JsonPropertyName("approvers")]
         public MergeRequestApprover[] Approvers;
 
+        [JsonPropertyName("approved_by")]
+        public MergeRequestApprover[] ApprovedBy { get; set; }
+
+        [JsonPropertyName("approved")]
+        public bool Approved { get; set; }
+
         [JsonPropertyName("approvals_required")]
         public int ApprovalsRequired { get; set; }
 
@@ -18,6 +24,9 @@ namespace NGitLab.Models
 
         [JsonPropertyName("user_can_approve")]
         public bool UserCanApprove { get; set; }
+
+        [JsonPropertyName("suggested_approvers")]
+        public User[] SuggestedApprovers { get; set; }
     }
 
     public class MergeRequestApproversChange
