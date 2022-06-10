@@ -1890,8 +1890,14 @@ NGitLab.Models.MergeRequestApprovals.ApprovalsLeft.get -> int
 NGitLab.Models.MergeRequestApprovals.ApprovalsLeft.set -> void
 NGitLab.Models.MergeRequestApprovals.ApprovalsRequired.get -> int
 NGitLab.Models.MergeRequestApprovals.ApprovalsRequired.set -> void
+NGitLab.Models.MergeRequestApprovals.Approved.get -> bool
+NGitLab.Models.MergeRequestApprovals.Approved.set -> void
+NGitLab.Models.MergeRequestApprovals.ApprovedBy.get -> NGitLab.Models.MergeRequestApprover[]
+NGitLab.Models.MergeRequestApprovals.ApprovedBy.set -> void
 NGitLab.Models.MergeRequestApprovals.Approvers -> NGitLab.Models.MergeRequestApprover[]
 NGitLab.Models.MergeRequestApprovals.MergeRequestApprovals() -> void
+NGitLab.Models.MergeRequestApprovals.SuggestedApprovers.get -> NGitLab.Models.User[]
+NGitLab.Models.MergeRequestApprovals.SuggestedApprovers.set -> void
 NGitLab.Models.MergeRequestApprovals.UserCanApprove.get -> bool
 NGitLab.Models.MergeRequestApprovals.UserCanApprove.set -> void
 NGitLab.Models.MergeRequestApprovals.UserHasApproved.get -> bool
