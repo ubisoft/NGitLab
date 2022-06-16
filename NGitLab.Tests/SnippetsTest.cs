@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using NGitLab.Impl.Json;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -72,6 +73,21 @@ namespace NGitLab.Tests
             Assert.That(snippetClient.Get(newSnippet.ProjectId, returnedProjectSnippet.Id), Is.Not.Null);
 
             snippetClient.Delete(newSnippet.ProjectId, returnedProjectSnippet.Id);
+        }
+
+        [Test]
+        public void Test_snippet_deserialize()
+        {
+            var body = @"{ ""id"": 6, ""title"": ""TITLE"", ""description"": ""DESCRIPTION"", ""visibility"": ""internal"", ""updated_at"": ""2022-06-16T12:50:47.646Z"", ""created_at"": ""2022-06-15T12:05:51.654Z"", ""project_id"": 1, ""web_url"": ""https://gitlab-xxxxx/-/snippets/2694"", ""raw_url"": ""https://gitlab-xxxxx/-/snippets/2694/raw"", ""ssh_url_to_repo"": ""git@gitlab-xxxxx/snippets/2694.git"", ""http_url_to_repo"": ""https://gitlab-xxxxx/snippets/2694.git"", ""author"": { ""id"": 1, ""name"": ""xxxx"", ""username"": ""dranc"", ""state"": ""active"", ""avatar_url"": ""https://gitlab-xxxxx/uploads/-/system/user/avatar/1/avatar.png"", ""web_url"": ""https://gitlab-xxxxx/dranc"" }, ""file_name"": ""ResourcesHelper.cs"", ""files"": [ { ""path"": ""ResourcesHelper.cs"", ""raw_url"": ""https:/gitlab-xxxxxx/-/snippets/1/raw/main/file1.cs"" }, { ""path"": ""SecondFile.txt"", ""raw_url"": ""https:/gitlab-xxxxx/-/snippets/1/raw/main/file2.txt"" } ] }";
+
+            var snippet = Serializer.Deserialize<Snippet>(body);
+
+            Assert.IsNotNull(snippet.Files);
+            Assert.IsNotEmpty(snippet.Files);
+            Assert.IsTrue(snippet.Files.Length == 2);
+
+            Assert.IsNotNull(snippet.Files[0]);
+            Assert.IsTrue(string.Equals(snippet.Files[0].Path, "ResourcesHelper.cs", StringComparison.Ordinal));
         }
     }
 }
