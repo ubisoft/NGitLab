@@ -28,5 +28,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("web_url")]
         public string WebUrl;
+
+        [JsonPropertyName("files")]
+        public SnippetFile[] Files { get; set; }
     }
 }
