@@ -2771,6 +2771,11 @@ NGitLab.Models.SnippetCreate.FileName -> string
 NGitLab.Models.SnippetCreate.SnippetCreate() -> void
 NGitLab.Models.SnippetCreate.Title -> string
 NGitLab.Models.SnippetCreate.Visibility -> NGitLab.Models.VisibilityLevel
+NGitLab.Models.SnippetCreateFile.ActionType
+NGitLab.Models.SnippetCreateFile.ActionType.Create = 0 -> NGitLab.Models.SnippetCreateFile.ActionType
+NGitLab.Models.SnippetCreateFile.ActionType.Delete = 2 -> NGitLab.Models.SnippetCreateFile.ActionType
+NGitLab.Models.SnippetCreateFile.ActionType.Move = 3 -> NGitLab.Models.SnippetCreateFile.ActionType
+NGitLab.Models.SnippetCreateFile.ActionType.Update = 1 -> NGitLab.Models.SnippetCreateFile.ActionType
 NGitLab.Models.SnippetProjectCreate
 NGitLab.Models.SnippetProjectCreate.Code -> string
 NGitLab.Models.SnippetProjectCreate.Description -> string

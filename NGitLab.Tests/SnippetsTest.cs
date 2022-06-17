@@ -95,8 +95,8 @@ namespace NGitLab.Tests
                 Visibility = VisibilityLevel.Public,
                 Files = new[]
                 {
-                    new SnippetCreateFile() { Action = "create", FilePath = "Path1.txt", Content = "Content1" },
-                    new SnippetCreateFile {  Action = "create", FilePath = "Path2.txt", Content = "Content2" },
+                    new SnippetCreateFile() { Action = SnippetCreateFile.ActionType.Create, FilePath = "Path1.txt", Content = "Content1" },
+                    new SnippetCreateFile {  Action = SnippetCreateFile.ActionType.Create, FilePath = "Path2.txt", Content = "Content2" },
                 },
             };
 
