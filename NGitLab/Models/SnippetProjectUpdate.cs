@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
@@ -17,6 +18,7 @@ namespace NGitLab.Models
 
         [Required]
         [JsonPropertyName("file_name")]
+        [Obsolete("Consider using the Files array that support more than one file.")]
         public string FileName;
 
         [JsonPropertyName("description")]
@@ -24,6 +26,7 @@ namespace NGitLab.Models
 
         [Required]
         [JsonPropertyName("content")]
+        [Obsolete("Consider using the Files array that support more than one file.")]
         public string Code;
 
         [Required]
