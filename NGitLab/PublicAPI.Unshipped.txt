@@ -689,6 +689,8 @@ NGitLab.Impl.SnippetClient.ForProject(int projectId) -> System.Collections.Gener
 NGitLab.Impl.SnippetClient.Get(int projectId, int snippetId) -> NGitLab.Models.Snippet
 NGitLab.Impl.SnippetClient.GetContent(int projectId, int snippetId, System.Action<System.IO.Stream> parser) -> void
 NGitLab.Impl.SnippetClient.SnippetClient(NGitLab.Impl.API api) -> void
+NGitLab.Impl.SnippetClient.Update(NGitLab.Models.SnippetProjectUpdate snippet) -> void
+NGitLab.Impl.SnippetClient.Update(NGitLab.Models.SnippetUpdate snippet) -> void
 NGitLab.Impl.SnippetClient.User.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Snippet>
 NGitLab.Impl.SshKeyClient
 NGitLab.Impl.SshKeyClient.Add(NGitLab.Models.SshKeyCreate key) -> NGitLab.Models.SshKey
@@ -884,6 +886,8 @@ NGitLab.ISnippetClient.Delete(int snippetId) -> void
 NGitLab.ISnippetClient.ForProject(int projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Snippet>
 NGitLab.ISnippetClient.Get(int projectId, int snippetId) -> NGitLab.Models.Snippet
 NGitLab.ISnippetClient.GetContent(int projectId, int snippetId, System.Action<System.IO.Stream> parser) -> void
+NGitLab.ISnippetClient.Update(NGitLab.Models.SnippetProjectUpdate snippet) -> void
+NGitLab.ISnippetClient.Update(NGitLab.Models.SnippetUpdate snippet) -> void
 NGitLab.ISnippetClient.User.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Snippet>
 NGitLab.ISshKeyClient
 NGitLab.ISshKeyClient.Add(NGitLab.Models.SshKeyCreate key) -> NGitLab.Models.SshKey
@@ -2768,14 +2772,17 @@ NGitLab.Models.SnippetCreate
 NGitLab.Models.SnippetCreate.Content -> string
 NGitLab.Models.SnippetCreate.Description -> string
 NGitLab.Models.SnippetCreate.FileName -> string
+NGitLab.Models.SnippetCreate.Files.get -> NGitLab.Models.SnippetCreateFile[]
+NGitLab.Models.SnippetCreate.Files.set -> void
 NGitLab.Models.SnippetCreate.SnippetCreate() -> void
 NGitLab.Models.SnippetCreate.Title -> string
 NGitLab.Models.SnippetCreate.Visibility -> NGitLab.Models.VisibilityLevel
-NGitLab.Models.SnippetCreateFile.ActionType
-NGitLab.Models.SnippetCreateFile.ActionType.Create = 0 -> NGitLab.Models.SnippetCreateFile.ActionType
-NGitLab.Models.SnippetCreateFile.ActionType.Delete = 2 -> NGitLab.Models.SnippetCreateFile.ActionType
-NGitLab.Models.SnippetCreateFile.ActionType.Move = 3 -> NGitLab.Models.SnippetCreateFile.ActionType
-NGitLab.Models.SnippetCreateFile.ActionType.Update = 1 -> NGitLab.Models.SnippetCreateFile.ActionType
+NGitLab.Models.SnippetCreateFile
+NGitLab.Models.SnippetCreateFile.Content.get -> string
+NGitLab.Models.SnippetCreateFile.Content.set -> void
+NGitLab.Models.SnippetCreateFile.FilePath.get -> string
+NGitLab.Models.SnippetCreateFile.FilePath.set -> void
+NGitLab.Models.SnippetCreateFile.SnippetCreateFile() -> void
 NGitLab.Models.SnippetProjectCreate
 NGitLab.Models.SnippetProjectCreate.Code -> string
 NGitLab.Models.SnippetProjectCreate.Description -> string
@@ -2784,6 +2791,23 @@ NGitLab.Models.SnippetProjectCreate.ProjectId -> int
 NGitLab.Models.SnippetProjectCreate.SnippetProjectCreate() -> void
 NGitLab.Models.SnippetProjectCreate.Title -> string
 NGitLab.Models.SnippetProjectCreate.Visibility -> NGitLab.Models.VisibilityLevel
+NGitLab.Models.SnippetProjectUpdate
+NGitLab.Models.SnippetProjectUpdate.SnippetProjectUpdate() -> void
+NGitLab.Models.SnippetUpdate
+NGitLab.Models.SnippetUpdate.Files.get -> NGitLab.Models.SnippetUpdateFile[]
+NGitLab.Models.SnippetUpdate.Files.set -> void
+NGitLab.Models.SnippetUpdate.SnippetUpdate() -> void
+NGitLab.Models.SnippetUpdateFile
+NGitLab.Models.SnippetUpdateFile.Action.get -> NGitLab.Models.SnippetUpdateFile.ActionType
+NGitLab.Models.SnippetUpdateFile.Action.set -> void
+NGitLab.Models.SnippetUpdateFile.ActionType
+NGitLab.Models.SnippetUpdateFile.ActionType.Create = 0 -> NGitLab.Models.SnippetUpdateFile.ActionType
+NGitLab.Models.SnippetUpdateFile.ActionType.Delete = 2 -> NGitLab.Models.SnippetUpdateFile.ActionType
+NGitLab.Models.SnippetUpdateFile.ActionType.Move = 3 -> NGitLab.Models.SnippetUpdateFile.ActionType
+NGitLab.Models.SnippetUpdateFile.ActionType.Update = 1 -> NGitLab.Models.SnippetUpdateFile.ActionType
+NGitLab.Models.SnippetUpdateFile.PreviousFile.get -> string
+NGitLab.Models.SnippetUpdateFile.PreviousFile.set -> void
+NGitLab.Models.SnippetUpdateFile.SnippetUpdateFile() -> void
 NGitLab.Models.SquashOption
 NGitLab.Models.SquashOption.Always = 1 -> NGitLab.Models.SquashOption
 NGitLab.Models.SquashOption.DefaultOff = 2 -> NGitLab.Models.SquashOption
@@ -3175,6 +3199,8 @@ virtual NGitLab.Impl.HttpRequestor.Stream(string tailAPIUrl, System.Action<Syste
 virtual NGitLab.Impl.HttpRequestor.StreamAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 virtual NGitLab.Impl.HttpRequestor.To<T>(string tailAPIUrl) -> T
 virtual NGitLab.Impl.HttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<T>
+virtual NGitLab.Models.SnippetProjectCreate.Files.get -> NGitLab.Models.SnippetCreateFile[]
+virtual NGitLab.Models.SnippetProjectCreate.Files.set -> void
 virtual NGitLab.RequestOptions.GetResponse(System.Net.HttpWebRequest request) -> System.Net.WebResponse
 virtual NGitLab.RequestOptions.GetResponseAsync(System.Net.HttpWebRequest request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.WebResponse>
 virtual NGitLab.RequestOptions.ShouldRetry(System.Exception ex, int retryNumber) -> bool

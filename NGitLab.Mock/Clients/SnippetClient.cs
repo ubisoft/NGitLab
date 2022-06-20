@@ -26,6 +26,16 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public void Update(SnippetUpdate snippet)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(SnippetProjectUpdate snippet)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(int snippetId)
         {
             throw new NotImplementedException();

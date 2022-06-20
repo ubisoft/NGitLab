@@ -3,10 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    public class SnippetProjectCreate
+    public class SnippetUpdate
     {
-        public int ProjectId;
-
+        [Required]
         [JsonPropertyName("id")]
         public int SnippedId;
 
@@ -18,14 +17,13 @@ namespace NGitLab.Models
         [JsonPropertyName("file_name")]
         public string FileName;
 
+        [Required]
+        [JsonPropertyName("content")]
+        public string Content;
+
         [JsonPropertyName("description")]
         public string Description;
 
-        [Required]
-        [JsonPropertyName("content")]
-        public string Code;
-
-        [Required]
         [JsonPropertyName("visibility")]
         public VisibilityLevel Visibility;
 
@@ -33,6 +31,6 @@ namespace NGitLab.Models
         /// An array of snippet files. Required when updating snippets with multiple files.
         /// </summary>
         [JsonPropertyName("files")]
-        public SnippetCreateFile[] Files { get; set; }
+        public SnippetUpdateFile[] Files { get; set; }
     }
 }

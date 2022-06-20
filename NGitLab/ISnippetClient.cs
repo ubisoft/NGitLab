@@ -35,6 +35,16 @@ namespace NGitLab
         void Create(SnippetProjectCreate snippet);
 
         /// <summary>
+        /// Update a user's snippet
+        /// </summary>
+        void Update(SnippetUpdate snippet);
+
+        /// <summary>
+        /// Update a project's snippet
+        /// </summary>
+        void Update(SnippetProjectUpdate snippet);
+
+        /// <summary>
         /// Delete a snippet not linked to a project but only to a user, could delete snippet linked to a project but will return an error 403 in API v4
         /// </summary>
         void Delete(int snippetId);
