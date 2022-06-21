@@ -8,9 +8,6 @@ namespace NGitLab.Models
     {
         public int ProjectId;
 
-        [JsonPropertyName("id")]
-        public int SnippedId;
-
         [Required]
         [JsonPropertyName("title")]
         public string Title;

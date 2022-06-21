@@ -53,8 +53,8 @@ namespace NGitLab.Tests
                 Visibility = VisibilityLevel.Public,
                 Files = new[]
                 {
-                    new SnippetUpdateFile { Action = SnippetUpdateFile.ActionType.Delete, FilePath = returnedUserSnippet.Files[0].Path },
-                    new SnippetUpdateFile { Action = SnippetUpdateFile.ActionType.Move, PreviousFile = returnedUserSnippet.Files[1].Path, FilePath = "rename.md" },
+                    new SnippetUpdateFile { Action = SnippetUpdateFileAction.Delete, FilePath = returnedUserSnippet.Files[0].Path },
+                    new SnippetUpdateFile { Action = SnippetUpdateFileAction.Move, PreviousFile = returnedUserSnippet.Files[1].Path, FilePath = "rename.md" },
                 },
             };
 
@@ -118,8 +118,8 @@ namespace NGitLab.Tests
                 Visibility = visibility,
                 Files = new[]
                 {
-                    new SnippetUpdateFile { Action = SnippetUpdateFile.ActionType.Delete, FilePath = returnedProjectSnippet.Files[0].Path },
-                    new SnippetUpdateFile { Action = SnippetUpdateFile.ActionType.Move, PreviousFile = returnedProjectSnippet.Files[1].Path, FilePath = "rename.md" },
+                    new SnippetUpdateFile { Action = SnippetUpdateFileAction.Delete, FilePath = returnedProjectSnippet.Files[0].Path },
+                    new SnippetUpdateFile { Action = SnippetUpdateFileAction.Move, PreviousFile = returnedProjectSnippet.Files[1].Path, FilePath = "rename.md" },
                 },
             };
 

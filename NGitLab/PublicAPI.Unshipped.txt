@@ -2808,6 +2808,11 @@ NGitLab.Models.SnippetUpdateFile.ActionType.Update = 1 -> NGitLab.Models.Snippet
 NGitLab.Models.SnippetUpdateFile.PreviousFile.get -> string
 NGitLab.Models.SnippetUpdateFile.PreviousFile.set -> void
 NGitLab.Models.SnippetUpdateFile.SnippetUpdateFile() -> void
+NGitLab.Models.SnippetUpdateFileAction
+NGitLab.Models.SnippetUpdateFileAction.Create = 0 -> NGitLab.Models.SnippetUpdateFileAction
+NGitLab.Models.SnippetUpdateFileAction.Delete = 2 -> NGitLab.Models.SnippetUpdateFileAction
+NGitLab.Models.SnippetUpdateFileAction.Move = 3 -> NGitLab.Models.SnippetUpdateFileAction
+NGitLab.Models.SnippetUpdateFileAction.Update = 1 -> NGitLab.Models.SnippetUpdateFileAction
 NGitLab.Models.SquashOption
 NGitLab.Models.SquashOption.Always = 1 -> NGitLab.Models.SquashOption
 NGitLab.Models.SquashOption.DefaultOff = 2 -> NGitLab.Models.SquashOption

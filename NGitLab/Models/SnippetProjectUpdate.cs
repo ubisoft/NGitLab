@@ -10,7 +10,7 @@ namespace NGitLab.Models
 
         [Required]
         [JsonPropertyName("id")]
-        public int SnippedId;
+        public int SnippedId { get; set; }
 
         [Required]
         [JsonPropertyName("title")]
