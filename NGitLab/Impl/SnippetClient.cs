@@ -44,12 +44,12 @@ namespace NGitLab.Impl
 
         public void Update(SnippetUpdate snippet)
         {
-            _api.Put().With(snippet).To<SnippetUpdate>($"{SnippetUrl}/{snippet.SnippedId.ToStringInvariant()}");
+            _api.Put().With(snippet).To<SnippetUpdate>($"{SnippetUrl}/{snippet.SnippetId.ToStringInvariant()}");
         }
 
         public void Update(SnippetProjectUpdate snippet)
         {
-            _api.Put().With(snippet).To<SnippetProjectUpdate>($"{ProjectUrl}/{snippet.ProjectId.ToStringInvariant()}/snippets/{snippet.SnippedId.ToStringInvariant()}");
+            _api.Put().With(snippet).To<SnippetProjectUpdate>($"{ProjectUrl}/{snippet.ProjectId.ToStringInvariant()}/snippets/{snippet.SnippetId.ToStringInvariant()}");
         }
 
         public void Delete(int snippetId) => _api.Delete().Execute($"{SnippetUrl}/{snippetId.ToStringInvariant()}");

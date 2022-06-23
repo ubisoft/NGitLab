@@ -48,7 +48,7 @@ namespace NGitLab.Tests
 
             var updatedSnippet = new SnippetUpdate
             {
-                SnippedId = returnedUserSnippet.Id,
+                SnippetId = returnedUserSnippet.Id,
                 Title = snippetName,
                 Visibility = VisibilityLevel.Public,
                 Files = new[]
@@ -112,7 +112,7 @@ namespace NGitLab.Tests
 
             var updatedSnippet = new SnippetProjectUpdate
             {
-                SnippedId = returnedProjectSnippet.Id,
+                SnippetId = returnedProjectSnippet.Id,
                 Title = projectSnippetName,
                 ProjectId = testProjectId,
                 Visibility = visibility,
