@@ -2808,8 +2808,8 @@ NGitLab.Models.SnippetProjectUpdate.FileName -> string
 NGitLab.Models.SnippetProjectUpdate.Files.get -> NGitLab.Models.SnippetUpdateFile[]
 NGitLab.Models.SnippetProjectUpdate.Files.set -> void
 NGitLab.Models.SnippetProjectUpdate.ProjectId -> int
-NGitLab.Models.SnippetProjectUpdate.SnippedId.get -> int
-NGitLab.Models.SnippetProjectUpdate.SnippedId.set -> void
+NGitLab.Models.SnippetProjectUpdate.SnippetId.get -> int
+NGitLab.Models.SnippetProjectUpdate.SnippetId.set -> void
 NGitLab.Models.SnippetProjectUpdate.SnippetProjectUpdate() -> void
 NGitLab.Models.SnippetProjectUpdate.Title -> string
 NGitLab.Models.SnippetProjectUpdate.Visibility -> NGitLab.Models.VisibilityLevel
@@ -2819,8 +2819,8 @@ NGitLab.Models.SnippetUpdate.Description -> string
 NGitLab.Models.SnippetUpdate.FileName -> string
 NGitLab.Models.SnippetUpdate.Files.get -> NGitLab.Models.SnippetUpdateFile[]
 NGitLab.Models.SnippetUpdate.Files.set -> void
-NGitLab.Models.SnippetUpdate.SnippedId.get -> int
-NGitLab.Models.SnippetUpdate.SnippedId.set -> void
+NGitLab.Models.SnippetUpdate.SnippetId.get -> int
+NGitLab.Models.SnippetUpdate.SnippetId.set -> void
 NGitLab.Models.SnippetUpdate.SnippetUpdate() -> void
 NGitLab.Models.SnippetUpdate.Title -> string
 NGitLab.Models.SnippetUpdate.Visibility -> NGitLab.Models.VisibilityLevel
