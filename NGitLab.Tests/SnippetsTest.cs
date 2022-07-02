@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using NGitLab.Impl.Json;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -24,9 +25,12 @@ namespace NGitLab.Tests
             var newSnippet1 = new SnippetCreate
             {
                 Title = snippetName,
-                Content = "var test = 42;",
-                FileName = "testFileName.cs",
                 Visibility = VisibilityLevel.Public,
+                Files = new[]
+                {
+                    new SnippetCreateFile { FilePath = "Path1.txt", Content = "Content1" },
+                    new SnippetCreateFile { FilePath = "Path2.txt", Content = "Content2" },
+                },
             };
 
             // act - assert
@@ -35,6 +39,32 @@ namespace NGitLab.Tests
             Assert.That(snippetClient.All.Select(x => x.Title), Contains.Item(snippetName));
 
             var returnedUserSnippet = snippetClient.All.First(s => string.Equals(s.Title, snippetName, StringComparison.Ordinal));
+
+            Assert.IsNotNull(returnedUserSnippet.Files);
+            Assert.AreEqual(2, returnedUserSnippet.Files.Length);
+
+            Assert.IsNotNull(returnedUserSnippet.Files[0]);
+            Assert.IsTrue(string.Equals(returnedUserSnippet.Files[0].Path, "Path1.txt", StringComparison.Ordinal));
+
+            var updatedSnippet = new SnippetUpdate
+            {
+                SnippetId = returnedUserSnippet.Id,
+                Title = snippetName,
+                Visibility = VisibilityLevel.Public,
+                Files = new[]
+                {
+                    new SnippetUpdateFile { Action = SnippetUpdateFileAction.Delete, FilePath = returnedUserSnippet.Files[0].Path },
+                    new SnippetUpdateFile { Action = SnippetUpdateFileAction.Move, PreviousFile = returnedUserSnippet.Files[1].Path, FilePath = "rename.md" },
+                },
+            };
+
+            snippetClient.Update(updatedSnippet);
+
+            var returnedProjectSnippetAfterUpdate = snippetClient.User.First(s => string.Equals(s.Title, snippetName, StringComparison.Ordinal));
+
+            Assert.AreEqual(1, returnedProjectSnippetAfterUpdate.Files.Length);
+            Assert.AreEqual("rename.md", returnedProjectSnippetAfterUpdate.Files[0].Path);
+
             snippetClient.Delete(returnedUserSnippet.Id);
         }
 
@@ -57,10 +87,13 @@ namespace NGitLab.Tests
             var newSnippet = new SnippetProjectCreate
             {
                 Title = projectSnippetName,
-                Code = "var test = 43;",
-                FileName = "testFileName1.cs",
                 ProjectId = testProjectId,
                 Visibility = visibility,
+                Files = new[]
+                {
+                    new SnippetCreateFile { FilePath = "Path1.txt", Content = "Content1" },
+                    new SnippetCreateFile { FilePath = "Path2.txt", Content = "Content2" },
+                },
             };
 
             // act - assert
@@ -70,6 +103,32 @@ namespace NGitLab.Tests
             var returnedProjectSnippet = snippetClient.User.First(s => string.Equals(s.Title, projectSnippetName, StringComparison.Ordinal));
 
             Assert.That(snippetClient.Get(newSnippet.ProjectId, returnedProjectSnippet.Id), Is.Not.Null);
+
+            Assert.IsNotNull(returnedProjectSnippet.Files);
+            Assert.AreEqual(2, returnedProjectSnippet.Files.Length);
+
+            Assert.IsNotNull(returnedProjectSnippet.Files[0]);
+            Assert.IsTrue(string.Equals(returnedProjectSnippet.Files[0].Path, "Path1.txt", StringComparison.Ordinal));
+
+            var updatedSnippet = new SnippetProjectUpdate
+            {
+                SnippetId = returnedProjectSnippet.Id,
+                Title = projectSnippetName,
+                ProjectId = testProjectId,
+                Visibility = visibility,
+                Files = new[]
+                {
+                    new SnippetUpdateFile { Action = SnippetUpdateFileAction.Delete, FilePath = returnedProjectSnippet.Files[0].Path },
+                    new SnippetUpdateFile { Action = SnippetUpdateFileAction.Move, PreviousFile = returnedProjectSnippet.Files[1].Path, FilePath = "rename.md" },
+                },
+            };
+
+            snippetClient.Update(updatedSnippet);
+
+            var returnedProjectSnippetAfterUpdate = snippetClient.User.First(s => string.Equals(s.Title, projectSnippetName, StringComparison.Ordinal));
+
+            Assert.AreEqual(1, returnedProjectSnippetAfterUpdate.Files.Length);
+            Assert.AreEqual("rename.md", returnedProjectSnippetAfterUpdate.Files[0].Path);
 
             snippetClient.Delete(newSnippet.ProjectId, returnedProjectSnippet.Id);
         }

@@ -4,8 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    public class SnippetCreate
+    public class SnippetUpdate
     {
+        [Required]
+        [JsonPropertyName("id")]
+        public int SnippetId { get; set; }
+
         [Required]
         [JsonPropertyName("title")]
         public string Title;
@@ -30,6 +34,6 @@ namespace NGitLab.Models
         /// An array of snippet files. Required when updating snippets with multiple files.
         /// </summary>
         [JsonPropertyName("files")]
-        public SnippetCreateFile[] Files { get; set; }
+        public SnippetUpdateFile[] Files { get; set; }
     }
 }

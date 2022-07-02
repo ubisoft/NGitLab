@@ -12,6 +12,7 @@ namespace NGitLab.Models
         public string Title;
 
         [JsonPropertyName("file_name")]
+        [Obsolete("Consider using the Files array that support more than one file.")]
         public string FileName;
 
         [JsonPropertyName("description")]
@@ -28,5 +29,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("web_url")]
         public string WebUrl;
+
+        [JsonPropertyName("files")]
+        public SnippetFile[] Files { get; set; }
     }
 }

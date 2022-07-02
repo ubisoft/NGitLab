@@ -42,6 +42,16 @@ namespace NGitLab.Impl
             _api.Post().With(snippet).To<SnippetProjectCreate>($"{ProjectUrl}/{snippet.ProjectId.ToStringInvariant()}/snippets");
         }
 
+        public void Update(SnippetUpdate snippet)
+        {
+            _api.Put().With(snippet).To<SnippetUpdate>($"{SnippetUrl}/{snippet.SnippetId.ToStringInvariant()}");
+        }
+
+        public void Update(SnippetProjectUpdate snippet)
+        {
+            _api.Put().With(snippet).To<SnippetProjectUpdate>($"{ProjectUrl}/{snippet.ProjectId.ToStringInvariant()}/snippets/{snippet.SnippetId.ToStringInvariant()}");
+        }
+
         public void Delete(int snippetId) => _api.Delete().Execute($"{SnippetUrl}/{snippetId.ToStringInvariant()}");
 
         public void Delete(int projectId, int snippetId) => _api.Delete().Execute($"{ProjectUrl}/{projectId.ToStringInvariant()}/snippets/{snippetId.ToStringInvariant()}");

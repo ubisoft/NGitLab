@@ -4,8 +4,14 @@ using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    public class SnippetCreate
+    public class SnippetProjectUpdate
     {
+        public int ProjectId;
+
+        [Required]
+        [JsonPropertyName("id")]
+        public int SnippetId { get; set; }
+
         [Required]
         [JsonPropertyName("title")]
         public string Title;
@@ -15,14 +21,15 @@ namespace NGitLab.Models
         [Obsolete("Consider using the Files array that support more than one file.")]
         public string FileName;
 
-        [Required]
-        [JsonPropertyName("content")]
-        [Obsolete("Consider using the Files array that support more than one file.")]
-        public string Content;
-
         [JsonPropertyName("description")]
         public string Description;
 
+        [Required]
+        [JsonPropertyName("content")]
+        [Obsolete("Consider using the Files array that support more than one file.")]
+        public string Code;
+
+        [Required]
         [JsonPropertyName("visibility")]
         public VisibilityLevel Visibility;
 
@@ -30,6 +37,6 @@ namespace NGitLab.Models
         /// An array of snippet files. Required when updating snippets with multiple files.
         /// </summary>
         [JsonPropertyName("files")]
-        public SnippetCreateFile[] Files { get; set; }
+        public SnippetUpdateFile[] Files { get; set; }
     }
 }
