@@ -14,9 +14,9 @@ namespace NGitLab.Impl
         {
             _api = api;
             _notesPath = "/projects/" + projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/notes";
-            _discussionsPath = projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/discussions";
+            _discussionsPath = "/projects/" + projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/discussions";
         }
-         
+
         public IEnumerable<MergeRequestComment> All => _api.Get().GetAll<MergeRequestComment>(_notesPath);
 
         public IEnumerable<MergeRequestDiscussion> Discussions => _api.Get().GetAll<MergeRequestDiscussion>(_discussionsPath);
