@@ -15,7 +15,7 @@ namespace NGitLab.Mock.Clients
             _mergeRequestIid = mergeRequestIid;
         }
 
-        public MergeRequestApprovals Approvals => throw new NotImplementedException();
+        public MergeRequestApprovals Approvals => new();
 
         public MergeRequestApprovals ApproveMergeRequest(MergeRequestApproveRequest request = null)
         {
