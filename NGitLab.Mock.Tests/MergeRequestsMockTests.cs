@@ -106,7 +106,7 @@ namespace NGitLab.Mock.Tests
         }
 
         [Test]
-        public void Test_merge_create_null_approval_client()
+        public void Test_merge_requests_create_null_approval_client()
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", isDefault: true)
