@@ -104,5 +104,26 @@ namespace NGitLab.Mock.Tests
             Assert.AreEqual(1, mergeRequestSingle.Assignees.Count, "Merge request assignees count invalid");
             Assert.AreEqual("user1", mergeRequestTwo.Assignee.UserName, "Merge request assignee is invalid");
         }
+
+        [Test]
+        public void Test_merge_create_null_approval_client()
+        {
+            using var server = new GitLabConfig()
+                .WithUser("user1", isDefault: true)
+                .WithUser("user2")
+                .WithProject("Test", configure: project => project
+                    .WithMergeRequest("branch-01", title: "Merge request 1", author: "user2", approvers: new[] { "user1" }))
+                .BuildServer();
+
+            var client = server.CreateClient("user1");
+            var mergeRequests = client.MergeRequests.Get(new MergeRequestQuery { ApproverIds = new[] { 1 } }).ToArray();
+
+            var mergeRequestClient = client.GetMergeRequest(client.Projects.Visible.First().Id);
+            var approvalClient = mergeRequestClient.ApprovalClient(mergeRequests[0].Iid);
+
+            var approvers = approvalClient.Approvals.Approvers;
+
+            Assert.AreEqual(null, approvers, "Approver is null");
+        }
     }
 }
