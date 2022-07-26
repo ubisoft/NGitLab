@@ -69,7 +69,7 @@ namespace NGitLab.Models
         /// <summary>
         /// Limit results to projects that match all of the given topics.
         /// </summary>
-        public List<string> Topics { get; } = new List<string>();
+        public IList<string> Topics { get; } = new List<string>();
     }
 
     public enum ProjectQueryScope
