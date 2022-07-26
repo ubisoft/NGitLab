@@ -397,5 +397,39 @@ namespace NGitLab.Tests
             createdProject = projectClient[createdProject.Id];
             Assert.IsFalse(createdProject.EmptyRepo);
         }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task GetProjectByTopics()
+        {
+            // Arrange
+            using var context = await GitLabTestContext.CreateAsync();
+
+            var topicRequired1 = CreateTopic();
+            var topicRequired2 = CreateTopic();
+            var topicOptional1 = CreateTopic();
+            var topicOptional2 = CreateTopic();
+
+            context.CreateProject();
+            context.CreateProject(p => p.Tags = new List<string> { topicRequired1, topicOptional1 });
+            context.CreateProject(p => p.Tags = new List<string> { topicRequired1, topicRequired2 });
+            context.CreateProject(p => p.Tags = new List<string> { topicRequired1, topicOptional2 });
+            context.CreateProject(p => p.Tags = new List<string> { topicRequired1, topicOptional1, topicRequired2 });
+            context.CreateProject(p => p.Tags = new List<string> { topicOptional1, topicOptional2, topicRequired2 });
+
+            var projectClient = context.Client.Projects;
+
+            var query = new ProjectQuery();
+            query.Topics.Add(topicRequired1);
+            query.Topics.Add(topicRequired2);
+
+            // Act
+            var projects = projectClient.Get(query); // Get projects that have both required topics
+
+            // Assert
+            Assert.AreEqual(2, projects.Count());
+
+            static string CreateTopic() => Guid.NewGuid().ToString("N");
+        }
     }
 }

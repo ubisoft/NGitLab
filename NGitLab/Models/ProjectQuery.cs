@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NGitLab.Models
 {
@@ -64,6 +65,11 @@ namespace NGitLab.Models
         /// Limit results to projects with last_activity after specified time.
         /// </summary>
         public DateTimeOffset? LastActivityAfter;
+
+        /// <summary>
+        /// Limit results to projects that match all of the given topics.
+        /// </summary>
+        public IList<string> Topics { get; } = new List<string>();
     }
 
     public enum ProjectQueryScope

@@ -2433,6 +2433,7 @@ NGitLab.Models.ProjectQuery.Scope -> NGitLab.Models.ProjectQueryScope
 NGitLab.Models.ProjectQuery.Search -> string
 NGitLab.Models.ProjectQuery.Simple -> bool?
 NGitLab.Models.ProjectQuery.Statistics -> bool?
+NGitLab.Models.ProjectQuery.Topics.get -> System.Collections.Generic.IList<string>
 NGitLab.Models.ProjectQuery.UserId -> int?
 NGitLab.Models.ProjectQuery.Visibility -> NGitLab.Models.VisibilityLevel?
 NGitLab.Models.ProjectQueryScope

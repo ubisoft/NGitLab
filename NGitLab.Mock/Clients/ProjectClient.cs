@@ -198,6 +198,11 @@ namespace NGitLab.Mock.Clients
                         break;
                 }
 
+                if (query.Topics.Any())
+                {
+                    projects = projects.Where(p => query.Topics.All(t => p.Tags.Contains(t, StringComparer.Ordinal)));
+                }
+
                 return projects.Select(project => project.ToClientProject()).ToList();
             }
         }

@@ -96,6 +96,11 @@ namespace NGitLab.Impl
                 url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel.Value);
             }
 
+            if (query.Topics.Any())
+            {
+                url = Utils.AddParameter(url, "topic", string.Join(",", query.Topics.Where(t => !string.IsNullOrWhiteSpace(t))));
+            }
+
             return url;
         }
 
