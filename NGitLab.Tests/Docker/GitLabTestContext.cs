@@ -87,7 +87,7 @@ namespace NGitLab.Tests.Docker
 
         public IGitLabClient CreateNewUser(out User user)
         {
-            var username = "user_" + DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
+            var username = "user_" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + "_" + Guid.NewGuid().ToString("N");
             var email = username + "@dummy.com";
             var password = "Pa$$w0rd";
             var client = AdminClient;
