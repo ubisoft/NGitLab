@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB204408-0886-42F7-8218-C0820EB7B352}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		BannedSymbols.txt = BannedSymbols.txt
 		.github\workflows\ci.yml = .github\workflows\ci.yml
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json

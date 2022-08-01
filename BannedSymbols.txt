@@ -1,0 +1,3 @@
+﻿#https://github.com/dotnet/csharplang/blob/main/spec/documentation-comments.md#id-string-format
+
+M:System.String.ToLower;Use ToLowerInvariant instead
