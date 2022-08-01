@@ -9,21 +9,21 @@ namespace NGitLab.Tests
         public void WhenSha1WithLowerCase_ThenParsedCorrectly()
         {
             const string value = "2695effb5807a22ff3d138d593fd856244e155e7";
-            Assert.AreEqual(value.ToUpper(), new Sha1(value).ToString().ToUpper());
+            Assert.AreEqual(value.ToUpperInvariant(), new Sha1(value).ToString().ToUpperInvariant());
         }
 
         [Test]
         public void WhenSha1WithLeadingZero_ThenParsedCorrectly()
         {
             const string value = "59529D73E3E6E2B7015F05D197E12C43B13BA033";
-            Assert.AreEqual(value.ToUpper(), new Sha1(value).ToString().ToUpper());
+            Assert.AreEqual(value.ToUpperInvariant(), new Sha1(value).ToString().ToUpperInvariant());
         }
 
         [Test]
         public void WhenSha1WithUpperCase_ThenParsedCorrectly()
         {
             const string value = "2695EFFB5807A22FF3D138D593FD856244E155E7";
-            Assert.AreEqual(value, new Sha1(value).ToString().ToUpper());
+            Assert.AreEqual(value, new Sha1(value).ToString().ToUpperInvariant());
         }
 
         [Test]

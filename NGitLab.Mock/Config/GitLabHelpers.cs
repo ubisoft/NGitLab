@@ -1704,9 +1704,9 @@ namespace NGitLab.Mock.Config
                 Description = issue.Description,
                 Author = issue.Author?.UserName ?? throw new InvalidOperationException($"Author required in issue '{issue.Title}'"),
                 Assignee = issue.Assignee?.UserName,
-                CreatedAt = issue.CreatedAt.DateTime,
-                UpdatedAt = issue.UpdatedAt.DateTime,
-                ClosedAt = issue.ClosedAt?.DateTime,
+                CreatedAt = issue.CreatedAt.UtcDateTime,
+                UpdatedAt = issue.UpdatedAt.UtcDateTime,
+                ClosedAt = issue.ClosedAt?.UtcDateTime,
             };
 
             foreach (var label in issue.Labels ?? Enumerable.Empty<string>())
@@ -1733,10 +1733,10 @@ namespace NGitLab.Mock.Config
                 Assignee = mergeRequest.Assignee?.UserName,
                 SourceBranch = mergeRequest.SourceBranch,
                 TargetBranch = mergeRequest.TargetBranch,
-                CreatedAt = mergeRequest.CreatedAt.DateTime,
-                UpdatedAt = mergeRequest.UpdatedAt.DateTime,
-                ClosedAt = mergeRequest.ClosedAt?.DateTime,
-                MergedAt = mergeRequest.MergedAt?.DateTime,
+                CreatedAt = mergeRequest.CreatedAt.UtcDateTime,
+                UpdatedAt = mergeRequest.UpdatedAt.UtcDateTime,
+                ClosedAt = mergeRequest.ClosedAt?.UtcDateTime,
+                MergedAt = mergeRequest.MergedAt?.UtcDateTime,
             };
 
             foreach (var label in mergeRequest.Labels)
@@ -1797,8 +1797,8 @@ namespace NGitLab.Mock.Config
                 Author = comment.Author?.UserName,
                 Message = comment.Body,
                 System = comment.System,
-                CreatedAt = comment.CreatedAt.DateTime,
-                UpdatedAt = comment.UpdatedAt.DateTime,
+                CreatedAt = comment.CreatedAt.UtcDateTime,
+                UpdatedAt = comment.UpdatedAt.UtcDateTime,
                 Thread = comment.ThreadId,
                 Resolvable = comment.Resolvable,
                 Resolved = comment.Resolved,
@@ -1813,8 +1813,8 @@ namespace NGitLab.Mock.Config
                 Author = comment.Author?.UserName,
                 Message = comment.Body,
                 System = comment.System,
-                CreatedAt = comment.CreatedAt.DateTime,
-                UpdatedAt = comment.UpdatedAt.DateTime,
+                CreatedAt = comment.CreatedAt.UtcDateTime,
+                UpdatedAt = comment.UpdatedAt.UtcDateTime,
                 Thread = comment.ThreadId,
                 Resolvable = comment.Resolvable,
                 Resolved = comment.Resolved,

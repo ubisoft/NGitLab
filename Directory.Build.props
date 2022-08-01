@@ -26,6 +26,7 @@
 
     <SourceRoot Include="$(MSBuildThisFileDirectory)/" />
 
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)/BannedSymbols.txt" Link="Properties/BannedSymbols.txt" />
     <PackageReference Include="MinVer" PrivateAssets="All" Version="4.1.0" />
 
     <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1">
@@ -47,6 +48,11 @@
     </PackageReference>
 
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
