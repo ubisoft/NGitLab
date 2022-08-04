@@ -944,6 +944,8 @@ NGitLab.Mock.Runner.Parent.get -> NGitLab.Mock.Project
 NGitLab.Mock.Runner.Runner() -> void
 NGitLab.Mock.Runner.RunUntagged.get -> bool
 NGitLab.Mock.Runner.RunUntagged.set -> void
+NGitLab.Mock.Runner.Status.get -> string
+NGitLab.Mock.Runner.Status.set -> void
 NGitLab.Mock.Runner.TagList.get -> string[]
 NGitLab.Mock.Runner.TagList.set -> void
 NGitLab.Mock.Runner.Token.get -> string

@@ -15,6 +15,8 @@ namespace NGitLab.Mock
 
         public bool Online { get; set; }
 
+        public string Status { get; set; }
+
         public string Description { get; set; }
 
         public bool IsShared { get; set; }
@@ -41,6 +43,7 @@ namespace NGitLab.Mock
                 Name = Name,
                 Active = Active,
                 Online = Online,
+                Status = Status,
                 Description = Description,
                 IsShared = IsShared,
                 Projects = Parent.Server.AllProjects.Where(p => p.EnabledRunners.Any(r => r.Id == Id)).Select(p => p.ToClientProject()).ToArray(),
