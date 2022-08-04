@@ -2703,6 +2703,7 @@ NGitLab.Models.Runner.Online -> bool
 NGitLab.Models.Runner.Projects -> NGitLab.Models.Project[]
 NGitLab.Models.Runner.Runner() -> void
 NGitLab.Models.Runner.RunUntagged -> bool
+NGitLab.Models.Runner.Status -> string
 NGitLab.Models.Runner.TagList -> string[]
 NGitLab.Models.Runner.Token -> string
 NGitLab.Models.Runner.Version -> string

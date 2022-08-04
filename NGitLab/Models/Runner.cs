@@ -21,6 +21,9 @@ namespace NGitLab.Models
         [JsonPropertyName("online")]
         public bool Online;
 
+        [JsonPropertyName("status")]
+        public string Status;
+
         [JsonPropertyName("description")]
         public string Description;
 
