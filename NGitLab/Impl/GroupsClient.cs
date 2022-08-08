@@ -114,10 +114,41 @@ namespace NGitLab.Impl
 
         public IEnumerable<Project> SearchProjects(int groupId, string search)
         {
+            return GetProjectsAsync(groupId, new GroupProjectsQuery
+            {
+                Search = search,
+            });
+        }
+
+        public GitLabCollectionResponse<Project> GetProjectsAsync(int groupId, GroupProjectsQuery query)
+        {
             var url = Url + "/" + Uri.EscapeDataString(groupId.ToString(CultureInfo.InvariantCulture)) + "/projects";
-            url = Utils.AddParameter(url, "search", search);
-            url = Utils.AddOrderBy(url);
-            return _api.Get().GetAll<Project>(url);
+
+            if (query.Visibility.HasValue)
+            {
+                url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLowerInvariant());
+            }
+
+            if (query.MinAccessLevel is not null)
+            {
+                url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
+            }
+
+            url = Utils.AddParameter(url, "archived", value: query.Archived);
+            url = Utils.AddParameter(url, "sort", query.Sort);
+            url = Utils.AddParameter(url, "search", query.Search);
+            url = Utils.AddParameter(url, "simple", query.Simple);
+            url = Utils.AddParameter(url, "owned", query.Owned);
+            url = Utils.AddParameter(url, "starred", query.Starred);
+            url = Utils.AddParameter(url, "with_issues_enabled", query.WithIssuesEnabled);
+            url = Utils.AddParameter(url, "with_merge_requests_enabled", query.WithMergeRequestsEnabled);
+            url = Utils.AddParameter(url, "with_shared", query.WithShared);
+            url = Utils.AddParameter(url, "include_subgroups", query.IncludeSubGroups);
+            url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
+            url = Utils.AddParameter(url, "with_security_reports ", query.WithSecurityReports);
+            url = Utils.AddOrderBy(url, query.OrderBy);
+
+            return _api.Get().GetAllAsync<Project>(url);
         }
 
         public Group Create(GroupCreate group) => _api.Post().With(group).To<Group>(Url);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -39,7 +40,10 @@ namespace NGitLab
 
         Task<Group> CreateAsync(GroupCreate group, CancellationToken cancellationToken = default);
 
+        [Obsolete("Use GetProjectsAsync instead")]
         IEnumerable<Project> SearchProjects(int groupId, string search);
+
+        GitLabCollectionResponse<Project> GetProjectsAsync(int groupId, GroupProjectsQuery query);
 
         void Delete(int id);
 
