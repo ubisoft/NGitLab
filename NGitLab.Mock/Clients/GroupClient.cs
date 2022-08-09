@@ -166,6 +166,11 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public GitLabCollectionResponse<Models.Project> GetProjectsAsync(int groupId, GroupProjectsQuery query)
+        {
+            throw new NotImplementedException();
+        }
+
         public Models.Group Update(int id, GroupUpdate groupUpdate)
         {
             using (Context.BeginOperationScope())

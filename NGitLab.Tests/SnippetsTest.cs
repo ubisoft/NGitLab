@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using NGitLab.Impl.Json;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;

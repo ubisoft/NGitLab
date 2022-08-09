@@ -322,5 +322,56 @@ namespace NGitLab.Tests
             Assert.IsTrue(result40.Any());
             Assert.IsTrue(result50.Any());
         }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_group_projects_query_returns_archived()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+
+            var projectClient = context.Client.Projects;
+            var project = projectClient.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture) });
+            projectClient.Archive(project.Id);
+
+            var projects = groupClient.GetProjectsAsync(group.Id, new GroupProjectsQuery
+            {
+                Archived = true,
+            }).ToArray();
+
+            group = groupClient[group.Id];
+            Assert.IsNotNull(group);
+            Assert.IsNotEmpty(projects);
+
+            var projectResult = projects.Single();
+            Assert.AreEqual(project.Id, projectResult.Id);
+            Assert.True(projectResult.Archived);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_group_projects_query_returns_searched_project()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var group = context.CreateGroup();
+
+            var projectClient = context.Client.Projects;
+            var project = projectClient.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture) });
+            projectClient.Create(new ProjectCreate { Name = "this is another project", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture) });
+
+            var projects = groupClient.GetProjectsAsync(group.Id, new GroupProjectsQuery
+            {
+                Search = "test",
+            }).ToArray();
+
+            group = groupClient[group.Id];
+            Assert.IsNotNull(group);
+            Assert.IsNotEmpty(projects);
+
+            var projectResult = projects.Single();
+            Assert.AreEqual(project.Id, projectResult.Id);
+        }
     }
 }
