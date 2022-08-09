@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
@@ -164,6 +166,83 @@ namespace NGitLab.Tests
 
             // Validate environment is still present
             Assert.IsNotNull(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToStop, System.StringComparison.Ordinal)));
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task QueryByState()
+        {
+            // Arrange
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var envClient = context.Client.GetEnvironmentClient(project.Id);
+
+            var newEnvNameToStop = "env_test_name_to_stop";
+            var stoppedEnv = envClient.Create(newEnvNameToStop, externalUrl: null);
+            envClient.Stop(stoppedEnv.Id);
+
+            var newEnvNameAvailable = "env_test_name_available";
+            var availableEnv = envClient.Create(newEnvNameAvailable, externalUrl: null);
+
+            // Act
+            var availableEnvs = envClient.GetEnvironmentsAsync(new Models.EnvironmentQuery { State = "available" });
+
+            // Assert
+            Assert.AreEqual(2, envClient.All.Count());
+            var availableEnvResult = availableEnvs.Single();
+            Assert.AreEqual(newEnvNameAvailable, availableEnvResult.Name);
+            Assert.AreEqual("available", availableEnvResult.State);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task QueryByName()
+        {
+            // Arrange
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var envClient = context.Client.GetEnvironmentClient(project.Id);
+
+            var devEnvName = "dev";
+            var devEnvironment = envClient.Create(devEnvName, externalUrl: null);
+
+            var prodEnvName = "production";
+            var prodEnvironment = envClient.Create(prodEnvName, externalUrl: null);
+
+            // Act
+            var prodEnvs = envClient.GetEnvironmentsAsync(new Models.EnvironmentQuery { Name = prodEnvName });
+
+            // Assert
+            Assert.AreEqual(2, envClient.All.Count());
+            var availableEnvResult = prodEnvs.Single();
+            Assert.AreEqual(prodEnvName, availableEnvResult.Name);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task QueryBySearch()
+        {
+            // Arrange
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var envClient = context.Client.GetEnvironmentClient(project.Id);
+
+            var devEnvName = "dev";
+            var devEnvironment = envClient.Create(devEnvName, externalUrl: null);
+
+            var dev2EnvName = "dev2";
+            var dev2Environment = envClient.Create(dev2EnvName, externalUrl: null);
+
+            var prodEnvName = "production";
+            var prodEnvironment = envClient.Create(prodEnvName, externalUrl: null);
+
+            // Act
+            var devEnvs = envClient.GetEnvironmentsAsync(new Models.EnvironmentQuery { Search = "dev" });
+
+            // Assert
+            Assert.AreEqual(3, envClient.All.Count());
+            Assert.AreEqual(2, devEnvs.Count());
+            Assert.That(devEnvs, Is.All.Matches<EnvironmentInfo>(e => e.Name.Contains("dev", StringComparison.Ordinal)));
         }
     }
 }

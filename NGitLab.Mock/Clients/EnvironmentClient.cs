@@ -35,5 +35,10 @@ namespace NGitLab.Mock.Clients
         {
             throw new NotImplementedException();
         }
+
+        public GitLabCollectionResponse<EnvironmentInfo> GetEnvironmentsAsync(EnvironmentQuery query)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
