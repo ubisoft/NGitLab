@@ -56,5 +56,16 @@ namespace NGitLab.Impl
         {
             return _api.Post().To<EnvironmentInfo>($"{_environmentsPath}/{environmentId.ToStringInvariant()}/stop");
         }
+
+        public GitLabCollectionResponse<EnvironmentInfo> GetEnvironmentsAsync(EnvironmentQuery query)
+        {
+            var url = _environmentsPath;
+
+            url = Utils.AddParameter(url, "name", value: query.Name);
+            url = Utils.AddParameter(url, "search", value: query.Search);
+            url = Utils.AddParameter(url, "states", value: query.State);
+
+            return _api.Get().GetAllAsync<EnvironmentInfo>(url);
+        }
     }
 }

@@ -39,5 +39,12 @@ namespace NGitLab
         /// <param name="environmentId">The ID of the environment</param>
         /// <returns>The stopped environment</returns>
         EnvironmentInfo Stop(int environmentId);
+
+        /// <summary>
+        /// List environments of the project
+        /// </summary>
+        /// <param name="query"><see cref="EnvironmentQuery"></see>/></param>
+        /// <returns>Environments that matched the query criteria</returns>
+        GitLabCollectionResponse<EnvironmentInfo> GetEnvironmentsAsync(EnvironmentQuery query);
     }
 }
