@@ -73,7 +73,14 @@ namespace NGitLab.Mock.Clients
 
         public Models.Pipeline CreatePipelineWithTrigger(string token, string @ref, Dictionary<string, string> variables)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var pipeline = project.Pipelines.Add(@ref, JobStatus.Running, Context.User);
+                pipeline.Variables = variables.Select(v => new PipelineVariable { Key = v.Key, Value = v.Value });
+                pipeline.CiToken = token;
+                return pipeline.ToPipelineClient();
+            }
         }
 
         public void Delete(int pipelineId)

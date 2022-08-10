@@ -50,6 +50,8 @@ namespace NGitLab.Mock
 
         public IEnumerable<PipelineVariable> Variables { get; set; }
 
+        public string CiToken { get; set; }
+
         public TestReport TestReports { get; set; }
 
         [Obsolete("Use other overloads")]
