@@ -692,6 +692,8 @@ NGitLab.Mock.Pipeline.AddNewJob(NGitLab.Mock.Project project) -> NGitLab.Mock.Jo
 NGitLab.Mock.Pipeline.AddNewJob(string name, NGitLab.JobStatus status, NGitLab.Mock.User user = null) -> NGitLab.Mock.Job
 NGitLab.Mock.Pipeline.BeforeSha.get -> NGitLab.Sha1
 NGitLab.Mock.Pipeline.BeforeSha.set -> void
+NGitLab.Mock.Pipeline.CiToken.get -> string
+NGitLab.Mock.Pipeline.CiToken.set -> void
 NGitLab.Mock.Pipeline.CommittedAt.get -> System.DateTimeOffset
 NGitLab.Mock.Pipeline.CommittedAt.set -> void
 NGitLab.Mock.Pipeline.Coverage.get -> double
