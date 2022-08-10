@@ -125,6 +125,7 @@ NGitLab.IEnvironmentClient.All.get -> System.Collections.Generic.IEnumerable<NGi
 NGitLab.IEnvironmentClient.Create(string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.Delete(int environmentId) -> void
 NGitLab.IEnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
+NGitLab.IEnvironmentClient.GetEnvironmentsAsync(NGitLab.Models.EnvironmentQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.EnvironmentInfo>
 NGitLab.IEnvironmentClient.Stop(int environmentId) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEpicClient
 NGitLab.IEpicClient.Create(int groupId, NGitLab.Models.EpicCreate epic) -> NGitLab.Models.Epic
@@ -201,6 +202,7 @@ NGitLab.IGroupsClient.Get(NGitLab.Models.GroupQuery query) -> System.Collections
 NGitLab.IGroupsClient.GetAsync(NGitLab.Models.GroupQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetByFullPathAsync(string fullPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
+NGitLab.IGroupsClient.GetProjectsAsync(int groupId, NGitLab.Models.GroupProjectsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.IGroupsClient.Restore(int id) -> void
 NGitLab.IGroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.IGroupsClient.SearchAsync(string search) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
@@ -384,6 +386,7 @@ NGitLab.Impl.EnvironmentClient.Create(string name, string externalUrl) -> NGitLa
 NGitLab.Impl.EnvironmentClient.Delete(int environmentId) -> void
 NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.EnvironmentClient.GetEnvironmentsAsync(NGitLab.Models.EnvironmentQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.EnvironmentInfo>
 NGitLab.Impl.EnvironmentClient.Stop(int environmentId) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EpicClient
 NGitLab.Impl.EpicClient.Create(int groupId, NGitLab.Models.EpicCreate epic) -> NGitLab.Models.Epic
@@ -427,6 +430,7 @@ NGitLab.Impl.GroupsClient.Get(NGitLab.Models.GroupQuery query) -> System.Collect
 NGitLab.Impl.GroupsClient.GetAsync(NGitLab.Models.GroupQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.GetByFullPathAsync(string fullPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
+NGitLab.Impl.GroupsClient.GetProjectsAsync(int groupId, NGitLab.Models.GroupProjectsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.Impl.GroupsClient.GroupsClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.GroupsClient.Restore(int id) -> void
 NGitLab.Impl.GroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
@@ -1300,6 +1304,14 @@ NGitLab.Models.EnvironmentInfo.Id -> int
 NGitLab.Models.EnvironmentInfo.Name -> string
 NGitLab.Models.EnvironmentInfo.Slug -> string
 NGitLab.Models.EnvironmentInfo.State -> string
+NGitLab.Models.EnvironmentQuery
+NGitLab.Models.EnvironmentQuery.EnvironmentQuery() -> void
+NGitLab.Models.EnvironmentQuery.Name.get -> string
+NGitLab.Models.EnvironmentQuery.Name.set -> void
+NGitLab.Models.EnvironmentQuery.Search.get -> string
+NGitLab.Models.EnvironmentQuery.Search.set -> void
+NGitLab.Models.EnvironmentQuery.State.get -> string
+NGitLab.Models.EnvironmentQuery.State.set -> void
 NGitLab.Models.Epic
 NGitLab.Models.Epic.CreatedAt.get -> System.DateTime
 NGitLab.Models.Epic.CreatedAt.set -> void
@@ -1547,6 +1559,38 @@ NGitLab.Models.GroupMemberUpdate.AccessLevel -> NGitLab.Models.AccessLevel
 NGitLab.Models.GroupMemberUpdate.ExpiresAt -> string
 NGitLab.Models.GroupMemberUpdate.GroupMemberUpdate() -> void
 NGitLab.Models.GroupMemberUpdate.UserId -> string
+NGitLab.Models.GroupProjectsQuery
+NGitLab.Models.GroupProjectsQuery.Archived.get -> bool?
+NGitLab.Models.GroupProjectsQuery.Archived.set -> void
+NGitLab.Models.GroupProjectsQuery.GroupProjectsQuery() -> void
+NGitLab.Models.GroupProjectsQuery.IncludeSubGroups.get -> bool?
+NGitLab.Models.GroupProjectsQuery.IncludeSubGroups.set -> void
+NGitLab.Models.GroupProjectsQuery.MinAccessLevel.get -> NGitLab.Models.AccessLevel?
+NGitLab.Models.GroupProjectsQuery.MinAccessLevel.set -> void
+NGitLab.Models.GroupProjectsQuery.OrderBy.get -> string
+NGitLab.Models.GroupProjectsQuery.OrderBy.set -> void
+NGitLab.Models.GroupProjectsQuery.Owned.get -> bool?
+NGitLab.Models.GroupProjectsQuery.Owned.set -> void
+NGitLab.Models.GroupProjectsQuery.Search.get -> string
+NGitLab.Models.GroupProjectsQuery.Search.set -> void
+NGitLab.Models.GroupProjectsQuery.Simple.get -> bool?
+NGitLab.Models.GroupProjectsQuery.Simple.set -> void
+NGitLab.Models.GroupProjectsQuery.Sort.get -> string
+NGitLab.Models.GroupProjectsQuery.Sort.set -> void
+NGitLab.Models.GroupProjectsQuery.Starred.get -> bool?
+NGitLab.Models.GroupProjectsQuery.Starred.set -> void
+NGitLab.Models.GroupProjectsQuery.Visibility.get -> NGitLab.Models.VisibilityLevel?
+NGitLab.Models.GroupProjectsQuery.Visibility.set -> void
+NGitLab.Models.GroupProjectsQuery.WithCustomAttributes.get -> bool?
+NGitLab.Models.GroupProjectsQuery.WithCustomAttributes.set -> void
+NGitLab.Models.GroupProjectsQuery.WithIssuesEnabled.get -> bool?
+NGitLab.Models.GroupProjectsQuery.WithIssuesEnabled.set -> void
+NGitLab.Models.GroupProjectsQuery.WithMergeRequestsEnabled.get -> bool?
+NGitLab.Models.GroupProjectsQuery.WithMergeRequestsEnabled.set -> void
+NGitLab.Models.GroupProjectsQuery.WithSecurityReports.get -> bool?
+NGitLab.Models.GroupProjectsQuery.WithSecurityReports.set -> void
+NGitLab.Models.GroupProjectsQuery.WithShared.get -> bool?
+NGitLab.Models.GroupProjectsQuery.WithShared.set -> void
 NGitLab.Models.GroupQuery
 NGitLab.Models.GroupQuery.AllAvailable -> bool?
 NGitLab.Models.GroupQuery.GroupQuery() -> void
@@ -2703,6 +2747,7 @@ NGitLab.Models.Runner.Online -> bool
 NGitLab.Models.Runner.Projects -> NGitLab.Models.Project[]
 NGitLab.Models.Runner.Runner() -> void
 NGitLab.Models.Runner.RunUntagged -> bool
+NGitLab.Models.Runner.Status -> string
 NGitLab.Models.Runner.TagList -> string[]
 NGitLab.Models.Runner.Token -> string
 NGitLab.Models.Runner.Version -> string

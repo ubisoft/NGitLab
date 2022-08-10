@@ -88,7 +88,7 @@ namespace NGitLab.Impl
 
             if (query.Visibility.HasValue)
             {
-                url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLower());
+                url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLowerInvariant());
             }
 
             if (query.MinAccessLevel != null)

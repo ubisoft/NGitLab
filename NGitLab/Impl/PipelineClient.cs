@@ -145,7 +145,7 @@ namespace NGitLab.Impl
             if (query.Scope.HasValue)
                 queryEntries.Add("scope", query.Scope.Value.ToString());
             if (query.Status.HasValue)
-                queryEntries.Add("status", query.Status.Value.ToString());
+                queryEntries.Add("status", query.Status.Value.ToString().ToLowerInvariant());
             if (!string.IsNullOrWhiteSpace(query.Ref))
                 queryEntries.Add("ref", query.Ref);
             if (!string.IsNullOrWhiteSpace(query.Sha))

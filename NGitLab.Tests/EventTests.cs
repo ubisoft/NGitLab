@@ -20,7 +20,7 @@ namespace NGitLab.Tests
             var userEvents = context.Client.GetUserEvents(currentUserId);
             var globalEvents = context.Client.GetEvents();
 
-            var firstEvent = userEvents.Get(new EventQuery { After = DateTime.Now.AddMonths(-1) }).FirstOrDefault();
+            var firstEvent = userEvents.Get(new EventQuery { After = DateTime.UtcNow.AddMonths(-1) }).FirstOrDefault();
 
             if (firstEvent != null)
             {
@@ -38,7 +38,7 @@ namespace NGitLab.Tests
             var currentUserId = context.Client.Users.Current.Id;
             var globalEvents = context.Client.GetEvents();
 
-            var firstEvent = globalEvents.Get(new EventQuery { After = DateTime.Now.AddMonths(-1) }).FirstOrDefault();
+            var firstEvent = globalEvents.Get(new EventQuery { After = DateTime.UtcNow.AddMonths(-1) }).FirstOrDefault();
 
             Assert.That(firstEvent, Is.Not.Null);
         }
