@@ -164,6 +164,8 @@ namespace NGitLab.Impl
                 queryEntries.Add("order_by", query.OrderBy.Value.ToString());
             if (query.Sort.HasValue)
                 queryEntries.Add("sort", query.Sort.Value.ToString());
+            if (query.PerPage.HasValue)
+                queryEntries.Add("per_page", query.PerPage.Value.ToString());
 
             var stringQuery = string.Join("&", queryEntries.Select(kp => $"{kp.Key}={kp.Value}"));
             var url = $"{_projectPath}/pipelines{(queryEntries.Any() ? $"?{stringQuery}" : string.Empty)}";
