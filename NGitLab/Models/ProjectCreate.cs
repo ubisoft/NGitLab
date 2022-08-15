@@ -63,7 +63,11 @@ namespace NGitLab.Models
         public VisibilityLevel VisibilityLevel;
 
         [JsonPropertyName("tag_list")]
+        [Obsolete("Deprecated by GitLab. Use Topics instead")]
         public List<string> Tags;
+
+        [JsonPropertyName("topics")]
+        public List<string> Topics { get; } = new List<string>();
 
         [JsonPropertyName("build_timeout")]
         public int? BuildTimeout;

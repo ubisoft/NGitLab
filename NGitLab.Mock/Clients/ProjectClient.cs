@@ -200,7 +200,7 @@ namespace NGitLab.Mock.Clients
 
                 if (query.Topics.Any())
                 {
-                    projects = projects.Where(p => query.Topics.All(t => p.Tags.Contains(t, StringComparer.Ordinal)));
+                    projects = projects.Where(p => query.Topics.All(t => p.Topics.Contains(t, StringComparer.Ordinal)));
                 }
 
                 return projects.Select(project => project.ToClientProject()).ToList();
@@ -293,9 +293,16 @@ namespace NGitLab.Mock.Clients
                     project.LfsEnabled = projectUpdate.LfsEnabled.Value;
                 }
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 if (projectUpdate.TagList != null)
                 {
                     project.Tags = projectUpdate.TagList.Where(t => !string.IsNullOrEmpty(t)).Distinct(StringComparer.Ordinal).ToArray();
+                }
+#pragma warning restore CS0618 // Type or member is obsolete
+
+                if (projectUpdate.Topics.Count > 0)
+                {
+                    project.Topics = projectUpdate.Topics.Where(t => !string.IsNullOrEmpty(t)).Distinct(StringComparer.Ordinal).ToArray();
                 }
 
                 return project.ToClientProject();
