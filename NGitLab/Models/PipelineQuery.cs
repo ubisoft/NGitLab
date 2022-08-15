@@ -25,5 +25,7 @@ namespace NGitLab.Models
         public PipelineOrderBy? OrderBy { get; set; }
 
         public PipelineSort? Sort { get; set; }
+
+        public int? PerPage { get; set; }
     }
 }
