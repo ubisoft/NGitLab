@@ -2278,6 +2278,8 @@ NGitLab.Models.PipelineQuery.Name.get -> string
 NGitLab.Models.PipelineQuery.Name.set -> void
 NGitLab.Models.PipelineQuery.OrderBy.get -> NGitLab.Models.PipelineOrderBy?
 NGitLab.Models.PipelineQuery.OrderBy.set -> void
+NGitLab.Models.PipelineQuery.PerPage.get -> int?
+NGitLab.Models.PipelineQuery.PerPage.set -> void
 NGitLab.Models.PipelineQuery.PipelineQuery() -> void
 NGitLab.Models.PipelineQuery.Ref.get -> string
 NGitLab.Models.PipelineQuery.Ref.set -> void
