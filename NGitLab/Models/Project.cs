@@ -126,7 +126,12 @@ namespace NGitLab.Models
         public bool SharedRunnersEnabled;
 
         [JsonPropertyName("tag_list")]
+        [Obsolete("Deprecated by GitLab. Use Topics instead")]
         public string[] TagList;
+
+        [JsonPropertyName("topics")]
+        [JsonInclude]
+        public string[] Topics { get; internal init; }
 
         [JsonPropertyName("star_count")]
         public int StarCount;

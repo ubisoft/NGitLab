@@ -77,7 +77,14 @@ namespace NGitLab.Mock
 
         public bool Archived { get; set; }
 
-        public string[] Tags { get; set; } = Array.Empty<string>();
+        [Obsolete("Deprecated by GitLab. Use Topics instead")]
+        public string[] Tags
+        {
+            get => Topics;
+            set => Topics = value;
+        }
+
+        public string[] Topics { get; set; } = Array.Empty<string>();
 
         public bool Mirror { get; set; }
 
@@ -348,6 +355,7 @@ namespace NGitLab.Mock
         {
             var kind = Group.IsUserNamespace ? "user" : "group";
 
+#pragma warning disable CS0618 // Type or member is obsolete
             return new Models.Project
             {
                 Id = Id,
@@ -373,12 +381,14 @@ namespace NGitLab.Mock
                 MergeMethod = MergeMethod,
                 Statistics = Statistics,
                 TagList = Tags,
+                Topics = Topics,
                 Mirror = Mirror,
                 MirrorUserId = MirrorUserId,
                 MirrorTriggerBuilds = MirrorTriggerBuilds,
                 OnlyMirrorProtectedBranch = OnlyMirrorProtectedBranch,
                 MirrorOverwritesDivergedBranches = MirrorOverwritesDivergedBranches,
             };
+#pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 }

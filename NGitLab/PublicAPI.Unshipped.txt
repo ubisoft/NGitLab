@@ -2372,6 +2372,7 @@ NGitLab.Models.Project.SshUrl -> string
 NGitLab.Models.Project.StarCount -> int
 NGitLab.Models.Project.Statistics -> NGitLab.Models.ProjectStatistics
 NGitLab.Models.Project.TagList -> string[]
+NGitLab.Models.Project.Topics.get -> string[]
 NGitLab.Models.Project.VisibilityLevel -> NGitLab.Models.VisibilityLevel
 NGitLab.Models.Project.WallEnabled -> bool
 NGitLab.Models.Project.WebUrl -> string
@@ -2393,6 +2394,7 @@ NGitLab.Models.ProjectCreate.ProjectCreate() -> void
 NGitLab.Models.ProjectCreate.SnippetsAccessLevel -> string
 NGitLab.Models.ProjectCreate.SnippetsEnabled -> bool
 NGitLab.Models.ProjectCreate.Tags -> System.Collections.Generic.List<string>
+NGitLab.Models.ProjectCreate.Topics.get -> System.Collections.Generic.List<string>
 NGitLab.Models.ProjectCreate.VisibilityLevel -> NGitLab.Models.VisibilityLevel
 NGitLab.Models.ProjectCreate.WallEnabled -> bool
 NGitLab.Models.ProjectCreate.WikiAccessLevel -> string
@@ -2542,6 +2544,7 @@ NGitLab.Models.ProjectUpdate.SnippetsAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.SnippetsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.SnippetsEnabled.set -> void
 NGitLab.Models.ProjectUpdate.TagList -> string[]
+NGitLab.Models.ProjectUpdate.Topics.get -> System.Collections.Generic.List<string>
 NGitLab.Models.ProjectUpdate.Visibility.get -> NGitLab.Models.VisibilityLevel?
 NGitLab.Models.ProjectUpdate.Visibility.set -> void
 NGitLab.Models.ProjectUpdate.WikiAccessLevel.get -> string

@@ -816,6 +816,8 @@ NGitLab.Mock.Project.Statistics.set -> void
 NGitLab.Mock.Project.Tags.get -> string[]
 NGitLab.Mock.Project.Tags.set -> void
 NGitLab.Mock.Project.ToClientProject() -> NGitLab.Models.Project
+NGitLab.Mock.Project.Topics.get -> string[]
+NGitLab.Mock.Project.Topics.set -> void
 NGitLab.Mock.Project.Visibility.get -> NGitLab.Models.VisibilityLevel
 NGitLab.Mock.Project.Visibility.set -> void
 NGitLab.Mock.Project.WebUrl.get -> string

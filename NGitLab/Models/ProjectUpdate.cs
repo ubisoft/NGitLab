@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
@@ -89,6 +90,10 @@ namespace NGitLab.Models
         public int? BuildTimeout;
 
         [JsonPropertyName("tag_list")]
+        [Obsolete("Deprecated by GitLab. Use Topics instead")]
         public string[] TagList;
+
+        [JsonPropertyName("topics")]
+        public List<string> Topics { get; } = new List<string>();
     }
 }
