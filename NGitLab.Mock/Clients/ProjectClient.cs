@@ -296,7 +296,7 @@ namespace NGitLab.Mock.Clients
 #pragma warning disable CS0618 // Type or member is obsolete
                 if (projectUpdate.TagList != null)
                 {
-                    project.Tags = projectUpdate.TagList.Where(t => !string.IsNullOrEmpty(t)).Distinct(StringComparer.Ordinal).ToArray();
+                    project.Topics = projectUpdate.TagList.Where(t => !string.IsNullOrEmpty(t)).Distinct(StringComparer.Ordinal).ToArray();
                 }
 #pragma warning restore CS0618 // Type or member is obsolete
 
