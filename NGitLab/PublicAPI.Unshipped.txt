@@ -69,6 +69,7 @@ NGitLab.GitLabClient.GitLabClient(string hostUrl, string userName, string passwo
 NGitLab.GitLabClient.GraphQL.get -> NGitLab.IGraphQLClient
 NGitLab.GitLabClient.Groups.get -> NGitLab.IGroupsClient
 NGitLab.GitLabClient.Issues.get -> NGitLab.IIssueClient
+NGitLab.GitLabClient.Jobs.get -> NGitLab.IGlobalJobClient
 NGitLab.GitLabClient.Labels.get -> NGitLab.ILabelClient
 NGitLab.GitLabClient.Members.get -> NGitLab.IMembersClient
 NGitLab.GitLabClient.MergeRequests.get -> NGitLab.IMergeRequestClient
@@ -174,6 +175,7 @@ NGitLab.IGitLabClient.GetWikiClient(int projectId) -> NGitLab.IWikiClient
 NGitLab.IGitLabClient.GraphQL.get -> NGitLab.IGraphQLClient
 NGitLab.IGitLabClient.Groups.get -> NGitLab.IGroupsClient
 NGitLab.IGitLabClient.Issues.get -> NGitLab.IIssueClient
+NGitLab.IGitLabClient.Jobs.get -> NGitLab.IGlobalJobClient
 NGitLab.IGitLabClient.Labels.get -> NGitLab.ILabelClient
 NGitLab.IGitLabClient.Members.get -> NGitLab.IMembersClient
 NGitLab.IGitLabClient.MergeRequests.get -> NGitLab.IMergeRequestClient
@@ -184,6 +186,8 @@ NGitLab.IGitLabClient.Snippets.get -> NGitLab.ISnippetClient
 NGitLab.IGitLabClient.SystemHooks.get -> NGitLab.ISystemHookClient
 NGitLab.IGitLabClient.Users.get -> NGitLab.IUserClient
 NGitLab.IGitLabClient.Version.get -> NGitLab.IVersionClient
+NGitLab.IGlobalJobClient
+NGitLab.IGlobalJobClient.GetJobFromJobTokenAsync(string token, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.IGraphQLClient
 NGitLab.IGraphQLClient.ExecuteAsync<T>(NGitLab.Models.GraphQLQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<T>
 NGitLab.IGroupBadgeClient

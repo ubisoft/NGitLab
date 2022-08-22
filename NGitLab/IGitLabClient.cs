@@ -10,6 +10,8 @@
 
         IGroupsClient Groups { get; }
 
+        IGlobalJobClient Jobs { get; }
+
         ILabelClient Labels { get; }
 
         IRunnerClient Runners { get; }

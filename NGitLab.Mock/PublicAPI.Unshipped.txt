@@ -500,6 +500,8 @@ NGitLab.Mock.Job.FinishedAt.set -> void
 NGitLab.Mock.Job.Id.get -> int
 NGitLab.Mock.Job.Id.set -> void
 NGitLab.Mock.Job.Job() -> void
+NGitLab.Mock.Job.JobToken.get -> string
+NGitLab.Mock.Job.JobToken.set -> void
 NGitLab.Mock.Job.Name.get -> string
 NGitLab.Mock.Job.Name.set -> void
 NGitLab.Mock.Job.Pipeline.get -> NGitLab.Mock.Pipeline

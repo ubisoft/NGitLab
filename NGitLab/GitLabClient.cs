@@ -40,6 +40,8 @@ namespace NGitLab
 
         public ISearchClient AdvancedSearch { get; }
 
+        public IGlobalJobClient Jobs { get; }
+
         public RequestOptions Options
         {
             get => _api.RequestOptions;
@@ -85,6 +87,7 @@ namespace NGitLab
             Epics = new EpicClient(_api);
             GraphQL = new GraphQLClient(_api);
             AdvancedSearch = new SearchClient(_api, "/search");
+            Jobs = new GlobalJobsClient(_api);
         }
 
         [Obsolete("Use GitLabClient constructor instead")]
