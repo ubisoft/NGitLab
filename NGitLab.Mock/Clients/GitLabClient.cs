@@ -39,6 +39,8 @@
 
         public IMergeRequestClient MergeRequests => new MergeRequestClient(Context);
 
+        public IGlobalJobClient Jobs => new GlobalJobsClient(Context);
+
         public IGraphQLClient GraphQL
         {
             get => _graphQLClient ??= Server.DefaultGraphQLClient ??= new GraphQLClient(Context);

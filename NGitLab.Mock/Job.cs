@@ -56,6 +56,8 @@ namespace NGitLab.Mock
 
         public Pipeline DownstreamPipeline { get; set; }
 
+        public string JobToken { get; set; } = Guid.NewGuid().ToString("N");
+
         internal Models.Bridge ToBridgeClient()
         {
             return new Models.Bridge
