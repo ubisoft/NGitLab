@@ -83,6 +83,7 @@ namespace NGitLab.Mock
 
                         _repository.Config.Set("receive.advertisePushOptions", value: true);
                         _repository.Config.Set("uploadpack.allowFilter", value: true);
+                        _repository.Config.Set("receive.denyCurrentBranch", value: "updateInstead"); // Allow git push to existing branches
 
                         _directory = directory;
                     }
@@ -90,6 +91,11 @@ namespace NGitLab.Mock
             }
 
             return _repository;
+        }
+
+        public void SetRepoConfig<T>(string name, T value)
+        {
+            GetGitRepository().Config.Set(name, value);
         }
 
         public bool IsRebaseNeeded(string branch, string ontoRebaseBranch)

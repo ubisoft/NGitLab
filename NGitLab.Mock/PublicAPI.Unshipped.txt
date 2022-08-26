@@ -55,10 +55,12 @@ NGitLab.Mock.Clients.LibGit2SharpExtensions
 NGitLab.Mock.Collection<T>
 NGitLab.Mock.Collection<T>.Clear() -> void
 NGitLab.Mock.Collection<T>.Collection(NGitLab.Mock.GitLabObject parent) -> void
+NGitLab.Mock.Collection<T>.CollectionChanged -> System.Collections.Specialized.NotifyCollectionChangedEventHandler
 NGitLab.Mock.Collection<T>.Contains(T item) -> bool
 NGitLab.Mock.Collection<T>.Count.get -> int
 NGitLab.Mock.Collection<T>.GetEnumerator() -> System.Collections.Generic.IEnumerator<T>
 NGitLab.Mock.Collection<T>.Parent.get -> NGitLab.Mock.GitLabObject
+NGitLab.Mock.Collection<T>.PropertyChanged -> System.ComponentModel.PropertyChangedEventHandler
 NGitLab.Mock.Collection<T>.Remove(T item) -> bool
 NGitLab.Mock.Collection<T>.Server.get -> NGitLab.Mock.GitLabServer
 NGitLab.Mock.CommitAction
@@ -926,6 +928,7 @@ NGitLab.Mock.Repository.Merge(NGitLab.Mock.User user, string sourceBranch, strin
 NGitLab.Mock.Repository.Project.get -> NGitLab.Mock.Project
 NGitLab.Mock.Repository.Rebase(NGitLab.Mock.User user, string sourceBranch, string targetBranch) -> LibGit2Sharp.Rebase
 NGitLab.Mock.Repository.RemoveBranch(string branchName) -> void
+NGitLab.Mock.Repository.SetRepoConfig<T>(string name, T value) -> void
 NGitLab.Mock.Repository.UpdateReleaseTag(string tagName, string releaseNotes) -> NGitLab.Mock.ReleaseTag
 NGitLab.Mock.Runner
 NGitLab.Mock.Runner.Active.get -> bool
