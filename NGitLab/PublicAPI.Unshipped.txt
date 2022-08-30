@@ -2397,6 +2397,8 @@ NGitLab.Models.ProjectCreate.Path -> string
 NGitLab.Models.ProjectCreate.ProjectCreate() -> void
 NGitLab.Models.ProjectCreate.SnippetsAccessLevel -> string
 NGitLab.Models.ProjectCreate.SnippetsEnabled -> bool
+NGitLab.Models.ProjectCreate.SquashOption.get -> NGitLab.Models.SquashOption?
+NGitLab.Models.ProjectCreate.SquashOption.set -> void
 NGitLab.Models.ProjectCreate.Tags -> System.Collections.Generic.List<string>
 NGitLab.Models.ProjectCreate.Topics.get -> System.Collections.Generic.List<string>
 NGitLab.Models.ProjectCreate.VisibilityLevel -> NGitLab.Models.VisibilityLevel

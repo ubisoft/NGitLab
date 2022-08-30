@@ -71,5 +71,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("build_timeout")]
         public int? BuildTimeout;
+
+        [JsonPropertyName("squash_option")]
+        public SquashOption? SquashOption { get; set; }
     }
 }

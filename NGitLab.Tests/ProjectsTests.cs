@@ -431,5 +431,32 @@ namespace NGitLab.Tests
 
             static string CreateTopic() => Guid.NewGuid().ToString("N");
         }
+
+        [TestCase(null)]
+        [TestCase(SquashOption.Always)]
+        [TestCase(SquashOption.Never)]
+        [TestCase(SquashOption.DefaultOff)]
+        [TestCase(SquashOption.DefaultOn)]
+        [NGitLabRetry]
+        public async Task CreateProjectWithSquashOption(SquashOption? inputSquashOption)
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var projectClient = context.Client.Projects;
+
+            var project = new ProjectCreate
+            {
+                Description = "desc",
+                Name = "CreateProjectWithSquashOption_Test_" + context.GetRandomNumber().ToString(CultureInfo.InvariantCulture),
+                VisibilityLevel = VisibilityLevel.Internal,
+                SquashOption = inputSquashOption,
+            };
+
+            var createdProject = projectClient.Create(project);
+
+            var expectedSquashOption = inputSquashOption ?? SquashOption.DefaultOff;
+            Assert.AreEqual(expectedSquashOption, createdProject.SquashOption);
+
+            projectClient.Delete(createdProject.Id);
+        }
     }
 }
