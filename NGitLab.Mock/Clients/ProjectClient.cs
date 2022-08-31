@@ -293,13 +293,6 @@ namespace NGitLab.Mock.Clients
                     project.LfsEnabled = projectUpdate.LfsEnabled.Value;
                 }
 
-#pragma warning disable CS0618 // Type or member is obsolete
-                if (projectUpdate.TagList != null)
-                {
-                    project.Topics = projectUpdate.TagList.Where(t => !string.IsNullOrEmpty(t)).Distinct(StringComparer.Ordinal).ToArray();
-                }
-#pragma warning restore CS0618 // Type or member is obsolete
-
                 if (projectUpdate.Topics.Count > 0)
                 {
                     project.Topics = projectUpdate.Topics.Where(t => !string.IsNullOrEmpty(t)).Distinct(StringComparer.Ordinal).ToArray();

@@ -63,7 +63,7 @@ namespace NGitLab.Models
         public VisibilityLevel VisibilityLevel;
 
         [JsonPropertyName("tag_list")]
-        [Obsolete("Deprecated by GitLab. Use Topics instead")]
+        [Obsolete("Deprecated by GitLab. Use Topics instead", error: true)]
         public List<string> Tags;
 
         [JsonPropertyName("topics")]
