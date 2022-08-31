@@ -67,7 +67,7 @@ namespace NGitLab.Models
         public List<string> Tags;
 
         [JsonPropertyName("topics")]
-        public List<string> Topics { get; } = new List<string>();
+        public List<string> Topics { get; set; }
 
         [JsonPropertyName("build_timeout")]
         public int? BuildTimeout;

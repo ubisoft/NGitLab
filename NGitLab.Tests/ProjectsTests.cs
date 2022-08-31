@@ -227,9 +227,10 @@ namespace NGitLab.Tests
             Assert.That(context.LastRequest.RequestUri.ToString(), Contains.Substring("per_page=5"));
         }
 
-        [Test]
+        [TestCase(false)]
+        [TestCase(true)]
         [NGitLabRetry]
-        public async Task CreateUpdateDelete()
+        public async Task CreateUpdateDelete(bool initiallySetTagsInsteadOfTopics)
         {
             using var context = await GitLabTestContext.CreateAsync();
             var projectClient = context.Client.Projects;
@@ -244,8 +245,13 @@ namespace NGitLab.Tests
                 SnippetsEnabled = true,
                 VisibilityLevel = VisibilityLevel.Internal,
                 WikiEnabled = true,
-                Topics = { "Tag-1", "Tag-2" },
             };
+
+            var expectedTopics = new List<string> { "Tag-1", "Tag-2" };
+            if (initiallySetTagsInsteadOfTopics)
+                project.Tags = expectedTopics;
+            else
+                project.Topics = expectedTopics;
 
             var createdProject = projectClient.Create(project);
 
@@ -254,13 +260,24 @@ namespace NGitLab.Tests
             Assert.AreEqual(project.MergeRequestsEnabled, createdProject.MergeRequestsEnabled);
             Assert.AreEqual(project.Name, createdProject.Name);
             Assert.AreEqual(project.VisibilityLevel, createdProject.VisibilityLevel);
-            CollectionAssert.AreEquivalent(project.Topics, createdProject.Topics);
+            CollectionAssert.AreEquivalent(expectedTopics, createdProject.Topics);
+            CollectionAssert.AreEquivalent(expectedTopics, createdProject.TagList);
             Assert.AreEqual(RepositoryAccessLevel.Enabled, createdProject.RepositoryAccessLevel);
 
             // Update
-            var updatedProject = projectClient.Update(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ProjectUpdate { Visibility = VisibilityLevel.Private, Topics = { "Tag-3" } });
+            expectedTopics = new List<string> { "Tag-3" };
+            var updateOptions = new ProjectUpdate { Visibility = VisibilityLevel.Private, Topics = expectedTopics };
+            var updatedProject = projectClient.Update(createdProject.Id.ToString(CultureInfo.InvariantCulture), updateOptions);
             Assert.AreEqual(VisibilityLevel.Private, updatedProject.VisibilityLevel);
-            Assert.AreEqual(new[] { "Tag-3" }, updatedProject.Topics);
+            CollectionAssert.AreEquivalent(expectedTopics, updatedProject.Topics);
+            CollectionAssert.AreEquivalent(expectedTopics, updatedProject.TagList);
+
+            updateOptions.Visibility = VisibilityLevel.Public;
+            updateOptions.Topics = null;    // If Topics are null, the project's existing topics will remain
+            updatedProject = projectClient.Update(createdProject.Id.ToString(CultureInfo.InvariantCulture), updateOptions);
+            Assert.AreEqual(VisibilityLevel.Public, updatedProject.VisibilityLevel);
+            CollectionAssert.AreEquivalent(expectedTopics, updatedProject.Topics);
+            CollectionAssert.AreEquivalent(expectedTopics, updatedProject.TagList);
 
             var updatedProject2 = projectClient.Update(createdProject.PathWithNamespace, new ProjectUpdate { Visibility = VisibilityLevel.Internal });
             Assert.AreEqual(VisibilityLevel.Internal, updatedProject2.VisibilityLevel);
@@ -310,7 +327,7 @@ namespace NGitLab.Tests
                 p.SnippetsEnabled = true;
                 p.VisibilityLevel = VisibilityLevel.Internal;
                 p.WikiEnabled = true;
-                p.Topics.AddRange(new[] { "Tag-1", "Tag-2" });
+                p.Topics = new List<string> { "Tag-1", "Tag-2" };
             });
 
             context.Client.GetRepository(createdProject.Id).Files.Create(new FileUpsert
@@ -411,11 +428,11 @@ namespace NGitLab.Tests
             var topicOptional2 = CreateTopic();
 
             context.CreateProject();
-            context.CreateProject(p => p.Topics.AddRange(new[] { topicRequired1, topicOptional1 }));
-            context.CreateProject(p => p.Topics.AddRange(new[] { topicRequired1, topicRequired2 }));
-            context.CreateProject(p => p.Topics.AddRange(new[] { topicRequired1, topicOptional2 }));
-            context.CreateProject(p => p.Topics.AddRange(new[] { topicRequired1, topicOptional1, topicRequired2 }));
-            context.CreateProject(p => p.Topics.AddRange(new[] { topicOptional1, topicOptional2, topicRequired2 }));
+            context.CreateProject(p => p.Topics = new List<string> { topicRequired1, topicOptional1 });
+            context.CreateProject(p => p.Topics = new List<string> { topicRequired1, topicRequired2 });
+            context.CreateProject(p => p.Topics = new List<string> { topicRequired1, topicOptional2 });
+            context.CreateProject(p => p.Topics = new List<string> { topicRequired1, topicOptional1, topicRequired2 });
+            context.CreateProject(p => p.Topics = new List<string> { topicOptional1, topicOptional2, topicRequired2 });
 
             var projectClient = context.Client.Projects;
 

@@ -94,6 +94,6 @@ namespace NGitLab.Models
         public string[] TagList;
 
         [JsonPropertyName("topics")]
-        public List<string> Topics { get; } = new List<string>();
+        public List<string> Topics { get; set; }
     }
 }
