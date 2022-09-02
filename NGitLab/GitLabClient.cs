@@ -157,6 +157,11 @@ namespace NGitLab
             return new MilestoneClient(_api, projectId);
         }
 
+        public IMilestoneClient GetGroupMilestone(int groupId)
+        {
+            return new MilestoneClient(_api, groupId, "groups");
+        }
+
         public IReleaseClient GetReleases(int projectId)
         {
             return new ReleaseClient(_api, projectId);

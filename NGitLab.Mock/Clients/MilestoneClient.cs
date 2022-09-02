@@ -11,7 +11,7 @@ namespace NGitLab.Mock
     {
         private readonly int _projectId;
 
-        public MilestoneClient(ClientContext context, int projectId)
+        public MilestoneClient(ClientContext context, int projectId, string urlPrefix = "projects")
             : base(context)
         {
             _projectId = projectId;

@@ -71,6 +71,8 @@
 
         public IMilestoneClient GetMilestone(int projectId) => new MilestoneClient(Context, projectId);
 
+        public IMilestoneClient GetGroupMilestone(int groupId) => new MilestoneClient(Context, groupId, "groups");
+
         public IReleaseClient GetReleases(int projectId) => new ReleaseClient(Context, projectId);
 
         public IPipelineClient GetPipelines(int projectId) => new PipelineClient(Context, jobClient: GetJobs(projectId), projectId: projectId);

@@ -9,10 +9,10 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _milestonePath;
 
-        public MilestoneClient(API api, int projectId)
+        public MilestoneClient(API api, int projectId, string urlPrefix = "projects")
         {
             _api = api;
-            _milestonePath = $"{Project.Url}/{projectId.ToStringInvariant()}/milestones";
+            _milestonePath = $"/{urlPrefix}/{projectId.ToStringInvariant()}/milestones";
         }
 
         public IEnumerable<Milestone> All => Get(new MilestoneQuery());

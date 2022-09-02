@@ -156,6 +156,7 @@ NGitLab.IGitLabClient.GetCommitStatus(int projectId) -> NGitLab.ICommitStatusCli
 NGitLab.IGitLabClient.GetEnvironmentClient(int projectId) -> NGitLab.IEnvironmentClient
 NGitLab.IGitLabClient.GetEvents() -> NGitLab.IEventClient
 NGitLab.IGitLabClient.GetGroupBadgeClient(int groupId) -> NGitLab.IGroupBadgeClient
+NGitLab.IGitLabClient.GetGroupMilestone(int groupId) -> NGitLab.IMilestoneClient
 NGitLab.IGitLabClient.GetGroupSearchClient(int groupId) -> NGitLab.ISearchClient
 NGitLab.IGitLabClient.GetGroupVariableClient(int groupId) -> NGitLab.IGroupVariableClient
 NGitLab.IGitLabClient.GetJobs(int projectId) -> NGitLab.IJobClient

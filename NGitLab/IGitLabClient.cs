@@ -50,6 +50,8 @@
 
         IMilestoneClient GetMilestone(int projectId);
 
+        IMilestoneClient GetGroupMilestone(int groupId);
+
         IReleaseClient GetReleases(int projectId);
 
         IMembersClient Members { get; }
