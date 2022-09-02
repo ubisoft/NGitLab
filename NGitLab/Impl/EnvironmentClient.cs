@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -66,6 +68,16 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "states", value: query.State);
 
             return _api.Get().GetAllAsync<EnvironmentInfo>(url);
+        }
+
+        public EnvironmentInfo GetById(int environmentId)
+        {
+            return _api.Get().To<EnvironmentInfo>($"{_environmentsPath}/{environmentId.ToStringInvariant()}");
+        }
+
+        public Task<EnvironmentInfo> GetByIdAsync(int environmentId, CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<EnvironmentInfo>($"{_environmentsPath}/{environmentId.ToStringInvariant()}", cancellationToken);
         }
     }
 }

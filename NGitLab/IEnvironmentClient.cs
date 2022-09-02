@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -46,5 +48,19 @@ namespace NGitLab
         /// <param name="query"><see cref="EnvironmentQuery"></see>/></param>
         /// <returns>Environments that matched the query criteria</returns>
         GitLabCollectionResponse<EnvironmentInfo> GetEnvironmentsAsync(EnvironmentQuery query);
+
+        /// <summary>
+        /// Get a specific environment
+        /// </summary>
+        /// <param name="environmentId">The ID of the environment</param>
+        /// <returns>The environment with the corresponding ID</returns>
+        EnvironmentInfo GetById(int environmentId);
+
+        /// <summary>
+        /// Get a specific environment
+        /// </summary>
+        /// <param name="environmentId">The ID of the environment</param>
+        /// <returns>The environment with the corresponding ID</returns>
+        Task<EnvironmentInfo> GetByIdAsync(int environmentId, CancellationToken cancellationToken = default);
     }
 }

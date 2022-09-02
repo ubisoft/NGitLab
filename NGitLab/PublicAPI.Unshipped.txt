@@ -126,6 +126,8 @@ NGitLab.IEnvironmentClient.All.get -> System.Collections.Generic.IEnumerable<NGi
 NGitLab.IEnvironmentClient.Create(string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.Delete(int environmentId) -> void
 NGitLab.IEnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
+NGitLab.IEnvironmentClient.GetById(int environmentId) -> NGitLab.Models.EnvironmentInfo
+NGitLab.IEnvironmentClient.GetByIdAsync(int environmentId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.EnvironmentInfo>
 NGitLab.IEnvironmentClient.GetEnvironmentsAsync(NGitLab.Models.EnvironmentQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.EnvironmentInfo>
 NGitLab.IEnvironmentClient.Stop(int environmentId) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEpicClient
@@ -390,6 +392,8 @@ NGitLab.Impl.EnvironmentClient.Create(string name, string externalUrl) -> NGitLa
 NGitLab.Impl.EnvironmentClient.Delete(int environmentId) -> void
 NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.EnvironmentClient.GetById(int environmentId) -> NGitLab.Models.EnvironmentInfo
+NGitLab.Impl.EnvironmentClient.GetByIdAsync(int environmentId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.EnvironmentInfo>
 NGitLab.Impl.EnvironmentClient.GetEnvironmentsAsync(NGitLab.Models.EnvironmentQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.EnvironmentInfo>
 NGitLab.Impl.EnvironmentClient.Stop(int environmentId) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EpicClient
@@ -1305,9 +1309,30 @@ NGitLab.Models.EnvironmentInfo
 NGitLab.Models.EnvironmentInfo.EnvironmentInfo() -> void
 NGitLab.Models.EnvironmentInfo.ExternalUrl -> string
 NGitLab.Models.EnvironmentInfo.Id -> int
+NGitLab.Models.EnvironmentInfo.LastDeployment -> NGitLab.Models.EnvironmentLastDeployment
 NGitLab.Models.EnvironmentInfo.Name -> string
 NGitLab.Models.EnvironmentInfo.Slug -> string
 NGitLab.Models.EnvironmentInfo.State -> string
+NGitLab.Models.EnvironmentLastDeployment
+NGitLab.Models.EnvironmentLastDeployment.CreatedAt.get -> System.DateTime
+NGitLab.Models.EnvironmentLastDeployment.CreatedAt.set -> void
+NGitLab.Models.EnvironmentLastDeployment.Deployable.get -> NGitLab.Models.Job
+NGitLab.Models.EnvironmentLastDeployment.Deployable.set -> void
+NGitLab.Models.EnvironmentLastDeployment.EnvironmentLastDeployment() -> void
+NGitLab.Models.EnvironmentLastDeployment.Id.get -> int
+NGitLab.Models.EnvironmentLastDeployment.Id.set -> void
+NGitLab.Models.EnvironmentLastDeployment.IId.get -> int
+NGitLab.Models.EnvironmentLastDeployment.IId.set -> void
+NGitLab.Models.EnvironmentLastDeployment.Ref.get -> string
+NGitLab.Models.EnvironmentLastDeployment.Ref.set -> void
+NGitLab.Models.EnvironmentLastDeployment.Sha.get -> NGitLab.Sha1
+NGitLab.Models.EnvironmentLastDeployment.Sha.set -> void
+NGitLab.Models.EnvironmentLastDeployment.Status.get -> NGitLab.JobStatus
+NGitLab.Models.EnvironmentLastDeployment.Status.set -> void
+NGitLab.Models.EnvironmentLastDeployment.UpdatedAt.get -> System.DateTime
+NGitLab.Models.EnvironmentLastDeployment.UpdatedAt.set -> void
+NGitLab.Models.EnvironmentLastDeployment.User.get -> NGitLab.Models.User
+NGitLab.Models.EnvironmentLastDeployment.User.set -> void
 NGitLab.Models.EnvironmentQuery
 NGitLab.Models.EnvironmentQuery.EnvironmentQuery() -> void
 NGitLab.Models.EnvironmentQuery.Name.get -> string

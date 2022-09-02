@@ -18,5 +18,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("state")]
         public string State;
+
+        [JsonPropertyName("last_deployment")]
+        public EnvironmentLastDeployment LastDeployment;
     }
 }

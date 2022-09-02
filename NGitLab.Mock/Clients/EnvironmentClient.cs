@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -37,6 +39,16 @@ namespace NGitLab.Mock.Clients
         }
 
         public GitLabCollectionResponse<EnvironmentInfo> GetEnvironmentsAsync(EnvironmentQuery query)
+        {
+            throw new NotImplementedException();
+        }
+
+        public EnvironmentInfo GetById(int environmentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<EnvironmentInfo> GetByIdAsync(int environmentId, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
