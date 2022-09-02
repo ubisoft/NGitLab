@@ -185,7 +185,7 @@ namespace NGitLab.Tests
             var availableEnv = envClient.Create(newEnvNameAvailable, externalUrl: null);
 
             // Act
-            var availableEnvs = envClient.GetEnvironmentsAsync(new Models.EnvironmentQuery { State = "available" });
+            var availableEnvs = envClient.GetEnvironmentsAsync(new EnvironmentQuery { State = "available" });
 
             // Assert
             Assert.AreEqual(2, envClient.All.Count());
@@ -210,7 +210,7 @@ namespace NGitLab.Tests
             var prodEnvironment = envClient.Create(prodEnvName, externalUrl: null);
 
             // Act
-            var prodEnvs = envClient.GetEnvironmentsAsync(new Models.EnvironmentQuery { Name = prodEnvName });
+            var prodEnvs = envClient.GetEnvironmentsAsync(new EnvironmentQuery { Name = prodEnvName });
 
             // Assert
             Assert.AreEqual(2, envClient.All.Count());
@@ -237,12 +237,32 @@ namespace NGitLab.Tests
             var prodEnvironment = envClient.Create(prodEnvName, externalUrl: null);
 
             // Act
-            var devEnvs = envClient.GetEnvironmentsAsync(new Models.EnvironmentQuery { Search = "dev" });
+            var devEnvs = envClient.GetEnvironmentsAsync(new EnvironmentQuery { Search = "dev" });
 
             // Assert
             Assert.AreEqual(3, envClient.All.Count());
             Assert.AreEqual(2, devEnvs.Count());
             Assert.That(devEnvs, Is.All.Matches<EnvironmentInfo>(e => e.Name.Contains("dev", StringComparison.Ordinal)));
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task GetById()
+        {
+            // Arrange
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var envClient = context.Client.GetEnvironmentClient(project.Id);
+
+            var devEnvName = "dev";
+            var devEnvironment = envClient.Create(devEnvName, externalUrl: null);
+
+            // Act
+            var devEnv = await envClient.GetByIdAsync(devEnvironment.Id);
+
+            // Assert
+            Assert.NotNull(devEnv);
+            Assert.AreEqual(devEnvName, devEnv.Name);
         }
     }
 }
