@@ -300,7 +300,7 @@ namespace NGitLab.Mock.Clients
                 }
 #pragma warning restore CS0618 // Type or member is obsolete
 
-                if (projectUpdate.Topics.Count > 0)
+                if (projectUpdate.Topics is { Count: > 0 })
                 {
                     project.Topics = projectUpdate.Topics.Where(t => !string.IsNullOrEmpty(t)).Distinct(StringComparer.Ordinal).ToArray();
                 }

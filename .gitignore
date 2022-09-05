@@ -187,3 +187,6 @@ FakesAssemblies/
 *.nupkg
 project.lock.json
 *.targets
+
+# Rider
+.idea/
