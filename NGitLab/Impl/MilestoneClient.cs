@@ -6,13 +6,31 @@ namespace NGitLab.Impl
 {
     public class MilestoneClient : IMilestoneClient
     {
+        internal enum Scope
+        {
+            Project,
+            Milestone,
+        }
+
         private readonly API _api;
         private readonly string _milestonePath;
 
-        public MilestoneClient(API api, int projectId, string urlPrefix = "projects")
+        internal MilestoneClient(API api, Scope scope, int id)
         {
             _api = api;
-            _milestonePath = $"/{urlPrefix}/{projectId.ToStringInvariant()}/milestones";
+            string urlPrefix = "projects";
+
+            if (scope == Scope.Milestone)
+            {
+                urlPrefix = "groups";
+            }
+
+            _milestonePath = $"/{urlPrefix}/{id.ToStringInvariant()}/milestones";
+        }
+
+        public MilestoneClient(API api, int projectId)
+            : this(api, Scope.Project, projectId)
+        {
         }
 
         public IEnumerable<Milestone> All => Get(new MilestoneQuery());

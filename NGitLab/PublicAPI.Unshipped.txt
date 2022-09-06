@@ -583,7 +583,7 @@ NGitLab.Impl.MilestoneClient.Close(int milestoneId) -> NGitLab.Models.Milestone
 NGitLab.Impl.MilestoneClient.Create(NGitLab.Models.MilestoneCreate milestone) -> NGitLab.Models.Milestone
 NGitLab.Impl.MilestoneClient.Delete(int milestoneId) -> void
 NGitLab.Impl.MilestoneClient.Get(NGitLab.Models.MilestoneQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Milestone>
-NGitLab.Impl.MilestoneClient.MilestoneClient(NGitLab.Impl.API api, int projectId, string urlPrefix = "projects") -> void
+NGitLab.Impl.MilestoneClient.MilestoneClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.MilestoneClient.this[int id].get -> NGitLab.Models.Milestone
 NGitLab.Impl.MilestoneClient.Update(int milestoneId, NGitLab.Models.MilestoneUpdate milestone) -> NGitLab.Models.Milestone
 NGitLab.Impl.NamespacesClient
