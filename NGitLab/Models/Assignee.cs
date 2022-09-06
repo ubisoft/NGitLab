@@ -22,8 +22,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("created_at")]
         public DateTime CreatedAt;
-        
+
         [JsonPropertyName("avatar_url")]
-        public string? AvatarURL;
+        public string AvatarURL;
     }
 }
