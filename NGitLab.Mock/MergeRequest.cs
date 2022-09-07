@@ -139,7 +139,7 @@ namespace NGitLab.Mock
 
         public void Accept(User user)
         {
-            var mergeCommit = SourceProject.Repository.Merge(user, SourceBranch, TargetBranch, Project);
+            var mergeCommit = Project.Repository.Merge(user, RepatriatedSourceBranch, TargetBranch, Project);
 
             MergeCommitSha = new Sha1(mergeCommit.Sha);
             MergedAt = DateTimeOffset.UtcNow;
@@ -149,6 +149,11 @@ namespace NGitLab.Mock
             {
                 SourceProject.Repository.RemoveBranch(SourceBranch);
             }
+
+            if (Project != SourceProject)
+                Project.Repository.RemoveBranch(RepatriatedSourceBranch);
+
+            RepatriatedSourceBranch = null;
         }
 
         public RebaseResult Rebase(User user)
@@ -247,5 +252,15 @@ namespace NGitLab.Mock
 
             return users.ToArray();
         }
+
+        internal void RepatriateSourceBranchToTargetProject()
+        {
+            // If the source branch is from a fork, sync it to the original project
+            RepatriatedSourceBranch = SourceProject == Project ?
+                SourceBranch :
+                Project.Repository.FetchBranchFromFork(SourceProject, SourceBranch);
+        }
+
+        internal string RepatriatedSourceBranch { get; private set; }
     }
 }

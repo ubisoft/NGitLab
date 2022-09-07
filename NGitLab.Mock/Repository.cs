@@ -473,6 +473,22 @@ namespace NGitLab.Mock
             }
         }
 
+        internal string FetchBranchFromFork(Project fork, string branch)
+        {
+            if (fork?.ForkedFrom != Project)
+                throw new InvalidOperationException("Cannot fetch MR source branch from unrelated project");
+
+            var repo = GetGitRepository();
+            var forkRemoteName = "fork"; // Should we also include the name of the fork?
+            var forkRemote =
+                repo.Network.Remotes[forkRemoteName] ??
+                repo.Network.Remotes.Add(forkRemoteName, fork.Repository.FullPath);
+
+            Commands.Fetch(repo, forkRemote.Name, new[] { branch }, new FetchOptions { }, "");
+
+            return $"remotes/{forkRemote.Name}/{branch}";
+        }
+
         private static Models.Tree GetTreeItem(string repositoryPath, string filePath)
         {
             var fileAttribute = System.IO.File.GetAttributes(filePath);
