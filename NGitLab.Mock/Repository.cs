@@ -200,6 +200,7 @@ namespace NGitLab.Mock
         public void RemoveBranch(string branchName)
         {
             var repository = GetGitRepository();
+            Commands.Checkout(repository, Project.DefaultBranch);
             repository.Branches.Remove(branchName);
         }
 
@@ -471,6 +472,22 @@ namespace NGitLab.Mock
             {
                 yield return GetTreeItem(FullPath, fileSystemEntry);
             }
+        }
+
+        internal string FetchBranchFromFork(Project fork, string branch)
+        {
+            if (fork?.ForkedFrom != Project)
+                throw new InvalidOperationException("Cannot fetch MR source branch from unrelated project");
+
+            var repo = GetGitRepository();
+            var forkRemoteName = "fork" + fork.Id.ToString(CultureInfo.InvariantCulture);
+            var forkRemote =
+                repo.Network.Remotes[forkRemoteName] ??
+                repo.Network.Remotes.Add(forkRemoteName, fork.Repository.FullPath);
+
+            Commands.Fetch(repo, forkRemote.Name, new[] { branch }, new FetchOptions { }, logMessage: "");
+
+            return $"remotes/{forkRemote.Name}/{branch}";
         }
 
         private static Models.Tree GetTreeItem(string repositoryPath, string filePath)

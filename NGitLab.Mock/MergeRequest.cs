@@ -10,6 +10,8 @@ namespace NGitLab.Mock
 {
     public sealed class MergeRequest : GitLabObject
     {
+        private string _consolidatedSourceBranch;
+
         public MergeRequest()
         {
             Comments = new NoteCollection<MergeRequestComment>(this);
@@ -139,7 +141,7 @@ namespace NGitLab.Mock
 
         public void Accept(User user)
         {
-            var mergeCommit = SourceProject.Repository.Merge(user, SourceBranch, TargetBranch, Project);
+            var mergeCommit = Project.Repository.Merge(user, ConsolidatedSourceBranch, TargetBranch, Project);
 
             MergeCommitSha = new Sha1(mergeCommit.Sha);
             MergedAt = DateTimeOffset.UtcNow;
@@ -149,6 +151,9 @@ namespace NGitLab.Mock
             {
                 SourceProject.Repository.RemoveBranch(SourceBranch);
             }
+
+            if (Project != SourceProject)
+                Project.Repository.RemoveBranch(ConsolidatedSourceBranch);
         }
 
         public RebaseResult Rebase(User user)
@@ -246,6 +251,19 @@ namespace NGitLab.Mock
             }
 
             return users.ToArray();
+        }
+
+        internal string ConsolidatedSourceBranch
+        {
+            get
+            {
+                _consolidatedSourceBranch ??=
+                    SourceProject == Project ?
+                    SourceBranch :
+                    Project.Repository.FetchBranchFromFork(SourceProject, SourceBranch);
+
+                return _consolidatedSourceBranch;
+            }
         }
     }
 }
