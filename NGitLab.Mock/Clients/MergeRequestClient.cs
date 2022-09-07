@@ -107,11 +107,9 @@ namespace NGitLab.Mock.Clients
                     }
                 }
 
-                mergeRequest.RepatriateSourceBranchToTargetProject();
-
                 if (project.MergeMethod != null &&
                     (string.Equals(project.MergeMethod, "ff", StringComparison.Ordinal) || string.Equals(project.MergeMethod, "rebase_merge", StringComparison.Ordinal)) &&
-                    project.Repository.IsRebaseNeeded(mergeRequest.RepatriatedSourceBranch, mergeRequest.TargetBranch))
+                    project.Repository.IsRebaseNeeded(mergeRequest.ConsolidatedSourceBranch, mergeRequest.TargetBranch))
                 {
                     throw new GitLabException("The merge request has some conflicts and cannot be merged")
                     {

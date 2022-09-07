@@ -10,6 +10,8 @@ namespace NGitLab.Mock
 {
     public sealed class MergeRequest : GitLabObject
     {
+        private string _consolidatedSourceBranch;
+
         public MergeRequest()
         {
             Comments = new NoteCollection<MergeRequestComment>(this);
@@ -139,7 +141,7 @@ namespace NGitLab.Mock
 
         public void Accept(User user)
         {
-            var mergeCommit = Project.Repository.Merge(user, RepatriatedSourceBranch, TargetBranch, Project);
+            var mergeCommit = Project.Repository.Merge(user, ConsolidatedSourceBranch, TargetBranch, Project);
 
             MergeCommitSha = new Sha1(mergeCommit.Sha);
             MergedAt = DateTimeOffset.UtcNow;
@@ -151,9 +153,7 @@ namespace NGitLab.Mock
             }
 
             if (Project != SourceProject)
-                Project.Repository.RemoveBranch(RepatriatedSourceBranch);
-
-            RepatriatedSourceBranch = null;
+                Project.Repository.RemoveBranch(ConsolidatedSourceBranch);
         }
 
         public RebaseResult Rebase(User user)
@@ -253,14 +253,17 @@ namespace NGitLab.Mock
             return users.ToArray();
         }
 
-        internal void RepatriateSourceBranchToTargetProject()
+        internal string ConsolidatedSourceBranch
         {
-            // If the source branch is from a fork, sync it to the original project
-            RepatriatedSourceBranch = SourceProject == Project ?
-                SourceBranch :
-                Project.Repository.FetchBranchFromFork(SourceProject, SourceBranch);
-        }
+            get
+            {
+                _consolidatedSourceBranch ??=
+                    SourceProject == Project ?
+                    SourceBranch :
+                    Project.Repository.FetchBranchFromFork(SourceProject, SourceBranch);
 
-        internal string RepatriatedSourceBranch { get; private set; }
+                return _consolidatedSourceBranch;
+            }
+        }
     }
 }
