@@ -71,6 +71,7 @@ namespace NGitLab.Mock.Clients
             return Accept(mergeRequestIid, new MergeRequestMerge
             {
                 Sha = message.Sha,
+                ShouldRemoveSourceBranch = message.ShouldRemoveSourceBranch,
             });
         }
 
@@ -81,6 +82,7 @@ namespace NGitLab.Mock.Clients
             {
                 var project = GetProject(_projectId, ProjectPermission.Contribute);
                 var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
+                mergeRequest.ShouldRemoveSourceBranch = message.ShouldRemoveSourceBranch ?? false;
 
                 if (project.ApprovalsBeforeMerge > mergeRequest.Approvers.Count)
                 {

@@ -151,6 +151,12 @@ namespace NGitLab.Mock.Tests
             // Assert
             Assert.IsFalse(mockMr.HasConflicts);
             Assert.AreEqual("merged", mockMr.State);
+
+            var branch = project.Repository.GetAllBranches().FirstOrDefault(b => string.Equals("fork/to-be-merged", b.FriendlyName));
+            Assert.IsNull(branch, "Since the merge succeeded and 'ShouldRemoveSourceBranch' was set, the 'fork/to-be-merged' branch should have been deleted");
+
+            branch = fork.Repository.GetAllBranches().FirstOrDefault(b => string.Equals("to-be-merged", b.FriendlyName));
+            Assert.IsNull(branch, "Since the merge succeeded and 'ShouldRemoveSourceBranch' was set, the 'to-be-merged' branch should have been deleted");
         }
 
         [Test]
@@ -198,6 +204,12 @@ namespace NGitLab.Mock.Tests
                 ShouldRemoveSourceBranch = true,
             }));
             Assert.IsTrue(exception.Message.Equals("The merge request has some conflicts and cannot be merged", StringComparison.Ordinal));
+
+            var branch = project.Repository.GetAllBranches().FirstOrDefault(b => string.Equals("fork/to-be-merged", b.FriendlyName));
+            Assert.IsNotNull(branch, "Since the merge failed, the 'fork/to-be-merged' branch should still be present");
+
+            branch = fork.Repository.GetAllBranches().FirstOrDefault(b => string.Equals("to-be-merged", b.FriendlyName));
+            Assert.IsNotNull(branch, "Since the merge failed, the 'to-be-merged' branch should still be present");
         }
     }
 }
