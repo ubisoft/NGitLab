@@ -201,8 +201,7 @@ namespace NGitLab.Mock
         {
             var repository = GetGitRepository();
             Commands.Checkout(repository, Project.DefaultBranch);
-            var branch = repository.Branches[branchName];
-            repository.Branches.Remove(branch);
+            repository.Branches.Remove(branchName);
         }
 
         public TagCollection GetTags()
