@@ -8,8 +8,8 @@ namespace NGitLab.Impl
     {
         internal enum Scope
         {
-            Project,
-            Milestone,
+            Projects,
+            Groups,
         }
 
         private readonly API _api;
@@ -20,7 +20,7 @@ namespace NGitLab.Impl
             _api = api;
             string urlPrefix = "projects";
 
-            if (scope == Scope.Milestone)
+            if (scope == Scope.Groups)
             {
                 urlPrefix = "groups";
             }
@@ -29,7 +29,7 @@ namespace NGitLab.Impl
         }
 
         public MilestoneClient(API api, int projectId)
-            : this(api, Scope.Project, projectId)
+            : this(api, Scope.Projects, projectId)
         {
         }
 

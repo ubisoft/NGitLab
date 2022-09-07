@@ -154,12 +154,12 @@ namespace NGitLab
 
         public IMilestoneClient GetMilestone(int projectId)
         {
-            return new MilestoneClient(_api, MilestoneClient.Scope.Project, projectId);
+            return new MilestoneClient(_api, MilestoneClient.Scope.Projects, projectId);
         }
 
         public IMilestoneClient GetGroupMilestone(int groupId)
         {
-            return new MilestoneClient(_api, MilestoneClient.Scope.Milestone, groupId);
+            return new MilestoneClient(_api, MilestoneClient.Scope.Groups, groupId);
         }
 
         public IReleaseClient GetReleases(int projectId)
