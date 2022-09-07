@@ -19,6 +19,10 @@ namespace NGitLab
 
         GitLabCollectionResponse<Issue> ForProjectAsync(int projectId);
 
+        GitLabCollectionResponse<Issue> ForGroupsAsync(int groupId);
+
+        GitLabCollectionResponse<Issue> ForGroupsAsync(int groupId, IssueQuery query);
+
         /// <summary>
         ///     <para>Return a single issue for a project given project.</para>
         ///     <para>url like GET /projects/:id/issues/:issue_id</para>

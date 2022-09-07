@@ -10,6 +10,7 @@ namespace NGitLab.Impl
     {
         private const string IssuesUrl = "/issues";
         private const string IssueByIdUrl = "/issues/{0}";
+        private const string GroupIssuesUrl = "/groups/{0}/issues";
         private const string ProjectIssuesUrl = "/projects/{0}/issues";
         private const string SingleIssueUrl = "/projects/{0}/issues/{1}";
         private const string ResourceLabelEventUrl = "/projects/{0}/issues/{1}/resource_label_events";
@@ -34,6 +35,16 @@ namespace NGitLab.Impl
         public GitLabCollectionResponse<Issue> ForProjectAsync(int projectId)
         {
             return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId));
+        }
+
+        public GitLabCollectionResponse<Issue> ForGroupsAsync(int groupId)
+        {
+            return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, GroupIssuesUrl, groupId));
+        }
+
+        public GitLabCollectionResponse<Issue> ForGroupsAsync(int groupId, IssueQuery query)
+        {
+            return Get(string.Format(CultureInfo.InvariantCulture, GroupIssuesUrl, groupId), query);
         }
 
         public Issue Get(int projectId, int issueIid)
