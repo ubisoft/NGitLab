@@ -18,14 +18,7 @@ namespace NGitLab.Impl
         internal MilestoneClient(API api, Scope scope, int id)
         {
             _api = api;
-            string urlPrefix = "projects";
-
-            if (scope == Scope.Groups)
-            {
-                urlPrefix = "groups";
-            }
-
-            _milestonePath = $"/{urlPrefix}/{id.ToStringInvariant()}/milestones";
+            _milestonePath = $"/{scope.ToString().ToLowerInvariant()}/{id.ToStringInvariant()}/milestones";
         }
 
         public MilestoneClient(API api, int projectId)

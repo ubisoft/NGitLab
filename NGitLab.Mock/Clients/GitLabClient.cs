@@ -71,7 +71,7 @@
 
         public IMilestoneClient GetMilestone(int projectId) => new MilestoneClient(Context, projectId);
 
-        public IMilestoneClient GetGroupMilestone(int groupId) => new MilestoneClient(Context, groupId);
+        public IMilestoneClient GetGroupMilestone(int groupId) => throw new System.NotImplementedException();
 
         public IReleaseClient GetReleases(int projectId) => new ReleaseClient(Context, projectId);
 
