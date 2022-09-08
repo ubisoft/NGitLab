@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using NGitLab.Impl;
 using NGitLab.Models;
 
 namespace NGitLab
 {
     public interface IMilestoneClient
     {
+        MilestoneScope Scope { get; }
+
         IEnumerable<Milestone> All { get; }
 
         IEnumerable<Milestone> AllInState(MilestoneState state);

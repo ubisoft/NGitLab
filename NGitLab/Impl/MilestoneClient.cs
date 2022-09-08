@@ -7,24 +7,21 @@ namespace NGitLab.Impl
 {
     public class MilestoneClient : IMilestoneClient
     {
-        internal enum Scope
-        {
-            Projects,
-            Groups,
-        }
+        public MilestoneScope Scope { get; }
 
         private readonly API _api;
         private readonly string _milestonePath;
 
-        internal MilestoneClient(API api, Scope scope, int id)
+        internal MilestoneClient(API api, MilestoneScope scope, int id)
         {
             _api = api;
             _milestonePath = $"/{scope.ToString().ToLowerInvariant()}/{id.ToStringInvariant()}/milestones";
+            Scope = scope;
         }
 
-        [Obsolete("Use GitlabClient.GetMilestone() or GitlabClient.GetGroupMilestone() instead.")]
+        [Obsolete("Use GitLabClient.GetMilestone() or GitLabClient.GetGroupMilestone() instead.")]
         public MilestoneClient(API api, int projectId)
-            : this(api, Scope.Projects, projectId)
+            : this(api, MilestoneScope.Projects, projectId)
         {
         }
 
