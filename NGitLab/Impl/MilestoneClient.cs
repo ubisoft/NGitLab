@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -21,6 +22,7 @@ namespace NGitLab.Impl
             _milestonePath = $"/{scope.ToString().ToLowerInvariant()}/{id.ToStringInvariant()}/milestones";
         }
 
+        [Obsolete("Use GitlabClient.GetMilestone() or GitlabClient.GetGroupMilestone() instead.")]
         public MilestoneClient(API api, int projectId)
             : this(api, Scope.Projects, projectId)
         {
