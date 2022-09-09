@@ -2413,6 +2413,7 @@ NGitLab.Models.Project.StarCount -> int
 NGitLab.Models.Project.Statistics -> NGitLab.Models.ProjectStatistics
 NGitLab.Models.Project.TagList -> string[]
 NGitLab.Models.Project.Topics.get -> string[]
+NGitLab.Models.Project.Topics.set -> void
 NGitLab.Models.Project.VisibilityLevel -> NGitLab.Models.VisibilityLevel
 NGitLab.Models.Project.WallEnabled -> bool
 NGitLab.Models.Project.WebUrl -> string

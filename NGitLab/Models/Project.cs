@@ -130,8 +130,7 @@ namespace NGitLab.Models
         public string[] TagList;
 
         [JsonPropertyName("topics")]
-        [JsonInclude]
-        public string[] Topics { get; internal init; }
+        public string[] Topics { get; set; }
 
         [JsonPropertyName("star_count")]
         public int StarCount;
