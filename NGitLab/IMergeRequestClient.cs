@@ -24,6 +24,8 @@ namespace NGitLab
 
         void Delete(int mergeRequestIid);
 
+        MergeRequest CancelMergeWhenPipelineSucceeds(int mergeRequestIid);
+
         [Obsolete("You should use MergeRequestMerge instead of MergeRequestAccept")]
         MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message);
 

@@ -194,6 +194,17 @@ namespace NGitLab.Tests
             Assert.AreEqual(1, reviewers.Length);
         }
 
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_cancel_merge_when_pipeline_succeeds()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+
+            AcceptAndCancelMergeRequest(mergeRequestClient, mergeRequest);
+        }
+
         private static void ListMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest mergeRequest)
         {
             Assert.IsTrue(mergeRequestClient.All.Any(x => x.Id == mergeRequest.Id), "Test 'All' accessor returns the merge request");
@@ -256,6 +267,31 @@ namespace NGitLab.Tests
         {
             var rebaseResult = mergeRequestClient.Rebase(mergeRequestIid: mergeRequest.Iid);
             Assert.IsTrue(rebaseResult.RebaseInProgress);
+        }
+
+        public static void AcceptAndCancelMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest request)
+        {
+            Polly.Policy
+                .Handle<GitLabException>(ex => ex.StatusCode is HttpStatusCode.MethodNotAllowed or HttpStatusCode.NotAcceptable)
+                .Retry(10)
+                .Execute(() =>
+                {
+                    var mergeRequest = mergeRequestClient.Accept(
+                    mergeRequestIid: request.Iid,
+                    message: new MergeRequestMerge
+                    {
+                        MergeCommitMessage = $"Merge my-super-feature into {request.TargetBranch}",
+                        ShouldRemoveSourceBranch = true,
+                        MergeWhenPipelineSucceeds = true,
+                        Squash = false,
+                    });
+
+                    Assert.That(mergeRequest.MergeWhenPipelineSucceeds, Is.EqualTo(true));
+
+                    mergeRequestClient.CancelMergeWhenPipelineSucceeds(mergeRequest.Iid);
+
+                    Assert.That(mergeRequest.MergeWhenPipelineSucceeds, Is.EqualTo(false));
+                });
         }
     }
 }

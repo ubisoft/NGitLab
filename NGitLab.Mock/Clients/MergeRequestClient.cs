@@ -259,6 +259,26 @@ namespace NGitLab.Mock.Clients
             return new MergeRequestCommitClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
         }
 
+        public Models.MergeRequest CancelMergeWhenPipelineSucceeds(int mergeRequestIid)
+        {
+            AssertProjectId();
+
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
+                var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
+                if (mergeRequest == null)
+                    throw new GitLabNotFoundException();
+
+                if (mergeRequest.State != MergeRequestState.opened)
+                    throw new GitLabBadRequestException();
+
+                mergeRequest.MergeWhenPipelineSucceeds = false;
+                mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
+                return mergeRequest.ToMergeRequestClient();
+            }
+        }
+
         public Models.MergeRequest Create(MergeRequestCreate mergeRequestCreate)
         {
             AssertProjectId();

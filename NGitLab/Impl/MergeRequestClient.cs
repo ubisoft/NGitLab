@@ -98,6 +98,10 @@ namespace NGitLab.Impl
             .Delete()
             .Execute(_projectPath + "/merge_requests/" + mergeRequestIid.ToStringInvariant());
 
+        public MergeRequest CancelMergeWhenPipelineSucceeds(int mergeRequestIid) => _api
+            .Post()
+            .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/cancel_merge_when_pipeline_succeeds");
+
         public MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message) => _api
             .Put().With(message)
             .To<MergeRequest>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/merge");
