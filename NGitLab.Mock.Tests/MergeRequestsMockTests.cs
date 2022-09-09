@@ -109,7 +109,7 @@ namespace NGitLab.Mock.Tests
 
         [TestCase(false)]
         [TestCase(true)]
-        public void Test_merge_request_with_no_rebase_required_can_be_accepted(bool sourceProjectIsFork)
+        public void Test_merge_request_with_no_rebase_required_can_be_accepted(bool sourceProjectSameAsTargetProject)
         {
             // Arrange
             using var server = new GitLabServer();
@@ -126,9 +126,9 @@ namespace NGitLab.Mock.Tests
             targetProject.Permissions.Add(new Permission(maintainer, AccessLevel.Maintainer));
             targetProject.Repository.Commit(maintainer, "A commit");
 
-            var sourceProject = sourceProjectIsFork ?
-                targetProject.Fork(contributor.Namespace, contributor, "TheSourceProject") :
-                targetProject;
+            var sourceProject = sourceProjectSameAsTargetProject ?
+                targetProject :
+                targetProject.Fork(contributor.Namespace, contributor, "TheSourceProject");
             sourceProject.Repository.CreateAndCheckoutBranch("to-be-merged");
             sourceProject.Repository.Commit(contributor, "add a file", new[] { File.CreateFromText(Guid.NewGuid().ToString("N"), "This is the new file's content") });
 
@@ -161,7 +161,7 @@ namespace NGitLab.Mock.Tests
 
         [TestCase(false)]
         [TestCase(true)]
-        public void Test_merge_request_with_non_conflicting_rebase_needed_and_merge_method_ff_cannot_be_accepted(bool sourceProjectIsFork)
+        public void Test_merge_request_with_non_conflicting_rebase_needed_and_merge_method_ff_cannot_be_accepted(bool sourceProjectSameAsTargetProject)
         {
             // Arrange
             using var server = new GitLabServer();
@@ -178,9 +178,9 @@ namespace NGitLab.Mock.Tests
             targetProject.Permissions.Add(new Permission(maintainer, AccessLevel.Maintainer));
             targetProject.Repository.Commit(maintainer, "A commit");
 
-            var sourceProject = sourceProjectIsFork ?
-                targetProject.Fork(contributor.Namespace, contributor, "TheSourceProject") :
-                targetProject;
+            var sourceProject = sourceProjectSameAsTargetProject ?
+                targetProject :
+                targetProject.Fork(contributor.Namespace, contributor, "TheSourceProject");
             sourceProject.Repository.CreateAndCheckoutBranch("to-be-merged");
             sourceProject.Repository.Commit(contributor, "add a file", new[] { File.CreateFromText(Guid.NewGuid().ToString("N"), "This is the new file's content") });
 
@@ -215,7 +215,7 @@ namespace NGitLab.Mock.Tests
 
         [TestCase(false)]
         [TestCase(true)]
-        public void Test_merge_request_with_conflicting_rebase_needed_cannot_be_accepted(bool sourceProjectIsFork)
+        public void Test_merge_request_with_conflicts_cannot_be_accepted(bool sourceProjectSameAsTargetProject)
         {
             // Arrange
             using var server = new GitLabServer();
@@ -232,9 +232,9 @@ namespace NGitLab.Mock.Tests
             targetProject.Permissions.Add(new Permission(maintainer, AccessLevel.Maintainer));
             targetProject.Repository.Commit(maintainer, "A commit");
 
-            var sourceProject = sourceProjectIsFork ?
-                targetProject.Fork(contributor.Namespace, contributor, "TheSourceProject") :
-                targetProject;
+            var sourceProject = sourceProjectSameAsTargetProject ?
+                targetProject :
+                targetProject.Fork(contributor.Namespace, contributor, "TheSourceProject");
             var conflictingFile = Guid.NewGuid().ToString("N");
             sourceProject.Repository.CreateAndCheckoutBranch("to-be-merged");
             sourceProject.Repository.Commit(contributor, "add a file", new[] { File.CreateFromText(conflictingFile, "This is the new file's content") });
