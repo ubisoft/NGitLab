@@ -42,7 +42,7 @@ namespace NGitLab.Tests.Milestone
         {
             using var context = await GitLabTestContext.CreateAsync();
             var group = context.CreateGroup();
-            var milestoneClient = context.Client.GetMilestone(group.Id);
+            var milestoneClient = context.Client.GetGroupMilestone(group.Id);
 
             var milestone = CreateMilestone(context, MilestoneScope.Groups, group.Id, "my-super-group-milestone");
 
