@@ -158,6 +158,16 @@ namespace NGitLab.Mock.Clients
             return GitLabCollectionResponse.Create(ForProject(projectId));
         }
 
+        public GitLabCollectionResponse<Models.Issue> ForGroupsAsync(int groupId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GitLabCollectionResponse<Models.Issue> ForGroupsAsync(int groupId, IssueQuery query)
+        {
+            throw new NotImplementedException();
+        }
+
         public Models.Issue Get(int projectId, int issueId)
         {
             using (Context.BeginOperationScope())

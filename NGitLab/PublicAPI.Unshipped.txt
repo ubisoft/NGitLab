@@ -44,6 +44,7 @@ NGitLab.GitLabClient.GetCommitStatus(int projectId) -> NGitLab.ICommitStatusClie
 NGitLab.GitLabClient.GetEnvironmentClient(int projectId) -> NGitLab.IEnvironmentClient
 NGitLab.GitLabClient.GetEvents() -> NGitLab.IEventClient
 NGitLab.GitLabClient.GetGroupBadgeClient(int groupId) -> NGitLab.IGroupBadgeClient
+NGitLab.GitLabClient.GetGroupMilestone(int groupId) -> NGitLab.IMilestoneClient
 NGitLab.GitLabClient.GetGroupSearchClient(int groupId) -> NGitLab.ISearchClient
 NGitLab.GitLabClient.GetGroupVariableClient(int groupId) -> NGitLab.IGroupVariableClient
 NGitLab.GitLabClient.GetJobs(int projectId) -> NGitLab.IJobClient
@@ -156,6 +157,7 @@ NGitLab.IGitLabClient.GetCommitStatus(int projectId) -> NGitLab.ICommitStatusCli
 NGitLab.IGitLabClient.GetEnvironmentClient(int projectId) -> NGitLab.IEnvironmentClient
 NGitLab.IGitLabClient.GetEvents() -> NGitLab.IEventClient
 NGitLab.IGitLabClient.GetGroupBadgeClient(int groupId) -> NGitLab.IGroupBadgeClient
+NGitLab.IGitLabClient.GetGroupMilestone(int groupId) -> NGitLab.IMilestoneClient
 NGitLab.IGitLabClient.GetGroupSearchClient(int groupId) -> NGitLab.ISearchClient
 NGitLab.IGitLabClient.GetGroupVariableClient(int groupId) -> NGitLab.IGroupVariableClient
 NGitLab.IGitLabClient.GetJobs(int projectId) -> NGitLab.IJobClient
@@ -240,6 +242,8 @@ NGitLab.IIssueClient.Create(NGitLab.Models.IssueCreate issueCreate) -> NGitLab.M
 NGitLab.IIssueClient.CreateAsync(NGitLab.Models.IssueCreate issueCreate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
 NGitLab.IIssueClient.Edit(NGitLab.Models.IssueEdit issueEdit) -> NGitLab.Models.Issue
 NGitLab.IIssueClient.EditAsync(NGitLab.Models.IssueEdit issueEdit, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
+NGitLab.IIssueClient.ForGroupsAsync(int groupId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
+NGitLab.IIssueClient.ForGroupsAsync(int groupId, NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.ForProject(int projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.IIssueClient.ForProjectAsync(int projectId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.Get(int projectId, int issueIid) -> NGitLab.Models.Issue
@@ -341,6 +345,7 @@ NGitLab.IMilestoneClient.Close(int milestoneId) -> NGitLab.Models.Milestone
 NGitLab.IMilestoneClient.Create(NGitLab.Models.MilestoneCreate milestone) -> NGitLab.Models.Milestone
 NGitLab.IMilestoneClient.Delete(int milestoneId) -> void
 NGitLab.IMilestoneClient.Get(NGitLab.Models.MilestoneQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Milestone>
+NGitLab.IMilestoneClient.Scope.get -> NGitLab.Impl.MilestoneScope
 NGitLab.IMilestoneClient.this[int id].get -> NGitLab.Models.Milestone
 NGitLab.IMilestoneClient.Update(int milestoneId, NGitLab.Models.MilestoneUpdate milestone) -> NGitLab.Models.Milestone
 NGitLab.Impl.API
@@ -463,6 +468,8 @@ NGitLab.Impl.IssueClient.Create(NGitLab.Models.IssueCreate issueCreate) -> NGitL
 NGitLab.Impl.IssueClient.CreateAsync(NGitLab.Models.IssueCreate issueCreate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.Edit(NGitLab.Models.IssueEdit issueEdit) -> NGitLab.Models.Issue
 NGitLab.Impl.IssueClient.EditAsync(NGitLab.Models.IssueEdit issueEdit, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
+NGitLab.Impl.IssueClient.ForGroupsAsync(int groupId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
+NGitLab.Impl.IssueClient.ForGroupsAsync(int groupId, NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.ForProject(int projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.ForProjectAsync(int projectId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.Get(int projectId, int issueIid) -> NGitLab.Models.Issue
@@ -582,8 +589,12 @@ NGitLab.Impl.MilestoneClient.Create(NGitLab.Models.MilestoneCreate milestone) ->
 NGitLab.Impl.MilestoneClient.Delete(int milestoneId) -> void
 NGitLab.Impl.MilestoneClient.Get(NGitLab.Models.MilestoneQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Milestone>
 NGitLab.Impl.MilestoneClient.MilestoneClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.MilestoneClient.Scope.get -> NGitLab.Impl.MilestoneScope
 NGitLab.Impl.MilestoneClient.this[int id].get -> NGitLab.Models.Milestone
 NGitLab.Impl.MilestoneClient.Update(int milestoneId, NGitLab.Models.MilestoneUpdate milestone) -> NGitLab.Models.Milestone
+NGitLab.Impl.MilestoneScope
+NGitLab.Impl.MilestoneScope.Groups = 1 -> NGitLab.Impl.MilestoneScope
+NGitLab.Impl.MilestoneScope.Projects = 0 -> NGitLab.Impl.MilestoneScope
 NGitLab.Impl.NamespacesClient
 NGitLab.Impl.NamespacesClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Namespace>
 NGitLab.Impl.NamespacesClient.NamespacesClient(NGitLab.Impl.API api) -> void

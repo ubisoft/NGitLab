@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using NGitLab.Impl;
 using NGitLab.Mock.Clients;
 using NGitLab.Models;
 
@@ -30,6 +31,8 @@ namespace NGitLab.Mock
         }
 
         public IEnumerable<Models.Milestone> All => Get(new MilestoneQuery());
+
+        public MilestoneScope Scope => throw new NotImplementedException();
 
         public Models.Milestone Activate(int milestoneId)
         {
