@@ -325,7 +325,7 @@ namespace NGitLab.Mock
                 throw new InvalidOperationException($"Branch '{sourceBranchName}' does not seem to stem from branch '{targetBranchName}'");
 
             // Determine if there are conflicts, by performing a rebase on a volatile copy of the source branch
-            var volatileBranchName = "volatile-" + Guid.NewGuid().ToString("N");
+            var volatileBranchName = "volatile/" + Guid.NewGuid().ToString("N");
             targetProject.Repository.CreateBranch(volatileBranchName, consolidatedSourceBranchName);
             var hasConflicts = !targetProject.Repository.Rebase(user, volatileBranchName, targetBranchName);
             targetProject.Repository.RemoveBranch(volatileBranchName);
