@@ -115,8 +115,8 @@ namespace NGitLab.Mock.Clients
                     };
                 }
 
-                if ((string.Equals(project.MergeMethod, "ff", StringComparison.Ordinal) || string.Equals(project.MergeMethod, "rebase_merge", StringComparison.Ordinal)) &&
-                    //!string.Equals(mergeRequest.BaseSha, mergeRequest.StartSha)
+                if (project.MergeMethod != null &&
+                    (string.Equals(project.MergeMethod, "ff", StringComparison.Ordinal) || string.Equals(project.MergeMethod, "rebase_merge", StringComparison.Ordinal)) &&
                     project.Repository.IsRebaseNeeded(mergeRequest.ConsolidatedSourceBranch, mergeRequest.TargetBranch))
                 {
                     throw new GitLabException($"The MR cannot be merged with method '{project.MergeMethod}': the source branch must first be rebased")
