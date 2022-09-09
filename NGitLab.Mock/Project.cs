@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LibGit2Sharp;
 using NGitLab.Models;
 
 namespace NGitLab.Mock
@@ -294,6 +295,57 @@ namespace NGitLab.Mock
             mergeRequest.Description = description;
 
             return mergeRequest;
+        }
+
+        public MergeRequest CreateMergeRequest(User user, string title, string description, string targetBranchName, string sourceBranchName, Project sourceProject = null)
+        {
+            var targetProject = this;
+            if (sourceProject is not null && sourceProject != targetProject && sourceProject.ForkedFrom != targetProject)
+                throw new InvalidOperationException("Cannot create a merge request from a source project different from the target project if the former is not a fork of the latter");
+
+            sourceProject ??= this;
+
+            var sourceBranchCommit = sourceProject.Repository.GetBranchTipCommit(sourceBranchName);
+            if (sourceBranchCommit is null)
+                throw new InvalidOperationException($"Branch '{sourceBranchName}' not found in source project");
+
+            var targetBranchCommit = targetProject.Repository.GetBranchTipCommit(targetBranchName);
+            if (targetBranchCommit is null)
+                throw new InvalidOperationException($"Branch '{targetBranchName}' not found in target project");
+
+            // If source project is not target project, fetch the former's source branch into the latter
+            var consolidatedSourceBranchName = sourceBranchName;
+            if (sourceProject != targetProject)
+            {
+                consolidatedSourceBranchName = targetProject.Repository.FetchBranchFromFork(sourceProject, sourceBranchName);
+            }
+
+            var commonCommit = targetProject.Repository.FindMergeBase(targetBranchCommit, sourceBranchCommit);
+            if (commonCommit is null)
+                throw new InvalidOperationException($"Branch '{sourceBranchName}' does not seem to stem from branch '{targetBranchName}'");
+
+            // Determine if there are conflicts, by performing a rebase on a volatile copy of the source branch
+            var volatileBranchName = "volatile-" + Guid.NewGuid().ToString("N");
+            targetProject.Repository.CreateBranch(volatileBranchName, consolidatedSourceBranchName);
+            var hasConflicts = !targetProject.Repository.Rebase(user, volatileBranchName, targetBranchName);
+            targetProject.Repository.RemoveBranch(volatileBranchName);
+
+            var mr = new MergeRequest
+            {
+                SourceProject = sourceProject,
+                SourceBranch = sourceBranchName,
+                TargetBranch = targetBranchName,
+                Title = title,
+                Description = description,
+                Author = user,
+                HasConflicts = hasConflicts,
+                BaseSha = commonCommit.Sha,
+                HeadSha = sourceBranchCommit.Sha,
+                StartSha = targetBranchCommit.Sha,
+            };
+            MergeRequests.Add(mr);
+
+            return mr;
         }
 
         public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged, int id)

@@ -52,6 +52,14 @@ namespace NGitLab.Mock
 
         public Project SourceProject { get; set; }
 
+        public bool HasConflicts { get; set; }
+
+        public string HeadSha { get; set; }
+
+        public string StartSha { get; set; }
+
+        public string BaseSha { get; set; }
+
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
         public DateTimeOffset? MergedAt { get; set; }
@@ -238,6 +246,13 @@ namespace NGitLab.Mock
                 Labels = Labels.ToArray(),
                 RebaseInProgress = RebaseInProgress,
                 Reviewers = GetUsers(Reviewers),
+                HasConflicts = HasConflicts,
+                DiffRefs = new DiffRefs
+                {
+                    BaseSha = BaseSha,
+                    StartSha = StartSha,
+                    HeadSha = HeadSha,
+                },
             };
         }
 
