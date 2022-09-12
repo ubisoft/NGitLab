@@ -11,6 +11,13 @@ namespace NGitLab.Mock
     public sealed class MergeRequest : GitLabObject
     {
         private string _consolidatedSourceBranch;
+        private string _previousHeadSha;
+        private string _previousStartSha;
+
+        private string _headSha;
+        private string _startSha;
+        private string _baseSha;
+        private bool _hasConflicts;
 
         public MergeRequest()
         {
@@ -51,6 +58,42 @@ namespace NGitLab.Mock
         public string TargetBranch { get; set; }
 
         public Project SourceProject { get; set; }
+
+        public string HeadSha
+        {
+            get
+            {
+                RefreshInternalState();
+                return _headSha;
+            }
+        }
+
+        public string StartSha
+        {
+            get
+            {
+                RefreshInternalState();
+                return _startSha;
+            }
+        }
+
+        public string BaseSha
+        {
+            get
+            {
+                RefreshInternalState();
+                return _baseSha;
+            }
+        }
+
+        public bool HasConflicts
+        {
+            get
+            {
+                RefreshInternalState();
+                return _hasConflicts;
+            }
+        }
 
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
@@ -238,6 +281,13 @@ namespace NGitLab.Mock
                 Labels = Labels.ToArray(),
                 RebaseInProgress = RebaseInProgress,
                 Reviewers = GetUsers(Reviewers),
+                HasConflicts = HasConflicts,
+                DiffRefs = new DiffRefs
+                {
+                    BaseSha = BaseSha,
+                    StartSha = StartSha,
+                    HeadSha = HeadSha,
+                },
             };
         }
 
@@ -257,13 +307,57 @@ namespace NGitLab.Mock
         {
             get
             {
-                _consolidatedSourceBranch ??=
-                    SourceProject == Project ?
-                    SourceBranch :
-                    Project.Repository.FetchBranchFromFork(SourceProject, SourceBranch);
-
+                RefreshInternalState();
                 return _consolidatedSourceBranch;
             }
+        }
+
+        private LibGit2Sharp.Commit SourceBranchHeadCommit => SourceProject?.Repository?.GetBranchTipCommit(SourceBranch);
+
+        private LibGit2Sharp.Commit TargetBranchHeadCommit => Project?.Repository?.GetBranchTipCommit(TargetBranch);
+
+        private void RefreshInternalState()
+        {
+            // Once the MR is merged or closed, stop updating its internal state
+            if (State != MergeRequestState.opened)
+                return;
+
+            var headSha = SourceBranchHeadCommit?.Sha;
+            if (headSha is not null)
+                _headSha = headSha;
+
+            var startSha = TargetBranchHeadCommit?.Sha;
+            if (startSha is not null)
+                _startSha = startSha;
+
+            if (_headSha is null || _startSha is null ||
+                (string.Equals(_previousHeadSha, _headSha, StringComparison.Ordinal) &&
+                 string.Equals(_previousStartSha, _startSha, StringComparison.Ordinal)))
+            {
+                return;
+            }
+
+            _previousHeadSha = _headSha;
+            _previousStartSha = _startSha;
+
+            // If source project is not target project, fetch the former's source branch into the latter
+            _consolidatedSourceBranch = SourceBranch;
+            if (SourceProject != Project)
+            {
+                _consolidatedSourceBranch = Project.Repository.FetchBranchFromFork(SourceProject, SourceBranch);
+            }
+
+            var commonCommit = Project.Repository.FindMergeBase(TargetBranchHeadCommit, SourceBranchHeadCommit);
+            if (commonCommit is null)
+                throw new InvalidOperationException($"Branch '{SourceBranch}' does not seem to stem from branch '{TargetBranch}'");
+
+            _baseSha = commonCommit.Sha;
+
+            // Determine if there are conflicts, by performing a rebase on a transient copy of the source branch
+            var transientBranchName = "transient/" + Guid.NewGuid().ToString("N");
+            Project.Repository.CreateBranch(transientBranchName, _consolidatedSourceBranch);
+            _hasConflicts = !Project.Repository.Rebase(Assignee, transientBranchName, TargetBranch);
+            Project.Repository.RemoveBranch(transientBranchName);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using NGitLab.Mock.Config;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -108,7 +109,7 @@ namespace NGitLab.Mock.Tests
 
         [TestCase(false)]
         [TestCase(true)]
-        public void Test_merge_request_can_be_accepted(bool sourceProjectIsFork)
+        public void Test_merge_request_with_no_rebase_required_can_be_accepted(bool sourceProjectSameAsTargetProject)
         {
             // Arrange
             using var server = new GitLabServer();
@@ -125,36 +126,31 @@ namespace NGitLab.Mock.Tests
             targetProject.Permissions.Add(new Permission(maintainer, AccessLevel.Maintainer));
             targetProject.Repository.Commit(maintainer, "A commit");
 
-            var sourceProject = sourceProjectIsFork ?
-                targetProject.Fork(contributor.Namespace, contributor, "TheSourceProject") :
-                targetProject;
+            var sourceProject = sourceProjectSameAsTargetProject ?
+                targetProject :
+                targetProject.Fork(contributor.Namespace, contributor, "TheSourceProject");
             sourceProject.Repository.CreateAndCheckoutBranch("to-be-merged");
             sourceProject.Repository.Commit(contributor, "add a file", new[] { File.CreateFromText(Guid.NewGuid().ToString("N"), "This is the new file's content") });
 
-            var mr = new MergeRequest
-            {
-                SourceProject = sourceProject,
-                SourceBranch = "to-be-merged",
-                TargetBranch = targetProject.DefaultBranch,
-                Author = new UserRef(contributor),
-                Assignee = new UserRef(maintainer),
-            };
+            var mr = targetProject.CreateMergeRequest(contributor, "A great title", "A great description", targetProject.DefaultBranch, "to-be-merged", sourceProject);
+            mr.Assignee = new UserRef(maintainer);
 
-            targetProject.MergeRequests.Add(mr);
             targetProject.MergeMethod = "ff";
 
             var maintainerClient = server.CreateClient("maintainer");
 
             // Act
-            var mockMr = maintainerClient.GetMergeRequest(mr.Project.Id).Accept(mr.Iid, new MergeRequestMerge
+            var modelMr = maintainerClient.GetMergeRequest(mr.Project.Id).Accept(mr.Iid, new MergeRequestMerge
             {
                 MergeWhenPipelineSucceeds = mr.HeadPipeline != null,
                 ShouldRemoveSourceBranch = true,
             });
 
             // Assert
-            Assert.IsFalse(mockMr.HasConflicts);
-            Assert.AreEqual("merged", mockMr.State);
+            Assert.IsFalse(modelMr.HasConflicts);
+            Assert.IsNotNull(modelMr.DiffRefs?.BaseSha);
+            Assert.AreEqual(modelMr.DiffRefs.BaseSha, modelMr.DiffRefs.StartSha);
+            Assert.AreEqual("merged", modelMr.State);
 
             Assert.IsFalse(targetProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
                 "Since the merge succeeded and 'ShouldRemoveSourceBranch' was set, 'to-be-merged' branch should be gone");
@@ -165,7 +161,7 @@ namespace NGitLab.Mock.Tests
 
         [TestCase(false)]
         [TestCase(true)]
-        public void Test_merge_request_needing_rebase_cannot_be_accepted(bool sourceProjectIsFork)
+        public void Test_merge_request_with_non_conflicting_rebase_needed_and_merge_method_ff_cannot_be_accepted(bool sourceProjectSameAsTargetProject)
         {
             // Arrange
             using var server = new GitLabServer();
@@ -182,26 +178,19 @@ namespace NGitLab.Mock.Tests
             targetProject.Permissions.Add(new Permission(maintainer, AccessLevel.Maintainer));
             targetProject.Repository.Commit(maintainer, "A commit");
 
-            var sourceProject = sourceProjectIsFork ?
-                targetProject.Fork(contributor.Namespace, contributor, "TheSourceProject") :
-                targetProject;
+            var sourceProject = sourceProjectSameAsTargetProject ?
+                targetProject :
+                targetProject.Fork(contributor.Namespace, contributor, "TheSourceProject");
             sourceProject.Repository.CreateAndCheckoutBranch("to-be-merged");
             sourceProject.Repository.Commit(contributor, "add a file", new[] { File.CreateFromText(Guid.NewGuid().ToString("N"), "This is the new file's content") });
 
-            var mr = new MergeRequest
-            {
-                SourceProject = sourceProject,
-                SourceBranch = "to-be-merged",
-                TargetBranch = targetProject.DefaultBranch,
-                Author = new UserRef(contributor),
-                Assignee = new UserRef(maintainer),
-            };
-
-            targetProject.MergeRequests.Add(mr);
             targetProject.MergeMethod = "ff";
 
-            targetProject.Repository.Checkout("main");
+            targetProject.Repository.Checkout(targetProject.DefaultBranch);
             targetProject.Repository.Commit(maintainer, "add a file", new[] { File.CreateFromText(Guid.NewGuid().ToString("N"), "This is the new file's content") });
+
+            var mr = targetProject.CreateMergeRequest(contributor, "A great title", "A great description", targetProject.DefaultBranch, "to-be-merged", sourceProject);
+            mr.Assignee = new UserRef(maintainer);
 
             var maintainerClient = server.CreateClient("maintainer");
 
@@ -211,7 +200,66 @@ namespace NGitLab.Mock.Tests
                 MergeWhenPipelineSucceeds = mr.HeadPipeline != null,
                 ShouldRemoveSourceBranch = true,
             }));
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, exception.StatusCode);
+            Assert.IsTrue(exception.Message.Equals("The MR cannot be merged with method 'ff': the source branch must first be rebased", StringComparison.Ordinal));
+
+            Assert.IsFalse(mr.HasConflicts);
+            Assert.AreNotEqual(mr.BaseSha, mr.StartSha);
+
+            Assert.IsTrue(targetProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
+                "Since the merge failed, 'to-be-merged' branch should still be there");
+
+            Assert.IsTrue(sourceProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
+                "Since the merge failed, 'to-be-merged' branch should still be there");
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void Test_merge_request_with_conflicts_cannot_be_accepted(bool sourceProjectSameAsTargetProject)
+        {
+            // Arrange
+            using var server = new GitLabServer();
+
+            var contributor = server.Users.AddNew("contributor");
+            var maintainer = server.Users.AddNew("maintainer");
+
+            var targetGroup = new Group("TheTargetGroup");
+            server.Groups.Add(targetGroup);
+
+            var targetProject = new Project("TheTargetProject") { Visibility = VisibilityLevel.Internal };
+            targetGroup.Projects.Add(targetProject);
+
+            targetProject.Permissions.Add(new Permission(maintainer, AccessLevel.Maintainer));
+            targetProject.Repository.Commit(maintainer, "A commit");
+
+            var sourceProject = sourceProjectSameAsTargetProject ?
+                targetProject :
+                targetProject.Fork(contributor.Namespace, contributor, "TheSourceProject");
+            var conflictingFile = Guid.NewGuid().ToString("N");
+            sourceProject.Repository.CreateAndCheckoutBranch("to-be-merged");
+            sourceProject.Repository.Commit(contributor, "add a file", new[] { File.CreateFromText(conflictingFile, "This is the new file's content") });
+
+            targetProject.MergeMethod = "ff";
+
+            targetProject.Repository.Checkout(targetProject.DefaultBranch);
+            targetProject.Repository.Commit(maintainer, "add a file", new[] { File.CreateFromText(conflictingFile, "This is conflicting content") });
+
+            var mr = targetProject.CreateMergeRequest(contributor, "A great title", "A great description", targetProject.DefaultBranch, "to-be-merged", sourceProject);
+            mr.Assignee = new UserRef(maintainer);
+
+            var maintainerClient = server.CreateClient("maintainer");
+
+            // Act/Assert
+            var exception = Assert.Throws<GitLabException>(() => maintainerClient.GetMergeRequest(mr.Project.Id).Accept(mr.Iid, new MergeRequestMerge
+            {
+                MergeWhenPipelineSucceeds = mr.HeadPipeline != null,
+                ShouldRemoveSourceBranch = true,
+            }));
+            Assert.AreEqual(HttpStatusCode.NotAcceptable, exception.StatusCode);
             Assert.IsTrue(exception.Message.Equals("The merge request has some conflicts and cannot be merged", StringComparison.Ordinal));
+
+            Assert.IsTrue(mr.HasConflicts);
+            Assert.AreNotEqual(mr.BaseSha, mr.StartSha);
 
             Assert.IsTrue(targetProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
                 "Since the merge failed, 'to-be-merged' branch should still be there");

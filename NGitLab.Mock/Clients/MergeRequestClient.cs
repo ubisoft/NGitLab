@@ -107,13 +107,21 @@ namespace NGitLab.Mock.Clients
                     }
                 }
 
-                if (project.MergeMethod != null &&
-                    (string.Equals(project.MergeMethod, "ff", StringComparison.Ordinal) || string.Equals(project.MergeMethod, "rebase_merge", StringComparison.Ordinal)) &&
-                    project.Repository.IsRebaseNeeded(mergeRequest.ConsolidatedSourceBranch, mergeRequest.TargetBranch))
+                if (mergeRequest.HasConflicts)
                 {
                     throw new GitLabException("The merge request has some conflicts and cannot be merged")
                     {
                         StatusCode = HttpStatusCode.NotAcceptable,
+                    };
+                }
+
+                if (project.MergeMethod != null &&
+                    (string.Equals(project.MergeMethod, "ff", StringComparison.Ordinal) || string.Equals(project.MergeMethod, "rebase_merge", StringComparison.Ordinal)) &&
+                    project.Repository.IsRebaseNeeded(mergeRequest.ConsolidatedSourceBranch, mergeRequest.TargetBranch))
+                {
+                    throw new GitLabException($"The MR cannot be merged with method '{project.MergeMethod}': the source branch must first be rebased")
+                    {
+                        StatusCode = HttpStatusCode.MethodNotAllowed,
                     };
                 }
 
