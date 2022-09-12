@@ -118,6 +118,8 @@ namespace NGitLab.Mock
 
         public Branch GetBranch(string branchName)
         {
+            if (string.IsNullOrEmpty(branchName))
+                return null;
             var repository = GetGitRepository();
             return repository.Branches[branchName];
         }
@@ -571,7 +573,7 @@ namespace NGitLab.Mock
             return result.Commit;
         }
 
-        public bool Rebase(User user, string sourceBranch, string targetBranch)
+        public bool Rebase(UserRef user, string sourceBranch, string targetBranch)
         {
             var repo = GetGitRepository();
             var rebase = repo.Rebase;

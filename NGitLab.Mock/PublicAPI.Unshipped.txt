@@ -564,7 +564,6 @@ NGitLab.Mock.MergeRequest.Assignees.set -> void
 NGitLab.Mock.MergeRequest.Author.get -> NGitLab.Mock.UserRef
 NGitLab.Mock.MergeRequest.Author.set -> void
 NGitLab.Mock.MergeRequest.BaseSha.get -> string
-NGitLab.Mock.MergeRequest.BaseSha.set -> void
 NGitLab.Mock.MergeRequest.Changes.get -> NGitLab.Mock.MergeRequestChangeCollection
 NGitLab.Mock.MergeRequest.ClosedAt.get -> System.DateTimeOffset?
 NGitLab.Mock.MergeRequest.ClosedAt.set -> void
@@ -578,10 +577,8 @@ NGitLab.Mock.MergeRequest.ForceRemoveSourceBranch.get -> bool
 NGitLab.Mock.MergeRequest.ForceRemoveSourceBranch.set -> void
 NGitLab.Mock.MergeRequest.GetDiscussions() -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestDiscussion>
 NGitLab.Mock.MergeRequest.HasConflicts.get -> bool
-NGitLab.Mock.MergeRequest.HasConflicts.set -> void
 NGitLab.Mock.MergeRequest.HeadPipeline.get -> NGitLab.Mock.Pipeline
 NGitLab.Mock.MergeRequest.HeadSha.get -> string
-NGitLab.Mock.MergeRequest.HeadSha.set -> void
 NGitLab.Mock.MergeRequest.Id.get -> int
 NGitLab.Mock.MergeRequest.Iid.get -> int
 NGitLab.Mock.MergeRequest.Labels.get -> System.Collections.Generic.IList<string>
@@ -608,7 +605,6 @@ NGitLab.Mock.MergeRequest.SourceProject.set -> void
 NGitLab.Mock.MergeRequest.Squash.get -> bool
 NGitLab.Mock.MergeRequest.Squash.set -> void
 NGitLab.Mock.MergeRequest.StartSha.get -> string
-NGitLab.Mock.MergeRequest.StartSha.set -> void
 NGitLab.Mock.MergeRequest.State.get -> NGitLab.Models.MergeRequestState
 NGitLab.Mock.MergeRequest.TargetBranch.get -> string
 NGitLab.Mock.MergeRequest.TargetBranch.set -> void
@@ -936,7 +932,7 @@ NGitLab.Mock.Repository.IsRebaseNeeded(string branch, string ontoRebaseBranch) -
 NGitLab.Mock.Repository.Merge(NGitLab.Mock.User user, string sourceBranch, string targetBranch) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.Merge(NGitLab.Mock.User user, string sourceBranch, string targetBranch, NGitLab.Mock.Project targetProject) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.Project.get -> NGitLab.Mock.Project
-NGitLab.Mock.Repository.Rebase(NGitLab.Mock.User user, string sourceBranch, string targetBranch) -> bool
+NGitLab.Mock.Repository.Rebase(NGitLab.Mock.UserRef user, string sourceBranch, string targetBranch) -> bool
 NGitLab.Mock.Repository.RemoveBranch(string branchName) -> void
 NGitLab.Mock.Repository.SetRepoConfig<T>(string name, T value) -> void
 NGitLab.Mock.Repository.UpdateReleaseTag(string tagName, string releaseNotes) -> NGitLab.Mock.ReleaseTag

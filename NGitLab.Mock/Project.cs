@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LibGit2Sharp;
 using NGitLab.Models;
 
 namespace NGitLab.Mock
@@ -49,7 +48,7 @@ namespace NGitLab.Mock
             {
                 if (string.IsNullOrEmpty(_defaultBranch))
                 {
-                    _defaultBranch = Parent.Server?.DefaultBranchName ?? throw new InvalidOperationException("Project is not added to a Server");
+                    _defaultBranch = Parent?.Server?.DefaultBranchName ?? throw new InvalidOperationException("Project is not added to a Server");
                 }
 
                 return _defaultBranch;
@@ -324,12 +323,6 @@ namespace NGitLab.Mock
             if (commonCommit is null)
                 throw new InvalidOperationException($"Branch '{sourceBranchName}' does not seem to stem from branch '{targetBranchName}'");
 
-            // Determine if there are conflicts, by performing a rebase on a volatile copy of the source branch
-            var volatileBranchName = "volatile/" + Guid.NewGuid().ToString("N");
-            targetProject.Repository.CreateBranch(volatileBranchName, consolidatedSourceBranchName);
-            var hasConflicts = !targetProject.Repository.Rebase(user, volatileBranchName, targetBranchName);
-            targetProject.Repository.RemoveBranch(volatileBranchName);
-
             var mr = new MergeRequest
             {
                 SourceProject = sourceProject,
@@ -338,10 +331,6 @@ namespace NGitLab.Mock
                 Title = title,
                 Description = description,
                 Author = user,
-                HasConflicts = hasConflicts,
-                BaseSha = commonCommit.Sha,
-                HeadSha = sourceBranchCommit.Sha,
-                StartSha = targetBranchCommit.Sha,
             };
             MergeRequests.Add(mr);
 
