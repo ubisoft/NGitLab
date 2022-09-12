@@ -202,6 +202,8 @@ namespace NGitLab.Tests
             var (project, mergeRequest) = context.CreateMergeRequest();
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
+            mergeRequest.MergeWhenPipelineSucceeds = true;
+
             AcceptAndCancelMergeRequest(mergeRequestClient, mergeRequest);
         }
 
@@ -276,21 +278,8 @@ namespace NGitLab.Tests
                 .Retry(10)
                 .Execute(() =>
                 {
-                    var mergeRequest = mergeRequestClient.Accept(
-                    mergeRequestIid: request.Iid,
-                    message: new MergeRequestMerge
-                    {
-                        MergeCommitMessage = $"Merge my-super-feature into {request.TargetBranch}",
-                        ShouldRemoveSourceBranch = true,
-                        MergeWhenPipelineSucceeds = true,
-                        Squash = false,
-                    });
-
-                    Assert.That(mergeRequest.MergeWhenPipelineSucceeds, Is.EqualTo(true));
-
-                    mergeRequestClient.CancelMergeWhenPipelineSucceeds(mergeRequest.Iid);
-
-                    Assert.That(mergeRequest.MergeWhenPipelineSucceeds, Is.EqualTo(false));
+                    mergeRequestClient.CancelMergeWhenPipelineSucceeds(mergeRequestIid: request.Iid);
+                    Assert.That(request.MergeWhenPipelineSucceeds, Is.EqualTo(false));
                 });
         }
     }
