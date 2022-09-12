@@ -278,7 +278,8 @@ namespace NGitLab.Tests
                 .Retry(10)
                 .Execute(() =>
                 {
-                    mergeRequestClient.CancelMergeWhenPipelineSucceeds(mergeRequestIid: request.Iid);
+                    Assert.That(request.MergeWhenPipelineSucceeds, Is.EqualTo(true));
+                    request = mergeRequestClient.CancelMergeWhenPipelineSucceeds(mergeRequestIid: request.Iid);
                     Assert.That(request.MergeWhenPipelineSucceeds, Is.EqualTo(false));
                 });
         }
