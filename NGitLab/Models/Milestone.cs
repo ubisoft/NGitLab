@@ -8,6 +8,9 @@ namespace NGitLab.Models
         [JsonPropertyName("id")]
         public int Id;
 
+        [JsonPropertyName("iid")]
+        public int Iid;
+
         [JsonPropertyName("title")]
         public string Title;
 
