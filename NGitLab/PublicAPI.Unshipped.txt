@@ -307,6 +307,7 @@ NGitLab.IMergeRequestClient.All.get -> System.Collections.Generic.IEnumerable<NG
 NGitLab.IMergeRequestClient.AllInState(NGitLab.Models.MergeRequestState state) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.IMergeRequestClient.ApprovalClient(int mergeRequestIid) -> NGitLab.IMergeRequestApprovalClient
 NGitLab.IMergeRequestClient.Approve(int mergeRequestIid, NGitLab.Models.MergeRequestApprove message) -> NGitLab.Models.MergeRequest
+NGitLab.IMergeRequestClient.CancelMergeWhenPipelineSucceeds(int mergeRequestIid) -> NGitLab.Models.MergeRequest
 NGitLab.IMergeRequestClient.Changes(int mergeRequestIid) -> NGitLab.IMergeRequestChangeClient
 NGitLab.IMergeRequestClient.Close(int mergeRequestIid) -> NGitLab.Models.MergeRequest
 NGitLab.IMergeRequestClient.ClosesIssues(int mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
@@ -536,6 +537,7 @@ NGitLab.Impl.MergeRequestClient.All.get -> System.Collections.Generic.IEnumerabl
 NGitLab.Impl.MergeRequestClient.AllInState(NGitLab.Models.MergeRequestState state) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.Impl.MergeRequestClient.ApprovalClient(int mergeRequestIid) -> NGitLab.IMergeRequestApprovalClient
 NGitLab.Impl.MergeRequestClient.Approve(int mergeRequestIid, NGitLab.Models.MergeRequestApprove message) -> NGitLab.Models.MergeRequest
+NGitLab.Impl.MergeRequestClient.CancelMergeWhenPipelineSucceeds(int mergeRequestIid) -> NGitLab.Models.MergeRequest
 NGitLab.Impl.MergeRequestClient.Changes(int mergeRequestIid) -> NGitLab.IMergeRequestChangeClient
 NGitLab.Impl.MergeRequestClient.Close(int mergeRequestIid) -> NGitLab.Models.MergeRequest
 NGitLab.Impl.MergeRequestClient.ClosesIssues(int mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
