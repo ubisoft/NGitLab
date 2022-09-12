@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -6,13 +7,22 @@ namespace NGitLab.Impl
 {
     public class MilestoneClient : IMilestoneClient
     {
+        public MilestoneScope Scope { get; }
+
         private readonly API _api;
         private readonly string _milestonePath;
 
-        public MilestoneClient(API api, int projectId)
+        internal MilestoneClient(API api, MilestoneScope scope, int id)
         {
             _api = api;
-            _milestonePath = $"{Project.Url}/{projectId.ToStringInvariant()}/milestones";
+            _milestonePath = $"/{scope.ToString().ToLowerInvariant()}/{id.ToStringInvariant()}/milestones";
+            Scope = scope;
+        }
+
+        [Obsolete("Use GitLabClient.GetMilestone() or GitLabClient.GetGroupMilestone() instead.")]
+        public MilestoneClient(API api, int projectId)
+            : this(api, MilestoneScope.Projects, projectId)
+        {
         }
 
         public IEnumerable<Milestone> All => Get(new MilestoneQuery());

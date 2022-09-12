@@ -84,6 +84,14 @@ jobs:
         retention-days: 3
         path: |
           ${{ env.TestResultsDirectory }}/**/*
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: github.actor != 'dependabot[bot]' && (success() || failure()) # the step doesn't work for dependabot
+      with:
+        name: test-results-${{ steps.set-artifact-name.outputs.artifact_name }}
+        path: ${{ env.TestResultsDirectory }}/**/*.trx
+        path-replace-backslashes: 'true'
+        reporter: dotnet-trx
 
   deploy:
     runs-on: 'ubuntu-20.04'
