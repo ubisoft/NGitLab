@@ -125,6 +125,9 @@ namespace NGitLab.Models
         [JsonPropertyName("rebase_in_progress")]
         public bool RebaseInProgress;
 
+        [JsonPropertyName("diverged_commits_count")]
+        public int? DivergedCommitsCount { get; set; }
+
         [JsonPropertyName("has_conflicts")]
         public bool HasConflicts { get; set; }
 

@@ -1935,6 +1935,8 @@ NGitLab.Models.MergeRequest.ClosedBy -> NGitLab.Models.User
 NGitLab.Models.MergeRequest.CreatedAt -> System.DateTime
 NGitLab.Models.MergeRequest.Description -> string
 NGitLab.Models.MergeRequest.DiffRefs -> NGitLab.Models.DiffRefs
+NGitLab.Models.MergeRequest.DivergedCommitsCount.get -> int?
+NGitLab.Models.MergeRequest.DivergedCommitsCount.set -> void
 NGitLab.Models.MergeRequest.Downvotes -> int
 NGitLab.Models.MergeRequest.ForceRemoveSourceBranch -> bool
 NGitLab.Models.MergeRequest.HasConflicts.get -> bool
