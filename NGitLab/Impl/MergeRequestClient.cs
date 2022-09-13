@@ -62,6 +62,7 @@ namespace NGitLab.Impl
             {
                 var url = $"{_projectPath}{MergeRequest.Url}/{iid.ToStringInvariant()}";
                 url = Utils.AddParameter(url, "include_rebase_in_progress", value: true);
+                url = Utils.AddParameter(url, "include_diverged_commits_count", value: true);
 
                 return _api.Get().To<MergeRequest>(url);
             }
