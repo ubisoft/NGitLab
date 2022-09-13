@@ -57,6 +57,30 @@ namespace NGitLab.Tests
             var (project, mergeRequest) = context.CreateMergeRequest();
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
+            // Additional commit in default branch, to create divergence
+            var commitClient = context.Client.GetCommits(project.Id);
+            commitClient.Create(new CommitCreate
+            {
+                Branch = project.DefaultBranch,
+                CommitMessage = "A message",
+                AuthorEmail = "a@example.com",
+                AuthorName = "a",
+                ProjectId = project.Id,
+                Actions =
+                {
+                    new CreateCommitAction
+                    {
+                        Action = "create",
+                        Content = "This is a test",
+                        FilePath = "whatever.txt",
+                    },
+                },
+            });
+
+            var mr = mergeRequestClient[mergeRequest.Iid];
+            Assert.AreEqual(1, mr.DivergedCommitsCount,
+                "There should be a 1-commit divergence between the default branch NOW and its state at the moment the MR was created");
+
             RebaseMergeRequest(mergeRequestClient, mergeRequest);
             var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
             Assert.IsTrue(commits.Any(), "Can return the commits");
