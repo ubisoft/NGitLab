@@ -234,6 +234,7 @@ namespace NGitLab.Tests
         private static void ListMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest mergeRequest)
         {
             Assert.IsTrue(mergeRequestClient.All.Any(x => x.Id == mergeRequest.Id), "Test 'All' accessor returns the merge request");
+            Assert.IsFalse(mergeRequestClient.All.Any(x => x.DivergedCommitsCount.HasValue), "Listing multiple MRs will not set their DivergedCommitsCount property");
             Assert.IsTrue(mergeRequestClient.AllInState(MergeRequestState.opened).Any(x => x.Id == mergeRequest.Id), "Can return all open requests");
             Assert.IsFalse(mergeRequestClient.AllInState(MergeRequestState.merged).Any(x => x.Id == mergeRequest.Id), "Can return all closed requests");
         }
