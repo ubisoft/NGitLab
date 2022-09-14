@@ -652,5 +652,19 @@ namespace NGitLab.Mock
                 _ => throw new NotSupportedException(),
             };
         }
+
+        internal int ComputeDivergence(Commit first, Commit second)
+        {
+            var repository = GetGitRepository();
+            var historyDivergence = repository.ObjectDatabase.CalculateHistoryDivergence(first, second);
+
+            var divergence = 0;
+            if (historyDivergence.AheadBy.HasValue)
+                divergence += historyDivergence.AheadBy.Value;
+            if (historyDivergence.BehindBy.HasValue)
+                divergence += historyDivergence.BehindBy.Value;
+
+            return divergence;
+        }
     }
 }
