@@ -144,10 +144,12 @@ namespace NGitLab.Mock.Tests
             {
                 MergeWhenPipelineSucceeds = mr.HeadPipeline != null,
                 ShouldRemoveSourceBranch = true,
+                Sha = mr.HeadSha,
             });
 
             // Assert
             Assert.IsFalse(modelMr.HasConflicts);
+            Assert.AreEqual(0, modelMr.DivergedCommitsCount);
             Assert.IsNotNull(modelMr.DiffRefs?.BaseSha);
             Assert.AreEqual(modelMr.DiffRefs.BaseSha, modelMr.DiffRefs.StartSha);
             Assert.AreEqual("merged", modelMr.State);
@@ -204,6 +206,7 @@ namespace NGitLab.Mock.Tests
             Assert.IsTrue(exception.Message.Equals("The MR cannot be merged with method 'ff': the source branch must first be rebased", StringComparison.Ordinal));
 
             Assert.IsFalse(mr.HasConflicts);
+            Assert.AreEqual(1, mr.DivergedCommitsCount);
             Assert.AreNotEqual(mr.BaseSha, mr.StartSha);
 
             Assert.IsTrue(targetProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
@@ -259,6 +262,7 @@ namespace NGitLab.Mock.Tests
             Assert.IsTrue(exception.Message.Equals("The merge request has some conflicts and cannot be merged", StringComparison.Ordinal));
 
             Assert.IsTrue(mr.HasConflicts);
+            Assert.AreEqual(1, mr.DivergedCommitsCount);
             Assert.AreNotEqual(mr.BaseSha, mr.StartSha);
 
             Assert.IsTrue(targetProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),

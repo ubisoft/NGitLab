@@ -573,6 +573,7 @@ NGitLab.Mock.MergeRequest.CreatedAt.get -> System.DateTimeOffset
 NGitLab.Mock.MergeRequest.CreatedAt.set -> void
 NGitLab.Mock.MergeRequest.Description.get -> string
 NGitLab.Mock.MergeRequest.Description.set -> void
+NGitLab.Mock.MergeRequest.DivergedCommitsCount.get -> int?
 NGitLab.Mock.MergeRequest.ForceRemoveSourceBranch.get -> bool
 NGitLab.Mock.MergeRequest.ForceRemoveSourceBranch.set -> void
 NGitLab.Mock.MergeRequest.GetDiscussions() -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestDiscussion>

@@ -97,7 +97,7 @@ namespace NGitLab.Mock.Clients
 
                 if (message.Sha != null)
                 {
-                    var commit = project.Repository.GetBranchTipCommit(mergeRequest.SourceBranch);
+                    var commit = mergeRequest.SourceBranchHeadCommit;
                     if (!string.Equals(commit.Sha, message.Sha, StringComparison.OrdinalIgnoreCase))
                     {
                         throw new GitLabException("SHA does not match HEAD of source branch")

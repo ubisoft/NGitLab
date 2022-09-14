@@ -20,6 +20,7 @@ namespace NGitLab.Mock
         private string _startSha;
         private string _baseSha;
         private bool _hasConflicts;
+        private int? _divergedCommitsCount;
 
         public MergeRequest()
         {
@@ -94,6 +95,15 @@ namespace NGitLab.Mock
             {
                 RefreshInternalState();
                 return _hasConflicts;
+            }
+        }
+
+        public int? DivergedCommitsCount
+        {
+            get
+            {
+                RefreshInternalState();
+                return _divergedCommitsCount;
             }
         }
 
@@ -284,6 +294,7 @@ namespace NGitLab.Mock
                 RebaseInProgress = RebaseInProgress,
                 Reviewers = GetUsers(Reviewers),
                 HasConflicts = HasConflicts,
+                DivergedCommitsCount = DivergedCommitsCount,
                 DiffRefs = new DiffRefs
                 {
                     BaseSha = BaseSha,
@@ -314,9 +325,9 @@ namespace NGitLab.Mock
             }
         }
 
-        private LibGit2Sharp.Commit SourceBranchHeadCommit => SourceProject?.Repository?.GetBranchTipCommit(SourceBranch);
+        internal LibGit2Sharp.Commit SourceBranchHeadCommit => SourceProject?.Repository?.GetBranchTipCommit(SourceBranch);
 
-        private LibGit2Sharp.Commit TargetBranchHeadCommit => Project?.Repository?.GetBranchTipCommit(TargetBranch);
+        internal LibGit2Sharp.Commit TargetBranchHeadCommit => Project?.Repository?.GetBranchTipCommit(TargetBranch);
 
         private void RefreshInternalState()
         {
@@ -354,6 +365,8 @@ namespace NGitLab.Mock
                 throw new InvalidOperationException($"Branch '{SourceBranch}' does not seem to stem from branch '{TargetBranch}'");
 
             _baseSha = commonCommit.Sha;
+
+            _divergedCommitsCount = Project.Repository.ComputeDivergence(TargetBranchHeadCommit, commonCommit);
 
             // Determine if there are conflicts, by performing a rebase on a transient copy of the source branch
             var transientBranchName = "transient/" + Guid.NewGuid().ToString("N");
