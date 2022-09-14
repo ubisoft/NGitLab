@@ -575,6 +575,13 @@ namespace NGitLab.Mock
 
         public bool Rebase(UserRef user, string sourceBranch, string targetBranch)
         {
+            if (user is null)
+                throw new ArgumentNullException(nameof(user));
+            if (string.IsNullOrEmpty(sourceBranch))
+                throw new ArgumentException("Cannot be null or empty", nameof(sourceBranch));
+            if (string.IsNullOrEmpty(targetBranch))
+                throw new ArgumentException("Cannot be null or empty", nameof(targetBranch));
+
             var repo = GetGitRepository();
             var rebase = repo.Rebase;
 
