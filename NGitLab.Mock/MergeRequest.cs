@@ -10,6 +10,8 @@ namespace NGitLab.Mock
 {
     public sealed class MergeRequest : GitLabObject
     {
+        private static readonly User DefaultUser = new User("default");
+
         private string _consolidatedSourceBranch;
         private string _previousHeadSha;
         private string _previousStartSha;
@@ -356,7 +358,7 @@ namespace NGitLab.Mock
             // Determine if there are conflicts, by performing a rebase on a transient copy of the source branch
             var transientBranchName = "transient/" + Guid.NewGuid().ToString("N");
             Project.Repository.CreateBranch(transientBranchName, _consolidatedSourceBranch);
-            _hasConflicts = !Project.Repository.Rebase(Assignee, transientBranchName, TargetBranch);
+            _hasConflicts = !Project.Repository.Rebase(DefaultUser, transientBranchName, TargetBranch);
             Project.Repository.RemoveBranch(transientBranchName);
         }
     }
