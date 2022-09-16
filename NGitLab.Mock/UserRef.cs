@@ -61,6 +61,7 @@ namespace NGitLab.Mock
                 Email = Email,
                 Name = Name,
                 State = _user.State.ToString(),
+                AvatarURL = _user.AvatarUrl,
             };
         }
     }

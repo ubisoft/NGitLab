@@ -1044,6 +1044,7 @@ NGitLab.Models.ApprovalRuleUpdate.UserIds.get -> int[]
 NGitLab.Models.ApprovalRuleUpdate.UserIds.set -> void
 NGitLab.Models.Assignee
 NGitLab.Models.Assignee.Assignee() -> void
+NGitLab.Models.Assignee.AvatarURL -> string
 NGitLab.Models.Assignee.CreatedAt -> System.DateTime
 NGitLab.Models.Assignee.Email -> string
 NGitLab.Models.Assignee.Id -> int
