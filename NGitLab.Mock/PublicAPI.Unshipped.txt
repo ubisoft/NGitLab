@@ -718,7 +718,6 @@ NGitLab.Mock.Pipeline.Id.set -> void
 NGitLab.Mock.Pipeline.Pipeline(string ref) -> void
 NGitLab.Mock.Pipeline.Project.get -> NGitLab.Mock.Project
 NGitLab.Mock.Pipeline.ProjectId.get -> int
-NGitLab.Mock.Pipeline.ProjectId.set -> void
 NGitLab.Mock.Pipeline.Ref.get -> string
 NGitLab.Mock.Pipeline.Ref.set -> void
 NGitLab.Mock.Pipeline.Sha.get -> NGitLab.Sha1
