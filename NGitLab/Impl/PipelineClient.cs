@@ -192,6 +192,11 @@ namespace NGitLab.Impl
             return _api.Get().To<TestReport>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/test_report");
         }
 
+        public TestReportSummary GetTestReportsSummary(int pipelineId)
+        {
+            return _api.Get().To<TestReportSummary>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/test_report_summary");
+        }
+
         public GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineBridgeQuery query)
         {
             var url = CreateGetBridgesUrl(query);

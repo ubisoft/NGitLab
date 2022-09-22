@@ -619,6 +619,7 @@ NGitLab.Impl.PipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> Sy
 NGitLab.Impl.PipelineClient.GetJobsAsync(NGitLab.Models.PipelineJobQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
 NGitLab.Impl.PipelineClient.GetJobsInProject(NGitLab.Models.JobScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.PipelineClient.GetTestReports(int pipelineId) -> NGitLab.Models.TestReport
+NGitLab.Impl.PipelineClient.GetTestReportsSummary(int pipelineId) -> NGitLab.Models.TestReportSummary
 NGitLab.Impl.PipelineClient.GetVariables(int pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
 NGitLab.Impl.PipelineClient.GetVariablesAsync(int pipelineId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineVariable>
 NGitLab.Impl.PipelineClient.PipelineClient(NGitLab.Impl.API api, int projectId) -> void
@@ -789,6 +790,7 @@ NGitLab.IPipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> System
 NGitLab.IPipelineClient.GetJobsAsync(NGitLab.Models.PipelineJobQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
 NGitLab.IPipelineClient.GetJobsInProject(NGitLab.Models.JobScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IPipelineClient.GetTestReports(int pipelineId) -> NGitLab.Models.TestReport
+NGitLab.IPipelineClient.GetTestReportsSummary(int pipelineId) -> NGitLab.Models.TestReportSummary
 NGitLab.IPipelineClient.GetVariables(int pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
 NGitLab.IPipelineClient.GetVariablesAsync(int pipelineId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineVariable>
 NGitLab.IPipelineClient.Search(NGitLab.Models.PipelineQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
@@ -3032,6 +3034,8 @@ NGitLab.Models.TestReport.TotalCount.get -> int
 NGitLab.Models.TestReport.TotalCount.set -> void
 NGitLab.Models.TestReport.TotalTime.get -> int
 NGitLab.Models.TestReport.TotalTime.set -> void
+NGitLab.Models.TestReportSummary
+NGitLab.Models.TestReportSummary.TestReportSummary() -> void
 NGitLab.Models.TestSuites
 NGitLab.Models.TestSuites.ErrorCount.get -> int
 NGitLab.Models.TestSuites.ErrorCount.set -> void

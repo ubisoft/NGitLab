@@ -730,6 +730,8 @@ NGitLab.Mock.Pipeline.Tag.get -> bool
 NGitLab.Mock.Pipeline.Tag.set -> void
 NGitLab.Mock.Pipeline.TestReports.get -> NGitLab.Models.TestReport
 NGitLab.Mock.Pipeline.TestReports.set -> void
+NGitLab.Mock.Pipeline.TestReportsSummary.get -> NGitLab.Models.TestReportSummary
+NGitLab.Mock.Pipeline.TestReportsSummary.set -> void
 NGitLab.Mock.Pipeline.UpdatedAt.get -> System.DateTimeOffset
 NGitLab.Mock.Pipeline.UpdatedAt.set -> void
 NGitLab.Mock.Pipeline.User.get -> NGitLab.Mock.User

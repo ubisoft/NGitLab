@@ -104,6 +104,12 @@ namespace NGitLab
         TestReport GetTestReports(int pipelineId);
 
         /// <summary>
+        /// Get test reports summary for a pipeline.
+        /// </summary>
+        /// <param name="pipelineId">ID of the pipeline</param>
+        TestReportSummary GetTestReportsSummary(int pipelineId);
+
+        /// <summary>
         /// Returns the bridges of a pipeline.
         /// </summary>
         /// <param name="query"></param>
