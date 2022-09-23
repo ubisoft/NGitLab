@@ -21,18 +21,27 @@ namespace NGitLab.Mock.Tests
 
             var reportSummary = pipeline.TestReportsSummary = new Models.TestReportSummary
             {
-                TotalTime = 60,
-                TotalCount = 1157,
-                SuccessCount = 1157,
+                Total = new Models.TestReportSummaryTotals
+                {
+                    Time = 60,
+                    Count = 1157,
+                    Success = 1157,
+                    Failed = 0,
+                    Skipped = 0,
+                    Error = 0,
+                },
             };
 
             var client = server.CreateClient();
             Assert.AreEqual(job.Trace, await client.GetJobs(project.Id).GetTraceAsync(job.Id));
 
             var summary = client.GetPipelines(project.Id).GetTestReportsSummary(pipeline.Id);
-            Assert.AreEqual(60, summary.TotalTime);
-            Assert.AreEqual(1157, summary.TotalCount);
-            Assert.AreEqual(1157, summary.SuccessCount);
+            Assert.AreEqual(60, summary.Total.Time);
+            Assert.AreEqual(1157, summary.Total.Count);
+            Assert.AreEqual(1157, summary.Total.Success);
+            Assert.AreEqual(0, summary.Total.Skipped);
+            Assert.AreEqual(0, summary.Total.Failed);
+            Assert.AreEqual(0, summary.Total.Error);
         }
     }
 }

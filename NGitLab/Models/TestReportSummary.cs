@@ -1,9 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    [DataContract(Name = "total")]
-    public class TestReportSummary : TestReport
+    public record TestReportSummary
     {
+        [JsonPropertyName("total")]
+        public TestReportSummaryTotals Total { get; set; }
+
+        [JsonPropertyName("test_suites")]
+        public IReadOnlyCollection<TestSuites> TestSuites { get; set; }
     }
 }

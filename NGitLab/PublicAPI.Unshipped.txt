@@ -3035,7 +3035,24 @@ NGitLab.Models.TestReport.TotalCount.set -> void
 NGitLab.Models.TestReport.TotalTime.get -> int
 NGitLab.Models.TestReport.TotalTime.set -> void
 NGitLab.Models.TestReportSummary
-NGitLab.Models.TestReportSummary.TestReportSummary() -> void
+NGitLab.Models.TestReportSummary.TestSuites.get -> System.Collections.Generic.IReadOnlyCollection<NGitLab.Models.TestSuites>
+NGitLab.Models.TestReportSummary.TestSuites.set -> void
+NGitLab.Models.TestReportSummary.Total.get -> NGitLab.Models.TestReportSummaryTotals
+NGitLab.Models.TestReportSummary.Total.set -> void
+NGitLab.Models.TestReportSummaryTotals
+NGitLab.Models.TestReportSummaryTotals.Count.get -> int
+NGitLab.Models.TestReportSummaryTotals.Count.set -> void
+NGitLab.Models.TestReportSummaryTotals.Error.get -> int
+NGitLab.Models.TestReportSummaryTotals.Error.set -> void
+NGitLab.Models.TestReportSummaryTotals.Failed.get -> int
+NGitLab.Models.TestReportSummaryTotals.Failed.set -> void
+NGitLab.Models.TestReportSummaryTotals.Skipped.get -> int
+NGitLab.Models.TestReportSummaryTotals.Skipped.set -> void
+NGitLab.Models.TestReportSummaryTotals.Success.get -> int
+NGitLab.Models.TestReportSummaryTotals.Success.set -> void
+NGitLab.Models.TestReportSummaryTotals.TestReportSummaryTotals() -> void
+NGitLab.Models.TestReportSummaryTotals.Time.get -> double
+NGitLab.Models.TestReportSummaryTotals.Time.set -> void
 NGitLab.Models.TestSuites
 NGitLab.Models.TestSuites.ErrorCount.get -> int
 NGitLab.Models.TestSuites.ErrorCount.set -> void
