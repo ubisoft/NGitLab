@@ -54,6 +54,8 @@ namespace NGitLab.Mock
 
         public TestReport TestReports { get; set; }
 
+        public TestReportSummary TestReportsSummary { get; set; }
+
         [Obsolete("Use other overloads")]
         public Job AddNewJob(Project project)
         {

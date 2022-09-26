@@ -113,6 +113,16 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public TestReportSummary GetTestReportsSummary(int pipelineId)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var pipeline = project.Pipelines.GetById(pipelineId);
+                return pipeline.TestReportsSummary;
+            }
+        }
+
         public GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineBridgeQuery query)
         {
             return GitLabCollectionResponse.Create(GetBridges(query));

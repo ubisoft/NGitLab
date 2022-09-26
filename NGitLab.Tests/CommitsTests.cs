@@ -49,7 +49,8 @@ namespace NGitLab.Tests
         }
 
         [Test]
-        public async Task Test_can_get_merge_request_assiciated_to_commit()
+        [NGitLabRetry]
+        public async Task Test_can_get_merge_request_associated_to_commit()
         {
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
