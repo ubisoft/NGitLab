@@ -17,5 +17,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("sha")]
         public Sha1 Sha;
+
+        [JsonPropertyName("source")]
+        public string Source;
     }
 }

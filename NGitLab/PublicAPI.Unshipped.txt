@@ -2275,6 +2275,7 @@ NGitLab.Models.PipelineBasic.Id -> int
 NGitLab.Models.PipelineBasic.PipelineBasic() -> void
 NGitLab.Models.PipelineBasic.Ref -> string
 NGitLab.Models.PipelineBasic.Sha -> NGitLab.Sha1
+NGitLab.Models.PipelineBasic.Source -> string
 NGitLab.Models.PipelineBasic.Status -> NGitLab.JobStatus
 NGitLab.Models.PipelineBridgeQuery
 NGitLab.Models.PipelineBridgeQuery.PipelineBridgeQuery() -> void
