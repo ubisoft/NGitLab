@@ -60,5 +60,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("detailed_status")]
         public PipelineDetailedStatus DetailedStatus { get; set; }
+
+        [JsonPropertyName("source")]
+        public string Source;
     }
 }

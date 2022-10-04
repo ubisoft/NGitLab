@@ -2263,6 +2263,7 @@ NGitLab.Models.Pipeline.Id -> int
 NGitLab.Models.Pipeline.Pipeline() -> void
 NGitLab.Models.Pipeline.Ref -> string
 NGitLab.Models.Pipeline.Sha -> NGitLab.Sha1
+NGitLab.Models.Pipeline.Source -> string
 NGitLab.Models.Pipeline.StartedAt -> System.DateTime
 NGitLab.Models.Pipeline.Status -> NGitLab.JobStatus
 NGitLab.Models.Pipeline.Tag -> bool
