@@ -91,10 +91,7 @@
 
         public IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId) => new ProjectLevelApprovalRulesClient(Context, projectId);
 
-        public IProtectedBranchClient GetProtectedBranchClient(int projectId)
-        {
-            throw new System.NotImplementedException();
-        }
+        public IProtectedBranchClient GetProtectedBranchClient(int projectId) => new ProtectedBranchClient(Context, projectId);
 
         public ISearchClient GetGroupSearchClient(int groupId) => new GroupSearchClient(Context, groupId);
 
