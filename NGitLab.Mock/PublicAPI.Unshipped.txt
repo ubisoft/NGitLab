@@ -816,7 +816,6 @@ NGitLab.Mock.Project.Pipelines.get -> NGitLab.Mock.PipelineCollection
 NGitLab.Mock.Project.Project() -> void
 NGitLab.Mock.Project.Project(string name) -> void
 NGitLab.Mock.Project.ProtectedBranches.get -> NGitLab.Mock.ProtectedBranchCollection
-NGitLab.Mock.Project.ProtectedBranches.set -> void
 NGitLab.Mock.Project.RegisteredRunners.get -> NGitLab.Mock.RunnerCollection
 NGitLab.Mock.Project.Releases.get -> NGitLab.Mock.ReleaseCollection
 NGitLab.Mock.Project.Remove() -> void

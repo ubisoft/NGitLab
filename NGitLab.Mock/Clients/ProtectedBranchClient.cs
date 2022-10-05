@@ -29,7 +29,7 @@ namespace NGitLab.Mock.Clients
             {
                 var project = GetProject(_projectId, ProjectPermission.Edit);
                 return project.ProtectedBranches
-                           .Where(b => b.Name.Contains(search ?? "", stringComparisong.Ordinal))
+                           .Where(b => b.Name.Contains(search ?? "", StringComparison.Ordinal))
                            .Select(b => b.ToProtectedBranchClient())
                            .ToArray();
             }
