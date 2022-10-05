@@ -37,7 +37,15 @@ namespace NGitLab.Mock.Clients
 
         public Models.ProtectedBranch ProtectBranch(BranchProtect branchProtect)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var protectedBranch = project.ProtectedBranches.FirstOrDefault(b => b.Name.Equals(branchProtect.BranchName, StringComparison.Ordinal));
+                protectedBranch ??= new();
+
+                project.ProtectedBranches.Add(protectedBranch);
+                return protectedBranch.ToProtectedBranchClient();
+            }
         }
 
         public void UnprotectBranch(string branchName)
@@ -45,11 +53,10 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.Edit);
-                var protectedBranches = project.ProtectedBranches.Select(b => b.ToProtectedBranchClient()).ToList();
-                var branchToUnprotect = protectedBranches.SingleOrDefault(b => b.Name.Equals(branchName, StringComparison.Ordinal));
-                if(branchToUnprotect != null)
+                var protectedBranch = project.ProtectedBranches.FirstOrDefault(b => b.Name.Equals(branchName, StringComparison.Ordinal));
+                if (protectedBranch != null)
                 {
-                    protectedBranches.Remove(branchToUnprotect);
+                    project.ProtectedBranches.Remove(protectedBranch);
                 }
             }
         }
