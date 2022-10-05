@@ -2,6 +2,12 @@
 abstract NGitLab.Mock.Note.NoteableType.get -> string
 abstract NGitLab.Mock.Note.NoticableId.get -> int
 abstract NGitLab.Mock.Note.NoticableIid.get -> int
+NGitLab.Mock.AccessLevelInfo
+NGitLab.Mock.AccessLevelInfo.AccessLevel.get -> NGitLab.Models.AccessLevel
+NGitLab.Mock.AccessLevelInfo.AccessLevel.set -> void
+NGitLab.Mock.AccessLevelInfo.AccessLevelInfo() -> void
+NGitLab.Mock.AccessLevelInfo.Description.get -> string
+NGitLab.Mock.AccessLevelInfo.Description.set -> void
 NGitLab.Mock.Badge
 NGitLab.Mock.Badge.Badge() -> void
 NGitLab.Mock.Badge.Id.get -> int
@@ -815,6 +821,8 @@ NGitLab.Mock.Project.Permissions.get -> NGitLab.Mock.PermissionCollection
 NGitLab.Mock.Project.Pipelines.get -> NGitLab.Mock.PipelineCollection
 NGitLab.Mock.Project.Project() -> void
 NGitLab.Mock.Project.Project(string name) -> void
+NGitLab.Mock.Project.ProtectedBranches.get -> NGitLab.Mock.ProtectedBranchCollection
+NGitLab.Mock.Project.ProtectedBranches.set -> void
 NGitLab.Mock.Project.RegisteredRunners.get -> NGitLab.Mock.RunnerCollection
 NGitLab.Mock.Project.Releases.get -> NGitLab.Mock.ReleaseCollection
 NGitLab.Mock.Project.Remove() -> void
@@ -869,6 +877,23 @@ NGitLab.Mock.ProjectHookCollection.ProjectHookCollection(NGitLab.Mock.GitLabObje
 NGitLab.Mock.ProjectIssueNote
 NGitLab.Mock.ProjectIssueNote.ProjectIssueNote() -> void
 NGitLab.Mock.ProjectIssueNote.Parent.get -> NGitLab.Mock.Issue
+NGitLab.Mock.ProtectedBranch
+NGitLab.Mock.ProtectedBranch.AllowForcePush.get -> bool
+NGitLab.Mock.ProtectedBranch.AllowForcePush.set -> void
+NGitLab.Mock.ProtectedBranch.CodeOwnerApprovalRequired.get -> bool
+NGitLab.Mock.ProtectedBranch.CodeOwnerApprovalRequired.set -> void
+NGitLab.Mock.ProtectedBranch.Id.get -> long
+NGitLab.Mock.ProtectedBranch.Id.set -> void
+NGitLab.Mock.ProtectedBranch.MergeAccessLevels.get -> NGitLab.Models.AccessLevelInfo[]
+NGitLab.Mock.ProtectedBranch.MergeAccessLevels.set -> void
+NGitLab.Mock.ProtectedBranch.Name.get -> string
+NGitLab.Mock.ProtectedBranch.Name.set -> void
+NGitLab.Mock.ProtectedBranch.ProtectedBranch() -> void
+NGitLab.Mock.ProtectedBranch.PushAccessLevels.get -> NGitLab.Models.AccessLevelInfo[]
+NGitLab.Mock.ProtectedBranch.PushAccessLevels.set -> void
+NGitLab.Mock.ProtectedBranchCollection
+NGitLab.Mock.ProtectedBranchCollection.GetById(long branchId) -> NGitLab.Mock.ProtectedBranch
+NGitLab.Mock.ProtectedBranchCollection.ProtectedBranchCollection(NGitLab.Mock.GitLabObject parent) -> void
 NGitLab.Mock.ReleaseCollection
 NGitLab.Mock.ReleaseCollection.Add(string tagName, string name, string description, NGitLab.Mock.User user) -> NGitLab.Mock.ReleaseInfo
 NGitLab.Mock.ReleaseCollection.Add(string tagName, string name, string reference, string description, NGitLab.Mock.User user) -> NGitLab.Mock.ReleaseInfo
@@ -1073,6 +1098,7 @@ override NGitLab.Mock.ProjectHookCollection.Add(NGitLab.Mock.ProjectHook item) -
 override NGitLab.Mock.ProjectIssueNote.NoteableType.get -> string
 override NGitLab.Mock.ProjectIssueNote.NoticableId.get -> int
 override NGitLab.Mock.ProjectIssueNote.NoticableIid.get -> int
+override NGitLab.Mock.ProtectedBranchCollection.Add(NGitLab.Mock.ProtectedBranch branch) -> void
 override NGitLab.Mock.ReleaseCollection.Add(NGitLab.Mock.ReleaseInfo release) -> void
 override NGitLab.Mock.RunnerCollection.Add(NGitLab.Mock.Runner item) -> void
 override NGitLab.Mock.RunnerRef.Equals(object obj) -> bool

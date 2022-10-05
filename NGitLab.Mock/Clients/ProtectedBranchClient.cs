@@ -14,21 +14,25 @@ namespace NGitLab.Mock.Clients
             _projectId = projectId;
         }
 
-        public ProtectedBranch GetProtectedBranch(string branchName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ProtectedBranch[] GetProtectedBranches(string search = null)
+        public Models.ProtectedBranch GetProtectedBranch(string branchName)
         {
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetAllProtectedBranches().ToArray();
+                return project.ProtectedBranches.First(b => b.Name.Equals(branchName, StringComparison.Ordinal)).ToProtectedBranchClient();
             }
         }
 
-        public ProtectedBranch ProtectBranch(BranchProtect branchProtect)
+        public Models.ProtectedBranch[] GetProtectedBranches(string search)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                return project.ProtectedBranches.Select(b => b.ToProtectedBranchClient()).ToArray();
+            }
+        }
+
+        public Models.ProtectedBranch ProtectBranch(BranchProtect branchProtect)
         {
             throw new NotImplementedException();
         }
@@ -38,7 +42,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                var protectedBranches = project.Repository.GetAllProtectedBranches().ToList();
+                var protectedBranches = project.ProtectedBranches.Select(b => b.ToProtectedBranchClient()).ToList();
                 var branchToUnprotect = protectedBranches.SingleOrDefault(b => b.Name.Equals(branchName, StringComparison.Ordinal));
                 if(branchToUnprotect != null)
                 {
