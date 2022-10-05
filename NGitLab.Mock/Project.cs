@@ -147,7 +147,7 @@ namespace NGitLab.Mock
 
         public ProjectStatistics Statistics { get; set; }
 
-        public ProtectedBranchCollection ProtectedBranches { get; set; }
+        public ProtectedBranchCollection ProtectedBranches { get; }
 
         public void Remove()
         {

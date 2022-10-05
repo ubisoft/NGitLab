@@ -18,7 +18,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
+                var project = GetProject(_projectId, ProjectPermission.Edit);
                 return project.ProtectedBranches.First(b => b.Name.Equals(branchName, StringComparison.Ordinal)).ToProtectedBranchClient();
             }
         }
@@ -27,8 +27,11 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                return project.ProtectedBranches.Select(b => b.ToProtectedBranchClient()).ToArray();
+                var project = GetProject(_projectId, ProjectPermission.Edit);
+                return project.ProtectedBranches
+                           .Where(b => b.Name.Contains(search ?? "", stringComparisong.Ordinal))
+                           .Select(b => b.ToProtectedBranchClient())
+                           .ToArray();
             }
         }
 
@@ -41,7 +44,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
+                var project = GetProject(_projectId, ProjectPermission.Edit);
                 var protectedBranches = project.ProtectedBranches.Select(b => b.ToProtectedBranchClient()).ToList();
                 var branchToUnprotect = protectedBranches.SingleOrDefault(b => b.Name.Equals(branchName, StringComparison.Ordinal));
                 if(branchToUnprotect != null)
