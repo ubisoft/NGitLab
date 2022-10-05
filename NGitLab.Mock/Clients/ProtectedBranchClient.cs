@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -20,7 +21,11 @@ namespace NGitLab.Mock.Clients
 
         public ProtectedBranch[] GetProtectedBranches(string search = null)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                return project.Repository.GetAllProtectedBranches().ToArray();
+            }
         }
 
         public ProtectedBranch ProtectBranch(BranchProtect branchProtect)
@@ -30,7 +35,16 @@ namespace NGitLab.Mock.Clients
 
         public void UnprotectBranch(string branchName)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var protectedBranches = project.Repository.GetAllProtectedBranches().ToList();
+                var branchToUnprotect = protectedBranches.SingleOrDefault(b => b.Name.Equals(branchName, StringComparison.Ordinal));
+                if(branchToUnprotect != null)
+                {
+                    protectedBranches.Remove(branchToUnprotect);
+                }
+            }
         }
     }
 }

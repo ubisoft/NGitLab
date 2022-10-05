@@ -130,6 +130,12 @@ namespace NGitLab.Mock
             return repository.Branches.ToList();
         }
 
+        public IReadOnlyCollection<Models.ProtectedBranch> GetAllProtectedBranches()
+        {
+            var repository = GetGitRepository();
+            return repository.Branches.Select(b => new Models.ProtectedBranch { Name = b.CanonicalName }).ToList();
+        }
+
         public Commit Commit(User user, string message)
         {
             return Commit(user, message, targetBranch: null, new[] { File.CreateFromText("test.txt", Guid.NewGuid().ToString()) });

@@ -919,6 +919,7 @@ NGitLab.Mock.Repository.Dispose() -> void
 NGitLab.Mock.Repository.FindMergeBase(LibGit2Sharp.Commit first, LibGit2Sharp.Commit second) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.FullPath.get -> string
 NGitLab.Mock.Repository.GetAllBranches() -> System.Collections.Generic.IReadOnlyCollection<LibGit2Sharp.Branch>
+NGitLab.Mock.Repository.GetAllProtectedBranches() -> System.Collections.Generic.IReadOnlyCollection<NGitLab.Models.ProtectedBranch>
 NGitLab.Mock.Repository.GetBranch(string branchName) -> LibGit2Sharp.Branch
 NGitLab.Mock.Repository.GetBranchCommits(string branchName) -> System.Collections.Generic.IEnumerable<LibGit2Sharp.Commit>
 NGitLab.Mock.Repository.GetBranchFullPatch(string branchName) -> LibGit2Sharp.Patch
