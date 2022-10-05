@@ -2,12 +2,6 @@
 abstract NGitLab.Mock.Note.NoteableType.get -> string
 abstract NGitLab.Mock.Note.NoticableId.get -> int
 abstract NGitLab.Mock.Note.NoticableIid.get -> int
-NGitLab.Mock.AccessLevelInfo
-NGitLab.Mock.AccessLevelInfo.AccessLevel.get -> NGitLab.Models.AccessLevel
-NGitLab.Mock.AccessLevelInfo.AccessLevel.set -> void
-NGitLab.Mock.AccessLevelInfo.AccessLevelInfo() -> void
-NGitLab.Mock.AccessLevelInfo.Description.get -> string
-NGitLab.Mock.AccessLevelInfo.Description.set -> void
 NGitLab.Mock.Badge
 NGitLab.Mock.Badge.Badge() -> void
 NGitLab.Mock.Badge.Id.get -> int
@@ -944,7 +938,6 @@ NGitLab.Mock.Repository.Dispose() -> void
 NGitLab.Mock.Repository.FindMergeBase(LibGit2Sharp.Commit first, LibGit2Sharp.Commit second) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.FullPath.get -> string
 NGitLab.Mock.Repository.GetAllBranches() -> System.Collections.Generic.IReadOnlyCollection<LibGit2Sharp.Branch>
-NGitLab.Mock.Repository.GetAllProtectedBranches() -> System.Collections.Generic.IReadOnlyCollection<NGitLab.Models.ProtectedBranch>
 NGitLab.Mock.Repository.GetBranch(string branchName) -> LibGit2Sharp.Branch
 NGitLab.Mock.Repository.GetBranchCommits(string branchName) -> System.Collections.Generic.IEnumerable<LibGit2Sharp.Commit>
 NGitLab.Mock.Repository.GetBranchFullPatch(string branchName) -> LibGit2Sharp.Patch
