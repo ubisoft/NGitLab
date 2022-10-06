@@ -31,6 +31,7 @@ namespace NGitLab.Mock
             CommitInfos = new CommitInfoCollection(this);
             CommitStatuses = new CommitStatusCollection(this);
             Releases = new ReleaseCollection(this);
+            ProtectedBranches = new ProtectedBranchCollection(this);
             ApprovalsBeforeMerge = 0;
         }
 
@@ -145,6 +146,8 @@ namespace NGitLab.Mock
         public string MergeMethod { get; set; }
 
         public ProjectStatistics Statistics { get; set; }
+
+        public ProtectedBranchCollection ProtectedBranches { get; }
 
         public void Remove()
         {

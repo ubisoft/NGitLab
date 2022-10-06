@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -13,24 +14,58 @@ namespace NGitLab.Mock.Clients
             _projectId = projectId;
         }
 
-        public ProtectedBranch GetProtectedBranch(string branchName)
+        public Models.ProtectedBranch GetProtectedBranch(string branchName)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Edit);
+                return project.ProtectedBranches.First(b => b.Name.Equals(branchName, StringComparison.Ordinal)).ToProtectedBranchClient();
+            }
         }
 
-        public ProtectedBranch[] GetProtectedBranches(string search = null)
+        public Models.ProtectedBranch[] GetProtectedBranches(string search)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Edit);
+                return project.ProtectedBranches
+                           .Where(b => b.Name.Contains(search ?? "", StringComparison.Ordinal))
+                           .Select(b => b.ToProtectedBranchClient())
+                           .ToArray();
+            }
         }
 
-        public ProtectedBranch ProtectBranch(BranchProtect branchProtect)
+        public Models.ProtectedBranch ProtectBranch(BranchProtect branchProtect)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Edit);
+                var protectedBranch = project.ProtectedBranches.FirstOrDefault(b => b.Name.Equals(branchProtect.BranchName, StringComparison.Ordinal));
+                if (protectedBranch == null)
+                {
+                    protectedBranch = new();
+                    project.ProtectedBranches.Add(protectedBranch);
+                }
+
+                protectedBranch.Name = branchProtect.BranchName;
+                protectedBranch.AllowForcePush = branchProtect.AllowForcePush;
+                protectedBranch.CodeOwnerApprovalRequired = branchProtect.CodeOwnerApprovalRequired;
+
+                return protectedBranch.ToProtectedBranchClient();
+            }
         }
 
         public void UnprotectBranch(string branchName)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Edit);
+                var protectedBranch = project.ProtectedBranches.FirstOrDefault(b => b.Name.Equals(branchName, StringComparison.Ordinal));
+                if (protectedBranch != null)
+                {
+                    project.ProtectedBranches.Remove(protectedBranch);
+                }
+            }
         }
     }
 }
