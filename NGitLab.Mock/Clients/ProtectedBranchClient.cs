@@ -39,11 +39,18 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
+                var project = GetProject(_projectId, ProjectPermission.Edit);
                 var protectedBranch = project.ProtectedBranches.FirstOrDefault(b => b.Name.Equals(branchProtect.BranchName, StringComparison.Ordinal));
-                protectedBranch ??= new();
+                if (protectedBranch == null)
+                {
+                    protectedBranch = new();
+                    project.ProtectedBranches.Add(protectedBranch);
+                }
 
-                project.ProtectedBranches.Add(protectedBranch);
+                protectedBranch.Name = branchProtect.BranchName;
+                protectedBranch.AllowForcePush = branchProtect.AllowForcePush;
+                protectedBranch.CodeOwnerApprovalRequired = branchProtect.CodeOwnerApprovalRequired;
+
                 return protectedBranch.ToProtectedBranchClient();
             }
         }
