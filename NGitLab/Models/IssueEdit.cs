@@ -36,5 +36,8 @@ namespace NGitLab.Models
         [JsonPropertyName("due_date")]
         [JsonConverter(typeof(DateOnlyConverter))]
         public DateTime? DueDate;
+
+        [JsonPropertyName("epic_id")]
+        public int? EpicId;
     }
 }
