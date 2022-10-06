@@ -36,5 +36,9 @@ namespace NGitLab.Models
 
         [JsonPropertyName("epic_id")]
         public int? EpicId;
+
+        [JsonPropertyName("epic_iid")]
+        public int? EpicIId;
+
     }
 }
