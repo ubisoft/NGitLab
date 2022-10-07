@@ -1705,7 +1705,7 @@ NGitLab.Models.IssueCreate.Confidential -> bool
 NGitLab.Models.IssueCreate.Description -> string
 NGitLab.Models.IssueCreate.DueDate -> System.DateTime?
 NGitLab.Models.IssueCreate.EpicId -> int?
-NGitLab.Models.IssueCreate.EpicIId -> int?
+NGitLab.Models.IssueCreate.EpicIid -> int?
 NGitLab.Models.IssueCreate.Id -> int
 NGitLab.Models.IssueCreate.IssueCreate() -> void
 NGitLab.Models.IssueCreate.Labels -> string
@@ -1716,7 +1716,7 @@ NGitLab.Models.IssueEdit.AssigneeId -> int?
 NGitLab.Models.IssueEdit.Description -> string
 NGitLab.Models.IssueEdit.DueDate -> System.DateTime?
 NGitLab.Models.IssueEdit.EpicId -> int?
-NGitLab.Models.IssueEdit.EpicIId -> int?
+NGitLab.Models.IssueEdit.EpicIid -> int?
 NGitLab.Models.IssueEdit.Id -> int
 NGitLab.Models.IssueEdit.IssueEdit() -> void
 NGitLab.Models.IssueEdit.IssueId -> int
