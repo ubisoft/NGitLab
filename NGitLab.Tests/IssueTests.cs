@@ -251,53 +251,5 @@ namespace NGitLab.Tests
 
             Assert.AreEqual(updatedDueDate, updatedIssue.DueDate);
         }
-
-        [Test]
-        [NGitLabRetry]
-        public async Task Test_get_new_and_updated_issue_with_epic_id()
-        {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject();
-            var issuesClient = context.Client.Issues;
-            var epicClient = context.Client.Epics;
-
-            var group = context.CreateGroup();
-            var epic = epicClient.Create(group.Id, new EpicCreate { Title = "epic1" });
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", EpicId = epic.Id });
-            var issue = issuesClient.Get(project.Id, issue1.IssueId);
-
-            var updatedIssue = issuesClient.Edit(new IssueEdit()
-            {
-                Id = project.Id,
-                IssueId = issue.IssueId,
-                EpicId = epic.Id,
-            });
-
-            Assert.AreEqual(epic.Id, updatedIssue.Epic.Id);
-        }
-
-        [Test]
-        [NGitLabRetry]
-        public async Task Test_get_new_and_updated_issue_with_epic_iid()
-        {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject();
-            var issuesClient = context.Client.Issues;
-            var epicClient = context.Client.Epics;
-
-            var group = context.CreateGroup();
-            var epic = epicClient.Create(group.Id, new EpicCreate { Title = "epic1" });
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", EpicId = epic.EpicIid });
-            var issue = issuesClient.Get(project.Id, issue1.IssueId);
-
-            var updatedIssue = issuesClient.Edit(new IssueEdit()
-            {
-                Id = project.Id,
-                IssueId = issue.IssueId,
-                EpicIid = epic.EpicIid,
-            });
-
-            Assert.AreEqual(epic.EpicIid, updatedIssue.Epic.EpicId);
-        }
     }
 }
