@@ -259,19 +259,20 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
-            var epicId = 1;
+            var epicClient = context.Client.Epics;
 
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", EpicId = epicId });
+            var epic = epicClient.Create(1, new EpicCreate { Title = "epic1" });
+            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", EpicId = epic.Id });
             var issue = issuesClient.Get(project.Id, issue1.IssueId);
 
             var updatedIssue = issuesClient.Edit(new IssueEdit()
             {
                 Id = project.Id,
                 IssueId = issue.IssueId,
-                EpicId = epicId,
+                EpicId = epic.Id,
             });
 
-            Assert.AreEqual(epicId, updatedIssue.Epic.EpicId);
+            Assert.AreEqual(epic.Id, updatedIssue.Epic.Id);
         }
     }
 }
