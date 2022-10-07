@@ -254,7 +254,7 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
-        public async Task Test_get_new_and_updated_issue_with_epic()
+        public async Task Test_get_new_and_updated_issue_with_epic_id()
         {
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
