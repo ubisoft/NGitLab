@@ -106,12 +106,22 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var issue = GetIssue(projectId, issueIid);
+                return Server.ResourceLabelEvents.Get(issue.Id);
+            }
         }
 
-        public GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int issueId)
+        public GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int issueIid)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var issue = GetIssue(projectId, issueIid);
+                var resourceLabelEvents = Server.ResourceLabelEvents.Get(issue.Id);
+
+                return GitLabCollectionResponse.Create(resourceLabelEvents);
+            }
         }
 
         public IEnumerable<Models.MergeRequest> RelatedTo(int projectId, int issueId)
