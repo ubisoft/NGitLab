@@ -104,23 +104,23 @@ namespace NGitLab.Mock.Clients
             return Edit(issueEdit);
         }
 
-        public IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid)
+        public IEnumerable<Models.ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid)
         {
             using (Context.BeginOperationScope())
             {
                 var issue = GetIssue(projectId, issueIid);
-                return Server.ResourceLabelEvents.Get(issue.Id);
+                return Server.ResourceLabelEvents.Get(issue.Id).Select(rle => rle.ToClientResourceLabelEvent());
             }
         }
 
-        public GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int issueIid)
+        public GitLabCollectionResponse<Models.ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int issueIid)
         {
             using (Context.BeginOperationScope())
             {
                 var issue = GetIssue(projectId, issueIid);
                 var resourceLabelEvents = Server.ResourceLabelEvents.Get(issue.Id);
 
-                return GitLabCollectionResponse.Create(resourceLabelEvents);
+                return GitLabCollectionResponse.Create(resourceLabelEvents.Select(rle => rle.ToClientResourceLabelEvent()));
             }
         }
 
