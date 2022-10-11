@@ -86,7 +86,7 @@ jobs:
           ${{ env.TestResultsDirectory }}/**/*
     - name: Test Report
       uses: dorny/test-reporter@v1
-      if: github.actor != 'dependabot[bot]' && (success() || failure()) # the step doesn't work for dependabot
+      if: github.actor != 'dependabot[bot]' && !github.event.pull_request.head.repo.fork && (success() || failure())
       with:
         name: test-results-${{ steps.set-artifact-name.outputs.artifact_name }}
         path: ${{ env.TestResultsDirectory }}/**/*.trx
