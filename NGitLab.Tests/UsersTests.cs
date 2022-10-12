@@ -54,6 +54,28 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
+        public async Task GetUserByEmailDoesNotWorkOnNonAdminClient()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var addedUser = CreateNewUser(context);
+
+            var searchedUsers = context.Client.Users.Search(addedUser.Email);
+            Assert.That(!searchedUsers.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task GetUserByEmailWorksOnAdminClient()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var addedUser = CreateNewUser(context);
+
+            var searchedUsers = context.AdminClient.Users.Search(addedUser.Email);
+            Assert.That(searchedUsers.SingleOrDefault(u => u.Email.Equals(addedUser.Email, StringComparison.OrdinalIgnoreCase)) is not null);
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task DeactivatedAccountShouldBeAbleToActivate()
         {
             using var context = await GitLabTestContext.CreateAsync();
