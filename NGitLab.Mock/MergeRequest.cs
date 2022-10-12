@@ -131,10 +131,20 @@ namespace NGitLab.Mock
 
         public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/merge_requests/{Iid.ToString(CultureInfo.InvariantCulture)}");
 
-        public Pipeline HeadPipeline => Project.Pipelines
-                  .Where(p => p.Sha.Equals(Sha))
+        public Pipeline HeadPipeline
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(HeadSha))
+                    return null;
+                var headSha = new Sha1(_headSha);
+                var pipeline = Project.Pipelines
+                  .Where(p => p.Sha.Equals(headSha))
                   .OrderByDescending(p => p.CreatedAt)
                   .FirstOrDefault();
+                return pipeline;
+            }
+        }
 
         public IList<string> Labels { get; } = new List<string>();
 
