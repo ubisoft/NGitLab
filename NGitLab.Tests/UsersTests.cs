@@ -200,6 +200,7 @@ namespace NGitLab.Tests
             {
                 Email = $"test{randomNumber}@test.pl",
                 PublicEmail = $"test{randomNumber}@gmail.com",
+                SkipConfirmation = true, // Skip confirmation and assume public email is verified
                 Bio = "bio",
                 CanCreateGroup = true,
                 IsAdmin = true,
