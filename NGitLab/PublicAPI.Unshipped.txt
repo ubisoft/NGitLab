@@ -3202,6 +3202,7 @@ NGitLab.Models.UserUpsert.Name -> string
 NGitLab.Models.UserUpsert.Password -> string
 NGitLab.Models.UserUpsert.ProjectsLimit -> int?
 NGitLab.Models.UserUpsert.Provider -> string
+NGitLab.Models.UserUpsert.PublicEmail -> string
 NGitLab.Models.UserUpsert.ResetPassword -> bool?
 NGitLab.Models.UserUpsert.SkipConfirmation -> bool?
 NGitLab.Models.UserUpsert.Skype -> string

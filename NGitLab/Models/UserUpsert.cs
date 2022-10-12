@@ -21,6 +21,9 @@ namespace NGitLab.Models
         [JsonPropertyName("name")]
         public string Name;
 
+        [JsonPropertyName("public_email")]
+        public string PublicEmail;
+
         [JsonPropertyName("skype")]
         public string Skype;
 
