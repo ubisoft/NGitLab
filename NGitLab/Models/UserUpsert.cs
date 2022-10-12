@@ -21,9 +21,6 @@ namespace NGitLab.Models
         [JsonPropertyName("name")]
         public string Name;
 
-        [JsonPropertyName("public_email")]
-        public string PublicEmail;
-
         [JsonPropertyName("skype")]
         public string Skype;
 
@@ -59,8 +56,5 @@ namespace NGitLab.Models
 
         [JsonPropertyName("skip_confirmation")]
         public bool? SkipConfirmation;
-
-        [JsonPropertyName("skip_reconfirmation")]
-        public bool? SkipReconfirmation;
     }
 }

@@ -65,17 +65,6 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
-        public async Task GetUserByPublicEmailWorksOnNonAdminClient()
-        {
-            using var context = await GitLabTestContext.CreateAsync();
-            var addedUser = CreateNewUser(context);
-
-            var searchedUsers = context.Client.Users.Search(addedUser.PublicEmail);
-            Assert.That(searchedUsers.SingleOrDefault(u => u.PublicEmail.Equals(addedUser.PublicEmail, StringComparison.OrdinalIgnoreCase)) is not null);
-        }
-
-        [Test]
-        [NGitLabRetry]
         public async Task GetUserByEmailWorksOnAdminClient()
         {
             using var context = await GitLabTestContext.CreateAsync();
@@ -196,7 +185,7 @@ namespace NGitLab.Tests
         private static User CreateNewUser(GitLabTestContext context)
         {
             var randomNumber = context.GetRandomNumber().ToString(CultureInfo.InvariantCulture);
-            var createdUser = context.AdminClient.Users.Create(new UserUpsert
+            return context.AdminClient.Users.Create(new UserUpsert
             {
                 Email = $"test{randomNumber}@test.pl",
                 Bio = "bio",
@@ -213,15 +202,6 @@ namespace NGitLab.Tests
                 Username = $"ngitlabtestuser{randomNumber}",
                 WebsiteURL = "https://www.example.com",
             });
-
-            context.AdminClient.Users.Update(createdUser.Id, new UserUpsert
-            {
-                PublicEmail = $"test{randomNumber}@gmail.com",
-                SkipConfirmation = true,
-                SkipReconfirmation = true, // Skip confirmation and assume public email is verified
-            });
-
-            return createdUser;
         }
 
         // Comes from https://github.com/meziantou/Meziantou.GitLabClient/blob/main/test/Meziantou.GitLabClient.Tests/Internals/RsaSshKey.cs
