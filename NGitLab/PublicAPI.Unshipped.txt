@@ -2791,7 +2791,7 @@ NGitLab.Models.ResourceLabelEvent.Label.set -> void
 NGitLab.Models.ResourceLabelEvent.ResourceId.get -> int
 NGitLab.Models.ResourceLabelEvent.ResourceId.set -> void
 NGitLab.Models.ResourceLabelEvent.ResourceLabelEvent() -> void
-NGitLab.Models.ResourceLabelEvent.ResourceType.get -> int
+NGitLab.Models.ResourceLabelEvent.ResourceType.get -> string
 NGitLab.Models.ResourceLabelEvent.ResourceType.set -> void
 NGitLab.Models.ResourceLabelEvent.User.get -> NGitLab.Models.Author
 NGitLab.Models.ResourceLabelEvent.User.set -> void

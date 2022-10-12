@@ -85,6 +85,7 @@ namespace NGitLab.Mock.Clients
 
                 issueToModify.Title = issueEdit.Title;
                 issueToModify.Description = issueEdit.Description;
+                CreateResourceLabelEvents(issueToModify.Labels, issueEdit.Labels.Split(','), issueToModify.Id);
                 issueToModify.Labels = issueEdit.Labels.Split(',');
                 issueToModify.UpdatedAt = DateTimeOffset.UtcNow;
                 var isValidState = Enum.TryParse<IssueState>(issueEdit.State, out var requestedState);
@@ -370,6 +371,65 @@ namespace NGitLab.Mock.Clients
             }
 
             return issues;
+        }
+
+        public void CreateResourceLabelEvents(string[] previousLabels, string[] newLabels, int resourceId)
+        {
+            var currentUser = Context.User;
+
+            foreach (var label in previousLabels)
+            {
+                if (!newLabels.Any(l => string.Equals(l, label, StringComparison.OrdinalIgnoreCase)))
+                {
+                    Server.ResourceLabelEvents.Add(new ResourceLabelEvent()
+                    {
+                        Action = ResourceLabelEventAction.Remove,
+                        Label = new Label() { Name = label },
+                        ResourceId = resourceId,
+                        CreatedAt = DateTime.UtcNow,
+                        Id = Server.GetNewResourceLabelEventId(),
+                        User = new Author()
+                        {
+                            Id = currentUser.Id,
+                            Email = currentUser.Email,
+                            AvatarUrl = currentUser.AvatarUrl,
+                            Name = currentUser.Name,
+                            State = currentUser.State.ToString(),
+                            Username = currentUser.UserName,
+                            CreatedAt = currentUser.CreatedAt,
+                            WebUrl = currentUser.WebUrl,
+                        },
+                        ResourceType = "issue",
+                    });
+                }
+            }
+
+            foreach (var label in previousLabels)
+            {
+                if (!previousLabels.Any(l => string.Equals(l, label, StringComparison.OrdinalIgnoreCase)))
+                {
+                    Server.ResourceLabelEvents.Add(new ResourceLabelEvent()
+                    {
+                        Action = ResourceLabelEventAction.Add,
+                        Label = new Label() { Name = label },
+                        ResourceId = resourceId,
+                        CreatedAt = DateTime.UtcNow,
+                        Id = Server.GetNewResourceLabelEventId(),
+                        User = new Author()
+                        {
+                            Id = currentUser.Id,
+                            Email = currentUser.Email,
+                            AvatarUrl = currentUser.AvatarUrl,
+                            Name = currentUser.Name,
+                            State = currentUser.State.ToString(),
+                            Username = currentUser.UserName,
+                            CreatedAt = currentUser.CreatedAt,
+                            WebUrl = currentUser.WebUrl,
+                        },
+                        ResourceType = "issue",
+                    });
+                }
+            }
         }
     }
 }

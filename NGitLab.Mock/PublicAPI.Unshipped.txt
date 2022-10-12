@@ -968,7 +968,6 @@ NGitLab.Mock.ResourceLabelEvent.Label.set -> void
 NGitLab.Mock.ResourceLabelEvent.ResourceId.get -> int
 NGitLab.Mock.ResourceLabelEvent.ResourceId.set -> void
 NGitLab.Mock.ResourceLabelEvent.ResourceLabelEvent() -> void
-NGitLab.Mock.ResourceLabelEvent.ResourceType.get -> int
 NGitLab.Mock.ResourceLabelEvent.ResourceType.set -> void
 NGitLab.Mock.ResourceLabelEvent.ToClientResourceLabelEvent() -> NGitLab.Models.ResourceLabelEvent
 NGitLab.Mock.ResourceLabelEvent.User.get -> NGitLab.Models.Author

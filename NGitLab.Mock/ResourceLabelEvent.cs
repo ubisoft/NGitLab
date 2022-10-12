@@ -13,7 +13,7 @@ namespace NGitLab.Mock
 
         public int ResourceId { get; set; }
 
-        public int ResourceType { get; set; }
+        public string ResourceType { get; set; }
 
         public Label Label { get; set; }
 

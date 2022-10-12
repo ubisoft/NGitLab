@@ -18,7 +18,7 @@ namespace NGitLab.Models
         public int ResourceId { get; set; }
 
         [JsonPropertyName("resource_type")]
-        public int ResourceType { get; set; }
+        public string ResourceType { get; set; }
 
         [JsonPropertyName("label")]
         public Label Label { get; set; }
