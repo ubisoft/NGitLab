@@ -53,7 +53,7 @@ jobs:
         gitlab: [
           'gitlab/gitlab-ee:14.9.5-ee.0',
           'gitlab/gitlab-ee:15.0.0-ee.0',
-          'gitlab/gitlab-ee:15.1.0-ee.0',
+          'gitlab/gitlab-ee:15.0.1-ee.0',
         ]
         configuration: [ Release ]
       fail-fast: false
