@@ -59,5 +59,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("skip_confirmation")]
         public bool? SkipConfirmation;
+
+        [JsonPropertyName("skip_reconfirmation")]
+        public bool? SkipReconfirmation;
     }
 }

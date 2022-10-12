@@ -196,11 +196,9 @@ namespace NGitLab.Tests
         private static User CreateNewUser(GitLabTestContext context)
         {
             var randomNumber = context.GetRandomNumber().ToString(CultureInfo.InvariantCulture);
-            return context.AdminClient.Users.Create(new UserUpsert
+            var createdUser = context.AdminClient.Users.Create(new UserUpsert
             {
                 Email = $"test{randomNumber}@test.pl",
-                PublicEmail = $"test{randomNumber}@gmail.com",
-                SkipConfirmation = true, // Skip confirmation and assume public email is verified
                 Bio = "bio",
                 CanCreateGroup = true,
                 IsAdmin = true,
@@ -215,6 +213,15 @@ namespace NGitLab.Tests
                 Username = $"ngitlabtestuser{randomNumber}",
                 WebsiteURL = "https://www.example.com",
             });
+
+            context.AdminClient.Users.Update(createdUser.Id, new UserUpsert
+            {
+                PublicEmail = $"test{randomNumber}@gmail.com",
+                SkipConfirmation = true,
+                SkipReconfirmation = true, // Skip confirmation and assume public email is verified
+            });
+
+            return createdUser;
         }
 
         // Comes from https://github.com/meziantou/Meziantou.GitLabClient/blob/main/test/Meziantou.GitLabClient.Tests/Internals/RsaSshKey.cs
