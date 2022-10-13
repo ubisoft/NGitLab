@@ -54,8 +54,9 @@ namespace NGitLab.Mock.Tests
             Assert.AreEqual(0, summary.Total.Error);
         }
 
-        [Test]
-        public void Test_create_pipeline_with_branch_ref_sets_sha()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void Test_create_pipeline_with_branch_ref_sets_sha(bool addCommitAfterBranching)
         {
             using var server = new GitLabServer();
             var user = server.Users.AddNew();
@@ -63,7 +64,17 @@ namespace NGitLab.Mock.Tests
             var commit = project.Repository.Commit(user, "test");
 
             var branch = "my-branch";
-            project.Repository.CreateBranch(branch);
+            if (addCommitAfterBranching)
+            {
+                project.Repository.CreateAndCheckoutBranch(branch);
+                var commit2 = project.Repository.Commit(user, "another test");
+                Assert.AreNotEqual(commit.Sha, commit2.Sha);
+                commit = commit2;
+            }
+            else
+            {
+                project.Repository.CreateBranch(branch);
+            }
 
             var pipeline = project.Pipelines.Add(branch, JobStatus.Success, user);
 
