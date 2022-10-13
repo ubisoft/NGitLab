@@ -271,5 +271,24 @@ namespace NGitLab.Mock.Tests
             Assert.IsTrue(sourceProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
                 "Since the merge failed, 'to-be-merged' branch should still be there");
         }
+
+        [Test]
+        public void Test_merge_request_with_head_pipeline()
+        {
+            using var server = new GitLabServer();
+            var user = server.Users.AddNew();
+            var project = user.Namespace.Projects.AddNew(project => project.Visibility = Models.VisibilityLevel.Internal);
+            var commit = project.Repository.Commit(user, "test");
+
+            var branch = "my-branch";
+            project.Repository.CreateAndCheckoutBranch(branch);
+            commit = project.Repository.Commit(user, "another test");
+
+            var mr = project.CreateMergeRequest(user, "A great title", "A great description", project.DefaultBranch, branch);
+            Assert.IsNull(mr.HeadPipeline, "No pipeline created yet on the source branch");
+
+            var pipeline = project.Pipelines.Add(branch, JobStatus.Success, user);
+            Assert.AreEqual(pipeline, mr.HeadPipeline, "A pipeline was just created on the source branch");
+        }
     }
 }

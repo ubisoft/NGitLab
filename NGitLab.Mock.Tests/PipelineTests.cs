@@ -53,5 +53,61 @@ namespace NGitLab.Mock.Tests
             Assert.AreEqual(0, summary.Total.Failed);
             Assert.AreEqual(0, summary.Total.Error);
         }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void Test_create_pipeline_with_branch_ref_sets_sha(bool addCommitAfterBranching)
+        {
+            using var server = new GitLabServer();
+            var user = server.Users.AddNew();
+            var project = user.Namespace.Projects.AddNew(project => project.Visibility = Models.VisibilityLevel.Internal);
+            var commit = project.Repository.Commit(user, "test");
+
+            var branch = "my-branch";
+            if (addCommitAfterBranching)
+            {
+                project.Repository.CreateAndCheckoutBranch(branch);
+                var commit2 = project.Repository.Commit(user, "another test");
+                Assert.AreNotEqual(commit.Sha, commit2.Sha);
+                commit = commit2;
+            }
+            else
+            {
+                project.Repository.CreateBranch(branch);
+            }
+
+            var pipeline = project.Pipelines.Add(branch, JobStatus.Success, user);
+
+            Assert.AreEqual(new Sha1(commit.Sha), pipeline.Sha);
+        }
+
+        [Test]
+        public void Test_create_pipeline_with_tag_ref_sets_sha()
+        {
+            using var server = new GitLabServer();
+            var user = server.Users.AddNew();
+            var project = user.Namespace.Projects.AddNew(project => project.Visibility = Models.VisibilityLevel.Internal);
+            var commit = project.Repository.Commit(user, "test");
+
+            var tag = "my-tag";
+            project.Repository.CreateTag(tag);
+
+            var pipeline = project.Pipelines.Add(tag, JobStatus.Success, user);
+
+            Assert.AreEqual(new Sha1(commit.Sha), pipeline.Sha);
+        }
+
+        [Test]
+        public void Test_create_pipeline_with_invalid_ref_does_not_set_sha()
+        {
+            using var server = new GitLabServer();
+            var user = server.Users.AddNew();
+            var project = user.Namespace.Projects.AddNew(project => project.Visibility = Models.VisibilityLevel.Internal);
+            var commit = project.Repository.Commit(user, "test");
+
+            var pipeline = project.Pipelines.Add("invalid_ref", JobStatus.Success, user);
+
+            Assert.AreEqual(default(Sha1), pipeline.Sha);
+        }
     }
 }
