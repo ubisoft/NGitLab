@@ -85,13 +85,25 @@ namespace NGitLab.Mock.Clients
 
                 issueToModify.Title = issueEdit.Title;
                 issueToModify.Description = issueEdit.Description;
-                CreateResourceLabelEvents(issueToModify.Labels, issueEdit.Labels.Split(','), issueToModify.Id);
-                issueToModify.Labels = issueEdit.Labels.Split(',');
+
+                var labelsEdit = issueEdit.Labels?.Split(',');
+
+                if (string.Equals(issueEdit.Labels, string.Empty))
+                {
+                    labelsEdit = Array.Empty<string>();
+                }
+
+                if (labelsEdit is not null)
+                {
+                    CreateResourceLabelEvents(issueToModify.Labels, labelsEdit, issueToModify.Id);
+                }
+
+                issueToModify.Labels = labelsEdit ?? issueToModify.Labels;
                 issueToModify.UpdatedAt = DateTimeOffset.UtcNow;
-                var isValidState = Enum.TryParse<IssueState>(issueEdit.State, out var requestedState);
+                var isValidState = Enum.TryParse<StateEvent>(issueEdit.State, out var requestedState);
                 if (isValidState)
                 {
-                    issueToModify.State = requestedState;
+                    issueToModify.State = (IssueState)requestedState;
                 }
 
                 return issueToModify.ToClientIssue();
@@ -404,7 +416,7 @@ namespace NGitLab.Mock.Clients
                 }
             }
 
-            foreach (var label in previousLabels)
+            foreach (var label in newLabels)
             {
                 if (!previousLabels.Any(l => string.Equals(l, label, StringComparison.OrdinalIgnoreCase)))
                 {

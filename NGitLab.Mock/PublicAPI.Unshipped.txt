@@ -968,6 +968,7 @@ NGitLab.Mock.ResourceLabelEvent.Label.set -> void
 NGitLab.Mock.ResourceLabelEvent.ResourceId.get -> int
 NGitLab.Mock.ResourceLabelEvent.ResourceId.set -> void
 NGitLab.Mock.ResourceLabelEvent.ResourceLabelEvent() -> void
+NGitLab.Mock.ResourceLabelEvent.ResourceType.get -> string
 NGitLab.Mock.ResourceLabelEvent.ResourceType.set -> void
 NGitLab.Mock.ResourceLabelEvent.ToClientResourceLabelEvent() -> NGitLab.Models.ResourceLabelEvent
 NGitLab.Mock.ResourceLabelEvent.User.get -> NGitLab.Models.Author
@@ -1012,6 +1013,9 @@ NGitLab.Mock.RunnerRef.Id.get -> int
 NGitLab.Mock.RunnerRef.RunnerRef(NGitLab.Mock.Runner runner) -> void
 NGitLab.Mock.RunnerRefCollection
 NGitLab.Mock.RunnerRefCollection.RunnerRefCollection(NGitLab.Mock.GitLabObject parent) -> void
+NGitLab.Mock.StateEvent
+NGitLab.Mock.StateEvent.close = 1 -> NGitLab.Mock.StateEvent
+NGitLab.Mock.StateEvent.open = 0 -> NGitLab.Mock.StateEvent
 NGitLab.Mock.StringExtensions
 NGitLab.Mock.SystemHook
 NGitLab.Mock.SystemHook.CreatedAt.get -> System.DateTime
