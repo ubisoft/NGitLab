@@ -391,6 +391,7 @@ NGitLab.Mock.GitLabServer.Dispose() -> void
 NGitLab.Mock.GitLabServer.Events.get -> NGitLab.Mock.EventCollection
 NGitLab.Mock.GitLabServer.GitLabServer() -> void
 NGitLab.Mock.GitLabServer.Groups.get -> NGitLab.Mock.GroupCollection
+NGitLab.Mock.GitLabServer.ResourceLabelEvents.get -> NGitLab.Mock.ResourceLabelEventCollection
 NGitLab.Mock.GitLabServer.SystemHooks.get -> NGitLab.Mock.SystemHookCollection
 NGitLab.Mock.GitLabServer.Url.get -> System.Uri
 NGitLab.Mock.GitLabServer.Url.set -> void
