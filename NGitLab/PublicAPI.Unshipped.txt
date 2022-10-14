@@ -2664,6 +2664,9 @@ NGitLab.Models.PushDataAction.Created = 0 -> NGitLab.Models.PushDataAction
 NGitLab.Models.PushDataAction.Pushed = 1 -> NGitLab.Models.PushDataAction
 NGitLab.Models.PushDataAction.Removed = 2 -> NGitLab.Models.PushDataAction
 NGitLab.Models.QueryAssigneeId
+NGitLab.Models.QueryParameterAttribute
+NGitLab.Models.QueryParameterAttribute.Name.get -> string
+NGitLab.Models.QueryParameterAttribute.QueryParameterAttribute(string name) -> void
 NGitLab.Models.RebaseResult
 NGitLab.Models.RebaseResult.RebaseInProgress -> bool
 NGitLab.Models.RebaseResult.RebaseResult() -> void

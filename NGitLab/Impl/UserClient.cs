@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Extensions;
@@ -31,6 +32,12 @@ namespace NGitLab.Impl
 
         public IEnumerable<User> Get(UserQuery query)
         {
+            var url = ConstructUrl(query);
+            return _api.Get().GetAll<User>(url);
+        }
+
+        internal string ConstructUrlTheOldWay(UserQuery query)
+        {
             var url = User.Url;
 
             url = Utils.AddParameter(url, "active", query.IsActive);
@@ -51,7 +58,13 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "two_factor", query.TwoFactor);
             url = Utils.AddParameter(url, "admins", query.IsAdmin);
 
-            return _api.Get().GetAll<User>(url);
+            return url;
+        }
+
+        internal string ConstructUrl(UserQuery query)
+        {
+            var url = User.Url;
+            return QueryStringHelper.BuildAndAppendQueryString(url, query);
         }
 
         public User Create(UserUpsert user) => _api.Post().With(user).To<User>(User.Url);

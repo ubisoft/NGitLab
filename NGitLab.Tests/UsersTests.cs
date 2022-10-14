@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using NGitLab.Impl;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -182,6 +183,62 @@ namespace NGitLab.Tests
             Assert.AreEqual(HttpStatusCode.Forbidden, exception.StatusCode);
         }
 
+        [TestCase(null, null, null, null, null, null, null, null, null, null, null, null, true, false, null, null, null)]
+        [TestCase(false, true, false, true, "me", "what-to-search-for", 100, "username", "asc", "external-uid", "some-provider", false, true, false, true, TwoFactorState.Disabled, true)]
+        [TestCase(true, false, true, false, "", "", 100, "", "", "", "", true, false, true, false, TwoFactorState.Enabled, false)]
+        public async Task ValidateThatQueryStringHelperWorks(
+            bool? active,
+            bool? blocked,
+            bool? external,
+            bool? excludeExternal,
+            string username,
+            string search,
+            int? perPage,
+            string orderBy,
+            string sort,
+            string externalUid,
+            string provider,
+            bool? withoutProjects,
+            bool createdAfter,
+            bool createdBefore,
+            bool? withCustomAttributes,
+            TwoFactorState? twoFactor,
+            bool? isAdmin)
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var query = new UserQuery
+            {
+                IsActive = active,
+                IsBlocked = blocked,
+                IsExternal = external,
+                ExcludeExternal = excludeExternal,
+                Username = username,
+                Search = search,
+                PerPage = perPage,
+                OrderBy = orderBy,
+                Sort = sort,
+                ExternalUid = externalUid,
+                Provider = provider,
+                WithoutProjects = withoutProjects,
+                CreatedBefore = createdBefore ? new DateTime(2020, 01, 01, 0, 0, 0, DateTimeKind.Utc) : null,
+                CreatedAfter = createdAfter ? new DateTime(2019, 01, 01, 0, 0, 0, DateTimeKind.Utc) : null,
+                WithCustomAttributes = withCustomAttributes,
+                TwoFactor = twoFactor,
+                IsAdmin = isAdmin,
+            };
+            var userClient = context.Client.Users as UserClient;
+            var oldUrl = userClient.ConstructUrlTheOldWay(query);
+            var newUrl = userClient.ConstructUrl(query);
+
+            const string expectedPrefix = "/users?";
+            StringAssert.StartsWith(expectedPrefix, oldUrl);
+            StringAssert.StartsWith(expectedPrefix, newUrl);
+
+            AssertQueryStringsAreEquivalent(
+                oldUrl.Substring(expectedPrefix.Length),
+                newUrl.Substring(expectedPrefix.Length));
+        }
+
         private static User CreateNewUser(GitLabTestContext context)
         {
             var randomNumber = context.GetRandomNumber().ToString(CultureInfo.InvariantCulture);
@@ -202,6 +259,33 @@ namespace NGitLab.Tests
                 Username = $"ngitlabtestuser{randomNumber}",
                 WebsiteURL = "https://www.example.com",
             });
+        }
+
+        private static void AssertQueryStringsAreEquivalent(string query1, string query2)
+        {
+            var params1 = ExtractAndSortQueryParameters(query1);
+            var params2 = ExtractAndSortQueryParameters(query2);
+
+            if (!params1.SequenceEqual(params2, StringComparer.Ordinal))
+            {
+                Assert.Fail($"Query parameters differ:{Environment.NewLine}query1 = {string.Join('&', params1)}{Environment.NewLine}query2 = {string.Join('&', params2)}");
+            }
+
+            static string[] ExtractAndSortQueryParameters(string query)
+            {
+                return query.Split('&')
+                    .Where(qp =>
+                    {
+                        var kvPair = qp.Split('=');
+                        var value = kvPair.Skip(1).FirstOrDefault();
+
+                        // Ignore query parameters with no value, such as 'provider=',
+                        // as the new way of constructing query strings will omit those.
+                        return !string.IsNullOrEmpty(value);
+                    })
+                    .OrderBy(qp => qp)
+                    .ToArray();
+            }
         }
 
         // Comes from https://github.com/meziantou/Meziantou.GitLabClient/blob/main/test/Meziantou.GitLabClient.Tests/Internals/RsaSshKey.cs
