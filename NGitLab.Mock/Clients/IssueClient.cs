@@ -385,7 +385,7 @@ namespace NGitLab.Mock.Clients
             return issues;
         }
 
-        public void CreateResourceLabelEvents(string[] previousLabels, string[] newLabels, int resourceId)
+        private void CreateResourceLabelEvents(string[] previousLabels, string[] newLabels, int resourceId)
         {
             var currentUser = Context.User;
 
