@@ -103,7 +103,6 @@ namespace NGitLab.Mock.Clients
 
                 if (labelsEdit is not null)
                 {
-
                     CreateResourceLabelEvents(issueToModify.Labels, labelsEdit, issueToModify.Id);
                     issueToModify.Labels = labelsEdit;
                 }
