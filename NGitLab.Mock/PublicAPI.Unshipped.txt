@@ -391,6 +391,7 @@ NGitLab.Mock.GitLabServer.Dispose() -> void
 NGitLab.Mock.GitLabServer.Events.get -> NGitLab.Mock.EventCollection
 NGitLab.Mock.GitLabServer.GitLabServer() -> void
 NGitLab.Mock.GitLabServer.Groups.get -> NGitLab.Mock.GroupCollection
+NGitLab.Mock.GitLabServer.ResourceLabelEvents.get -> NGitLab.Mock.ResourceLabelEventCollection
 NGitLab.Mock.GitLabServer.SystemHooks.get -> NGitLab.Mock.SystemHookCollection
 NGitLab.Mock.GitLabServer.Url.get -> System.Uri
 NGitLab.Mock.GitLabServer.Url.set -> void
@@ -956,6 +957,25 @@ NGitLab.Mock.Repository.Rebase(NGitLab.Mock.UserRef user, string sourceBranch, s
 NGitLab.Mock.Repository.RemoveBranch(string branchName) -> void
 NGitLab.Mock.Repository.SetRepoConfig<T>(string name, T value) -> void
 NGitLab.Mock.Repository.UpdateReleaseTag(string tagName, string releaseNotes) -> NGitLab.Mock.ReleaseTag
+NGitLab.Mock.ResourceLabelEvent
+NGitLab.Mock.ResourceLabelEvent.Action.get -> NGitLab.Models.ResourceLabelEventAction
+NGitLab.Mock.ResourceLabelEvent.Action.set -> void
+NGitLab.Mock.ResourceLabelEvent.CreatedAt.get -> System.DateTime
+NGitLab.Mock.ResourceLabelEvent.CreatedAt.set -> void
+NGitLab.Mock.ResourceLabelEvent.Id.get -> int
+NGitLab.Mock.ResourceLabelEvent.Id.set -> void
+NGitLab.Mock.ResourceLabelEvent.Label.get -> NGitLab.Mock.Label
+NGitLab.Mock.ResourceLabelEvent.Label.set -> void
+NGitLab.Mock.ResourceLabelEvent.ResourceId.get -> int
+NGitLab.Mock.ResourceLabelEvent.ResourceId.set -> void
+NGitLab.Mock.ResourceLabelEvent.ResourceLabelEvent() -> void
+NGitLab.Mock.ResourceLabelEvent.ResourceType.get -> string
+NGitLab.Mock.ResourceLabelEvent.ResourceType.set -> void
+NGitLab.Mock.ResourceLabelEvent.ToClientResourceLabelEvent() -> NGitLab.Models.ResourceLabelEvent
+NGitLab.Mock.ResourceLabelEvent.User.get -> NGitLab.Models.Author
+NGitLab.Mock.ResourceLabelEvent.User.set -> void
+NGitLab.Mock.ResourceLabelEventCollection
+NGitLab.Mock.ResourceLabelEventCollection.ResourceLabelEventCollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.Runner
 NGitLab.Mock.Runner.Active.get -> bool
 NGitLab.Mock.Runner.Active.set -> void
@@ -994,6 +1014,9 @@ NGitLab.Mock.RunnerRef.Id.get -> int
 NGitLab.Mock.RunnerRef.RunnerRef(NGitLab.Mock.Runner runner) -> void
 NGitLab.Mock.RunnerRefCollection
 NGitLab.Mock.RunnerRefCollection.RunnerRefCollection(NGitLab.Mock.GitLabObject parent) -> void
+NGitLab.Mock.StateEvent
+NGitLab.Mock.StateEvent.close = 1 -> NGitLab.Mock.StateEvent
+NGitLab.Mock.StateEvent.open = 0 -> NGitLab.Mock.StateEvent
 NGitLab.Mock.StringExtensions
 NGitLab.Mock.SystemHook
 NGitLab.Mock.SystemHook.CreatedAt.get -> System.DateTime
@@ -1092,6 +1115,7 @@ override NGitLab.Mock.ProjectIssueNote.NoticableId.get -> int
 override NGitLab.Mock.ProjectIssueNote.NoticableIid.get -> int
 override NGitLab.Mock.ProtectedBranchCollection.Add(NGitLab.Mock.ProtectedBranch branch) -> void
 override NGitLab.Mock.ReleaseCollection.Add(NGitLab.Mock.ReleaseInfo release) -> void
+override NGitLab.Mock.ResourceLabelEventCollection.Add(NGitLab.Mock.ResourceLabelEvent item) -> void
 override NGitLab.Mock.RunnerCollection.Add(NGitLab.Mock.Runner item) -> void
 override NGitLab.Mock.RunnerRef.Equals(object obj) -> bool
 override NGitLab.Mock.RunnerRef.GetHashCode() -> int
