@@ -55,6 +55,7 @@ namespace NGitLab.Mock
             instance.Username = UserName;
             instance.Name = Name;
             instance.Email = Email;
+            instance.State = State.ToString();
             instance.AvatarURL = AvatarUrl;
             instance.CreatedAt = CreatedAt;
             instance.Identities = Identities;
