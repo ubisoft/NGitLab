@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -48,7 +49,7 @@ namespace NGitLab.Tests.Release
             Assert.That(release.Description, Is.EqualTo("test updated"));
 
             tagsClient.Delete("0.7");
-            Assert.IsNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", System.StringComparison.Ordinal)));
+            Assert.IsNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)));
         }
 
         [Test]
@@ -93,10 +94,10 @@ namespace NGitLab.Tests.Release
             Assert.IsTrue(link.External);
 
             linksClient.Delete(link.Id.Value);
-            Assert.IsNull(linksClient.All.FirstOrDefault(x => string.Equals(x.Name, "test link", System.StringComparison.Ordinal)));
+            Assert.IsNull(linksClient.All.FirstOrDefault(x => string.Equals(x.Name, "test link", StringComparison.Ordinal)));
 
             tagsClient.Delete("0.7");
-            Assert.IsNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", System.StringComparison.Ordinal)));
+            Assert.IsNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)));
         }
     }
 }

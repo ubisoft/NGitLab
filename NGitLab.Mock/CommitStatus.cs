@@ -1,4 +1,6 @@
-﻿namespace NGitLab.Mock
+﻿using NGitLab.Models;
+
+namespace NGitLab.Mock
 {
     public sealed class CommitStatus : GitLabObject
     {
@@ -18,9 +20,9 @@
 
         public int? Coverage { get; set; }
 
-        public Models.CommitStatusCreate ToClientCommitStatusCreate()
+        public CommitStatusCreate ToClientCommitStatusCreate()
         {
-            return new Models.CommitStatusCreate
+            return new CommitStatusCreate
             {
                 Name = Name,
                 TargetUrl = TargetUrl,

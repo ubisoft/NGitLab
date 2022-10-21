@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
@@ -18,7 +19,7 @@ namespace NGitLab.Mock.Clients
 
         private MergeRequest GetMergeRequest() => GetMergeRequest(_projectId, _mergeRequestIid);
 
-        public IEnumerable<Models.MergeRequestDiscussion> All
+        public IEnumerable<MergeRequestDiscussion> All
         {
             get
             {
@@ -29,7 +30,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public Models.MergeRequestDiscussion Add(Models.MergeRequestComment comment)
+        public MergeRequestDiscussion Add(Models.MergeRequestComment comment)
         {
             return Add(new MergeRequestDiscussionCreate
             {
@@ -38,7 +39,7 @@ namespace NGitLab.Mock.Clients
             });
         }
 
-        public Models.MergeRequestDiscussion Add(MergeRequestDiscussionCreate commentCreate)
+        public MergeRequestDiscussion Add(MergeRequestDiscussionCreate commentCreate)
         {
             EnsureUserIsAuthenticated();
 
@@ -56,7 +57,7 @@ namespace NGitLab.Mock.Clients
 
                 GetMergeRequest().Comments.Add(comment);
 
-                return new MergeRequestDiscussion()
+                return new MergeRequestDiscussion
                 {
                     Id = comment.ThreadId,
                     IndividualNote = false,
@@ -70,7 +71,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var discussions = GetMergeRequest().GetDiscussions();
-                var discussion = discussions.First(x => string.Equals(x.Id, resolve.Id, System.StringComparison.Ordinal));
+                var discussion = discussions.First(x => string.Equals(x.Id, resolve.Id, StringComparison.Ordinal));
                 if (discussion == null)
                     throw new GitLabNotFoundException();
 
@@ -88,7 +89,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var discussions = GetMergeRequest().GetDiscussions();
-                var discussion = discussions.First(x => string.Equals(x.Id, discussionId, System.StringComparison.Ordinal));
+                var discussion = discussions.First(x => string.Equals(x.Id, discussionId, StringComparison.Ordinal));
                 if (discussion == null)
                     throw new GitLabNotFoundException();
 

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -19,7 +20,7 @@ namespace NGitLab.Tests
                 {
                     if (typeof(Task).IsAssignableFrom(method.ReturnType))
                     {
-                        if (!method.Name.EndsWith("Async", System.StringComparison.Ordinal))
+                        if (!method.Name.EndsWith("Async", StringComparison.Ordinal))
                         {
                             Assert.Fail($"The method '{method}' must end with 'Async'");
                         }
@@ -36,7 +37,7 @@ namespace NGitLab.Tests
                            Assert.Fail($"The last parameter of method '{method}' must be of type 'CancellationToken' and named 'cancellationToken'");
                         }
 
-                        if (!string.Equals(parameterInfo.Name, "cancellationToken", System.StringComparison.Ordinal))
+                        if (!string.Equals(parameterInfo.Name, "cancellationToken", StringComparison.Ordinal))
                         {
                             Assert.Fail($"The parameter '{parameterInfo.Name}' of '{method}' must be named 'cancellationToken'");
                         }
@@ -51,7 +52,7 @@ namespace NGitLab.Tests
 
                     if (method.ReturnType.IsGenericType && typeof(GitLabCollectionResponse<>).IsAssignableFrom(method.ReturnType.GetGenericTypeDefinition()))
                     {
-                        if (!method.Name.EndsWith("Async", System.StringComparison.Ordinal))
+                        if (!method.Name.EndsWith("Async", StringComparison.Ordinal))
                         {
                             Assert.Fail($"The method '{method}' must end with 'Async'");
                         }

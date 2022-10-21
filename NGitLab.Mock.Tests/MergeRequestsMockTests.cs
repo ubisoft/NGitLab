@@ -277,7 +277,7 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabServer();
             var user = server.Users.AddNew();
-            var project = user.Namespace.Projects.AddNew(project => project.Visibility = Models.VisibilityLevel.Internal);
+            var project = user.Namespace.Projects.AddNew(project => project.Visibility = VisibilityLevel.Internal);
             var commit = project.Repository.Commit(user, "test");
 
             var branch = "my-branch";

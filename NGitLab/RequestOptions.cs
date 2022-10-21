@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Impl;
 
 namespace NGitLab
 {
@@ -54,9 +55,9 @@ namespace NGitLab
             // See https://developer.mozilla.org/en-US/docs/Glossary/Safe/HTTP
             // If there is no HTTP request method specified, carry on the predicate assessment.
             if (gitLabException.MethodType.HasValue &&
-                gitLabException.MethodType != Impl.MethodType.Get &&
-                gitLabException.MethodType != Impl.MethodType.Head &&
-                gitLabException.MethodType != Impl.MethodType.Options)
+                gitLabException.MethodType != MethodType.Get &&
+                gitLabException.MethodType != MethodType.Head &&
+                gitLabException.MethodType != MethodType.Options)
             {
                 return false;
             }

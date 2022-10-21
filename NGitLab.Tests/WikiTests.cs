@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
@@ -16,7 +17,7 @@ namespace NGitLab.Tests
             var wikiClient = context.Client.GetWikiClient(project.Id);
 
             // Create a page
-            var page = wikiClient.Create(new Models.WikiPageCreate
+            var page = wikiClient.Create(new WikiPageCreate
             {
                 Title = "Titi/Test Title",
                 Content = "Test Content",
@@ -27,7 +28,7 @@ namespace NGitLab.Tests
             Assert.That(page.Slug, Is.EqualTo("Titi/Test-Title"));
 
             // Edit the page
-            page = wikiClient.Update(page.Slug, new Models.WikiPageUpdate
+            page = wikiClient.Update(page.Slug, new WikiPageUpdate
             {
                 Content = "Edited content",
                 Title = "titi/toto/Edited Title",

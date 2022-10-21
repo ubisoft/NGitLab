@@ -153,7 +153,7 @@ namespace NGitLab.Mock.Clients
         protected void EnsureUserIsAuthenticated()
         {
             if (Context.User == null)
-                throw new GitLabException { StatusCode = System.Net.HttpStatusCode.Unauthorized };
+                throw new GitLabException { StatusCode = HttpStatusCode.Unauthorized };
         }
 
         internal enum ProjectPermission

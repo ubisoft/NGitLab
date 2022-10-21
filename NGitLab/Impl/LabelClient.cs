@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using NGitLab.Models;
@@ -29,12 +30,12 @@ namespace NGitLab.Impl
 
         public Label GetLabel(int projectId, string name)
         {
-            return ForProject(projectId).FirstOrDefault((x) => string.Equals(x.Name, name, System.StringComparison.Ordinal));
+            return ForProject(projectId).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
         }
 
         public Label GetGroupLabel(int groupId, string name)
         {
-            return ForGroup(groupId).FirstOrDefault((x) => string.Equals(x.Name, name, System.StringComparison.Ordinal));
+            return ForGroup(groupId).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
         }
 
         public Label Create(LabelCreate label)

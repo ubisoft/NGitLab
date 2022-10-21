@@ -1,4 +1,5 @@
 ﻿using System;
+using NGitLab.Models;
 
 namespace NGitLab.Mock
 {
@@ -38,9 +39,9 @@ namespace NGitLab.Mock
             return new UserRef(user);
         }
 
-        public Models.Author ToClientAuthor()
+        public Author ToClientAuthor()
         {
-            return new Models.Author
+            return new Author
             {
                 Id = Id,
                 Username = UserName,
@@ -52,9 +53,9 @@ namespace NGitLab.Mock
             };
         }
 
-        public Models.Assignee ToClientAssignee()
+        public Assignee ToClientAssignee()
         {
-            return new Models.Assignee
+            return new Assignee
             {
                 Id = Id,
                 Username = UserName,

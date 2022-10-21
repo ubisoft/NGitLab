@@ -7,6 +7,14 @@ using System.Linq;
 using System.Threading;
 using LibGit2Sharp;
 using NGitLab.Mock.Clients;
+using NGitLab.Models;
+using Blob = LibGit2Sharp.Blob;
+using Branch = LibGit2Sharp.Branch;
+using Commit = LibGit2Sharp.Commit;
+using Identity = LibGit2Sharp.Identity;
+using ObjectType = NGitLab.Models.ObjectType;
+using Tag = LibGit2Sharp.Tag;
+using Tree = NGitLab.Models.Tree;
 
 namespace NGitLab.Mock
 {
@@ -163,7 +171,7 @@ namespace NGitLab.Mock
             return repository.Commit(message, author, committer);
         }
 
-        public Commit Commit(Models.CommitCreate commitCreate)
+        public Commit Commit(CommitCreate commitCreate)
         {
             var repo = GetGitRepository();
             var mustCreateBranch = !repo.Commits.Any();
@@ -405,7 +413,7 @@ namespace NGitLab.Mock
             {
                 if (request.RefName.Contains("..", StringComparison.Ordinal))
                 {
-                    var refs = request.RefName.Split(new string[] { ".." }, StringSplitOptions.RemoveEmptyEntries);
+                    var refs = request.RefName.Split(new[] { ".." }, StringSplitOptions.RemoveEmptyEntries);
                     filter.ExcludeReachableFrom = refs[0];
                     filter.IncludeReachableFrom = refs[1];
                 }
@@ -430,7 +438,7 @@ namespace NGitLab.Mock
             }
         }
 
-        public Models.FileData GetFile(string filePath, string @ref)
+        public FileData GetFile(string filePath, string @ref)
         {
             var repo = GetGitRepository();
             Commands.Checkout(repo, @ref);
@@ -443,7 +451,7 @@ namespace NGitLab.Mock
 
             var fileInfo = new FileInfo(fileCompletePath);
             var commit = GetCommit(@ref);
-            return new Models.FileData
+            return new FileData
             {
                 Name = fileInfo.Name,
                 Path = filePath,
@@ -457,7 +465,7 @@ namespace NGitLab.Mock
             };
         }
 
-        internal IEnumerable<Models.Tree> GetTree()
+        internal IEnumerable<Tree> GetTree()
         {
             var repo = GetGitRepository();
             Commands.Checkout(repo, Project.DefaultBranch);
@@ -468,7 +476,7 @@ namespace NGitLab.Mock
             }
         }
 
-        internal IEnumerable<Models.Tree> GetTree(Models.RepositoryGetTreeOptions repositoryGetTreeOptions)
+        internal IEnumerable<Tree> GetTree(RepositoryGetTreeOptions repositoryGetTreeOptions)
         {
             var repo = GetGitRepository();
             var commitOrBranch = string.IsNullOrEmpty(repositoryGetTreeOptions.Ref) ? Project.DefaultBranch : repositoryGetTreeOptions.Ref;
@@ -493,19 +501,19 @@ namespace NGitLab.Mock
                 repo.Network.Remotes[forkRemoteName] ??
                 repo.Network.Remotes.Add(forkRemoteName, fork.Repository.FullPath);
 
-            Commands.Fetch(repo, forkRemote.Name, new[] { branch }, new FetchOptions { }, logMessage: "");
+            Commands.Fetch(repo, forkRemote.Name, new[] { branch }, new FetchOptions(), logMessage: "");
 
             return $"remotes/{forkRemote.Name}/{branch}";
         }
 
-        private static Models.Tree GetTreeItem(string repositoryPath, string filePath)
+        private static Tree GetTreeItem(string repositoryPath, string filePath)
         {
             var fileAttribute = System.IO.File.GetAttributes(filePath);
-            return new Models.Tree
+            return new Tree
             {
                 Name = Path.GetFileName(filePath),
                 Path = GetTreeRelativePath(filePath),
-                Type = fileAttribute.HasFlag(FileAttributes.Directory) ? Models.ObjectType.tree : Models.ObjectType.blob,
+                Type = fileAttribute.HasFlag(FileAttributes.Directory) ? ObjectType.tree : ObjectType.blob,
             };
 
             string GetTreeRelativePath(string fileFullPath)
@@ -616,7 +624,7 @@ namespace NGitLab.Mock
             }
         }
 
-        private Commit CreateOnNonBareRepo(Models.CommitCreate commit)
+        private Commit CreateOnNonBareRepo(CommitCreate commit)
         {
             var repo = GetGitRepository();
             ApplyActions(commit);
@@ -628,7 +636,7 @@ namespace NGitLab.Mock
             return newCommit;
         }
 
-        private void ApplyActions(Models.CommitCreate commit)
+        private void ApplyActions(CommitCreate commit)
         {
             var repo = GetGitRepository();
 

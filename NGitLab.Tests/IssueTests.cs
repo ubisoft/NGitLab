@@ -133,9 +133,7 @@ namespace NGitLab.Tests
             var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2", Confidential = true });
             var issue3 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title3" });
 
-            var issues = issuesClient.Get(new IssueQuery
-            {
-            }).Where(i => i.ProjectId == project.Id).ToList();
+            var issues = issuesClient.Get(new IssueQuery()).Where(i => i.ProjectId == project.Id).ToList();
 
             Assert.AreEqual(3, issues.Count);
         }
@@ -242,7 +240,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(initialDueDate, issue1.DueDate);
 
             var updatedDueDate = new DateTime(2022, 2, 1);
-            var updatedIssue = issuesClient.Edit(new IssueEdit()
+            var updatedIssue = issuesClient.Edit(new IssueEdit
             {
                 Id = project.Id,
                 IssueId = issue.IssueId,

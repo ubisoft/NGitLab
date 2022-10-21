@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -72,7 +73,7 @@ namespace NGitLab.Tests
             {
                 return groupClient[groupId];
             }
-            catch (GitLabException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            catch (GitLabException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
                 return null;
             }

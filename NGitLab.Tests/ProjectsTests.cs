@@ -172,7 +172,7 @@ namespace NGitLab.Tests
             var project = context.CreateProject(p => p.VisibilityLevel = VisibilityLevel.Internal);
             var projectClient = context.Client.Projects;
 
-            var query = new SingleProjectQuery()
+            var query = new SingleProjectQuery
             {
                 Statistics = true,
             };
@@ -338,7 +338,7 @@ namespace NGitLab.Tests
                 RawContent = "this project should only live during the unit tests, you can delete if you find some",
             });
 
-            var forkedProject = projectClient.Fork(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkProject()
+            var forkedProject = projectClient.Fork(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkProject
             {
                 Path = createdProject.Path + "-fork",
                 Name = createdProject.Name + "Fork",
@@ -352,7 +352,7 @@ namespace NGitLab.Tests
 
             // Create a merge request with AllowCollaboration (only testable on a fork, also the source branch must not be protected)
             context.Client.GetRepository(forkedProject.Id).Branches.Create(new BranchCreate { Name = "branch-test", Ref = createdProject.DefaultBranch });
-            var mr = context.Client.GetMergeRequest(forkedProject.Id).Create(new MergeRequestCreate()
+            var mr = context.Client.GetMergeRequest(forkedProject.Id).Create(new MergeRequestCreate
             {
                 AllowCollaboration = true,
                 Description = "desc",

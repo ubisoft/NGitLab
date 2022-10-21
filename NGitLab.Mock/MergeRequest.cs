@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using NGitLab.Models;
+using Commit = LibGit2Sharp.Commit;
 
 namespace NGitLab.Mock
 {
@@ -186,7 +187,7 @@ namespace NGitLab.Mock
             }
         }
 
-        public IEnumerable<LibGit2Sharp.Commit> Commits
+        public IEnumerable<Commit> Commits
         {
             get
             {
@@ -335,9 +336,9 @@ namespace NGitLab.Mock
             }
         }
 
-        internal LibGit2Sharp.Commit SourceBranchHeadCommit => SourceProject?.Repository?.GetBranchTipCommit(SourceBranch);
+        internal Commit SourceBranchHeadCommit => SourceProject?.Repository?.GetBranchTipCommit(SourceBranch);
 
-        internal LibGit2Sharp.Commit TargetBranchHeadCommit => Project?.Repository?.GetBranchTipCommit(TargetBranch);
+        internal Commit TargetBranchHeadCommit => Project?.Repository?.GetBranchTipCommit(TargetBranch);
 
         private void RefreshInternalState()
         {

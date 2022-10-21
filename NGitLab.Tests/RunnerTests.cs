@@ -19,7 +19,7 @@ namespace NGitLab.Tests
             var project2 = context.CreateProject(initializeWithCommits: true);
 
             var runnersClient = context.Client.Runners;
-            var runner = runnersClient.Register(new RunnerRegister() { Token = project1.RunnersToken });
+            var runner = runnersClient.Register(new RunnerRegister { Token = project1.RunnersToken });
             runnersClient.EnableRunner(project2.Id, new RunnerId(runner.Id));
 
             runnersClient.DisableRunner(project1.Id, new RunnerId(runner.Id));
@@ -39,7 +39,7 @@ namespace NGitLab.Tests
             var project = context.CreateProject(initializeWithCommits: true);
             var project2 = context.CreateProject(initializeWithCommits: true);
             var runnersClient = context.Client.Runners;
-            var runner = runnersClient.Register(new RunnerRegister() { Token = project.RunnersToken });
+            var runner = runnersClient.Register(new RunnerRegister { Token = project.RunnersToken });
             runnersClient.EnableRunner(project2.Id, new RunnerId(runner.Id));
 
             var result = runnersClient.OfProject(project.Id).ToList();
@@ -57,7 +57,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject(initializeWithCommits: true);
             var runnersClient = context.Client.Runners;
-            var runner = runnersClient.Register(new RunnerRegister() { Token = project.RunnersToken });
+            var runner = runnersClient.Register(new RunnerRegister { Token = project.RunnersToken });
 
             using (await context.StartRunnerForOneJobAsync(project.Id))
             {
@@ -78,7 +78,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject(initializeWithCommits: true);
             var runnersClient = context.Client.Runners;
-            var runner = runnersClient.Register(new RunnerRegister() { Token = project.RunnersToken, Locked = false });
+            var runner = runnersClient.Register(new RunnerRegister { Token = project.RunnersToken, Locked = false });
             Assert.IsFalse(runner.Locked, "Runner should not be locked.");
 
             runner = runnersClient.Update(runner.Id, new RunnerUpdate { Locked = true });
@@ -95,7 +95,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject(initializeWithCommits: true);
             var runnersClient = context.Client.Runners;
-            var runner = runnersClient.Register(new RunnerRegister() { Token = project.RunnersToken, RunUntagged = false, TagList = new[] { "tag" } });
+            var runner = runnersClient.Register(new RunnerRegister { Token = project.RunnersToken, RunUntagged = false, TagList = new[] { "tag" } });
             Assert.False(runner.RunUntagged);
 
             runner = runnersClient.Update(runner.Id, new RunnerUpdate { RunUntagged = true });

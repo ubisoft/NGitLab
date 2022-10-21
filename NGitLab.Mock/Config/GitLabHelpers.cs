@@ -1,11 +1,12 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NGitLab.Models;
-
-#nullable enable
+using Commit = LibGit2Sharp.Commit;
 
 #pragma warning disable RS0026 // Adding optional parameters to public methods
 #pragma warning disable RS0037 // Activate nullable values in public API
@@ -964,7 +965,7 @@ namespace NGitLab.Mock.Config
             foreach (var group in config.Groups.OrderBy(x =>
                 string.IsNullOrEmpty(x.Namespace) ? x.Name : $"{x.Namespace}/{x.Name}"))
             {
-                CreateGroup(server, @group);
+                CreateGroup(server, group);
             }
 
             foreach (var project in config.Projects)
@@ -1087,7 +1088,7 @@ namespace NGitLab.Mock.Config
             var group = GetOrCreateGroup(server, project.Namespace ?? Guid.NewGuid().ToString("D"));
             group.Projects.Add(prj);
 
-            var aliases = new Dictionary<string, LibGit2Sharp.Commit>(StringComparer.Ordinal);
+            var aliases = new Dictionary<string, Commit>(StringComparer.Ordinal);
             foreach (var commit in project.Commits)
             {
                 var cmt = CreateCommit(server, prj, commit);
@@ -1162,12 +1163,12 @@ namespace NGitLab.Mock.Config
             }
         }
 
-        private static LibGit2Sharp.Commit CreateCommit(GitLabServer server, Project prj, GitLabCommit commit)
+        private static Commit CreateCommit(GitLabServer server, Project prj, GitLabCommit commit)
         {
             var username = commit.User ?? commit.Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
             var user = GetOrCreateUser(server, username);
             var targetBranch = commit.TargetBranch;
-            LibGit2Sharp.Commit cmt;
+            Commit cmt;
             if (string.IsNullOrEmpty(targetBranch))
             {
                 var branchExists = string.IsNullOrEmpty(commit.SourceBranch) || prj.Repository.GetAllBranches().Any(x => string.Equals(x.FriendlyName, commit.SourceBranch, StringComparison.Ordinal));
@@ -1411,7 +1412,7 @@ namespace NGitLab.Mock.Config
                 cmt.CreatedAt = cmt.UpdatedAt;
         }
 
-        private static Pipeline CreatePipeline(GitLabServer server, Mock.GitLabObject parent, GitLabPipeline pipeline, Dictionary<string, LibGit2Sharp.Commit> aliases)
+        private static Pipeline CreatePipeline(GitLabServer server, Mock.GitLabObject parent, GitLabPipeline pipeline, Dictionary<string, Commit> aliases)
         {
             if (!aliases.TryGetValue(pipeline.Commit ?? throw new ArgumentException("pipeline.Commit == null", nameof(pipeline)), out var commit))
                 throw new InvalidOperationException($"Cannot find commit from alias '{pipeline.Commit}'");
@@ -1478,7 +1479,7 @@ namespace NGitLab.Mock.Config
             return ppl;
         }
 
-        private static Job CreateJob(GitLabServer server, Pipeline pipeline, GitLabJob job, DateTime maxCreatedAt, Dictionary<string, LibGit2Sharp.Commit> aliases)
+        private static Job CreateJob(GitLabServer server, Pipeline pipeline, GitLabJob job, DateTime maxCreatedAt, Dictionary<string, Commit> aliases)
         {
             var jb = new Job
             {
@@ -1660,7 +1661,7 @@ namespace NGitLab.Mock.Config
             };
         }
 
-        private static GitLabCommit ToConfig(LibGit2Sharp.Commit commit)
+        private static GitLabCommit ToConfig(Commit commit)
         {
             return new GitLabCommit
             {

@@ -57,7 +57,7 @@ namespace NGitLab.Tests.RepositoryClient
                             new CreateCommitAction
                             {
                                 Action = "create",
-                                Content = $"test",
+                                Content = "test",
                                 FilePath =  // Spread files among the root directory and its 'subfolder'
                                     i % 2 == 0 ?
                                     $"test{i.ToString(CultureInfo.InvariantCulture)}.md" :

@@ -5,10 +5,6 @@ namespace NGitLab.Mock
 {
     public sealed class ReleaseInfo : GitLabObject
     {
-        public ReleaseInfo()
-        {
-        }
-
         public Project Project => (Project)Parent;
 
         public string TagName { get; set; }

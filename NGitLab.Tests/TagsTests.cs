@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -24,11 +25,11 @@ namespace NGitLab.Tests
             });
 
             Assert.IsNotNull(result);
-            Assert.IsNotNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "v0.5", System.StringComparison.Ordinal)));
-            Assert.IsNotNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Message, "Test message", System.StringComparison.Ordinal)));
+            Assert.IsNotNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "v0.5", StringComparison.Ordinal)));
+            Assert.IsNotNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Message, "Test message", StringComparison.Ordinal)));
 
             tagsClient.Delete("v0.5");
-            Assert.IsNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "v0.5", System.StringComparison.Ordinal)));
+            Assert.IsNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "v0.5", StringComparison.Ordinal)));
         }
     }
 }

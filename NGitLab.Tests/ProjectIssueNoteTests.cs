@@ -18,7 +18,7 @@ namespace NGitLab.Tests
             var noteClient = context.Client.GetProjectIssueNoteClient(project.Id);
 
             // Create
-            var noteCreate = new ProjectIssueNoteCreate()
+            var noteCreate = new ProjectIssueNoteCreate
             {
                 IssueId = issue.IssueId,
                 Body = "Issue Body",
@@ -32,7 +32,7 @@ namespace NGitLab.Tests
             Assert.That(getNote.Body, Is.EqualTo(noteCreate.Body));
 
             // Edit
-            var noteEdit = new ProjectIssueNoteEdit()
+            var noteEdit = new ProjectIssueNoteEdit
             {
                 IssueId = issue.IssueId,
                 NoteId = createdNote.NoteId,
@@ -51,7 +51,7 @@ namespace NGitLab.Tests
             var issue = context.Client.Issues.Create(new IssueCreate { Id = project.Id, Title = "test", Description = "test" });
             var noteClient = context.Client.GetProjectIssueNoteClient(project.Id);
 
-            var noteCreate = new ProjectIssueNoteCreate()
+            var noteCreate = new ProjectIssueNoteCreate
             {
                 IssueId = issue.IssueId,
                 Body = "Issue Body",

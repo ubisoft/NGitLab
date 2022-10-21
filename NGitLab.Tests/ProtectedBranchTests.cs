@@ -14,24 +14,24 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject(initializeWithCommits: true);
             var branchClient = context.Client.GetRepository(project.Id).Branches;
-            var branch = branchClient.Create(new BranchCreate() { Name = "protectedBranch", Ref = project.DefaultBranch });
+            var branch = branchClient.Create(new BranchCreate { Name = "protectedBranch", Ref = project.DefaultBranch });
             var protectedBranchClient = context.Client.GetProtectedBranchClient(project.Id);
             var branchProtect = new BranchProtect(branch.Name)
             {
                 PushAccessLevel = AccessLevel.Maintainer,
                 MergeAccessLevel = AccessLevel.NoAccess,
                 AllowForcePush = true,
-                AllowedToPush = new AccessLevelInfo[]
+                AllowedToPush = new[]
                 {
-                    new AccessLevelInfo()
+                    new AccessLevelInfo
                     {
                         AccessLevel = AccessLevel.Admin,
                         Description = "Admin",
                     },
                 },
-                AllowedToUnprotect = new AccessLevelInfo[]
+                AllowedToUnprotect = new[]
                 {
-                    new AccessLevelInfo()
+                    new AccessLevelInfo
                     {
                         AccessLevel = AccessLevel.NoAccess,
                         Description = "Example",

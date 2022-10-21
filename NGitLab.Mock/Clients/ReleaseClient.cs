@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public Models.ReleaseInfo Create(Models.ReleaseCreate data)
+        public Models.ReleaseInfo Create(ReleaseCreate data)
         {
             using (Context.BeginOperationScope())
             {
@@ -101,7 +102,7 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
         public async Task<Models.ReleaseInfo> CreateAsync(ReleaseCreate data, CancellationToken cancellationToken = default)
         {
             await Task.Yield();

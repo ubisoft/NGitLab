@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using NGitLab.Extensions;
@@ -71,7 +72,7 @@ namespace NGitLab.Impl
         public MergeRequest Create(MergeRequestCreate mergeRequest)
         {
             if (mergeRequest == null)
-                throw new System.ArgumentNullException(nameof(mergeRequest));
+                throw new ArgumentNullException(nameof(mergeRequest));
 
             if (mergeRequest.TargetProjectId == null)
             {

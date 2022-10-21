@@ -40,7 +40,7 @@ namespace NGitLab.Tests
             Assert.IsNotNull(file);
             Assert.AreEqual("test2", file.DecodedContent);
 
-            var fileDelete = new FileDelete()
+            var fileDelete = new FileDelete
             {
                 Path = fileName,
                 Branch = project.DefaultBranch,
@@ -114,7 +114,7 @@ namespace NGitLab.Tests
             Assert.IsNotEmpty(secondBlameInfo.Commit.CommitterName);
             Assert.NotNull(secondBlameInfo.Commit.AuthoredDate);
 
-            var fileDelete = new FileDelete()
+            var fileDelete = new FileDelete
             {
                 Path = fileName,
                 Branch = project.DefaultBranch,
@@ -166,7 +166,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(1, blameById.Length);
             Assert.AreEqual(initialBlameInfo, blameById[0]);
 
-            var fileDelete = new FileDelete()
+            var fileDelete = new FileDelete
             {
                 Path = fileName,
                 Branch = project.DefaultBranch,
@@ -210,7 +210,7 @@ namespace NGitLab.Tests
             Assert.AreEqual(realBlameInfo, realBlameInfo);
             Assert.AreEqual(dummyBlameInfo, dummyBlameInfo);
 
-            var fileDelete = new FileDelete()
+            var fileDelete = new FileDelete
             {
                 Path = fileName,
                 Branch = project.DefaultBranch,

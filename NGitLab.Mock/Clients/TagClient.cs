@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
+using Commit = LibGit2Sharp.Commit;
 
 namespace NGitLab.Mock.Clients
 {
@@ -48,7 +49,7 @@ namespace NGitLab.Mock.Clients
         public Tag ToTagClient(LibGit2Sharp.Tag tag)
         {
             var project = GetProject(_projectId, ProjectPermission.Contribute);
-            var commit = (LibGit2Sharp.Commit)tag.PeeledTarget;
+            var commit = (Commit)tag.PeeledTarget;
 
             return new Tag
             {

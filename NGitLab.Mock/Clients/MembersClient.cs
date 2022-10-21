@@ -46,15 +46,15 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var @group = GetGroup(groupId, GroupPermission.Edit);
+                var group = GetGroup(groupId, GroupPermission.Edit);
                 var user = Server.Users.GetById(groupMemberCreate.UserId);
 
-                CheckUserPermissionOfGroup(groupMemberCreate.AccessLevel, user, @group);
+                CheckUserPermissionOfGroup(groupMemberCreate.AccessLevel, user, group);
 
                 var permission = new Permission(user, groupMemberCreate.AccessLevel);
-                @group.Permissions.Add(permission);
+                group.Permissions.Add(permission);
 
-                return @group.GetEffectivePermissions().GetEffectivePermission(user).ToMembershipClient();
+                return group.GetEffectivePermissions().GetEffectivePermission(user).ToMembershipClient();
             }
         }
 
@@ -62,11 +62,11 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var @group = GetGroup(groupId, GroupPermission.Edit);
+                var group = GetGroup(groupId, GroupPermission.Edit);
                 var user = Server.Users.GetById(groupMemberUpdate.UserId);
 
-                CheckUserPermissionOfGroup(groupMemberUpdate.AccessLevel, user, @group);
-                return @group.GetEffectivePermissions().GetEffectivePermission(user).ToMembershipClient();
+                CheckUserPermissionOfGroup(groupMemberUpdate.AccessLevel, user, group);
+                return group.GetEffectivePermissions().GetEffectivePermission(user).ToMembershipClient();
             }
         }
 
@@ -125,7 +125,7 @@ namespace NGitLab.Mock.Clients
             {
                 if (existingPermission.AccessLevel > accessLevel)
                 {
-                    throw new GitLabException($"{{\"access_level\":[\"should be greater than or equal to Owner inherited membership from group Runners\"]}}.")
+                    throw new GitLabException("{\"access_level\":[\"should be greater than or equal to Owner inherited membership from group Runners\"]}.")
                     {
                         StatusCode = HttpStatusCode.BadRequest,
                     };
@@ -138,14 +138,14 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        private static void CheckUserPermissionOfGroup(AccessLevel accessLevel, User user, Group @group)
+        private static void CheckUserPermissionOfGroup(AccessLevel accessLevel, User user, Group group)
         {
-            var existingPermission = @group.GetEffectivePermissions().GetEffectivePermission(user);
+            var existingPermission = group.GetEffectivePermissions().GetEffectivePermission(user);
             if (existingPermission != null)
             {
                 if (existingPermission.AccessLevel > accessLevel)
                 {
-                    throw new GitLabException($"{{\"access_level\":[\"should be greater than or equal to Owner inherited membership from group Runners\"]}}.")
+                    throw new GitLabException("{\"access_level\":[\"should be greater than or equal to Owner inherited membership from group Runners\"]}.")
                     {
                         StatusCode = HttpStatusCode.BadRequest,
                     };

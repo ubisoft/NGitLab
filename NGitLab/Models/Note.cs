@@ -39,6 +39,6 @@ namespace NGitLab.Models
         public long NoteableIid { get; set; }
 
         [JsonPropertyName("noteable_type")]
-        public NGitLab.DynamicEnum<NoteableType> NoteableType { get; set; }
+        public DynamicEnum<NoteableType> NoteableType { get; set; }
     }
 }

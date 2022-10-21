@@ -1,4 +1,5 @@
-﻿using NGitLab.Models;
+﻿using System;
+using NGitLab.Models;
 
 namespace NGitLab.Mock
 {
@@ -6,13 +7,13 @@ namespace NGitLab.Mock
     {
         public Permission(User user, AccessLevel accessLevel)
         {
-            User = user ?? throw new System.ArgumentNullException(nameof(user));
+            User = user ?? throw new ArgumentNullException(nameof(user));
             AccessLevel = accessLevel;
         }
 
         public Permission(Group group, AccessLevel accessLevel)
         {
-            Group = group ?? throw new System.ArgumentNullException(nameof(group));
+            Group = group ?? throw new ArgumentNullException(nameof(group));
             AccessLevel = accessLevel;
         }
 

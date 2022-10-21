@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using NGitLab.Models;
@@ -361,7 +362,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0051:Method is too long", Justification = "There are lots of cases to support")]
+        [SuppressMessage("Design", "MA0051:Method is too long", Justification = "There are lots of cases to support")]
         public IEnumerable<Models.MergeRequest> FilterByQuery(IEnumerable<MergeRequest> mergeRequests, MergeRequestQuery query)
         {
             if (query != null)
@@ -502,7 +503,7 @@ namespace NGitLab.Mock.Clients
             return mergeRequests.Select(mr => mr.ToMergeRequestClient()).ToList();
         }
 
-        public IEnumerable<Models.Author> GetParticipants(int mergeRequestIid)
+        public IEnumerable<Author> GetParticipants(int mergeRequestIid)
         {
             AssertProjectId();
 

@@ -324,7 +324,7 @@ namespace NGitLab.Mock
 
             var commonCommit = targetProject.Repository.FindMergeBase(targetBranchCommit, sourceBranchCommit);
             if (commonCommit is null)
-                throw new InvalidOperationException($"Branch '{sourceBranchName}' does not seem to stem from branch '{targetBranchName}'");
+                throw new InvalidOperationException($"Branch '{consolidatedSourceBranchName}' does not seem to stem from branch '{targetBranchName}'");
 
             var mr = new MergeRequest
             {
@@ -415,7 +415,7 @@ namespace NGitLab.Mock
                 SshUrl = SshUrl,
                 DefaultBranch = DefaultBranch,
                 VisibilityLevel = Visibility,
-                Namespace = new Namespace() { FullPath = Group.PathWithNameSpace, Id = Group.Id, Kind = kind, Name = Group.Name, Path = Group.Path },
+                Namespace = new Namespace { FullPath = Group.PathWithNameSpace, Id = Group.Id, Kind = kind, Name = Group.Name, Path = Group.Path },
                 WebUrl = WebUrl,
                 BuildTimeout = (int)BuildTimeout.TotalMinutes,
                 RepositoryAccessLevel = RepositoryAccessLevel,

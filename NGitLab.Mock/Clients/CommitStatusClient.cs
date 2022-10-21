@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
@@ -38,10 +39,10 @@ namespace NGitLab.Mock.Clients
 
             static bool Equals(CommitStatus a, CommitStatusCreate b)
             {
-                return string.Equals(a.Name, b.Name, System.StringComparison.Ordinal) &&
-                       string.Equals(a.Ref, b.Ref, System.StringComparison.Ordinal) &&
-                       string.Equals(a.Sha, b.CommitSha, System.StringComparison.OrdinalIgnoreCase) &&
-                       string.Equals(a.TargetUrl, b.TargetUrl, System.StringComparison.Ordinal);
+                return string.Equals(a.Name, b.Name, StringComparison.Ordinal) &&
+                       string.Equals(a.Ref, b.Ref, StringComparison.Ordinal) &&
+                       string.Equals(a.Sha, b.CommitSha, StringComparison.OrdinalIgnoreCase) &&
+                       string.Equals(a.TargetUrl, b.TargetUrl, StringComparison.Ordinal);
             }
         }
 
@@ -51,7 +52,7 @@ namespace NGitLab.Mock.Clients
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
                 return project.CommitStatuses
-                    .Where(p => string.Equals(p.Sha, commitSha, System.StringComparison.OrdinalIgnoreCase))
+                    .Where(p => string.Equals(p.Sha, commitSha, StringComparison.OrdinalIgnoreCase))
                     .Select(p => p.ToClientCommitStatus())
                     .ToList();
             }
