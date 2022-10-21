@@ -99,15 +99,16 @@ namespace NGitLab.Models
         [JsonPropertyName("identities")]
         public Identity[] Identities;
 
-        [Obsolete("This does not match GitLab's Api. Use Identities.Provider instead.")]
-        [JsonPropertyName("provider")]
+        [Obsolete("Does not match GitLab's API. Use 'Identities.Provider' instead.")]
+        [JsonIgnore]
         public string Provider;
 
-        [Obsolete("This does not match GitLab's Api. Use Identities.ExternUid instead.")]
-        [JsonPropertyName("extern_uid")]
+        [Obsolete("Does not match GitLab's API. Use 'Identities.ExternUid' instead.")]
+        [JsonIgnore]
         public string ExternUid;
 
-        [JsonPropertyName("blocked")]
+        [Obsolete("Does not match GitLab's API. Use 'State' instead.")]
+        [JsonIgnore]
         public bool Blocked;
 
         [JsonPropertyName("can_create_group")]
