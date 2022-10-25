@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
-using LibGit2Sharp;
+using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
 {
     public static class LibGit2SharpExtensions
     {
-        public static Models.Commit ToCommitClient(this LibGit2Sharp.Commit commit, Project project)
+        public static Commit ToCommitClient(this LibGit2Sharp.Commit commit, Project project)
         {
             var commitInfo = project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal));
-            return new Models.Commit
+            return new Commit
             {
                 AuthoredDate = commit.Author.When.UtcDateTime,
                 AuthorEmail = commit.Author.Email,
@@ -28,10 +28,10 @@ namespace NGitLab.Mock.Clients
             };
         }
 
-        public static Models.Branch ToBranchClient(this LibGit2Sharp.Branch branch, Project project)
+        public static Branch ToBranchClient(this LibGit2Sharp.Branch branch, Project project)
         {
             var commit = branch.Tip;
-            return new Models.Branch
+            return new Branch
             {
                 CanPush = true,
                 Protected = false,
@@ -39,7 +39,7 @@ namespace NGitLab.Mock.Clients
                 DevelopersCanPush = true,
                 Merged = false,
                 Name = branch.FriendlyName,
-                Default = string.Equals(branch.FriendlyName, project.DefaultBranch, System.StringComparison.Ordinal),
+                Default = string.Equals(branch.FriendlyName, project.DefaultBranch, StringComparison.Ordinal),
                 Commit = ToCommitInfo(commit),
             };
         }
@@ -60,7 +60,7 @@ namespace NGitLab.Mock.Clients
             };
         }
 
-        internal static Commit GetLastCommitForFileChanges(this LibGit2Sharp.Repository repository, string filePath)
+        internal static LibGit2Sharp.Commit GetLastCommitForFileChanges(this LibGit2Sharp.Repository repository, string filePath)
         {
             return repository.Commits.QueryBy(filePath).FirstOrDefault()?.Commit;
         }

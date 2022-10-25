@@ -1,4 +1,6 @@
-﻿namespace NGitLab.Mock.Clients
+﻿using System;
+
+namespace NGitLab.Mock.Clients
 {
     internal sealed class GitLabClient : ClientBase, IGitLabClient
     {
@@ -71,7 +73,7 @@
 
         public IMilestoneClient GetMilestone(int projectId) => new MilestoneClient(Context, projectId);
 
-        public IMilestoneClient GetGroupMilestone(int groupId) => throw new System.NotImplementedException();
+        public IMilestoneClient GetGroupMilestone(int groupId) => throw new NotImplementedException();
 
         public IReleaseClient GetReleases(int projectId) => new ReleaseClient(Context, projectId);
 

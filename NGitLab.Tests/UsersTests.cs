@@ -44,7 +44,7 @@ namespace NGitLab.Tests
             var addedUser = CreateNewUser(context);
             Assert.That(addedUser.Bio, Is.EqualTo("bio"));
 
-            var updatedUser = users.Update(addedUser.Id, new UserUpsert() { Bio = "Bio2" });
+            var updatedUser = users.Update(addedUser.Id, new UserUpsert { Bio = "Bio2" });
             Assert.That(updatedUser.Bio, Is.EqualTo("Bio2"));
 
             users.Delete(addedUser.Id);

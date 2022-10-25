@@ -15,7 +15,7 @@ namespace NGitLab.Mock.Clients
             _projectId = projectId;
         }
 
-        public Models.Commit Create(Models.CommitCreate commit)
+        public Commit Create(CommitCreate commit)
         {
             using (Context.BeginOperationScope())
             {
@@ -26,7 +26,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public Models.Commit GetCommit(string @ref)
+        public Commit GetCommit(string @ref)
         {
             using (Context.BeginOperationScope())
             {

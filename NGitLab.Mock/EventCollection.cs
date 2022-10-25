@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NGitLab.Models;
 
 namespace NGitLab.Mock
 {
@@ -24,7 +25,7 @@ namespace NGitLab.Mock
             base.Add(item);
         }
 
-        internal IEnumerable<Event> Get(Models.EventQuery query, int? userId, int? projectId)
+        internal IEnumerable<Event> Get(EventQuery query, int? userId, int? projectId)
         {
             var events = this.AsQueryable();
 

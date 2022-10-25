@@ -154,7 +154,7 @@ namespace NGitLab.Tests
             // --- Add the exampleAdminUser as approver for this MR since adding the MR owners won't increment the number of approvers---
             var userId = context.AdminClient.Users.Current.Id;
 
-            var approversChange = new MergeRequestApproversChange()
+            var approversChange = new MergeRequestApproversChange
             {
                 Approvers = new[] { userId },
             };
@@ -208,7 +208,7 @@ namespace NGitLab.Tests
             context.CreateMergeRequest(); // Second MR to verify filter returns only one
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
             var userId = context.Client.Users.Current.Id;
-            mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { ReviewerIds = new int[] { userId } });
+            mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { ReviewerIds = new[] { userId } });
 
             var mergeRequests = mergeRequestClient.Get(new MergeRequestQuery { ReviewerId = userId }).ToList();
             Assert.AreEqual(1, mergeRequests.Count, "The query retrieved all open merged requests that are assigned for a reviewer");
@@ -231,7 +231,7 @@ namespace NGitLab.Tests
             AcceptAndCancelMergeRequest(mergeRequestClient, mergeRequest);
         }
 
-        private static void ListMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest mergeRequest)
+        private static void ListMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest mergeRequest)
         {
             Assert.IsTrue(mergeRequestClient.All.Any(x => x.Id == mergeRequest.Id), "Test 'All' accessor returns the merge request");
             Assert.IsFalse(mergeRequestClient.All.Any(x => x.DivergedCommitsCount.HasValue), "Listing multiple MRs will not set their DivergedCommitsCount property");
@@ -239,7 +239,7 @@ namespace NGitLab.Tests
             Assert.IsFalse(mergeRequestClient.AllInState(MergeRequestState.merged).Any(x => x.Id == mergeRequest.Id), "Can return all closed requests");
         }
 
-        public static Models.MergeRequest UpdateMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest request)
+        public static MergeRequest UpdateMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest request)
         {
             var updatedMergeRequest = mergeRequestClient.Update(request.Iid, new MergeRequestUpdate
             {
@@ -258,7 +258,7 @@ namespace NGitLab.Tests
             return updatedMergeRequest;
         }
 
-        private static void Test_can_update_a_subset_of_merge_request_fields(IMergeRequestClient mergeRequestClient, Models.MergeRequest mergeRequest)
+        private static void Test_can_update_a_subset_of_merge_request_fields(IMergeRequestClient mergeRequestClient, MergeRequest mergeRequest)
         {
             var updated = mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate
             {
@@ -269,9 +269,9 @@ namespace NGitLab.Tests
             Assert.AreEqual(mergeRequest.Description, updated.Description);
         }
 
-        public static void AcceptMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest request)
+        public static void AcceptMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest request)
         {
-            Polly.Policy
+            Policy
                 .Handle<GitLabException>(ex => ex.StatusCode is HttpStatusCode.MethodNotAllowed or HttpStatusCode.NotAcceptable)
                 .Retry(10)
                 .Execute(() =>
@@ -290,15 +290,15 @@ namespace NGitLab.Tests
                 });
         }
 
-        public static void RebaseMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest mergeRequest)
+        public static void RebaseMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest mergeRequest)
         {
             var rebaseResult = mergeRequestClient.Rebase(mergeRequestIid: mergeRequest.Iid);
             Assert.IsTrue(rebaseResult.RebaseInProgress);
         }
 
-        public static void AcceptAndCancelMergeRequest(IMergeRequestClient mergeRequestClient, Models.MergeRequest request)
+        public static void AcceptAndCancelMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest request)
         {
-            Polly.Policy
+            Policy
                 .Handle<GitLabException>(ex => ex.StatusCode is HttpStatusCode.MethodNotAllowed or HttpStatusCode.NotAcceptable)
                 .Retry(10)
                 .Execute(() =>

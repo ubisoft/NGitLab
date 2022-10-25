@@ -52,7 +52,7 @@ namespace NGitLab.Tests
             };
 
             var user = context.AdminClient.Users.Create(userUpsert);
-            context.Client.GetCommits(project.Id).Create(new CommitCreate()
+            context.Client.GetCommits(project.Id).Create(new CommitCreate
             {
                 AuthorName = userUpsert.Name,
                 AuthorEmail = userUpsert.Email,

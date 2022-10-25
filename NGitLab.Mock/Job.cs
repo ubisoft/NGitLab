@@ -6,10 +6,6 @@ namespace NGitLab.Mock
 {
     public sealed class Job : GitLabObject
     {
-        public Job()
-        {
-        }
-
         public string Name { get; set; }
 
         public int Id { get; set; }
@@ -58,9 +54,9 @@ namespace NGitLab.Mock
 
         public string JobToken { get; set; } = Guid.NewGuid().ToString("N");
 
-        internal Models.Bridge ToBridgeClient()
+        internal Bridge ToBridgeClient()
         {
-            return new Models.Bridge
+            return new Bridge
             {
                 Name = Name,
                 Id = Id,
@@ -71,7 +67,7 @@ namespace NGitLab.Mock
                 FinishedAt = FinishedAt,
                 Stage = Stage,
                 Coverage = Coverage,
-                Pipeline = new Models.Job.JobPipeline
+                Pipeline = new JobBasic.JobPipeline
                 {
                     Id = Pipeline.Id,
                     ProjectId = DownstreamPipeline.ProjectId,
@@ -106,7 +102,7 @@ namespace NGitLab.Mock
                 Coverage = Coverage,
                 Artifacts = Artifacts,
                 Runner = Runner,
-                Pipeline = new Models.Job.JobPipeline
+                Pipeline = new JobBasic.JobPipeline
                 {
                     Id = Pipeline.Id,
                     ProjectId = Pipeline.ProjectId,

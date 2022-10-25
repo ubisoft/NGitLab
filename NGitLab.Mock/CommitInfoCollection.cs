@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace NGitLab.Mock
 {
@@ -11,7 +12,7 @@ namespace NGitLab.Mock
 
         public CommitInfo GetOrAdd(string sha)
         {
-            var commitInfo = this.FirstOrDefault(commit => string.Equals(commit.Sha, sha, System.StringComparison.OrdinalIgnoreCase));
+            var commitInfo = this.FirstOrDefault(commit => string.Equals(commit.Sha, sha, StringComparison.OrdinalIgnoreCase));
             if (commitInfo == null)
             {
                 commitInfo = new CommitInfo

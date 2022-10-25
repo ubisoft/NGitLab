@@ -7,14 +7,12 @@ namespace NGitLab.Impl
     internal sealed class ProtectedBranchClient : IProtectedBranchClient
     {
         private readonly API _api;
-        private readonly int _projectId;
         private readonly string _protectedBranchesUrl;
 
         public ProtectedBranchClient(API api, int projectId)
         {
             _api = api;
-            _projectId = projectId;
-            _protectedBranchesUrl = $"{Project.Url}/{_projectId.ToStringInvariant()}/protected_branches";
+            _protectedBranchesUrl = $"{Project.Url}/{projectId.ToStringInvariant()}/protected_branches";
         }
 
         public ProtectedBranch ProtectBranch(BranchProtect branchProtect)

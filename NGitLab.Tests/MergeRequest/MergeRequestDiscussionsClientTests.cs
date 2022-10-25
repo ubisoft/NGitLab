@@ -103,7 +103,7 @@ namespace NGitLab.Tests
             };
             var discussion = mergeRequestDiscussions.Add(newDiscussion);
 
-            var resolve = new MergeRequestDiscussionResolve()
+            var resolve = new MergeRequestDiscussionResolve
             {
                 Id = discussion.Id,
                 Resolved = true,

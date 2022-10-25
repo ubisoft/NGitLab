@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -59,7 +60,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
         public async Task<Models.Issue> CreateAsync(IssueCreate issueCreate, CancellationToken cancellationToken = default)
         {
             await Task.Yield();
@@ -118,7 +119,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
         public async Task<Models.Issue> EditAsync(IssueEdit issueEdit, CancellationToken cancellationToken = default)
         {
             await Task.Yield();
@@ -210,7 +211,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
         public async Task<Models.Issue> GetAsync(int projectId, int issueId, CancellationToken cancellationToken = default)
         {
             await Task.Yield();

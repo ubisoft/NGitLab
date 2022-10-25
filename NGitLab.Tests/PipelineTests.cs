@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -118,7 +117,7 @@ namespace NGitLab.Tests
             JobTests.AddGitLabCiFile(context.Client, project);
 
             // Arrange/Act
-            var pipeline = pipelineClient.Create(new PipelineCreate()
+            var pipeline = pipelineClient.Create(new PipelineCreate
             {
                 Ref = project.DefaultBranch,
                 Variables =
@@ -151,7 +150,7 @@ namespace NGitLab.Tests
             JobTests.AddGitLabCiFile(context.Client, project);
 
             // Arrange/Act
-            var pipeline = pipelineClient.Create(new PipelineCreate()
+            var pipeline = pipelineClient.Create(new PipelineCreate
             {
                 Ref = project.DefaultBranch,
             });

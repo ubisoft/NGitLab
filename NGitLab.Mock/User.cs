@@ -41,9 +41,9 @@ namespace NGitLab.Mock
             return user;
         }
 
-        public Models.Session ToClientSession()
+        public Session ToClientSession()
         {
-            var user = new Models.Session();
+            var user = new Session();
             CopyTo(user);
             return user;
         }
@@ -66,7 +66,7 @@ namespace NGitLab.Mock
             }
         }
 
-        public Group Namespace => Server.Groups.FirstOrDefault(group => string.Equals(@group.PathWithNameSpace, UserName, StringComparison.Ordinal));
+        public Group Namespace => Server.Groups.FirstOrDefault(group => string.Equals(group.PathWithNameSpace, UserName, StringComparison.Ordinal));
 
         public override string ToString() => $"{Id}: {UserName}";
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -128,7 +129,7 @@ namespace NGitLab.Mock.Clients
             return GitLabCollectionResponse.Create(GetBridges(query));
         }
 
-        public IEnumerable<Models.Bridge> GetBridges(PipelineBridgeQuery query)
+        public IEnumerable<Bridge> GetBridges(PipelineBridgeQuery query)
         {
             using (Context.BeginOperationScope())
             {
@@ -274,7 +275,7 @@ namespace NGitLab.Mock.Clients
             return GitLabCollectionResponse.Create(GetJobs(query));
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+        [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
         public async Task<Models.Pipeline> CreateAsync(PipelineCreate createOptions, CancellationToken cancellationToken = default)
         {
             await Task.Yield();

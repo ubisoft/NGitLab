@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -77,7 +76,7 @@ namespace NGitLab.Mock.Clients
         private ProjectIssueNote GetIssueNote(int issueIid, int issueNoteId)
         {
             var issue = GetIssue(issueIid);
-            var note = issue.Notes.FirstOrDefault(n => n.Id == (long)issueNoteId);
+            var note = issue.Notes.FirstOrDefault(n => n.Id == issueNoteId);
 
             if (note == null)
             {

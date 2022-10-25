@@ -1,11 +1,12 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
-#nullable enable
 
 namespace NGitLab.Tests
 {
@@ -86,9 +87,9 @@ namespace NGitLab.Tests
         public async Task AddMemberToGroup()
         {
             using var context = await GitLabTestContext.CreateAsync();
-            var @group = context.CreateGroup();
+            var group = context.CreateGroup();
             context.CreateNewUser(out var user);
-            var groupId = @group.Id.ToString(CultureInfo.InvariantCulture);
+            var groupId = group.Id.ToString(CultureInfo.InvariantCulture);
 
             var expiresAt = DateTimeOffset.UtcNow.AddDays(30).ToString("yyyy-MM-dd");
             context.Client.Members.AddMemberToGroup(groupId, new GroupMemberCreate
@@ -108,9 +109,9 @@ namespace NGitLab.Tests
         public async Task UpsertAccessLevelMemberOfGroup()
         {
             using var context = await GitLabTestContext.CreateAsync();
-            var @group = context.CreateGroup();
+            var group = context.CreateGroup();
             context.CreateNewUser(out var user);
-            var groupId = @group.Id.ToString(CultureInfo.InvariantCulture);
+            var groupId = group.Id.ToString(CultureInfo.InvariantCulture);
 
             // Add
             context.Client.Members.AddMemberToGroup(groupId, new GroupMemberCreate
@@ -136,9 +137,9 @@ namespace NGitLab.Tests
         public async Task GetAccessLevelMemberOfGroup()
         {
             using var context = await GitLabTestContext.CreateAsync();
-            var @group = context.CreateGroup();
+            var group = context.CreateGroup();
             context.CreateNewUser(out var user);
-            var groupId = @group.Id.ToString(CultureInfo.InvariantCulture);
+            var groupId = group.Id.ToString(CultureInfo.InvariantCulture);
 
             context.Client.Members.AddMemberToGroup(groupId, new GroupMemberCreate
             {

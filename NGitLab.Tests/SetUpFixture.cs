@@ -9,7 +9,7 @@ namespace NGitLab.Tests
         [OneTimeSetUp]
         public void RunBeforeAnyTests()
         {
-            FunctionRetryExtensions.Logger = (msg) => TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {msg}");
+            FunctionRetryExtensions.Logger = msg => TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {msg}");
         }
     }
 }

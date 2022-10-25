@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using NGitLab.Extensions;
 using NGitLab.Models;
@@ -23,7 +24,7 @@ namespace NGitLab.Impl
         public WikiPage Create(WikiPageCreate wikiPage)
         {
             if (wikiPage == null)
-                throw new System.ArgumentNullException(nameof(wikiPage));
+                throw new ArgumentNullException(nameof(wikiPage));
 
             return _api
                 .Post().With(wikiPage)

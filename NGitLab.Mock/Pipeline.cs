@@ -104,9 +104,9 @@ namespace NGitLab.Mock
             return Project.Jobs.Add(job, this);
         }
 
-        internal Models.Job.JobPipeline ToJobPipeline()
+        internal JobBasic.JobPipeline ToJobPipeline()
         {
-            return new Models.Job.JobPipeline
+            return new JobBasic.JobPipeline
             {
                 Id = Id,
                 ProjectId = Project.Id,
@@ -116,9 +116,9 @@ namespace NGitLab.Mock
             };
         }
 
-        internal Models.PipelineBasic ToPipelineBasicClient()
+        internal PipelineBasic ToPipelineBasicClient()
         {
-            return new Models.PipelineBasic
+            return new PipelineBasic
             {
                 Id = Id,
                 Status = Status,

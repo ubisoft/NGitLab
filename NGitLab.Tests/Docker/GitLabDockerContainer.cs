@@ -112,7 +112,7 @@ namespace NGitLab.Tests.Docker
             }
             catch (Exception ex)
             {
-                s_creationErrorMessage = "Cannot connect to Docker service. Make sure it's running on your machine before launching any tests.\nDetails: " + ex.ToString();
+                s_creationErrorMessage = "Cannot connect to Docker service. Make sure it's running on your machine before launching any tests.\nDetails: " + ex;
                 Assert.Fail(s_creationErrorMessage);
             }
         }
@@ -160,7 +160,7 @@ namespace NGitLab.Tests.Docker
             await ValidateDockerIsEnabled(client);
 
             TestContext.Progress.WriteLine("Looking up GitLab Docker containers");
-            var containers = await client.Containers.ListContainersAsync(new ContainersListParameters() { All = true }).ConfigureAwait(false);
+            var containers = await client.Containers.ListContainersAsync(new ContainersListParameters { All = true }).ConfigureAwait(false);
             var container = containers.FirstOrDefault(c => c.Names.Contains("/" + ContainerName, StringComparer.Ordinal));
             if (container != null)
             {
@@ -170,7 +170,7 @@ namespace NGitLab.Tests.Docker
                 if (inspect.Image != inspectImage.ID)
                 {
                     TestContext.Progress.WriteLine("Ending GitLab Docker container, as it's using the wrong image");
-                    await client.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters() { Force = true }).ConfigureAwait(false);
+                    await client.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters { Force = true }).ConfigureAwait(false);
                     container = null;
                 }
             }
@@ -179,11 +179,11 @@ namespace NGitLab.Tests.Docker
             {
                 // Download GitLab images
                 TestContext.Progress.WriteLine("Making sure the right GitLab Docker image is available locally");
-                await client.Images.CreateImageAsync(new ImagesCreateParameters() { FromImage = ImageName, Tag = GitLabDockerVersion }, new AuthConfig() { }, new Progress<JSONMessage>()).ConfigureAwait(false);
+                await client.Images.CreateImageAsync(new ImagesCreateParameters { FromImage = ImageName, Tag = GitLabDockerVersion }, new AuthConfig(), new Progress<JSONMessage>()).ConfigureAwait(false);
 
                 // Create the container
                 TestContext.Progress.WriteLine("Creating the GitLab Docker container");
-                var hostConfig = new HostConfig()
+                var hostConfig = new HostConfig
                 {
                     PortBindings = new Dictionary<string, IList<PortBinding>>(StringComparer.Ordinal)
                     {
@@ -191,7 +191,7 @@ namespace NGitLab.Tests.Docker
                     },
                 };
 
-                var response = await client.Containers.CreateContainerAsync(new CreateContainerParameters()
+                var response = await client.Containers.CreateContainerAsync(new CreateContainerParameters
                 {
                     Hostname = "localhost",
                     Image = ImageName + ":" + GitLabDockerVersion,
@@ -209,7 +209,7 @@ namespace NGitLab.Tests.Docker
                     },
                 }).ConfigureAwait(false);
 
-                containers = await client.Containers.ListContainersAsync(new ContainersListParameters() { All = true }).ConfigureAwait(false);
+                containers = await client.Containers.ListContainersAsync(new ContainersListParameters { All = true }).ConfigureAwait(false);
                 container = containers.First(c => c.ID == response.ID);
             }
 
@@ -305,7 +305,7 @@ namespace NGitLab.Tests.Docker
                     TestContext.Progress.WriteLine("Creating root password");
                     var form = result.Forms["new_user"];
                     if (form == null)
-                        throw new InvalidOperationException($"Cannot set the root password. The page doesn't contain the form 'new_user'");
+                        throw new InvalidOperationException("Cannot set the root password. The page doesn't contain the form 'new_user'");
 
                     ((IHtmlInputElement)form["user[password]"]).Value = AdminPassword;
                     ((IHtmlInputElement)form["user[password_confirmation]"]).Value = AdminPassword;
@@ -378,7 +378,7 @@ namespace NGitLab.Tests.Docker
                              if (htmlInputElement is null)
                                  throw new InvalidOperationException("The page does not contain the field 'new_personal_access_token.personal_access_token[name]':\n" + result.ToHtml());
 
-                             htmlInputElement.Value = $"GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
+                             htmlInputElement.Value = "GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
                              foreach (var element in form.Elements.OfType<IHtmlInputElement>().Where(e => e.Name == "personal_access_token[scopes][]"))
                              {
                                  element.IsChecked = true;
@@ -408,7 +408,7 @@ namespace NGitLab.Tests.Docker
                 {
                     try
                     {
-                        user = retryPolicy.Execute(() => client.Users.Create(new UserUpsert()
+                        user = retryPolicy.Execute(() => client.Users.Create(new UserUpsert
                         {
                             Username = "common_user",
                             Email = "common_user@example.com",
@@ -473,7 +473,7 @@ namespace NGitLab.Tests.Docker
                     // Validate token
                     var user = client.Users.Current;
 
-                    using var httpClient = new HttpClient()
+                    using var httpClient = new HttpClient
                     {
                         BaseAddress = GitLabUrl,
                         DefaultRequestHeaders =
@@ -488,7 +488,7 @@ namespace NGitLab.Tests.Docker
                     // Validate cookie
                     Credentials = credentials;
                 }
-                catch (GitLabException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                catch (GitLabException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
                 {
                 }
             }

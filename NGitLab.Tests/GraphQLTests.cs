@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
@@ -14,7 +15,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
 
-            var exception = Assert.ThrowsAsync<GitLabException>(() => context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new Models.GraphQLQuery
+            var exception = Assert.ThrowsAsync<GitLabException>(() => context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
             {
                 Query = @"
 {
@@ -34,7 +35,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
 
-            var response = await context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new Models.GraphQLQuery
+            var response = await context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
             {
                 Query = @"
 query($path: ID!)

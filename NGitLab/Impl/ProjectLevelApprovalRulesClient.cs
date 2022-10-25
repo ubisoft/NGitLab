@@ -7,14 +7,12 @@ namespace NGitLab.Impl
     public class ProjectLevelApprovalRulesClient : IProjectLevelApprovalRulesClient
     {
         private readonly API _api;
-        private readonly int _projectId;
         private readonly string _approvalRulesUrl;
 
         public ProjectLevelApprovalRulesClient(API api, int projectId)
         {
             _api = api;
-            _projectId = projectId;
-            _approvalRulesUrl = $"{Project.Url}/{_projectId.ToStringInvariant()}/approval_rules";
+            _approvalRulesUrl = $"{Project.Url}/{projectId.ToStringInvariant()}/approval_rules";
         }
 
         public List<ApprovalRule> GetProjectLevelApprovalRules()

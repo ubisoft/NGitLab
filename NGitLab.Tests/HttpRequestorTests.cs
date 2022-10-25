@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Impl;
+using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
@@ -82,7 +83,7 @@ namespace NGitLab.Tests
             var project = commonUserClient.Projects.Accessible.First();
 
             // Act
-            var issue = adminClient.Issues.Create(new Models.IssueCreate
+            var issue = adminClient.Issues.Create(new IssueCreate
             {
                 Id = project.Id,
                 Title = $"An issue created on behalf of user '{commonUserSession.Username}'",
@@ -114,7 +115,7 @@ namespace NGitLab.Tests
             var project = commonUserClient.Projects.Accessible.First();
 
             // Act
-            var issue = adminClient.Issues.Create(new Models.IssueCreate
+            var issue = adminClient.Issues.Create(new IssueCreate
             {
                 Id = project.Id,
                 Title = $"An issue created on behalf of user '{commonUserId}'",

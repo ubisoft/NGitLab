@@ -41,12 +41,12 @@ namespace NGitLab.Tests.Docker
             AdminClient = CreateClient(DockerContainer.Credentials.AdminUserToken);
             Client = CreateClient(DockerContainer.Credentials.UserToken);
 
-            HttpClient = new HttpClient()
+            HttpClient = new HttpClient
             {
                 BaseAddress = DockerContainer.GitLabUrl,
             };
 
-            AdminHttpClient = new HttpClient()
+            AdminHttpClient = new HttpClient
             {
                 BaseAddress = DockerContainer.GitLabUrl,
                 DefaultRequestHeaders =
@@ -92,7 +92,7 @@ namespace NGitLab.Tests.Docker
             var password = "Pa$$w0rd";
             var client = AdminClient;
 
-            user = client.Users.Create(new Models.UserUpsert()
+            user = client.Users.Create(new UserUpsert
             {
                 Email = email,
                 Username = username,
@@ -102,7 +102,7 @@ namespace NGitLab.Tests.Docker
                 SkipConfirmation = true,
             });
 
-            var token = client.Users.CreateToken(new Models.UserTokenCreate()
+            var token = client.Users.CreateToken(new UserTokenCreate
             {
                 UserId = user.Id,
                 Name = "UnitTest",
@@ -118,7 +118,7 @@ namespace NGitLab.Tests.Docker
 
             var project = s_gitlabRetryPolicy.Execute(() =>
                 {
-                    var projectCreate = new ProjectCreate()
+                    var projectCreate = new ProjectCreate
                     {
                         Name = GetUniqueRandomString(),
                         DefaultBranch = defaultBranch,
@@ -146,7 +146,7 @@ namespace NGitLab.Tests.Docker
                 AddSomeCommits();
                 s_gitlabRetryPolicy.Execute(() =>
                 {
-                    var projectUpdate = new ProjectUpdate()
+                    var projectUpdate = new ProjectUpdate
                     {
                         DefaultBranch = defaultBranch,
                     };
@@ -186,7 +186,7 @@ namespace NGitLab.Tests.Docker
         {
             var client = Client;
             var name = GetUniqueRandomString();
-            var groupCreate = new GroupCreate()
+            var groupCreate = new GroupCreate
             {
                 Name = name,
                 Path = name,
@@ -282,11 +282,11 @@ namespace NGitLab.Tests.Docker
                         Uri url;
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            url = new Uri($"https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-windows-amd64.exe");
+                            url = new Uri("https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-windows-amd64.exe");
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
-                            url = new Uri($"https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64");
+                            url = new Uri("https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64");
                         }
                         else
                         {

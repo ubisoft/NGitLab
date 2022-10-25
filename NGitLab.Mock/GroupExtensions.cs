@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace NGitLab.Mock
@@ -20,10 +21,10 @@ namespace NGitLab.Mock
         {
             foreach (var group in groups)
             {
-                if (string.Equals(group.PathWithNameSpace, idOrPathWithNamespace, System.StringComparison.Ordinal))
+                if (string.Equals(group.PathWithNameSpace, idOrPathWithNamespace, StringComparison.Ordinal))
                     return group;
 
-                if (string.Equals(group.Id.ToString(CultureInfo.InvariantCulture), idOrPathWithNamespace, System.StringComparison.Ordinal))
+                if (string.Equals(group.Id.ToString(CultureInfo.InvariantCulture), idOrPathWithNamespace, StringComparison.Ordinal))
                     return group;
             }
 

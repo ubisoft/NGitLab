@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using NGitLab.Mock.Config;
+using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Mock.Tests
@@ -11,7 +12,7 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabServer();
             var user = server.Users.AddNew();
-            var project = user.Namespace.Projects.AddNew(project => project.Visibility = Models.VisibilityLevel.Internal);
+            var project = user.Namespace.Projects.AddNew(project => project.Visibility = VisibilityLevel.Internal);
             var commit = project.Repository.Commit(user, "test");
 
             var pipeline = project.Pipelines.Add(commit.Sha, JobStatus.Success, user);
@@ -27,13 +28,13 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabServer();
             var user = server.Users.AddNew();
-            var project = user.Namespace.Projects.AddNew(project => project.Visibility = Models.VisibilityLevel.Internal);
+            var project = user.Namespace.Projects.AddNew(project => project.Visibility = VisibilityLevel.Internal);
             var commit = project.Repository.Commit(user, "test");
 
             var pipeline = project.Pipelines.Add(commit.Sha, JobStatus.Success, user);
-            pipeline.TestReportsSummary = new Models.TestReportSummary
+            pipeline.TestReportsSummary = new TestReportSummary
             {
-                Total = new Models.TestReportSummaryTotals
+                Total = new TestReportSummaryTotals
                 {
                     Time = 60,
                     Count = 1157,
@@ -60,7 +61,7 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabServer();
             var user = server.Users.AddNew();
-            var project = user.Namespace.Projects.AddNew(project => project.Visibility = Models.VisibilityLevel.Internal);
+            var project = user.Namespace.Projects.AddNew(project => project.Visibility = VisibilityLevel.Internal);
             var commit = project.Repository.Commit(user, "test");
 
             var branch = "my-branch";
@@ -86,7 +87,7 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabServer();
             var user = server.Users.AddNew();
-            var project = user.Namespace.Projects.AddNew(project => project.Visibility = Models.VisibilityLevel.Internal);
+            var project = user.Namespace.Projects.AddNew(project => project.Visibility = VisibilityLevel.Internal);
             var commit = project.Repository.Commit(user, "test");
 
             var tag = "my-tag";
@@ -102,7 +103,7 @@ namespace NGitLab.Mock.Tests
         {
             using var server = new GitLabServer();
             var user = server.Users.AddNew();
-            var project = user.Namespace.Projects.AddNew(project => project.Visibility = Models.VisibilityLevel.Internal);
+            var project = user.Namespace.Projects.AddNew(project => project.Visibility = VisibilityLevel.Internal);
             var commit = project.Repository.Commit(user, "test");
 
             var pipeline = project.Pipelines.Add("invalid_ref", JobStatus.Success, user);

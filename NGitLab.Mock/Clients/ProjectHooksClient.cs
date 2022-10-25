@@ -87,7 +87,7 @@ namespace NGitLab.Mock.Clients
 
         private static ProjectHook UpsertToHook(ProjectHookUpsert hook)
         {
-            var hookFromUpsert = new ProjectHook()
+            var hookFromUpsert = new ProjectHook
             {
                 Url = hook.Url,
                 PushEvents = hook.PushEvents,

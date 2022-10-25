@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
@@ -35,7 +36,7 @@ namespace NGitLab.Models
         {
             get
             {
-                if (string.Equals(Encoding, "base64", System.StringComparison.Ordinal))
+                if (string.Equals(Encoding, "base64", StringComparison.Ordinal))
                     return Base64Decode(Content);
                 return Content;
             }
@@ -43,7 +44,7 @@ namespace NGitLab.Models
 
         public static string Base64Decode(string base64EncodedData)
         {
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
     }

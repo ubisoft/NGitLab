@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
 {
@@ -49,12 +50,12 @@ namespace NGitLab.Mock.Clients
             {
                 using (Context.BeginOperationScope())
                 {
-                    return All.Where(badge => badge.Kind == Models.BadgeKind.Project).ToList();
+                    return All.Where(badge => badge.Kind == BadgeKind.Project).ToList();
                 }
             }
         }
 
-        public Models.Badge Create(Models.BadgeCreate badge)
+        public Models.Badge Create(BadgeCreate badge)
         {
             EnsureUserIsAuthenticated();
 
@@ -81,7 +82,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public Models.Badge Update(int id, Models.BadgeUpdate badge)
+        public Models.Badge Update(int id, BadgeUpdate badge)
         {
             using (Context.BeginOperationScope())
             {

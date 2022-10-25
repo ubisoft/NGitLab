@@ -21,7 +21,7 @@ namespace NGitLab.Mock.Clients
             {
                 using (Context.BeginOperationScope())
                 {
-                    return new MergeRequestChange()
+                    return new MergeRequestChange
                     {
                         Changes = GetMergeRequest(_projectId, _mergeRequestIid).Changes.Select(a => a.ToChange())
                             .ToArray(),

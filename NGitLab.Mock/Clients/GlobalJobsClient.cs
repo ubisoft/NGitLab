@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace NGitLab.Mock.Clients
             await Task.Yield();
             using (Context.BeginOperationScope())
             {
-                var job = Server.AllProjects.SelectMany(p => p.Jobs).FirstOrDefault(j => string.Equals(j.JobToken, token, System.StringComparison.Ordinal));
+                var job = Server.AllProjects.SelectMany(p => p.Jobs).FirstOrDefault(j => string.Equals(j.JobToken, token, StringComparison.Ordinal));
 
                 if (job == null)
                     throw new GitLabNotFoundException();

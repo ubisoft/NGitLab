@@ -11,7 +11,7 @@ namespace NGitLab.Mock
             : base(parent)
         {
             _project = parent as Project ??
-                       throw new ArgumentException($"Parent must be a Project", nameof(parent));
+                       throw new ArgumentException("Parent must be a Project", nameof(parent));
         }
 
         public Pipeline GetById(int id)
