@@ -2703,6 +2703,8 @@ NGitLab.Models.ReleaseInfo.Description.get -> string
 NGitLab.Models.ReleaseInfo.Description.set -> void
 NGitLab.Models.ReleaseInfo.Evidences.get -> NGitLab.Models.ReleaseEvidence[]
 NGitLab.Models.ReleaseInfo.Evidences.set -> void
+NGitLab.Models.ReleaseInfo.Links.get -> NGitLab.Models.ReleaseInfoLinks
+NGitLab.Models.ReleaseInfo.Links.set -> void
 NGitLab.Models.ReleaseInfo.Milestones.get -> NGitLab.Models.Milestone[]
 NGitLab.Models.ReleaseInfo.Milestones.set -> void
 NGitLab.Models.ReleaseInfo.Name.get -> string
@@ -2714,6 +2716,12 @@ NGitLab.Models.ReleaseInfo.TagName.get -> string
 NGitLab.Models.ReleaseInfo.TagName.set -> void
 NGitLab.Models.ReleaseInfo.TagPath.get -> string
 NGitLab.Models.ReleaseInfo.TagPath.set -> void
+NGitLab.Models.ReleaseInfoLinks
+NGitLab.Models.ReleaseInfoLinks.EditUrl.get -> string
+NGitLab.Models.ReleaseInfoLinks.EditUrl.set -> void
+NGitLab.Models.ReleaseInfoLinks.ReleaseInfoLinks() -> void
+NGitLab.Models.ReleaseInfoLinks.Self.get -> string
+NGitLab.Models.ReleaseInfoLinks.Self.set -> void
 NGitLab.Models.ReleaseLink
 NGitLab.Models.ReleaseLink.DirectAssetUrl.get -> string
 NGitLab.Models.ReleaseLink.DirectAssetUrl.set -> void
