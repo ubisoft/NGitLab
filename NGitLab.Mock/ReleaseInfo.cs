@@ -38,6 +38,11 @@ namespace NGitLab.Mock
                 Commit = Commit,
                 CommitPath = CommitPath,
                 TagPath = TagPath,
+                Links = new ReleaseInfoLinks
+                {
+                    Self = $"{Project.WebUrl}/-/releases/{TagName}",
+                    EditUrl = $"{Project.WebUrl}/-/releases/{TagName}/edit",
+                },
             };
         }
     }
