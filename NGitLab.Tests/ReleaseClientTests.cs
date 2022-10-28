@@ -33,8 +33,8 @@ namespace NGitLab.Tests.Release
             Assert.That(release.TagName, Is.EqualTo("0.7"));
             Assert.That(release.Name, Is.EqualTo("0.7"));
             Assert.That(release.Description, Is.EqualTo("test"));
-            Assert.That(release.Links.Self, Is.EqualTo($"{context.HttpClient.BaseAddress}{project.PathWithNamespace}/-/releases/0.7"));
-            Assert.That(release.Links.EditUrl, Is.EqualTo($"{context.HttpClient.BaseAddress}{project.PathWithNamespace}/-/releases/0.7/edit"));
+            Assert.That(release.Links.Self, Is.EqualTo($"{project.WebUrl}/-/releases/0.7"));
+            Assert.That(release.Links.EditUrl, Is.EqualTo($"{project.WebUrl}/-/releases/0.7/edit"));
 
             release = releaseClient[tag.Name];
             Assert.That(release.TagName, Is.EqualTo("0.7"));
