@@ -40,5 +40,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("evidences")]
         public ReleaseEvidence[] Evidences { get; set; }
+
+        [JsonPropertyName("_links")]
+        public ReleaseInfoLinks Links { get; set; }
     }
 }

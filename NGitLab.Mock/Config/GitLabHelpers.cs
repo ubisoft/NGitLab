@@ -51,11 +51,11 @@ namespace NGitLab.Mock.Config
             return Configure<GitLabMergeRequest>(mergeRequest, configure);
         }
 
-        private static T Configure<T>(this T mergeRequest, Action<T> configure)
+        private static T Configure<T>(this T gitLabObject, Action<T> configure)
             where T : GitLabObject
         {
-            configure(mergeRequest);
-            return mergeRequest;
+            configure(gitLabObject);
+            return gitLabObject;
         }
 
         public static GitLabPipeline Configure(this GitLabPipeline pipeline, Action<GitLabPipeline> configure)
@@ -505,6 +505,20 @@ namespace NGitLab.Mock.Config
                 }
 
                 configure?.Invoke(issue);
+            });
+        }
+
+        public static GitLabProject WithRelease(this GitLabProject project, string author, string tagName)
+        {
+            return Configure(project, _ =>
+            {
+                var release = new GitLabReleaseInfo
+                {
+                    Author = author,
+                    TagName = tagName,
+                };
+
+                project.Releases.Add(release);
             });
         }
 
@@ -1111,6 +1125,11 @@ namespace NGitLab.Mock.Config
                 CreateIssue(server, prj, issue);
             }
 
+            foreach (var release in project.Releases)
+            {
+                CreateRelease(server, prj, release);
+            }
+
             for (var i = 0; i < project.MergeRequests.Count; i++)
             {
                 var mergeRequest = project.MergeRequests[i];
@@ -1161,6 +1180,18 @@ namespace NGitLab.Mock.Config
                     throw new GitLabException($"Cannot clone '{prj.PathWithNamespace}' in '{project.ClonePath}': {error}");
                 }
             }
+        }
+
+        private static void CreateRelease(GitLabServer server, Project project, GitLabReleaseInfo gitLabRelease)
+        {
+            var user = GetOrCreateUser(server, gitLabRelease.Author);
+            var release = new ReleaseInfo
+            {
+                Author = new UserRef(user),
+                TagName = gitLabRelease.TagName,
+            };
+
+            project.Releases.Add(release);
         }
 
         private static Commit CreateCommit(GitLabServer server, Project prj, GitLabCommit commit)
