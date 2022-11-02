@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
@@ -8,6 +9,9 @@ namespace NGitLab.Models
 
         [JsonPropertyName("id")]
         public int Id;
+
+        [JsonPropertyName("project_id")]
+        public int ProjectId;
 
         [JsonPropertyName("status")]
         public JobStatus Status;
@@ -20,5 +24,14 @@ namespace NGitLab.Models
 
         [JsonPropertyName("source")]
         public string Source;
+
+        [JsonPropertyName("created_at")]
+        public DateTime CreatedAt;
+
+        [JsonPropertyName("updated_at")]
+        public DateTime UpdatedAt;
+
+        [JsonPropertyName("web_url")]
+        public string WebUrl;
     }
 }
