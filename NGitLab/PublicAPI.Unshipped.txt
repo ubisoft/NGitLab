@@ -2274,12 +2274,16 @@ NGitLab.Models.Pipeline.User -> NGitLab.Models.User
 NGitLab.Models.Pipeline.WebUrl -> string
 NGitLab.Models.Pipeline.YamlError -> string
 NGitLab.Models.PipelineBasic
+NGitLab.Models.PipelineBasic.CreatedAt -> System.DateTime
 NGitLab.Models.PipelineBasic.Id -> int
 NGitLab.Models.PipelineBasic.PipelineBasic() -> void
+NGitLab.Models.PipelineBasic.ProjectId -> int
 NGitLab.Models.PipelineBasic.Ref -> string
 NGitLab.Models.PipelineBasic.Sha -> NGitLab.Sha1
 NGitLab.Models.PipelineBasic.Source -> string
 NGitLab.Models.PipelineBasic.Status -> NGitLab.JobStatus
+NGitLab.Models.PipelineBasic.UpdatedAt -> System.DateTime
+NGitLab.Models.PipelineBasic.WebUrl -> string
 NGitLab.Models.PipelineBridgeQuery
 NGitLab.Models.PipelineBridgeQuery.PipelineBridgeQuery() -> void
 NGitLab.Models.PipelineBridgeQuery.PipelineId.get -> int
