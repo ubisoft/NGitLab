@@ -9,6 +9,8 @@ namespace NGitLab
     {
         IEnumerable<ReleaseInfo> All { get; }
 
+        GitLabCollectionResponse<ReleaseInfo> GetAsync(ReleaseQuery query = null);
+
         ReleaseInfo this[string tagName] { get; }
 
         ReleaseInfo Create(ReleaseCreate data);
