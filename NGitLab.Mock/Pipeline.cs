@@ -124,6 +124,9 @@ namespace NGitLab.Mock
                 Status = Status,
                 Ref = Ref,
                 Sha = Sha,
+                CreatedAt = CreatedAt.UtcDateTime,
+                UpdatedAt = UpdatedAt.UtcDateTime,
+                ProjectId = Project.Id,
             };
         }
 

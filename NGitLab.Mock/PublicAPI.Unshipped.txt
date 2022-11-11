@@ -191,7 +191,15 @@ NGitLab.Mock.Config.GitLabProject.ForkingAccessLevel.get -> NGitLab.Models.Repos
 NGitLab.Mock.Config.GitLabProject.ForkingAccessLevel.set -> void
 NGitLab.Mock.Config.GitLabProject.Milestones.get -> NGitLab.Mock.Config.GitLabMilestonesCollection
 NGitLab.Mock.Config.GitLabProject.Pipelines.get -> NGitLab.Mock.Config.GitLabPipelinesCollection
+NGitLab.Mock.Config.GitLabProject.Releases.get -> NGitLab.Mock.Config.GitLabReleaseInfoCollection
 NGitLab.Mock.Config.GitLabProject.Visibility.get -> NGitLab.Models.VisibilityLevel?
+NGitLab.Mock.Config.GitLabReleaseInfo
+NGitLab.Mock.Config.GitLabReleaseInfo.Author.get -> string
+NGitLab.Mock.Config.GitLabReleaseInfo.Author.set -> void
+NGitLab.Mock.Config.GitLabReleaseInfo.GitLabReleaseInfo() -> void
+NGitLab.Mock.Config.GitLabReleaseInfo.TagName.get -> string
+NGitLab.Mock.Config.GitLabReleaseInfo.TagName.set -> void
+NGitLab.Mock.Config.GitLabReleaseInfoCollection
 NGitLab.Mock.EffectivePermissions
 NGitLab.Mock.EffectivePermissions.GetAccessLevel(NGitLab.Mock.User user) -> NGitLab.Models.AccessLevel?
 NGitLab.Mock.EffectivePermissions.GetEffectivePermission(NGitLab.Mock.User user) -> NGitLab.Mock.EffectiveUserPermission
@@ -1154,6 +1162,7 @@ static NGitLab.Mock.Config.GitLabHelpers.WithMilestone(this NGitLab.Mock.Config.
 static NGitLab.Mock.Config.GitLabHelpers.WithMilestone(this NGitLab.Mock.Config.GitLabProject project, string title, System.Action<NGitLab.Mock.Config.GitLabMilestone> configure) -> NGitLab.Mock.Config.GitLabProject
 static NGitLab.Mock.Config.GitLabHelpers.WithPipeline(this NGitLab.Mock.Config.GitLabProject project, string ref, System.Action<NGitLab.Mock.Config.GitLabPipeline> configure) -> NGitLab.Mock.Config.GitLabProject
 static NGitLab.Mock.Config.GitLabHelpers.WithProject(this NGitLab.Mock.Config.GitLabConfig config, string name = null, int id = 0, string namespace = null, string description = null, string defaultBranch = null, NGitLab.Models.VisibilityLevel visibility = NGitLab.Models.VisibilityLevel.Internal, bool initialCommit = false, bool addDefaultUserAsMaintainer = false, string clonePath = null, string cloneParameters = null, System.Action<NGitLab.Mock.Config.GitLabProject> configure = null) -> NGitLab.Mock.Config.GitLabConfig
+static NGitLab.Mock.Config.GitLabHelpers.WithRelease(this NGitLab.Mock.Config.GitLabProject project, string author, string tagName) -> NGitLab.Mock.Config.GitLabProject
 static NGitLab.Mock.Config.GitLabHelpers.WithSystemComment(this NGitLab.Mock.Config.GitLabIssue issue, string message = null, string innerHtml = null, int id = 0, string author = null, System.DateTime? createdAt = null, System.DateTime? updatedAt = null) -> NGitLab.Mock.Config.GitLabIssue
 static NGitLab.Mock.Config.GitLabHelpers.WithSystemComment(this NGitLab.Mock.Config.GitLabMergeRequest mergeRequest, string message = null, string innerHtml = null, int id = 0, string author = null, System.DateTime? createdAt = null, System.DateTime? updatedAt = null) -> NGitLab.Mock.Config.GitLabMergeRequest
 static NGitLab.Mock.Config.GitLabHelpers.WithUser(this NGitLab.Mock.Config.GitLabConfig config, string username, string name = null, string email = null, string avatarUrl = null, bool isAdmin = false, bool isDefault = false, System.Action<NGitLab.Mock.Config.GitLabUser> configure = null) -> NGitLab.Mock.Config.GitLabConfig
