@@ -36,6 +36,8 @@ namespace NGitLab.Tests.Release
             Assert.That(release.Links.Self, Is.EqualTo($"{project.WebUrl}/-/releases/0.7"));
             Assert.That(release.Links.EditUrl, Is.EqualTo($"{project.WebUrl}/-/releases/0.7/edit"));
 
+            Assert.IsNotNull(releaseClient.GetAsync().FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)));
+
             release = releaseClient[tag.Name];
             Assert.That(release.TagName, Is.EqualTo("0.7"));
             Assert.That(release.Name, Is.EqualTo("0.7"));
@@ -50,6 +52,7 @@ namespace NGitLab.Tests.Release
             Assert.That(release.Name, Is.EqualTo("0.7"));
             Assert.That(release.Description, Is.EqualTo("test updated"));
 
+            Assert.IsNotNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)));
             tagsClient.Delete("0.7");
             Assert.IsNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)));
         }

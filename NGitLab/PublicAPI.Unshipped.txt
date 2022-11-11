@@ -857,6 +857,7 @@ NGitLab.IReleaseClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab
 NGitLab.IReleaseClient.Create(NGitLab.Models.ReleaseCreate data) -> NGitLab.Models.ReleaseInfo
 NGitLab.IReleaseClient.CreateAsync(NGitLab.Models.ReleaseCreate data, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.ReleaseInfo>
 NGitLab.IReleaseClient.Delete(string tagName) -> void
+NGitLab.IReleaseClient.GetAsync(NGitLab.Models.ReleaseQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ReleaseInfo>
 NGitLab.IReleaseClient.ReleaseLinks(string tagName) -> NGitLab.IReleaseLinkClient
 NGitLab.IReleaseClient.this[string tagName].get -> NGitLab.Models.ReleaseInfo
 NGitLab.IReleaseClient.Update(NGitLab.Models.ReleaseUpdate data) -> NGitLab.Models.ReleaseInfo
@@ -2765,6 +2766,16 @@ NGitLab.Models.ReleaseLinkUpdate.Name.set -> void
 NGitLab.Models.ReleaseLinkUpdate.ReleaseLinkUpdate() -> void
 NGitLab.Models.ReleaseLinkUpdate.Url.get -> string
 NGitLab.Models.ReleaseLinkUpdate.Url.set -> void
+NGitLab.Models.ReleaseQuery
+NGitLab.Models.ReleaseQuery.IncludeHtmlDescription.get -> bool?
+NGitLab.Models.ReleaseQuery.IncludeHtmlDescription.set -> void
+NGitLab.Models.ReleaseQuery.OrderBy.get -> string
+NGitLab.Models.ReleaseQuery.OrderBy.set -> void
+NGitLab.Models.ReleaseQuery.PerPage.get -> int?
+NGitLab.Models.ReleaseQuery.PerPage.set -> void
+NGitLab.Models.ReleaseQuery.ReleaseQuery() -> void
+NGitLab.Models.ReleaseQuery.Sort.get -> string
+NGitLab.Models.ReleaseQuery.Sort.set -> void
 NGitLab.Models.ReleaseUpdate
 NGitLab.Models.ReleaseUpdate.Description.get -> string
 NGitLab.Models.ReleaseUpdate.Description.set -> void

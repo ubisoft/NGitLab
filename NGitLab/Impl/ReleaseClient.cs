@@ -34,5 +34,19 @@ namespace NGitLab.Impl
         public void Delete(string tagName) => _api.Delete().Execute($"{_releasesPath}/{Uri.EscapeDataString(tagName)}");
 
         public IReleaseLinkClient ReleaseLinks(string tagName) => new ReleaseLinkClient(_api, _releasesPath, tagName);
+
+        public GitLabCollectionResponse<ReleaseInfo> GetAsync(ReleaseQuery query = null)
+        {
+            var url = _releasesPath;
+            if (query != null)
+            {
+                url = Utils.AddParameter(url, "order_by", query.OrderBy);
+                url = Utils.AddParameter(url, "sort", query.Sort);
+                url = Utils.AddParameter(url, "include_html_description", query.IncludeHtmlDescription);
+                url = Utils.AddParameter(url, "per_page", query.PerPage);
+            }
+
+            return _api.Get().GetAllAsync<ReleaseInfo>(url);
+        }
     }
 }
