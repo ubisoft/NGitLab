@@ -10,5 +10,7 @@ namespace NGitLab
         void Delete(string name);
 
         IEnumerable<Tag> All { get; }
+
+        GitLabCollectionResponse<Tag> GetAsync(TagQuery query);
     }
 }
