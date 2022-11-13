@@ -205,7 +205,7 @@ namespace NGitLab.Impl
 
         private string CreateGetBridgesUrl(PipelineBridgeQuery query)
         {
-            var url = $"{_pipelinesPath}/{query.PipelineId}/bridges";
+            var url = $"{_pipelinesPath}/{query.PipelineId.ToStringInvariant()}/bridges";
             url = Utils.AddParameter(url, "scope", query.Scope);
             return url;
         }

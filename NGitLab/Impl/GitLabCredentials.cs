@@ -54,7 +54,7 @@ namespace NGitLab.Impl
             get => _apiToken;
             set
             {
-                _apiToken = value ?? throw new ArgumentException(nameof(value));
+                _apiToken = value ?? throw new ArgumentNullException(nameof(value));
 
                 // Passwords and user names and not useful anymore.
                 UserName = null;

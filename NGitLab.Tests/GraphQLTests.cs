@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
+using static NGitLab.Extensions.NumberExtensions;
 
 namespace NGitLab.Tests
 {
@@ -50,7 +51,7 @@ query($path: ID!)
                 },
             });
 
-            Assert.AreEqual("gid://gitlab/Project/" + project.Id, response.Project.Id);
+            Assert.AreEqual("gid://gitlab/Project/" + project.Id.ToStringInvariant(), response.Project.Id);
         }
 
         private sealed class ProjectResponse

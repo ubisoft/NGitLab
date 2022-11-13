@@ -4,7 +4,7 @@ using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
 {
-    internal class ProtectedBranchClient : ClientBase, IProtectedBranchClient
+    internal sealed class ProtectedBranchClient : ClientBase, IProtectedBranchClient
     {
         private readonly int _projectId;
 
@@ -23,7 +23,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public Models.ProtectedBranch[] GetProtectedBranches(string search)
+        public Models.ProtectedBranch[] GetProtectedBranches(string search = null)
         {
             using (Context.BeginOperationScope())
             {
