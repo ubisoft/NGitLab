@@ -27,7 +27,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<Tag> All => _api.Get().GetAll<Tag>(_tagsPath + "?per_page=50");
 
-        public GitLabCollectionResponse<Tag> GetAsync(TagQuery query = null)
+        public GitLabCollectionResponse<Tag> GetAsync(TagQuery query)
         {
             var url = _tagsPath;
             if (query != null)

@@ -734,7 +734,7 @@ NGitLab.Impl.TagClient
 NGitLab.Impl.TagClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tag>
 NGitLab.Impl.TagClient.Create(NGitLab.Models.TagCreate tag) -> NGitLab.Models.Tag
 NGitLab.Impl.TagClient.Delete(string name) -> void
-NGitLab.Impl.TagClient.GetAsync(NGitLab.Models.TagQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Tag>
+NGitLab.Impl.TagClient.GetAsync(NGitLab.Models.TagQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Tag>
 NGitLab.Impl.TagClient.TagClient(NGitLab.Impl.API api, string repoPath) -> void
 NGitLab.Impl.TriggerClient
 NGitLab.Impl.TriggerClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Trigger>
