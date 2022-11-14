@@ -66,7 +66,7 @@ namespace NGitLab.Mock.Clients
             };
         }
 
-        public GitLabCollectionResponse<Models.Tag> GetAsync(TagQuery query = null)
+        public GitLabCollectionResponse<Models.Tag> GetAsync(TagQuery query)
         {
             using (Context.BeginOperationScope())
             {
