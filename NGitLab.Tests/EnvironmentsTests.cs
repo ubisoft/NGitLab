@@ -12,7 +12,7 @@ namespace NGitLab.Tests
         private static string GetSlugNameStart(string name)
         {
             if (name.Length > 17)
-                name = name.Substring(0, 17);
+                name = name[..17];
             return name.Replace('_', '-');
         }
 

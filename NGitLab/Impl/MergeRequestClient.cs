@@ -74,10 +74,7 @@ namespace NGitLab.Impl
             if (mergeRequest == null)
                 throw new ArgumentNullException(nameof(mergeRequest));
 
-            if (mergeRequest.TargetProjectId == null)
-            {
-                mergeRequest.TargetProjectId = _projectId;
-            }
+            mergeRequest.TargetProjectId ??= _projectId;
 
             return _api
                 .Post().With(mergeRequest)

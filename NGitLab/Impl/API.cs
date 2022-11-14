@@ -38,10 +38,7 @@ namespace NGitLab.Impl
 
         protected virtual IHttpRequestor CreateRequestor(MethodType methodType)
         {
-            if (_credentials.ApiToken == null)
-            {
-                _credentials.ApiToken = OpenPrivateSession();
-            }
+            _credentials.ApiToken ??= OpenPrivateSession();
 
             return new HttpRequestor(_credentials.HostUrl, _credentials.ApiToken, methodType, RequestOptions);
         }
