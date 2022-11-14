@@ -23,7 +23,7 @@ namespace NGitLab.Impl
         public EnvironmentInfo Create(string name, string externalUrl)
         {
             if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(name));
 
             var url = Utils.AddParameter(_environmentsPath, "name", name);
 

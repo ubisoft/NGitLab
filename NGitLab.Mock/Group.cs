@@ -77,10 +77,7 @@ namespace NGitLab.Mock
         {
             get
             {
-                if (_path == null)
-                {
-                    _path = Slug.Create(Name);
-                }
+                _path ??= Slug.Create(Name);
 
                 return _path;
             }

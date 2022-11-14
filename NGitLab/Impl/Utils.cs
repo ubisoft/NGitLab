@@ -29,25 +29,20 @@ namespace NGitLab.Impl
             return Equals(values, null) ? url : AddParameterInternal(url, parameterName, string.Join(",", values));
         }
 
-        public static string AddKeysetPaginationParameter(string url, string orderBy, int? pageSize = null)
-        {
-            if (pageSize.HasValue)
-            {
-                url = AddParameter(url, "page_size", pageSize);
-            }
-
-            url = AddParameter(url, "order_by", orderBy);
-            return AddParameter(url, "pagination", "keyset");
-        }
-
         public static string AddOrderBy(string url, string orderBy = null, bool supportKeysetPagination = true)
         {
             if (supportKeysetPagination && (string.IsNullOrEmpty(orderBy) || string.Equals(orderBy, "id", StringComparison.Ordinal)))
             {
-                return AddKeysetPaginationParameter(url, "id");
+                return AddKeysetPaginationParameter(url);
             }
 
             return AddParameter(url, "order_by", orderBy);
+
+            static string AddKeysetPaginationParameter(string url)
+            {
+                url = AddParameter(url, "order_by", "id");
+                return AddParameter(url, "pagination", "keyset");
+            }
         }
 
         private static string AddParameterInternal(string url, string parameterName, string stringValue)

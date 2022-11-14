@@ -1,4 +1,5 @@
-﻿#pragma warning disable MA0102 // Make member readonly, this would be a breaking change
+﻿#pragma warning disable IDE0250 // Make struct 'readonly', this would be a breaking change
+#pragma warning disable MA0102  // Make member readonly, this would be a breaking change
 using System;
 using System.Collections.Generic;
 
