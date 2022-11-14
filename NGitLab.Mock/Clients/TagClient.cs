@@ -70,7 +70,6 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
                 var result = GetProject(_projectId, ProjectPermission.View).Repository.GetTags();
                 if (query != null)
                 {
