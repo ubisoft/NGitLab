@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 using Commit = LibGit2Sharp.Commit;
 
@@ -62,6 +64,24 @@ namespace NGitLab.Mock.Clients
                 },
                 Message = tag.Annotation?.Message,
             };
+        }
+
+        public GitLabCollectionResponse<Models.Tag> GetAsync(TagQuery query)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var result = GetProject(_projectId, ProjectPermission.View).Repository.GetTags();
+                if (query != null)
+                {
+                    if (!string.IsNullOrEmpty(query.Sort))
+                        throw new NotImplementedException();
+
+                    if (!string.IsNullOrEmpty(query.OrderBy))
+                        throw new NotImplementedException();
+                }
+
+                return GitLabCollectionResponse.Create(result.Select(tag => ToTagClient(tag)).ToArray());
+            }
         }
     }
 }

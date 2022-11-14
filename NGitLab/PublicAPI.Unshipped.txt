@@ -678,7 +678,7 @@ NGitLab.Impl.RepositoryClient.GetCommit(NGitLab.Sha1 sha) -> NGitLab.Models.Comm
 NGitLab.Impl.RepositoryClient.GetCommitDiff(NGitLab.Sha1 sha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Diff>
 NGitLab.Impl.RepositoryClient.GetCommitRefs(NGitLab.Sha1 sha, NGitLab.Models.CommitRefType type = NGitLab.Models.CommitRefType.All) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Ref>
 NGitLab.Impl.RepositoryClient.GetCommits(NGitLab.GetCommitsRequest request) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
-NGitLab.Impl.RepositoryClient.GetCommits(string refName, int maxResults) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
+NGitLab.Impl.RepositoryClient.GetCommits(string refName, int maxResults = 0) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
 NGitLab.Impl.RepositoryClient.GetRawBlob(string sha, System.Action<System.IO.Stream> parser) -> void
 NGitLab.Impl.RepositoryClient.GetTree(NGitLab.Models.RepositoryGetTreeOptions options) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
 NGitLab.Impl.RepositoryClient.GetTree(string path) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
@@ -734,6 +734,7 @@ NGitLab.Impl.TagClient
 NGitLab.Impl.TagClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tag>
 NGitLab.Impl.TagClient.Create(NGitLab.Models.TagCreate tag) -> NGitLab.Models.Tag
 NGitLab.Impl.TagClient.Delete(string name) -> void
+NGitLab.Impl.TagClient.GetAsync(NGitLab.Models.TagQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Tag>
 NGitLab.Impl.TagClient.TagClient(NGitLab.Impl.API api, string repoPath) -> void
 NGitLab.Impl.TriggerClient
 NGitLab.Impl.TriggerClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Trigger>
@@ -931,6 +932,7 @@ NGitLab.ITagClient
 NGitLab.ITagClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tag>
 NGitLab.ITagClient.Create(NGitLab.Models.TagCreate tag) -> NGitLab.Models.Tag
 NGitLab.ITagClient.Delete(string name) -> void
+NGitLab.ITagClient.GetAsync(NGitLab.Models.TagQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Tag>
 NGitLab.ITriggerClient
 NGitLab.ITriggerClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Trigger>
 NGitLab.ITriggerClient.Create(string description) -> NGitLab.Models.Trigger
@@ -3033,6 +3035,14 @@ NGitLab.Models.TagCreate.Name -> string
 NGitLab.Models.TagCreate.Ref -> string
 NGitLab.Models.TagCreate.ReleaseDescription -> string
 NGitLab.Models.TagCreate.TagCreate() -> void
+NGitLab.Models.TagQuery
+NGitLab.Models.TagQuery.OrderBy.get -> string
+NGitLab.Models.TagQuery.OrderBy.set -> void
+NGitLab.Models.TagQuery.PerPage.get -> int?
+NGitLab.Models.TagQuery.PerPage.set -> void
+NGitLab.Models.TagQuery.Sort.get -> string
+NGitLab.Models.TagQuery.Sort.set -> void
+NGitLab.Models.TagQuery.TagQuery() -> void
 NGitLab.Models.TestCases
 NGitLab.Models.TestCases.Classname.get -> string
 NGitLab.Models.TestCases.Classname.set -> void

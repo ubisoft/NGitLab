@@ -59,7 +59,7 @@ namespace NGitLab.Impl
         /// <summary>
         /// Gets all the commits of the specified branch/tag.
         /// </summary>
-        public IEnumerable<Commit> GetCommits(string refName, int maxResults)
+        public IEnumerable<Commit> GetCommits(string refName, int maxResults = 0)
         {
             return GetCommits(new GetCommitsRequest { MaxResults = maxResults, RefName = refName });
         }

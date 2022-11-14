@@ -216,9 +216,9 @@ namespace NGitLab
             => new ProtectedBranchClient(_api, projectId);
 
         public ISearchClient GetGroupSearchClient(int groupId)
-            => new SearchClient(_api, $"/groups/{groupId}/search");
+            => new SearchClient(_api, $"/groups/{groupId.ToStringInvariant()}/search");
 
         public ISearchClient GetProjectSearchClient(int projectId)
-            => new SearchClient(_api, $"/projects/{projectId}/search");
+            => new SearchClient(_api, $"/projects/{projectId.ToStringInvariant()}/search");
     }
 }

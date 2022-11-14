@@ -26,5 +26,18 @@ namespace NGitLab.Impl
         }
 
         public IEnumerable<Tag> All => _api.Get().GetAll<Tag>(_tagsPath + "?per_page=50");
+
+        public GitLabCollectionResponse<Tag> GetAsync(TagQuery query)
+        {
+            var url = _tagsPath;
+            if (query != null)
+            {
+                url = Utils.AddParameter(url, "order_by", query.OrderBy);
+                url = Utils.AddParameter(url, "sort", query.Sort);
+                url = Utils.AddParameter(url, "per_page", query.PerPage);
+            }
+
+            return _api.Get().GetAllAsync<Tag>(url);
+        }
     }
 }

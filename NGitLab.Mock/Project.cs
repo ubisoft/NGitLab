@@ -387,9 +387,9 @@ namespace NGitLab.Mock
                 Description = Description,
                 ForkedFrom = this,
                 ImportStatus = "finished",
+                Visibility = Server.DefaultForkVisibilityLevel,
             };
 
-            newProject.Visibility = Server.DefaultForkVisibilityLevel;
             newProject.Permissions.Add(new Permission(user, AccessLevel.Maintainer));
             group.Projects.Add(newProject);
             return newProject;
