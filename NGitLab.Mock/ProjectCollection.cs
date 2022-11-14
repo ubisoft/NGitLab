@@ -11,7 +11,7 @@ namespace NGitLab.Mock
 
         public Project AddNew()
         {
-            return AddNew(null);
+            return AddNew(configure: null);
         }
 
         public Project AddNew(Action<Project> configure)

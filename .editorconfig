@@ -226,24 +226,6 @@ MA0051.maximum_lines_per_method = 100
 MA0051.maximum_statements_per_method = 100
 MA0053.public_class_should_be_sealed = false
 
-# CA1031: Do not catch general exception types
-dotnet_diagnostic.CA1031.severity = none
-
-# CA1303: Do not pass literals as localized parameters
-dotnet_diagnostic.CA1303.severity = none
-
-# CA1308: Normalize strings to uppercase
-dotnet_diagnostic.CA1308.severity = none
-
-# CA1716: Identifiers should not match keywords
-dotnet_diagnostic.CA1716.severity = none
-
-# CA2007: Consider calling ConfigureAwait on the awaited task
-dotnet_diagnostic.CA2007.severity = none
-
-# CA2227: Collection properties should be read only
-dotnet_diagnostic.CA2227.severity = none
-
 # IDE0005: Using directive is unnecessary
 dotnet_diagnostic.IDE0005.severity = warning
 
@@ -252,6 +234,9 @@ dotnet_diagnostic.IDE1006.severity = silent
 
 # IDE0079: Remove unnecessary suppression (false-positive)
 dotnet_diagnostic.IDE0079.severity = silent
+
+# MA0005: Use Array.Empty<T>() -> Defer to CA1825
+dotnet_diagnostic.MA0005.severity = none
 
 # SA1000: The keyword new should be followed by a space
 dotnet_diagnostic.SA1000.severity = none
@@ -313,88 +298,9 @@ dotnet_diagnostic.SA1633.severity = none
 
 ###################### TO DO: FIX (OR MOVE TO SECTION ABOVE) THE FOLLOWING ######################
 
-# CA1032: Implement standard exception constructors
-dotnet_diagnostic.CA1032.severity = none
-
-# CA1033: Interface methods should be callable by child types
-dotnet_diagnostic.CA1033.severity = none
-
-# CA1034: Nested types should not be visible
-dotnet_diagnostic.CA1034.severity = none
-
-# CA1044: Properties should not be write only
-dotnet_diagnostic.CA1044.severity = none
-
-# CA1051: Do not declare visible instance fields
-dotnet_diagnostic.CA1051.severity = none
-
-# CA1054: Change the type of parameter queueUrl of method from string to System.Uri
-dotnet_diagnostic.CA1054.severity = none
-
-# CA1056: Change the type of property from string to System.Uri
-dotnet_diagnostic.CA1056.severity = none
-
-# CA1062: Validate arguments of public methods
-dotnet_diagnostic.CA1062.severity = none
-
-# CA1066: Type {0} should implement IEquatable<T> because it overrides Equals
-dotnet_diagnostic.CA1066.severity = none
-
-# CA1304: Specify CultureInfo
-dotnet_diagnostic.CA1304.severity = none
-
-# CA1305: Specify IFormatProvider
-dotnet_diagnostic.CA1305.severity = none
-
-# CA1707: Identifiers should not contain underscores
-dotnet_diagnostic.CA1707.severity = none
-
-# CA1714: Flags enums should have plural names
-dotnet_diagnostic.CA1714.severity = none
-
-# CA1721: Property names should not match get methods
-dotnet_diagnostic.CA1721.severity = none
-
-# CA1815: Override equals and operator equals on value types
-dotnet_diagnostic.CA1815.severity = none
-
-# CA1819: Properties should not return arrays
-dotnet_diagnostic.CA1819.severity = none
-
-# CA1825: Avoid zero-length array allocations.
-# NOTE: Array.Empty<T> is not available in .NET 4.5
-dotnet_diagnostic.CA1825.severity = none
-
-# CA2000: Dispose objects before losing scope
-dotnet_diagnostic.CA2000.severity = none
-
-# CA2208: Instantiate argument exceptions correctly
-dotnet_diagnostic.CA2208.severity = none
-
-# CA2211: Non-constant fields should not be visible
-dotnet_diagnostic.CA2211.severity = none
-
-# CA2225: Operator overloads have named alternates
-dotnet_diagnostic.CA2225.severity = none
-
-# CA2231: Overload operator equals on overriding value type Equals
-dotnet_diagnostic.CA2231.severity = none
-
-# CA2237: Mark ISerializable types with serializable
-dotnet_diagnostic.CA2237.severity = none
-
-# CA5364: Do Not Use Deprecated Security Protocols
-dotnet_diagnostic.CA5364.severity = none
-
 # CS0618: Type or member is obsolete
 dotnet_diagnostic.CS0618.severity = suggestion
 
-# IDE0052: Remove unread private members
-dotnet_diagnostic.IDE0052.severity = silent
-
-# MA0005: Use Array.Empty<T>()
-# NOTE: Array.Empty<T> is not available in .NET 4.5
-dotnet_diagnostic.MA0005.severity = none
 
 # MA0008: Add StructLayoutAttribute
 dotnet_diagnostic.MA0008.severity = none
@@ -411,20 +317,11 @@ dotnet_diagnostic.MA0016.severity = none
 # MA0025: TODO Implement the functionality
 dotnet_diagnostic.MA0025.severity = none
 
-# MA0045: Do not use blocking call (make method async)
-dotnet_diagnostic.MA0045.severity = none
-
 # MA0048: File name must match type name
 dotnet_diagnostic.MA0048.severity = none
 
-# Method too long
+# MA0051: Method is too long
 dotnet_diagnostic.MA0051.severity = none
-
-# MA0061: Method overrides should not change parameter defaults
-dotnet_diagnostic.MA0061.severity = none
-
-# MA0069: Non-constant static fields should not be visible
-dotnet_diagnostic.MA0069.severity = none
 
 # SA0001: XML comment analysis is disabled due to project configuration
 dotnet_diagnostic.SA0001.severity = none
