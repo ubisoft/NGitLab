@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -7,7 +8,7 @@ using NUnit.Framework;
 
 namespace NGitLab.Tests
 {
-    public class TagsTests
+    public class TagTests
     {
         [Test]
         [NGitLabRetry]
@@ -30,6 +31,37 @@ namespace NGitLab.Tests
 
             tagsClient.Delete("v0.5");
             Assert.IsNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "v0.5", StringComparison.Ordinal)));
+        }
+
+        [NGitLabRetry]
+        [TestCase("v0.5", true)]
+        [TestCase("v0.6", false)]
+        public async Task GetTag(string tagNameSought, bool expectExistence)
+        {
+            // Arrange
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true);
+            var tagClient = context.Client.GetRepository(project.Id).Tags;
+
+            var tagCreated = tagClient.Create(new TagCreate
+            {
+                Name = "v0.5",
+                Message = "Test message",
+                Ref = project.DefaultBranch,
+            });
+            Assert.IsNotNull(tagCreated);
+
+            // Act/Assert
+            if (expectExistence)
+            {
+                var tagFetched = await tagClient.GetByNameAsync(tagNameSought);
+                Assert.IsNotNull(tagFetched);
+            }
+            else
+            {
+                var ex = Assert.ThrowsAsync<GitLabException>(() => tagClient.GetByNameAsync(tagNameSought));
+                Assert.AreEqual(HttpStatusCode.NotFound, ex.StatusCode);
+            }
         }
     }
 }
