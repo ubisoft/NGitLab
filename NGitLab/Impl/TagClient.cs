@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -18,6 +21,11 @@ namespace NGitLab.Impl
         public Tag Create(TagCreate tag)
         {
             return _api.Post().With(tag).To<Tag>(_tagsPath);
+        }
+
+        public Task<Tag> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<Tag>(_tagsPath + '/' + Uri.EscapeDataString(name), cancellationToken);
         }
 
         public void Delete(string name)

@@ -735,6 +735,7 @@ NGitLab.Impl.TagClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab
 NGitLab.Impl.TagClient.Create(NGitLab.Models.TagCreate tag) -> NGitLab.Models.Tag
 NGitLab.Impl.TagClient.Delete(string name) -> void
 NGitLab.Impl.TagClient.GetAsync(NGitLab.Models.TagQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Tag>
+NGitLab.Impl.TagClient.GetByNameAsync(string name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Tag>
 NGitLab.Impl.TagClient.TagClient(NGitLab.Impl.API api, string repoPath) -> void
 NGitLab.Impl.TriggerClient
 NGitLab.Impl.TriggerClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Trigger>
@@ -933,6 +934,7 @@ NGitLab.ITagClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Mod
 NGitLab.ITagClient.Create(NGitLab.Models.TagCreate tag) -> NGitLab.Models.Tag
 NGitLab.ITagClient.Delete(string name) -> void
 NGitLab.ITagClient.GetAsync(NGitLab.Models.TagQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Tag>
+NGitLab.ITagClient.GetByNameAsync(string name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Tag>
 NGitLab.ITriggerClient
 NGitLab.ITriggerClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Trigger>
 NGitLab.ITriggerClient.Create(string description) -> NGitLab.Models.Trigger

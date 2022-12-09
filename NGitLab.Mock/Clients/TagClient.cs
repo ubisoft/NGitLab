@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
 using Commit = LibGit2Sharp.Commit;
@@ -36,6 +39,18 @@ namespace NGitLab.Mock.Clients
                 var createdTag = project.Repository.CreateTag(Context.User, tag.Name, tag.Ref, tag.Message, tag.ReleaseDescription);
 
                 return ToTagClient(createdTag);
+            }
+        }
+
+        public Task<Tag> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                var mockTag = project.Repository.GetTags().FirstOrDefault(t => t.FriendlyName.Equals(name, StringComparison.Ordinal));
+                if (mockTag is null)
+                    throw new GitLabException() { StatusCode = HttpStatusCode.NotFound };
+                return Task.FromResult(ToTagClient(mockTag));
             }
         }
 
