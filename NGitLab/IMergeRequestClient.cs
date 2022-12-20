@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -13,6 +15,8 @@ namespace NGitLab
         IEnumerable<MergeRequest> Get(MergeRequestQuery query);
 
         MergeRequest this[int iid] { get; }
+
+        Task<MergeRequest> GetByIidAsync(int iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default);
 
         MergeRequest Create(MergeRequestCreate mergeRequest);
 

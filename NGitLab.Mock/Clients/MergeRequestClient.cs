@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -44,6 +46,11 @@ namespace NGitLab.Mock.Clients
                     return mergeRequest.ToMergeRequestClient();
                 }
             }
+        }
+
+        public Task<Models.MergeRequest> GetByIidAsync(int iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(this[iid]);
         }
 
         public IEnumerable<Models.MergeRequest> All
