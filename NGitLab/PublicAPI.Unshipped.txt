@@ -320,6 +320,7 @@ NGitLab.IMergeRequestClient.Get(NGitLab.Models.MergeRequestQuery query) -> Syste
 NGitLab.IMergeRequestClient.GetParticipants(int mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Author>
 NGitLab.IMergeRequestClient.GetPipelines(int mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.IMergeRequestClient.Rebase(int mergeRequestIid) -> NGitLab.Models.RebaseResult
+NGitLab.IMergeRequestClient.RebaseAsync(int mergeRequestIid, NGitLab.Models.MergeRequestRebase options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.RebaseResult>
 NGitLab.IMergeRequestClient.Reopen(int mergeRequestIid) -> NGitLab.Models.MergeRequest
 NGitLab.IMergeRequestClient.this[int iid].get -> NGitLab.Models.MergeRequest
 NGitLab.IMergeRequestClient.Update(int mergeRequestIid, NGitLab.Models.MergeRequestUpdate mergeRequest) -> NGitLab.Models.MergeRequest
@@ -552,6 +553,7 @@ NGitLab.Impl.MergeRequestClient.GetPipelines(int mergeRequestIid) -> System.Coll
 NGitLab.Impl.MergeRequestClient.MergeRequestClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.MergeRequestClient.MergeRequestClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.MergeRequestClient.Rebase(int mergeRequestIid) -> NGitLab.Models.RebaseResult
+NGitLab.Impl.MergeRequestClient.RebaseAsync(int mergeRequestIid, NGitLab.Models.MergeRequestRebase options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.RebaseResult>
 NGitLab.Impl.MergeRequestClient.Reopen(int mergeRequestIid) -> NGitLab.Models.MergeRequest
 NGitLab.Impl.MergeRequestClient.this[int iid].get -> NGitLab.Models.MergeRequest
 NGitLab.Impl.MergeRequestClient.Update(int mergeRequestIid, NGitLab.Models.MergeRequestUpdate mergeRequest) -> NGitLab.Models.MergeRequest
@@ -2142,6 +2144,10 @@ NGitLab.Models.MergeRequestQuery.View.get -> string
 NGitLab.Models.MergeRequestQuery.View.set -> void
 NGitLab.Models.MergeRequestQuery.Wip.get -> bool?
 NGitLab.Models.MergeRequestQuery.Wip.set -> void
+NGitLab.Models.MergeRequestRebase
+NGitLab.Models.MergeRequestRebase.MergeRequestRebase() -> void
+NGitLab.Models.MergeRequestRebase.SkipCi.get -> bool?
+NGitLab.Models.MergeRequestRebase.SkipCi.set -> void
 NGitLab.Models.MergeRequestState
 NGitLab.Models.MergeRequestState.closed = 1 -> NGitLab.Models.MergeRequestState
 NGitLab.Models.MergeRequestState.locked = 3 -> NGitLab.Models.MergeRequestState

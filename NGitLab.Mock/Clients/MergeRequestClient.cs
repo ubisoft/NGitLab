@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -190,6 +192,11 @@ namespace NGitLab.Mock.Clients
 
                 return mergeRequest.Rebase(Context.User);
             }
+        }
+
+        public Task<RebaseResult> RebaseAsync(int mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(Rebase(mergeRequestIid));
         }
 
         public IEnumerable<Models.MergeRequest> AllInState(MergeRequestState state)

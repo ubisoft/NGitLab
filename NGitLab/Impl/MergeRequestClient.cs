@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -116,6 +118,10 @@ namespace NGitLab.Impl
         public RebaseResult Rebase(int mergeRequestIid) => _api
             .Put()
             .To<RebaseResult>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/rebase");
+
+        public Task<RebaseResult> RebaseAsync(int mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default) => _api
+            .Put().With(options)
+            .ToAsync<RebaseResult>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/rebase", cancellationToken);
 
         public IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid)
         {

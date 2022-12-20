@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -34,6 +36,8 @@ namespace NGitLab
         MergeRequest Approve(int mergeRequestIid, MergeRequestApprove message);
 
         RebaseResult Rebase(int mergeRequestIid);
+
+        Task<RebaseResult> RebaseAsync(int mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default);
 
         IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid);
 
