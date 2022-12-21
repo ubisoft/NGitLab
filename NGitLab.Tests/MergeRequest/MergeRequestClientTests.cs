@@ -89,6 +89,45 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
+        public async Task Test_merge_request_rebaseasync_skip_ci()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+
+            // Additional commit in default branch, to create divergence
+            var commitClient = context.Client.GetCommits(project.Id);
+            commitClient.Create(new CommitCreate
+            {
+                Branch = project.DefaultBranch,
+                CommitMessage = "A message",
+                AuthorEmail = "a@example.com",
+                AuthorName = "a",
+                ProjectId = project.Id,
+                Actions =
+                {
+                    new CreateCommitAction
+                    {
+                        Action = "create",
+                        Content = "This is a test",
+                        FilePath = "whatever.txt",
+                    },
+                },
+            });
+
+            var mr = mergeRequestClient[mergeRequest.Iid];
+            Assert.AreEqual(1, mr.DivergedCommitsCount,
+                "There should be a 1-commit divergence between the default branch NOW and its state at the moment the MR was created");
+
+            var rebaseResult = await mergeRequestClient.RebaseAsync(mergeRequest.Iid, new MergeRequestRebase { SkipCi = true });
+            Assert.IsTrue(rebaseResult.RebaseInProgress);
+
+            var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
+            Assert.IsTrue(commits.Any(), "Can return the commits");
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task Test_merge_request_id_is_not_equal_to_iid()
         {
             using var context = await GitLabTestContext.CreateAsync();

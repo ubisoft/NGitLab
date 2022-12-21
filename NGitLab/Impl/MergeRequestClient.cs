@@ -132,6 +132,10 @@ namespace NGitLab.Impl
             .Put()
             .To<RebaseResult>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/rebase");
 
+        public Task<RebaseResult> RebaseAsync(int mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default) => _api
+            .Put().With(options)
+            .ToAsync<RebaseResult>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/rebase", cancellationToken);
+
         public IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid)
         {
             return _api.Get().GetAll<PipelineBasic>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/pipelines");

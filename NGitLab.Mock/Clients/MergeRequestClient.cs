@@ -199,6 +199,11 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public Task<RebaseResult> RebaseAsync(int mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(Rebase(mergeRequestIid));
+        }
+
         public IEnumerable<Models.MergeRequest> AllInState(MergeRequestState state)
         {
             using (Context.BeginOperationScope())

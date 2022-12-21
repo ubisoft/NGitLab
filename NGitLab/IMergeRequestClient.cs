@@ -39,6 +39,8 @@ namespace NGitLab
 
         RebaseResult Rebase(int mergeRequestIid);
 
+        Task<RebaseResult> RebaseAsync(int mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default);
+
         IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid);
 
         IEnumerable<Author> GetParticipants(int mergeRequestIid);
