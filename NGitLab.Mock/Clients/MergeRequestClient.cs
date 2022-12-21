@@ -48,6 +48,11 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public Task<Models.MergeRequest> GetByIidAsync(int iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(this[iid]);
+        }
+
         public IEnumerable<Models.MergeRequest> All
         {
             get

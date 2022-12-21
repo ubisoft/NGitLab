@@ -71,6 +71,19 @@ namespace NGitLab.Impl
             }
         }
 
+        public Task<MergeRequest> GetByIidAsync(int iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default)
+        {
+            var url = $"{_projectPath}{MergeRequest.Url}/{iid.ToStringInvariant()}";
+            if (options != null)
+            {
+                url = Utils.AddParameter(url, "include_rebase_in_progress", options.IncludeRebaseInProgress);
+                url = Utils.AddParameter(url, "include_diverged_commits_count", options.IncludeDivergedCommitsCount);
+                url = Utils.AddParameter(url, "render_html", options.RenderHtml);
+            }
+
+            return _api.Get().ToAsync<MergeRequest>(url, cancellationToken);
+        }
+
         public MergeRequest Create(MergeRequestCreate mergeRequest)
         {
             if (mergeRequest == null)

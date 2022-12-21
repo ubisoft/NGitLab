@@ -16,6 +16,8 @@ namespace NGitLab
 
         MergeRequest this[int iid] { get; }
 
+        Task<MergeRequest> GetByIidAsync(int iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default);
+
         MergeRequest Create(MergeRequestCreate mergeRequest);
 
         MergeRequest Update(int mergeRequestIid, MergeRequestUpdate mergeRequest);

@@ -21,6 +21,7 @@ namespace NGitLab.Tests
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
             Assert.AreEqual(mergeRequest.Id, mergeRequestClient[mergeRequest.Iid].Id, "Test we can get a merge request by IId");
+            Assert.AreEqual(mergeRequest.Id, (await mergeRequestClient.GetByIidAsync(mergeRequest.Iid, options: null)).Id, "Test we can get a merge request by IId");
 
             ListMergeRequest(mergeRequestClient, mergeRequest);
             mergeRequest = UpdateMergeRequest(mergeRequestClient, mergeRequest);
