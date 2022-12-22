@@ -160,12 +160,8 @@ namespace NGitLab.Mock.Clients
             {
                 if (query.MinAccessLevel != null
                  || query.LastActivityAfter != null
-                 || query.OrderBy != null
-                 || query.PerPage != null
                  || query.Search != null
-                 || query.Statistics != null
-                 || query.Ascending != null
-                 || query.Simple != null
+                 || query.Statistics is true
                  || query.UserId != null)
                 {
                     throw new NotImplementedException();
@@ -201,6 +197,22 @@ namespace NGitLab.Mock.Clients
                 if (query.Topics.Any())
                 {
                     projects = projects.Where(p => query.Topics.All(t => p.Topics.Contains(t, StringComparer.Ordinal)));
+                }
+
+                if (query.OrderBy is "id")
+                {
+                    if (query.Ascending is null or true)
+                    {
+                        projects = projects.OrderBy(p => p.Id);
+                    }
+                    else
+                    {
+                        projects = projects.OrderByDescending(p => p.Id);
+                    }
+                }
+                else if (query.OrderBy is not null)
+                {
+                    throw new NotImplementedException();
                 }
 
                 return projects.Select(project => project.ToClientProject()).ToList();
