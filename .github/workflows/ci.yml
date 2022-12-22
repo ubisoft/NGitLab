@@ -71,7 +71,7 @@ jobs:
       uses: actions/setup-dotnet@v3
     - run: |
         $value = "${{ matrix.gitlab }}-${{ matrix.configuration }}".Replace(':', '-').Replace('/', '-')
-        Write-Host "::set-output name=artifact_name::test-results-$value"
+        "artifact_name=test-results-$value" >> $env:GITHUB_OUTPUT
       name: Set artifact name
       id: set-artifact-name
     - run: dotnet test --configuration ${{ matrix.configuration }} --logger trx --results-directory "${{ env.TestResultsDirectory }}" --collect:"XPlat Code Coverage" /p:RunAnalyzers=false
