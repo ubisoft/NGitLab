@@ -441,7 +441,15 @@ namespace NGitLab.Mock
         public FileData GetFile(string filePath, string @ref)
         {
             var repo = GetGitRepository();
-            Commands.Checkout(repo, @ref);
+            try
+            {
+                Commands.Checkout(repo, @ref);
+            }
+            catch (LibGit2Sharp.NotFoundException)
+            {
+                throw new GitLabNotFoundException("File not found");
+            }
+
             var fileCompletePath = Path.Combine(FullPath, filePath);
 
             if (!System.IO.File.Exists(fileCompletePath))
