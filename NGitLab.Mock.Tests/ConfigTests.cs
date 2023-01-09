@@ -1,4 +1,6 @@
-﻿using NGitLab.Mock.Config;
+﻿using System.Linq;
+using FluentAssertions;
+using NGitLab.Mock.Config;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -106,6 +108,34 @@ namespace NGitLab.Mock.Tests
 
             using var server = config2.BuildServer();
             Assert.IsNotNull(server);
+        }
+
+        [Test]
+        public void Test_job_ids_are_unique()
+        {
+            var config = new GitLabConfig()
+                .WithUser("user1", isDefault: true)
+                .WithProject("project-1", description: "Project #1", visibility: VisibilityLevel.Public,
+                    configure: project => project
+                        .WithCommit("Initial commit", alias: "C1")
+                        .WithPipeline("C1", p => p.WithJob().WithJob().WithJob()))
+                .WithProject("project-2", description: "Project #2", visibility: VisibilityLevel.Public,
+                    configure: project => project
+                        .WithCommit("Initial commit", alias: "C1")
+                        .WithPipeline("C1", p => p.WithJob().WithJob()));
+
+            using var server = config.BuildServer();
+            Assert.IsNotNull(server);
+
+            var project1 = server.AllProjects.FirstOrDefault();
+            Assert.IsNotNull(project1);
+
+            project1.Jobs.Should().BeEquivalentTo(new[] { new { Id = 1 }, new { Id = 2 }, new { Id = 3 } });
+
+            var project2 = server.AllProjects.LastOrDefault();
+            Assert.IsNotNull(project2);
+
+            project2.Jobs.Should().BeEquivalentTo(new[] { new { Id = 4 }, new { Id = 5 } });
         }
     }
 }
