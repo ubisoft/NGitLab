@@ -104,7 +104,7 @@ namespace NGitLab.Mock.Tests
         }
 
         [Test]
-        public void Test_jobs_id_are_unique()
+        public void Test_job_ids_are_unique()
         {
             var config = new GitLabConfig()
                 .WithUser("user1", isDefault: true)
