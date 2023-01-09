@@ -183,6 +183,7 @@ NGitLab.Mock.Config.GitLabPipeline
 NGitLab.Mock.Config.GitLabPipeline.Commit.get -> string
 NGitLab.Mock.Config.GitLabPipeline.Commit.set -> void
 NGitLab.Mock.Config.GitLabPipeline.GitLabPipeline() -> void
+NGitLab.Mock.Config.GitLabPipeline.GitLabPipeline(NGitLab.Mock.Config.GitLabProject project) -> void
 NGitLab.Mock.Config.GitLabPipeline.Jobs.get -> NGitLab.Mock.Config.GitLabJobsCollection
 NGitLab.Mock.Config.GitLabPipelinesCollection
 NGitLab.Mock.Config.GitLabProject.CloneParameters.get -> string

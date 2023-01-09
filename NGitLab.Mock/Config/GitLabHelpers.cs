@@ -920,7 +920,7 @@ namespace NGitLab.Mock.Config
         {
             return Configure(project, _ =>
             {
-                var pipeline = new GitLabPipeline
+                var pipeline = new GitLabPipeline(project)
                 {
                     Commit = @ref ?? throw new ArgumentNullException(nameof(@ref)),
                 };
@@ -947,6 +947,9 @@ namespace NGitLab.Mock.Config
         {
             return Configure(pipeline, _ =>
             {
+                if (pipeline.Parent == null)
+                    throw new InvalidOperationException($"Parent not set on pipeline {pipeline}");
+
                 var job = new GitLabJob
                 {
                     Name = name,

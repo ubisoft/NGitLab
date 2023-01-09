@@ -10,6 +10,12 @@ namespace NGitLab.Mock.Config
             Jobs = new GitLabJobsCollection(this);
         }
 
+        public GitLabPipeline(GitLabProject project)
+        {
+            Parent = project;
+            Jobs = new GitLabJobsCollection(this);
+        }
+
         /// <summary>
         /// Commit alias reference
         /// </summary>

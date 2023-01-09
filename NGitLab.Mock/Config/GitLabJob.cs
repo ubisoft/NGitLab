@@ -48,6 +48,7 @@ namespace NGitLab.Mock.Config
             var config = _parent switch
             {
                 GitLabProject project => project.Parent,
+                GitLabPipeline pipeline => pipeline.Parent?.Parent,
                 _ => null,
             };
 
