@@ -18,17 +18,24 @@ namespace NGitLab.Mock.Tests
             server.Groups.Add(group);
             var project = new Project("test-project")
             {
-                Description = "Test project", DefaultBranch = "default", Visibility = VisibilityLevel.Public,
+                Description = "Test project",
+                DefaultBranch = "default",
+                Visibility = VisibilityLevel.Public,
             };
             group.Projects.Add(project);
             project.Labels.Add("label1");
             project.Issues.Add(new Issue
             {
-                Title = "Issue #1", Description = "My issue", Author = new UserRef(user), Labels = new[] { "label1" },
+                Title = "Issue #1",
+                Description = "My issue",
+                Author = new UserRef(user),
+                Labels = new[] { "label1" },
             });
             project.MergeRequests.Add(new MergeRequest
             {
-                Title = "Merge request #1", Description = "My merge request", Author = new UserRef(user),
+                Title = "Merge request #1",
+                Description = "My merge request",
+                Author = new UserRef(user),
             });
             project.Permissions.Add(new Permission(user, AccessLevel.Owner));
 
