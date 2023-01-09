@@ -948,7 +948,7 @@ namespace NGitLab.Mock.Config
             return Configure(pipeline, _ =>
             {
                 if (pipeline.Parent == null)
-                    throw new InvalidOperationException($"Parent not set on pipeline {pipeline}");
+                    throw new InvalidOperationException($"Parent project not set on pipeline {pipeline}");
 
                 var job = new GitLabJob
                 {
