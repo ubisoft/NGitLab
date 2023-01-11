@@ -279,19 +279,28 @@ namespace NGitLab.Mock.Clients
                     return new(StringComparer.Ordinal);
 
                 project.Repository.Checkout(project.DefaultBranch);
-                var files = Directory.GetFiles(project.Repository.FullPath, "*", SearchOption.AllDirectories);
-                Dictionary<string, double> result = new(StringComparer.Ordinal)
-                {
-                    { "C#", files.Count(f => HasExtension(f, ".cs")) / files.Length },
-                    { "HTML", files.Count(f => HasExtension(f, ".html", ".htm")) / files.Length },
-                    { "JavaScript", files.Count(f => HasExtension(f, ".js", ".jsx")) / files.Length },
-                    { "PowerShell", files.Count(f => HasExtension(f, ".ps1")) / files.Length },
-                    { "TypeScript", files.Count(f => HasExtension(f, ".ts", ".tsx")) / files.Length },
-                };
 
+                var gitFolder = Path.Combine(project.Repository.FullPath, ".git");
+                var files = Directory.GetFiles(project.Repository.FullPath, "*", SearchOption.AllDirectories)
+                    .Where(file => !file.StartsWith(gitFolder, StringComparison.Ordinal))
+                    .ToArray();
+
+                Dictionary<string, double> result = new(StringComparer.Ordinal);
+                AddByExtension("C#", ".cs");
+                AddByExtension("HTML", ".html", ".htm");
+                AddByExtension("JavaScript", ".js", ".jsx");
+                AddByExtension("PowerShell", ".ps1");
+                AddByExtension("TypeScript", ".ts", ".tsx");
                 return result;
 
-                bool HasExtension(string path, params string[] expectedExtensions) => expectedExtensions.Any(expectedExtension => path.EndsWith(expectedExtension, StringComparison.OrdinalIgnoreCase));
+                void AddByExtension(string name, params string[] expectedExtensions)
+                {
+                    var count = files.Count(file => expectedExtensions.Any(expectedExtension => file.EndsWith(expectedExtension, StringComparison.OrdinalIgnoreCase)));
+                    if (count > 0)
+                    {
+                        result.Add(name, count / (double)files.Length);
+                    }
+                }
             }
         }
 
