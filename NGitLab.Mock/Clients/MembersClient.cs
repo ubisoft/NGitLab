@@ -95,7 +95,12 @@ namespace NGitLab.Mock.Clients
 
         public IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var group = GetGroup(groupId, GroupPermission.View);
+                var members = group.GetEffectivePermissions().Permissions;
+                return members.Select(member => member.ToMembershipClient());
+            }
         }
 
         public IEnumerable<Membership> OfNamespace(string groupId)
