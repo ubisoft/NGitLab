@@ -432,6 +432,7 @@ NGitLab.Mock.Group.IsUserNamespace.get -> bool
 NGitLab.Mock.Group.Labels.get -> NGitLab.Mock.LabelsCollection
 NGitLab.Mock.Group.LfsEnabled.get -> bool
 NGitLab.Mock.Group.LfsEnabled.set -> void
+NGitLab.Mock.Group.Milestones.get -> NGitLab.Mock.MilestoneCollection
 NGitLab.Mock.Group.Name.get -> string
 NGitLab.Mock.Group.Name.set -> void
 NGitLab.Mock.Group.Parent.get -> NGitLab.Mock.Group
