@@ -139,13 +139,13 @@ namespace NGitLab.Mock
 
                 if (_scope == MilestoneScope.Groups)
                 {
-                    var group = GetGroup(_resourceId, GroupPermission.Edit);
-                    milestones.Concat(group.Milestones);
+                    var group = GetGroup(_resourceId, GroupPermission.View);
+                    milestones = milestones.Concat(group.Milestones);
                 }
                 else if (_scope == MilestoneScope.Projects)
                 {
-                    var project = GetProject(_resourceId, ProjectPermission.Edit);
-                    milestones.Concat(project.Milestones);
+                    var project = GetProject(_resourceId, ProjectPermission.View);
+                    milestones = milestones.Concat(project.Milestones);
                 }
 
                 if (query.State != null)
