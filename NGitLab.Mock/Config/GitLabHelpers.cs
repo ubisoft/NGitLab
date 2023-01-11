@@ -980,7 +980,7 @@ namespace NGitLab.Mock.Config
             }
 
             foreach (var group in config.Groups.OrderBy(x =>
-                string.IsNullOrEmpty(x.Namespace) ? x.Name : $"{x.Namespace}/{x.Name}"))
+                string.IsNullOrEmpty(x.Namespace) ? x.Name : $"{x.Namespace}/{x.Name}", StringComparer.Ordinal))
             {
                 CreateGroup(server, group);
             }
