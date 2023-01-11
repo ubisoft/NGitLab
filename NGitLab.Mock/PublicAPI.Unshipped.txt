@@ -429,6 +429,7 @@ NGitLab.Mock.Group.Groups.get -> NGitLab.Mock.GroupCollection
 NGitLab.Mock.Group.Id.get -> int
 NGitLab.Mock.Group.Id.set -> void
 NGitLab.Mock.Group.IsUserNamespace.get -> bool
+NGitLab.Mock.Group.IsUserOwner(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Group.Labels.get -> NGitLab.Mock.LabelsCollection
 NGitLab.Mock.Group.LfsEnabled.get -> bool
 NGitLab.Mock.Group.LfsEnabled.set -> void
@@ -958,6 +959,7 @@ NGitLab.Mock.Repository.GetCommits(string ref) -> System.Collections.Generic.IEn
 NGitLab.Mock.Repository.GetFile(string filePath, string ref) -> NGitLab.Models.FileData
 NGitLab.Mock.Repository.GetReleaseTag(string tagName) -> NGitLab.Mock.ReleaseTag
 NGitLab.Mock.Repository.GetTags() -> LibGit2Sharp.TagCollection
+NGitLab.Mock.Repository.IsEmpty.get -> bool
 NGitLab.Mock.Repository.IsRebaseNeeded(string branch, string ontoRebaseBranch) -> bool
 NGitLab.Mock.Repository.Merge(NGitLab.Mock.User user, string sourceBranch, string targetBranch) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.Merge(NGitLab.Mock.User user, string sourceBranch, string targetBranch, NGitLab.Mock.Project targetProject) -> LibGit2Sharp.Commit

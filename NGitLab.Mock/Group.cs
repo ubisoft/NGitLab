@@ -157,6 +157,12 @@ namespace NGitLab.Mock
             }
         }
 
+        public bool IsUserOwner(User user)
+        {
+            var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
+            return accessLevel >= AccessLevel.Owner;
+        }
+
         public bool CanUserViewGroup(User user)
         {
             if (Visibility == VisibilityLevel.Public)

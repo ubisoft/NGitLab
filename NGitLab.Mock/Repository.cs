@@ -47,6 +47,17 @@ namespace NGitLab.Mock
             }
         }
 
+        public bool IsEmpty
+        {
+            get
+            {
+                if (_directory == null)
+                    return true;
+
+                return !GetGitRepository().Commits.Any();
+            }
+        }
+
         private LibGit2Sharp.Repository GetGitRepository()
         {
             if (_directory == null)
