@@ -10,12 +10,14 @@ namespace NGitLab.Mock
 {
     internal sealed class MilestoneClient : ClientBase, IMilestoneClient
     {
-        private readonly int _projectId;
+        private readonly int _resourceId;
+        private readonly MilestoneScope _scope;
 
-        public MilestoneClient(ClientContext context, int projectId)
+        public MilestoneClient(ClientContext context, int id, MilestoneScope scope)
             : base(context)
         {
-            _projectId = projectId;
+            _resourceId = id;
+            _scope = scope;
         }
 
         public Models.Milestone this[int id]
@@ -24,7 +26,7 @@ namespace NGitLab.Mock
             {
                 using (Context.BeginOperationScope())
                 {
-                    var project = GetProject(_projectId, ProjectPermission.View);
+                    var project = GetProject(_resourceId, ProjectPermission.View);
                     return FindMilestone(id, project)?.ToClientMilestone();
                 }
             }
@@ -38,8 +40,19 @@ namespace NGitLab.Mock
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Edit);
-                var milestone = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+                var milestone = new Milestone();
+
+                if (_scope == MilestoneScope.Groups)
+                {
+                    var group = GetGroup(_resourceId, GroupPermission.Edit);
+                    milestone = FindMilestone(milestoneId, group) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+                }
+                else if (_scope == MilestoneScope.Projects)
+                {
+                    var project = GetProject(_resourceId, ProjectPermission.Edit);
+                    milestone = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+                }
+
                 milestone.State = MilestoneState.active;
                 return milestone.ToClientMilestone();
             }
@@ -54,8 +67,19 @@ namespace NGitLab.Mock
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Edit);
-                var milestone = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+                var milestone = new Milestone();
+
+                if (_scope == MilestoneScope.Groups)
+                {
+                    var group = GetGroup(_resourceId, GroupPermission.Edit);
+                    milestone = FindMilestone(milestoneId, group) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+                }
+                else if (_scope == MilestoneScope.Projects)
+                {
+                    var project = GetProject(_resourceId, ProjectPermission.Edit);
+                    milestone = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+                }
+
                 milestone.State = MilestoneState.closed;
                 return milestone.ToClientMilestone();
             }
@@ -65,7 +89,6 @@ namespace NGitLab.Mock
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Edit);
                 var ms = new Milestone
                 {
                     Title = milestone.Title,
@@ -73,7 +96,18 @@ namespace NGitLab.Mock
                     DueDate = string.IsNullOrEmpty(milestone.DueDate) ? DateTimeOffset.UtcNow : DateTimeOffset.Parse(milestone.DueDate),
                     StartDate = string.IsNullOrEmpty(milestone.StartDate) ? DateTimeOffset.UtcNow : DateTimeOffset.Parse(milestone.StartDate),
                 };
-                project.Milestones.Add(ms);
+
+                if (_scope == MilestoneScope.Groups)
+                {
+                    var group = GetGroup(_resourceId, GroupPermission.Edit);
+                    group.Milestones.Add(ms);
+                }
+                else if (_scope == MilestoneScope.Projects)
+                {
+                    var project = GetProject(_resourceId, ProjectPermission.Edit);
+                    project.Milestones.Add(ms);
+                }
+
                 return ms.ToClientMilestone();
             }
         }
@@ -82,9 +116,18 @@ namespace NGitLab.Mock
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Edit);
-                var milestone = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
-                project.Milestones.Remove(milestone);
+                if (_scope == MilestoneScope.Groups)
+                {
+                    var group = GetGroup(_resourceId, GroupPermission.Edit);
+                    var milestone = FindMilestone(milestoneId, group) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+                    group.Milestones.Remove(milestone);
+                }
+                else if (_scope == MilestoneScope.Projects)
+                {
+                    var project = GetProject(_resourceId, ProjectPermission.Edit);
+                    var milestone = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+                    project.Milestones.Remove(milestone);
+                }
             }
         }
 
@@ -92,8 +135,19 @@ namespace NGitLab.Mock
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                IEnumerable<Milestone> milestones = project.Milestones;
+                IEnumerable<Milestone> milestones = new List<Milestone>();
+
+                if (_scope == MilestoneScope.Groups)
+                {
+                    var group = GetGroup(_resourceId, GroupPermission.View);
+                    milestones = milestones.Concat(group.Milestones);
+                }
+                else if (_scope == MilestoneScope.Projects)
+                {
+                    var project = GetProject(_resourceId, ProjectPermission.View);
+                    milestones = milestones.Concat(project.Milestones);
+                }
+
                 if (query.State != null)
                 {
                     milestones = milestones.Where(m => (int)m.State == (int)query.State);
@@ -112,8 +166,19 @@ namespace NGitLab.Mock
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Edit);
-                var ms = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+                var ms = new Milestone();
+
+                if (_scope == MilestoneScope.Groups)
+                {
+                    var group = GetGroup(_resourceId, GroupPermission.Edit);
+                    ms = FindMilestone(milestoneId, group) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+                }
+                else if (_scope == MilestoneScope.Projects)
+                {
+                    var project = GetProject(_resourceId, ProjectPermission.Edit);
+                    ms = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+                }
+
                 if (!string.IsNullOrEmpty(milestone.Title))
                 {
                     ms.Title = milestone.Title;
@@ -141,6 +206,11 @@ namespace NGitLab.Mock
         private static Milestone FindMilestone(int id, Project project)
         {
             return project.Milestones.FirstOrDefault(x => x.Id == id);
+        }
+
+        private static Milestone FindMilestone(int id, Group group)
+        {
+            return group.Milestones.FirstOrDefault(x => x.Id == id);
         }
     }
 }

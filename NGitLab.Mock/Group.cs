@@ -73,6 +73,8 @@ namespace NGitLab.Mock
 
         public LabelsCollection Labels { get; }
 
+        public MilestoneCollection Milestones { get; }
+
         public string Path
         {
             get
