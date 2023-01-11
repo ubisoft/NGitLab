@@ -1,4 +1,5 @@
 ﻿using System;
+using NGitLab.Impl;
 
 namespace NGitLab.Mock.Clients
 {
@@ -71,9 +72,9 @@ namespace NGitLab.Mock.Clients
 
         public IMergeRequestClient GetMergeRequest(int projectId) => new MergeRequestClient(Context, projectId);
 
-        public IMilestoneClient GetMilestone(int projectId) => new MilestoneClient(Context, projectId);
+        public IMilestoneClient GetMilestone(int projectId) => new MilestoneClient(Context, projectId, MilestoneScope.Projects);
 
-        public IMilestoneClient GetGroupMilestone(int groupId) => throw new NotImplementedException();
+        public IMilestoneClient GetGroupMilestone(int groupId) => new MilestoneClient(Context, groupId, MilestoneScope.Groups);
 
         public IReleaseClient GetReleases(int projectId) => new ReleaseClient(Context, projectId);
 
