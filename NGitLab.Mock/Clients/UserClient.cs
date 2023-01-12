@@ -125,7 +125,9 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                return Server.Users.SearchByUsername(query).Select(user => user.ToClientUser()).ToList();
+                return Server.Users
+                    .Where(user => string.Equals(user.Email, query, StringComparison.OrdinalIgnoreCase) || string.Equals(user.UserName, query, StringComparison.OrdinalIgnoreCase))
+                    .Select(user => user.ToClientUser()).ToList();
             }
         }
 
