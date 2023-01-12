@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
 using NGitLab.Mock.Config;
 using NUnit.Framework;
 
@@ -32,6 +33,23 @@ namespace NGitLab.Mock.Tests
                 .BuildServer();
 
             Assert.IsTrue(Directory.Exists(tempDir.GetFullPath(".git")));
+        }
+
+        [Test]
+        public void Test_get_languages()
+        {
+            using var server = new GitLabServer();
+            var user = server.Users.AddNew();
+            var project = user.Namespace.Projects.AddNew();
+
+            var client = server.CreateClient(user);
+            Assert.IsEmpty(client.Projects.GetLanguages(project.Id.ToString(CultureInfo.InvariantCulture)));
+
+            project.Repository.Commit(user, "dummy", new[] { File.CreateFromText("test.cs", "dummy"), File.CreateFromText("test.js", "dummy") });
+            var languages = client.Projects.GetLanguages(project.Id.ToString(CultureInfo.InvariantCulture));
+            Assert.AreEqual(2, languages.Count);
+            Assert.AreEqual(0.5d, languages["C#"]);
+            Assert.AreEqual(0.5d, languages["JavaScript"]);
         }
     }
 }
