@@ -22,6 +22,7 @@ namespace NGitLab.Mock
             Permissions = new PermissionCollection(this);
             Badges = new BadgeCollection(this);
             Labels = new LabelsCollection(this);
+            Milestones = new MilestoneCollection(this);
             Name = name;
         }
 
