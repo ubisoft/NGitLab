@@ -51,5 +51,18 @@ namespace NGitLab.Mock.Tests
             Assert.AreEqual(0.5d, languages["C#"]);
             Assert.AreEqual(0.5d, languages["JavaScript"]);
         }
+
+        [Test]
+        public void Test_empty_repo()
+        {
+            using var server = new GitLabServer();
+            var user = server.Users.AddNew();
+            var project = user.Namespace.Projects.AddNew();
+
+            Assert.IsTrue(project.ToClientProject().EmptyRepo);
+
+            project.Repository.Commit(user, "dummy");
+            Assert.IsFalse(project.ToClientProject().EmptyRepo);
+        }
     }
 }
