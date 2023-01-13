@@ -1,5 +1,4 @@
-﻿using System;
-using NGitLab.Impl;
+﻿using NGitLab.Impl;
 
 namespace NGitLab.Mock.Clients
 {

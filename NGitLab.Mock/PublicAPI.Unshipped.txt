@@ -796,8 +796,6 @@ NGitLab.Mock.Project.Id.get -> int
 NGitLab.Mock.Project.Id.set -> void
 NGitLab.Mock.Project.ImportStatus.get -> string
 NGitLab.Mock.Project.ImportStatus.set -> void
-NGitLab.Mock.Project.IsEmpty.get -> bool
-NGitLab.Mock.Project.IsEmpty.set -> void
 NGitLab.Mock.Project.Issues.get -> NGitLab.Mock.IssueCollection
 NGitLab.Mock.Project.IsUserMember(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Project.IsUserOwner(NGitLab.Mock.User user) -> bool
