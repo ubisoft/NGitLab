@@ -177,6 +177,9 @@ namespace NGitLab.Mock
             if (user == null)
                 return false;
 
+            if (user.IsAdmin)
+                return true;
+
             var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
             if (accessLevel.HasValue)
                 return true;
@@ -189,6 +192,9 @@ namespace NGitLab.Mock
             if (user == null)
                 return false;
 
+            if (user.IsAdmin)
+                return true;
+
             var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
             return accessLevel.HasValue && accessLevel.Value == AccessLevel.Owner;
         }
@@ -197,6 +203,9 @@ namespace NGitLab.Mock
         {
             if (user == null)
                 return false;
+
+            if (user.IsAdmin)
+                return true;
 
             var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
             return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Maintainer;
@@ -207,6 +216,9 @@ namespace NGitLab.Mock
             if (user == null)
                 return false;
 
+            if (user.IsAdmin)
+                return true;
+
             var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
             return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Developer;
         }
@@ -215,6 +227,9 @@ namespace NGitLab.Mock
         {
             if (user == null)
                 return false;
+
+            if (user.IsAdmin)
+                return true;
 
             var accessLevel = GetEffectivePermissions().GetAccessLevel(user);
             return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Developer;
