@@ -36,6 +36,23 @@ namespace NGitLab.Mock.Tests
         }
 
         [Test]
+        public void Test_projects_created_url_ends_with_namespace_and_name()
+        {
+            using var server = new GitLabConfig()
+                .WithUser("Test", isDefault: true)
+                .WithProject("Test", @namespace: "testgroup", addDefaultUserAsMaintainer: true)
+                .BuildServer();
+
+            var client = server.CreateClient();
+            var project = client.Projects["testgroup/Test"];
+
+            Assert.IsNotNull(project);
+            StringAssert.EndsWith("testgroup\\test", project.SshUrl);
+            StringAssert.EndsWith("testgroup\\test", project.HttpUrl);
+            StringAssert.EndsWith("testgroup/test", project.WebUrl);
+        }
+
+        [Test]
         public void Test_get_languages()
         {
             using var server = new GitLabServer();
