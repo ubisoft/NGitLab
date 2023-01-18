@@ -24,6 +24,7 @@ namespace NGitLab.Mock
 
         private readonly object _lock = new();
         private TemporaryDirectory _directory;
+        private string _repositoryDirectory;
         private LibGit2Sharp.Repository _repository;
         private readonly IList<ReleaseTag> _releaseTags = new List<ReleaseTag>();
 
@@ -38,12 +39,12 @@ namespace NGitLab.Mock
         {
             get
             {
-                if (_directory == null)
+                if (_repositoryDirectory == null)
                 {
                     _ = GetGitRepository();
                 }
 
-                return _directory.FullPath;
+                return _repositoryDirectory;
             }
         }
 
@@ -67,9 +68,13 @@ namespace NGitLab.Mock
                     if (_directory == null)
                     {
                         var directory = TemporaryDirectory.Create();
+
+                        // We happen the project full path to have a final path that match more closely the folder layout as found on GitLab
+                        var repositoryDirectory = Path.Combine(directory.FullPath, Project.PathWithNamespace.Replace('/', Path.DirectorySeparatorChar));
+
                         if (Project.ForkedFrom == null)
                         {
-                            LibGit2Sharp.Repository.Init(directory.FullPath);
+                            LibGit2Sharp.Repository.Init(repositoryDirectory);
 
                             // libgit2sharp cannot init with a branch other than master
                             // Use symbolic-ref to keep the code compatible with older version of git
@@ -81,7 +86,7 @@ namespace NGitLab.Mock
                                     Arguments = $"symbolic-ref HEAD \"refs/heads/{Project.DefaultBranch}\"",
                                     RedirectStandardError = true,
                                     UseShellExecute = false,
-                                    WorkingDirectory = directory.FullPath,
+                                    WorkingDirectory = repositoryDirectory,
                                 },
                             };
 
@@ -90,20 +95,21 @@ namespace NGitLab.Mock
                             if (process.ExitCode != 0)
                             {
                                 var error = process.StandardError.ReadToEnd();
-                                throw new GitLabException($"Cannot update symbolic ref with branch '{Project.DefaultBranch}' in '{directory.FullPath}': {error}");
+                                throw new GitLabException($"Cannot update symbolic ref with branch '{Project.DefaultBranch}' in '{repositoryDirectory}': {error}");
                             }
                         }
                         else
                         {
-                            LibGit2Sharp.Repository.Clone(Project.ForkedFrom.Repository.FullPath, directory.FullPath);
+                            LibGit2Sharp.Repository.Clone(Project.ForkedFrom.Repository.FullPath, repositoryDirectory);
                         }
 
-                        _repository = new LibGit2Sharp.Repository(directory.FullPath);
+                        _repository = new LibGit2Sharp.Repository(repositoryDirectory);
 
                         _repository.Config.Set("receive.advertisePushOptions", value: true);
                         _repository.Config.Set("uploadpack.allowFilter", value: true);
                         _repository.Config.Set("receive.denyCurrentBranch", value: "updateInstead"); // Allow git push to existing branches
 
+                        _repositoryDirectory = repositoryDirectory;
                         _directory = directory;
                     }
                 }
