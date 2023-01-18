@@ -68,6 +68,8 @@ namespace NGitLab.Mock
                     if (_directory == null)
                     {
                         var directory = TemporaryDirectory.Create();
+
+                        // We happen the project full path to have a final path that match more closely the folder layout as found on GitLab
                         var repositoryDirectory = Path.Combine(directory.FullPath, Project.PathWithNamespace.Replace('/', Path.DirectorySeparatorChar));
 
                         if (Project.ForkedFrom == null)

@@ -47,8 +47,8 @@ namespace NGitLab.Mock.Tests
             var project = client.Projects["testgroup/Test"];
 
             Assert.IsNotNull(project);
-            StringAssert.EndsWith("testgroup\\test", project.SshUrl);
-            StringAssert.EndsWith("testgroup\\test", project.HttpUrl);
+            StringAssert.EndsWith($"testgroup{Path.DirectorySeparatorChar}test", project.SshUrl);
+            StringAssert.EndsWith($"testgroup{Path.DirectorySeparatorChar}test", project.HttpUrl);
             StringAssert.EndsWith("testgroup/test", project.WebUrl);
         }
 
