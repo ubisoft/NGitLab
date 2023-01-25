@@ -33,7 +33,7 @@ namespace NGitLab.Mock
 
         public UserRef Author { get; set; }
 
-        public DateTimeOffset CreatedAt { get; }
+        public DateTimeOffset CreatedAt { get; set; }
 
         public DateTimeOffset UpdatedAt { get; set; }
 
