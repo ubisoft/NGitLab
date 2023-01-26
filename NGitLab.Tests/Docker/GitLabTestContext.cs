@@ -274,7 +274,9 @@ namespace NGitLab.Tests.Docker
 
             try
             {
-                var path = Path.Combine(Path.GetTempPath(), "GitLabClient", "Runners", "gitlab-runner.exe");
+                // Version availables: https://gitlab.com/gitlab-org/gitlab-runner/-/releases
+                var version = "15.6.3";
+                var path = Path.Combine(Path.GetTempPath(), "GitLabClient", "Runners", version, "gitlab-runner.exe");
                 if (!File.Exists(path))
                 {
                     if (!File.Exists(path))
@@ -282,11 +284,11 @@ namespace NGitLab.Tests.Docker
                         Uri url;
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         {
-                            url = new Uri("https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-windows-amd64.exe");
+                            url = new Uri($"https://gitlab-runner-downloads.s3.amazonaws.com/v{version}/binaries/gitlab-runner-windows-amd64.exe");
                         }
                         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                         {
-                            url = new Uri("https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64");
+                            url = new Uri($"https://gitlab-runner-downloads.s3.amazonaws.com/v{version}/binaries/gitlab-runner-linux-amd64");
                         }
                         else
                         {
@@ -330,7 +332,7 @@ namespace NGitLab.Tests.Docker
                 {
                     // Update the git configuration to remove any proxy for this host
                     // git config --global http.http://localhost:48624.proxy ""
-                    using var gitConfigProcess = Process.Start("git", "config --global http.http://localhost:48624.proxy \"\"");
+                    using var gitConfigProcess = Process.Start("git", "config --global http." + DockerContainer.GitLabUrl.ToString() + ".proxy \"\"");
                     gitConfigProcess.WaitForExit();
                     if (gitConfigProcess.ExitCode != 0)
                         throw new InvalidOperationException("git config failed");
@@ -356,15 +358,15 @@ namespace NGitLab.Tests.Docker
                 {
                     FileName = path,
                     ArgumentList =
-                {
-                    "run-single",
-                    "--url", DockerContainer.GitLabUrl.ToString(),
-                    "--executor", "shell",
-                    "--shell", RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "powershell" : "pwsh",
-                    "--builds-dir", buildDir,
-                    "--wait-timeout", "240", // in seconds
-                    "--token", runner.Token,
-                },
+                    {
+                        "run-single",
+                        "--url", DockerContainer.GitLabUrl.ToString(),
+                        "--executor", "shell",
+                        "--shell", RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "powershell" : "pwsh",
+                        "--builds-dir", buildDir,
+                        "--wait-timeout", "240", // in seconds
+                        "--token", runner.Token,
+                    },
                     CreateNoWindow = true,
                     ErrorDialog = false,
                     UseShellExecute = false,
@@ -374,6 +376,9 @@ namespace NGitLab.Tests.Docker
                 var process = Process.Start(psi);
                 if (process == null)
                     throw new InvalidOperationException("Cannot start the runner");
+
+                // Give some time to ensure the runner doesn't stop immediately
+                await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
 
                 if (process.HasExited)
                     throw new InvalidOperationException("The runner has exited");
