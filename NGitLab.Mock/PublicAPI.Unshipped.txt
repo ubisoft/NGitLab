@@ -465,6 +465,7 @@ NGitLab.Mock.Issue.ClosedAt.set -> void
 NGitLab.Mock.Issue.Confidential.get -> bool
 NGitLab.Mock.Issue.Confidential.set -> void
 NGitLab.Mock.Issue.CreatedAt.get -> System.DateTimeOffset
+NGitLab.Mock.Issue.CreatedAt.set -> void
 NGitLab.Mock.Issue.Description.get -> string
 NGitLab.Mock.Issue.Description.set -> void
 NGitLab.Mock.Issue.Id.get -> int
