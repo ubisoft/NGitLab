@@ -364,15 +364,17 @@ namespace NGitLab.Mock.Config
         /// <param name="user">Author username (required if default user not defined)</param>
         /// <param name="sourceBranch">Source branch (required if checkout or merge)</param>
         /// <param name="targetBranch">Target branch (required if merge)</param>
+        /// <param name="fromBranch">From branch</param>
         /// <param name="tags">Tags.</param>
         /// <param name="alias">Alias to reference it in pipeline.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabProject WithCommit(this GitLabProject project, string? message = null, string? user = null, string? sourceBranch = null, string? targetBranch = null, IEnumerable<string>? tags = null, string? alias = null, Action<GitLabCommit>? configure = null)
+        public static GitLabProject WithCommit(this GitLabProject project, string? message = null, string? user = null, string? sourceBranch = null, string? targetBranch = null, string? fromBranch = null, IEnumerable<string>? tags = null, string? alias = null, Action<GitLabCommit>? configure = null)
         {
             return WithCommit(project, message, user, commit =>
             {
                 commit.SourceBranch = sourceBranch;
                 commit.TargetBranch = targetBranch;
+                commit.FromBranch = fromBranch;
                 commit.Alias = alias;
                 if (tags != null)
                 {
@@ -1203,6 +1205,11 @@ namespace NGitLab.Mock.Config
             var user = GetOrCreateUser(server, username);
             var targetBranch = commit.TargetBranch;
             Commit cmt;
+            if (!string.IsNullOrEmpty(commit.FromBranch))
+            {
+                prj.Repository.Checkout(commit.FromBranch);
+            }
+
             if (string.IsNullOrEmpty(targetBranch))
             {
                 var branchExists = string.IsNullOrEmpty(commit.SourceBranch) || prj.Repository.GetAllBranches().Any(x => string.Equals(x.FriendlyName, commit.SourceBranch, StringComparison.Ordinal));

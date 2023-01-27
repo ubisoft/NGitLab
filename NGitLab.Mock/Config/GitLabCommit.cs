@@ -37,6 +37,11 @@ namespace NGitLab.Mock.Config
         public string TargetBranch { get; set; }
 
         /// <summary>
+        /// Branch to checkout before make more operation
+        /// </summary>
+        public string FromBranch { get; set; }
+
+        /// <summary>
         /// Indicates if source branch must be deleted after merge
         /// </summary>
         public bool DeleteSourceBranch { get; set; }
