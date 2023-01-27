@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NGitLab.Mock.Config;
 using NUnit.Framework;
 
@@ -53,6 +54,29 @@ namespace NGitLab.Mock.Tests
 
             Assert.That(tags, Has.One.Items);
             Assert.AreEqual("1.0.0", tags[0].Name);
+        }
+
+        [Test]
+        public void Test_two_branches_can_be_created_from_same_commit()
+        {
+            using var server = new GitLabConfig()
+                .WithUser("user1", isDefault: true)
+                .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, defaultBranch: "main", configure: project => project
+                    .WithCommit("Initial commit")
+                    .WithCommit("Commit for branch_1", sourceBranch: "branch_1")
+                    .WithCommit("Commit for branch_2", sourceBranch: "branch_2", fromBranch: "main"))
+                .BuildServer();
+
+            var client = server.CreateClient();
+            var repository = client.GetRepository(1);
+            var commitFromBranch1 = repository.GetCommits("branch_1").FirstOrDefault();
+            var commitFromBranch2 = repository.GetCommits("branch_2").FirstOrDefault();
+
+            Assert.NotNull(commitFromBranch1);
+            Assert.NotNull(commitFromBranch2);
+            Assert.IsNotEmpty(commitFromBranch1.Parents);
+            Assert.IsNotEmpty(commitFromBranch2.Parents);
+            Assert.AreEqual(commitFromBranch1.Parents[0], commitFromBranch2.Parents[0]);
         }
     }
 }
