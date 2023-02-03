@@ -390,6 +390,7 @@ namespace NGitLab.Mock
             {
                 _hasConflicts = true;
             }
+
             Project.Repository.RemoveBranch(transientBranchName);
         }
     }
