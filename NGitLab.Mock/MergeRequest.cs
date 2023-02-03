@@ -382,7 +382,15 @@ namespace NGitLab.Mock
             // Determine if there are conflicts, by performing a rebase on a transient copy of the source branch
             var transientBranchName = "transient/" + Guid.NewGuid().ToString("N");
             Project.Repository.CreateBranch(transientBranchName, _consolidatedSourceBranch);
-            _hasConflicts = !Project.Repository.Rebase(DefaultUser, transientBranchName, TargetBranch);
+            try
+            {
+                _hasConflicts = !Project.Repository.Rebase(DefaultUser, transientBranchName, TargetBranch);
+            }
+            catch
+            {
+                _hasConflicts = true;
+            }
+
             Project.Repository.RemoveBranch(transientBranchName);
         }
     }
