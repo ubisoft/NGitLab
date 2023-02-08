@@ -259,6 +259,8 @@ NGitLab.IIssueClient.RelatedTo(int projectId, int issueIid) -> System.Collection
 NGitLab.IIssueClient.RelatedToAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
 NGitLab.IIssueClient.ResourceLabelEvents(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ResourceLabelEvent>
 NGitLab.IIssueClient.ResourceLabelEventsAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceLabelEvent>
+NGitLab.IIssueClient.ResourceStateEvents(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ResourceStateEvent>
+NGitLab.IIssueClient.ResourceStateEventsAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceStateEvent>
 NGitLab.IIssueClient.TimeStatsAsync(int projectId, int issueIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
 NGitLab.IJobClient
 NGitLab.IJobClient.Get(int jobId) -> NGitLab.Models.Job
@@ -489,6 +491,8 @@ NGitLab.Impl.IssueClient.RelatedTo(int projectId, int issueIid) -> System.Collec
 NGitLab.Impl.IssueClient.RelatedToAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
 NGitLab.Impl.IssueClient.ResourceLabelEvents(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ResourceLabelEvent>
 NGitLab.Impl.IssueClient.ResourceLabelEventsAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceLabelEvent>
+NGitLab.Impl.IssueClient.ResourceStateEvents(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ResourceStateEvent>
+NGitLab.Impl.IssueClient.ResourceStateEventsAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceStateEvent>
 NGitLab.Impl.IssueClient.TimeStatsAsync(int projectId, int issueIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
 NGitLab.Impl.JobClient
 NGitLab.Impl.JobClient.Get(int jobId) -> NGitLab.Models.Job
@@ -2833,6 +2837,20 @@ NGitLab.Models.ResourceLabelEvent.User.set -> void
 NGitLab.Models.ResourceLabelEventAction
 NGitLab.Models.ResourceLabelEventAction.Add = 0 -> NGitLab.Models.ResourceLabelEventAction
 NGitLab.Models.ResourceLabelEventAction.Remove = 1 -> NGitLab.Models.ResourceLabelEventAction
+NGitLab.Models.ResourceStateEvent
+NGitLab.Models.ResourceStateEvent.CreatedAt.get -> System.DateTime
+NGitLab.Models.ResourceStateEvent.CreatedAt.set -> void
+NGitLab.Models.ResourceStateEvent.Id.get -> int
+NGitLab.Models.ResourceStateEvent.Id.set -> void
+NGitLab.Models.ResourceStateEvent.ResourceId.get -> int
+NGitLab.Models.ResourceStateEvent.ResourceId.set -> void
+NGitLab.Models.ResourceStateEvent.ResourceStateEvent() -> void
+NGitLab.Models.ResourceStateEvent.ResourceType.get -> string
+NGitLab.Models.ResourceStateEvent.ResourceType.set -> void
+NGitLab.Models.ResourceStateEvent.State.get -> string
+NGitLab.Models.ResourceStateEvent.State.set -> void
+NGitLab.Models.ResourceStateEvent.User.get -> NGitLab.Models.Author
+NGitLab.Models.ResourceStateEvent.User.set -> void
 NGitLab.Models.Runner
 NGitLab.Models.Runner.Active -> bool
 NGitLab.Models.Runner.ContactedAt -> System.DateTime

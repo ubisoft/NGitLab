@@ -25,6 +25,7 @@ namespace NGitLab.Mock
         private int _lastLabelId = 10000;
         private int _lastProtectedBranchId = 10000;
         private int _lastResourceLabelEventId = 10000;
+        private int _lastResourceStateEventId = 10000;
 
         public GitLabServer()
         {
@@ -33,6 +34,7 @@ namespace NGitLab.Mock
             SystemHooks = new SystemHookCollection(this);
             Events = new EventCollection(this);
             ResourceLabelEvents = new ResourceLabelEventCollection(this);
+            ResourceStateEvents = new ResourceStateEventCollection(this);
         }
 
         public string DefaultBranchName { get; set; } = "main";
@@ -48,6 +50,8 @@ namespace NGitLab.Mock
         public SystemHookCollection SystemHooks { get; }
 
         public EventCollection Events { get; }
+
+        public ResourceStateEventCollection ResourceStateEvents { get; }
 
         public ResourceLabelEventCollection ResourceLabelEvents { get; }
 
@@ -115,6 +119,8 @@ namespace NGitLab.Mock
         internal int GetNewProtectedBranchId() => Interlocked.Increment(ref _lastProtectedBranchId);
 
         internal int GetNewResourceLabelEventId() => Interlocked.Increment(ref _lastResourceLabelEventId);
+
+        internal int GetNewResourceStateEventId() => Interlocked.Increment(ref _lastResourceStateEventId);
 
         internal string MakeUrl(string relativeUrl)
         {

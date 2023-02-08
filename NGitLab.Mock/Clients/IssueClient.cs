@@ -146,6 +146,26 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public IEnumerable<Models.ResourceStateEvent> ResourceStateEvents(int projectId, int issueIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var issue = GetIssue(projectId, issueIid);
+                return Server.ResourceStateEvents.Get(issue.Id).Select(rle => rle.ToClientResourceStateEvent());
+            }
+        }
+
+        public GitLabCollectionResponse<Models.ResourceStateEvent> ResourceStateEventsAsync(int projectId, int issueIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var issue = GetIssue(projectId, issueIid);
+                var resourceStateEvents = Server.ResourceStateEvents.Get(issue.Id);
+
+                return GitLabCollectionResponse.Create(resourceStateEvents.Select(rle => rle.ToClientResourceStateEvent()));
+            }
+        }
+
         public IEnumerable<Models.MergeRequest> RelatedTo(int projectId, int issueId)
         {
             throw new NotImplementedException();

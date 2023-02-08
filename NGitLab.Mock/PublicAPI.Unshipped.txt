@@ -403,6 +403,7 @@ NGitLab.Mock.GitLabServer.Events.get -> NGitLab.Mock.EventCollection
 NGitLab.Mock.GitLabServer.GitLabServer() -> void
 NGitLab.Mock.GitLabServer.Groups.get -> NGitLab.Mock.GroupCollection
 NGitLab.Mock.GitLabServer.ResourceLabelEvents.get -> NGitLab.Mock.ResourceLabelEventCollection
+NGitLab.Mock.GitLabServer.ResourceStateEvents.get -> NGitLab.Mock.ResourceStateEventCollection
 NGitLab.Mock.GitLabServer.SystemHooks.get -> NGitLab.Mock.SystemHookCollection
 NGitLab.Mock.GitLabServer.Url.get -> System.Uri
 NGitLab.Mock.GitLabServer.Url.set -> void
@@ -989,6 +990,23 @@ NGitLab.Mock.ResourceLabelEvent.User.get -> NGitLab.Models.Author
 NGitLab.Mock.ResourceLabelEvent.User.set -> void
 NGitLab.Mock.ResourceLabelEventCollection
 NGitLab.Mock.ResourceLabelEventCollection.ResourceLabelEventCollection(NGitLab.Mock.GitLabObject container) -> void
+NGitLab.Mock.ResourceStateEvent
+NGitLab.Mock.ResourceStateEvent.CreatedAt.get -> System.DateTime
+NGitLab.Mock.ResourceStateEvent.CreatedAt.set -> void
+NGitLab.Mock.ResourceStateEvent.Id.get -> int
+NGitLab.Mock.ResourceStateEvent.Id.set -> void
+NGitLab.Mock.ResourceStateEvent.ResourceId.get -> int
+NGitLab.Mock.ResourceStateEvent.ResourceId.set -> void
+NGitLab.Mock.ResourceStateEvent.ResourceStateEvent() -> void
+NGitLab.Mock.ResourceStateEvent.ResourceType.get -> string
+NGitLab.Mock.ResourceStateEvent.ResourceType.set -> void
+NGitLab.Mock.ResourceStateEvent.State.get -> string
+NGitLab.Mock.ResourceStateEvent.State.set -> void
+NGitLab.Mock.ResourceStateEvent.ToClientResourceStateEvent() -> NGitLab.Models.ResourceStateEvent
+NGitLab.Mock.ResourceStateEvent.User.get -> NGitLab.Models.Author
+NGitLab.Mock.ResourceStateEvent.User.set -> void
+NGitLab.Mock.ResourceStateEventCollection
+NGitLab.Mock.ResourceStateEventCollection.ResourceStateEventCollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.Runner
 NGitLab.Mock.Runner.Active.get -> bool
 NGitLab.Mock.Runner.Active.set -> void
@@ -1129,6 +1147,7 @@ override NGitLab.Mock.ProjectIssueNote.NoticableIid.get -> int
 override NGitLab.Mock.ProtectedBranchCollection.Add(NGitLab.Mock.ProtectedBranch branch) -> void
 override NGitLab.Mock.ReleaseCollection.Add(NGitLab.Mock.ReleaseInfo release) -> void
 override NGitLab.Mock.ResourceLabelEventCollection.Add(NGitLab.Mock.ResourceLabelEvent item) -> void
+override NGitLab.Mock.ResourceStateEventCollection.Add(NGitLab.Mock.ResourceStateEvent item) -> void
 override NGitLab.Mock.RunnerCollection.Add(NGitLab.Mock.Runner item) -> void
 override NGitLab.Mock.RunnerRef.Equals(object obj) -> bool
 override NGitLab.Mock.RunnerRef.GetHashCode() -> int
