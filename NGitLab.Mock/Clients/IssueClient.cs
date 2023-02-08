@@ -422,7 +422,7 @@ namespace NGitLab.Mock.Clients
             {
                 if (!newLabels.Any(l => string.Equals(l, label, StringComparison.OrdinalIgnoreCase)))
                 {
-                    Server.ResourceLabelEvents.Add(new ResourceStateEvent()
+                    Server.ResourceLabelEvents.Add(new ResourceLabelEvent()
                     {
                         Action = ResourceLabelEventAction.Remove,
                         Label = new Label() { Name = label },
@@ -449,7 +449,7 @@ namespace NGitLab.Mock.Clients
             {
                 if (!previousLabels.Any(l => string.Equals(l, label, StringComparison.OrdinalIgnoreCase)))
                 {
-                    Server.ResourceLabelEvents.Add(new ResourceStateEvent()
+                    Server.ResourceLabelEvents.Add(new ResourceLabelEvent()
                     {
                         Action = ResourceLabelEventAction.Add,
                         Label = new Label() { Name = label },
