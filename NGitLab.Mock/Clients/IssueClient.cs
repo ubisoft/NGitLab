@@ -146,6 +146,26 @@ namespace NGitLab.Mock.Clients
             }
         }
 
+        public IEnumerable<Models.ResourceStateEvent> ResourceStateEvents(int projectId, int issueIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var issue = GetIssue(projectId, issueIid);
+                return Server.ResourceStateEvents.Get(issue.Id).Select(rle => rle.ToClientResourceStateEvent());
+            }
+        }
+
+        public GitLabCollectionResponse<Models.ResourceStateEvent> ResourceStateEventsAsync(int projectId, int issueIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var issue = GetIssue(projectId, issueIid);
+                var resourceStateEvents = Server.ResourceStateEvents.Get(issue.Id);
+
+                return GitLabCollectionResponse.Create(resourceStateEvents.Select(rle => rle.ToClientResourceStateEvent()));
+            }
+        }
+
         public IEnumerable<Models.MergeRequest> RelatedTo(int projectId, int issueId)
         {
             throw new NotImplementedException();
@@ -402,7 +422,7 @@ namespace NGitLab.Mock.Clients
             {
                 if (!newLabels.Any(l => string.Equals(l, label, StringComparison.OrdinalIgnoreCase)))
                 {
-                    Server.ResourceLabelEvents.Add(new ResourceLabelEvent()
+                    Server.ResourceLabelEvents.Add(new ResourceStateEvent()
                     {
                         Action = ResourceLabelEventAction.Remove,
                         Label = new Label() { Name = label },
@@ -429,7 +449,7 @@ namespace NGitLab.Mock.Clients
             {
                 if (!previousLabels.Any(l => string.Equals(l, label, StringComparison.OrdinalIgnoreCase)))
                 {
-                    Server.ResourceLabelEvents.Add(new ResourceLabelEvent()
+                    Server.ResourceLabelEvents.Add(new ResourceStateEvent()
                     {
                         Action = ResourceLabelEventAction.Add,
                         Label = new Label() { Name = label },
