@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -380,8 +381,13 @@ namespace NGitLab.Mock
             _divergedCommitsCount = Project.Repository.ComputeDivergence(TargetBranchHeadCommit, commonCommit);
 
             // Determine if there are conflicts, by performing a rebase on a transient copy of the source branch
-            var transientBranchName = "transient/" + Guid.NewGuid().ToString("N");
-            Project.Repository.CreateBranch(transientBranchName, _consolidatedSourceBranch);
+            var smallBranchName = Guid.NewGuid().ToString("N");
+            var transientBranchName = "refs/transient/" + smallBranchName;
+
+            var branchFullPath = Path.Combine(Project.Repository.FullPath, ".git/refs/transient", smallBranchName);
+            Directory.CreateDirectory(Path.GetDirectoryName(branchFullPath)!);
+            System.IO.File.WriteAllText(branchFullPath, Project.Repository.GetCommit(SourceBranch).Sha);
+
             try
             {
                 _hasConflicts = !Project.Repository.Rebase(DefaultUser, transientBranchName, TargetBranch);
@@ -391,7 +397,7 @@ namespace NGitLab.Mock
                 _hasConflicts = true;
             }
 
-            Project.Repository.RemoveBranch(transientBranchName);
+            //System.IO.File.Delete(branchFullPath);
         }
     }
 }
