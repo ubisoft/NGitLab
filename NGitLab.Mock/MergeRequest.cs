@@ -397,7 +397,7 @@ namespace NGitLab.Mock
                 _hasConflicts = true;
             }
 
-            //System.IO.File.Delete(branchFullPath);
+            System.IO.File.Delete(branchFullPath);
         }
     }
 }
