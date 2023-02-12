@@ -374,5 +374,565 @@ namespace NGitLab.Tests
             var projectResult = projects.Single();
             Assert.AreEqual(project.Id, projectResult.Id);
         }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_id()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroupOne = context.CreateGroup();
+            var parentGroupTwo = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroupTwo.Id);
+
+            var subgroups = groupClient.GetSubgroupsByIdAsync(parentGroupOne.Id, new GroupQuery());
+            Assert.AreEqual(2, subgroups.Count());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_fullpath()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroupOne = context.CreateGroup();
+            var parentGroupTwo = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroupTwo.Id);
+
+            var subgroups = groupClient.GetSubgroupsByFullPathAsync(parentGroupOne.FullPath, new GroupQuery());
+            Assert.AreEqual(2, subgroups.Count());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_id_SkipGroups_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            // Arrange
+            var skippedGroupIds = new[] { subGroupTwo.Id };
+
+            // Act
+            var resultSkip = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, new GroupQuery { SkipGroups = skippedGroupIds }).ToList();
+
+            // Assert
+            foreach (var skippedGroup in skippedGroupIds)
+            {
+                Assert.False(resultSkip.Any(group => group.Id == skippedGroup), $"Group {skippedGroup} found in results");
+            }
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_fullpath_SkipGroups_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            // Arrange
+            var skippedGroupIds = new[] { subGroupTwo.Id };
+
+            // Act
+            var resultSkip = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, new GroupQuery { SkipGroups = skippedGroupIds }).ToList();
+
+            // Assert
+            foreach (var skippedGroup in skippedGroupIds)
+            {
+                Assert.False(resultSkip.Any(group => group.Id == skippedGroup), $"Group {skippedGroup} found in results");
+            }
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_id_groupQuery_Search_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            // Arrange
+            var groupQuery = new GroupQuery
+            {
+                Search = subGroupOne.Name,
+            };
+
+            // Act
+            var result = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQuery).Count(g => string.Equals(g.Name, subGroupOne.Name, StringComparison.Ordinal));
+
+            // Assert
+            Assert.AreEqual(1, result);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_fullpath_groupQuery_Search_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            // Arrange
+            var groupQuery = new GroupQuery
+            {
+                Search = subGroupOne.Name,
+            };
+
+            // Act
+            var result = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQuery).Count(g => string.Equals(g.Name, subGroupOne.Name, StringComparison.Ordinal));
+
+            // Assert
+            Assert.AreEqual(1, result);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_id_groupQuery_AllAvailable_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            // Arrange
+            var groupQueryAllAvailable = new GroupQuery
+            {
+                AllAvailable = true,
+            };
+
+            // Act
+            var result = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryAllAvailable);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_fullpath_query_groupQuery_AllAvailable_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            // Arrange
+            var groupQueryAllAvailable = new GroupQuery
+            {
+                AllAvailable = true,
+            };
+
+            // Act
+            var result = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryAllAvailable);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_id_groupQuery_OrderBy_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            // Arrange
+            var groupQueryOrderByName = new GroupQuery
+            {
+                OrderBy = "name",
+            };
+            var groupQueryOrderByPath = new GroupQuery
+            {
+                OrderBy = "path",
+            };
+            var groupQueryOrderById = new GroupQuery
+            {
+                OrderBy = "id",
+            };
+
+            // Act
+            var resultByName = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryOrderByName);
+            var resultByPath = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryOrderByPath);
+            var resultById = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryOrderById);
+
+            // Assert
+            Assert.IsTrue(resultByName.Any());
+            Assert.IsTrue(resultByPath.Any());
+            Assert.IsTrue(resultById.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_fullpath_groupQuery_OrderBy_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            // Arrange
+            var groupQueryOrderByName = new GroupQuery
+            {
+                OrderBy = "name",
+            };
+            var groupQueryOrderByPath = new GroupQuery
+            {
+                OrderBy = "path",
+            };
+            var groupQueryOrderById = new GroupQuery
+            {
+                OrderBy = "id",
+            };
+
+            // Act
+            var resultByName = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryOrderByName);
+            var resultByPath = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryOrderByPath);
+            var resultById = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryOrderById);
+
+            // Assert
+            Assert.IsTrue(resultByName.Any());
+            Assert.IsTrue(resultByPath.Any());
+            Assert.IsTrue(resultById.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_id_groupQuery_Sort_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            // Arrange
+            var groupQueryAsc = new GroupQuery
+            {
+                Sort = "asc",
+            };
+            var groupQueryDesc = new GroupQuery
+            {
+                Sort = "desc",
+            };
+
+            // Act
+            var resultAsc = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryAsc);
+            var resultDesc = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryDesc);
+
+            // Assert
+            Assert.IsTrue(resultAsc.Any());
+            Assert.IsTrue(resultDesc.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_fullpath_groupQuery_Sort_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            // Arrange
+            var groupQueryAsc = new GroupQuery
+            {
+                Sort = "asc",
+            };
+            var groupQueryDesc = new GroupQuery
+            {
+                Sort = "desc",
+            };
+
+            // Act
+            var resultAsc = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryAsc);
+            var resultDesc = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryDesc);
+
+            // Assert
+            Assert.IsTrue(resultAsc.Any());
+            Assert.IsTrue(resultDesc.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_id_groupQuery_Statistics_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            var groupQueryWithStats = new GroupQuery
+            {
+                Statistics = true,
+            };
+
+            // Act
+            var result = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryWithStats);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_fullpath_groupQuery_Statistics_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            var groupQueryWithStats = new GroupQuery
+            {
+                Statistics = true,
+            };
+
+            // Act
+            var result = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryWithStats);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_id_groupQuery_WithCustomAttributes_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            var groupQueryWithCustomAttributes = new GroupQuery
+            {
+                WithCustomAttributes = true,
+            };
+
+            // Act
+            var result = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryWithCustomAttributes);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_fullpath_groupQuery_WithCustomAttributes_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            var groupQueryWithCustomAttributes = new GroupQuery
+            {
+                WithCustomAttributes = true,
+            };
+
+            // Act
+            var result = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryWithCustomAttributes);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_id_groupQuery_Owned_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            var groupQueryOwned = new GroupQuery
+            {
+                Owned = true,
+            };
+
+            // Act
+            var result = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryOwned);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_fullpath_groupQuery_Owned_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            var groupQueryOwned = new GroupQuery
+            {
+                Owned = true,
+            };
+
+            // Act
+            var result = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryOwned);
+
+            // Assert
+            Assert.IsTrue(result.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_id_groupQuery_MinAccessLevel_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            var groupQueryGuest = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Guest,
+            };
+            var groupQueryReporter = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Reporter,
+            };
+            var groupQueryDeveloper = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Developer,
+            };
+            var groupQueryMantainer = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Maintainer,
+            };
+            var groupQueryOwner = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Owner,
+            };
+
+            // Act
+            var resultGuest = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryGuest);
+            var resultReporter = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryReporter);
+            var resultDeveloper = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryDeveloper);
+            var resultMantainer = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryMantainer);
+            var resultOwner = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryOwner);
+
+            // Assert
+            Assert.IsTrue(resultGuest.Any());
+            Assert.IsTrue(resultReporter.Any());
+            Assert.IsTrue(resultDeveloper.Any());
+            Assert.IsTrue(resultMantainer.Any());
+            Assert.IsTrue(resultOwner.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_subgroups_by_fullpath_groupQuery_MinAccessLevel_returns_groups()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var groupClient = context.Client.Groups;
+            var parentGroup = context.CreateGroup();
+
+            var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+            var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+
+            var groupQueryGuest = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Guest,
+            };
+            var groupQueryReporter = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Reporter,
+            };
+            var groupQueryDeveloper = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Developer,
+            };
+            var groupQueryMantainer = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Maintainer,
+            };
+            var groupQueryOwner = new GroupQuery
+            {
+                MinAccessLevel = AccessLevel.Owner,
+            };
+
+            // Act
+            var resultGuest = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryGuest);
+            var resultReporter = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryReporter);
+            var resultDeveloper = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryDeveloper);
+            var resultMantainer = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryMantainer);
+            var resultOwner = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryOwner);
+
+            // Assert
+            Assert.IsTrue(resultGuest.Any());
+            Assert.IsTrue(resultReporter.Any());
+            Assert.IsTrue(resultDeveloper.Any());
+            Assert.IsTrue(resultMantainer.Any());
+            Assert.IsTrue(resultOwner.Any());
+        }
     }
 }
