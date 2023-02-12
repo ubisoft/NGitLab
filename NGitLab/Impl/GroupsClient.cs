@@ -36,13 +36,13 @@ namespace NGitLab.Impl
             return _api.Get().GetAllAsync<Group>(url);
         }
 
-        private static string CreateGetUrl(GroupQuery query, string extraParams = null)
+        private static string CreateGetUrl(GroupQuery query, string subPath = null)
         {
             var url = Group.Url;
 
-            if (!string.IsNullOrEmpty(extraParams))
+            if (subPath is not null)
             {
-                url += extraParams;
+                url += subPath;
             }
 
             if (query.SkipGroups != null && query.SkipGroups.Any())
@@ -119,13 +119,13 @@ namespace NGitLab.Impl
 
         public GitLabCollectionResponse<Group> GetSubgroupsByIdAsync(int id, GroupQuery query)
         {
-            var url = CreateGetUrl(query, extraParams: "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)) + "/" + "subgroups");
+            var url = CreateGetUrl(query, subPath: "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)) + "/subgroups");
             return _api.Get().GetAllAsync<Group>(url);
         }
 
         public GitLabCollectionResponse<Group> GetSubgroupsByFullPathAsync(string fullPath, GroupQuery query)
         {
-            var url = CreateGetUrl(query, extraParams: "/" + Uri.EscapeDataString(fullPath) + "/" + "subgroups");
+            var url = CreateGetUrl(query, subPath: "/" + Uri.EscapeDataString(fullPath) + "/subgroups");
             return _api.Get().GetAllAsync<Group>(url);
         }
 
