@@ -211,6 +211,8 @@ NGitLab.IGroupsClient.GetAsync(NGitLab.Models.GroupQuery query) -> NGitLab.GitLa
 NGitLab.IGroupsClient.GetByFullPathAsync(string fullPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetProjectsAsync(int groupId, NGitLab.Models.GroupProjectsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
+NGitLab.IGroupsClient.GetSubgroupsByFullPathAsync(string fullPath, NGitLab.Models.GroupQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
+NGitLab.IGroupsClient.GetSubgroupsByIdAsync(int id, NGitLab.Models.GroupQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.IGroupsClient.Restore(int id) -> void
 NGitLab.IGroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.IGroupsClient.SearchAsync(string search) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>

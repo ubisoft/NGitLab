@@ -36,6 +36,10 @@ namespace NGitLab
 
         Task<Group> GetByFullPathAsync(string fullPath, CancellationToken cancellationToken = default);
 
+        GitLabCollectionResponse<Group> GetSubgroupsByIdAsync(int id, GroupQuery query);
+
+        GitLabCollectionResponse<Group> GetSubgroupsByFullPathAsync(string fullPath, GroupQuery query);
+
         Group Create(GroupCreate group);
 
         Task<Group> CreateAsync(GroupCreate group, CancellationToken cancellationToken = default);
