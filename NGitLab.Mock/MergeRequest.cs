@@ -383,10 +383,7 @@ namespace NGitLab.Mock
             // Determine if there are conflicts, by performing a rebase on a transient copy of the source branch
             var smallBranchName = Guid.NewGuid().ToString("N");
             var transientBranchName = "refs/transient/" + smallBranchName;
-
-            var branchFullPath = Path.Combine(Project.Repository.FullPath, ".git/refs/transient", smallBranchName);
-            Directory.CreateDirectory(Path.GetDirectoryName(branchFullPath)!);
-            System.IO.File.WriteAllText(branchFullPath, Project.Repository.GetCommit(SourceBranch).Sha);
+            Project.Repository.CreateInternalBranch(transientBranchName, _consolidatedSourceBranch);
 
             try
             {
@@ -397,7 +394,7 @@ namespace NGitLab.Mock
                 _hasConflicts = true;
             }
 
-            System.IO.File.Delete(branchFullPath);
+            Project.Repository.RemoveInternalBranch(transientBranchName);
         }
     }
 }

@@ -230,11 +230,24 @@ namespace NGitLab.Mock
             return repository.Branches.Add(branchName, reference);
         }
 
+        internal Reference CreateInternalBranch(string fullBranchName, string reference)
+        {
+            var repository = GetGitRepository();
+            return repository.Refs.Add(fullBranchName, reference);
+        }
+
         public void RemoveBranch(string branchName)
         {
             var repository = GetGitRepository();
             Commands.Checkout(repository, Project.DefaultBranch);
             repository.Branches.Remove(branchName);
+        }
+
+        internal void RemoveInternalBranch(string fullBranchName)
+        {
+            var repository = GetGitRepository();
+            Commands.Checkout(repository, Project.DefaultBranch);
+            repository.Branches.Remove(fullBranchName);
         }
 
         public TagCollection GetTags()
