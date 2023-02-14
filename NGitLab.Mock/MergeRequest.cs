@@ -379,19 +379,14 @@ namespace NGitLab.Mock
 
             _divergedCommitsCount = Project.Repository.ComputeDivergence(TargetBranchHeadCommit, commonCommit);
 
-            // Determine if there are conflicts, by performing a rebase on a transient copy of the source branch
-            var transientBranchName = "transient/" + Guid.NewGuid().ToString("N");
-            Project.Repository.CreateBranch(transientBranchName, _consolidatedSourceBranch);
             try
             {
-                _hasConflicts = !Project.Repository.Rebase(DefaultUser, transientBranchName, TargetBranch);
+                _hasConflicts = Project.Repository.HasConflicts(DefaultUser, _consolidatedSourceBranch, TargetBranch);
             }
             catch
             {
                 _hasConflicts = true;
             }
-
-            Project.Repository.RemoveBranch(transientBranchName);
         }
     }
 }
