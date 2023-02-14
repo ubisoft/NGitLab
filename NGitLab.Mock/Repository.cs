@@ -651,8 +651,6 @@ namespace NGitLab.Mock
             var branch = repo.Branches[sourceBranch];
             var upstream = repo.Branches[targetBranch];
 
-            _ = repo.Network.Remotes[targetBranch];
-
             var signature = new Signature(user.UserName, user.Email, DateTimeOffset.UtcNow);
             var options = new MergeOptions
             {
