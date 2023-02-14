@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
@@ -45,7 +46,9 @@ namespace NGitLab.Models
         public static string Base64Decode(string base64EncodedData)
         {
             var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+            using var ms = new MemoryStream(base64EncodedBytes);
+            using var streamReader = new StreamReader(ms, detectEncodingFromByteOrderMarks: true);
+            return streamReader.ReadToEnd();
         }
     }
 }

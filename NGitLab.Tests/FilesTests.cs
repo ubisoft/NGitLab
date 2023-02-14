@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -217,6 +218,30 @@ namespace NGitLab.Tests
                 CommitMessage = "Delete file",
             };
             filesClient.Delete(fileDelete);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_file_with_bom()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var filesClient = context.Client.GetRepository(project.Id).Files;
+
+            var fileName = "test.md";
+            var fileUpsert = new FileUpsert
+            {
+                Branch = project.DefaultBranch,
+                CommitMessage = "dummy",
+                Encoding = "base64",
+                Content = Convert.ToBase64String(new byte[] { 0xEF, 0xBB, 0xBF, 0x61 }), // UTF8 BOM + 'a'
+                Path = fileName,
+            };
+            filesClient.Create(fileUpsert);
+
+            var file = filesClient.Get(fileName, project.DefaultBranch);
+            Assert.AreEqual("77u/YQ==", file.Content);
+            Assert.AreEqual("a", file.DecodedContent);
         }
     }
 }
