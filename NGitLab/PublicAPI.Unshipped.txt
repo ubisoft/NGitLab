@@ -3030,16 +3030,25 @@ NGitLab.Models.SshKeyCreate.Key -> string
 NGitLab.Models.SshKeyCreate.SshKeyCreate() -> void
 NGitLab.Models.SshKeyCreate.Title -> string
 NGitLab.Models.SubgroupQuery
-NGitLab.Models.SubgroupQuery.AllAvailable -> bool?
-NGitLab.Models.SubgroupQuery.MinAccessLevel -> NGitLab.Models.AccessLevel?
-NGitLab.Models.SubgroupQuery.OrderBy -> string
-NGitLab.Models.SubgroupQuery.Owned -> bool?
-NGitLab.Models.SubgroupQuery.Search -> string
-NGitLab.Models.SubgroupQuery.SkipGroups -> int[]
-NGitLab.Models.SubgroupQuery.Sort -> string
-NGitLab.Models.SubgroupQuery.Statistics -> bool?
+NGitLab.Models.SubgroupQuery.AllAvailable.get -> bool?
+NGitLab.Models.SubgroupQuery.AllAvailable.set -> void
+NGitLab.Models.SubgroupQuery.MinAccessLevel.get -> NGitLab.Models.AccessLevel?
+NGitLab.Models.SubgroupQuery.MinAccessLevel.set -> void
+NGitLab.Models.SubgroupQuery.OrderBy.get -> string
+NGitLab.Models.SubgroupQuery.OrderBy.set -> void
+NGitLab.Models.SubgroupQuery.Owned.get -> bool?
+NGitLab.Models.SubgroupQuery.Owned.set -> void
+NGitLab.Models.SubgroupQuery.Search.get -> string
+NGitLab.Models.SubgroupQuery.Search.set -> void
+NGitLab.Models.SubgroupQuery.SkipGroups.get -> int[]
+NGitLab.Models.SubgroupQuery.SkipGroups.set -> void
+NGitLab.Models.SubgroupQuery.Sort.get -> string
+NGitLab.Models.SubgroupQuery.Sort.set -> void
+NGitLab.Models.SubgroupQuery.Statistics.get -> bool?
+NGitLab.Models.SubgroupQuery.Statistics.set -> void
 NGitLab.Models.SubgroupQuery.SubgroupQuery() -> void
-NGitLab.Models.SubgroupQuery.WithCustomAttributes -> bool?
+NGitLab.Models.SubgroupQuery.WithCustomAttributes.get -> bool?
+NGitLab.Models.SubgroupQuery.WithCustomAttributes.set -> void
 NGitLab.Models.SystemHook
 NGitLab.Models.SystemHook.CreatedAt.get -> System.DateTime
 NGitLab.Models.SystemHook.CreatedAt.set -> void
