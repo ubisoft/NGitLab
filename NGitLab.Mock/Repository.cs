@@ -636,6 +636,41 @@ namespace NGitLab.Mock
             return true;
         }
 
+        internal bool HasConflicts(UserRef user, string sourceBranch, string targetBranch)
+        {
+            if (user is null)
+                throw new ArgumentNullException(nameof(user));
+            if (string.IsNullOrEmpty(sourceBranch))
+                throw new ArgumentException("Cannot be null or empty", nameof(sourceBranch));
+            if (string.IsNullOrEmpty(targetBranch))
+                throw new ArgumentException("Cannot be null or empty", nameof(targetBranch));
+
+            var repo = GetGitRepository();
+
+            var head = repo.Head;
+            var branch = repo.Branches[sourceBranch];
+            var upstream = repo.Branches[targetBranch];
+
+            var signature = new Signature(user.UserName, user.Email, DateTimeOffset.UtcNow);
+            var options = new MergeOptions
+            {
+                CommitOnSuccess = false,
+                FastForwardStrategy = FastForwardStrategy.NoFastForward,
+            };
+
+            Commands.Checkout(repo, upstream);
+
+            var resetTip = upstream.Tip;
+
+            var mergeResult = repo.Merge(branch.Tip, signature, options);
+            var result = mergeResult.Status == MergeStatus.Conflicts;
+
+            repo.Reset(ResetMode.Hard, resetTip);
+            Commands.Checkout(repo, head);
+
+            return result;
+        }
+
         public void Dispose()
         {
             try
