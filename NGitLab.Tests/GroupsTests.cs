@@ -388,7 +388,7 @@ namespace NGitLab.Tests
             var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroupTwo.Id);
 
-            var subgroups = groupClient.GetSubgroupsByIdAsync(parentGroupOne.Id, new GroupQuery());
+            var subgroups = groupClient.GetSubgroupsByIdAsync(parentGroupOne.Id);
             Assert.AreEqual(2, subgroups.Count());
         }
 
@@ -405,7 +405,7 @@ namespace NGitLab.Tests
             var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroupTwo.Id);
 
-            var subgroups = groupClient.GetSubgroupsByFullPathAsync(parentGroupOne.FullPath, new GroupQuery());
+            var subgroups = groupClient.GetSubgroupsByFullPathAsync(parentGroupOne.FullPath);
             Assert.AreEqual(2, subgroups.Count());
         }
 
@@ -425,7 +425,7 @@ namespace NGitLab.Tests
             var skippedGroupIds = new[] { subGroupTwo.Id };
 
             // Act
-            var resultSkip = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, new GroupQuery { SkipGroups = skippedGroupIds }).ToList();
+            var resultSkip = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, new SubgroupQuery { SkipGroups = skippedGroupIds }).ToList();
 
             // Assert
             foreach (var skippedGroup in skippedGroupIds)
@@ -450,7 +450,7 @@ namespace NGitLab.Tests
             var skippedGroupIds = new[] { subGroupTwo.Id };
 
             // Act
-            var resultSkip = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, new GroupQuery { SkipGroups = skippedGroupIds }).ToList();
+            var resultSkip = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, new SubgroupQuery { SkipGroups = skippedGroupIds }).ToList();
 
             // Assert
             foreach (var skippedGroup in skippedGroupIds)
@@ -472,7 +472,7 @@ namespace NGitLab.Tests
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
             // Arrange
-            var groupQuery = new GroupQuery
+            var groupQuery = new SubgroupQuery
             {
                 Search = subGroupOne.Name,
             };
@@ -497,7 +497,7 @@ namespace NGitLab.Tests
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
             // Arrange
-            var groupQuery = new GroupQuery
+            var groupQuery = new SubgroupQuery
             {
                 Search = subGroupOne.Name,
             };
@@ -522,7 +522,7 @@ namespace NGitLab.Tests
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
             // Arrange
-            var groupQueryAllAvailable = new GroupQuery
+            var groupQueryAllAvailable = new SubgroupQuery
             {
                 AllAvailable = true,
             };
@@ -547,7 +547,7 @@ namespace NGitLab.Tests
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
             // Arrange
-            var groupQueryAllAvailable = new GroupQuery
+            var groupQueryAllAvailable = new SubgroupQuery
             {
                 AllAvailable = true,
             };
@@ -572,15 +572,15 @@ namespace NGitLab.Tests
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
             // Arrange
-            var groupQueryOrderByName = new GroupQuery
+            var groupQueryOrderByName = new SubgroupQuery
             {
                 OrderBy = "name",
             };
-            var groupQueryOrderByPath = new GroupQuery
+            var groupQueryOrderByPath = new SubgroupQuery
             {
                 OrderBy = "path",
             };
-            var groupQueryOrderById = new GroupQuery
+            var groupQueryOrderById = new SubgroupQuery
             {
                 OrderBy = "id",
             };
@@ -609,15 +609,15 @@ namespace NGitLab.Tests
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
             // Arrange
-            var groupQueryOrderByName = new GroupQuery
+            var groupQueryOrderByName = new SubgroupQuery
             {
                 OrderBy = "name",
             };
-            var groupQueryOrderByPath = new GroupQuery
+            var groupQueryOrderByPath = new SubgroupQuery
             {
                 OrderBy = "path",
             };
-            var groupQueryOrderById = new GroupQuery
+            var groupQueryOrderById = new SubgroupQuery
             {
                 OrderBy = "id",
             };
@@ -646,11 +646,11 @@ namespace NGitLab.Tests
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
             // Arrange
-            var groupQueryAsc = new GroupQuery
+            var groupQueryAsc = new SubgroupQuery
             {
                 Sort = "asc",
             };
-            var groupQueryDesc = new GroupQuery
+            var groupQueryDesc = new SubgroupQuery
             {
                 Sort = "desc",
             };
@@ -677,11 +677,11 @@ namespace NGitLab.Tests
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
             // Arrange
-            var groupQueryAsc = new GroupQuery
+            var groupQueryAsc = new SubgroupQuery
             {
                 Sort = "asc",
             };
-            var groupQueryDesc = new GroupQuery
+            var groupQueryDesc = new SubgroupQuery
             {
                 Sort = "desc",
             };
@@ -707,7 +707,7 @@ namespace NGitLab.Tests
             var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
-            var groupQueryWithStats = new GroupQuery
+            var groupQueryWithStats = new SubgroupQuery
             {
                 Statistics = true,
             };
@@ -731,7 +731,7 @@ namespace NGitLab.Tests
             var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
-            var groupQueryWithStats = new GroupQuery
+            var groupQueryWithStats = new SubgroupQuery
             {
                 Statistics = true,
             };
@@ -755,7 +755,7 @@ namespace NGitLab.Tests
             var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
-            var groupQueryWithCustomAttributes = new GroupQuery
+            var groupQueryWithCustomAttributes = new SubgroupQuery
             {
                 WithCustomAttributes = true,
             };
@@ -779,7 +779,7 @@ namespace NGitLab.Tests
             var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
-            var groupQueryWithCustomAttributes = new GroupQuery
+            var groupQueryWithCustomAttributes = new SubgroupQuery
             {
                 WithCustomAttributes = true,
             };
@@ -803,7 +803,7 @@ namespace NGitLab.Tests
             var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
-            var groupQueryOwned = new GroupQuery
+            var groupQueryOwned = new SubgroupQuery
             {
                 Owned = true,
             };
@@ -827,7 +827,7 @@ namespace NGitLab.Tests
             var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
-            var groupQueryOwned = new GroupQuery
+            var groupQueryOwned = new SubgroupQuery
             {
                 Owned = true,
             };
@@ -851,23 +851,23 @@ namespace NGitLab.Tests
             var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
-            var groupQueryGuest = new GroupQuery
+            var groupQueryGuest = new SubgroupQuery
             {
                 MinAccessLevel = AccessLevel.Guest,
             };
-            var groupQueryReporter = new GroupQuery
+            var groupQueryReporter = new SubgroupQuery
             {
                 MinAccessLevel = AccessLevel.Reporter,
             };
-            var groupQueryDeveloper = new GroupQuery
+            var groupQueryDeveloper = new SubgroupQuery
             {
                 MinAccessLevel = AccessLevel.Developer,
             };
-            var groupQueryMantainer = new GroupQuery
+            var groupQueryMantainer = new SubgroupQuery
             {
                 MinAccessLevel = AccessLevel.Maintainer,
             };
-            var groupQueryOwner = new GroupQuery
+            var groupQueryOwner = new SubgroupQuery
             {
                 MinAccessLevel = AccessLevel.Owner,
             };
@@ -899,23 +899,23 @@ namespace NGitLab.Tests
             var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
 
-            var groupQueryGuest = new GroupQuery
+            var groupQueryGuest = new SubgroupQuery
             {
                 MinAccessLevel = AccessLevel.Guest,
             };
-            var groupQueryReporter = new GroupQuery
+            var groupQueryReporter = new SubgroupQuery
             {
                 MinAccessLevel = AccessLevel.Reporter,
             };
-            var groupQueryDeveloper = new GroupQuery
+            var groupQueryDeveloper = new SubgroupQuery
             {
                 MinAccessLevel = AccessLevel.Developer,
             };
-            var groupQueryMantainer = new GroupQuery
+            var groupQueryMantainer = new SubgroupQuery
             {
                 MinAccessLevel = AccessLevel.Maintainer,
             };
-            var groupQueryOwner = new GroupQuery
+            var groupQueryOwner = new SubgroupQuery
             {
                 MinAccessLevel = AccessLevel.Owner,
             };

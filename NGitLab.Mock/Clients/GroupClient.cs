@@ -293,7 +293,7 @@ namespace NGitLab.Mock.Clients
             return Update(id, groupUpdate);
         }
 
-        public GitLabCollectionResponse<Models.Group> GetSubgroupsByIdAsync(int id, GroupQuery query)
+        public GitLabCollectionResponse<Models.Group> GetSubgroupsByIdAsync(int id, SubgroupQuery query = null)
         {
             using (Context.BeginOperationScope())
             {
@@ -326,7 +326,7 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public GitLabCollectionResponse<Models.Group> GetSubgroupsByFullPathAsync(string fullPath, GroupQuery query)
+        public GitLabCollectionResponse<Models.Group> GetSubgroupsByFullPathAsync(string fullPath, SubgroupQuery query = null)
         {
             using (Context.BeginOperationScope())
             {

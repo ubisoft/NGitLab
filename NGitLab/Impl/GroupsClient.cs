@@ -36,14 +36,9 @@ namespace NGitLab.Impl
             return _api.Get().GetAllAsync<Group>(url);
         }
 
-        private static string CreateGetUrl(GroupQuery query, string subPath = null)
+        private static string CreateGetUrl(GroupQuery query)
         {
             var url = Group.Url;
-
-            if (subPath is not null)
-            {
-                url += subPath;
-            }
 
             if (query.SkipGroups != null && query.SkipGroups.Any())
             {
@@ -93,6 +88,61 @@ namespace NGitLab.Impl
             return url;
         }
 
+        private static string CreateSubgroupGetUrl(SubgroupQuery query, string id)
+        {
+            var url = Group.Url + "/" + id + "/subgroups";
+
+            if (query is not null)
+            {
+                if (query.SkipGroups != null && query.SkipGroups.Any())
+                {
+                    foreach (var skipGroup in query.SkipGroups)
+                    {
+                        url = Utils.AddParameter(url, "skip_groups[]", skipGroup);
+                    }
+                }
+
+                if (query.AllAvailable != null)
+                {
+                    url = Utils.AddParameter(url, "all_available", query.AllAvailable);
+                }
+
+                if (!string.IsNullOrEmpty(query.Search))
+                {
+                    url = Utils.AddParameter(url, "search", query.Search);
+                }
+
+                url = Utils.AddOrderBy(url, query.OrderBy);
+
+                if (query.Sort != null)
+                {
+                    url = Utils.AddParameter(url, "sort", query.Sort);
+                }
+
+                if (query.Statistics != null)
+                {
+                    url = Utils.AddParameter(url, "statistics", query.Statistics);
+                }
+
+                if (query.WithCustomAttributes != null)
+                {
+                    url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
+                }
+
+                if (query.Owned != null)
+                {
+                    url = Utils.AddParameter(url, "owned", query.Owned);
+                }
+
+                if (query.MinAccessLevel != null)
+                {
+                    url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
+                }
+            }
+
+            return url;
+        }
+
         public IEnumerable<Group> Search(string search)
         {
             return _api.Get().GetAll<Group>(Utils.AddOrderBy(Url + $"?search={Uri.EscapeDataString(search)}"));
@@ -117,15 +167,15 @@ namespace NGitLab.Impl
             return _api.Get().ToAsync<Group>(Url + "/" + Uri.EscapeDataString(fullPath), cancellationToken);
         }
 
-        public GitLabCollectionResponse<Group> GetSubgroupsByIdAsync(int id, GroupQuery query)
+        public GitLabCollectionResponse<Group> GetSubgroupsByIdAsync(int id, SubgroupQuery query = null)
         {
-            var url = CreateGetUrl(query, subPath: "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)) + "/subgroups");
+            var url = CreateSubgroupGetUrl(query, Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
             return _api.Get().GetAllAsync<Group>(url);
         }
 
-        public GitLabCollectionResponse<Group> GetSubgroupsByFullPathAsync(string fullPath, GroupQuery query)
+        public GitLabCollectionResponse<Group> GetSubgroupsByFullPathAsync(string fullPath, SubgroupQuery query = null)
         {
-            var url = CreateGetUrl(query, subPath: "/" + Uri.EscapeDataString(fullPath) + "/subgroups");
+            var url = CreateSubgroupGetUrl(query, Uri.EscapeDataString(fullPath));
             return _api.Get().GetAllAsync<Group>(url);
         }
 

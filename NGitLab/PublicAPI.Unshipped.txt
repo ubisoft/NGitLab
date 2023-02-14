@@ -211,8 +211,8 @@ NGitLab.IGroupsClient.GetAsync(NGitLab.Models.GroupQuery query) -> NGitLab.GitLa
 NGitLab.IGroupsClient.GetByFullPathAsync(string fullPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetProjectsAsync(int groupId, NGitLab.Models.GroupProjectsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
-NGitLab.IGroupsClient.GetSubgroupsByFullPathAsync(string fullPath, NGitLab.Models.GroupQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
-NGitLab.IGroupsClient.GetSubgroupsByIdAsync(int id, NGitLab.Models.GroupQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
+NGitLab.IGroupsClient.GetSubgroupsByFullPathAsync(string fullPath, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
+NGitLab.IGroupsClient.GetSubgroupsByIdAsync(int id, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.IGroupsClient.Restore(int id) -> void
 NGitLab.IGroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.IGroupsClient.SearchAsync(string search) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
@@ -451,8 +451,8 @@ NGitLab.Impl.GroupsClient.GetAsync(NGitLab.Models.GroupQuery query) -> NGitLab.G
 NGitLab.Impl.GroupsClient.GetByFullPathAsync(string fullPath, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.GetProjectsAsync(int groupId, NGitLab.Models.GroupProjectsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
-NGitLab.Impl.GroupsClient.GetSubgroupsByFullPathAsync(string fullPath, NGitLab.Models.GroupQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
-NGitLab.Impl.GroupsClient.GetSubgroupsByIdAsync(int id, NGitLab.Models.GroupQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
+NGitLab.Impl.GroupsClient.GetSubgroupsByFullPathAsync(string fullPath, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
+NGitLab.Impl.GroupsClient.GetSubgroupsByIdAsync(int id, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.GroupsClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.GroupsClient.Restore(int id) -> void
 NGitLab.Impl.GroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
@@ -3029,6 +3029,17 @@ NGitLab.Models.SshKeyCreate
 NGitLab.Models.SshKeyCreate.Key -> string
 NGitLab.Models.SshKeyCreate.SshKeyCreate() -> void
 NGitLab.Models.SshKeyCreate.Title -> string
+NGitLab.Models.SubgroupQuery
+NGitLab.Models.SubgroupQuery.AllAvailable -> bool?
+NGitLab.Models.SubgroupQuery.MinAccessLevel -> NGitLab.Models.AccessLevel?
+NGitLab.Models.SubgroupQuery.OrderBy -> string
+NGitLab.Models.SubgroupQuery.Owned -> bool?
+NGitLab.Models.SubgroupQuery.Search -> string
+NGitLab.Models.SubgroupQuery.SkipGroups -> int[]
+NGitLab.Models.SubgroupQuery.Sort -> string
+NGitLab.Models.SubgroupQuery.Statistics -> bool?
+NGitLab.Models.SubgroupQuery.SubgroupQuery() -> void
+NGitLab.Models.SubgroupQuery.WithCustomAttributes -> bool?
 NGitLab.Models.SystemHook
 NGitLab.Models.SystemHook.CreatedAt.get -> System.DateTime
 NGitLab.Models.SystemHook.CreatedAt.set -> void
