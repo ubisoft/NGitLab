@@ -292,5 +292,71 @@ namespace NGitLab.Mock.Clients
             await Task.Yield();
             return Update(id, groupUpdate);
         }
+
+        public GitLabCollectionResponse<Models.Group> GetSubgroupsByIdAsync(int id, SubgroupQuery query = null)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var parentGroup = this[id];
+                var groups = Server.AllGroups;
+                if (query != null)
+                {
+                    if (query.SkipGroups != null && query.SkipGroups.Length > 0)
+                    {
+                        groups = groups.Where(g => !query.SkipGroups.Contains(g.Id));
+                    }
+
+                    if (query.Owned is true)
+                    {
+                        groups = groups.Where(g => g.IsUserOwner(Context.User));
+                    }
+
+                    if (query.MinAccessLevel != null)
+                    {
+                        groups = groups.Where(g => g.GetEffectivePermissions().GetAccessLevel(Context.User) >= query.MinAccessLevel);
+                    }
+
+                    if (!string.IsNullOrEmpty(query.Search))
+                        throw new NotImplementedException();
+                }
+
+                var clientGroups = groups.Select(g => g.ToClientGroup());
+
+                return GitLabCollectionResponse.Create(clientGroups.Where(g => g.ParentId == parentGroup.Id));
+            }
+        }
+
+        public GitLabCollectionResponse<Models.Group> GetSubgroupsByFullPathAsync(string fullPath, SubgroupQuery query = null)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var parentGroup = this[fullPath];
+                var groups = Server.AllGroups;
+                if (query != null)
+                {
+                    if (query.SkipGroups != null && query.SkipGroups.Length > 0)
+                    {
+                        groups = groups.Where(g => !query.SkipGroups.Contains(g.Id));
+                    }
+
+                    if (query.Owned is true)
+                    {
+                        groups = groups.Where(g => g.IsUserOwner(Context.User));
+                    }
+
+                    if (query.MinAccessLevel != null)
+                    {
+                        groups = groups.Where(g => g.GetEffectivePermissions().GetAccessLevel(Context.User) >= query.MinAccessLevel);
+                    }
+
+                    if (!string.IsNullOrEmpty(query.Search))
+                        throw new NotImplementedException();
+                }
+
+                var clientGroups = groups.Select(g => g.ToClientGroup());
+
+                return GitLabCollectionResponse.Create(clientGroups.Where(g => g.ParentId == parentGroup.Id));
+            }
+        }
     }
 }
