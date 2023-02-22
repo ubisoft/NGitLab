@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -26,120 +25,19 @@ namespace NGitLab.Impl
 
         public IEnumerable<Group> Get(GroupQuery query)
         {
-            var url = CreateGetUrl(query);
+            var url = QueryStringHelper.BuildAndAppendQueryString(Group.Url, query);
             return _api.Get().GetAll<Group>(url);
         }
 
         public GitLabCollectionResponse<Group> GetAsync(GroupQuery query)
         {
-            var url = CreateGetUrl(query);
+            var url = QueryStringHelper.BuildAndAppendQueryString(Group.Url, query);
             return _api.Get().GetAllAsync<Group>(url);
-        }
-
-        private static string CreateGetUrl(GroupQuery query)
-        {
-            var url = Group.Url;
-
-            if (query.SkipGroups != null && query.SkipGroups.Any())
-            {
-                foreach (var skipGroup in query.SkipGroups)
-                {
-                    url = Utils.AddParameter(url, "skip_groups[]", skipGroup);
-                }
-            }
-
-            if (query.AllAvailable != null)
-            {
-                url = Utils.AddParameter(url, "all_available", query.AllAvailable);
-            }
-
-            if (!string.IsNullOrEmpty(query.Search))
-            {
-                url = Utils.AddParameter(url, "search", query.Search);
-            }
-
-            url = Utils.AddOrderBy(url, query.OrderBy);
-
-            if (query.Sort != null)
-            {
-                url = Utils.AddParameter(url, "sort", query.Sort);
-            }
-
-            if (query.Statistics != null)
-            {
-                url = Utils.AddParameter(url, "statistics", query.Statistics);
-            }
-
-            if (query.WithCustomAttributes != null)
-            {
-                url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
-            }
-
-            if (query.Owned != null)
-            {
-                url = Utils.AddParameter(url, "owned", query.Owned);
-            }
-
-            if (query.MinAccessLevel != null)
-            {
-                url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
-            }
-
-            return url;
         }
 
         private static string CreateSubgroupGetUrl(SubgroupQuery query, string id)
         {
-            var url = Group.Url + "/" + id + "/subgroups";
-
-            if (query is not null)
-            {
-                if (query.SkipGroups != null && query.SkipGroups.Any())
-                {
-                    foreach (var skipGroup in query.SkipGroups)
-                    {
-                        url = Utils.AddParameter(url, "skip_groups[]", skipGroup);
-                    }
-                }
-
-                if (query.AllAvailable != null)
-                {
-                    url = Utils.AddParameter(url, "all_available", query.AllAvailable);
-                }
-
-                if (!string.IsNullOrEmpty(query.Search))
-                {
-                    url = Utils.AddParameter(url, "search", query.Search);
-                }
-
-                url = Utils.AddOrderBy(url, query.OrderBy);
-
-                if (query.Sort != null)
-                {
-                    url = Utils.AddParameter(url, "sort", query.Sort);
-                }
-
-                if (query.Statistics != null)
-                {
-                    url = Utils.AddParameter(url, "statistics", query.Statistics);
-                }
-
-                if (query.WithCustomAttributes != null)
-                {
-                    url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
-                }
-
-                if (query.Owned != null)
-                {
-                    url = Utils.AddParameter(url, "owned", query.Owned);
-                }
-
-                if (query.MinAccessLevel != null)
-                {
-                    url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
-                }
-            }
-
+            var url = QueryStringHelper.BuildAndAppendQueryString(Group.Url + "/" + id + "/subgroups", query);
             return url;
         }
 
@@ -189,32 +87,7 @@ namespace NGitLab.Impl
 
         public GitLabCollectionResponse<Project> GetProjectsAsync(int groupId, GroupProjectsQuery query)
         {
-            var url = Url + "/" + Uri.EscapeDataString(groupId.ToString(CultureInfo.InvariantCulture)) + "/projects";
-
-            if (query.Visibility.HasValue)
-            {
-                url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLowerInvariant());
-            }
-
-            if (query.MinAccessLevel is not null)
-            {
-                url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
-            }
-
-            url = Utils.AddParameter(url, "archived", value: query.Archived);
-            url = Utils.AddParameter(url, "sort", query.Sort);
-            url = Utils.AddParameter(url, "search", query.Search);
-            url = Utils.AddParameter(url, "simple", query.Simple);
-            url = Utils.AddParameter(url, "owned", query.Owned);
-            url = Utils.AddParameter(url, "starred", query.Starred);
-            url = Utils.AddParameter(url, "with_issues_enabled", query.WithIssuesEnabled);
-            url = Utils.AddParameter(url, "with_merge_requests_enabled", query.WithMergeRequestsEnabled);
-            url = Utils.AddParameter(url, "with_shared", query.WithShared);
-            url = Utils.AddParameter(url, "include_subgroups", query.IncludeSubGroups);
-            url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
-            url = Utils.AddParameter(url, "with_security_reports ", query.WithSecurityReports);
-            url = Utils.AddOrderBy(url, query.OrderBy);
-
+            var url = QueryStringHelper.BuildAndAppendQueryString(Url + "/" + Uri.EscapeDataString(groupId.ToString(CultureInfo.InvariantCulture)) + "/projects", query);
             return _api.Get().GetAllAsync<Project>(url);
         }
 

@@ -9,11 +9,14 @@ namespace NGitLab.Models
         public string Path;
 
         [Required]
+        [QueryParameter("branch")]
         public string Branch;
 
+        [QueryParameter("encoding")]
         public string Encoding;
 
         [Required]
+        [QueryParameter("content")]
         public string Content;
 
         /// <summary>
@@ -29,6 +32,7 @@ namespace NGitLab.Models
         }
 
         [Required]
+        [QueryParameter("commit_message")]
         public string CommitMessage;
 
         public static string Base64Encode(string plainText)

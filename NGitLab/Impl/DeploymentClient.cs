@@ -18,24 +18,13 @@ namespace NGitLab.Impl
 
         public IEnumerable<Deployment> Get(int projectId, DeploymentQuery query)
         {
-            return Get(string.Format(ProjectDeploymentsUrl, projectId), query);
+            var url = QueryStringHelper.BuildAndAppendQueryString(string.Format(ProjectDeploymentsUrl, projectId), query);
+            return _api.Get().GetAll<Deployment>(url);
         }
 
         public IEnumerable<MergeRequest> GetMergeRequests(int projectId, int deploymentId)
         {
             return _api.Get().GetAll<MergeRequest>(string.Format(CultureInfo.InvariantCulture, DeploymentMergeRequestsUrl, projectId, deploymentId));
-        }
-
-        private IEnumerable<Deployment> Get(string url, DeploymentQuery query)
-        {
-            url = Utils.AddParameter(url, "status", query.Status);
-            url = Utils.AddParameter(url, "order_by", query.OrderBy);
-            url = Utils.AddParameter(url, "sort", query.Sort);
-            url = Utils.AddParameter(url, "environment", query.Environment);
-            url = Utils.AddParameter(url, "updated_after", query.UpdatedAfter);
-            url = Utils.AddParameter(url, "updated_before", query.UpdatedBefore);
-
-            return _api.Get().GetAll<Deployment>(url);
         }
     }
 }

@@ -19,7 +19,8 @@ namespace NGitLab.Impl
 
         public IEnumerable<Epic> Get(int groupId, EpicQuery query)
         {
-            return Get(string.Format(CultureInfo.InvariantCulture, GroupEpicsUrl, groupId), query);
+            var url = QueryStringHelper.BuildAndAppendQueryString(string.Format(CultureInfo.InvariantCulture, GroupEpicsUrl, groupId), query);
+            return _api.Get().GetAll<Epic>(url);
         }
 
         public Epic Get(int groupId, int epicId)
@@ -30,21 +31,6 @@ namespace NGitLab.Impl
         public GitLabCollectionResponse<Issue> GetIssuesAsync(int groupId, int epicId)
         {
             return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, GroupEpicIssuesUrl, groupId, epicId));
-        }
-
-        private IEnumerable<Epic> Get(string url, EpicQuery query)
-        {
-            url = Utils.AddParameter(url, "state", query.State);
-            url = Utils.AddParameter(url, "order_by", query.OrderBy);
-            url = Utils.AddParameter(url, "sort", query.Sort);
-            url = Utils.AddParameter(url, "labels", query.Labels);
-            url = Utils.AddParameter(url, "created_after", query.CreatedAfter);
-            url = Utils.AddParameter(url, "created_before", query.CreatedBefore);
-            url = Utils.AddParameter(url, "updated_after", query.UpdatedAfter);
-            url = Utils.AddParameter(url, "updated_before", query.UpdatedBefore);
-            url = Utils.AddParameter(url, "search", query.Search);
-
-            return _api.Get().GetAll<Epic>(url);
         }
 
         public Epic Create(int groupId, EpicCreate epic)

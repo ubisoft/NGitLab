@@ -19,19 +19,19 @@ namespace NGitLab.Impl
 
         public void Create(FileUpsert file)
         {
-            var url = AppendQueryParams($"{_repoPath}/files/{EncodeFilePath(file.Path)}", file);
+            var url = QueryStringHelper.BuildAndAppendQueryString($"{_repoPath}/files/{EncodeFilePath(file.Path)}", file);
             _api.Post().With(file).Execute(url);
         }
 
         public void Update(FileUpsert file)
         {
-            var url = AppendQueryParams($"{_repoPath}/files/{EncodeFilePath(file.Path)}", file);
+            var url = QueryStringHelper.BuildAndAppendQueryString($"{_repoPath}/files/{EncodeFilePath(file.Path)}", file);
             _api.Put().With(file).Execute(url);
         }
 
         public void Delete(FileDelete file)
         {
-            var url = AppendQueryParams($"{_repoPath}/files/{EncodeFilePath(file.Path)}", file);
+            var url = QueryStringHelper.BuildAndAppendQueryString($"{_repoPath}/files/{EncodeFilePath(file.Path)}", file);
             _api.Delete().Execute(url);
         }
 
@@ -66,22 +66,6 @@ namespace NGitLab.Impl
         private static string EncodeFilePath(string path)
         {
             return Uri.EscapeDataString(path);
-        }
-
-        private static string AppendQueryParams(string url, FileUpsert fileUpsert)
-        {
-            url = Utils.AddParameter(url, "branch", fileUpsert.Branch);
-            url = Utils.AddParameter(url, "encoding", fileUpsert.Encoding);
-            url = Utils.AddParameter(url, "content", fileUpsert.Content);
-            url = Utils.AddParameter(url, "commit_message", fileUpsert.CommitMessage);
-            return url;
-        }
-
-        private static string AppendQueryParams(string url, FileDelete fileDelete)
-        {
-            url = Utils.AddParameter(url, "branch", fileDelete.Branch);
-            url = Utils.AddParameter(url, "commit_message", fileDelete.CommitMessage);
-            return url;
         }
     }
 }

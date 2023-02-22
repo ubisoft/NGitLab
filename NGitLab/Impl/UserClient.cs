@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Extensions;
@@ -32,39 +31,8 @@ namespace NGitLab.Impl
 
         public IEnumerable<User> Get(UserQuery query)
         {
-            var url = ConstructUrl(query);
+            var url = QueryStringHelper.BuildAndAppendQueryString(User.Url, query);
             return _api.Get().GetAll<User>(url);
-        }
-
-        internal string ConstructUrlTheOldWay(UserQuery query)
-        {
-            var url = User.Url;
-
-            url = Utils.AddParameter(url, "active", query.IsActive);
-            url = Utils.AddParameter(url, "blocked", query.IsBlocked);
-            url = Utils.AddParameter(url, "external", query.IsExternal);
-            url = Utils.AddParameter(url, "exclude_external", query.ExcludeExternal);
-            url = Utils.AddParameter(url, "username", query.Username);
-            url = Utils.AddParameter(url, "search", query.Search);
-            url = Utils.AddParameter(url, "per_page", query.PerPage);
-            url = Utils.AddParameter(url, "order_by", query.OrderBy);
-            url = Utils.AddParameter(url, "sort", query.Sort);
-            url = Utils.AddParameter(url, "extern_uid", query.ExternalUid);
-            url = Utils.AddParameter(url, "provider", query.Provider);
-            url = Utils.AddParameter(url, "without_projects", query.WithoutProjects);
-            url = Utils.AddParameter(url, "created_before", query.CreatedBefore);
-            url = Utils.AddParameter(url, "created_after", query.CreatedAfter);
-            url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
-            url = Utils.AddParameter(url, "two_factor", query.TwoFactor);
-            url = Utils.AddParameter(url, "admins", query.IsAdmin);
-
-            return url;
-        }
-
-        internal string ConstructUrl(UserQuery query)
-        {
-            var url = User.Url;
-            return QueryStringHelper.BuildAndAppendQueryString(url, query);
         }
 
         public User Create(UserUpsert user) => _api.Post().With(user).To<User>(User.Url);

@@ -1494,6 +1494,8 @@ NGitLab.Models.EventAction.Uploaded = 4 -> NGitLab.Models.EventAction
 NGitLab.Models.EventQuery
 NGitLab.Models.EventQuery.Action.get -> NGitLab.Models.EventAction?
 NGitLab.Models.EventQuery.Action.set -> void
+NGitLab.Models.EventQuery.ActualAfter.get -> System.DateTime?
+NGitLab.Models.EventQuery.ActualBefore.get -> System.DateTime?
 NGitLab.Models.EventQuery.After.get -> System.DateTime?
 NGitLab.Models.EventQuery.After.set -> void
 NGitLab.Models.EventQuery.Before.get -> System.DateTime?
@@ -1622,6 +1624,9 @@ NGitLab.Models.GroupMemberUpdate.ExpiresAt -> string
 NGitLab.Models.GroupMemberUpdate.GroupMemberUpdate() -> void
 NGitLab.Models.GroupMemberUpdate.UserId -> string
 NGitLab.Models.GroupProjectsQuery
+NGitLab.Models.GroupProjectsQuery.ActualMinAccessLevel.get -> int?
+NGitLab.Models.GroupProjectsQuery.ActualOrderBy.get -> string
+NGitLab.Models.GroupProjectsQuery.ActualVisibility.get -> string
 NGitLab.Models.GroupProjectsQuery.Archived.get -> bool?
 NGitLab.Models.GroupProjectsQuery.Archived.set -> void
 NGitLab.Models.GroupProjectsQuery.GroupProjectsQuery() -> void
@@ -1633,6 +1638,7 @@ NGitLab.Models.GroupProjectsQuery.OrderBy.get -> string
 NGitLab.Models.GroupProjectsQuery.OrderBy.set -> void
 NGitLab.Models.GroupProjectsQuery.Owned.get -> bool?
 NGitLab.Models.GroupProjectsQuery.Owned.set -> void
+NGitLab.Models.GroupProjectsQuery.Pagination.get -> string
 NGitLab.Models.GroupProjectsQuery.Search.get -> string
 NGitLab.Models.GroupProjectsQuery.Search.set -> void
 NGitLab.Models.GroupProjectsQuery.Simple.get -> bool?
@@ -1654,11 +1660,14 @@ NGitLab.Models.GroupProjectsQuery.WithSecurityReports.set -> void
 NGitLab.Models.GroupProjectsQuery.WithShared.get -> bool?
 NGitLab.Models.GroupProjectsQuery.WithShared.set -> void
 NGitLab.Models.GroupQuery
+NGitLab.Models.GroupQuery.ActualMinAccessLevel.get -> int?
+NGitLab.Models.GroupQuery.ActualOrderBy.get -> string
 NGitLab.Models.GroupQuery.AllAvailable -> bool?
 NGitLab.Models.GroupQuery.GroupQuery() -> void
 NGitLab.Models.GroupQuery.MinAccessLevel -> NGitLab.Models.AccessLevel?
 NGitLab.Models.GroupQuery.OrderBy -> string
 NGitLab.Models.GroupQuery.Owned -> bool?
+NGitLab.Models.GroupQuery.Pagination.get -> string
 NGitLab.Models.GroupQuery.Search -> string
 NGitLab.Models.GroupQuery.SkipGroups -> int[]
 NGitLab.Models.GroupQuery.Sort -> string
@@ -3033,6 +3042,8 @@ NGitLab.Models.SshKeyCreate.Key -> string
 NGitLab.Models.SshKeyCreate.SshKeyCreate() -> void
 NGitLab.Models.SshKeyCreate.Title -> string
 NGitLab.Models.SubgroupQuery
+NGitLab.Models.SubgroupQuery.ActualMinAccessLevel.get -> int?
+NGitLab.Models.SubgroupQuery.ActualOrderBy.get -> string
 NGitLab.Models.SubgroupQuery.AllAvailable.get -> bool?
 NGitLab.Models.SubgroupQuery.AllAvailable.set -> void
 NGitLab.Models.SubgroupQuery.MinAccessLevel.get -> NGitLab.Models.AccessLevel?
@@ -3041,6 +3052,7 @@ NGitLab.Models.SubgroupQuery.OrderBy.get -> string
 NGitLab.Models.SubgroupQuery.OrderBy.set -> void
 NGitLab.Models.SubgroupQuery.Owned.get -> bool?
 NGitLab.Models.SubgroupQuery.Owned.set -> void
+NGitLab.Models.SubgroupQuery.Pagination.get -> string
 NGitLab.Models.SubgroupQuery.Search.get -> string
 NGitLab.Models.SubgroupQuery.Search.set -> void
 NGitLab.Models.SubgroupQuery.SkipGroups.get -> int[]
