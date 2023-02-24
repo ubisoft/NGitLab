@@ -8,6 +8,7 @@
         /// <summary>
         /// Include project statistics
         /// </summary>
+        [QueryParameter("statistics")]
         public bool? Statistics;
     }
 }

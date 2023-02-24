@@ -1547,12 +1547,15 @@ NGitLab.Models.FileUpsert.FileUpsert() -> void
 NGitLab.Models.FileUpsert.Path -> string
 NGitLab.Models.FileUpsert.RawContent.set -> void
 NGitLab.Models.ForkedProjectQuery
+NGitLab.Models.ForkedProjectQuery.ActualAccessLevel.get -> int?
+NGitLab.Models.ForkedProjectQuery.ActualOrderBy.get -> string
 NGitLab.Models.ForkedProjectQuery.Archived -> bool?
 NGitLab.Models.ForkedProjectQuery.ForkedProjectQuery() -> void
 NGitLab.Models.ForkedProjectQuery.Membership -> bool?
 NGitLab.Models.ForkedProjectQuery.MinAccessLevel -> NGitLab.Models.AccessLevel?
 NGitLab.Models.ForkedProjectQuery.OrderBy -> string
 NGitLab.Models.ForkedProjectQuery.Owned -> bool?
+NGitLab.Models.ForkedProjectQuery.Pagination.get -> string
 NGitLab.Models.ForkedProjectQuery.PerPage -> int?
 NGitLab.Models.ForkedProjectQuery.Search -> string
 NGitLab.Models.ForkedProjectQuery.Simple -> bool?
@@ -2560,16 +2563,23 @@ NGitLab.Models.ProjectMemberUpdate.ExpiresAt -> string
 NGitLab.Models.ProjectMemberUpdate.ProjectMemberUpdate() -> void
 NGitLab.Models.ProjectMemberUpdate.UserId -> string
 NGitLab.Models.ProjectQuery
+NGitLab.Models.ProjectQuery.ActualOrderBy.get -> string
+NGitLab.Models.ProjectQuery.ActualTopics.get -> string
+NGitLab.Models.ProjectQuery.ActualVisibility.get -> string
 NGitLab.Models.ProjectQuery.Archived -> bool?
 NGitLab.Models.ProjectQuery.Ascending -> bool?
 NGitLab.Models.ProjectQuery.LastActivityAfter -> System.DateTimeOffset?
+NGitLab.Models.ProjectQuery.Membership.get -> bool?
 NGitLab.Models.ProjectQuery.MinAccessLevel -> NGitLab.Models.AccessLevel?
 NGitLab.Models.ProjectQuery.OrderBy -> string
+NGitLab.Models.ProjectQuery.Owned.get -> bool?
+NGitLab.Models.ProjectQuery.Pagination.get -> string
 NGitLab.Models.ProjectQuery.PerPage -> int?
 NGitLab.Models.ProjectQuery.ProjectQuery() -> void
 NGitLab.Models.ProjectQuery.Scope -> NGitLab.Models.ProjectQueryScope
 NGitLab.Models.ProjectQuery.Search -> string
 NGitLab.Models.ProjectQuery.Simple -> bool?
+NGitLab.Models.ProjectQuery.Sort.get -> string
 NGitLab.Models.ProjectQuery.Statistics -> bool?
 NGitLab.Models.ProjectQuery.Topics.get -> System.Collections.Generic.IList<string>
 NGitLab.Models.ProjectQuery.UserId -> int?

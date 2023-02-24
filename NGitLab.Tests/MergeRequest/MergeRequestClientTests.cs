@@ -21,7 +21,9 @@ namespace NGitLab.Tests
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
             Assert.AreEqual(mergeRequest.Id, mergeRequestClient[mergeRequest.Iid].Id, "Test we can get a merge request by IId");
-            Assert.AreEqual(mergeRequest.Id, (await mergeRequestClient.GetByIidAsync(mergeRequest.Iid, options: null)).Id, "Test we can get a merge request by IId");
+            var mr = await mergeRequestClient.GetByIidAsync(mergeRequest.Iid, options: null);
+            Assert.AreEqual(mergeRequest.Id, mr.Id, "Test we can get a merge request by IId");
+            Assert.IsNull(mr.DivergedCommitsCount, "Since IncludeDivergedCommitsCount was not requested, none was returned");
 
             ListMergeRequest(mergeRequestClient, mergeRequest);
             mergeRequest = UpdateMergeRequest(mergeRequestClient, mergeRequest);
@@ -48,6 +50,25 @@ namespace NGitLab.Tests
             //   .ConfigureAwait(false);
             var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
             Assert.IsTrue(commits.Any(), "Can return the commits");
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_GetByIidAsync_with_query()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+
+            Assert.AreEqual(mergeRequest.Id, mergeRequestClient[mergeRequest.Iid].Id, "Test we can get a merge request by IId");
+            var mr = await mergeRequestClient.GetByIidAsync(mergeRequest.Iid, options: new SingleMergeRequestQuery
+            {
+                IncludeDivergedCommitsCount = true,
+                IncludeRebaseInProgress = true,
+            });
+
+            Assert.NotNull(mr.DivergedCommitsCount, "Since IncludeDivergedCommitsCount was requested, it was returned");
+            Assert.AreEqual(0, mr.DivergedCommitsCount);
         }
 
         [Test]

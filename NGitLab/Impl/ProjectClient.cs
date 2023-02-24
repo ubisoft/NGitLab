@@ -44,64 +44,10 @@ namespace NGitLab.Impl
 
         private static string CreateGetUrl(ProjectQuery query)
         {
-            var url = Project.Url;
-
-            if (query.UserId.HasValue)
-            {
-                url = $"/users/{query.UserId.Value.ToStringInvariant()}/projects";
-            }
-
-            if (query.LastActivityAfter.HasValue)
-            {
-                url = Utils.AddParameter(url, "last_activity_after", query.LastActivityAfter.Value.UtcDateTime.ToString("O"));
-            }
-
-            switch (query.Scope)
-            {
-                case ProjectQueryScope.Accessible:
-                    url = Utils.AddParameter(url, "membership", value: true);
-                    break;
-                case ProjectQueryScope.Owned:
-                    url = Utils.AddParameter(url, "owned", value: true);
-                    break;
-#pragma warning disable 618 // Obsolete
-                case ProjectQueryScope.Visible:
-#pragma warning restore 618
-                case ProjectQueryScope.All:
-                    // This is the default, it returns all visible projects.
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            url = Utils.AddParameter(url, "archived", query.Archived);
-            url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: SupportKeysetPagination(query));
-            url = Utils.AddParameter(url, "search", query.Search);
-            url = Utils.AddParameter(url, "simple", query.Simple);
-            url = Utils.AddParameter(url, "statistics", query.Statistics);
-            url = Utils.AddParameter(url, "per_page", query.PerPage);
-
-            if (query.Ascending == true)
-            {
-                url = Utils.AddParameter(url, "sort", "asc");
-            }
-
-            if (query.Visibility.HasValue)
-            {
-                url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLowerInvariant());
-            }
-
-            if (query.MinAccessLevel != null)
-            {
-                url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel.Value);
-            }
-
-            if (query.Topics.Any())
-            {
-                url = Utils.AddParameter(url, "topic", string.Join(",", query.Topics.Where(t => !string.IsNullOrWhiteSpace(t))));
-            }
-
-            return url;
+            var url = query.UserId.HasValue ?
+                $"/users/{query.UserId.Value.ToStringInvariant()}/projects" :
+                Project.Url;
+            return QueryStringHelper.BuildAndAppendQueryString(url, query);
         }
 
         public IEnumerable<Project> Get(ProjectQuery query)
@@ -118,25 +64,19 @@ namespace NGitLab.Impl
 
         public Project GetById(int id, SingleProjectQuery query)
         {
-            var url = Project.Url + "/" + id.ToStringInvariant();
-            url = Utils.AddParameter(url, "statistics", query.Statistics);
-
+            var url = QueryStringHelper.BuildAndAppendQueryString(Project.Url + "/" + id.ToStringInvariant(), query);
             return _api.Get().To<Project>(url);
         }
 
         public async Task<Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default)
         {
-            var url = Project.Url + "/" + id.ToStringInvariant();
-            url = Utils.AddParameter(url, "statistics", query.Statistics);
-
+            var url = QueryStringHelper.BuildAndAppendQueryString(Project.Url + "/" + id.ToStringInvariant(), query);
             return await _api.Get().ToAsync<Project>(url, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default)
         {
-            var url = Project.Url + "/" + WebUtility.UrlEncode(path);
-            url = Utils.AddParameter(url, "statistics", query?.Statistics);
-
+            var url = QueryStringHelper.BuildAndAppendQueryString(Project.Url + "/" + WebUtility.UrlEncode(path), query);
             return await _api.Get().ToAsync<Project>(url, cancellationToken).ConfigureAwait(false);
         }
 
@@ -164,30 +104,7 @@ namespace NGitLab.Impl
 
         private static string CreateGetForksUrl(string id, ForkedProjectQuery query)
         {
-            var url = Project.Url + "/" + id + "/forks";
-
-            if (query != null)
-            {
-                url = Utils.AddParameter(url, "owned", query.Owned);
-                url = Utils.AddParameter(url, "archived", query.Archived);
-                url = Utils.AddParameter(url, "membership", query.Membership);
-                url = Utils.AddOrderBy(url, query.OrderBy);
-                url = Utils.AddParameter(url, "search", query.Search);
-                url = Utils.AddParameter(url, "simple", query.Simple);
-                url = Utils.AddParameter(url, "statistics", query.Statistics);
-                url = Utils.AddParameter(url, "per_page", query.PerPage);
-
-                if (query.Visibility.HasValue)
-                {
-                    url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLowerInvariant());
-                }
-
-                if (query.MinAccessLevel != null)
-                {
-                    url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel.Value);
-                }
-            }
-
+            var url = QueryStringHelper.BuildAndAppendQueryString(Project.Url + "/" + id + "/forks", query);
             return url;
         }
 

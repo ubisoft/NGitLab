@@ -33,29 +33,7 @@ namespace NGitLab.Impl
 
         public IEnumerable<MergeRequest> Get(MergeRequestQuery query)
         {
-            var url = _projectPath + MergeRequest.Url;
-
-            url = Utils.AddParameter(url, "state", query.State);
-            url = Utils.AddParameter(url, "order_by", query.OrderBy);
-            url = Utils.AddParameter(url, "sort", query.Sort);
-            url = Utils.AddParameter(url, "milestone", query.Milestone);
-            url = Utils.AddParameter(url, "view", query.View);
-            url = Utils.AddParameter(url, "labels", query.Labels);
-            url = Utils.AddParameter(url, "created_after", query.CreatedAfter);
-            url = Utils.AddParameter(url, "created_before", query.CreatedBefore);
-            url = Utils.AddParameter(url, "updated_after", query.UpdatedAfter);
-            url = Utils.AddParameter(url, "updated_before", query.UpdatedBefore);
-            url = Utils.AddParameter(url, "scope", query.Scope);
-            url = Utils.AddParameter(url, "author_id", query.AuthorId);
-            url = Utils.AddParameter(url, "per_page", query.PerPage);
-            url = Utils.AddParameter(url, "assignee_id", query.AssigneeId);
-            url = Utils.AddParameter(url, "reviewer_id", query.ReviewerId);
-            url = Utils.AddParameter(url, "approver_ids[]", query.ApproverIds);
-            url = Utils.AddParameter(url, "source_branch", query.SourceBranch);
-            url = Utils.AddParameter(url, "target_branch", query.TargetBranch);
-            url = Utils.AddParameter(url, "search", query.Search);
-            url = Utils.AddParameter(url, "wip", query.Wip.HasValue ? (query.Wip.Value ? "yes" : "no") : null);
-
+            var url = QueryStringHelper.BuildAndAppendQueryString(_projectPath + MergeRequest.Url, query);
             return _api.Get().GetAll<MergeRequest>(url);
         }
 
@@ -63,24 +41,20 @@ namespace NGitLab.Impl
         {
             get
             {
-                var url = $"{_projectPath}{MergeRequest.Url}/{iid.ToStringInvariant()}";
-                url = Utils.AddParameter(url, "include_rebase_in_progress", value: true);
-                url = Utils.AddParameter(url, "include_diverged_commits_count", value: true);
-
+                var url = QueryStringHelper.BuildAndAppendQueryString(
+                    $"{_projectPath}{MergeRequest.Url}/{iid.ToStringInvariant()}",
+                    new SingleMergeRequestQuery
+                    {
+                        IncludeDivergedCommitsCount = true,
+                        IncludeRebaseInProgress = true,
+                    });
                 return _api.Get().To<MergeRequest>(url);
             }
         }
 
         public Task<MergeRequest> GetByIidAsync(int iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default)
         {
-            var url = $"{_projectPath}{MergeRequest.Url}/{iid.ToStringInvariant()}";
-            if (options != null)
-            {
-                url = Utils.AddParameter(url, "include_rebase_in_progress", options.IncludeRebaseInProgress);
-                url = Utils.AddParameter(url, "include_diverged_commits_count", options.IncludeDivergedCommitsCount);
-                url = Utils.AddParameter(url, "render_html", options.RenderHtml);
-            }
-
+            var url = QueryStringHelper.BuildAndAppendQueryString($"{_projectPath}{MergeRequest.Url}/{iid.ToStringInvariant()}", options);
             return _api.Get().ToAsync<MergeRequest>(url, cancellationToken);
         }
 

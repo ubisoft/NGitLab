@@ -16,7 +16,7 @@ internal static class QueryStringHelper
         return string.IsNullOrEmpty(queryString) ? url : $"{url}?{queryString}";
     }
 
-    public static string BuildQueryString<T>(T query)
+    private static string BuildQueryString<T>(T query)
     {
         if (query is null)
             return null;
@@ -78,12 +78,11 @@ internal static class QueryStringHelper
         return value switch
         {
             string s => s,
-            bool b => b.ToString(),
             int i => FormatIntValue(i),
             DateTime dt => FormatDateTimeValue(dt),
             DateTimeOffset dto => FormatDateTimeOffsetValue(dto),
             Enum e => FormatEnumValue(e),
-            _ => /*value.ToString()*/throw new InvalidOperationException($"Could not format '{value}' as string)"),
+            _ => value.ToString(),
         };
     }
 
