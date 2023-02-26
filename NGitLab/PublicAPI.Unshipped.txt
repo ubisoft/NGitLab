@@ -560,6 +560,7 @@ NGitLab.Impl.MergeRequestClient.Get(NGitLab.Models.MergeRequestQuery query) -> S
 NGitLab.Impl.MergeRequestClient.GetByIidAsync(int iid, NGitLab.Models.SingleMergeRequestQuery options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.MergeRequest>
 NGitLab.Impl.MergeRequestClient.GetParticipants(int mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Author>
 NGitLab.Impl.MergeRequestClient.GetPipelines(int mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
+NGitLab.Impl.MergeRequestClient.GetVersions(int mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestVersion>
 NGitLab.Impl.MergeRequestClient.MergeRequestClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.MergeRequestClient.MergeRequestClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.MergeRequestClient.Rebase(int mergeRequestIid) -> NGitLab.Models.RebaseResult
