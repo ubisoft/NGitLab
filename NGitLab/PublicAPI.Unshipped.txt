@@ -2188,6 +2188,23 @@ NGitLab.Models.MergeRequestUserInfo
 NGitLab.Models.MergeRequestUserInfo.CanMerge.get -> bool
 NGitLab.Models.MergeRequestUserInfo.CanMerge.set -> void
 NGitLab.Models.MergeRequestUserInfo.MergeRequestUserInfo() -> void
+NGitLab.Models.MergeRequestVersion
+NGitLab.Models.MergeRequestVersion.Id.get -> int
+NGitLab.Models.MergeRequestVersion.Id.set -> void
+NGitLab.Models.MergeRequestVersion.HeadCommitSha.get -> string
+NGitLab.Models.MergeRequestVersion.HeadCommitSha.set -> void
+NGitLab.Models.MergeRequestVersion.BaseCommitSha.get -> string
+NGitLab.Models.MergeRequestVersion.BaseCommitSha.set -> void
+NGitLab.Models.MergeRequestVersion.StartCommitSha.get -> string
+NGitLab.Models.MergeRequestVersion.StartCommitSha.set -> void
+NGitLab.Models.MergeRequestVersion.CreatedAt.get -> System.DateTime
+NGitLab.Models.MergeRequestVersion.CreatedAt.set -> void
+NGitLab.Models.MergeRequestVersion.MergeRequestId.get -> int
+NGitLab.Models.MergeRequestVersion.MergeRequestId.set -> void
+NGitLab.Models.MergeRequestVersion.State.get -> string
+NGitLab.Models.MergeRequestVersion.State.set -> void
+NGitLab.Models.MergeRequestVersion.RealSize.get -> string
+NGitLab.Models.MergeRequestVersion.RealSize.set -> void
 NGitLab.Models.Milestone
 NGitLab.Models.Milestone.CreatedAt -> System.DateTime
 NGitLab.Models.Milestone.Description -> string
