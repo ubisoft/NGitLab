@@ -45,6 +45,8 @@ namespace NGitLab
 
         IEnumerable<Author> GetParticipants(int mergeRequestIid);
 
+        GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(int mergeRequestIid);
+
         IMergeRequestCommentClient Comments(int mergeRequestIid);
 
         IMergeRequestDiscussionClient Discussions(int mergeRequestIid);

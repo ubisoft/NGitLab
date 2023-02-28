@@ -670,6 +670,11 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(int mergeRequestIid)
+        {
+            throw new NotImplementedException();
+        }
+
         public IMergeRequestDiscussionClient Discussions(int mergeRequestIid)
         {
             AssertProjectId();
