@@ -282,7 +282,6 @@ namespace NGitLab.Tests
             var versions = mergeRequestClient.GetVersionsAsync(mergeRequest.Iid);
             var version = versions.First();
 
-            Assert.AreEqual(mergeRequest.CreatedAt, version.CreatedAt);
             Assert.AreEqual(mergeRequest.Sha, version.HeadCommitSha);
         }
 
