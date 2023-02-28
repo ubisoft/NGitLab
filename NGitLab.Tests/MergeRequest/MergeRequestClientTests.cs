@@ -271,6 +271,21 @@ namespace NGitLab.Tests
             AcceptAndCancelMergeRequest(mergeRequestClient, mergeRequest);
         }
 
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_merge_request_versions()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+
+            var versions = mergeRequestClient.GetVersionsAsync(mergeRequest.Iid);
+            var version = versions.First();
+
+            Assert.AreEqual(mergeRequest.CreatedAt, version.CreatedAt);
+            Assert.AreEqual(mergeRequest.Sha, version.HeadCommitSha);
+        }
+
         private static void ListMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest mergeRequest)
         {
             Assert.IsTrue(mergeRequestClient.All.Any(x => x.Id == mergeRequest.Id), "Test 'All' accessor returns the merge request");
