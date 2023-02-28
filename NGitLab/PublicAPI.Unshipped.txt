@@ -1953,6 +1953,8 @@ NGitLab.Models.MergeRequest.AllowCollaboration -> bool?
 NGitLab.Models.MergeRequest.Assignee -> NGitLab.Models.User
 NGitLab.Models.MergeRequest.Assignees -> NGitLab.Models.User[]
 NGitLab.Models.MergeRequest.Author -> NGitLab.Models.User
+NGitLab.Models.MergeRequest.BlockingDiscussionsResolved.get -> bool
+NGitLab.Models.MergeRequest.BlockingDiscussionsResolved.set -> void
 NGitLab.Models.MergeRequest.ChangesCount -> string
 NGitLab.Models.MergeRequest.ClosedAt -> System.DateTime?
 NGitLab.Models.MergeRequest.ClosedBy -> NGitLab.Models.User

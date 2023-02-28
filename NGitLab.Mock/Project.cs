@@ -143,6 +143,8 @@ namespace NGitLab.Mock
 
         public string MergeMethod { get; set; }
 
+        public bool AllThreadsMustBeResolvedToMerge { get; set; }
+
         public ProjectStatistics Statistics { get; set; }
 
         public ProtectedBranchCollection ProtectedBranches { get; }
