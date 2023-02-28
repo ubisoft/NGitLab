@@ -131,6 +131,9 @@ namespace NGitLab.Models
         [JsonPropertyName("has_conflicts")]
         public bool HasConflicts { get; set; }
 
+        [JsonPropertyName("blocking_discussions_resolved")]
+        public bool BlockingDiscussionsResolved { get; set; }
+
         [JsonPropertyName("user")]
         public MergeRequestUserInfo User { get; set; }
 

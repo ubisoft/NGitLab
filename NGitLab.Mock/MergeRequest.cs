@@ -312,6 +312,7 @@ namespace NGitLab.Mock
                     StartSha = StartSha,
                     HeadSha = HeadSha,
                 },
+                BlockingDiscussionsResolved = !Project.AllThreadsMustBeResolvedToMerge || Comments.All(c => !c.Resolvable || c.Resolved),
             };
         }
 
