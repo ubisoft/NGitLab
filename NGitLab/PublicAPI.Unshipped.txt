@@ -3465,6 +3465,8 @@ static NGitLab.Models.QueryAssigneeId.Any.get -> NGitLab.Models.QueryAssigneeId
 static NGitLab.Models.QueryAssigneeId.implicit operator NGitLab.Models.QueryAssigneeId(int id) -> NGitLab.Models.QueryAssigneeId
 static NGitLab.Models.QueryAssigneeId.None.get -> NGitLab.Models.QueryAssigneeId
 static NGitLab.RequestOptions.Default.get -> NGitLab.RequestOptions
+static NGitLab.Sha1.operator !=(NGitLab.Sha1 left, NGitLab.Sha1 right) -> bool
+static NGitLab.Sha1.operator ==(NGitLab.Sha1 left, NGitLab.Sha1 right) -> bool
 virtual NGitLab.Impl.API.CreateRequestor(NGitLab.Impl.MethodType methodType) -> NGitLab.IHttpRequestor
 virtual NGitLab.Impl.HttpRequestor.Execute(string tailAPIUrl) -> void
 virtual NGitLab.Impl.HttpRequestor.ExecuteAsync(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
