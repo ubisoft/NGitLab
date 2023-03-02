@@ -26,6 +26,10 @@ namespace NGitLab
             _p3 = GetInt(value, ref index);
         }
 
+        public static bool operator ==(Sha1 left, Sha1 right) => left.Equals(right);
+
+        public static bool operator !=(Sha1 left, Sha1 right) => !(left == right);
+
         public bool Equals(Sha1 other)
         {
             return _p1 == other._p1 && _p2 == other._p2 && _p3 == other._p3;
