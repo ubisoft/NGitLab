@@ -227,6 +227,7 @@ namespace NGitLab.Mock
             SourceProject.Repository.Rebase(user, SourceBranch, TargetBranch);
 
             UpdatedAt = DateTimeOffset.UtcNow;
+            RefreshInternalState();
 
             return new RebaseResult { RebaseInProgress = true };
         }
@@ -346,6 +347,8 @@ namespace NGitLab.Mock
             // Once the MR is merged or closed, stop updating its internal state
             if (State != MergeRequestState.opened)
                 return;
+
+            UpdateSha();
 
             var headSha = SourceBranchHeadCommit?.Sha;
             if (headSha is not null)
