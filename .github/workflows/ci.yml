@@ -55,8 +55,7 @@ jobs:
           'gitlab/gitlab-ee:15.1.6-ee.0',
           'gitlab/gitlab-ee:15.4.6-ee.0',
           'gitlab/gitlab-ee:15.6.8-ee.0',
-          # Several MR-related tests fail against the following version. We need to investigate...
-          # 'gitlab/gitlab-ee:15.10.0-ee.0',
+          'gitlab/gitlab-ee:15.10.0-ee.0',
         ]
         configuration: [ Release ]
       fail-fast: false
