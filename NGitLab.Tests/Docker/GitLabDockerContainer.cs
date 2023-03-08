@@ -225,7 +225,7 @@ namespace NGitLab.Tests.Docker
             var stopwatch = Stopwatch.StartNew();
             while (true)
             {
-                TestContext.Progress.WriteLine($"Waiting for the GitLab Docker container to be ready ({stopwatch.Elapsed})");
+                TestContext.Progress.WriteLine($@"Waiting for the GitLab Docker container to be ready ({stopwatch.Elapsed:mm\:ss})");
                 var status = await client.Containers.InspectContainerAsync(container.ID);
                 if (!status.State.Running)
                     throw new InvalidOperationException($"Container '{status.ID}' is not running");
@@ -233,11 +233,10 @@ namespace NGitLab.Tests.Docker
                 var healthState = status.State.Health.Status;
 
                 // unhealthy is valid as long as the container is running as it may indicate a slow creation
-                if (healthState == "starting" || healthState == "unhealthy")
+                if (healthState is "starting" or "unhealthy")
                 {
-                    await Task.Delay(3000);
                 }
-                else if (healthState == "healthy")
+                else if (healthState is "healthy")
                 {
                     // A healthy container doesn't mean the service is actually running.
                     // GitLab has lots of configuration steps that are still running when the container is healthy.
@@ -250,13 +249,13 @@ namespace NGitLab.Tests.Docker
                     catch
                     {
                     }
-
-                    await Task.Delay(3000);
                 }
                 else
                 {
                     throw new InvalidOperationException($"Container status '{healthState}' is not supported");
                 }
+
+                await Task.Delay(5000);
             }
 
             TestContext.Progress.WriteLine("GitLab Docker container is ready");
@@ -306,7 +305,7 @@ namespace NGitLab.Tests.Docker
                     await page.RunAndWaitForResponseAsync(async () =>
                     {
                         await page.EvalOnSelectorAsync("form#new_user", "form => form.submit()");
-                    }, GitLabUrl.AbsoluteUri);
+                    }, response => response.Status == 200);
 
                     url = await GetCurrentUrl(page);
                 }
@@ -318,21 +317,19 @@ namespace NGitLab.Tests.Docker
 
                     await page.GotoAsync(GitLabUrl + "/-/profile/personal_access_tokens");
 
-                    var tokenName = "GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
-                    await page.Locator("form#new_personal_access_token input[name='personal_access_token[name]']").FillAsync(tokenName);
+                    var formLocator = page.Locator("main#content-body form");
 
-                    foreach (var checkbox in await page.Locator("form#new_personal_access_token input[type=checkbox][name='personal_access_token[scopes][]']").AllAsync())
+                    var tokenName = "GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
+                    await formLocator.GetByLabel("Token name").FillAsync(tokenName);
+
+                    foreach (var checkbox in await formLocator.GetByRole(AriaRole.Checkbox).AllAsync())
                     {
                         await checkbox.CheckAsync(new LocatorCheckOptions { Force = true });
                     }
 
-                    await page.RunAndWaitForResponseAsync(async () =>
-                    {
-                        await page.EvalOnSelectorAsync("form#new_personal_access_token", "form => form.submit()");
-                    }, response => response.Status == 200);
+                    await formLocator.GetByRole(AriaRole.Button, new() { Name = "Create personal access token" }).ClickAsync();
 
-                    var token = await page.Locator("input#created-personal-access-token").GetAttributeAsync("value");
-
+                    var token = await page.GetByTitle("Copy personal access token").GetAttributeAsync("data-clipboard-text");
                     credentials.AdminUserToken = token;
                 }
 
