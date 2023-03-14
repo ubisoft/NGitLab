@@ -1,10 +1,11 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
     public class CommitStatusCreate
     {
-        [JsonPropertyName("id")]
+        [Obsolete("'Project Id' is ignored in the POSTed JSON; it is actually specified through the endpoint URL.")]
         public int ProjectId;
 
         [JsonPropertyName("sha")]

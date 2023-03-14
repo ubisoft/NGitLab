@@ -1043,12 +1043,6 @@ NGitLab.Models.ApprovalRuleCreate.RuleType.get -> string
 NGitLab.Models.ApprovalRuleCreate.RuleType.set -> void
 NGitLab.Models.ApprovalRuleCreate.UserIds.get -> int[]
 NGitLab.Models.ApprovalRuleCreate.UserIds.set -> void
-NGitLab.Models.ApprovalRuleDelete
-NGitLab.Models.ApprovalRuleDelete.ApprovalRuleDelete() -> void
-NGitLab.Models.ApprovalRuleDelete.ApprovalRuleId.get -> int
-NGitLab.Models.ApprovalRuleDelete.ApprovalRuleId.set -> void
-NGitLab.Models.ApprovalRuleDelete.Id.get -> int
-NGitLab.Models.ApprovalRuleDelete.Id.set -> void
 NGitLab.Models.ApprovalRuleUpdate
 NGitLab.Models.ApprovalRuleUpdate.ApprovalRuleId.get -> int
 NGitLab.Models.ApprovalRuleUpdate.ApprovalRuleId.set -> void

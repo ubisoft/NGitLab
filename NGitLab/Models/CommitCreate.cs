@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -6,8 +7,7 @@ namespace NGitLab.Models
 {
     public class CommitCreate
     {
-        [Required]
-        [JsonPropertyName("id")]
+        [Obsolete("'Project Id' is ignored in the POSTed JSON; it is actually specified through the endpoint URL.")]
         public int ProjectId;
 
         [Required]

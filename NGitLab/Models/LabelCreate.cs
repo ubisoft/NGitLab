@@ -6,7 +6,6 @@ namespace NGitLab.Models
     public class LabelCreate
     {
         [Required]
-        [JsonPropertyName("id")]
         public int Id;
 
         [Required]

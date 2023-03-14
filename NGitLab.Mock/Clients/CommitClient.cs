@@ -19,7 +19,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(commit.ProjectId, ProjectPermission.Contribute);
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
                 var gitCommit = project.Repository.Commit(commit);
 
                 return gitCommit.ToCommitClient(project);

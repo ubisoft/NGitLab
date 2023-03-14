@@ -8,7 +8,6 @@ namespace NGitLab.Models
     public class IssueCreate
     {
         [Required]
-        [JsonPropertyName("id")]
         public int Id;
 
         [Required]

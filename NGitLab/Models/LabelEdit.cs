@@ -16,7 +16,6 @@ namespace NGitLab.Models
         }
 
         [Required]
-        [JsonPropertyName("id")]
         public int Id;
 
         [Required]

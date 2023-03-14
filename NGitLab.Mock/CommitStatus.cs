@@ -32,7 +32,6 @@ namespace NGitLab.Mock
                 Description = Description,
                 State = Status,
                 Coverage = Coverage,
-                ProjectId = Parent.Id,
             };
         }
 
