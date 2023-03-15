@@ -18,6 +18,7 @@ namespace NGitLab.Impl
         private const string RelatedToUrl = "/projects/{0}/issues/{1}/related_merge_requests";
         private const string ClosedByUrl = "/projects/{0}/issues/{1}/closed_by";
         private const string TimeStatsUrl = "/projects/{0}/issues/{1}/time_stats";
+        private const string CloneIssueUrl = "/projects/{0}/issues/{1}/clone";
 
         private readonly API _api;
 
@@ -151,6 +152,12 @@ namespace NGitLab.Impl
         public Task<TimeStats> TimeStatsAsync(int projectId, int issueIid, CancellationToken cancellationToken = default)
         {
             return _api.Get().ToAsync<TimeStats>(string.Format(CultureInfo.InvariantCulture, TimeStatsUrl, projectId, issueIid), cancellationToken);
+        }
+
+        public Task<Issue> CloneAsync(int projectId, int issueIid, int toProjectId, bool withNotes = false, CancellationToken cancellationToken = default)
+        {
+            var cloneInfo = new { to_project_id  = toProjectId, with_notes = withNotes.ToString().ToLowerInvariant() };
+            return _api.Post().With(cloneInfo).ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, CloneIssueUrl, projectId, issueIid), cancellationToken);
         }
 
         private GitLabCollectionResponse<Issue> Get(string url, IssueQuery query)

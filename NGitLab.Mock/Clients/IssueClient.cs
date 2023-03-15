@@ -191,6 +191,11 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public Task<Models.Issue> CloneAsync(int projectId, int issueIid, int toProjectId, bool withNotes = false, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Models.Issue> ForProject(int projectId)
         {
             using (Context.BeginOperationScope())
