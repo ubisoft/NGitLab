@@ -31,6 +31,11 @@ namespace NGitLab.Impl
                 url = Utils.AddParameter(url, "per_page", query.PerPage);
             }
 
+            if (query.Page.HasValue)
+            {
+                url = Utils.AddParameter(url, "page", query.Page);
+            }
+
             if (query.Confidential.HasValue)
             {
                 url = Utils.AddParameter(url, "confidential", query.Confidential);

@@ -3391,6 +3391,8 @@ NGitLab.SearchQuery.Confidential.get -> bool?
 NGitLab.SearchQuery.Confidential.set -> void
 NGitLab.SearchQuery.OrderBy.get -> string
 NGitLab.SearchQuery.OrderBy.set -> void
+NGitLab.SearchQuery.Page.get -> int?
+NGitLab.SearchQuery.Page.set -> void
 NGitLab.SearchQuery.PerPage.get -> int?
 NGitLab.SearchQuery.PerPage.set -> void
 NGitLab.SearchQuery.Search.get -> string
