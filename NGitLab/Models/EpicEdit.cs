@@ -6,7 +6,8 @@ namespace NGitLab.Models
 {
     public class EpicEdit
     {
-        [Obsolete("'Project Id' is ignored in the PUT JSON; it is actually specified through the endpoint URL.")]
+        [Obsolete("Unnecessary in the PUT JSON")]
+        [JsonIgnore]
         public int Id { get; set; }
 
         [Required]

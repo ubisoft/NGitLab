@@ -40,22 +40,22 @@ namespace NGitLab.Impl
 
         public Label Create(LabelCreate label)
         {
-            return _api.Post().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, label.Id));
+            return _api.Post().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, label.GroupOrProjectId));
         }
 
         public Label CreateGroupLabel(LabelCreate label)
         {
-            return _api.Post().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, label.Id));
+            return _api.Post().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, label.GroupOrProjectId));
         }
 
         public Label Edit(LabelEdit label)
         {
-            return _api.Put().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, label.Id));
+            return _api.Put().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, label.GroupOrProjectId));
         }
 
         public Label EditGroupLabel(LabelEdit label)
         {
-            return _api.Put().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, label.Id));
+            return _api.Put().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, label.GroupOrProjectId));
         }
 
         public Label Delete(LabelDelete label)

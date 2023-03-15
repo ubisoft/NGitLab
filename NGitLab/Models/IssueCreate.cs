@@ -7,8 +7,14 @@ namespace NGitLab.Models
 {
     public class IssueCreate
     {
-        [Required]
+        [Obsolete("Use " + nameof(ProjectId) + " instead")]
+        [JsonIgnore]
         public int Id;
+
+        [JsonIgnore]
+#pragma warning disable CS0618 // Type or member is obsolete
+        public int ProjectId { get => Id; set => Id = value; }
+#pragma warning restore CS0618 // Type or member is obsolete
 
         [Required]
         [JsonPropertyName("title")]

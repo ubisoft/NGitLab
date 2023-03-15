@@ -50,7 +50,6 @@ namespace NGitLab.Tests
                 Ref = pipeline.Ref,
                 PipelineId = pipeline.Id,
                 Name = "test",
-                ProjectId = project.Id,
                 Coverage = 50,
                 Description = "descr",
                 Status = "success",

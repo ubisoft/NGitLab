@@ -91,22 +91,22 @@ namespace NGitLab.Impl
 
         public Issue Create(IssueCreate issueCreate)
         {
-            return _api.Post().With(issueCreate).To<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, issueCreate.Id));
+            return _api.Post().With(issueCreate).To<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, issueCreate.ProjectId));
         }
 
         public Task<Issue> CreateAsync(IssueCreate issueCreate, CancellationToken cancellationToken = default)
         {
-            return _api.Post().With(issueCreate).ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, issueCreate.Id), cancellationToken);
+            return _api.Post().With(issueCreate).ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, issueCreate.ProjectId), cancellationToken);
         }
 
         public Issue Edit(IssueEdit issueEdit)
         {
-            return _api.Put().With(issueEdit).To<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, issueEdit.Id, issueEdit.IssueId));
+            return _api.Put().With(issueEdit).To<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, issueEdit.ProjectId, issueEdit.IssueId));
         }
 
         public Task<Issue> EditAsync(IssueEdit issueEdit, CancellationToken cancellationToken = default)
         {
-            return _api.Put().With(issueEdit).ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, issueEdit.Id, issueEdit.IssueId), cancellationToken);
+            return _api.Put().With(issueEdit).ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, issueEdit.ProjectId, issueEdit.IssueId), cancellationToken);
         }
 
         public IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid)

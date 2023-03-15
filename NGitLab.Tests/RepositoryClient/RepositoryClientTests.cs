@@ -51,7 +51,6 @@ namespace NGitLab.Tests.RepositoryClient
                         CommitMessage = context.GetUniqueRandomString(),
                         AuthorEmail = "a@example.com",
                         AuthorName = "a",
-                        ProjectId = project.Id,
                         Actions =
                         {
                             new CreateCommitAction

@@ -95,7 +95,6 @@ namespace NGitLab.Tests
         {
             return new ApprovalRuleCreate
             {
-                Id = project.Id,
                 Name = approvalRuleName,
                 ApprovalsRequired = approvalsRequired,
                 RuleType = "regular",

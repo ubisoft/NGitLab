@@ -1247,6 +1247,8 @@ NGitLab.Models.CommitStats.Total -> int
 NGitLab.Models.CommitStatus
 NGitLab.Models.CommitStatus.CommitSha -> string
 NGitLab.Models.CommitStatus.CommitStatus() -> void
+NGitLab.Models.CommitStatus.Id.get -> int
+NGitLab.Models.CommitStatus.Id.set -> void
 NGitLab.Models.CommitStatus.Name -> string
 NGitLab.Models.CommitStatus.ProjectId -> int
 NGitLab.Models.CommitStatus.Ref -> string
@@ -1730,6 +1732,8 @@ NGitLab.Models.IssueCreate.Id -> int
 NGitLab.Models.IssueCreate.IssueCreate() -> void
 NGitLab.Models.IssueCreate.Labels -> string
 NGitLab.Models.IssueCreate.MileStoneId -> int?
+NGitLab.Models.IssueCreate.ProjectId.get -> int
+NGitLab.Models.IssueCreate.ProjectId.set -> void
 NGitLab.Models.IssueCreate.Title -> string
 NGitLab.Models.IssueEdit
 NGitLab.Models.IssueEdit.AssigneeId -> int?
@@ -1741,6 +1745,8 @@ NGitLab.Models.IssueEdit.IssueEdit() -> void
 NGitLab.Models.IssueEdit.IssueId -> int
 NGitLab.Models.IssueEdit.Labels -> string
 NGitLab.Models.IssueEdit.MilestoneId -> int?
+NGitLab.Models.IssueEdit.ProjectId.get -> int
+NGitLab.Models.IssueEdit.ProjectId.set -> void
 NGitLab.Models.IssueEdit.State -> string
 NGitLab.Models.IssueEdit.Title -> string
 NGitLab.Models.IssueEpic
@@ -1919,6 +1925,8 @@ NGitLab.Models.Label.Name -> string
 NGitLab.Models.LabelCreate
 NGitLab.Models.LabelCreate.Color -> string
 NGitLab.Models.LabelCreate.Description -> string
+NGitLab.Models.LabelCreate.GroupOrProjectId.get -> int
+NGitLab.Models.LabelCreate.GroupOrProjectId.set -> void
 NGitLab.Models.LabelCreate.Id -> int
 NGitLab.Models.LabelCreate.LabelCreate() -> void
 NGitLab.Models.LabelCreate.Name -> string
@@ -1929,6 +1937,8 @@ NGitLab.Models.LabelDelete.Name -> string
 NGitLab.Models.LabelEdit
 NGitLab.Models.LabelEdit.Color -> string
 NGitLab.Models.LabelEdit.Description -> string
+NGitLab.Models.LabelEdit.GroupOrProjectId.get -> int
+NGitLab.Models.LabelEdit.GroupOrProjectId.set -> void
 NGitLab.Models.LabelEdit.Id -> int
 NGitLab.Models.LabelEdit.LabelEdit() -> void
 NGitLab.Models.LabelEdit.LabelEdit(int projectId, NGitLab.Models.Label label) -> void

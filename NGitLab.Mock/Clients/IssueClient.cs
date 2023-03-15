@@ -35,7 +35,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(issueCreate.Id, ProjectPermission.View);
+                var project = GetProject(issueCreate.ProjectId, ProjectPermission.View);
 
                 var issue = new Issue
                 {
@@ -71,7 +71,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var projectId = issueEdit.Id;
+                var projectId = issueEdit.ProjectId;
                 var issueToModify = GetIssue(projectId, issueEdit.IssueId);
 
                 if (issueEdit.AssigneeId.HasValue)

@@ -7,7 +7,8 @@ namespace NGitLab.Models
 {
     public class CommitCreate
     {
-        [Obsolete("'Project Id' is ignored in the POSTed JSON; it is actually specified through the endpoint URL.")]
+        [Obsolete("Unnecessary in the POSTed JSON; the 'Project Id' is actually specified through the endpoint URL.")]
+        [JsonIgnore]
         public int ProjectId;
 
         [Required]

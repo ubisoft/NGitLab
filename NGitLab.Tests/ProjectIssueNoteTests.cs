@@ -14,7 +14,7 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
-            var issue = context.Client.Issues.Create(new IssueCreate { Id = project.Id, Title = "test", Description = "test" });
+            var issue = context.Client.Issues.Create(new IssueCreate { ProjectId = project.Id, Title = "test", Description = "test" });
             var noteClient = context.Client.GetProjectIssueNoteClient(project.Id);
 
             // Create
@@ -48,7 +48,7 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
-            var issue = context.Client.Issues.Create(new IssueCreate { Id = project.Id, Title = "test", Description = "test" });
+            var issue = context.Client.Issues.Create(new IssueCreate { ProjectId = project.Id, Title = "test", Description = "test" });
             var noteClient = context.Client.GetProjectIssueNoteClient(project.Id);
 
             var noteCreate = new ProjectIssueNoteCreate

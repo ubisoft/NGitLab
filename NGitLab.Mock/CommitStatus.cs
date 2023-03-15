@@ -41,7 +41,6 @@ namespace NGitLab.Mock
             {
                 CommitSha = Sha,
                 Name = Name,
-                ProjectId = Parent.Id,
                 Ref = Ref,
                 Status = Status,
             };

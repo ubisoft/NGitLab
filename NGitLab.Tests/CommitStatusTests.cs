@@ -75,7 +75,6 @@ namespace NGitLab.Tests
                     CommitSha = Commit.Id.ToString(),
                     Name = "Commit for CommitStatusTests",
                     State = state,
-                    ProjectId = Project.Id,
                     Description = "desc",
                     Coverage = coverage,
                     TargetUrl = "https://google.ca/",

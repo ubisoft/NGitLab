@@ -16,7 +16,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(label.Id, ProjectPermission.Edit);
+                var project = GetProject(label.GroupOrProjectId, ProjectPermission.Edit);
                 return project.Labels.Add(label.Name, label.Color, label.Description).ToClientLabel();
             }
         }
@@ -25,7 +25,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var group = GetGroup(label.Id, GroupPermission.Edit);
+                var group = GetGroup(label.GroupOrProjectId, GroupPermission.Edit);
                 return group.Labels.Add(label.Name, label.Color, label.Description).ToClientLabel();
             }
         }
@@ -45,7 +45,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(label.Id, ProjectPermission.Edit);
+                var project = GetProject(label.GroupOrProjectId, ProjectPermission.Edit);
                 var l = FindLabel(project.Labels, label.Name) ?? throw new GitLabNotFoundException($"Cannot find label '{label.Name}'");
 
                 if (!string.IsNullOrEmpty(label.NewName))
@@ -71,7 +71,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var group = GetGroup(label.Id, GroupPermission.Edit);
+                var group = GetGroup(label.GroupOrProjectId, GroupPermission.Edit);
                 var l = FindLabel(group.Labels, label.Name) ?? throw new GitLabNotFoundException($"Cannot find label '{label.Name}'");
 
                 if (!string.IsNullOrEmpty(label.NewName))

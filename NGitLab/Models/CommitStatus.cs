@@ -5,9 +5,12 @@ namespace NGitLab.Models
 {
     public class CommitStatus
     {
-        [Obsolete("This is NOT the 'Project Id' (could be some kind of 'Commit Status Id')")]
-        [JsonPropertyName("id")]
+        [Obsolete("This is NOT the 'Project Id' (was some kind of 'Commit Status Id')")]
+        [JsonIgnore]
         public int ProjectId;
+
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
 
         [JsonPropertyName("sha")]
         public string CommitSha;

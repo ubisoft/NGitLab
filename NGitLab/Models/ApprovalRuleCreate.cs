@@ -9,7 +9,8 @@ namespace NGitLab.Models
         /// <summary>
         /// The Id of a project.
         /// </summary>
-        [Obsolete("'Project Id' is ignored in the POSTed JSON; it is actually specified through the endpoint URL.")]
+        [Obsolete("Unnecessary in the POSTed JSON; the 'Project Id' is actually specified through the endpoint URL.")]
+        [JsonIgnore]
         public int Id { get; set; }
 
         /// <summary>
