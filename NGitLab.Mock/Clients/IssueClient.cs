@@ -191,7 +191,7 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
-        public Task<Models.Issue> CloneAsync(int projectId, int issueIid, int toProjectId, bool withNotes = false, CancellationToken cancellationToken = default)
+        public Task<Models.Issue> CloneAsync(int projectId, int issueIid, IssueClone issueClone, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

@@ -154,10 +154,9 @@ namespace NGitLab.Impl
             return _api.Get().ToAsync<TimeStats>(string.Format(CultureInfo.InvariantCulture, TimeStatsUrl, projectId, issueIid), cancellationToken);
         }
 
-        public Task<Issue> CloneAsync(int projectId, int issueIid, int toProjectId, bool withNotes = false, CancellationToken cancellationToken = default)
+        public Task<Issue> CloneAsync(int projectId, int issueIid, IssueClone issueClone, CancellationToken cancellationToken = default)
         {
-            var cloneInfo = new { to_project_id  = toProjectId, with_notes = withNotes.ToString().ToLowerInvariant() };
-            return _api.Post().With(cloneInfo).ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, CloneIssueUrl, projectId, issueIid), cancellationToken);
+            return _api.Post().With(issueClone).ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, CloneIssueUrl, projectId, issueIid), cancellationToken);
         }
 
         private GitLabCollectionResponse<Issue> Get(string url, IssueQuery query)
