@@ -5,9 +5,9 @@ namespace NGitLab.Models
     public class IssueClone
     {
         [JsonPropertyName("to_project_id")]
-        public int ToProjectId;
+        public int ToProjectId { get; set; }
 
         [JsonPropertyName("with_notes")]
-        public bool WithNotes;
+        public bool WithNotes { get; set; }
     }
 }

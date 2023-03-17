@@ -473,6 +473,7 @@ NGitLab.Impl.HttpRequestor.With(object data) -> NGitLab.IHttpRequestor
 NGitLab.Impl.IGitDiffChangeCounter
 NGitLab.Impl.IGitDiffChangeCounter.Compute(NGitLab.Models.MergeRequestChange mergeRequestChange) -> NGitLab.Impl.DiffStats
 NGitLab.Impl.IssueClient
+NGitLab.Impl.IssueClient.CloneAsync(int projectId, int issueIid, NGitLab.Models.IssueClone issueClone, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.ClosedBy(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.Impl.IssueClient.ClosedByAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
 NGitLab.Impl.IssueClient.Create(NGitLab.Models.IssueCreate issueCreate) -> NGitLab.Models.Issue
@@ -1721,8 +1722,10 @@ NGitLab.Models.Issue.Weight.get -> int?
 NGitLab.Models.Issue.Weight.set -> void
 NGitLab.Models.IssueClone
 NGitLab.Models.IssueClone.IssueClone() -> void
-NGitLab.Models.IssueClone.ToProjectId -> int
-NGitLab.Models.IssueClone.WithNotes -> bool
+NGitLab.Models.IssueClone.ToProjectId.get -> int
+NGitLab.Models.IssueClone.ToProjectId.set -> void
+NGitLab.Models.IssueClone.WithNotes.get -> bool
+NGitLab.Models.IssueClone.WithNotes.set -> void
 NGitLab.Models.IssueCreate
 NGitLab.Models.IssueCreate.AssigneeId -> int?
 NGitLab.Models.IssueCreate.Confidential -> bool
