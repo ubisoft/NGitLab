@@ -285,6 +285,21 @@ namespace NGitLab.Tests
             Assert.AreEqual(mergeRequest.Sha, version.HeadCommitSha);
         }
 
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_merge_request_head_pipeline()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var sourceProjectId = await context.Client.Projects.GetByIdAsync(mergeRequest.SourceProjectId, new SingleProjectQuery());
+            JobTests.AddGitLabCiFile(context.Client, sourceProjectId, branch: mergeRequest.SourceBranch);
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+
+            mergeRequest = await GitLabTestContext.RetryUntilAsync(() => mergeRequestClient[mergeRequest.Iid], p => p.HeadPipeline != null, TimeSpan.FromSeconds(120));
+
+            Assert.AreEqual(project.Id, mergeRequest.HeadPipeline?.ProjectId);
+        }
+
         private static void ListMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest mergeRequest)
         {
             Assert.IsTrue(mergeRequestClient.All.Any(x => x.Id == mergeRequest.Id), "Test 'All' accessor returns the merge request");

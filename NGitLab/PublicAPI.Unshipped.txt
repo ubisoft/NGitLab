@@ -2306,6 +2306,8 @@ NGitLab.Models.Pipeline.Duration -> long?
 NGitLab.Models.Pipeline.FinishedAt -> System.DateTime
 NGitLab.Models.Pipeline.Id -> int
 NGitLab.Models.Pipeline.Pipeline() -> void
+NGitLab.Models.Pipeline.ProjectId.get -> int
+NGitLab.Models.Pipeline.ProjectId.set -> void
 NGitLab.Models.Pipeline.Ref -> string
 NGitLab.Models.Pipeline.Sha -> NGitLab.Sha1
 NGitLab.Models.Pipeline.Source -> string

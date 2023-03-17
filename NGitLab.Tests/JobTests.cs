@@ -10,7 +10,7 @@ namespace NGitLab.Tests
 {
     public class JobTests
     {
-        internal static void AddGitLabCiFile(IGitLabClient client, Project project, int jobCount = 1, bool manualAction = false)
+        internal static void AddGitLabCiFile(IGitLabClient client, Project project, int jobCount = 1, bool manualAction = false, string branch = null)
         {
             var content = @"
 variables:
@@ -39,7 +39,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
 
             client.GetRepository(project.Id).Files.Create(new FileUpsert
             {
-                Branch = project.DefaultBranch,
+                Branch = branch ?? project.DefaultBranch,
                 CommitMessage = "test",
                 Path = ".gitlab-ci.yml",
                 Content = content,
