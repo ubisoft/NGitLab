@@ -127,7 +127,11 @@ namespace NGitLab.Impl
         public async Task<Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default)
         {
             var url = Project.Url + "/" + id.ToStringInvariant();
-            url = Utils.AddParameter(url, "statistics", query.Statistics);
+
+            if (query != null)
+            {
+                url = Utils.AddParameter(url, "statistics", query.Statistics);
+            }
 
             return await _api.Get().ToAsync<Project>(url, cancellationToken).ConfigureAwait(false);
         }
