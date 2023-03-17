@@ -140,5 +140,15 @@ namespace NGitLab
         /// <param name="issueIid">The id of the issue in the project's scope.</param>
         /// <returns>The time tracking statistics of the issue.</returns>
         Task<TimeStats> TimeStatsAsync(int projectId, int issueIid, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Clone the issue to given project
+        /// </summary>
+        /// <param name="projectId">The project id</param>
+        /// <param name="issueIid">The id of the issue in the project's scope</param>
+        /// <param name="issueClone">Destination information</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<Issue> CloneAsync(int projectId, int issueIid, IssueClone issueClone, CancellationToken cancellationToken = default);
     }
 }
