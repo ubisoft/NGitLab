@@ -380,7 +380,11 @@ namespace NGitLab.Mock
 
             var existingProject = group.Projects.FirstOrDefault(p => string.Equals(p.Name, projectName, StringComparison.Ordinal));
             if (existingProject != null)
-                return existingProject;
+            {
+                return existingProject == this ?
+                    throw new InvalidOperationException($"Cannot fork '{PathWithNamespace}' onto itself") :
+                    existingProject;
+            }
 
             var newProject = new Project(projectName)
             {

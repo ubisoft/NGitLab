@@ -139,7 +139,7 @@ namespace NGitLab.Mock
                 if (string.IsNullOrEmpty(HeadSha))
                     return null;
                 var headSha = new Sha1(_headSha);
-                var pipeline = Project.Pipelines
+                var pipeline = SourceProject.Pipelines
                   .Where(p => p.Sha.Equals(headSha))
                   .OrderByDescending(p => p.CreatedAt)
                   .FirstOrDefault();
@@ -215,6 +215,7 @@ namespace NGitLab.Mock
 
             if (ForceRemoveSourceBranch || ShouldRemoveSourceBranch)
             {
+                SourceProject.Repository.Checkout(SourceProject.DefaultBranch);
                 SourceProject.Repository.RemoveBranch(SourceBranch);
             }
 
