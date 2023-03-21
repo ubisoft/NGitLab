@@ -90,6 +90,9 @@ namespace NGitLab.Mock.Clients
             {
                 var project = GetProject(_projectId, ProjectPermission.Contribute);
                 var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
+                if (mergeRequest == null)
+                    throw new GitLabNotFoundException();
+
                 mergeRequest.ShouldRemoveSourceBranch = message.ShouldRemoveSourceBranch ?? false;
 
                 if (project.ApprovalsBeforeMerge > mergeRequest.Approvers.Count)
@@ -99,9 +102,6 @@ namespace NGitLab.Mock.Clients
                         StatusCode = HttpStatusCode.Unauthorized,
                     };
                 }
-
-                if (mergeRequest == null)
-                    throw new GitLabNotFoundException();
 
                 if (message.Sha != null)
                 {
