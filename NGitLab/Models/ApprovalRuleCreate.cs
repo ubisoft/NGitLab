@@ -1,15 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
     public class ApprovalRuleCreate
     {
-        /// <summary>
-        /// The Id of a project.
-        /// </summary>
-        [Required]
-        [JsonPropertyName("id")]
+        // Unnecessary in the POSTed JSON; the 'Project Id' is actually specified through the endpoint URL.
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [JsonIgnore]
         public int Id { get; set; }
 
         /// <summary>

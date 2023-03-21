@@ -59,7 +59,6 @@ namespace NGitLab.Tests
 
             var commit = context.Client.GetCommits(project.Id).Create(new CommitCreate
             {
-                ProjectId = project.Id,
                 Branch = "test-mr",
                 CommitMessage = "Test to retrieve MR from commit sha",
             });

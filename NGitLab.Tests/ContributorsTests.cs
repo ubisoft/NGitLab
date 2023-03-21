@@ -58,7 +58,6 @@ namespace NGitLab.Tests
                 AuthorEmail = userUpsert.Email,
                 Branch = project.DefaultBranch,
                 StartBranch = project.DefaultBranch,
-                ProjectId = project.Id,
                 CommitMessage = "test",
             });
 

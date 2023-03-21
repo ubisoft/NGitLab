@@ -16,8 +16,8 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1" });
-            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2" });
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1" });
+            var issue2 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title2" });
 
             var issues = issuesClient.Get(new IssueQuery
             {
@@ -36,7 +36,7 @@ namespace NGitLab.Tests
             var issuesClient = context.Client.Issues;
             var adminIssuesClient = context.AdminClient.Issues;
 
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1" });
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1" });
 
             var issue = adminIssuesClient.GetById(issue1.Id);
 
@@ -51,8 +51,8 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1" });
-            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2", AssigneeId = context.Client.Users.Current.Id });
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1" });
+            var issue2 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title2", AssigneeId = context.Client.Users.Current.Id });
 
             var issues = issuesClient.Get(new IssueQuery
             {
@@ -71,8 +71,8 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1" });
-            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2", AssigneeId = context.Client.Users.Current.Id });
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1" });
+            var issue2 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title2", AssigneeId = context.Client.Users.Current.Id });
 
             var issues = issuesClient.Get(new IssueQuery
             {
@@ -91,9 +91,9 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", Confidential = true });
-            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2", Confidential = true });
-            var issue3 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title3" });
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1", Confidential = true });
+            var issue2 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title2", Confidential = true });
+            var issue3 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title3" });
 
             var issues = issuesClient.Get(new IssueQuery
             {
@@ -110,9 +110,9 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", Confidential = true });
-            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2", Confidential = true });
-            var issue3 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title3" });
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1", Confidential = true });
+            var issue2 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title2", Confidential = true });
+            var issue3 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title3" });
 
             var issues = issuesClient.Get(new IssueQuery
             {
@@ -129,9 +129,9 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", Confidential = true });
-            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2", Confidential = true });
-            var issue3 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title3" });
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1", Confidential = true });
+            var issue2 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title2", Confidential = true });
+            var issue3 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title3" });
 
             var issues = issuesClient.Get(new IssueQuery()).Where(i => i.ProjectId == project.Id).ToList();
 
@@ -145,8 +145,8 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1" });
-            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2", AssigneeId = context.Client.Users.Current.Id });
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1" });
+            var issue2 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title2", AssigneeId = context.Client.Users.Current.Id });
 
             var issues = issuesClient.Get(project.Id, new IssueQuery
             {
@@ -176,8 +176,8 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1" });
-            var issue2 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title2", AssigneeId = context.Client.Users.Current.Id });
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1" });
+            var issue2 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title2", AssigneeId = context.Client.Users.Current.Id });
 
             var issues = issuesClient.ForProject(project.Id).ToList();
             Assert.AreEqual(2, issues.Count);
@@ -193,7 +193,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var issuesClient = context.Client.Issues;
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1" });
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1" });
 
             var issues = issuesClient.ForProject(project.Id).ToList();
             Assert.AreEqual(1, issues.Count);
@@ -202,14 +202,14 @@ namespace NGitLab.Tests
             var updatedIssue = issues[0];
             issuesClient.Edit(new IssueEdit
             {
-                Id = project.Id,
+                ProjectId = project.Id,
                 IssueId = updatedIssue.IssueId,
                 Labels = testLabel,
             });
 
             issuesClient.Edit(new IssueEdit
             {
-                Id = project.Id,
+                ProjectId = project.Id,
                 IssueId = updatedIssue.IssueId,
                 Labels = string.Empty,
             });
@@ -235,14 +235,14 @@ namespace NGitLab.Tests
             var issuesClient = context.Client.Issues;
 
             var initialDueDate = new DateTime(2022, 1, 1);
-            var issue1 = issuesClient.Create(new IssueCreate { Id = project.Id, Title = "title1", DueDate = initialDueDate });
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1", DueDate = initialDueDate });
             var issue = issuesClient.Get(project.Id, issue1.IssueId);
             Assert.AreEqual(initialDueDate, issue1.DueDate);
 
             var updatedDueDate = new DateTime(2022, 2, 1);
             var updatedIssue = issuesClient.Edit(new IssueEdit
             {
-                Id = project.Id,
+                ProjectId = project.Id,
                 IssueId = issue.IssueId,
                 DueDate = updatedDueDate,
             });

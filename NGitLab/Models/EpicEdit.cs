@@ -1,12 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
     public class EpicEdit
     {
-        [Required]
-        [JsonPropertyName("id")]
+        // Unnecessary in the PUT JSON
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [JsonIgnore]
         public int Id { get; set; }
 
         [Required]

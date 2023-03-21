@@ -66,7 +66,6 @@ namespace NGitLab.Tests
                 CommitMessage = "A message",
                 AuthorEmail = "a@example.com",
                 AuthorName = "a",
-                ProjectId = project.Id,
                 Actions =
                 {
                     new CreateCommitAction
@@ -103,7 +102,6 @@ namespace NGitLab.Tests
                 CommitMessage = "A message",
                 AuthorEmail = "a@example.com",
                 AuthorName = "a",
-                ProjectId = project.Id,
                 Actions =
                 {
                     new CreateCommitAction

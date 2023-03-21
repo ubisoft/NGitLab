@@ -85,7 +85,7 @@ namespace NGitLab.Tests
             // Act
             var issue = adminClient.Issues.Create(new IssueCreate
             {
-                Id = project.Id,
+                ProjectId = project.Id,
                 Title = $"An issue created on behalf of user '{commonUserSession.Username}'",
             });
 
@@ -117,7 +117,7 @@ namespace NGitLab.Tests
             // Act
             var issue = adminClient.Issues.Create(new IssueCreate
             {
-                Id = project.Id,
+                ProjectId = project.Id,
                 Title = $"An issue created on behalf of user '{commonUserId}'",
             });
 

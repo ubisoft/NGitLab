@@ -27,7 +27,6 @@ namespace NGitLab.Mock.Clients
                     CommitMessage = file.CommitMessage,
                     AuthorEmail = Context.User.Email,
                     AuthorName = Context.User.Name,
-                    ProjectId = _projectId,
                     Actions = new[]
                     {
                         new CreateCommitAction
@@ -55,7 +54,6 @@ namespace NGitLab.Mock.Clients
                     CommitMessage = file.CommitMessage,
                     AuthorEmail = Context.User.Email,
                     AuthorName = Context.User.Name,
-                    ProjectId = _projectId,
                     Actions = new[]
                     {
                         new CreateCommitAction
@@ -105,7 +103,6 @@ namespace NGitLab.Mock.Clients
                     CommitMessage = file.CommitMessage,
                     AuthorEmail = Context.User.Email,
                     AuthorName = Context.User.Name,
-                    ProjectId = _projectId,
                     Actions = new[]
                     {
                         new CreateCommitAction

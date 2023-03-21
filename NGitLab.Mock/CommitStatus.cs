@@ -32,7 +32,6 @@ namespace NGitLab.Mock
                 Description = Description,
                 State = Status,
                 Coverage = Coverage,
-                ProjectId = Parent.Id,
             };
         }
 
@@ -42,7 +41,6 @@ namespace NGitLab.Mock
             {
                 CommitSha = Sha,
                 Name = Name,
-                ProjectId = Parent.Id,
                 Ref = Ref,
                 Status = Status,
             };

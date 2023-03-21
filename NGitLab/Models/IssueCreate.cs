@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using NGitLab.Impl.Json;
@@ -7,8 +8,11 @@ namespace NGitLab.Models
 {
     public class IssueCreate
     {
-        [Required]
-        [JsonPropertyName("id")]
+        [JsonIgnore]
+        public int ProjectId { get => Id; set => Id = value; }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [JsonIgnore]
         public int Id;
 
         [Required]

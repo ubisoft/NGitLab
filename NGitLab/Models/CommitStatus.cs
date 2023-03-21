@@ -1,11 +1,17 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
     public class CommitStatus
     {
-        [JsonPropertyName("id")]
+        // This is NOT the 'Project Id', but some kind of (undocumented) 'Commit Status Id'
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [JsonIgnore]
         public int ProjectId;
+
+        [JsonPropertyName("id")]
+        public int Id { get => ProjectId; set => ProjectId = value; }
 
         [JsonPropertyName("sha")]
         public string CommitSha;
