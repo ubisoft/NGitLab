@@ -35,7 +35,7 @@ namespace NGitLab.Mock.Tests
                 .BuildServer();
 
             var client = server.CreateClient();
-            client.Labels.Create(new LabelCreate { GroupOrProjectId = 1, Name = "test1" });
+            client.Labels.Create(new LabelCreate { Id = 1, Name = "test1" });
             var labels = client.Labels.ForProject(1).ToArray();
 
             Assert.AreEqual(1, labels.Length, "Labels count is invalid");
@@ -52,7 +52,7 @@ namespace NGitLab.Mock.Tests
                 .BuildServer();
 
             var client = server.CreateClient();
-            client.Labels.Edit(new LabelEdit { GroupOrProjectId = 1, Name = "test1", NewName = "test2" });
+            client.Labels.Edit(new LabelEdit { Id = 1, Name = "test1", NewName = "test2" });
             var labels = client.Labels.ForProject(1).ToArray();
 
             Assert.AreEqual(1, labels.Length, "Labels count is invalid");
@@ -102,7 +102,7 @@ namespace NGitLab.Mock.Tests
                 .BuildServer();
 
             var client = server.CreateClient();
-            client.Labels.CreateGroupLabel(new LabelCreate { GroupOrProjectId = 2, Name = "test1" });
+            client.Labels.CreateGroupLabel(new LabelCreate { Id = 2, Name = "test1" });
             var labels = client.Labels.ForGroup(2).ToArray();
 
             Assert.AreEqual(1, labels.Length, "Labels count is invalid");
@@ -119,7 +119,7 @@ namespace NGitLab.Mock.Tests
                 .BuildServer();
 
             var client = server.CreateClient();
-            client.Labels.EditGroupLabel(new LabelEdit { GroupOrProjectId = 2, Name = "test1", NewName = "test2" });
+            client.Labels.EditGroupLabel(new LabelEdit { Id = 2, Name = "test1", NewName = "test2" });
             var labels = client.Labels.ForGroup(2).ToArray();
 
             Assert.AreEqual(1, labels.Length, "Labels count is invalid");

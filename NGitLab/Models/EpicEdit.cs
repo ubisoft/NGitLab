@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -6,7 +6,8 @@ namespace NGitLab.Models
 {
     public class EpicEdit
     {
-        [Obsolete("Unnecessary in the PUT JSON")]
+        // Unnecessary in the PUT JSON
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [JsonIgnore]
         public int Id { get; set; }
 

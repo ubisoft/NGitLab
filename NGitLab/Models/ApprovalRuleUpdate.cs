@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -6,10 +6,8 @@ namespace NGitLab.Models
 {
     public sealed class ApprovalRuleUpdate
     {
-        /// <summary>
-        /// The Id of a project.
-        /// </summary>
-        [Obsolete("Unnecessary in the PUT JSON; the 'Project Id' is actually specified through the endpoint URL.")]
+        // Unnecessary in the PUT JSON; the 'Project Id' is actually specified through the endpoint URL.
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [JsonIgnore]
         public int Id { get; set; }
 

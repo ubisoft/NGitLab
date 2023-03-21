@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using NGitLab.Impl.Json;
@@ -7,14 +8,12 @@ namespace NGitLab.Models
 {
     public class IssueEdit
     {
-        [Obsolete("Use " + nameof(ProjectId) + " instead")]
-        [JsonIgnore]
-        public int Id;
-
-#pragma warning disable CS0618 // Type or member is obsolete
         [JsonIgnore]
         public int ProjectId { get => Id; set => Id = value; }
-#pragma warning restore CS0618 // Type or member is obsolete
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [JsonIgnore]
+        public int Id;
 
         [Required]
         [JsonPropertyName("issue_id")]

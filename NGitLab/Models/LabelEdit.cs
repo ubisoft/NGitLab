@@ -1,9 +1,10 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public class LabelEdit
     {
         public LabelEdit()
@@ -12,18 +13,12 @@ namespace NGitLab.Models
 
         public LabelEdit(int projectId, Label label)
         {
-            GroupOrProjectId = projectId;
+            Id = projectId;
             Name = label.Name;
         }
 
-        [Obsolete("Use " + nameof(GroupOrProjectId) + " instead")]
         [JsonIgnore]
         public int Id;
-
-        [JsonIgnore]
-#pragma warning disable CS0618 // Type or member is obsolete
-        public int GroupOrProjectId { get => Id; set => Id = value; }
-#pragma warning restore CS0618 // Type or member is obsolete
 
         [Required]
         [JsonPropertyName("name")]
