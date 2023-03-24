@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Meziantou.Framework.Versioning;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -7,11 +8,33 @@ namespace NGitLab.Tests
 {
     public class ProjectLevelApprovalRulesClientTests
     {
+        // Starting at version 15.2.0, project-level approval rules require a Premium subscription
+        private readonly SemanticVersion MaxVersion = new(15, 1, 0);
+        private GitLabTestContext context;
+
+        [SetUp]
+        public async Task SetUp()
+        {
+            context = await GitLabTestContext.CreateAsync();
+            var gitLabVersion = context.Client.Version.Get();
+
+            if (SemanticVersion.TryParse(gitLabVersion.Version, out var version) &&
+                version > MaxVersion)
+            {
+                Assert.Inconclusive($"Test supported up to version {MaxVersion}, but currently running against {version}");
+            }
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            context?.Dispose();
+        }
+
         [Test]
         [NGitLabRetry]
-        public async Task CreateApprovalRule()
+        public void CreateApprovalRule()
         {
-            using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var projectLevelApprovalRulesClient = context.Client.GetProjectLevelApprovalRulesClient(project.Id);
 
@@ -27,9 +50,8 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
-        public async Task DeleteApprovalRule()
+        public void DeleteApprovalRule()
         {
-            using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var projectLevelApprovalRulesClient = context.Client.GetProjectLevelApprovalRulesClient(project.Id);
 
@@ -44,9 +66,8 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
-        public async Task UpdateApprovalRule()
+        public void UpdateApprovalRule()
         {
-            using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var projectLevelApprovalRulesClient = context.Client.GetProjectLevelApprovalRulesClient(project.Id);
 
@@ -73,9 +94,8 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
-        public async Task GetApprovalRules()
+        public void GetApprovalRules()
         {
-            using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var projectLevelApprovalRulesClient = context.Client.GetProjectLevelApprovalRulesClient(project.Id);
 
