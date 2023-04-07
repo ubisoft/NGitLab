@@ -110,6 +110,7 @@ NGitLab.IBranchClient.Unprotect(string name) -> NGitLab.Models.Branch
 NGitLab.IClusterClient
 NGitLab.IClusterClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.ClusterInfo>
 NGitLab.ICommitClient
+NGitLab.ICommitClient.CherryPick(NGitLab.Models.CommitCherryPick cherryPick) -> NGitLab.Models.Commit
 NGitLab.ICommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.Models.Commit
 NGitLab.ICommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
 NGitLab.ICommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
@@ -389,6 +390,7 @@ NGitLab.Impl.ClusterClient
 NGitLab.Impl.ClusterClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.ClusterInfo>
 NGitLab.Impl.ClusterClient.ClusterClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.CommitClient
+NGitLab.Impl.CommitClient.CherryPick(NGitLab.Models.CommitCherryPick cherryPick) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.CommitClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.CommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
@@ -1226,6 +1228,11 @@ NGitLab.Models.Commit.Stats -> NGitLab.Models.CommitStats
 NGitLab.Models.Commit.Status -> string
 NGitLab.Models.Commit.Title -> string
 NGitLab.Models.Commit.WebUrl -> string
+NGitLab.Models.CommitCherryPick
+NGitLab.Models.CommitCherryPick.Branch -> string
+NGitLab.Models.CommitCherryPick.CommitCherryPick() -> void
+NGitLab.Models.CommitCherryPick.Message -> string
+NGitLab.Models.CommitCherryPick.Sha -> string
 NGitLab.Models.CommitCreate
 NGitLab.Models.CommitCreate.Actions -> System.Collections.Generic.IList<NGitLab.Models.CreateCommitAction>
 NGitLab.Models.CommitCreate.AuthorEmail -> string

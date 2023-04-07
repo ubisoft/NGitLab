@@ -941,6 +941,7 @@ NGitLab.Mock.ReleaseTag.ReleaseNotes.set -> void
 NGitLab.Mock.ReleaseTag.ReleaseTag(string name, string releaseNotes) -> void
 NGitLab.Mock.Repository
 NGitLab.Mock.Repository.Checkout(string committishOrBranchNameSpec) -> void
+NGitLab.Mock.Repository.CherryPick(NGitLab.Models.CommitCherryPick commitCherryPick) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.Commit(NGitLab.Mock.User user, string message) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.Commit(NGitLab.Mock.User user, string message, string targetBranch, System.Collections.Generic.IEnumerable<NGitLab.Mock.File> files) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.Commit(NGitLab.Mock.User user, string message, System.Collections.Generic.IEnumerable<NGitLab.Mock.File> files) -> LibGit2Sharp.Commit

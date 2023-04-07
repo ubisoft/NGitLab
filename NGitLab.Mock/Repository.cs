@@ -207,6 +207,20 @@ namespace NGitLab.Mock
             return commit;
         }
 
+        public Commit CherryPick(CommitCherryPick commitCherryPick)
+        {
+            var repo = GetGitRepository();
+            Commands.Checkout(repo, commitCherryPick.Branch);
+
+            var commit = GetCommit(commitCherryPick.Sha);
+            var options = new CherryPickOptions
+            {
+                CommitOnSuccess = commitCherryPick.Message?.Length > 0,
+            };
+            var cherryPickResult = repo.CherryPick(commit, commit.Author, options);
+            return cherryPickResult.Commit ?? repo.Commit(commitCherryPick.Message, commit.Author, commit.Committer);
+        }
+
         public void Checkout(string committishOrBranchNameSpec)
         {
             Commands.Checkout(GetGitRepository(), committishOrBranchNameSpec);
