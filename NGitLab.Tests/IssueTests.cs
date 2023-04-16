@@ -228,6 +228,50 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
+        public async Task Test_get_all_resource_milestone_events()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var issuesClient = context.Client.Issues;
+            var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1" });
+
+            var issues = issuesClient.ForProject(project.Id).ToList();
+            Assert.AreEqual(1, issues.Count);
+
+            var milestoneClient = context.Client.GetMilestone(project.Id);
+            var milestone1 = milestoneClient.Create(new MilestoneCreate { Title = "TestMilestone", Description = "Milestone for Testing", StartDate = "2020-01-27T05:07:12.573Z", DueDate = "2020-05-26T05:07:12.573Z" });
+
+            var updatedIssue = issues[0];
+            issuesClient.Edit(new IssueEdit
+            {
+                ProjectId = project.Id,
+                IssueId = updatedIssue.IssueId,
+                MilestoneId = milestone1.Id,
+            });
+
+            issuesClient.Edit(new IssueEdit
+            {
+                ProjectId = project.Id,
+                IssueId = updatedIssue.IssueId,
+                MilestoneId = 0,
+            });
+
+            var resourceLabelEvents = issuesClient.ResourceMilestoneEvents(project.Id, updatedIssue.IssueId).ToList();
+            Assert.AreEqual(2, resourceLabelEvents.Count);
+
+            var addMilestoneEvent = resourceLabelEvents.First(e => e.Action == ResourceLabelEventAction.Add);
+            Assert.AreEqual(milestone1.Id, addMilestoneEvent.Milestone.Id);
+            Assert.AreEqual(milestone1.Title, addMilestoneEvent.Milestone.Title);
+            Assert.AreEqual(ResourceLabelEventAction.Add, addMilestoneEvent.Action);
+
+            var removeMilestoneEvent = resourceLabelEvents.First(e => e.Action == ResourceLabelEventAction.Remove);
+            Assert.AreEqual(milestone1.Id, removeMilestoneEvent.Milestone.Id);
+            Assert.AreEqual(milestone1.Title, addMilestoneEvent.Milestone.Title);
+            Assert.AreEqual(ResourceLabelEventAction.Remove, removeMilestoneEvent.Action);
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task Test_get_new_and_updated_issue_with_duedate()
         {
             using var context = await GitLabTestContext.CreateAsync();

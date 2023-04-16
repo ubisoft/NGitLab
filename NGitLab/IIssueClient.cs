@@ -101,6 +101,19 @@ namespace NGitLab
         GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int issueIid);
 
         /// <summary>
+        /// Gets the resource milestone events.
+        ///
+        /// url like GET /projects/:id/issues/:issue_iid/resource_milestone_events
+        ///
+        /// </summary>
+        /// <param name="projectId">The project id.</param>
+        /// <param name="issueIid">The id of the issue in the project's scope.</param>
+        /// <returns>A collection of the resource milestone events linked to this issue.</returns>
+        IEnumerable<ResourceMilestoneEvent> ResourceMilestoneEvents(int projectId, int issueIid);
+
+        GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int issueIid);
+
+        /// <summary>
         /// Gets the resource state events.
         ///
         /// url like GET /projects/:id/issues/:issue_iid/resource_state_events

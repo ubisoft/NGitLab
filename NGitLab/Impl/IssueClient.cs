@@ -14,6 +14,7 @@ namespace NGitLab.Impl
         private const string ProjectIssuesUrl = "/projects/{0}/issues";
         private const string SingleIssueUrl = "/projects/{0}/issues/{1}";
         private const string ResourceLabelEventUrl = "/projects/{0}/issues/{1}/resource_label_events";
+        private const string ResourceMilestoneEventUrl = "/projects/{0}/issues/{1}/resource_milestone_events";
         private const string ResourceStateEventUrl = "/projects/{0}/issues/{1}/resource_state_events";
         private const string RelatedToUrl = "/projects/{0}/issues/{1}/related_merge_requests";
         private const string ClosedByUrl = "/projects/{0}/issues/{1}/closed_by";
@@ -117,6 +118,16 @@ namespace NGitLab.Impl
         public GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int issueIid)
         {
             return _api.Get().GetAllAsync<ResourceLabelEvent>(string.Format(CultureInfo.InvariantCulture, ResourceLabelEventUrl, projectId, issueIid));
+        }
+
+        public IEnumerable<ResourceMilestoneEvent> ResourceMilestoneEvents(int projectId, int issueIid)
+        {
+            return _api.Get().GetAll<ResourceMilestoneEvent>(string.Format(CultureInfo.InvariantCulture, ResourceMilestoneEventUrl, projectId, issueIid));
+        }
+
+        public GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int issueIid)
+        {
+            return _api.Get().GetAllAsync<ResourceMilestoneEvent>(string.Format(CultureInfo.InvariantCulture, ResourceMilestoneEventUrl, projectId, issueIid));
         }
 
         public IEnumerable<ResourceStateEvent> ResourceStateEvents(int projectId, int issueIid)
