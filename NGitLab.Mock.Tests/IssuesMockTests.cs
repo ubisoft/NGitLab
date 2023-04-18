@@ -71,5 +71,47 @@ namespace NGitLab.Mock.Tests
             Assert.AreEqual(5, issue.IssueId);
             Assert.AreEqual("Issue title", issue.Title);
         }
+
+        [Test]
+        public void Test_issue_bla()
+        {
+            using var server = new GitLabConfig()
+                .WithUser("user1", isDefault: true)
+                .WithProject("Test", id: 1, configure: project => project
+                    .WithIssue("Issue title", author: "user", id: 5)
+                    .WithMilestone("Milestone 1")
+                    .WithMilestone("Milestone 2"))
+                .BuildServer();
+
+            var client = server.CreateClient();
+            var issuesClient = client.Issues;
+            var milestone = client.GetMilestone(1).All.ToArray()[0];
+
+            issuesClient.Edit(new IssueEdit
+            {
+                ProjectId = 1,
+                IssueId = 5,
+                MilestoneId = milestone.Id,
+            });
+
+            issuesClient.Edit(new IssueEdit
+            {
+                ProjectId = 1,
+                IssueId = 5,
+                MilestoneId = 2,
+            });
+
+            var resourceMilestoneEvents = issuesClient.ResourceMilestoneEvents(projectId: 1, issueIid: 5).ToList();
+            Assert.AreEqual(3, resourceMilestoneEvents.Count);
+
+            var removeMilestoneEvents = resourceMilestoneEvents.Where(e => e.Action == ResourceMilestoneEventAction.Remove).ToArray();
+            Assert.AreEqual(1, removeMilestoneEvents.Length);
+            Assert.AreEqual(1, removeMilestoneEvents[0].Milestone.Id);
+
+            var addMilestoneEvents = resourceMilestoneEvents.Where(e => e.Action == ResourceMilestoneEventAction.Add).ToArray();
+            Assert.AreEqual(2, addMilestoneEvents.Length);
+            Assert.AreEqual(1, addMilestoneEvents[0].Milestone.Id);
+            Assert.AreEqual(2, addMilestoneEvents[1].Milestone.Id);
+        }
     }
 }
