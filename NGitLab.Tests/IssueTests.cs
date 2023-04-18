@@ -259,15 +259,15 @@ namespace NGitLab.Tests
             var resourceLabelEvents = issuesClient.ResourceMilestoneEvents(project.Id, updatedIssue.IssueId).ToList();
             Assert.AreEqual(2, resourceLabelEvents.Count);
 
-            var addMilestoneEvent = resourceLabelEvents.First(e => e.Action == ResourceLabelEventAction.Add);
+            var addMilestoneEvent = resourceLabelEvents.First(e => e.Action == ResourceMilestoneEventAction.Add);
             Assert.AreEqual(milestone1.Id, addMilestoneEvent.Milestone.Id);
             Assert.AreEqual(milestone1.Title, addMilestoneEvent.Milestone.Title);
-            Assert.AreEqual(ResourceLabelEventAction.Add, addMilestoneEvent.Action);
+            Assert.AreEqual(ResourceMilestoneEventAction.Add, addMilestoneEvent.Action);
 
-            var removeMilestoneEvent = resourceLabelEvents.First(e => e.Action == ResourceLabelEventAction.Remove);
+            var removeMilestoneEvent = resourceLabelEvents.First(e => e.Action == ResourceMilestoneEventAction.Remove);
             Assert.AreEqual(milestone1.Id, removeMilestoneEvent.Milestone.Id);
             Assert.AreEqual(milestone1.Title, addMilestoneEvent.Milestone.Title);
-            Assert.AreEqual(ResourceLabelEventAction.Remove, removeMilestoneEvent.Action);
+            Assert.AreEqual(ResourceMilestoneEventAction.Remove, removeMilestoneEvent.Action);
         }
 
         [Test]

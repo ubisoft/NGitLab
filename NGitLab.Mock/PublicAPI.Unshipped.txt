@@ -403,6 +403,7 @@ NGitLab.Mock.GitLabServer.Events.get -> NGitLab.Mock.EventCollection
 NGitLab.Mock.GitLabServer.GitLabServer() -> void
 NGitLab.Mock.GitLabServer.Groups.get -> NGitLab.Mock.GroupCollection
 NGitLab.Mock.GitLabServer.ResourceLabelEvents.get -> NGitLab.Mock.ResourceLabelEventCollection
+NGitLab.Mock.GitLabServer.ResourceMilestoneEvents.get -> NGitLab.Mock.ResourceMilestoneEventCollection
 NGitLab.Mock.GitLabServer.ResourceStateEvents.get -> NGitLab.Mock.ResourceStateEventCollection
 NGitLab.Mock.GitLabServer.SystemHooks.get -> NGitLab.Mock.SystemHookCollection
 NGitLab.Mock.GitLabServer.Url.get -> System.Uri
@@ -992,6 +993,26 @@ NGitLab.Mock.ResourceLabelEvent.User.get -> NGitLab.Models.Author
 NGitLab.Mock.ResourceLabelEvent.User.set -> void
 NGitLab.Mock.ResourceLabelEventCollection
 NGitLab.Mock.ResourceLabelEventCollection.ResourceLabelEventCollection(NGitLab.Mock.GitLabObject container) -> void
+NGitLab.Mock.ResourceMilestoneEvent
+NGitLab.Mock.ResourceMilestoneEvent.Action.get -> NGitLab.Models.ResourceMilestoneEventAction
+NGitLab.Mock.ResourceMilestoneEvent.Action.set -> void
+NGitLab.Mock.ResourceMilestoneEvent.CreatedAt.get -> System.DateTime
+NGitLab.Mock.ResourceMilestoneEvent.CreatedAt.set -> void
+NGitLab.Mock.ResourceMilestoneEvent.Id.get -> int
+NGitLab.Mock.ResourceMilestoneEvent.Id.set -> void
+NGitLab.Mock.ResourceMilestoneEvent.Milestone.get -> NGitLab.Mock.Milestone
+NGitLab.Mock.ResourceMilestoneEvent.Milestone.set -> void
+NGitLab.Mock.ResourceMilestoneEvent.ResourceId.get -> int
+NGitLab.Mock.ResourceMilestoneEvent.ResourceId.set -> void
+NGitLab.Mock.ResourceMilestoneEvent.ResourceMilestoneEvent() -> void
+NGitLab.Mock.ResourceMilestoneEvent.ResourceType.get -> string
+NGitLab.Mock.ResourceMilestoneEvent.ResourceType.set -> void
+NGitLab.Mock.ResourceMilestoneEvent.ToClientResourceMilestoneEvent() -> NGitLab.Models.ResourceMilestoneEvent
+NGitLab.Mock.ResourceMilestoneEvent.User.get -> NGitLab.Models.Author
+NGitLab.Mock.ResourceMilestoneEvent.User.set -> void
+NGitLab.Mock.ResourceMilestoneEventCollection
+NGitLab.Mock.ResourceMilestoneEventCollection.Add(NGitLab.Mock.User user, NGitLab.Mock.Milestone milestone, NGitLab.Models.ResourceMilestoneEventAction action) -> void
+NGitLab.Mock.ResourceMilestoneEventCollection.ResourceMilestoneEventCollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.ResourceStateEvent
 NGitLab.Mock.ResourceStateEvent.CreatedAt.get -> System.DateTime
 NGitLab.Mock.ResourceStateEvent.CreatedAt.set -> void
@@ -1149,6 +1170,7 @@ override NGitLab.Mock.ProjectIssueNote.NoticableIid.get -> int
 override NGitLab.Mock.ProtectedBranchCollection.Add(NGitLab.Mock.ProtectedBranch branch) -> void
 override NGitLab.Mock.ReleaseCollection.Add(NGitLab.Mock.ReleaseInfo release) -> void
 override NGitLab.Mock.ResourceLabelEventCollection.Add(NGitLab.Mock.ResourceLabelEvent item) -> void
+override NGitLab.Mock.ResourceMilestoneEventCollection.Add(NGitLab.Mock.ResourceMilestoneEvent item) -> void
 override NGitLab.Mock.ResourceStateEventCollection.Add(NGitLab.Mock.ResourceStateEvent item) -> void
 override NGitLab.Mock.RunnerCollection.Add(NGitLab.Mock.Runner item) -> void
 override NGitLab.Mock.RunnerRef.Equals(object obj) -> bool

@@ -25,6 +25,7 @@ namespace NGitLab.Mock
         private int _lastLabelId = 10000;
         private int _lastProtectedBranchId = 10000;
         private int _lastResourceLabelEventId = 10000;
+        private int _lastResourceMilestoneEventId = 10000;
         private int _lastResourceStateEventId = 10000;
 
         public GitLabServer()
@@ -34,6 +35,7 @@ namespace NGitLab.Mock
             SystemHooks = new SystemHookCollection(this);
             Events = new EventCollection(this);
             ResourceLabelEvents = new ResourceLabelEventCollection(this);
+            ResourceMilestoneEvents = new ResourceMilestoneEventCollection(this);
             ResourceStateEvents = new ResourceStateEventCollection(this);
         }
 
@@ -54,6 +56,8 @@ namespace NGitLab.Mock
         public ResourceStateEventCollection ResourceStateEvents { get; }
 
         public ResourceLabelEventCollection ResourceLabelEvents { get; }
+
+        public ResourceMilestoneEventCollection ResourceMilestoneEvents { get; }
 
         public VisibilityLevel DefaultForkVisibilityLevel { get; set; } = VisibilityLevel.Private;
 
@@ -119,6 +123,8 @@ namespace NGitLab.Mock
         internal int GetNewProtectedBranchId() => Interlocked.Increment(ref _lastProtectedBranchId);
 
         internal int GetNewResourceLabelEventId() => Interlocked.Increment(ref _lastResourceLabelEventId);
+
+        internal int GetNewResourceMilestoneEventId() => Interlocked.Increment(ref _lastResourceMilestoneEventId);
 
         internal int GetNewResourceStateEventId() => Interlocked.Increment(ref _lastResourceStateEventId);
 

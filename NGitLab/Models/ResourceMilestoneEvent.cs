@@ -24,6 +24,6 @@ namespace NGitLab.Models
         public Milestone Milestone { get; set; }
 
         [JsonPropertyName("action")]
-        public ResourceMilestoneEvent Action { get; set; }
+        public ResourceMilestoneEventAction Action { get; set; }
     }
 }
