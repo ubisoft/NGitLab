@@ -1011,7 +1011,6 @@ NGitLab.Mock.ResourceMilestoneEvent.ToClientResourceMilestoneEvent() -> NGitLab.
 NGitLab.Mock.ResourceMilestoneEvent.User.get -> NGitLab.Models.Author
 NGitLab.Mock.ResourceMilestoneEvent.User.set -> void
 NGitLab.Mock.ResourceMilestoneEventCollection
-NGitLab.Mock.ResourceMilestoneEventCollection.Add(NGitLab.Mock.User user, NGitLab.Mock.Milestone milestone, NGitLab.Models.ResourceMilestoneEventAction action) -> void
 NGitLab.Mock.ResourceMilestoneEventCollection.ResourceMilestoneEventCollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.ResourceStateEvent
 NGitLab.Mock.ResourceStateEvent.CreatedAt.get -> System.DateTime
