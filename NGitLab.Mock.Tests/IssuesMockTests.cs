@@ -73,7 +73,7 @@ namespace NGitLab.Mock.Tests
         }
 
         [Test]
-        public void Test_issue_bla()
+        public void Test_issue_resource_milestone_events_can_be_found()
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", isDefault: true)
