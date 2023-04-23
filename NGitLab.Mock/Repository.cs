@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -410,15 +410,7 @@ namespace NGitLab.Mock
         public Commit GetCommit(string reference)
         {
             var repository = GetGitRepository();
-            var branchTip = GetBranchTipCommit(reference);
-            if (branchTip != null)
-                return branchTip;
-
-            var tag = repository.Tags[reference];
-            if (tag?.PeeledTarget is Commit commit)
-                return commit;
-
-            return repository.Commits.SingleOrDefault(c => string.Equals(c.Sha, reference, StringComparison.Ordinal));
+            return repository.Lookup<Commit>(reference);
         }
 
         public Patch GetBranchFullPatch(string branchName)
