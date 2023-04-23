@@ -7,13 +7,13 @@ namespace NGitLab.Models
     {
         [Required]
         [JsonIgnore]
-        public string Sha;
+        public Sha1 Sha { get; set; }
 
         [Required]
         [JsonPropertyName("branch")]
-        public string Branch;
+        public string Branch { get; set; }
 
         [JsonPropertyName("message")]
-        public string Message;
+        public string Message { get; set; }
     }
 }

@@ -212,7 +212,7 @@ namespace NGitLab.Mock
             var repo = GetGitRepository();
             Commands.Checkout(repo, commitCherryPick.Branch);
 
-            var commit = GetCommit(commitCherryPick.Sha);
+            var commit = GetCommit(commitCherryPick.Sha.ToString());
             var options = new CherryPickOptions
             {
                 CommitOnSuccess = commitCherryPick.Message?.Length > 0,
