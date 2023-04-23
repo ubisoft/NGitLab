@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -218,7 +218,7 @@ namespace NGitLab.Mock
                 CommitOnSuccess = commitCherryPick.Message?.Length > 0,
             };
             var cherryPickResult = repo.CherryPick(commit, commit.Author, options);
-            return cherryPickResult.Commit ?? repo.Commit(commitCherryPick.Message, commit.Author, commit.Committer);
+            return cherryPickResult.Commit ?? repo.Commit(commit.Message, commit.Author, commit.Committer);
         }
 
         public void Checkout(string committishOrBranchNameSpec)
