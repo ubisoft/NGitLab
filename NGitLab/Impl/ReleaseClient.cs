@@ -44,6 +44,7 @@ namespace NGitLab.Impl
                 url = Utils.AddParameter(url, "sort", query.Sort);
                 url = Utils.AddParameter(url, "include_html_description", query.IncludeHtmlDescription);
                 url = Utils.AddParameter(url, "per_page", query.PerPage);
+                url = Utils.AddParameter(url, "page", query.Page);
             }
 
             return _api.Get().GetAllAsync<ReleaseInfo>(url);

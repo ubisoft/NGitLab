@@ -115,14 +115,22 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                var result = project.Releases;
+                var result = project.Releases.AsEnumerable();
                 if (query != null)
                 {
-                    if (!string.IsNullOrEmpty(query.Sort))
-                        throw new NotImplementedException();
+                    var orderBy = !string.IsNullOrEmpty(query.OrderBy) && string.Equals(query.OrderBy, "created_at", StringComparison.Ordinal)
+                        ? new Func<ReleaseInfo, DateTime>(r => r.CreatedAt)
+                        : new Func<ReleaseInfo, DateTime>(r => r.ReleasedAt);
 
-                    if (!string.IsNullOrEmpty(query.OrderBy))
-                        throw new NotImplementedException();
+                    var sortAsc = !string.IsNullOrEmpty(query.Sort) && string.Equals(query.Sort, "asc", StringComparison.Ordinal);
+                    result = sortAsc ? result.OrderBy(orderBy) : result.OrderByDescending(orderBy);
+
+                    if (query.Page.HasValue)
+                    {
+                        var perPage = query.PerPage ?? 20;
+                        var page = Math.Max(0, query.Page.Value - 1);
+                        result = result.Skip(perPage * page);
+                    }
 
                     if (query.IncludeHtmlDescription == true)
                         throw new NotImplementedException();

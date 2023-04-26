@@ -510,14 +510,17 @@ namespace NGitLab.Mock.Config
             });
         }
 
-        public static GitLabProject WithRelease(this GitLabProject project, string author, string tagName)
+        public static GitLabProject WithRelease(this GitLabProject project, string author, string tagName, DateTime? createdAt = null, DateTime? releasedAt = null)
         {
             return Configure(project, _ =>
             {
+                var date = DateTime.UtcNow;
                 var release = new GitLabReleaseInfo
                 {
                     Author = author,
                     TagName = tagName,
+                    CreatedAt = createdAt ?? date,
+                    ReleasedAt = releasedAt ?? date,
                 };
 
                 project.Releases.Add(release);
@@ -1194,6 +1197,8 @@ namespace NGitLab.Mock.Config
             {
                 Author = new UserRef(user),
                 TagName = gitLabRelease.TagName,
+                CreatedAt = gitLabRelease.CreatedAt,
+                ReleasedAt = gitLabRelease.ReleasedAt,
             };
 
             project.Releases.Add(release);
