@@ -25,5 +25,7 @@ namespace NGitLab
         Milestone Close(int milestoneId);
 
         Milestone Activate(int milestoneId);
+
+        IEnumerable<MergeRequest> GetMergeRequests(int milestoneId);
     }
 }

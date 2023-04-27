@@ -57,6 +57,9 @@ namespace NGitLab.Impl
             .Put().With(new MilestoneUpdateState { NewState = nameof(MilestoneStateEvent.activate) })
             .To<Milestone>($"{_milestonePath}/{milestoneId.ToStringInvariant()}");
 
+        public IEnumerable<MergeRequest> GetMergeRequests(int milestoneId) => _api
+            .Get().GetAll<MergeRequest>($"{_milestonePath}/{milestoneId.ToStringInvariant()}/merge_requests");
+
         public void Delete(int milestoneId) => _api
             .Delete()
             .Execute($"{_milestonePath}/{milestoneId.ToStringInvariant()}");

@@ -76,6 +76,8 @@ namespace NGitLab.Mock
 
         public MilestoneCollection Milestones { get; }
 
+        public IEnumerable<MergeRequest> MergeRequests => AllProjects.SelectMany(project => project.MergeRequests);
+
         public string Path
         {
             get
