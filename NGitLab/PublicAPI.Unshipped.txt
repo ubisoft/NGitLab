@@ -2881,6 +2881,8 @@ NGitLab.Models.ReleaseQuery.IncludeHtmlDescription.get -> bool?
 NGitLab.Models.ReleaseQuery.IncludeHtmlDescription.set -> void
 NGitLab.Models.ReleaseQuery.OrderBy.get -> string
 NGitLab.Models.ReleaseQuery.OrderBy.set -> void
+NGitLab.Models.ReleaseQuery.Page.get -> int?
+NGitLab.Models.ReleaseQuery.Page.set -> void
 NGitLab.Models.ReleaseQuery.PerPage.get -> int?
 NGitLab.Models.ReleaseQuery.PerPage.set -> void
 NGitLab.Models.ReleaseQuery.ReleaseQuery() -> void
