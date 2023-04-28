@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -13,6 +14,50 @@ namespace NGitLab.Mock.Clients
             : base(context)
         {
             _projectId = projectId;
+        }
+
+        public IEnumerable<Branch> Search(string search)
+        {
+            Func<string, bool> filterBranch;
+            switch (search)
+            {
+                case null:
+                case "":
+                    filterBranch = _ => true;
+                    break;
+
+                case not null when search[0] == '^' && search[search.Length - 1] == '$':
+                    search = search.Substring(1, search.Length - 1 - 1);
+                    filterBranch = branch => branch.Equals(search, StringComparison.OrdinalIgnoreCase);
+                    break;
+
+                case not null when search[0] == '^':
+                    search = search.Substring(1);
+                    filterBranch = branch => branch.StartsWith(search, StringComparison.OrdinalIgnoreCase);
+                    break;
+
+                case not null when search[search.Length - 1] == '$':
+                    search = search.Substring(0, search.Length - 1);
+                    filterBranch = branch => branch.EndsWith(search, StringComparison.OrdinalIgnoreCase);
+                    break;
+
+                default:
+                    filterBranch = branch => branch.Contains(search, StringComparison.OrdinalIgnoreCase);
+                    break;
+            }
+
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.View);
+                return project.Repository.GetAllBranches()
+                    .Where(branch => filterBranch(branch.FriendlyName))
+                    .Select(branch => branch.ToBranchClient(project));
+            }
+        }
+
+        public GitLabCollectionResponse<Branch> SearchAsync(string search)
+        {
+            return GitLabCollectionResponse.Create(Search(search));
         }
 
         public Branch this[string name]
