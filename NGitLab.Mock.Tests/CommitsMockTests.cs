@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NGitLab.Mock.Config;
+using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Mock.Tests
@@ -76,6 +77,29 @@ namespace NGitLab.Mock.Tests
             Assert.IsNotEmpty(commitFromBranch1.Parents);
             Assert.IsNotEmpty(commitFromBranch2.Parents);
             Assert.AreEqual(commitFromBranch1.Parents[0], commitFromBranch2.Parents[0]);
+        }
+
+        [Test]
+        public void Test_commits_can_be_cherry_pick()
+        {
+            using var server = new GitLabConfig()
+                .WithUser("user1", isDefault: true)
+                .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
+                    .WithCommit("Initial commit")
+                    .WithCommit("Changes with tag", sourceBranch: "branch_1"))
+                .BuildServer();
+
+            var client = server.CreateClient();
+            var repository = client.GetRepository(1);
+            var commitFromBranch1 = repository.GetCommits("branch_1").FirstOrDefault();
+            Assert.NotNull(commitFromBranch1);
+
+            var cherryPicked = client.GetCommits(1).CherryPick(new CommitCherryPick
+            {
+                Sha = commitFromBranch1.Id,
+                Branch = "main",
+            });
+            Assert.NotNull(cherryPicked);
         }
     }
 }

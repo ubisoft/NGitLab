@@ -23,6 +23,11 @@ namespace NGitLab
         Commit GetCommit(string @ref);
 
         /// <summary>
+        /// Cherry-picks a commit to a given branch.
+        /// </summary>
+        Commit CherryPick(CommitCherryPick cherryPick);
+
+        /// <summary>
         /// Get merge requests related to a commit
         /// </summary>
         GitLabCollectionResponse<MergeRequest> GetRelatedMergeRequestsAsync(RelatedMergeRequestsQuery query);

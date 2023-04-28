@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
@@ -34,6 +34,17 @@ namespace NGitLab.Mock.Clients
                 var commit = project.Repository.GetCommit(@ref);
 
                 return commit?.ToCommitClient(project);
+            }
+        }
+
+        public Commit CherryPick(CommitCherryPick cherryPick)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var project = GetProject(_projectId, ProjectPermission.Contribute);
+                var gitCommit = project.Repository.CherryPick(cherryPick);
+
+                return gitCommit.ToCommitClient(project);
             }
         }
 

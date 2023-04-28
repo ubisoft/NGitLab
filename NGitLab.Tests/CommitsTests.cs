@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -75,6 +76,42 @@ namespace NGitLab.Tests
 
             var mergeRequest = mergeRequests.Single();
             Assert.AreEqual(mergeRequestTitle, mergeRequest.Title);
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_can_cherry_pick_commit()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var repository = context.Client.GetRepository(project.Id);
+            var commitClient = context.Client.GetCommits(project.Id);
+
+            repository.Branches.Create(new BranchCreate { Name = "test-cherry-pick", Ref = project.DefaultBranch });
+
+            var commit = commitClient.Create(new CommitCreate
+            {
+                Branch = "test-cherry-pick",
+                CommitMessage = "Test to cherry-pick",
+                Actions = new List<CreateCommitAction>
+                {
+                    new()
+                    {
+                        Action = "update",
+                        Content = "Test to cherry-pick",
+                        FilePath = "README.md",
+                    },
+                },
+            });
+
+            var cherryPickedCommit = commitClient.CherryPick(new CommitCherryPick
+            {
+                Branch = project.DefaultBranch,
+                Sha = commit.Id,
+            });
+
+            var latestCommit = commitClient.GetCommit(project.DefaultBranch);
+            Assert.AreEqual(cherryPickedCommit.Id, latestCommit.Id);
         }
     }
 }

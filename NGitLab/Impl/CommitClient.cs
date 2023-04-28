@@ -23,6 +23,11 @@ namespace NGitLab.Impl
             return _api.Get().To<Commit>(_repoPath + $"/commits/{@ref}");
         }
 
+        public Commit CherryPick(CommitCherryPick cherryPick)
+        {
+            return _api.Post().With(cherryPick).To<Commit>($"{_repoPath}/commits/{cherryPick.Sha}/cherry_pick");
+        }
+
         public JobStatus GetJobStatus(string branchName)
         {
             var encodedBranch = WebUtility.UrlEncode(branchName);

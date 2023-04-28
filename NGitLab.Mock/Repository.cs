@@ -207,6 +207,20 @@ namespace NGitLab.Mock
             return commit;
         }
 
+        public Commit CherryPick(CommitCherryPick commitCherryPick)
+        {
+            var repo = GetGitRepository();
+            Commands.Checkout(repo, commitCherryPick.Branch);
+
+            var commit = GetCommit(commitCherryPick.Sha.ToString());
+            var options = new CherryPickOptions
+            {
+                CommitOnSuccess = commitCherryPick.Message?.Length > 0,
+            };
+            var cherryPickResult = repo.CherryPick(commit, commit.Author, options);
+            return cherryPickResult.Commit ?? repo.Commit(commit.Message, commit.Author, commit.Committer);
+        }
+
         public void Checkout(string committishOrBranchNameSpec)
         {
             Commands.Checkout(GetGitRepository(), committishOrBranchNameSpec);
@@ -396,15 +410,7 @@ namespace NGitLab.Mock
         public Commit GetCommit(string reference)
         {
             var repository = GetGitRepository();
-            var branchTip = GetBranchTipCommit(reference);
-            if (branchTip != null)
-                return branchTip;
-
-            var tag = repository.Tags[reference];
-            if (tag?.PeeledTarget is Commit commit)
-                return commit;
-
-            return repository.Commits.SingleOrDefault(c => string.Equals(c.Sha, reference, StringComparison.Ordinal));
+            return repository.Lookup<Commit>(reference);
         }
 
         public Patch GetBranchFullPatch(string branchName)
