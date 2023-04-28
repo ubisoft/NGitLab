@@ -20,6 +20,12 @@ namespace NGitLab.Models
         [JsonPropertyName("due_date")]
         public string DueDate;
 
+        [JsonPropertyName("group_id")]
+        public int? GroupId;
+
+        [JsonPropertyName("project_id")]
+        public int? ProjectId;
+
         [JsonPropertyName("start_date")]
         public string StartDate;
 
