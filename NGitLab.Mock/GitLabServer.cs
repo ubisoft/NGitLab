@@ -28,6 +28,8 @@ namespace NGitLab.Mock
         private int _lastResourceMilestoneEventId = 10000;
         private int _lastResourceStateEventId = 10000;
 
+        public event EventHandler ClientOperation;
+
         public GitLabServer()
         {
             Groups = new GroupCollection(this);
@@ -131,6 +133,11 @@ namespace NGitLab.Mock
         internal string MakeUrl(string relativeUrl)
         {
             return new Uri(Url, relativeUrl).AbsoluteUri;
+        }
+
+        internal void RaiseOnClientOperation()
+        {
+            ClientOperation?.Invoke(this, EventArgs.Empty);
         }
     }
 }

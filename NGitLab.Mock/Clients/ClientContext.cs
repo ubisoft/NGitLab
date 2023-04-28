@@ -21,6 +21,7 @@ namespace NGitLab.Mock.Clients
 
         public IDisposable BeginOperationScope()
         {
+            Server.RaiseOnClientOperation();
             Monitor.Enter(_operationLock);
             return new Releaser(_operationLock);
         }

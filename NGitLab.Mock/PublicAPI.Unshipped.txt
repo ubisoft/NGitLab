@@ -395,6 +395,7 @@ NGitLab.Mock.GitLabServer
 NGitLab.Mock.GitLabServer.AllGroups.get -> System.Collections.Generic.IEnumerable<NGitLab.Mock.Group>
 NGitLab.Mock.GitLabServer.AllProjects.get -> System.Collections.Generic.IEnumerable<NGitLab.Mock.Project>
 NGitLab.Mock.GitLabServer.AllRunners.get -> System.Collections.Generic.IEnumerable<NGitLab.Mock.Runner>
+NGitLab.Mock.GitLabServer.ClientOperation -> System.EventHandler
 NGitLab.Mock.GitLabServer.CreateClient(NGitLab.Mock.User user) -> NGitLab.IGitLabClient
 NGitLab.Mock.GitLabServer.DefaultBranchName.get -> string
 NGitLab.Mock.GitLabServer.DefaultBranchName.set -> void
