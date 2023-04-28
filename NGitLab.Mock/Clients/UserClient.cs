@@ -36,7 +36,16 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public Session Current => Context.User?.ToClientSession();
+        public Session Current
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return Context.User?.ToClientSession();
+                }
+            }
+        }
 
         public ISshKeyClient CurrentUserSShKeys => throw new NotSupportedException();
 
