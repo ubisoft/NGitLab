@@ -56,26 +56,31 @@ namespace NGitLab.Tests
             var defaultBranch = project.DefaultBranch;
 
             var branches = branchClient.Search(defaultBranch);
-            Assert.IsTrue(branches.Any(branch => string.Equals(branch.Name, defaultBranch, StringComparison.Ordinal)));
+            var expectedBranch = branches.Single();
+            Assert.AreEqual(defaultBranch, expectedBranch.Name);
 
             // This case only worked with GitLab 15.7 and later
             // https://gitlab.com/gitlab-org/gitlab/-/merge_requests/104451
             /*
             branches = branchClient.Search($"^{defaultBranch}$");
-            Assert.IsTrue(branches.Any(branch => string.Equals(branch.Name, defaultBranch, StringComparison.Ordinal)));
+            expectedBranch = branches.Single();
+            Assert.AreEqual(defaultBranch, expectedBranch.Name);
             */
 
             branches = branchClient.Search($"^{defaultBranch[..^1]}");
-            Assert.IsTrue(branches.Any(branch => string.Equals(branch.Name, defaultBranch, StringComparison.Ordinal)));
+            expectedBranch = branches.Single();
+            Assert.AreEqual(defaultBranch, expectedBranch.Name);
 
             branches = branchClient.Search($"{defaultBranch[1..]}$");
-            Assert.IsTrue(branches.Any(branch => string.Equals(branch.Name, defaultBranch, StringComparison.Ordinal)));
+            expectedBranch = branches.Single();
+            Assert.AreEqual(defaultBranch, expectedBranch.Name);
 
             branches = branchClient.Search(defaultBranch[1..^1]);
-            Assert.IsTrue(branches.Any(branch => string.Equals(branch.Name, defaultBranch, StringComparison.Ordinal)));
+            expectedBranch = branches.Single();
+            Assert.AreEqual(defaultBranch, expectedBranch.Name);
 
             branches = branchClient.Search("foobar");
-            Assert.IsFalse(branches.Any(branch => string.Equals(branch.Name, defaultBranch, StringComparison.Ordinal)));
+            Assert.IsEmpty(branches);
         }
     }
 }
