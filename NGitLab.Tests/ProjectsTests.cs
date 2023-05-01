@@ -376,7 +376,7 @@ namespace NGitLab.Tests
             var project = context.CreateProject();
             var projectClient = context.Client.Projects;
 
-            var date = DateTime.UtcNow.AddMonths(-1);
+            var date = DateTimeOffset.UtcNow.AddMonths(-1);
             var query = new ProjectQuery
             {
                 LastActivityAfter = date,
@@ -386,7 +386,7 @@ namespace NGitLab.Tests
 
             var projects = projectClient.Get(query).Take(10).ToList();
             CollectionAssert.IsNotEmpty(projects);
-            Assert.That(projects.Select(p => p.LastActivityAt), Is.All.GreaterThan(date));
+            Assert.That(projects.Select(p => p.LastActivityAt), Is.All.GreaterThan(date.UtcDateTime));
         }
 
         [Test]
