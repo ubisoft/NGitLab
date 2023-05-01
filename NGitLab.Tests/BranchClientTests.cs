@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -42,6 +43,44 @@ namespace NGitLab.Tests
             Assert.Less(fiveMinutesAgo, commit.CommittedDate);
 
             Assert.IsTrue(Uri.TryCreate(commit.WebUrl, UriKind.Absolute, out _));
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_search_branches()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject(initializeWithCommits: true);
+            var branchClient = context.Client.GetRepository(project.Id).Branches;
+
+            var defaultBranch = project.DefaultBranch;
+
+            var branches = branchClient.Search(defaultBranch);
+            var expectedBranch = branches.Single();
+            Assert.AreEqual(defaultBranch, expectedBranch.Name);
+
+            // This case only worked with GitLab 15.7 and later
+            // https://gitlab.com/gitlab-org/gitlab/-/merge_requests/104451
+            /*
+            branches = branchClient.Search($"^{defaultBranch}$");
+            expectedBranch = branches.Single();
+            Assert.AreEqual(defaultBranch, expectedBranch.Name);
+            */
+
+            branches = branchClient.Search($"^{defaultBranch[..^1]}");
+            expectedBranch = branches.Single();
+            Assert.AreEqual(defaultBranch, expectedBranch.Name);
+
+            branches = branchClient.Search($"{defaultBranch[1..]}$");
+            expectedBranch = branches.Single();
+            Assert.AreEqual(defaultBranch, expectedBranch.Name);
+
+            branches = branchClient.Search(defaultBranch[1..^1]);
+            expectedBranch = branches.Single();
+            Assert.AreEqual(defaultBranch, expectedBranch.Name);
+
+            branches = branchClient.Search("foobar");
+            Assert.IsEmpty(branches);
         }
     }
 }

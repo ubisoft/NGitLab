@@ -7,6 +7,10 @@ namespace NGitLab
     {
         IEnumerable<Branch> All { get; }
 
+        IEnumerable<Branch> Search(string search);
+
+        GitLabCollectionResponse<Branch> SearchAsync(string search);
+
         Branch this[string name] { get; }
 
         Branch Protect(string name);

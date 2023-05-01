@@ -105,6 +105,8 @@ NGitLab.IBranchClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.
 NGitLab.IBranchClient.Create(NGitLab.Models.BranchCreate branch) -> NGitLab.Models.Branch
 NGitLab.IBranchClient.Delete(string name) -> void
 NGitLab.IBranchClient.Protect(string name) -> NGitLab.Models.Branch
+NGitLab.IBranchClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Branch>
+NGitLab.IBranchClient.SearchAsync(string search) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Branch>
 NGitLab.IBranchClient.this[string name].get -> NGitLab.Models.Branch
 NGitLab.IBranchClient.Unprotect(string name) -> NGitLab.Models.Branch
 NGitLab.IClusterClient
@@ -384,6 +386,8 @@ NGitLab.Impl.BranchClient.BranchClient(NGitLab.Impl.API api, string repoPath) ->
 NGitLab.Impl.BranchClient.Create(NGitLab.Models.BranchCreate branch) -> NGitLab.Models.Branch
 NGitLab.Impl.BranchClient.Delete(string name) -> void
 NGitLab.Impl.BranchClient.Protect(string name) -> NGitLab.Models.Branch
+NGitLab.Impl.BranchClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Branch>
+NGitLab.Impl.BranchClient.SearchAsync(string search) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Branch>
 NGitLab.Impl.BranchClient.this[string name].get -> NGitLab.Models.Branch
 NGitLab.Impl.BranchClient.Unprotect(string name) -> NGitLab.Models.Branch
 NGitLab.Impl.ClusterClient

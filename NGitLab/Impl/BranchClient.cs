@@ -17,6 +17,12 @@ namespace NGitLab.Impl
 
         public IEnumerable<Branch> All => _api.Get().GetAll<Branch>(_repoPath + "/branches");
 
+        public IEnumerable<Branch> Search(string search) =>
+            _api.Get().GetAll<Branch>(_repoPath + "/branches?search=" + Uri.EscapeDataString(search));
+
+        public GitLabCollectionResponse<Branch> SearchAsync(string search) =>
+            _api.Get().GetAllAsync<Branch>(_repoPath + "/branches?search=" + Uri.EscapeDataString(search));
+
         public Branch this[string name] => _api.Get().To<Branch>(_repoPath + "/branches/" + Uri.EscapeDataString(name));
 
         public Branch Protect(string name) => _api.Put().To<Branch>(_repoPath + "/branches/" + Uri.EscapeDataString(name) + "/protect");
