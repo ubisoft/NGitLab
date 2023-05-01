@@ -415,12 +415,12 @@ namespace NGitLab.Mock.Clients
 
                 if (query.CreatedAfter != null)
                 {
-                    mergeRequests = mergeRequests.Where(mr => mr.CreatedAt >= query.CreatedAfter.Value);
+                    mergeRequests = mergeRequests.Where(mr => mr.CreatedAt >= query.CreatedAfter.Value.ToDateTimeOffsetAssumeUtc());
                 }
 
                 if (query.CreatedBefore != null)
                 {
-                    mergeRequests = mergeRequests.Where(mr => mr.CreatedAt <= query.CreatedBefore.Value);
+                    mergeRequests = mergeRequests.Where(mr => mr.CreatedAt <= query.CreatedBefore.Value.ToDateTimeOffsetAssumeUtc());
                 }
 
                 if (!string.IsNullOrEmpty(query.Labels))
@@ -473,12 +473,12 @@ namespace NGitLab.Mock.Clients
 
                 if (query.UpdatedAfter != null)
                 {
-                    mergeRequests = mergeRequests.Where(mr => mr.UpdatedAt >= query.UpdatedAfter.Value);
+                    mergeRequests = mergeRequests.Where(mr => mr.UpdatedAt >= query.UpdatedAfter.Value.ToDateTimeOffsetAssumeUtc());
                 }
 
                 if (query.UpdatedBefore != null)
                 {
-                    mergeRequests = mergeRequests.Where(mr => mr.UpdatedAt <= query.UpdatedBefore);
+                    mergeRequests = mergeRequests.Where(mr => mr.UpdatedAt <= query.UpdatedBefore.Value.ToDateTimeOffsetAssumeUtc());
                 }
 
                 if (query.State != null)

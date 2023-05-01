@@ -1297,7 +1297,7 @@ namespace NGitLab.Mock.Config
                 Author = new UserRef(GetOrCreateUser(server, issueAuthor)),
                 Assignees = string.IsNullOrEmpty(issueAssignee) ? Array.Empty<UserRef>() : issueAssignee.Split(',').Select(a => new UserRef(GetOrCreateUser(server, a.Trim()))).ToArray(),
                 Milestone = string.IsNullOrEmpty(issue.Milestone) ? null : GetOrCreateMilestone(project, issue.Milestone),
-                UpdatedAt = updatedAt,
+                UpdatedAt = updatedAt.ToDateTimeOffsetAssumeUtc(),
                 ClosedAt = issue.ClosedAt,
             };
 
@@ -1341,8 +1341,8 @@ namespace NGitLab.Mock.Config
                 Assignees = string.IsNullOrEmpty(mergeRequestAssignee) ? Array.Empty<UserRef>() : mergeRequestAssignee.Split(',').Select(a => new UserRef(GetOrCreateUser(server, a.Trim()))).ToArray(),
                 SourceBranch = mergeRequest.SourceBranch ?? Guid.NewGuid().ToString("D"),
                 TargetBranch = mergeRequest.TargetBranch ?? server.DefaultBranchName,
-                CreatedAt = createdAt,
-                UpdatedAt = updatedAt,
+                CreatedAt = createdAt.ToDateTimeOffsetAssumeUtc(),
+                UpdatedAt = updatedAt.ToDateTimeOffsetAssumeUtc(),
                 ClosedAt = mergeRequest.ClosedAt,
                 MergedAt = mergeRequest.MergedAt,
                 SourceProject = project,
@@ -1375,7 +1375,7 @@ namespace NGitLab.Mock.Config
                     .DefaultIfEmpty(updatedAt)
                     .Min();
 
-                CreateComment(server, request, comment, maxCommentCreatedAt);
+                CreateComment(server, request, comment, maxCommentCreatedAt.ToDateTimeOffsetAssumeUtc());
             }
 
             project.MergeRequests.Add(request);
@@ -1509,9 +1509,9 @@ namespace NGitLab.Mock.Config
             else if (statuses.Contains(JobStatus.Failed))
                 ppl.Status = JobStatus.Failed;
 
-            ppl.CreatedAt = jobs.Select(x => x.CreatedAt).DefaultIfEmpty(DateTime.UtcNow).Min();
+            ppl.CreatedAt = jobs.Select(x => x.CreatedAt).DefaultIfEmpty(DateTime.UtcNow).Min().ToDateTimeOffsetAssumeUtc();
             var dateTimes = jobs.Where(x => x.StartedAt != default).Select(x => x.StartedAt).ToArray();
-            ppl.StartedAt = dateTimes.Length == 0 ? null : dateTimes.Min();
+            ppl.StartedAt = dateTimes.Length == 0 ? null : dateTimes.Min().ToDateTimeOffsetAssumeUtc();
             ppl.FinishedAt = jobs.Any(x => x.Status is JobStatus.Created or JobStatus.Pending or JobStatus.Preparing or JobStatus.WaitingForResource or JobStatus.Running)
                 ? null
                 : jobs.Where(x => x.FinishedAt != default).Select(x => (DateTimeOffset)x.FinishedAt).DefaultIfEmpty(ppl.CreatedAt).Max();
