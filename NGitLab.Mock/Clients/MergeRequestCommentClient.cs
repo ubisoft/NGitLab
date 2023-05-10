@@ -106,7 +106,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var comments = GetMergeRequest().Comments.Select(mr => mr.ToMergeRequestCommentClient());
-                var orderByUpdated = query.OrderBy.Equals("updated_at", StringComparison.Ordinal);
+                var orderByUpdated = query.OrderBy != null && query.OrderBy.Equals("updated_at", StringComparison.Ordinal);
 
                 if (string.Equals(query.Sort, "asc", StringComparison.Ordinal))
                 {
