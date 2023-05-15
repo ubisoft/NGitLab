@@ -48,5 +48,9 @@ namespace NGitLab
         IBranchClient Branches { get; }
 
         IProjectHooksClient ProjectHooks { get; }
+
+        CompareInfo Compare(Sha1 from, Sha1 to);
+
+        CompareInfo Compare(string source, string target);
     }
 }
