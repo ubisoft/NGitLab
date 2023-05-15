@@ -1,19 +1,24 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
     public class FileUpsert
     {
         [Required]
+        [JsonPropertyName("path")]
         public string Path;
 
         [Required]
+        [JsonPropertyName("branch")]
         public string Branch;
 
+        [JsonPropertyName("encoding")]
         public string Encoding;
 
         [Required]
+        [JsonPropertyName("content")]
         public string Content;
 
         /// <summary>
@@ -29,6 +34,7 @@ namespace NGitLab.Models
         }
 
         [Required]
+        [JsonPropertyName("commit_message")]
         public string CommitMessage;
 
         public static string Base64Encode(string plainText)
