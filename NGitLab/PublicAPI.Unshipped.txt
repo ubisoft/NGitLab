@@ -1227,6 +1227,7 @@ NGitLab.Models.Commit.CreatedAt -> System.DateTime
 NGitLab.Models.Commit.Id -> NGitLab.Sha1
 NGitLab.Models.Commit.Message -> string
 NGitLab.Models.Commit.Parents -> NGitLab.Sha1[]
+NGitLab.Models.Commit.Pipeline -> NGitLab.Models.Pipeline
 NGitLab.Models.Commit.ShortId -> string
 NGitLab.Models.Commit.Stats -> NGitLab.Models.CommitStats
 NGitLab.Models.Commit.Status -> string

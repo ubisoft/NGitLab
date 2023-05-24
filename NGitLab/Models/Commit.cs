@@ -51,5 +51,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("web_url")]
         public string WebUrl;
+
+        [JsonPropertyName("last_pipeline")]
+        public Pipeline Pipeline;
     }
 }
