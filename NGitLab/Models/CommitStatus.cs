@@ -24,7 +24,7 @@ namespace NGitLab.Models
 
         [JsonPropertyName("name")]
         public string Name;
-        
+
         [JsonPropertyName("target_url")]
         public string TargetUrl;
 

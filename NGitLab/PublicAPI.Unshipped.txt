@@ -1275,14 +1275,18 @@ NGitLab.Models.CommitStats.CommitStats() -> void
 NGitLab.Models.CommitStats.Deletions -> int
 NGitLab.Models.CommitStats.Total -> int
 NGitLab.Models.CommitStatus
+NGitLab.Models.CommitStatus.Author -> NGitLab.Models.Author
 NGitLab.Models.CommitStatus.CommitSha -> string
 NGitLab.Models.CommitStatus.CommitStatus() -> void
+NGitLab.Models.CommitStatus.Coverage -> int?
+NGitLab.Models.CommitStatus.Description -> string
 NGitLab.Models.CommitStatus.Id.get -> int
 NGitLab.Models.CommitStatus.Id.set -> void
 NGitLab.Models.CommitStatus.Name -> string
 NGitLab.Models.CommitStatus.ProjectId -> int
 NGitLab.Models.CommitStatus.Ref -> string
 NGitLab.Models.CommitStatus.Status -> string
+NGitLab.Models.CommitStatus.TargetUrl -> string
 NGitLab.Models.CommitStatusCreate
 NGitLab.Models.CommitStatusCreate.CommitSha -> string
 NGitLab.Models.CommitStatusCreate.CommitStatusCreate() -> void
