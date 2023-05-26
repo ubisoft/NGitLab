@@ -2524,6 +2524,7 @@ NGitLab.Models.Project.OpenIssuesCount -> int
 NGitLab.Models.Project.Owner -> NGitLab.Models.User
 NGitLab.Models.Project.Path -> string
 NGitLab.Models.Project.PathWithNamespace -> string
+NGitLab.Models.Project.Permissions -> NGitLab.Models.Permissions
 NGitLab.Models.Project.PrintingMergeRequestsLinkEnabled -> bool
 NGitLab.Models.Project.Project() -> void
 NGitLab.Models.Project.Public -> bool
