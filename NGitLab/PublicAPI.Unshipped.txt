@@ -2347,6 +2347,18 @@ NGitLab.Models.ObjectType
 NGitLab.Models.ObjectType.blob = 0 -> NGitLab.Models.ObjectType
 NGitLab.Models.ObjectType.commit = 2 -> NGitLab.Models.ObjectType
 NGitLab.Models.ObjectType.tree = 1 -> NGitLab.Models.ObjectType
+NGitLab.Models.Permission
+NGitLab.Models.Permission.AccessLevel.get -> NGitLab.Models.AccessLevel
+NGitLab.Models.Permission.AccessLevel.set -> void
+NGitLab.Models.Permission.NotificationLevel.get -> int
+NGitLab.Models.Permission.NotificationLevel.set -> void
+NGitLab.Models.Permission.Permission() -> void
+NGitLab.Models.Permissions
+NGitLab.Models.Permissions.GroupAccess.get -> NGitLab.Models.Permission
+NGitLab.Models.Permissions.GroupAccess.set -> void
+NGitLab.Models.Permissions.Permissions() -> void
+NGitLab.Models.Permissions.ProjectAccess.get -> NGitLab.Models.Permission
+NGitLab.Models.Permissions.ProjectAccess.set -> void
 NGitLab.Models.PersonInfo
 NGitLab.Models.PersonInfo.Email -> string
 NGitLab.Models.PersonInfo.Name -> string
