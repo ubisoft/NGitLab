@@ -2512,6 +2512,7 @@ NGitLab.Models.Project.OpenIssuesCount -> int
 NGitLab.Models.Project.Owner -> NGitLab.Models.User
 NGitLab.Models.Project.Path -> string
 NGitLab.Models.Project.PathWithNamespace -> string
+NGitLab.Models.Project.Permissions -> NGitLab.Models.ProjectPermissions
 NGitLab.Models.Project.PrintingMergeRequestsLinkEnabled -> bool
 NGitLab.Models.Project.Project() -> void
 NGitLab.Models.Project.Public -> bool
@@ -2654,6 +2655,18 @@ NGitLab.Models.ProjectMemberUpdate.AccessLevel -> NGitLab.Models.AccessLevel
 NGitLab.Models.ProjectMemberUpdate.ExpiresAt -> string
 NGitLab.Models.ProjectMemberUpdate.ProjectMemberUpdate() -> void
 NGitLab.Models.ProjectMemberUpdate.UserId -> string
+NGitLab.Models.ProjectPermission
+NGitLab.Models.ProjectPermission.AccessLevel.get -> NGitLab.Models.AccessLevel
+NGitLab.Models.ProjectPermission.AccessLevel.set -> void
+NGitLab.Models.ProjectPermission.NotificationLevel.get -> int
+NGitLab.Models.ProjectPermission.NotificationLevel.set -> void
+NGitLab.Models.ProjectPermission.ProjectPermission() -> void
+NGitLab.Models.ProjectPermissions
+NGitLab.Models.ProjectPermissions.GroupAccess.get -> NGitLab.Models.ProjectPermission
+NGitLab.Models.ProjectPermissions.GroupAccess.set -> void
+NGitLab.Models.ProjectPermissions.ProjectAccess.get -> NGitLab.Models.ProjectPermission
+NGitLab.Models.ProjectPermissions.ProjectAccess.set -> void
+NGitLab.Models.ProjectPermissions.ProjectPermissions() -> void
 NGitLab.Models.ProjectQuery
 NGitLab.Models.ProjectQuery.Archived -> bool?
 NGitLab.Models.ProjectQuery.Ascending -> bool?
