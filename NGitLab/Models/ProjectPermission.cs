@@ -2,7 +2,7 @@
 
 namespace NGitLab.Models
 {
-    public class Permission
+    public class ProjectPermission
     {
         [JsonPropertyName("access_level")]
         public AccessLevel AccessLevel { get; set; }

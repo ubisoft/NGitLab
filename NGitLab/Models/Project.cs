@@ -205,6 +205,6 @@ namespace NGitLab.Models
         public DynamicEnum<SquashOption> SquashOption;
 
         [JsonPropertyName("permissions")]
-        public Permissions Permissions;
+        public ProjectPermissions Permissions;
     }
 }

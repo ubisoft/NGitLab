@@ -2,12 +2,12 @@ using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
-    public class Permissions
+    public class ProjectPermissions
     {
         [JsonPropertyName("project_access")]
-        public Permission ProjectAccess { get; set; }
+        public ProjectPermission ProjectAccess { get; set; }
 
         [JsonPropertyName("group_access")]
-        public Permission GroupAccess { get; set; }
+        public ProjectPermission GroupAccess { get; set; }
     }
 }
