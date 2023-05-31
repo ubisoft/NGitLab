@@ -455,7 +455,7 @@ NGitLab.Mock.Group.RequestAccessEnabled.get -> bool
 NGitLab.Mock.Group.RequestAccessEnabled.set -> void
 NGitLab.Mock.Group.SharedRunnersLimit.get -> System.TimeSpan
 NGitLab.Mock.Group.SharedRunnersLimit.set -> void
-NGitLab.Mock.Group.ToClientGroup() -> NGitLab.Models.Group
+NGitLab.Mock.Group.ToClientGroup(NGitLab.Mock.User currentUser) -> NGitLab.Models.Group
 NGitLab.Mock.Group.Visibility.get -> NGitLab.Models.VisibilityLevel
 NGitLab.Mock.Group.Visibility.set -> void
 NGitLab.Mock.GroupCollection
@@ -849,7 +849,7 @@ NGitLab.Mock.Project.Statistics.get -> NGitLab.Models.ProjectStatistics
 NGitLab.Mock.Project.Statistics.set -> void
 NGitLab.Mock.Project.Tags.get -> string[]
 NGitLab.Mock.Project.Tags.set -> void
-NGitLab.Mock.Project.ToClientProject() -> NGitLab.Models.Project
+NGitLab.Mock.Project.ToClientProject(NGitLab.Mock.User currentUser) -> NGitLab.Models.Project
 NGitLab.Mock.Project.Topics.get -> string[]
 NGitLab.Mock.Project.Topics.set -> void
 NGitLab.Mock.Project.Visibility.get -> NGitLab.Models.VisibilityLevel

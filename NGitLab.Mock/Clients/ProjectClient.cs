@@ -27,7 +27,7 @@ namespace NGitLab.Mock.Clients
                     if (project == null || !project.CanUserViewProject(Context.User))
                         throw new GitLabNotFoundException();
 
-                    return project.ToClientProject();
+                    return project.ToClientProject(Context.User);
                 }
             }
         }
@@ -39,7 +39,7 @@ namespace NGitLab.Mock.Clients
                 using (Context.BeginOperationScope())
                 {
                     var project = GetProject(fullName, ProjectPermission.View);
-                    return project.ToClientProject();
+                    return project.ToClientProject(Context.User);
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace NGitLab.Mock.Clients
             {
                 using (Context.BeginOperationScope())
                 {
-                    return Server.AllProjects.Where(project => project.IsUserMember(Context.User)).Select(project => project.ToClientProject()).ToList();
+                    return Server.AllProjects.Where(project => project.IsUserMember(Context.User)).Select(project => project.ToClientProject(Context.User)).ToList();
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace NGitLab.Mock.Clients
             {
                 using (Context.BeginOperationScope())
                 {
-                    return Server.AllProjects.Where(project => project.IsUserOwner(Context.User)).Select(project => project.ToClientProject()).ToList();
+                    return Server.AllProjects.Where(project => project.IsUserOwner(Context.User)).Select(project => project.ToClientProject(Context.User)).ToList();
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace NGitLab.Mock.Clients
             {
                 using (Context.BeginOperationScope())
                 {
-                    return Server.AllProjects.Where(project => project.CanUserViewProject(Context.User)).Select(project => project.ToClientProject()).ToList();
+                    return Server.AllProjects.Where(project => project.CanUserViewProject(Context.User)).Select(project => project.ToClientProject(Context.User)).ToList();
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace NGitLab.Mock.Clients
                 };
 
                 parentGroup.Projects.Add(newProject);
-                return newProject.ToClientProject();
+                return newProject.ToClientProject(Context.User);
             }
         }
 
@@ -151,7 +151,7 @@ namespace NGitLab.Mock.Clients
                 var project = GetProject(id, ProjectPermission.View);
                 var group = forkProject.Namespace != null ? GetParentGroup(forkProject.Namespace) : Context.User.Namespace;
                 var newProject = project.Fork(group, Context.User, forkProject.Name);
-                return newProject.ToClientProject();
+                return newProject.ToClientProject(Context.User);
             }
         }
 
@@ -220,7 +220,7 @@ namespace NGitLab.Mock.Clients
                     throw new NotImplementedException();
                 }
 
-                return projects.Select(project => project.ToClientProject()).ToList();
+                return projects.Select(project => project.ToClientProject(Context.User)).ToList();
             }
         }
 
@@ -228,7 +228,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                return GetProject(id, ProjectPermission.View).ToClientProject();
+                return GetProject(id, ProjectPermission.View).ToClientProject(Context.User);
             }
         }
 
@@ -265,7 +265,7 @@ namespace NGitLab.Mock.Clients
                 var matches = Server.AllProjects.Where(project => project.ForkedFrom?.Id == upstream.Id);
                 matches = matches.Where(project => query.Owned == null || query.Owned == project.IsUserOwner(Context.User));
 
-                return matches.Select(project => project.ToClientProject()).ToList();
+                return matches.Select(project => project.ToClientProject(Context.User)).ToList();
             }
         }
 
@@ -352,7 +352,7 @@ namespace NGitLab.Mock.Clients
                     project.Topics = projectUpdate.Topics.Where(t => !string.IsNullOrEmpty(t)).Distinct(StringComparer.Ordinal).ToArray();
                 }
 
-                return project.ToClientProject();
+                return project.ToClientProject(Context.User);
             }
         }
 

@@ -26,7 +26,7 @@ namespace NGitLab.Mock.Clients
                     if (group == null || !group.CanUserViewGroup(Context.User))
                         throw new GitLabNotFoundException();
 
-                    return group.ToClientGroup();
+                    return group.ToClientGroup(Context.User);
                 }
             }
         }
@@ -41,7 +41,7 @@ namespace NGitLab.Mock.Clients
                     if (group == null || !group.CanUserViewGroup(Context.User))
                         throw new GitLabNotFoundException();
 
-                    return group.ToClientGroup();
+                    return group.ToClientGroup(Context.User);
                 }
             }
         }
@@ -52,7 +52,7 @@ namespace NGitLab.Mock.Clients
             {
                 using (Context.BeginOperationScope())
                 {
-                    return Server.AllGroups.Where(group => group.CanUserViewGroup(Context.User)).Select(group => group.ToClientGroup()).ToList();
+                    return Server.AllGroups.Where(group => group.CanUserViewGroup(Context.User)).Select(group => group.ToClientGroup(Context.User)).ToList();
                 }
             }
         }
@@ -92,7 +92,7 @@ namespace NGitLab.Mock.Clients
                     Server.Groups.Add(newGroup);
                 }
 
-                return newGroup.ToClientGroup();
+                return newGroup.ToClientGroup(Context.User);
             }
         }
 
@@ -114,7 +114,7 @@ namespace NGitLab.Mock.Clients
                 if (!group.CanUserDeleteGroup(Context.User))
                     throw new GitLabForbiddenException();
 
-                group.ToClientGroup();
+                group.ToClientGroup(Context.User);
             }
         }
 
@@ -151,7 +151,7 @@ namespace NGitLab.Mock.Clients
                         throw new NotImplementedException();
                 }
 
-                return groups.Select(g => g.ToClientGroup()).ToArray();
+                return groups.Select(g => g.ToClientGroup(Context.User)).ToArray();
             }
         }
 
@@ -227,7 +227,7 @@ namespace NGitLab.Mock.Clients
                 }
 
                 projects = projects.Where(project => project.CanUserViewProject(Context.User));
-                return GitLabCollectionResponse.Create(projects.Select(project => project.ToClientProject()).ToArray());
+                return GitLabCollectionResponse.Create(projects.Select(project => project.ToClientProject(Context.User)).ToArray());
             }
         }
 
@@ -282,7 +282,7 @@ namespace NGitLab.Mock.Clients
                     group.Visibility = groupUpdate.Visibility.Value;
                 }
 
-                return group.ToClientGroup();
+                return group.ToClientGroup(Context.User);
             }
         }
 
@@ -320,7 +320,7 @@ namespace NGitLab.Mock.Clients
                         throw new NotImplementedException();
                 }
 
-                var clientGroups = groups.Select(g => g.ToClientGroup());
+                var clientGroups = groups.Select(g => g.ToClientGroup(Context.User));
 
                 return GitLabCollectionResponse.Create(clientGroups.Where(g => g.ParentId == parentGroup.Id));
             }
@@ -353,7 +353,7 @@ namespace NGitLab.Mock.Clients
                         throw new NotImplementedException();
                 }
 
-                var clientGroups = groups.Select(g => g.ToClientGroup());
+                var clientGroups = groups.Select(g => g.ToClientGroup(Context.User));
 
                 return GitLabCollectionResponse.Create(clientGroups.Where(g => g.ParentId == parentGroup.Id));
             }

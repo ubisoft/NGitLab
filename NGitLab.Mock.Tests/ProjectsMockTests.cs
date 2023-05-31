@@ -76,10 +76,10 @@ namespace NGitLab.Mock.Tests
             var user = server.Users.AddNew();
             var project = user.Namespace.Projects.AddNew();
 
-            Assert.IsTrue(project.ToClientProject().EmptyRepo);
+            Assert.IsTrue(project.ToClientProject(user).EmptyRepo);
 
             project.Repository.Commit(user, "dummy");
-            Assert.IsFalse(project.ToClientProject().EmptyRepo);
+            Assert.IsFalse(project.ToClientProject(user).EmptyRepo);
         }
     }
 }
