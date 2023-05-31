@@ -53,6 +53,6 @@ namespace NGitLab.Models
         public string WebUrl;
 
         [JsonPropertyName("last_pipeline")]
-        public Pipeline Pipeline;
+        public Pipeline LastPipeline;
     }
 }
