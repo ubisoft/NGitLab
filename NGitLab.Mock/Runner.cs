@@ -35,7 +35,7 @@ namespace NGitLab.Mock
 
         public bool RunUntagged { get; set; }
 
-        internal Models.Runner ToClientRunner()
+        internal Models.Runner ToClientRunner(User currentUser)
         {
             return new Models.Runner
             {
@@ -46,7 +46,7 @@ namespace NGitLab.Mock
                 Status = Status,
                 Description = Description,
                 IsShared = IsShared,
-                Projects = Parent.Server.AllProjects.Where(p => p.EnabledRunners.Any(r => r.Id == Id)).Select(p => p.ToClientProject()).ToArray(),
+                Projects = Parent.Server.AllProjects.Where(p => p.EnabledRunners.Any(r => r.Id == Id)).Select(p => p.ToClientProject(currentUser)).ToArray(),
                 ContactedAt = ContactedAt,
                 Token = Token,
                 TagList = TagList,

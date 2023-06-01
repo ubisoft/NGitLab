@@ -11,7 +11,16 @@ namespace NGitLab.Mock.Clients
 {
     internal sealed class RunnerClient : ClientBase, IRunnerClient
     {
-        public IEnumerable<Models.Runner> Accessible => GetOwnedRunners().Select(r => r.ToClientRunner());
+        public IEnumerable<Models.Runner> Accessible
+        {
+            get
+            {
+                using (Context.BeginOperationScope())
+                {
+                    return GetOwnedRunners().Select(r => r.ToClientRunner(Context.User));
+                }
+            }
+        }
 
         public IEnumerable<Models.Runner> All
         {
@@ -25,7 +34,7 @@ namespace NGitLab.Mock.Clients
                 using (Context.BeginOperationScope())
                 {
                     var runners = Server.AllProjects.SelectMany(p => p.RegisteredRunners);
-                    var clientRunners = runners.Select(r => r.ToClientRunner()).ToList();
+                    var clientRunners = runners.Select(r => r.ToClientRunner(Context.User)).ToList();
                     return clientRunners;
                 }
             }
@@ -125,7 +134,7 @@ namespace NGitLab.Mock.Clients
                 }
 
                 project.EnabledRunners.Add(runnerReference);
-                return runner.ToClientRunner();
+                return runner.ToClientRunner(Context.User);
             }
         }
 
