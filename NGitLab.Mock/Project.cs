@@ -399,7 +399,7 @@ namespace NGitLab.Mock
             return newProject;
         }
 
-        public Models.Project ToClientProject()
+        public Models.Project ToClientProject(User currentUser)
         {
             var kind = Group.IsUserNamespace ? "user" : "group";
 
@@ -412,7 +412,7 @@ namespace NGitLab.Mock
                 EmptyRepo = Repository.IsEmpty,
                 Path = Path,
                 PathWithNamespace = PathWithNamespace,
-                ForkedFromProject = ForkedFrom?.ToClientProject(),
+                ForkedFromProject = ForkedFrom?.ToClientProject(currentUser),
                 ForkingAccessLevel = ForkingAccessLevel,
                 ImportStatus = ImportStatus,
                 HttpUrl = HttpUrl,
@@ -435,8 +435,25 @@ namespace NGitLab.Mock
                 MirrorTriggerBuilds = MirrorTriggerBuilds,
                 OnlyMirrorProtectedBranch = OnlyMirrorProtectedBranch,
                 MirrorOverwritesDivergedBranches = MirrorOverwritesDivergedBranches,
+                Permissions = GetProjectPermissions(currentUser),
             };
 #pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        private ProjectPermissions GetProjectPermissions(User user)
+        {
+            var projectPermissions = new ProjectPermissions();
+            if (Permissions.FirstOrDefault(x => x.User == user)?.AccessLevel is { } accessLevel)
+            {
+                projectPermissions.ProjectAccess = new ProjectPermission { AccessLevel = accessLevel };
+            }
+
+            if (Group.GetEffectivePermissions().GetAccessLevel(user) is { } groupAccessLevel)
+            {
+                projectPermissions.GroupAccess = new ProjectPermission { AccessLevel = groupAccessLevel };
+            }
+
+            return projectPermissions;
         }
     }
 }

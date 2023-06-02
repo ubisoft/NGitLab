@@ -235,7 +235,7 @@ namespace NGitLab.Mock
             return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Developer;
         }
 
-        public Models.Group ToClientGroup()
+        public Models.Group ToClientGroup(User currentUser)
         {
             return new Models.Group
             {
@@ -243,7 +243,7 @@ namespace NGitLab.Mock
                 Name = Name,
                 Visibility = Visibility,
                 ParentId = Parent?.Id,
-                Projects = Projects.Select(p => p.ToClientProject()).ToArray(),
+                Projects = Projects.Select(p => p.ToClientProject(currentUser)).ToArray(),
                 FullName = FullName,
                 FullPath = PathWithNameSpace,
                 Path = Path,
