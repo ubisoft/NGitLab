@@ -24,5 +24,17 @@ namespace NGitLab.Models
 
         [JsonPropertyName("name")]
         public string Name;
+
+        [JsonPropertyName("target_url")]
+        public string TargetUrl;
+
+        [JsonPropertyName("description")]
+        public string Description;
+
+        [JsonPropertyName("coverage")]
+        public int? Coverage;
+
+        [JsonPropertyName("author")]
+        public Author Author;
     }
 }
