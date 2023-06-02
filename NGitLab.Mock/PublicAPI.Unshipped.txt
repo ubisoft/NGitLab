@@ -1113,6 +1113,8 @@ NGitLab.Mock.TextFile.TextFile(string path, string content, System.Text.Encoding
 NGitLab.Mock.User
 NGitLab.Mock.User.AvatarUrl.get -> string
 NGitLab.Mock.User.AvatarUrl.set -> void
+NGitLab.Mock.User.Bot.get -> bool
+NGitLab.Mock.User.Bot.set -> void
 NGitLab.Mock.User.CreatedAt.get -> System.DateTime
 NGitLab.Mock.User.CreatedAt.set -> void
 NGitLab.Mock.User.Email.get -> string
