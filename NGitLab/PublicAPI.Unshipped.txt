@@ -2008,23 +2008,7 @@ NGitLab.Models.LastActivityDate.Username.set -> void
 NGitLab.Models.LintCI
 NGitLab.Models.LintCI.Errors.get -> string[]
 NGitLab.Models.LintCI.Errors.set -> void
-NGitLab.Models.LintCI.Includes.get -> NGitLab.Models.LintCI.LintCIYamlInclude[]
-NGitLab.Models.LintCI.Includes.set -> void
 NGitLab.Models.LintCI.LintCI() -> void
-NGitLab.Models.LintCI.LintCIYamlInclude
-NGitLab.Models.LintCI.LintCIYamlInclude.Blob.get -> string
-NGitLab.Models.LintCI.LintCIYamlInclude.Blob.set -> void
-NGitLab.Models.LintCI.LintCIYamlInclude.ContextProject.get -> string
-NGitLab.Models.LintCI.LintCIYamlInclude.ContextProject.set -> void
-NGitLab.Models.LintCI.LintCIYamlInclude.ContextSha.get -> string
-NGitLab.Models.LintCI.LintCIYamlInclude.ContextSha.set -> void
-NGitLab.Models.LintCI.LintCIYamlInclude.LintCIYamlInclude() -> void
-NGitLab.Models.LintCI.LintCIYamlInclude.Location.get -> string
-NGitLab.Models.LintCI.LintCIYamlInclude.Location.set -> void
-NGitLab.Models.LintCI.LintCIYamlInclude.Raw.get -> string
-NGitLab.Models.LintCI.LintCIYamlInclude.Raw.set -> void
-NGitLab.Models.LintCI.LintCIYamlInclude.Type.get -> string
-NGitLab.Models.LintCI.LintCIYamlInclude.Type.set -> void
 NGitLab.Models.LintCI.MergedYaml.get -> string
 NGitLab.Models.LintCI.MergedYaml.set -> void
 NGitLab.Models.LintCI.Valid.get -> bool
