@@ -9,20 +9,14 @@ namespace NGitLab.Tests
     public class ProjectLevelApprovalRulesClientTests
     {
         // Starting at version 15.2.0, project-level approval rules require a Premium subscription
-        private readonly SemanticVersion MaxVersion = new(15, 1, 0);
+        private readonly SemanticVersion MaxVersion = new(15, 1, 99);
         private GitLabTestContext context;
 
         [SetUp]
         public async Task SetUp()
         {
             context = await GitLabTestContext.CreateAsync();
-            var gitLabVersion = context.Client.Version.Get();
-
-            if (SemanticVersion.TryParse(gitLabVersion.Version, out var version) &&
-                version > MaxVersion)
-            {
-                Assert.Inconclusive($"Test supported up to version {MaxVersion}, but currently running against {version}");
-            }
+            context.ReportTestAsInconclusiveIfVersionOutOfRange(maxVersion: MaxVersion);
         }
 
         [TearDown]

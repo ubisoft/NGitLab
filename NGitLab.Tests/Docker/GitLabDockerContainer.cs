@@ -349,7 +349,7 @@ namespace NGitLab.Tests.Docker
 
             static void EnsureChromiumIsInstalled()
             {
-                TestContext.Progress.WriteLine("Make sure Chromium is installed");
+                TestContext.Progress.WriteLine("Making sure Chromium is installed");
 
                 var exitCode = Microsoft.Playwright.Program.Main(new[] { "install", "--force", "chromium", "--with-deps" });
                 if (exitCode != 0)

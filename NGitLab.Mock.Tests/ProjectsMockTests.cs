@@ -132,6 +132,5 @@ namespace NGitLab.Mock.Tests
             project.Permissions.ProjectAccess.Should().BeNull();
             project.Permissions.GroupAccess.AccessLevel.Should().Be(AccessLevel.Maintainer);
         }
-
     }
 }

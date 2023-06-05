@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
+using Meziantou.Framework.Versioning;
 using NGitLab.Models;
 using NUnit.Framework;
 using Polly;
@@ -252,6 +253,19 @@ namespace NGitLab.Tests.Docker
         public int GetRandomNumber()
         {
             return RandomNumberGenerator.GetInt32(0, int.MaxValue);
+        }
+
+        public void ReportTestAsInconclusiveIfVersionOutOfRange(SemanticVersion minVersion = null, SemanticVersion maxVersion = null)
+        {
+            var gitLabVersion = AdminClient.Version.Get();
+            if (!SemanticVersion.TryParse(gitLabVersion.Version, out var currentVersion))
+                return;
+
+            if (minVersion is not null && currentVersion < minVersion)
+                Assert.Inconclusive($"Test supported starting at version {minVersion}, but currently running against {currentVersion}");
+
+            if (maxVersion is not null && currentVersion > maxVersion)
+                Assert.Inconclusive($"Test supported up to version {maxVersion}, but currently running against {currentVersion}");
         }
 
         private IGitLabClient CreateClient(string token)
