@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Meziantou.Framework.Versioning;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
+using NuGet.Versioning;
 using NUnit.Framework;
 using Polly;
 
@@ -177,7 +178,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
 
             // https://about.gitlab.com/releases/2021/04/22/gitlab-13-11-released/#removal-of-merge-request-approvers-endpoint-in-favor-of-approval-rules-api
-            context.ReportTestAsInconclusiveIfVersionOutOfRange(maxVersion: SemanticVersion.Parse("13.10.99"));
+            context.ReportTestAsInconclusiveIfVersionOutOfRange(VersionRange.Parse("[,13.11)"));
 
             var (project, mergeRequest) = context.CreateMergeRequest();
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
