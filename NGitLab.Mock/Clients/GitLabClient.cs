@@ -51,6 +51,8 @@ namespace NGitLab.Mock.Clients
 
         public ISearchClient AdvancedSearch => new AdvancedSearchClient(Context);
 
+        public ILintClient Lint => new LintClient(Context);
+
         public IEventClient GetEvents() => new EventClient(Context);
 
         public IEventClient GetUserEvents(int userId) => new EventClient(Context, userId: userId);

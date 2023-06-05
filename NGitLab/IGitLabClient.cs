@@ -18,6 +18,8 @@
 
         IMergeRequestClient MergeRequests { get; }
 
+        ILintClient Lint { get; }
+
         /// <summary>
         /// All the user events of GitLab (can be scoped for the current user).
         /// </summary>
