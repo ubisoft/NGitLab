@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace NGitLab.Models
 {
@@ -10,7 +9,7 @@ namespace NGitLab.Models
         [JsonPropertyName("valid")]
         public bool Valid { get; set; }
 
-        [JsonPropertyName("id")]
+        [JsonPropertyName("merged_yaml")]
         public string MergedYaml { get; set; }
 
         [JsonPropertyName("errors")]

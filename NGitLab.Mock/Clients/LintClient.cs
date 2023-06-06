@@ -14,12 +14,12 @@ namespace NGitLab.Mock.Clients
             _context = context;
         }
 
-        public Task<LintCI> LintGitLabCIYamlAsync(string projectId, string yamlContent, LintCIOptions options, CancellationToken cancellationToken = default)
+        public Task<LintCI> ValidateCIYamlContentAsync(string projectId, string yamlContent, LintCIOptions options, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<LintCI> LintProjectGitLabCIYamlAsync(string projectId, LintCIOptions options, CancellationToken cancellationToken = default)
+        public Task<LintCI> ValidateProjectCIConfigurationAsync(string projectId, LintCIOptions options, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

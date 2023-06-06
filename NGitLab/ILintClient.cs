@@ -9,8 +9,8 @@ namespace NGitLab
     /// </summary>
     public interface ILintClient
     {
-        Task<LintCI> LintGitLabCIYamlAsync(string projectId, string yamlContent, LintCIOptions options, CancellationToken cancellationToken = default);
+        Task<LintCI> ValidateCIYamlContentAsync(string projectId, string yamlContent, LintCIOptions options, CancellationToken cancellationToken = default);
 
-        Task<LintCI> LintProjectGitLabCIYamlAsync(string projectId, LintCIOptions options, CancellationToken cancellationToken = default);
+        Task<LintCI> ValidateProjectCIConfigurationAsync(string projectId, LintCIOptions options, CancellationToken cancellationToken = default);
     }
 }

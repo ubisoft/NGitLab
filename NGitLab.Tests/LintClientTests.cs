@@ -25,7 +25,7 @@ build:
     - echo test
 ";
 
-            var result = await context.Client.Lint.LintGitLabCIYamlAsync(project.Id.ToString(), yaml, new(), CancellationToken.None);
+            var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), yaml, new(), CancellationToken.None);
 
             Assert.True(result.Valid);
             Assert.False(result.Errors.Any());
@@ -49,7 +49,7 @@ build:
 wrong_key
 ";
 
-            var result = await context.Client.Lint.LintGitLabCIYamlAsync(project.Id.ToString(), yaml, new(), CancellationToken.None);
+            var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), yaml, new(), CancellationToken.None);
 
             Assert.False(result.Valid);
             Assert.True(result.Errors.Any());
@@ -79,7 +79,7 @@ build:
                 Content = yaml,
             });
 
-            var result = await context.Client.Lint.LintProjectGitLabCIYamlAsync(project.Id.ToString(), new(), CancellationToken.None);
+            var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
 
             Assert.True(result.Valid);
             Assert.False(result.Errors.Any());
@@ -110,7 +110,7 @@ wrong_key
                 Content = yaml,
             });
 
-            var result = await context.Client.Lint.LintProjectGitLabCIYamlAsync(project.Id.ToString(), new(), CancellationToken.None);
+            var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
 
             Assert.False(result.Valid);
             Assert.True(result.Errors.Any());

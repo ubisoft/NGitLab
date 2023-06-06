@@ -5,7 +5,7 @@ using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
-    internal class LintClient : ILintClient
+    public class LintClient : ILintClient
     {
         private readonly API _api;
 
@@ -14,15 +14,17 @@ namespace NGitLab.Impl
             _api = api;
         }
 
-        public Task<LintCI> LintGitLabCIYamlAsync(string projectId, string yamlContent, LintCIOptions options, CancellationToken cancellationToken = default)
+        public Task<LintCI> ValidateCIYamlContentAsync(string projectId, string yamlContent, LintCIOptions options, CancellationToken cancellationToken = default)
         {
             var url = BuildLintCIUrl(projectId, options);
-            url = Utils.AddParameter(url, "content", yamlContent);
 
-            return _api.Post().ToAsync<LintCI>(url, cancellationToken);
+            return _api.Post().With(new
+            {
+                content = yamlContent,
+            }).ToAsync<LintCI>(url, cancellationToken);
         }
 
-        public Task<LintCI> LintProjectGitLabCIYamlAsync(string projectId, LintCIOptions options, CancellationToken cancellationToken = default)
+        public Task<LintCI> ValidateProjectCIConfigurationAsync(string projectId, LintCIOptions options, CancellationToken cancellationToken = default)
         {
             var url = BuildLintCIUrl(projectId, options);
 

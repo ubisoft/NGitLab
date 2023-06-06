@@ -234,6 +234,7 @@ NGitLab.IGroupVariableClient.Delete(string key) -> void
 NGitLab.IGroupVariableClient.this[string key].get -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
 NGitLab.IHttpRequestor
+NGitLab.IHttpRequestor.Body(object data) -> NGitLab.IHttpRequestor
 NGitLab.IHttpRequestor.Execute(string tailAPIUrl) -> void
 NGitLab.IHttpRequestor.ExecuteAsync(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 NGitLab.IHttpRequestor.GetAll<T>(string tailUrl) -> System.Collections.Generic.IEnumerable<T>
@@ -301,8 +302,8 @@ NGitLab.ILabelClient.GetGroupLabel(int groupId, string name) -> NGitLab.Models.L
 NGitLab.ILabelClient.GetLabel(int projectId, string name) -> NGitLab.Models.Label
 NGitLab.ILabelClient.GetProjectLabel(int projectId, string name) -> NGitLab.Models.Label
 NGitLab.ILintClient
-NGitLab.ILintClient.LintGitLabCIYamlAsync(string projectId, string yamlContent, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
-NGitLab.ILintClient.LintProjectGitLabCIYamlAsync(string projectId, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
+NGitLab.ILintClient.ValidateCIYamlContentAsync(string projectId, string yamlContent, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
+NGitLab.ILintClient.ValidateProjectCIConfigurationAsync(string projectId, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
 NGitLab.IMembersClient
 NGitLab.IMembersClient.AddMemberToGroup(string groupId, NGitLab.Models.GroupMemberCreate user) -> NGitLab.Models.Membership
 NGitLab.IMembersClient.AddMemberToProject(string projectId, NGitLab.Models.ProjectMemberCreate user) -> NGitLab.Models.Membership
@@ -552,6 +553,10 @@ NGitLab.Impl.LabelClient.GetGroupLabel(int groupId, string name) -> NGitLab.Mode
 NGitLab.Impl.LabelClient.GetLabel(int projectId, string name) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.GetProjectLabel(int projectId, string name) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.LabelClient(NGitLab.Impl.API api) -> void
+NGitLab.Impl.LintClient
+NGitLab.Impl.LintClient.LintClient(NGitLab.Impl.API api) -> void
+NGitLab.Impl.LintClient.ValidateCIYamlContentAsync(string projectId, string yamlContent, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
+NGitLab.Impl.LintClient.ValidateProjectCIConfigurationAsync(string projectId, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
 NGitLab.Impl.MembersClient
 NGitLab.Impl.MembersClient.AddMemberToGroup(string groupId, NGitLab.Models.GroupMemberCreate user) -> NGitLab.Models.Membership
 NGitLab.Impl.MembersClient.AddMemberToProject(string projectId, NGitLab.Models.ProjectMemberCreate user) -> NGitLab.Models.Membership
@@ -2016,7 +2021,7 @@ NGitLab.Models.LintCI.Valid.set -> void
 NGitLab.Models.LintCI.Warnings.get -> string[]
 NGitLab.Models.LintCI.Warnings.set -> void
 NGitLab.Models.LintCIOptions
-NGitLab.Models.LintCIOptions.DryRun.get -> bool
+NGitLab.Models.LintCIOptions.DryRun.get -> bool?
 NGitLab.Models.LintCIOptions.DryRun.set -> void
 NGitLab.Models.LintCIOptions.IncludeJobs.get -> bool?
 NGitLab.Models.LintCIOptions.IncludeJobs.set -> void

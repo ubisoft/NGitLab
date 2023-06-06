@@ -5,7 +5,7 @@
         /// <summary>
         /// Run pipeline creation simulation, or only do static check.
         /// </summary>
-        public bool DryRun { get; set; }
+        public bool? DryRun { get; set; }
 
         /// <summary>
         /// If the list of jobs that would exist in a static check or pipeline simulation should be included in the response.
