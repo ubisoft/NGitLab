@@ -91,9 +91,22 @@ namespace NGitLab.Impl
 
             mergeRequest.TargetProjectId ??= _projectId;
 
-            return _api
+            var mr = _api
                 .Post().With(mergeRequest)
                 .To<MergeRequest>(_projectPath + "/merge_requests");
+
+            // Try to retrieve MR data (up to a certain number of times), until they seem consistent...
+            var remainingRetrievalCount = 10;
+            while (remainingRetrievalCount > 0)
+            {
+                mr = this[mr.Iid];
+                if (mr.ChangesCount is not null)
+                    break;
+                Thread.Sleep(200);
+                remainingRetrievalCount--;
+            }
+
+            return mr;
         }
 
         public MergeRequest Update(int mergeRequestIid, MergeRequestUpdate mergeRequest) => _api
