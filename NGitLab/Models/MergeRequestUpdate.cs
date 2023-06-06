@@ -36,6 +36,15 @@ namespace NGitLab.Models
 
         [JsonPropertyName("allow_collaboration")]
         public bool? AllowCollaboration;
+
+        [JsonPropertyName("remove_source_branch")]
+        public bool? RemoveSourceBranch;
+
+        [JsonPropertyName("squash")]
+        public bool? Squash;
+
+        [JsonPropertyName("squash_on_merge")]
+        public bool? SquashOnMerge;
     }
 
     public class MergeRequestUpdateState
