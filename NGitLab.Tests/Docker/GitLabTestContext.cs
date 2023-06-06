@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
+using NuGet.Versioning;
 using NUnit.Framework;
 using Polly;
 
@@ -252,6 +253,15 @@ namespace NGitLab.Tests.Docker
         public int GetRandomNumber()
         {
             return RandomNumberGenerator.GetInt32(0, int.MaxValue);
+        }
+
+        public void ReportTestAsInconclusiveIfVersionOutOfRange(VersionRange versionRange)
+        {
+            var gitLabVersion = Client.Version.Get();
+            if (!NuGetVersion.TryParse(gitLabVersion.Version, out var currentVersion))
+                return;
+            if (!versionRange.Satisfies(currentVersion))
+                Assert.Inconclusive($"Test supported in version range '{versionRange}', but currently running against '{currentVersion}'");
         }
 
         private IGitLabClient CreateClient(string token)

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Meziantou.Framework.Versioning;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
+using NuGet.Versioning;
 using NUnit.Framework;
 using Polly;
 
@@ -175,11 +176,9 @@ namespace NGitLab.Tests
         public async Task Test_merge_request_approvers()
         {
             using var context = await GitLabTestContext.CreateAsync();
-            var version = SemanticVersion.Parse(context.AdminClient.Version.Get().Version);
-            if (version >= SemanticVersion.Parse("13.11.0"))
-            {
-                Assert.Inconclusive("Setting approvers is not supported in GitLab 14, you must use approval rules");
-            }
+
+            // https://about.gitlab.com/releases/2021/04/22/gitlab-13-11-released/#removal-of-merge-request-approvers-endpoint-in-favor-of-approval-rules-api
+            context.ReportTestAsInconclusiveIfVersionOutOfRange(VersionRange.Parse("[,13.11)"));
 
             var (project, mergeRequest) = context.CreateMergeRequest();
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
