@@ -42,6 +42,8 @@ namespace NGitLab
 
         public IGlobalJobClient Jobs { get; }
 
+        public ILintClient Lint { get; }
+
         public RequestOptions Options
         {
             get => _api.RequestOptions;
@@ -88,6 +90,7 @@ namespace NGitLab
             GraphQL = new GraphQLClient(_api);
             AdvancedSearch = new SearchClient(_api, "/search");
             Jobs = new GlobalJobsClient(_api);
+            Lint = new LintClient(_api);
         }
 
         [Obsolete("Use GitLabClient constructor instead")]

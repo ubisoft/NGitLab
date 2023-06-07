@@ -7,6 +7,7 @@ const NGitLab.Impl.NamespacesClient.Url = "/namespaces" -> string
 const NGitLab.Models.Commit.Url = "/commits" -> string
 const NGitLab.Models.Contributor.Url = "/contributors" -> string
 const NGitLab.Models.Group.Url = "/groups" -> string
+const NGitLab.Models.LintCI.Url = "/ci/lint" -> string
 const NGitLab.Models.MergeRequest.Url = "/merge_requests" -> string
 const NGitLab.Models.Pipeline.Url = "/pipelines" -> string
 const NGitLab.Models.PipelineBasic.Url = "/pipelines" -> string
@@ -72,6 +73,7 @@ NGitLab.GitLabClient.Groups.get -> NGitLab.IGroupsClient
 NGitLab.GitLabClient.Issues.get -> NGitLab.IIssueClient
 NGitLab.GitLabClient.Jobs.get -> NGitLab.IGlobalJobClient
 NGitLab.GitLabClient.Labels.get -> NGitLab.ILabelClient
+NGitLab.GitLabClient.Lint.get -> NGitLab.ILintClient
 NGitLab.GitLabClient.Members.get -> NGitLab.IMembersClient
 NGitLab.GitLabClient.MergeRequests.get -> NGitLab.IMergeRequestClient
 NGitLab.GitLabClient.Namespaces.get -> NGitLab.INamespacesClient
@@ -184,6 +186,7 @@ NGitLab.IGitLabClient.Groups.get -> NGitLab.IGroupsClient
 NGitLab.IGitLabClient.Issues.get -> NGitLab.IIssueClient
 NGitLab.IGitLabClient.Jobs.get -> NGitLab.IGlobalJobClient
 NGitLab.IGitLabClient.Labels.get -> NGitLab.ILabelClient
+NGitLab.IGitLabClient.Lint.get -> NGitLab.ILintClient
 NGitLab.IGitLabClient.Members.get -> NGitLab.IMembersClient
 NGitLab.IGitLabClient.MergeRequests.get -> NGitLab.IMergeRequestClient
 NGitLab.IGitLabClient.Namespaces.get -> NGitLab.INamespacesClient
@@ -297,6 +300,9 @@ NGitLab.ILabelClient.ForProject(int projectId) -> System.Collections.Generic.IEn
 NGitLab.ILabelClient.GetGroupLabel(int groupId, string name) -> NGitLab.Models.Label
 NGitLab.ILabelClient.GetLabel(int projectId, string name) -> NGitLab.Models.Label
 NGitLab.ILabelClient.GetProjectLabel(int projectId, string name) -> NGitLab.Models.Label
+NGitLab.ILintClient
+NGitLab.ILintClient.ValidateCIYamlContentAsync(string projectId, string yamlContent, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
+NGitLab.ILintClient.ValidateProjectCIConfigurationAsync(string projectId, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
 NGitLab.IMembersClient
 NGitLab.IMembersClient.AddMemberToGroup(string groupId, NGitLab.Models.GroupMemberCreate user) -> NGitLab.Models.Membership
 NGitLab.IMembersClient.AddMemberToProject(string projectId, NGitLab.Models.ProjectMemberCreate user) -> NGitLab.Models.Membership
@@ -546,6 +552,10 @@ NGitLab.Impl.LabelClient.GetGroupLabel(int groupId, string name) -> NGitLab.Mode
 NGitLab.Impl.LabelClient.GetLabel(int projectId, string name) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.GetProjectLabel(int projectId, string name) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.LabelClient(NGitLab.Impl.API api) -> void
+NGitLab.Impl.LintClient
+NGitLab.Impl.LintClient.LintClient(NGitLab.Impl.API api) -> void
+NGitLab.Impl.LintClient.ValidateCIYamlContentAsync(string projectId, string yamlContent, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
+NGitLab.Impl.LintClient.ValidateProjectCIConfigurationAsync(string projectId, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
 NGitLab.Impl.MembersClient
 NGitLab.Impl.MembersClient.AddMemberToGroup(string groupId, NGitLab.Models.GroupMemberCreate user) -> NGitLab.Models.Membership
 NGitLab.Impl.MembersClient.AddMemberToProject(string projectId, NGitLab.Models.ProjectMemberCreate user) -> NGitLab.Models.Membership
@@ -1999,6 +2009,24 @@ NGitLab.Models.LastActivityDate.LastActivityOn.get -> System.DateTimeOffset
 NGitLab.Models.LastActivityDate.LastActivityOn.set -> void
 NGitLab.Models.LastActivityDate.Username.get -> string
 NGitLab.Models.LastActivityDate.Username.set -> void
+NGitLab.Models.LintCI
+NGitLab.Models.LintCI.Errors.get -> string[]
+NGitLab.Models.LintCI.Errors.set -> void
+NGitLab.Models.LintCI.LintCI() -> void
+NGitLab.Models.LintCI.MergedYaml.get -> string
+NGitLab.Models.LintCI.MergedYaml.set -> void
+NGitLab.Models.LintCI.Valid.get -> bool
+NGitLab.Models.LintCI.Valid.set -> void
+NGitLab.Models.LintCI.Warnings.get -> string[]
+NGitLab.Models.LintCI.Warnings.set -> void
+NGitLab.Models.LintCIOptions
+NGitLab.Models.LintCIOptions.DryRun.get -> bool?
+NGitLab.Models.LintCIOptions.DryRun.set -> void
+NGitLab.Models.LintCIOptions.IncludeJobs.get -> bool?
+NGitLab.Models.LintCIOptions.IncludeJobs.set -> void
+NGitLab.Models.LintCIOptions.LintCIOptions() -> void
+NGitLab.Models.LintCIOptions.Ref.get -> string
+NGitLab.Models.LintCIOptions.Ref.set -> void
 NGitLab.Models.Membership
 NGitLab.Models.Membership.AccessLevel -> int
 NGitLab.Models.Membership.AvatarURL -> string
