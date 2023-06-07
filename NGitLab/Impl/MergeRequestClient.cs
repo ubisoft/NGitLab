@@ -96,13 +96,15 @@ namespace NGitLab.Impl
                 .To<MergeRequest>(_projectPath + "/merge_requests");
 
             // Try to retrieve MR data (up to a certain number of times), until they seem consistent...
+            var mrClient = mr.TargetProjectId == _projectId ? this : new MergeRequestClient(_api, mr.TargetProjectId);
+
             var remainingRetrievalCount = 10;
             while (remainingRetrievalCount > 0)
             {
-                mr = this[mr.Iid];
+                mr = mrClient[mr.Iid];
                 if (mr.ChangesCount is not null)
                     break;
-                Thread.Sleep(200);
+                Thread.Sleep(300);
                 remainingRetrievalCount--;
             }
 
