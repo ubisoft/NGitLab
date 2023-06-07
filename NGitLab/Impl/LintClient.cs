@@ -17,11 +17,12 @@ namespace NGitLab.Impl
         public Task<LintCI> ValidateCIYamlContentAsync(string projectId, string yamlContent, LintCIOptions options, CancellationToken cancellationToken = default)
         {
             var url = BuildLintCIUrl(projectId, options);
-
-            return _api.Post().With(new
+            var data = new
             {
                 content = yamlContent,
-            }).ToAsync<LintCI>(url, cancellationToken);
+            };
+
+            return _api.Post().With(data).ToAsync<LintCI>(url, cancellationToken);
         }
 
         public Task<LintCI> ValidateProjectCIConfigurationAsync(string projectId, LintCIOptions options, CancellationToken cancellationToken = default)

@@ -9,6 +9,24 @@ namespace NGitLab.Tests
 {
     public class LintClientTests
     {
+        private const string ValidCIYaml = @"
+variables:
+  CI_DEBUG_TRACE: ""true""
+build:
+  script:
+    - echo test
+";
+
+        private const string InvalidCIYaml = @"
+variables:
+  CI_DEBUG_TRACE: ""true""
+build:
+  script:
+    - echo test
+  this_key_should_not_exist:
+    - this should fail the linting
+";
+
         [Test]
         [NGitLabRetry]
         public async Task LintValidCIYaml()
@@ -17,15 +35,7 @@ namespace NGitLab.Tests
             var project = context.CreateProject();
             var lintClient = context.Client.Lint;
 
-            var yaml = @"
-variables:
-  CI_DEBUG_TRACE: ""true""
-build:
-  script:
-    - echo test
-";
-
-            var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), yaml, new(), CancellationToken.None);
+            var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), ValidCIYaml, new(), CancellationToken.None);
 
             Assert.True(result.Valid);
             Assert.False(result.Errors.Any());
@@ -40,16 +50,7 @@ build:
             var project = context.CreateProject();
             var lintClient = context.Client.Lint;
 
-            var yaml = @"
-variables:
-  CI_DEBUG_TRACE: ""true""
-build:
-  script:
-    - echo test
-wrong_key
-";
-
-            var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), yaml, new(), CancellationToken.None);
+            var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), InvalidCIYaml, new(), CancellationToken.None);
 
             Assert.False(result.Valid);
             Assert.True(result.Errors.Any());
@@ -64,19 +65,12 @@ wrong_key
             var project = context.CreateProject();
             var lintClient = context.Client.Lint;
 
-            var yaml = @"
-variables:
-  CI_DEBUG_TRACE: ""true""
-build:
-  script:
-    - echo test
-";
             context.Client.GetRepository(project.Id).Files.Create(new FileUpsert
             {
                 Branch = project.DefaultBranch,
                 CommitMessage = "test",
                 Path = ".gitlab-ci.yml",
-                Content = yaml,
+                Content = ValidCIYaml,
             });
 
             var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
@@ -94,20 +88,12 @@ build:
             var project = context.CreateProject();
             var lintClient = context.Client.Lint;
 
-            var yaml = @"
-variables:
-  CI_DEBUG_TRACE: ""true""
-build:
-  script:
-    - echo test
-wrong_key
-";
             context.Client.GetRepository(project.Id).Files.Create(new FileUpsert
             {
                 Branch = project.DefaultBranch,
                 CommitMessage = "test",
                 Path = ".gitlab-ci.yml",
-                Content = yaml,
+                Content = InvalidCIYaml,
             });
 
             var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
