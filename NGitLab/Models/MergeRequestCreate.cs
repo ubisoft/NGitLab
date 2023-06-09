@@ -42,5 +42,15 @@ namespace NGitLab.Models
 
         [JsonPropertyName("allow_collaboration")]
         public bool? AllowCollaboration;
+
+        /// <summary>
+        /// Indicates whether the MR creation method should wait for GitLab to fully assess MR data before returning to the caller.
+        /// This could be necessary in certain cases, starting with GitLab versions somewhere between 15.4 and 15.11...
+        /// </summary>
+        /// <remarks>
+        /// Needed by NGitLab tests, as MRs are often created and immediately fetched.
+        /// </remarks>
+        [JsonIgnore]
+        public bool AwaitAssessment { get; set; }
     }
 }

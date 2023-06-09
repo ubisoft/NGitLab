@@ -70,6 +70,7 @@ namespace NGitLab.Tests
                 SourceBranch = "test-mr",
                 TargetBranch = project.DefaultBranch,
                 Title = mergeRequestTitle,
+                AwaitAssessment = true,
             });
 
             var mergeRequests = context.Client.GetCommits(project.Id).GetRelatedMergeRequestsAsync(new RelatedMergeRequestsQuery { Sha = commit.Id });

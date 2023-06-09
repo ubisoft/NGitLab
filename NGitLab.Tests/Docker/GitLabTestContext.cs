@@ -229,6 +229,7 @@ namespace NGitLab.Tests.Docker
                 SourceBranch = BranchForMRName,
                 TargetBranch = project.DefaultBranch,
                 Title = "test",
+                AwaitAssessment = true,
             });
 
             return (project, mr);
