@@ -399,6 +399,11 @@ namespace NGitLab.Mock
             return newProject;
         }
 
+        public User CreateBotUser(string name)
+        {
+
+        }
+
         public Models.Project ToClientProject(User currentUser)
         {
             var kind = Group.IsUserNamespace ? "user" : "group";
