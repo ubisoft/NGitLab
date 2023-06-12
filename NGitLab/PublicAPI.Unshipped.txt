@@ -2165,8 +2165,6 @@ NGitLab.Models.MergeRequestCreate
 NGitLab.Models.MergeRequestCreate.AllowCollaboration -> bool?
 NGitLab.Models.MergeRequestCreate.AssigneeId -> int?
 NGitLab.Models.MergeRequestCreate.AssigneeIds -> int[]
-NGitLab.Models.MergeRequestCreate.AwaitAssessment.get -> bool
-NGitLab.Models.MergeRequestCreate.AwaitAssessment.set -> void
 NGitLab.Models.MergeRequestCreate.ReviewerIds -> int[]
 NGitLab.Models.MergeRequestCreate.Description -> string
 NGitLab.Models.MergeRequestCreate.Labels -> string

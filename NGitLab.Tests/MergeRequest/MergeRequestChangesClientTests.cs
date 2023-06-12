@@ -12,9 +12,14 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var (project, mergeRequest) = context.CreateMergeRequest();
+
+            // Sleep so GitLab has time to finish assessing the just created MR (otherwise the following calls will return nothing)
+            await Task.Delay(5000);
+
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
             var mergeRequestChanges = mergeRequestClient.Changes(mergeRequest.Iid);
             var changes = mergeRequestChanges.MergeRequestChange.Changes;
+
             Assert.AreEqual(1, changes.Length);
             Assert.AreEqual(100644, changes[0].AMode);
             Assert.AreEqual(100644, changes[0].BMode);

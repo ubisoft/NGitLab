@@ -70,8 +70,10 @@ namespace NGitLab.Tests
                 SourceBranch = "test-mr",
                 TargetBranch = project.DefaultBranch,
                 Title = mergeRequestTitle,
-                AwaitAssessment = true,
             });
+
+            // Sleep so GitLab has time to finish assessing the just created MR (otherwise the following calls will return nothing)
+            await Task.Delay(5000);
 
             var mergeRequests = context.Client.GetCommits(project.Id).GetRelatedMergeRequestsAsync(new RelatedMergeRequestsQuery { Sha = commit.Id });
 

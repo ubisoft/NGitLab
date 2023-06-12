@@ -91,37 +91,9 @@ namespace NGitLab.Impl
 
             mergeRequest.TargetProjectId ??= _projectId;
 
-            var mr = _api
+            return _api
                 .Post().With(mergeRequest)
                 .To<MergeRequest>(_projectPath + "/merge_requests");
-
-            AwaitAssessmentIfNeedBe();
-
-            return mr;
-
-            // Starting with GitLab versions somewhere between 15.4 and 15.11, creating a merge request and
-            // retrieving its data quickly thereafter (as done in our tests) might return incomplete/invalid data.
-            // For such cases, wait until data are consistent before returning to the caller...
-            void AwaitAssessmentIfNeedBe()
-            {
-                if (!mergeRequest.AwaitAssessment)
-                    return;
-
-                // If the MR target project is not the same as this client's project, create a new client
-                var mrClient = mr.TargetProjectId == _projectId ? this : new MergeRequestClient(_api, mr.TargetProjectId);
-
-                var remainingRetrievalCount = 10;
-                while (remainingRetrievalCount > 0)
-                {
-                    mr = mrClient[mr.Iid];
-
-                    // Use 'mr.ChangesCount' as an indicator of data consistency, but is there a better one?
-                    if (mr.ChangesCount is not null)
-                        break;
-                    Thread.Sleep(300);
-                    remainingRetrievalCount--;
-                }
-            }
         }
 
         public MergeRequest Update(int mergeRequestIid, MergeRequestUpdate mergeRequest) => _api

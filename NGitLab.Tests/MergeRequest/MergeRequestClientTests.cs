@@ -57,6 +57,10 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var (project, mergeRequest) = context.CreateMergeRequest();
+
+            // Sleep so GitLab has time to finish assessing the just created MR (otherwise the following calls will return nothing)
+            await Task.Delay(5000);
+
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
             // Additional commit in default branch, to create divergence
@@ -93,6 +97,10 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var (project, mergeRequest) = context.CreateMergeRequest();
+
+            // Sleep so GitLab has time to finish assessing the just created MR (otherwise the following calls will return nothing)
+            await Task.Delay(5000);
+
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
             // Additional commit in default branch, to create divergence
@@ -274,6 +282,10 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var (project, mergeRequest) = context.CreateMergeRequest();
+
+            // Sleep so GitLab has time to finish assessing the just created MR (otherwise the following calls will return nothing)
+            await Task.Delay(5000);
+
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
             var versions = mergeRequestClient.GetVersionsAsync(mergeRequest.Iid);
