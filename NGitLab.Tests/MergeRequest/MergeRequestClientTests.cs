@@ -57,10 +57,6 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var (project, mergeRequest) = context.CreateMergeRequest();
-
-            // Sleep so GitLab has time to finish assessing the just created MR (otherwise the following calls will return nothing)
-            await Task.Delay(5000);
-
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
             // Additional commit in default branch, to create divergence
@@ -87,7 +83,12 @@ namespace NGitLab.Tests
                 "There should be a 1-commit divergence between the default branch NOW and its state at the moment the MR was created");
 
             RebaseMergeRequest(mergeRequestClient, mergeRequest);
-            var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
+
+            var commits = await GitLabTestContext.RetryUntilAsync(
+                () => mergeRequestClient.Commits(mergeRequest.Iid).All,
+                commits => commits.Any(),
+                TimeSpan.FromSeconds(10));
+
             Assert.IsTrue(commits.Any(), "Can return the commits");
         }
 
@@ -97,10 +98,6 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var (project, mergeRequest) = context.CreateMergeRequest();
-
-            // Sleep so GitLab has time to finish assessing the just created MR (otherwise the following calls will return nothing)
-            await Task.Delay(5000);
-
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
             // Additional commit in default branch, to create divergence
@@ -129,7 +126,11 @@ namespace NGitLab.Tests
             var rebaseResult = await mergeRequestClient.RebaseAsync(mergeRequest.Iid, new MergeRequestRebase { SkipCi = true });
             Assert.IsTrue(rebaseResult.RebaseInProgress);
 
-            var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
+            var commits = await GitLabTestContext.RetryUntilAsync(
+                () => mergeRequestClient.Commits(mergeRequest.Iid).All,
+                commits => commits.Any(),
+                TimeSpan.FromSeconds(10));
+
             Assert.IsTrue(commits.Any(), "Can return the commits");
         }
 
@@ -282,13 +283,13 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var (project, mergeRequest) = context.CreateMergeRequest();
-
-            // Sleep so GitLab has time to finish assessing the just created MR (otherwise the following calls will return nothing)
-            await Task.Delay(5000);
-
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
-            var versions = mergeRequestClient.GetVersionsAsync(mergeRequest.Iid);
+            var versions = await GitLabTestContext.RetryUntilAsync(
+                () => mergeRequestClient.GetVersionsAsync(mergeRequest.Iid),
+                versions => versions.Any(),
+                TimeSpan.FromSeconds(10));
+
             var version = versions.First();
 
             Assert.AreEqual(mergeRequest.Sha, version.HeadCommitSha);
