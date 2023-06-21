@@ -424,6 +424,7 @@ NGitLab.Mock.Group.CanUserAddProject(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Group.CanUserDeleteGroup(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Group.CanUserEditGroup(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Group.CanUserViewGroup(NGitLab.Mock.User user) -> bool
+NGitLab.Mock.Group.CreateBotUser(NGitLab.Models.AccessLevel accessLevel) -> NGitLab.Mock.User
 NGitLab.Mock.Group.DescendantGroups.get -> System.Collections.Generic.IEnumerable<NGitLab.Mock.Group>
 NGitLab.Mock.Group.Description.get -> string
 NGitLab.Mock.Group.Description.set -> void
@@ -787,6 +788,7 @@ NGitLab.Mock.Project.CanUserViewConfidentialIssues(NGitLab.Mock.User user) -> bo
 NGitLab.Mock.Project.CanUserViewProject(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Project.CommitInfos.get -> NGitLab.Mock.CommitInfoCollection
 NGitLab.Mock.Project.CommitStatuses.get -> NGitLab.Mock.CommitStatusCollection
+NGitLab.Mock.Project.CreateBotUser(string tokenName, NGitLab.Models.AccessLevel accessLevel) -> NGitLab.Mock.User
 NGitLab.Mock.Project.CreateMergeRequest(NGitLab.Mock.User user, string title, string description, string targetBranchName, string sourceBranchName, NGitLab.Mock.Project sourceProject = null) -> NGitLab.Mock.MergeRequest
 NGitLab.Mock.Project.CreateNewMergeRequest(NGitLab.Mock.User user, string branchName, string targetBranch, string title, string description) -> NGitLab.Mock.MergeRequest
 NGitLab.Mock.Project.DefaultBranch.get -> string
@@ -1114,7 +1116,6 @@ NGitLab.Mock.User
 NGitLab.Mock.User.AvatarUrl.get -> string
 NGitLab.Mock.User.AvatarUrl.set -> void
 NGitLab.Mock.User.Bot.get -> bool
-NGitLab.Mock.User.Bot.set -> void
 NGitLab.Mock.User.CreatedAt.get -> System.DateTime
 NGitLab.Mock.User.CreatedAt.set -> void
 NGitLab.Mock.User.Email.get -> string
