@@ -399,6 +399,25 @@ namespace NGitLab.Mock
             return newProject;
         }
 
+        /// <summary>
+        /// https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html#bot-users-for-projects
+        /// </summary>
+        /// <param name="tokenName">Name of the token</param>
+        /// <param name="accessLevel">AccessLevel to give to the bot user</param>
+        /// <returns>Bot user that have been added to the project</returns>
+        public User CreateBotUser(string tokenName, AccessLevel accessLevel)
+        {
+            var botUsername = $"project_{Id}_bot_{Guid.NewGuid():D}";
+            var bot = new User(botUsername)
+            {
+                Name = tokenName,
+                Email = $"{botUsername}@noreply.example.com",
+            };
+            Permissions.Add(new Permission(bot, accessLevel));
+            Server.Users.Add(bot);
+            return bot;
+        }
+
         public Models.Project ToClientProject(User currentUser)
         {
             var kind = Group.IsUserNamespace ? "user" : "group";
