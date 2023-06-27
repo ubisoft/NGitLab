@@ -68,7 +68,7 @@ namespace NGitLab.Mock
 
         public Project ForkedFrom { get; internal set; }
 
-        public RepositoryAccessLevel ForkingAccessLevel { get; set; }
+        public RepositoryAccessLevel ForkingAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
 
         public string ImportStatus { get; set; }
 
