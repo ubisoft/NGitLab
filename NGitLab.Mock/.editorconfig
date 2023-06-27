@@ -1,4 +1,3 @@
 [*.cs]
 
-dotnet_diagnostic.MA0074.severity = none
 dotnet_diagnostic.MA0076.severity = none
