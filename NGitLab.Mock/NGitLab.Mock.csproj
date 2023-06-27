@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
-    <NoWarn>$(NoWarn);NU5104</NoWarn>
+    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
+    <NoWarn>$(NoWarn);NU1701;NU5104</NoWarn>
     <Description>GitLab REST API .NET Client Mock Library</Description>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\NGitLab\NGitLab.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0182" />
+    <PackageReference Include="LibGit2Sharp" Version="0.27.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -16,7 +16,7 @@
     <PackageReference Include="YamlDotNet" Version="13.1.1" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework) == 'net461'">
+  <ItemGroup Condition="$(TargetFramework) == 'net472'">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
