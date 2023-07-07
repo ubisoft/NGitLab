@@ -2752,12 +2752,14 @@ NGitLab.Models.ProjectUpdate.JobsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.JobsEnabled.set -> void
 NGitLab.Models.ProjectUpdate.LfsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.LfsEnabled.set -> void
-NGitLab.Models.ProjectUpdate.MergePipelinesEnabled -> bool
+NGitLab.Models.ProjectUpdate.MergePipelinesEnabled.get -> bool
+NGitLab.Models.ProjectUpdate.MergePipelinesEnabled.set -> void
 NGitLab.Models.ProjectUpdate.MergeRequestsAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.MergeRequestsAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.MergeRequestsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.MergeRequestsEnabled.set -> void
-NGitLab.Models.ProjectUpdate.MergeTrainsEnabled -> bool
+NGitLab.Models.ProjectUpdate.MergeTrainsEnabled.get -> bool
+NGitLab.Models.ProjectUpdate.MergeTrainsEnabled.set -> void
 NGitLab.Models.ProjectUpdate.Name.get -> string
 NGitLab.Models.ProjectUpdate.Name.set -> void
 NGitLab.Models.ProjectUpdate.OnlyAllowMergeIfAllDiscussionsAreResolved.get -> bool?
