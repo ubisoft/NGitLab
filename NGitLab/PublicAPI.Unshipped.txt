@@ -2532,8 +2532,10 @@ NGitLab.Models.Project.LastActivityAt -> System.DateTime
 NGitLab.Models.Project.LfsEnabled -> bool
 NGitLab.Models.Project.Links -> NGitLab.Models.ProjectLinks
 NGitLab.Models.Project.MergeMethod -> string
+NGitLab.Models.Project.MergePipelinesEnabled -> bool
 NGitLab.Models.Project.MergeRequestsAccessLevel -> string
 NGitLab.Models.Project.MergeRequestsEnabled -> bool
+NGitLab.Models.Project.MergeTrainsEnabled -> bool
 NGitLab.Models.Project.Mirror -> bool
 NGitLab.Models.Project.MirrorOverwritesDivergedBranches -> bool
 NGitLab.Models.Project.MirrorTriggerBuilds -> bool
@@ -2580,8 +2582,10 @@ NGitLab.Models.ProjectCreate.Description -> string
 NGitLab.Models.ProjectCreate.ImportUrl -> string
 NGitLab.Models.ProjectCreate.IssuesAccessLevel -> string
 NGitLab.Models.ProjectCreate.IssuesEnabled -> bool
+NGitLab.Models.ProjectCreate.MergePipelinesEnabled -> bool
 NGitLab.Models.ProjectCreate.MergeRequestsAccessLevel -> string
 NGitLab.Models.ProjectCreate.MergeRequestsEnabled -> bool
+NGitLab.Models.ProjectCreate.MergeTrainsEnabled -> bool
 NGitLab.Models.ProjectCreate.Name -> string
 NGitLab.Models.ProjectCreate.NamespaceId -> string
 NGitLab.Models.ProjectCreate.Path -> string
@@ -2748,10 +2752,12 @@ NGitLab.Models.ProjectUpdate.JobsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.JobsEnabled.set -> void
 NGitLab.Models.ProjectUpdate.LfsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.LfsEnabled.set -> void
+NGitLab.Models.ProjectUpdate.MergePipelinesEnabled -> bool
 NGitLab.Models.ProjectUpdate.MergeRequestsAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.MergeRequestsAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.MergeRequestsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.MergeRequestsEnabled.set -> void
+NGitLab.Models.ProjectUpdate.MergeTrainsEnabled -> bool
 NGitLab.Models.ProjectUpdate.Name.get -> string
 NGitLab.Models.ProjectUpdate.Name.set -> void
 NGitLab.Models.ProjectUpdate.OnlyAllowMergeIfAllDiscussionsAreResolved.get -> bool?
