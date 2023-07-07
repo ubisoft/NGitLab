@@ -239,9 +239,7 @@ namespace NGitLab.Tests
             {
                 Description = "desc",
                 IssuesEnabled = true,
-                MergePipelinesEnabled = true,
                 MergeRequestsEnabled = true,
-                MergeTrainsEnabled = true,
                 Name = "CreateDelete_Test_" + context.GetRandomNumber().ToString(CultureInfo.InvariantCulture),
                 NamespaceId = null,
                 SnippetsEnabled = true,
@@ -259,9 +257,7 @@ namespace NGitLab.Tests
 
             Assert.AreEqual(project.Description, createdProject.Description);
             Assert.AreEqual(project.IssuesEnabled, createdProject.IssuesEnabled);
-            Assert.AreEqual(project.MergePipelinesEnabled, createdProject.MergePipelinesEnabled);
             Assert.AreEqual(project.MergeRequestsEnabled, createdProject.MergeRequestsEnabled);
-            Assert.AreEqual(project.MergeTrainsEnabled, createdProject.MergeTrainsEnabled);
             Assert.AreEqual(project.Name, createdProject.Name);
             Assert.AreEqual(project.VisibilityLevel, createdProject.VisibilityLevel);
             CollectionAssert.AreEquivalent(expectedTopics, createdProject.Topics);
