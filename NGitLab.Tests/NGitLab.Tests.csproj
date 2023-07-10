@@ -14,7 +14,7 @@
     <PackageReference Include="Meziantou.Framework.Versioning" Version="1.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
     <PackageReference Include="Microsoft.Playwright" Version="1.35.0" />
     <PackageReference Include="NuGet.Versioning" Version="6.6.1" />
     <PackageReference Include="NUnit" Version="3.13.3" />
