@@ -2,144 +2,143 @@ using System;
 using System.Text.Json.Serialization;
 using NGitLab.Extensions;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class MergeRequest
 {
-    public class MergeRequest
-    {
-        public const string Url = "/merge_requests";
+    public const string Url = "/merge_requests";
 
-        [JsonPropertyName("id")]
-        public int Id;
+    [JsonPropertyName("id")]
+    public int Id;
 
-        [JsonPropertyName("iid")]
-        public int Iid;
+    [JsonPropertyName("iid")]
+    public int Iid;
 
-        [JsonPropertyName("state")]
-        public string State;
+    [JsonPropertyName("state")]
+    public string State;
 
-        [JsonPropertyName("title")]
-        public string Title;
+    [JsonPropertyName("title")]
+    public string Title;
 
-        [JsonPropertyName("assignee")]
-        public User Assignee;
+    [JsonPropertyName("assignee")]
+    public User Assignee;
 
-        [JsonPropertyName("author")]
-        public User Author;
+    [JsonPropertyName("author")]
+    public User Author;
 
-        [JsonPropertyName("created_at")]
-        public DateTime CreatedAt;
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt;
 
-        [JsonPropertyName("description")]
-        public string Description;
+    [JsonPropertyName("description")]
+    public string Description;
 
-        [JsonPropertyName("downvotes")]
-        public int Downvotes;
+    [JsonPropertyName("downvotes")]
+    public int Downvotes;
 
-        [JsonPropertyName("upvotes")]
-        public int Upvotes;
+    [JsonPropertyName("upvotes")]
+    public int Upvotes;
 
-        [JsonPropertyName("updated_at")]
-        public DateTime UpdatedAt;
+    [JsonPropertyName("updated_at")]
+    public DateTime UpdatedAt;
 
-        [JsonPropertyName("target_branch")]
-        public string TargetBranch;
+    [JsonPropertyName("target_branch")]
+    public string TargetBranch;
 
-        [JsonPropertyName("source_branch")]
-        public string SourceBranch;
+    [JsonPropertyName("source_branch")]
+    public string SourceBranch;
 
-        [JsonPropertyName("project_id")]
-        public int ProjectId;
+    [JsonPropertyName("project_id")]
+    public int ProjectId;
 
-        [JsonPropertyName("source_project_id")]
-        public int SourceProjectId;
+    [JsonPropertyName("source_project_id")]
+    public int SourceProjectId;
 
-        [JsonPropertyName("target_project_id")]
-        public int TargetProjectId;
+    [JsonPropertyName("target_project_id")]
+    public int TargetProjectId;
 
-        [JsonPropertyName("work_in_progress")]
-        public bool? WorkInProgress;
+    [JsonPropertyName("work_in_progress")]
+    public bool? WorkInProgress;
 
-        [JsonPropertyName("milestone")]
-        public Milestone Milestone;
+    [JsonPropertyName("milestone")]
+    public Milestone Milestone;
 
-        [JsonPropertyName("labels")]
-        public string[] Labels;
+    [JsonPropertyName("labels")]
+    public string[] Labels;
 
-        [JsonPropertyName("merge_when_pipeline_succeeds")]
-        public bool MergeWhenPipelineSucceeds;
+    [JsonPropertyName("merge_when_pipeline_succeeds")]
+    public bool MergeWhenPipelineSucceeds;
 
-        [JsonPropertyName("merge_status")]
-        public string MergeStatus;
+    [JsonPropertyName("merge_status")]
+    public string MergeStatus;
 
-        [JsonPropertyName("sha")]
-        public string Sha;
+    [JsonPropertyName("sha")]
+    public string Sha;
 
-        [JsonPropertyName("merge_commit_sha")]
-        public string MergeCommitSha;
+    [JsonPropertyName("merge_commit_sha")]
+    public string MergeCommitSha;
 
-        [JsonPropertyName("squash_commit_sha")]
-        public string SquashCommitSha;
+    [JsonPropertyName("squash_commit_sha")]
+    public string SquashCommitSha;
 
-        [JsonPropertyName("diff_refs")]
-        public DiffRefs DiffRefs;
+    [JsonPropertyName("diff_refs")]
+    public DiffRefs DiffRefs;
 
-        [JsonPropertyName("should_remove_source_branch")]
-        public bool? ShouldRemoveSourceBranch;
+    [JsonPropertyName("should_remove_source_branch")]
+    public bool? ShouldRemoveSourceBranch;
 
-        [JsonPropertyName("force_remove_source_branch")]
-        public bool ForceRemoveSourceBranch;
+    [JsonPropertyName("force_remove_source_branch")]
+    public bool ForceRemoveSourceBranch;
 
-        [JsonPropertyName("squash")]
-        public bool Squash;
+    [JsonPropertyName("squash")]
+    public bool Squash;
 
-        [JsonPropertyName("changes_count")]
-        public string ChangesCount;
+    [JsonPropertyName("changes_count")]
+    public string ChangesCount;
 
-        [JsonPropertyName("web_url")]
-        public string WebUrl;
+    [JsonPropertyName("web_url")]
+    public string WebUrl;
 
-        [JsonPropertyName("merged_by")]
-        public User MergedBy;
+    [JsonPropertyName("merged_by")]
+    public User MergedBy;
 
-        [JsonPropertyName("merged_at")]
-        public DateTime? MergedAt;
+    [JsonPropertyName("merged_at")]
+    public DateTime? MergedAt;
 
-        [JsonPropertyName("closed_at")]
-        public DateTime? ClosedAt;
+    [JsonPropertyName("closed_at")]
+    public DateTime? ClosedAt;
 
-        [JsonPropertyName("closed_by")]
-        public User ClosedBy;
+    [JsonPropertyName("closed_by")]
+    public User ClosedBy;
 
-        [JsonPropertyName("assignees")]
-        public User[] Assignees;
+    [JsonPropertyName("assignees")]
+    public User[] Assignees;
 
-        [JsonPropertyName("reviewers")]
-        public User[] Reviewers;
+    [JsonPropertyName("reviewers")]
+    public User[] Reviewers;
 
-        [JsonPropertyName("allow_collaboration")]
-        public bool? AllowCollaboration;
+    [JsonPropertyName("allow_collaboration")]
+    public bool? AllowCollaboration;
 
-        [JsonPropertyName("head_pipeline")]
-        public Pipeline HeadPipeline;
+    [JsonPropertyName("head_pipeline")]
+    public Pipeline HeadPipeline;
 
-        [JsonPropertyName("rebase_in_progress")]
-        public bool RebaseInProgress;
+    [JsonPropertyName("rebase_in_progress")]
+    public bool RebaseInProgress;
 
-        [JsonPropertyName("diverged_commits_count")]
-        public int? DivergedCommitsCount { get; set; }
+    [JsonPropertyName("diverged_commits_count")]
+    public int? DivergedCommitsCount { get; set; }
 
-        [JsonPropertyName("has_conflicts")]
-        public bool HasConflicts { get; set; }
+    [JsonPropertyName("has_conflicts")]
+    public bool HasConflicts { get; set; }
 
-        [JsonPropertyName("blocking_discussions_resolved")]
-        public bool BlockingDiscussionsResolved { get; set; }
+    [JsonPropertyName("blocking_discussions_resolved")]
+    public bool BlockingDiscussionsResolved { get; set; }
 
-        [JsonPropertyName("user")]
-        public MergeRequestUserInfo User { get; set; }
+    [JsonPropertyName("user")]
+    public MergeRequestUserInfo User { get; set; }
 
-        public override string ToString()
-        {
-            return $"!{Id.ToStringInvariant()}: {Title}";
-        }
-    }
+    [JsonPropertyName("detailed_merge_status")]
+    public DynamicEnum<DetailedMergeStatus> DetailedMergeStatus { get; set; }
+
+    public override string ToString() => $"!{Id.ToStringInvariant()}: {Title}";
 }

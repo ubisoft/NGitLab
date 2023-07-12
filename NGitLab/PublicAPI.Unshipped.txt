@@ -1365,6 +1365,20 @@ NGitLab.Models.DeploymentStatus.created = 0 -> NGitLab.Models.DeploymentStatus
 NGitLab.Models.DeploymentStatus.failed = 3 -> NGitLab.Models.DeploymentStatus
 NGitLab.Models.DeploymentStatus.running = 1 -> NGitLab.Models.DeploymentStatus
 NGitLab.Models.DeploymentStatus.success = 2 -> NGitLab.Models.DeploymentStatus
+NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.BlockedStatus = 0 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.BrokenStatus = 1 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.Checking = 2 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.CiMustPass = 4 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.CiStillRunning = 5 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.DiscussionsNotResolved = 6 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.DraftStatus = 7 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.ExternalStatusChecks = 8 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.Mergeable = 9 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.NotApproved = 10 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.NotOpen = 11 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.PoliciesDenied = 12 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.Unchecked = 3 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.Diff
 NGitLab.Models.Diff.AMode -> string
 NGitLab.Models.Diff.BMode -> string
@@ -2049,6 +2063,8 @@ NGitLab.Models.MergeRequest.ClosedAt -> System.DateTime?
 NGitLab.Models.MergeRequest.ClosedBy -> NGitLab.Models.User
 NGitLab.Models.MergeRequest.CreatedAt -> System.DateTime
 NGitLab.Models.MergeRequest.Description -> string
+NGitLab.Models.MergeRequest.DetailedMergeStatus.get -> NGitLab.DynamicEnum<NGitLab.Models.DetailedMergeStatus>
+NGitLab.Models.MergeRequest.DetailedMergeStatus.set -> void
 NGitLab.Models.MergeRequest.DiffRefs -> NGitLab.Models.DiffRefs
 NGitLab.Models.MergeRequest.DivergedCommitsCount.get -> int?
 NGitLab.Models.MergeRequest.DivergedCommitsCount.set -> void

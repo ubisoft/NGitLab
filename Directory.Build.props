@@ -8,7 +8,7 @@
     <Authors>$(Company), NGitLab contributors</Authors>
 
     <!-- Compile Options -->
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <Deterministic>true</Deterministic>
     <Features>strict</Features>
     <TreatWarningsAsErrors Condition="'$(Configuration)' != 'Debug'">true</TreatWarningsAsErrors>
