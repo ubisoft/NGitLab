@@ -48,6 +48,11 @@ namespace NGitLab.Tests
             //   .ConfigureAwait(false);
             var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
             Assert.IsTrue(commits.Any(), "Can return the commits");
+
+            if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.6,)"), out _))
+                Assert.IsNotNull(mergeRequest.DetailedMergeStatus.EnumValue);
+            else
+                Assert.IsNull(mergeRequest.DetailedMergeStatus.EnumValue);
         }
 
         [Test]
@@ -186,7 +191,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
 
             // https://about.gitlab.com/releases/2021/04/22/gitlab-13-11-released/#removal-of-merge-request-approvers-endpoint-in-favor-of-approval-rules-api
-            context.ReportTestAsInconclusiveIfVersionOutOfRange(VersionRange.Parse("[,13.11)"));
+            context.ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange.Parse("[,13.11)"));
 
             var (project, mergeRequest) = context.CreateMergeRequest();
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);

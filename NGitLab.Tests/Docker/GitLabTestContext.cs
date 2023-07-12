@@ -255,13 +255,20 @@ namespace NGitLab.Tests.Docker
             return RandomNumberGenerator.GetInt32(0, int.MaxValue);
         }
 
-        public void ReportTestAsInconclusiveIfVersionOutOfRange(VersionRange versionRange)
+        public bool IsGitLabVersionInRange(VersionRange versionRange, out string gitLabVersion)
         {
-            var gitLabVersion = Client.Version.Get();
-            if (!NuGetVersion.TryParse(gitLabVersion.Version, out var currentVersion))
-                return;
-            if (!versionRange.Satisfies(currentVersion))
-                Assert.Inconclusive($"Test supported in version range '{versionRange}', but currently running against '{currentVersion}'");
+            var currentVersion = Client.Version.Get();
+            gitLabVersion = currentVersion.Version;
+
+            // Although a GitLab version is not a NuGet version, let's consider it as one to determine range inclusion
+            return NuGetVersion.TryParse(gitLabVersion, out var nuGetVersion) &&
+                   versionRange.Satisfies(nuGetVersion);
+        }
+
+        public void ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange versionRange)
+        {
+            if (!IsGitLabVersionInRange(versionRange, out var gitLabVersion))
+                Assert.Inconclusive($"Test supported by GitLab '{versionRange}', but currently running against '{gitLabVersion}'");
         }
 
         private IGitLabClient CreateClient(string token)
