@@ -10,6 +10,7 @@ namespace NGitLab.Impl
     {
         private const string IssuesUrl = "/issues";
         private const string IssueByIdUrl = "/issues/{0}";
+        private const string LinkedIssuesByIdUrl = "/projects/{0}/issues/{1}/links";
         private const string GroupIssuesUrl = "/groups/{0}/issues";
         private const string ProjectIssuesUrl = "/projects/{0}/issues";
         private const string SingleIssueUrl = "/projects/{0}/issues/{1}";
@@ -143,6 +144,11 @@ namespace NGitLab.Impl
         public IEnumerable<MergeRequest> RelatedTo(int projectId, int issueIid)
         {
             return _api.Get().GetAll<MergeRequest>(string.Format(CultureInfo.InvariantCulture, RelatedToUrl, projectId, issueIid));
+        }
+
+        public IEnumerable<Issue> LinkedTo(int projectId, int issueId)
+        {
+            return _api.Get().To<IEnumerable<Issue>>(string.Format(CultureInfo.InvariantCulture, LinkedIssuesByIdUrl, projectId, issueId));
         }
 
         public GitLabCollectionResponse<MergeRequest> RelatedToAsync(int projectId, int issueIid)

@@ -134,6 +134,14 @@ namespace NGitLab
         /// <returns>The list of MR that are related this issue.</returns>
         IEnumerable<MergeRequest> RelatedTo(int projectId, int issueIid);
 
+        /// <summary>
+        /// Get all merge requests that are related to a particular issue.
+        /// </summary>
+        /// <param name="projectId">The project id.</param>
+        /// <param name="issueId">The id of the issue in the project's scope.</param>
+        /// <returns>The list of Issues linked to this issue.</returns>
+        IEnumerable<Issue> LinkedTo(int projectId,int issueId);
+
         GitLabCollectionResponse<MergeRequest> RelatedToAsync(int projectId, int issueIid);
 
         /// <summary>

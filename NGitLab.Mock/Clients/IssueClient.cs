@@ -302,6 +302,14 @@ namespace NGitLab.Mock.Clients
             return GetById(issueId);
         }
 
+        public IEnumerable<Models.Issue> LinkedTo(int projectId, int issueId)
+        {
+            using (Context.BeginOperationScope())
+            {
+                return Enumerable.Empty<Models.Issue>();
+            }
+        }
+
         public Models.Issue GetById(int issueId)
         {
             using (Context.BeginOperationScope())
