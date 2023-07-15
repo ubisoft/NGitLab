@@ -135,7 +135,7 @@ namespace NGitLab
         IEnumerable<MergeRequest> RelatedTo(int projectId, int issueIid);
 
         /// <summary>
-        /// Get all merge requests that are related to a particular issue.
+        /// Get all Issues that are linked to a particular issue of particular project.
         /// </summary>
         /// <param name="projectId">The project id.</param>
         /// <param name="issueId">The id of the issue in the project's scope.</param>
