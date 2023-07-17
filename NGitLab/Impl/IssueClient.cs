@@ -146,9 +146,9 @@ namespace NGitLab.Impl
             return _api.Get().GetAll<MergeRequest>(string.Format(CultureInfo.InvariantCulture, RelatedToUrl, projectId, issueIid));
         }
 
-        public IEnumerable<Issue> LinkedTo(int projectId, int issueId)
+        public GitLabCollectionResponse<Issue> LinkedTo(int projectId, int issueId)
         {
-            return _api.Get().To<IEnumerable<Issue>>(string.Format(CultureInfo.InvariantCulture, LinkedIssuesByIdUrl, projectId, issueId));
+            return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, LinkedIssuesByIdUrl, projectId, issueId));
         }
 
         public GitLabCollectionResponse<MergeRequest> RelatedToAsync(int projectId, int issueIid)

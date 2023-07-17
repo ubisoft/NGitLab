@@ -302,12 +302,9 @@ namespace NGitLab.Mock.Clients
             return GetById(issueId);
         }
 
-        public IEnumerable<Models.Issue> LinkedTo(int projectId, int issueId)
+        public GitLabCollectionResponse<Models.Issue> LinkedTo(int projectId, int issueId)
         {
-            using (Context.BeginOperationScope())
-            {
-                return Enumerable.Empty<Models.Issue>();
-            }
+            throw new NotImplementedException();
         }
 
         public Models.Issue GetById(int issueId)
