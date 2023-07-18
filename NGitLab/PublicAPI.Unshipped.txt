@@ -263,6 +263,7 @@ NGitLab.IIssueClient.GetAsync(int projectId, NGitLab.Models.IssueQuery query) ->
 NGitLab.IIssueClient.GetAsync(NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.GetById(int issueId) -> NGitLab.Models.Issue
 NGitLab.IIssueClient.GetByIdAsync(int issueId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
+NGitLab.IIssueClient.LinkedTo(int projectId, int issueId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.IIssueClient.RelatedTo(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.IIssueClient.RelatedToAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
