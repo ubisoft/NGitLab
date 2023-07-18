@@ -293,5 +293,21 @@ namespace NGitLab.Tests
 
             Assert.AreEqual(updatedDueDate, updatedIssue.DueDate);
         }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_linked_issue()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var issuesClient = context.Client.Issues;
+
+            var issue1 = await issuesClient.CreateAsync(new IssueCreate { ProjectId = project.Id, Title = "title1" });
+            var issue2 = await issuesClient.CreateAsync(new IssueCreate { ProjectId = project.Id, Title = "title2", Description = "blocks #1" });
+
+            var issues = issuesClient.LinkedTo(project.Id, issue1.IssueId).ToList();
+            Assert.AreEqual(1, issues.Count);
+            Assert.IsTrue(issue2.Id.Equals(issues.FirstOrDefault()?.IssueId));
+        }
     }
 }
