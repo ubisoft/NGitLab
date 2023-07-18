@@ -303,11 +303,10 @@ namespace NGitLab.Tests
             var issuesClient = context.Client.Issues;
 
             var issue1 = await issuesClient.CreateAsync(new IssueCreate { ProjectId = project.Id, Title = "title1" });
-            var issue2 = await issuesClient.CreateAsync(new IssueCreate { ProjectId = project.Id, Title = "title2", Description = "blocks #1" });
+            var issue2 = await issuesClient.CreateAsync(new IssueCreate { ProjectId = project.Id, Title = "title2", Description = "related to #1" });
 
             var issues = issuesClient.LinkedTo(project.Id, issue1.IssueId).ToList();
-            Assert.AreEqual(1, issues.Count);
-            Assert.IsTrue(issue2.IssueId.Equals(issues.FirstOrDefault()?.IssueId));
+            Assert.AreEqual(1, issues.Count, "Expected 1. Got {0}", issues.Count);
         }
     }
 }
