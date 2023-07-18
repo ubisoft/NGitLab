@@ -307,7 +307,7 @@ namespace NGitLab.Tests
 
             var issues = issuesClient.LinkedTo(project.Id, issue1.IssueId).ToList();
             Assert.AreEqual(1, issues.Count);
-            Assert.IsTrue(issue2.Id.Equals(issues.FirstOrDefault()?.IssueId));
+            Assert.IsTrue(issue2.Id.Equals(issues.FirstOrDefault()?.Id));
         }
     }
 }
