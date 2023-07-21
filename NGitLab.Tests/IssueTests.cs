@@ -306,7 +306,9 @@ namespace NGitLab.Tests
             var issue2 = await issuesClient.CreateAsync(new IssueCreate { ProjectId = project.Id, Title = "title2", Description = "related to #1" });
 
             var issues = issuesClient.LinkedTo(project.Id, issue1.IssueId).ToList();
-            Assert.AreEqual(1, issues.Count, "Expected 1. Got {0}", issues.Count);
+
+            // for now, no API to link issues so not links exist but API should not throw
+            Assert.AreEqual(0, issues.Count, "Expected 0. Got {0}", issues.Count);
         }
     }
 }
