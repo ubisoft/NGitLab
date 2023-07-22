@@ -11,6 +11,7 @@ namespace NGitLab.Impl
         private const string IssuesUrl = "/issues";
         private const string IssueByIdUrl = "/issues/{0}";
         private const string LinkedIssuesByIdUrl = "/projects/{0}/issues/{1}/links";
+        private const string CreateLinkBetweenIssuesUrl = "/projects/{0}/issues/{1}/links?target_project_id={2}&target_issue_iid={3}";
         private const string GroupIssuesUrl = "/groups/{0}/issues";
         private const string ProjectIssuesUrl = "/projects/{0}/issues";
         private const string SingleIssueUrl = "/projects/{0}/issues/{1}";
@@ -149,6 +150,13 @@ namespace NGitLab.Impl
         public GitLabCollectionResponse<Issue> LinkedTo(int projectId, int issueId)
         {
             return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, LinkedIssuesByIdUrl, projectId, issueId));
+        }
+
+        public bool CreateLinkBetweenIssues(int sourceProjectId, int sourceIssueId, int targetProjectId,
+            int targetIssueId)
+        {
+            _api.Post().Execute(string.Format(CultureInfo.InvariantCulture, CreateLinkBetweenIssuesUrl, sourceProjectId, sourceIssueId, targetProjectId, targetIssueId));
+            return true;
         }
 
         public GitLabCollectionResponse<MergeRequest> RelatedToAsync(int projectId, int issueIid)

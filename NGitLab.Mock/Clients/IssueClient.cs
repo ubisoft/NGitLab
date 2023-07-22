@@ -194,6 +194,8 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+
+
         public GitLabCollectionResponse<Models.MergeRequest> RelatedToAsync(int projectId, int issueIid)
         {
             throw new NotImplementedException();
@@ -303,6 +305,11 @@ namespace NGitLab.Mock.Clients
         }
 
         public GitLabCollectionResponse<Models.Issue> LinkedTo(int projectId, int issueId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CreateLinkBetweenIssues(int sourceProjectId, int sourceIssueId, int targetProjectId, int targetIssueId)
         {
             throw new NotImplementedException();
         }
