@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -155,8 +156,15 @@ namespace NGitLab.Impl
         public bool CreateLinkBetweenIssues(int sourceProjectId, int sourceIssueId, int targetProjectId,
             int targetIssueId)
         {
-            _api.Post().Execute(string.Format(CultureInfo.InvariantCulture, CreateLinkBetweenIssuesUrl, sourceProjectId, sourceIssueId, targetProjectId, targetIssueId));
-            return true;
+            try
+            {
+                _api.Post().Execute(string.Format(CultureInfo.InvariantCulture, CreateLinkBetweenIssuesUrl, sourceProjectId, sourceIssueId, targetProjectId, targetIssueId));
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public GitLabCollectionResponse<MergeRequest> RelatedToAsync(int projectId, int issueIid)
