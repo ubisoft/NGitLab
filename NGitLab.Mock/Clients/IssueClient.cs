@@ -193,7 +193,6 @@ namespace NGitLab.Mock.Clients
         {
             throw new NotImplementedException();
         }
-        
         public GitLabCollectionResponse<Models.MergeRequest> RelatedToAsync(int projectId, int issueIid)
         {
             throw new NotImplementedException();
