@@ -264,7 +264,7 @@ NGitLab.IIssueClient.GetAsync(int projectId, NGitLab.Models.IssueQuery query) ->
 NGitLab.IIssueClient.GetAsync(NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.GetById(int issueId) -> NGitLab.Models.Issue
 NGitLab.IIssueClient.GetByIdAsync(int issueId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
-NGitLab.IIssueClient.LinkedTo(int projectId, int issueId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
+NGitLab.IIssueClient.LinkedToAsync(int projectId, int issueId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.IIssueClient.RelatedTo(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.IIssueClient.RelatedToAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
@@ -516,7 +516,7 @@ NGitLab.Impl.IssueClient.GetAsync(NGitLab.Models.IssueQuery query) -> NGitLab.Gi
 NGitLab.Impl.IssueClient.GetById(int issueId) -> NGitLab.Models.Issue
 NGitLab.Impl.IssueClient.GetByIdAsync(int issueId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.IssueClient(NGitLab.Impl.API api) -> void
-NGitLab.Impl.IssueClient.LinkedTo(int projectId, int issueId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
+NGitLab.Impl.IssueClient.LinkedToAsync(int projectId, int issueId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.RelatedTo(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.Impl.IssueClient.RelatedToAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
