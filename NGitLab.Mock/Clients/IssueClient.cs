@@ -302,7 +302,7 @@ namespace NGitLab.Mock.Clients
             return GetById(issueId);
         }
 
-        public GitLabCollectionResponse<Models.Issue> LinkedTo(int projectId, int issueId)
+        public GitLabCollectionResponse<Models.Issue> LinkedToAsync(int projectId, int issueId)
         {
             throw new NotImplementedException();
         }

@@ -140,7 +140,7 @@ namespace NGitLab
         /// <param name="projectId">The project id.</param>
         /// <param name="issueId">The id of the issue in the project's scope.</param>
         /// <returns>The list of Issues linked to this issue.</returns>
-        GitLabCollectionResponse<Issue> LinkedTo(int projectId, int issueId);
+        GitLabCollectionResponse<Issue> LinkedToAsync(int projectId, int issueId);
 
         /// <summary>
         /// Create links between Issues.
