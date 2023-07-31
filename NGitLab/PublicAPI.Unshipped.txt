@@ -2325,9 +2325,11 @@ NGitLab.Models.Milestone
 NGitLab.Models.Milestone.CreatedAt -> System.DateTime
 NGitLab.Models.Milestone.Description -> string
 NGitLab.Models.Milestone.DueDate -> string
+NGitLab.Models.Milestone.GroupId -> int?
 NGitLab.Models.Milestone.Id -> int
 NGitLab.Models.Milestone.Iid -> int
 NGitLab.Models.Milestone.Milestone() -> void
+NGitLab.Models.Milestone.ProjectId -> int?
 NGitLab.Models.Milestone.StartDate -> string
 NGitLab.Models.Milestone.State -> string
 NGitLab.Models.Milestone.Title -> string

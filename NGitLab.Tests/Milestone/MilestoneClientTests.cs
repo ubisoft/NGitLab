@@ -79,6 +79,8 @@ namespace NGitLab.Tests.Milestone
             Assert.That(milestone.Description, Is.EqualTo($"{title} description"));
             Assert.That(milestone.StartDate, Is.EqualTo("2017-08-20"));
             Assert.That(milestone.DueDate, Is.EqualTo("2017-09-20"));
+            Assert.That(milestone.ProjectId, scope == MilestoneScope.Projects ? Is.EqualTo(id) : Is.Null);
+            Assert.That(milestone.GroupId, scope == MilestoneScope.Groups ? Is.EqualTo(id) : Is.Null);
 
             return milestone;
         }
@@ -100,6 +102,8 @@ namespace NGitLab.Tests.Milestone
             Assert.That(updatedMilestone.StartDate, Is.EqualTo("2018-08-20"));
             Assert.That(updatedMilestone.DueDate, Is.EqualTo("2018-09-20"));
             Assert.That(updatedMilestone.State, Is.EqualTo(milestone.State));
+            Assert.That(milestone.ProjectId, scope == MilestoneScope.Projects ? Is.EqualTo(id) : Is.Null);
+            Assert.That(milestone.GroupId, scope == MilestoneScope.Groups ? Is.EqualTo(id) : Is.Null);
 
             return updatedMilestone;
         }
@@ -118,6 +122,8 @@ namespace NGitLab.Tests.Milestone
             Assert.That(updatedMilestone.StartDate, Is.EqualTo(milestone.StartDate));
             Assert.That(updatedMilestone.DueDate, Is.EqualTo(milestone.DueDate));
             Assert.That(updatedMilestone.State, Is.EqualTo(milestone.State));
+            Assert.That(updatedMilestone.ProjectId, scope == MilestoneScope.Projects ? Is.EqualTo(id) : Is.Null);
+            Assert.That(updatedMilestone.GroupId, scope == MilestoneScope.Groups ? Is.EqualTo(id) : Is.Null);
 
             return updatedMilestone;
         }
@@ -125,15 +131,17 @@ namespace NGitLab.Tests.Milestone
         private static Models.Milestone ActivateMilestone(GitLabTestContext context, MilestoneScope scope, int id, Models.Milestone milestone)
         {
             var milestoneClient = scope == MilestoneScope.Projects ? context.Client.GetMilestone(id) : context.Client.GetGroupMilestone(id);
-            var closedMilestone = milestoneClient.Activate(milestone.Id);
+            var activeMilestone = milestoneClient.Activate(milestone.Id);
 
-            Assert.That(closedMilestone.State, Is.EqualTo(nameof(MilestoneState.active)));
-            Assert.That(closedMilestone.Title, Is.EqualTo(milestone.Title));
-            Assert.That(closedMilestone.Description, Is.EqualTo(milestone.Description));
-            Assert.That(closedMilestone.StartDate, Is.EqualTo(milestone.StartDate));
-            Assert.That(closedMilestone.DueDate, Is.EqualTo(milestone.DueDate));
+            Assert.That(activeMilestone.State, Is.EqualTo(nameof(MilestoneState.active)));
+            Assert.That(activeMilestone.Title, Is.EqualTo(milestone.Title));
+            Assert.That(activeMilestone.Description, Is.EqualTo(milestone.Description));
+            Assert.That(activeMilestone.StartDate, Is.EqualTo(milestone.StartDate));
+            Assert.That(activeMilestone.DueDate, Is.EqualTo(milestone.DueDate));
+            Assert.That(activeMilestone.ProjectId, scope == MilestoneScope.Projects ? Is.EqualTo(id) : Is.Null);
+            Assert.That(activeMilestone.GroupId, scope == MilestoneScope.Groups ? Is.EqualTo(id) : Is.Null);
 
-            return closedMilestone;
+            return activeMilestone;
         }
 
         private static Models.Milestone CloseMilestone(GitLabTestContext context, MilestoneScope scope, int id, Models.Milestone milestone)
@@ -146,6 +154,8 @@ namespace NGitLab.Tests.Milestone
             Assert.That(closedMilestone.Description, Is.EqualTo(milestone.Description));
             Assert.That(closedMilestone.StartDate, Is.EqualTo(milestone.StartDate));
             Assert.That(closedMilestone.DueDate, Is.EqualTo(milestone.DueDate));
+            Assert.That(closedMilestone.ProjectId, scope == MilestoneScope.Projects ? Is.EqualTo(id) : Is.Null);
+            Assert.That(closedMilestone.GroupId, scope == MilestoneScope.Groups ? Is.EqualTo(id) : Is.Null);
 
             return closedMilestone;
         }
