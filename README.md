@@ -18,9 +18,11 @@ For further info about the GitLab API, refer to [the official documentation](htt
 
 ## Where can I get it?
 
-Get it from [NuGet](https://www.nuget.org/packages/NGitLab). You can simply install it with the Package Manager console:
+Get it from [nuget.org](https://www.nuget.org/packages/NGitLab). You can simply install it using the `dotnet` CLI:
 
-> PM> Install-Package NGitLab
+```PowerShell
+dotnet add package NGitLab
+```
 
 ## Running Unit Tests locally
 
