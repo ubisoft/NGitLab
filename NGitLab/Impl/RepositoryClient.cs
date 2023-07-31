@@ -24,7 +24,7 @@ namespace NGitLab.Impl
 
         public ITagClient Tags => new TagClient(_api, _repoPath);
 
-        public IContributorClient Contributors => new ContributorClient(_api, _repoPath, _projectId);
+        public IContributorClient Contributors => new ContributorClient(_api, _repoPath);
 
         public IEnumerable<Tree> Tree => _api.Get().GetAll<Tree>(_repoPath + "/tree");
 

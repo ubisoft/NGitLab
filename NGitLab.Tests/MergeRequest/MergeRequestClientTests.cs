@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Meziantou.Framework.Versioning;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NuGet.Versioning;
@@ -49,6 +48,11 @@ namespace NGitLab.Tests
             //   .ConfigureAwait(false);
             var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
             Assert.IsTrue(commits.Any(), "Can return the commits");
+
+            if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.6,)"), out _))
+                Assert.IsNotNull(mergeRequest.DetailedMergeStatus.EnumValue);
+            else
+                Assert.IsNull(mergeRequest.DetailedMergeStatus.EnumValue);
         }
 
         [Test]
@@ -83,7 +87,12 @@ namespace NGitLab.Tests
                 "There should be a 1-commit divergence between the default branch NOW and its state at the moment the MR was created");
 
             RebaseMergeRequest(mergeRequestClient, mergeRequest);
-            var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
+
+            var commits = await GitLabTestContext.RetryUntilAsync(
+                () => mergeRequestClient.Commits(mergeRequest.Iid).All,
+                commits => commits.Any(),
+                TimeSpan.FromSeconds(10));
+
             Assert.IsTrue(commits.Any(), "Can return the commits");
         }
 
@@ -121,7 +130,11 @@ namespace NGitLab.Tests
             var rebaseResult = await mergeRequestClient.RebaseAsync(mergeRequest.Iid, new MergeRequestRebase { SkipCi = true });
             Assert.IsTrue(rebaseResult.RebaseInProgress);
 
-            var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
+            var commits = await GitLabTestContext.RetryUntilAsync(
+                () => mergeRequestClient.Commits(mergeRequest.Iid).All,
+                commits => commits.Any(),
+                TimeSpan.FromSeconds(10));
+
             Assert.IsTrue(commits.Any(), "Can return the commits");
         }
 
@@ -178,7 +191,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
 
             // https://about.gitlab.com/releases/2021/04/22/gitlab-13-11-released/#removal-of-merge-request-approvers-endpoint-in-favor-of-approval-rules-api
-            context.ReportTestAsInconclusiveIfVersionOutOfRange(VersionRange.Parse("[,13.11)"));
+            context.ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange.Parse("[,13.11)"));
 
             var (project, mergeRequest) = context.CreateMergeRequest();
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
@@ -276,7 +289,11 @@ namespace NGitLab.Tests
             var (project, mergeRequest) = context.CreateMergeRequest();
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
-            var versions = mergeRequestClient.GetVersionsAsync(mergeRequest.Iid);
+            var versions = await GitLabTestContext.RetryUntilAsync(
+                () => mergeRequestClient.GetVersionsAsync(mergeRequest.Iid),
+                versions => versions.Any(),
+                TimeSpan.FromSeconds(10));
+
             var version = versions.First();
 
             Assert.AreEqual(mergeRequest.Sha, version.HeadCommitSha);

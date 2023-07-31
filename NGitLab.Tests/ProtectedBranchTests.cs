@@ -33,7 +33,7 @@ namespace NGitLab.Tests
                 {
                     new AccessLevelInfo
                     {
-                        AccessLevel = AccessLevel.NoAccess,
+                        AccessLevel = AccessLevel.Admin,
                         Description = "Example",
                     },
                 },

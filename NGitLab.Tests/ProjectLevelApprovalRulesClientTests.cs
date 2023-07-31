@@ -16,7 +16,7 @@ namespace NGitLab.Tests
         public async Task SetUp()
         {
             context = await GitLabTestContext.CreateAsync();
-            context.ReportTestAsInconclusiveIfVersionOutOfRange(SupportedVersionRange);
+            context.ReportTestAsInconclusiveIfGitLabVersionOutOfRange(SupportedVersionRange);
         }
 
         [TearDown]

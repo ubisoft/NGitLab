@@ -34,6 +34,25 @@ namespace NGitLab.Mock
 
         public string WebUrl => Server.MakeUrl(UserName);
 
+        public bool Bot
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(UserName))
+                    return false;
+
+                var nameParts = UserName.Split('_');
+
+                if (nameParts.Length != 4)
+                    return false;
+
+                if (!string.Equals(nameParts[0], "project", StringComparison.Ordinal) && !string.Equals(nameParts[0], "group", StringComparison.Ordinal))
+                    return false;
+
+                return int.TryParse(nameParts[1], out var _) && string.Equals("bot", nameParts[2], StringComparison.Ordinal);
+            }
+        }
+
         public Models.User ToClientUser()
         {
             var user = new Models.User();
@@ -59,6 +78,7 @@ namespace NGitLab.Mock
             instance.AvatarURL = AvatarUrl;
             instance.CreatedAt = CreatedAt;
             instance.Identities = Identities;
+            instance.Bot = Bot;
 
             if (IsAdmin)
             {

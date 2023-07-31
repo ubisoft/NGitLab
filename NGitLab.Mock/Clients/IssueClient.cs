@@ -302,6 +302,16 @@ namespace NGitLab.Mock.Clients
             return GetById(issueId);
         }
 
+        public GitLabCollectionResponse<Models.Issue> LinkedToAsync(int projectId, int issueId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CreateLinkBetweenIssues(int sourceProjectId, int sourceIssueId, int targetProjectId, int targetIssueId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Models.Issue GetById(int issueId)
         {
             using (Context.BeginOperationScope())

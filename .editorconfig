@@ -73,10 +73,10 @@ csharp_style_var_for_built_in_types = true : suggestion
 csharp_style_var_when_type_is_apparent = true : warning
 
 # Expression-Bodied members
-csharp_style_expression_bodied_accessors = true : suggestion
-csharp_style_expression_bodied_indexers = true : suggestion
-csharp_style_expression_bodied_operators = true : suggestion
-csharp_style_expression_bodied_properties = true : suggestion
+csharp_style_expression_bodied_accessors = true:suggestion
+csharp_style_expression_bodied_indexers = true:suggestion
+csharp_style_expression_bodied_operators = true:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
 # Explicitly disabled due to difference in coding style between source and tests
 #csharp_style_expression_bodied_constructors = true : warning
 #csharp_style_expression_bodied_methods = true : warning
@@ -101,7 +101,7 @@ csharp_style_conditional_delegate_call = true : warning
 csharp_style_throw_expression = true : warning
 
 # Code block preferences
-csharp_prefer_braces = when_multiline : suggestion
+csharp_prefer_braces = when_multiline:suggestion
 
 ## Formatting conventions
 # Dotnet formatting settings:
@@ -141,6 +141,16 @@ csharp_space_between_method_call_empty_parameter_list_parentheses = false
 # Wrapping options
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = false
+csharp_using_directive_placement = outside_namespace:silent
+csharp_prefer_simple_using_statement = true:suggestion
+csharp_style_namespace_declarations = block_scoped:silent
+csharp_style_prefer_method_group_conversion = true:silent
+csharp_style_prefer_top_level_statements = true:silent
+csharp_style_expression_bodied_methods = false:silent
+csharp_style_expression_bodied_constructors = false:silent
+csharp_style_expression_bodied_lambdas = true:silent
+csharp_style_expression_bodied_local_functions = false:silent
+dotnet_diagnostic.SA1507.severity = error
 
 ## Naming conventions
 [*.{cs,vb}]
@@ -159,7 +169,7 @@ dotnet_naming_style.non_private_static_field_style.capitalization = pascal_case
 # Constants are PascalCase
 dotnet_naming_rule.constants_should_be_pascal_case.severity = suggestion
 dotnet_naming_rule.constants_should_be_pascal_case.symbols = constants
-dotnet_naming_rule.constants_should_be_pascal_case.style = constant_style
+dotnet_naming_rule.constants_should_be_pascal_case.style = non_private_static_field_style
 
 dotnet_naming_symbols.constants.applicable_kinds = field, local
 dotnet_naming_symbols.constants.required_modifiers = const
@@ -198,7 +208,7 @@ dotnet_naming_style.camel_case_style.capitalization = camel_case
 # Local functions are PascalCase
 dotnet_naming_rule.local_functions_should_be_pascal_case.severity = suggestion
 dotnet_naming_rule.local_functions_should_be_pascal_case.symbols = local_functions
-dotnet_naming_rule.local_functions_should_be_pascal_case.style = local_function_style
+dotnet_naming_rule.local_functions_should_be_pascal_case.style = non_private_static_field_style
 
 dotnet_naming_symbols.local_functions.applicable_kinds = local_function
 dotnet_naming_style.local_function_style.capitalization = pascal_case
@@ -216,7 +226,7 @@ dotnet_naming_symbols.type_parameter_symbol.applicable_accessibilities = *
 # By default, name items with PascalCase
 dotnet_naming_rule.members_should_be_pascal_case.severity = suggestion
 dotnet_naming_rule.members_should_be_pascal_case.symbols = all_members
-dotnet_naming_rule.members_should_be_pascal_case.style = pascal_case_style
+dotnet_naming_rule.members_should_be_pascal_case.style = non_private_static_field_style
 
 dotnet_naming_symbols.all_members.applicable_kinds = *
 
@@ -373,3 +383,6 @@ dotnet_diagnostic.SA1636.severity = none
 
 # SA1649: File name should match first type name
 dotnet_diagnostic.SA1649.severity = none
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+tab_width = 4
+end_of_line = crlf

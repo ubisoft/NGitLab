@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -72,7 +73,10 @@ namespace NGitLab.Tests
                 Title = mergeRequestTitle,
             });
 
-            var mergeRequests = context.Client.GetCommits(project.Id).GetRelatedMergeRequestsAsync(new RelatedMergeRequestsQuery { Sha = commit.Id });
+            var mergeRequests = await GitLabTestContext.RetryUntilAsync(
+                () => context.Client.GetCommits(project.Id).GetRelatedMergeRequestsAsync(new RelatedMergeRequestsQuery { Sha = commit.Id }),
+                mergeRequests => mergeRequests.Any(),
+                TimeSpan.FromSeconds(10));
 
             var mergeRequest = mergeRequests.Single();
             Assert.AreEqual(mergeRequestTitle, mergeRequest.Title);
