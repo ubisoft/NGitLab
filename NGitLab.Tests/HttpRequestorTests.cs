@@ -125,6 +125,22 @@ namespace NGitLab.Tests
             Assert.AreEqual(commonUserSession.Id, issue.Author.Id);
         }
 
+        [Test]
+        public async Task Test_authorization_header_uses_bearer()
+        {
+            // Arrange
+            using var context = await GitLabTestContext.CreateAsync();
+            var commonUserClient = context.Client;
+            string expectedHeaderValue = string.Concat("Bearer ", context.DockerContainer.Credentials.UserToken);
+
+            // Act
+            var project = commonUserClient.Projects.Accessible.First();
+
+            // Assert
+            var actualHeaderValue = context.LastRequest.Headers[HttpRequestHeader.Authorization];
+            Assert.AreEqual(expectedHeaderValue, actualHeaderValue);
+        }
+
         private sealed class MockRequestOptions : RequestOptions
         {
             public string HttpRequestSudoHeader { get; set; }
