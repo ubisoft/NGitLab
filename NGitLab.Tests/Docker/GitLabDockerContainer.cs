@@ -107,6 +107,10 @@ namespace NGitLab.Tests.Docker
             {
                 await client.Images.ListImagesAsync(new ImagesListParameters()).ConfigureAwait(false);
             }
+            catch (ArgumentOutOfRangeException ex) when (ex.Message.StartsWith("The added or subtracted value results in an un-representable DateTime.", StringComparison.Ordinal))
+            {
+                // Ignore https://github.com/rancher-sandbox/rancher-desktop/issues/5145
+            }
             catch (Exception ex)
             {
                 s_creationErrorMessage = "Cannot connect to Docker service. Make sure it's running on your machine before launching any tests.\nDetails: " + ex;
