@@ -2281,6 +2281,7 @@ NGitLab.Models.MergeRequestStateEvent.close = 0 -> NGitLab.Models.MergeRequestSt
 NGitLab.Models.MergeRequestStateEvent.merge = 2 -> NGitLab.Models.MergeRequestStateEvent
 NGitLab.Models.MergeRequestStateEvent.reopen = 1 -> NGitLab.Models.MergeRequestStateEvent
 NGitLab.Models.MergeRequestUpdate
+NGitLab.Models.MergeRequestUpdate.AddLabels -> string
 NGitLab.Models.MergeRequestUpdate.AllowCollaboration -> bool?
 NGitLab.Models.MergeRequestUpdate.AssigneeId -> int?
 NGitLab.Models.MergeRequestUpdate.AssigneeIds -> int[]
@@ -2289,6 +2290,7 @@ NGitLab.Models.MergeRequestUpdate.Labels -> string
 NGitLab.Models.MergeRequestUpdate.MergeRequestUpdate() -> void
 NGitLab.Models.MergeRequestUpdate.MilestoneId -> int?
 NGitLab.Models.MergeRequestUpdate.NewState -> string
+NGitLab.Models.MergeRequestUpdate.RemoveLabels -> string
 NGitLab.Models.MergeRequestUpdate.RemoveSourceBranch -> bool?
 NGitLab.Models.MergeRequestUpdate.ReviewerIds -> int[]
 NGitLab.Models.MergeRequestUpdate.SourceBranch -> string
