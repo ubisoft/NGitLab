@@ -11,7 +11,6 @@ namespace NGitLab.Models
         [JsonPropertyName("name")]
         public string Name;
 
-        [Required]
         [JsonPropertyName("namespace_id")]
         public string NamespaceId;
 
