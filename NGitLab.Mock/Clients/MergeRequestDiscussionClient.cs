@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -28,6 +30,21 @@ namespace NGitLab.Mock.Clients
                     return GetMergeRequest().GetDiscussions().ToList();
                 }
             }
+        }
+
+        public MergeRequestDiscussion Get(string id)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var discussions = GetMergeRequest().GetDiscussions();
+                var discussion = discussions.FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.Ordinal));
+                return discussion ?? throw new GitLabNotFoundException();
+            }
+        }
+
+        public Task<MergeRequestDiscussion> GetAsync(string id, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(Get(id));
         }
 
         public MergeRequestDiscussion Add(Models.MergeRequestComment comment)
@@ -71,7 +88,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var discussions = GetMergeRequest().GetDiscussions();
-                var discussion = discussions.First(x => string.Equals(x.Id, resolve.Id, StringComparison.Ordinal));
+                var discussion = discussions.FirstOrDefault(x => string.Equals(x.Id, resolve.Id, StringComparison.Ordinal));
                 if (discussion == null)
                     throw new GitLabNotFoundException();
 
@@ -89,7 +106,7 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var discussions = GetMergeRequest().GetDiscussions();
-                var discussion = discussions.First(x => string.Equals(x.Id, discussionId, StringComparison.Ordinal));
+                var discussion = discussions.FirstOrDefault(x => string.Equals(x.Id, discussionId, StringComparison.Ordinal));
                 if (discussion == null)
                     throw new GitLabNotFoundException();
 

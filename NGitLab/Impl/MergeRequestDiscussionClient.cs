@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -16,6 +18,10 @@ namespace NGitLab.Impl
         }
 
         public IEnumerable<MergeRequestDiscussion> All => _api.Get().GetAll<MergeRequestDiscussion>(_discussionsPath);
+
+        public MergeRequestDiscussion Get(string id) => _api.Get().To<MergeRequestDiscussion>($"{_discussionsPath}/{id}");
+
+        public Task<MergeRequestDiscussion> GetAsync(string id, CancellationToken cancellationToken = default) => _api.Get().ToAsync<MergeRequestDiscussion>($"{_discussionsPath}/{id}", cancellationToken);
 
         public MergeRequestDiscussion Add(MergeRequestDiscussionCreate comment) => _api.Post().With(comment).To<MergeRequestDiscussion>(_discussionsPath);
 
