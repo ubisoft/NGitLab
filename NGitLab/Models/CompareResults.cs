@@ -2,7 +2,7 @@
 
 namespace NGitLab.Models
 {
-    public class CompareInfo
+    public class CompareResults
     {
         [JsonPropertyName("commit")]
         public Commit Commit { get; set; }

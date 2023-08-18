@@ -96,14 +96,9 @@ namespace NGitLab.Impl
             return allCommits.Take(request.MaxResults);
         }
 
-        public CompareInfo Compare(Sha1 from, Sha1 to)
+        public CompareResults Compare(CompareQuery query)
         {
-            return _api.Get().To<CompareInfo>(_repoPath + $@"/compare?from={from}&to={to}");
-        }
-
-        public CompareInfo Compare(string source, string target)
-        {
-            return _api.Get().To<CompareInfo>(_repoPath + $@"/compare?from={target}&to={source}");
+            return _api.Get().To<CompareResults>(_repoPath + $@"/compare?from={query.Target}&to={query.Source}");
         }
 
         public Commit GetCommit(Sha1 sha) => _api.Get().To<Commit>(_repoPath + "/commits/" + sha);

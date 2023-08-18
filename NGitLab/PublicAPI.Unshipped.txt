@@ -723,8 +723,7 @@ NGitLab.Impl.ProjectLevelApprovalRulesClient.UpdateProjectLevelApprovalRule(int 
 NGitLab.Impl.RepositoryClient
 NGitLab.Impl.RepositoryClient.Branches.get -> NGitLab.IBranchClient
 NGitLab.Impl.RepositoryClient.Commits.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
-NGitLab.Impl.RepositoryClient.Compare(NGitLab.Sha1 from, NGitLab.Sha1 to) -> NGitLab.Models.CompareInfo
-NGitLab.Impl.RepositoryClient.Compare(string source, string target) -> NGitLab.Models.CompareInfo
+NGitLab.Impl.RepositoryClient.Compare(NGitLab.Models.CompareQuery query) -> NGitLab.Models.CompareResults
 NGitLab.Impl.RepositoryClient.Contributors.get -> NGitLab.IContributorClient
 NGitLab.Impl.RepositoryClient.Files.get -> NGitLab.IFilesClient
 NGitLab.Impl.RepositoryClient.GetArchive(System.Action<System.IO.Stream> parser) -> void
@@ -926,8 +925,7 @@ NGitLab.IReleaseLinkClient.Update(int id, NGitLab.Models.ReleaseLinkUpdate data)
 NGitLab.IRepositoryClient
 NGitLab.IRepositoryClient.Branches.get -> NGitLab.IBranchClient
 NGitLab.IRepositoryClient.Commits.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
-NGitLab.IRepositoryClient.Compare(NGitLab.Sha1 from, NGitLab.Sha1 to) -> NGitLab.Models.CompareInfo
-NGitLab.IRepositoryClient.Compare(string source, string target) -> NGitLab.Models.CompareInfo
+NGitLab.IRepositoryClient.Compare(NGitLab.Models.CompareQuery query) -> NGitLab.Models.CompareResults
 NGitLab.IRepositoryClient.Contributors.get -> NGitLab.IContributorClient
 NGitLab.IRepositoryClient.Files.get -> NGitLab.IFilesClient
 NGitLab.IRepositoryClient.GetArchive(System.Action<System.IO.Stream> parser) -> void
@@ -1318,18 +1316,24 @@ NGitLab.Models.CommitStatusCreate.Ref -> string
 NGitLab.Models.CommitStatusCreate.State -> string
 NGitLab.Models.CommitStatusCreate.Status -> string
 NGitLab.Models.CommitStatusCreate.TargetUrl -> string
-NGitLab.Models.CompareInfo
-NGitLab.Models.CompareInfo.Commit.get -> NGitLab.Models.Commit
-NGitLab.Models.CompareInfo.Commit.set -> void
-NGitLab.Models.CompareInfo.Commits.get -> NGitLab.Models.Commit[]
-NGitLab.Models.CompareInfo.Commits.set -> void
-NGitLab.Models.CompareInfo.CompareInfo() -> void
-NGitLab.Models.CompareInfo.CompareSameRefs.get -> bool
-NGitLab.Models.CompareInfo.CompareSameRefs.set -> void
-NGitLab.Models.CompareInfo.CompareTimeout.get -> bool
-NGitLab.Models.CompareInfo.CompareTimeout.set -> void
-NGitLab.Models.CompareInfo.Diff.get -> NGitLab.Models.Diff[]
-NGitLab.Models.CompareInfo.Diff.set -> void
+NGitLab.Models.CompareQuery
+NGitLab.Models.CompareQuery.CompareQuery(string source, string target) -> void
+NGitLab.Models.CompareQuery.Source.get -> string
+NGitLab.Models.CompareQuery.Source.set -> void
+NGitLab.Models.CompareQuery.Target.get -> string
+NGitLab.Models.CompareQuery.Target.set -> void
+NGitLab.Models.CompareResults
+NGitLab.Models.CompareResults.Commit.get -> NGitLab.Models.Commit
+NGitLab.Models.CompareResults.Commit.set -> void
+NGitLab.Models.CompareResults.Commits.get -> NGitLab.Models.Commit[]
+NGitLab.Models.CompareResults.Commits.set -> void
+NGitLab.Models.CompareResults.CompareResults() -> void
+NGitLab.Models.CompareResults.CompareSameRefs.get -> bool
+NGitLab.Models.CompareResults.CompareSameRefs.set -> void
+NGitLab.Models.CompareResults.CompareTimeout.get -> bool
+NGitLab.Models.CompareResults.CompareTimeout.set -> void
+NGitLab.Models.CompareResults.Diff.get -> NGitLab.Models.Diff[]
+NGitLab.Models.CompareResults.Diff.set -> void
 NGitLab.Models.Contributor
 NGitLab.Models.Contributor.Addition -> int
 NGitLab.Models.Contributor.Commits -> int

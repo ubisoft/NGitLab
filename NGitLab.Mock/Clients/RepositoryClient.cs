@@ -123,12 +123,7 @@ namespace NGitLab.Mock.Clients
             return commit.ToCommitClient(project);
         }
 
-        public CompareInfo Compare(Sha1 from, Sha1 to)
-        {
-            throw new NotImplementedException();
-        }
-
-        public CompareInfo Compare(string source, string target)
+        public CompareResults Compare(CompareQuery query)
         {
             throw new NotImplementedException();
         }

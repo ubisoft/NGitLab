@@ -49,8 +49,9 @@ namespace NGitLab
 
         IProjectHooksClient ProjectHooks { get; }
 
-        CompareInfo Compare(Sha1 from, Sha1 to);
-
-        CompareInfo Compare(string source, string target);
+        /// <summary>
+        /// Compare two branches/tags/commit hashes
+        /// </summary>
+        CompareResults Compare(CompareQuery query);
     }
 }
