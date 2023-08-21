@@ -31,6 +31,12 @@ namespace NGitLab.Models
         [JsonPropertyName("labels")]
         public string Labels;
 
+        [JsonPropertyName("add_labels")]
+        public string AddLabels;
+
+        [JsonPropertyName("remove_labels")]
+        public string RemoveLabels;
+
         [JsonPropertyName("milestone_id")]
         public int? MilestoneId;
 
