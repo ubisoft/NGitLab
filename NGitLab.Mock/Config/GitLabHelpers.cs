@@ -772,6 +772,8 @@ namespace NGitLab.Mock.Config
                 milestone.CreatedAt = createdAt;
                 milestone.UpdatedAt = updatedAt;
                 milestone.ClosedAt = closedAt;
+
+                configure?.Invoke(milestone);
             });
         }
 
@@ -821,6 +823,8 @@ namespace NGitLab.Mock.Config
                 milestone.CreatedAt = createdAt;
                 milestone.UpdatedAt = updatedAt;
                 milestone.ClosedAt = closedAt;
+
+                configure.Invoke(milestone);
             });
         }
 
@@ -1458,23 +1462,17 @@ namespace NGitLab.Mock.Config
 
         private static void CreateMilestone(Group group, GitLabMilestone milestone)
         {
-            var mlt = new Milestone
-            {
-                Id = milestone.Id,
-                Title = milestone.Title,
-                Description = milestone.Description,
-                DueDate = milestone.DueDate ?? DateTimeOffset.UtcNow,
-                StartDate = milestone.StartDate ?? DateTimeOffset.UtcNow,
-                UpdatedAt = milestone.UpdatedAt ?? DateTimeOffset.UtcNow,
-                ClosedAt = milestone.ClosedAt,
-            };
+            var mlt = CreateMilestone(milestone);
             group.Milestones.Add(mlt);
-
-            if (mlt.ClosedAt != null && mlt.UpdatedAt > mlt.ClosedAt)
-                mlt.UpdatedAt = (DateTimeOffset)mlt.ClosedAt;
         }
 
         private static void CreateMilestone(Project project, GitLabMilestone milestone)
+        {
+            var mlt = CreateMilestone(milestone);
+            project.Milestones.Add(mlt);
+        }
+
+        private static Milestone CreateMilestone(GitLabMilestone milestone)
         {
             var mlt = new Milestone
             {
@@ -1486,10 +1484,11 @@ namespace NGitLab.Mock.Config
                 UpdatedAt = milestone.UpdatedAt ?? DateTimeOffset.UtcNow,
                 ClosedAt = milestone.ClosedAt,
             };
-            project.Milestones.Add(mlt);
 
             if (mlt.ClosedAt != null && mlt.UpdatedAt > mlt.ClosedAt)
+            {
                 mlt.UpdatedAt = (DateTimeOffset)mlt.ClosedAt;
+            }
         }
 
         private static void CreateComment(GitLabServer server, Issue issue, GitLabComment comment)
