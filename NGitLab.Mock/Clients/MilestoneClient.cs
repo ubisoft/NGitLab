@@ -60,7 +60,7 @@ namespace NGitLab.Mock
                         mergeRequests = milestone.Project.MergeRequests;
                         break;
                     default:
-                        throw new NotImplementedException();
+                        throw new NotSupportedException($"{Scope} milestone is not supported yet.");
                 }
 
                 mergeRequests = mergeRequests.Where(mr => mr.Milestone == milestone);
@@ -106,7 +106,7 @@ namespace NGitLab.Mock
                         project.Milestones.Add(ms);
                         break;
                     default:
-                        throw new NotImplementedException();
+                        throw new NotSupportedException($"{Scope} milestone is not supported yet.");
                 }
 
                 return ms.ToClientMilestone();
@@ -127,7 +127,7 @@ namespace NGitLab.Mock
                         milestone.Project.Milestones.Remove(milestone);
                         break;
                     default:
-                        throw new NotImplementedException();
+                        throw new NotSupportedException($"{Scope} milestone is not supported yet.");
                 }
             }
         }
@@ -149,7 +149,7 @@ namespace NGitLab.Mock
                         milestones = project.Milestones;
                         break;
                     default:
-                        throw new NotImplementedException();
+                        throw new NotSupportedException($"{Scope} milestone is not supported yet.");
                 }
 
                 if (query.State != null)
@@ -211,7 +211,7 @@ namespace NGitLab.Mock
                     milestone = project.Milestones.FirstOrDefault(x => x.Id == milestoneId);
                     break;
                 default:
-                    throw new NotImplementedException();
+                    throw new NotSupportedException($"{Scope} milestone is not supported yet.");
             }
 
             return milestone ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
