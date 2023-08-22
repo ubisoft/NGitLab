@@ -824,7 +824,7 @@ namespace NGitLab.Mock.Config
                 milestone.UpdatedAt = updatedAt;
                 milestone.ClosedAt = closedAt;
 
-                configure.Invoke(milestone);
+                configure?.Invoke(milestone);
             });
         }
 
