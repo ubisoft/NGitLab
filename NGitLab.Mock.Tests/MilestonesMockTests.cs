@@ -103,17 +103,19 @@ namespace NGitLab.Mock.Tests
         [Test]
         public void Test_projects_merge_request_can_be_found_from_milestone()
         {
+            const int projectId = 1;
+            const int mileStoneId = 1;
             using var server = new GitLabConfig()
                 .WithUser("user1", isDefault: true)
-                .WithProject("Test", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
-                    .WithMilestone("Milestone 1", id: 1)
+                .WithProject("Test", id: projectId, addDefaultUserAsMaintainer: true, configure: project => project
+                    .WithMilestone("Milestone 1", id: mileStoneId)
                     .WithMergeRequest("branch-01", title: "Merge request 1", milestone: "Milestone 1")
                     .WithMergeRequest("branch-02", title: "Merge request 2", milestone: "Milestone 1")
                     .WithMergeRequest("branch-03", title: "Merge request 3", milestone: "Milestone 2"))
                 .BuildServer();
 
             var client = server.CreateClient();
-            var mergeRequests = client.GetMilestone(1).GetMergeRequests(1).ToArray();
+            var mergeRequests = client.GetMilestone(projectId).GetMergeRequests(milestoneId).ToArray();
             Assert.AreEqual(2, mergeRequests.Length, "Merge requests count is invalid");
         }
 
