@@ -1489,6 +1489,8 @@ namespace NGitLab.Mock.Config
             {
                 mlt.UpdatedAt = (DateTimeOffset)mlt.ClosedAt;
             }
+
+            return mlt;
         }
 
         private static void CreateComment(GitLabServer server, Issue issue, GitLabComment comment)
