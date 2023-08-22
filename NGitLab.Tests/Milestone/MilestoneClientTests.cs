@@ -94,7 +94,7 @@ namespace NGitLab.Tests.Milestone
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
             mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { MilestoneId = milestone.Id });
 
-            var mergeRequests = milestoneClient.GetMergeRequests(milestone.Id).ToList();
+            var mergeRequests = milestoneClient.GetMergeRequests(milestone.Id).ToArray();
             Assert.AreEqual(1, mergeRequests.Count, "The query retrieved all merged requests that assigned to the milestone.");
         }
 
