@@ -364,6 +364,8 @@ NGitLab.IMergeRequestDiscussionClient
 NGitLab.IMergeRequestDiscussionClient.Add(NGitLab.Models.MergeRequestDiscussionCreate discussion) -> NGitLab.Models.MergeRequestDiscussion
 NGitLab.IMergeRequestDiscussionClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestDiscussion>
 NGitLab.IMergeRequestDiscussionClient.Delete(string discussionId, long commentId) -> void
+NGitLab.IMergeRequestDiscussionClient.Get(string id) -> NGitLab.Models.MergeRequestDiscussion
+NGitLab.IMergeRequestDiscussionClient.GetAsync(string id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.MergeRequestDiscussion>
 NGitLab.IMergeRequestDiscussionClient.Resolve(NGitLab.Models.MergeRequestDiscussionResolve resolve) -> NGitLab.Models.MergeRequestDiscussion
 NGitLab.IMilestoneClient
 NGitLab.IMilestoneClient.Activate(int milestoneId) -> NGitLab.Models.Milestone
@@ -624,6 +626,8 @@ NGitLab.Impl.MergeRequestDiscussionClient
 NGitLab.Impl.MergeRequestDiscussionClient.Add(NGitLab.Models.MergeRequestDiscussionCreate comment) -> NGitLab.Models.MergeRequestDiscussion
 NGitLab.Impl.MergeRequestDiscussionClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestDiscussion>
 NGitLab.Impl.MergeRequestDiscussionClient.Delete(string discussionId, long commentId) -> void
+NGitLab.Impl.MergeRequestDiscussionClient.Get(string id) -> NGitLab.Models.MergeRequestDiscussion
+NGitLab.Impl.MergeRequestDiscussionClient.GetAsync(string id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.MergeRequestDiscussion>
 NGitLab.Impl.MergeRequestDiscussionClient.MergeRequestDiscussionClient(NGitLab.Impl.API api, string projectPath, int mergeRequestIid) -> void
 NGitLab.Impl.MergeRequestDiscussionClient.Resolve(NGitLab.Models.MergeRequestDiscussionResolve resolve) -> NGitLab.Models.MergeRequestDiscussion
 NGitLab.Impl.MethodType

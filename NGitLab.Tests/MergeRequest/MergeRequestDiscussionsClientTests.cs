@@ -36,6 +36,26 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
+        public async Task GetDiscussion_DiscussionFound()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
+
+            const string discussionMessage = "Discussion for MR";
+            var newDiscussion = new MergeRequestDiscussionCreate
+            {
+                Body = discussionMessage,
+            };
+            var discussion = mergeRequestDiscussions.Add(newDiscussion);
+
+            var gotDiscussion = await mergeRequestDiscussions.GetAsync(discussion.Id);
+            Assert.NotNull(gotDiscussion);
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task EditCommentFromDiscussion_CommentEdited()
         {
             using var context = await GitLabTestContext.CreateAsync();
