@@ -53,6 +53,8 @@ namespace NGitLab.Mock.Config
         public DateTime? MergedAt { get; set; }
 
         public DateTime? ClosedAt { get; set; }
+
+        public string Milestone { get; set; }
     }
 
     public class GitLabMergeRequestsCollection : GitLabCollection<GitLabMergeRequest, GitLabProject>

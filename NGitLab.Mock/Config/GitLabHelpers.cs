@@ -582,8 +582,9 @@ namespace NGitLab.Mock.Config
         /// <param name="mergedAt">Merge date time.</param>
         /// <param name="approvers">Approvers usernames.</param>
         /// <param name="labels">Labels names.</param>
+        /// <param name="milestone">Milestone name.</param>
         /// <param name="configure">Configuration method</param>
-        public static GitLabProject WithMergeRequest(this GitLabProject project, string? sourceBranch = null, string? title = null, int id = default, string? targetBranch = null, string? description = null, string? author = null, string? assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string>? approvers = null, IEnumerable<string>? labels = null, Action<GitLabMergeRequest>? configure = null)
+        public static GitLabProject WithMergeRequest(this GitLabProject project, string? sourceBranch = null, string? title = null, int id = default, string? targetBranch = null, string? description = null, string? author = null, string? assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string>? approvers = null, IEnumerable<string>? labels = null, string? milestone = null, Action<GitLabMergeRequest>? configure = null)
         {
             return WithMergeRequest(project, sourceBranch, title, author, mergeRequest =>
             {
@@ -597,6 +598,8 @@ namespace NGitLab.Mock.Config
                 mergeRequest.UpdatedAt = updatedAt;
                 mergeRequest.ClosedAt = closedAt;
                 mergeRequest.MergedAt = mergedAt;
+                mergeRequest.Milestone = milestone;
+
                 if (labels != null)
                 {
                     foreach (var label in labels)
@@ -724,6 +727,57 @@ namespace NGitLab.Mock.Config
         }
 
         /// <summary>
+        /// Add milestone in group
+        /// </summary>
+        /// <param name="group">Group.</param>
+        /// <param name="title">Title (required)</param>
+        /// <param name="configure">Configuration method</param>
+        public static GitLabGroup WithMilestone(this GitLabGroup group, string title, Action<GitLabMilestone> configure)
+        {
+            return Configure(group, _ =>
+            {
+                var milestone = new GitLabMilestone
+                {
+                    Title = title ?? throw new ArgumentNullException(nameof(title)),
+                };
+
+                group.Milestones.Add(milestone);
+                configure(milestone);
+            });
+        }
+
+        /// <summary>
+        /// Add milestone in group
+        /// </summary>
+        /// <param name="group">Group.</param>
+        /// <param name="title">Title (required)</param>
+        /// <param name="id">Explicit ID (config increment)</param>
+        /// <param name="description">Description.</param>
+        /// <param name="dueDate">Due date time.</param>
+        /// <param name="startDate">Start date time.</param>
+        /// <param name="createdAt">Creation date time.</param>
+        /// <param name="updatedAt">Update date time.</param>
+        /// <param name="closedAt">Close date time.</param>
+        /// <param name="configure">Configuration method</param>
+        public static GitLabGroup WithMilestone(this GitLabGroup group, string title, int id = default, string? description = null, DateTime? dueDate = null, DateTime? startDate = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, Action<GitLabMilestone>? configure = null)
+        {
+            return WithMilestone(group, title, milestone =>
+            {
+                if (id != default)
+                    milestone.Id = id;
+
+                milestone.Description = description;
+                milestone.DueDate = dueDate;
+                milestone.StartDate = startDate;
+                milestone.CreatedAt = createdAt;
+                milestone.UpdatedAt = updatedAt;
+                milestone.ClosedAt = closedAt;
+
+                configure?.Invoke(milestone);
+            });
+        }
+
+        /// <summary>
         /// Add milestone in project
         /// </summary>
         /// <param name="project">Project.</param>
@@ -769,6 +823,8 @@ namespace NGitLab.Mock.Config
                 milestone.CreatedAt = createdAt;
                 milestone.UpdatedAt = updatedAt;
                 milestone.ClosedAt = closedAt;
+
+                configure?.Invoke(milestone);
             });
         }
 
@@ -1094,6 +1150,11 @@ namespace NGitLab.Mock.Config
             {
                 CreatePermission(server, grp, permission);
             }
+
+            foreach (var milestone in group.Milestones)
+            {
+                CreateMilestone(grp, milestone);
+            }
         }
 
         private static void CreateProject(GitLabServer server, GitLabProject project)
@@ -1346,6 +1407,7 @@ namespace NGitLab.Mock.Config
                 ClosedAt = mergeRequest.ClosedAt,
                 MergedAt = mergeRequest.MergedAt,
                 SourceProject = project,
+                Milestone = string.IsNullOrEmpty(mergeRequest.Milestone) ? null : GetOrCreateMilestone(project, mergeRequest.Milestone),
             };
 
             var endedAt = request.MergedAt ?? request.ClosedAt;
@@ -1398,7 +1460,19 @@ namespace NGitLab.Mock.Config
                 : new Permission(GetOrCreateUser(server, permission.User), permission.Level);
         }
 
+        private static void CreateMilestone(Group group, GitLabMilestone milestone)
+        {
+            var mlt = CreateMilestone(milestone);
+            group.Milestones.Add(mlt);
+        }
+
         private static void CreateMilestone(Project project, GitLabMilestone milestone)
+        {
+            var mlt = CreateMilestone(milestone);
+            project.Milestones.Add(mlt);
+        }
+
+        private static Milestone CreateMilestone(GitLabMilestone milestone)
         {
             var mlt = new Milestone
             {
@@ -1410,10 +1484,13 @@ namespace NGitLab.Mock.Config
                 UpdatedAt = milestone.UpdatedAt ?? DateTimeOffset.UtcNow,
                 ClosedAt = milestone.ClosedAt,
             };
-            project.Milestones.Add(mlt);
 
             if (mlt.ClosedAt != null && mlt.UpdatedAt > mlt.ClosedAt)
+            {
                 mlt.UpdatedAt = (DateTimeOffset)mlt.ClosedAt;
+            }
+
+            return mlt;
         }
 
         private static void CreateComment(GitLabServer server, Issue issue, GitLabComment comment)
@@ -1569,6 +1646,14 @@ namespace NGitLab.Mock.Config
         private static Milestone GetOrCreateMilestone(Project project, string title)
         {
             var milestone = project.Milestones.FirstOrDefault(x => string.Equals(x.Title, title, StringComparison.OrdinalIgnoreCase));
+
+            var group = project.Group;
+            while (milestone == null && group != null)
+            {
+                milestone = group.Milestones.FirstOrDefault(x => string.Equals(x.Title, title, StringComparison.OrdinalIgnoreCase));
+                group = group.Parent;
+            }
+
             if (milestone == null)
             {
                 milestone = new Milestone

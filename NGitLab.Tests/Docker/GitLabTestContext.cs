@@ -199,10 +199,10 @@ namespace NGitLab.Tests.Docker
             return client.Groups.Create(groupCreate);
         }
 
-        public (Project Project, MergeRequest MergeRequest) CreateMergeRequest()
+        public (Project Project, MergeRequest MergeRequest) CreateMergeRequest(Action<MergeRequestCreate> configure = null, Action<ProjectCreate> configureProject = null)
         {
             var client = Client;
-            var project = CreateProject(initializeWithCommits: true);
+            var project = CreateProject(configureProject, initializeWithCommits: true);
 
             const string BranchForMRName = "branch-for-mr";
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Create(new FileUpsert { Branch = project.DefaultBranch, CommitMessage = "test", Content = "test", Path = "test.md" }));
@@ -224,12 +224,15 @@ namespace NGitLab.Tests.Docker
 
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Update(new FileUpsert { Branch = BranchForMRName, CommitMessage = "test", Content = "test2", Path = "test.md" }));
 
-            var mr = client.GetMergeRequest(project.Id).Create(new MergeRequestCreate
+            var mergeRequestCreate = new MergeRequestCreate
             {
                 SourceBranch = BranchForMRName,
                 TargetBranch = project.DefaultBranch,
                 Title = "test",
-            });
+            };
+
+            configure?.Invoke(mergeRequestCreate);
+            var mr = client.GetMergeRequest(project.Id).Create(mergeRequestCreate);
 
             return (project, mr);
         }

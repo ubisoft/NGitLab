@@ -63,6 +63,41 @@ namespace NGitLab.Tests.Milestone
             DeleteMilestone(context, MilestoneScope.Groups, group.Id, milestone);
         }
 
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_project_milestone_merge_requests()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var (project, mergeRequest) = context.CreateMergeRequest();
+
+            var milestoneClient = context.Client.GetMilestone(project.Id);
+            var milestone = CreateMilestone(context, MilestoneScope.Projects, project.Id, "my-super-milestone");
+
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { MilestoneId = milestone.Id });
+
+            var mergeRequests = milestoneClient.GetMergeRequests(milestone.Id).ToArray();
+            Assert.AreEqual(1, mergeRequests.Length, "The query retrieved all merged requests that assigned to the milestone.");
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_group_milestone_merge_requests()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var group = context.CreateGroup();
+            var (project, mergeRequest) = context.CreateMergeRequest(configureProject: project => project.NamespaceId = group.Id.ToString());
+
+            var milestoneClient = context.Client.GetGroupMilestone(group.Id);
+            var milestone = CreateMilestone(context, MilestoneScope.Groups, group.Id, "my-super-milestone");
+
+            var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+            mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { MilestoneId = milestone.Id });
+
+            var mergeRequests = milestoneClient.GetMergeRequests(milestone.Id).ToArray();
+            Assert.AreEqual(1, mergeRequests.Length, "The query retrieved all merged requests that assigned to the milestone.");
+        }
+
         private static Models.Milestone CreateMilestone(GitLabTestContext context, MilestoneScope scope, int id, string title)
         {
             var milestoneClient = scope == MilestoneScope.Projects ? context.Client.GetMilestone(id) : context.Client.GetGroupMilestone(id);

@@ -373,6 +373,7 @@ NGitLab.IMilestoneClient.Close(int milestoneId) -> NGitLab.Models.Milestone
 NGitLab.IMilestoneClient.Create(NGitLab.Models.MilestoneCreate milestone) -> NGitLab.Models.Milestone
 NGitLab.IMilestoneClient.Delete(int milestoneId) -> void
 NGitLab.IMilestoneClient.Get(NGitLab.Models.MilestoneQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Milestone>
+NGitLab.IMilestoneClient.GetMergeRequests(int milestoneId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.IMilestoneClient.Scope.get -> NGitLab.Impl.MilestoneScope
 NGitLab.IMilestoneClient.this[int id].get -> NGitLab.Models.Milestone
 NGitLab.IMilestoneClient.Update(int milestoneId, NGitLab.Models.MilestoneUpdate milestone) -> NGitLab.Models.Milestone
@@ -642,6 +643,7 @@ NGitLab.Impl.MilestoneClient.Close(int milestoneId) -> NGitLab.Models.Milestone
 NGitLab.Impl.MilestoneClient.Create(NGitLab.Models.MilestoneCreate milestone) -> NGitLab.Models.Milestone
 NGitLab.Impl.MilestoneClient.Delete(int milestoneId) -> void
 NGitLab.Impl.MilestoneClient.Get(NGitLab.Models.MilestoneQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Milestone>
+NGitLab.Impl.MilestoneClient.GetMergeRequests(int milestoneId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.Impl.MilestoneClient.MilestoneClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.MilestoneClient.Scope.get -> NGitLab.Impl.MilestoneScope
 NGitLab.Impl.MilestoneClient.this[int id].get -> NGitLab.Models.Milestone

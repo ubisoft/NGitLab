@@ -99,5 +99,47 @@ namespace NGitLab.Mock.Tests
             Assert.AreEqual(1, activeMilestones.Length, "Active milestones count is invalid");
             Assert.AreEqual(0, closedMilestones.Length, "Closed milestones count is invalid");
         }
+
+        [Test]
+        public void Test_projects_merge_request_can_be_found_from_milestone()
+        {
+            const int ProjectId = 1;
+            const int MilestoneId = 1;
+            using var server = new GitLabConfig()
+                .WithUser("user1", isDefault: true)
+                .WithProject("Test", id: ProjectId, addDefaultUserAsMaintainer: true, configure: project => project
+                    .WithMilestone("Milestone 1", id: MilestoneId)
+                    .WithMergeRequest("branch-01", title: "Merge request 1", milestone: "Milestone 1")
+                    .WithMergeRequest("branch-02", title: "Merge request 2", milestone: "Milestone 1")
+                    .WithMergeRequest("branch-03", title: "Merge request 3", milestone: "Milestone 2"))
+                .BuildServer();
+
+            var client = server.CreateClient();
+            var mergeRequests = client.GetMilestone(ProjectId).GetMergeRequests(MilestoneId).ToArray();
+            Assert.AreEqual(2, mergeRequests.Length, "Merge requests count is invalid");
+        }
+
+        [Test]
+        public void Test_groups_merge_request_can_be_found_from_milestone()
+        {
+            const int projectId = 1;
+            const int milestoneId = 1;
+            using var server = new GitLabConfig()
+                .WithUser("user1", isDefault: true)
+                .WithGroup("parentGroup", id: projectId, configure: group => group
+                    .WithMilestone("Milestone 1", id: milestoneId))
+                .WithGroup("subGroup1", 2, @namespace: "parentGroup")
+                .WithGroup("subGroup2", 3, @namespace: "parentGroup")
+                .WithProject("project1", @namespace: "parentGroup/subGroup1", addDefaultUserAsMaintainer: true, configure: project => project
+                    .WithMergeRequest("branch-01", title: "Merge request 1", milestone: "Milestone 1")
+                    .WithMergeRequest("branch-02", title: "Merge request 2", milestone: "Milestone 2"))
+                .WithProject("project2", @namespace: "parentGroup/subGroup2", addDefaultUserAsMaintainer: true, configure: project => project
+                    .WithMergeRequest("branch-03", title: "Merge request 3", milestone: "Milestone 1"))
+                .BuildServer();
+
+            var client = server.CreateClient();
+            var mergeRequests = client.GetGroupMilestone(projectId).GetMergeRequests(milestoneId).ToArray();
+            Assert.AreEqual(2, mergeRequests.Length, "Merge requests count is invalid");
+        }
     }
 }
