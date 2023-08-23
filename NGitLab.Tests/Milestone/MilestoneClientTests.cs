@@ -77,7 +77,7 @@ namespace NGitLab.Tests.Milestone
             mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { MilestoneId = milestone.Id });
 
             var mergeRequests = milestoneClient.GetMergeRequests(milestone.Id).ToArray();
-            Assert.AreEqual(1, mergeRequests.Count, "The query retrieved all merged requests that assigned to the milestone.");
+            Assert.AreEqual(1, mergeRequests.Length, "The query retrieved all merged requests that assigned to the milestone.");
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace NGitLab.Tests.Milestone
             mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { MilestoneId = milestone.Id });
 
             var mergeRequests = milestoneClient.GetMergeRequests(milestone.Id).ToArray();
-            Assert.AreEqual(1, mergeRequests.Count, "The query retrieved all merged requests that assigned to the milestone.");
+            Assert.AreEqual(1, mergeRequests.Length, "The query retrieved all merged requests that assigned to the milestone.");
         }
 
         private static Models.Milestone CreateMilestone(GitLabTestContext context, MilestoneScope scope, int id, string title)
