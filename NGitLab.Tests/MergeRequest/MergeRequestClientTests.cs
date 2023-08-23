@@ -25,6 +25,7 @@ namespace NGitLab.Tests
 
             ListMergeRequest(mergeRequestClient, mergeRequest);
             mergeRequest = UpdateMergeRequest(mergeRequestClient, mergeRequest);
+            Test_can_update_labels_with_delta(mergeRequestClient, mergeRequest);
             Test_can_update_a_subset_of_merge_request_fields(mergeRequestClient, mergeRequest);
 
             await GitLabTestContext.RetryUntilAsync(
@@ -350,6 +351,20 @@ namespace NGitLab.Tests
 
             Assert.AreEqual("Second update", updated.Title);
             Assert.AreEqual(mergeRequest.Description, updated.Description);
+        }
+
+        private static void Test_can_update_labels_with_delta(IMergeRequestClient mergeRequestClient, MergeRequest mergeRequest)
+        {
+            // Ensure original labels are "a,b"
+            CollectionAssert.AreEqual(new[] { "a", "b" }, mergeRequest.Labels);
+
+            var updated = mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate
+            {
+                RemoveLabels = "b",
+                AddLabels = "c,d",
+            });
+
+            CollectionAssert.AreEqual(new[] { "a", "c", "d" }, updated.Labels);
         }
 
         public static void AcceptMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest request)
