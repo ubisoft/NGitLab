@@ -122,10 +122,12 @@ namespace NGitLab.Mock.Tests
         [Test]
         public void Test_groups_merge_request_can_be_found_from_milestone()
         {
+            const int projectId = 1;
+            const int milestoneId = 1;
             using var server = new GitLabConfig()
                 .WithUser("user1", isDefault: true)
-                .WithGroup("parentGroup", id: 1, configure: group => group
-                    .WithMilestone("Milestone 1", id: 1))
+                .WithGroup("parentGroup", id: projectId, configure: group => group
+                    .WithMilestone("Milestone 1", id: milestoneId))
                 .WithGroup("subGroup1", 2, @namespace: "parentGroup")
                 .WithGroup("subGroup2", 3, @namespace: "parentGroup")
                 .WithProject("project1", @namespace: "parentGroup/subGroup1", addDefaultUserAsMaintainer: true, configure: project => project
@@ -136,7 +138,7 @@ namespace NGitLab.Mock.Tests
                 .BuildServer();
 
             var client = server.CreateClient();
-            var mergeRequests = client.GetGroupMilestone(1).GetMergeRequests(1).ToArray();
+            var mergeRequests = client.GetGroupMilestone(projectId).GetMergeRequests(milestoneId).ToArray();
             Assert.AreEqual(2, mergeRequests.Length, "Merge requests count is invalid");
         }
     }
