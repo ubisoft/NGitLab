@@ -22,5 +22,22 @@ namespace NGitLab.Mock
         public Group Group { get; }
 
         public AccessLevel AccessLevel { get; }
+
+        internal Membership ToUserMembership()
+        {
+            if (User is null)
+                return null;
+
+            return new Membership
+            {
+                Id = User.Id,
+                AvatarURL = User.AvatarUrl,
+                CreatedAt = User.CreatedAt,
+                Name = User.Name,
+                State = User.State.ToString().ToLowerInvariant(),
+                UserName = User.UserName,
+                AccessLevel = (int)AccessLevel,
+            };
+        }
     }
 }
