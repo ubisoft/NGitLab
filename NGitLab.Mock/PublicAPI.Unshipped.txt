@@ -435,6 +435,7 @@ NGitLab.Mock.Group.ExtraSharedRunnersLimit.get -> System.TimeSpan
 NGitLab.Mock.Group.ExtraSharedRunnersLimit.set -> void
 NGitLab.Mock.Group.FullName.get -> string
 NGitLab.Mock.Group.GetEffectivePermissions() -> NGitLab.Mock.EffectivePermissions
+NGitLab.Mock.Group.GetEffectivePermissions(bool includeInheritedPermissions) -> NGitLab.Mock.EffectivePermissions
 NGitLab.Mock.Group.Group() -> void
 NGitLab.Mock.Group.Group(NGitLab.Mock.User user) -> void
 NGitLab.Mock.Group.Group(string name) -> void
@@ -810,6 +811,7 @@ NGitLab.Mock.Project.ForkingAccessLevel.get -> NGitLab.Models.RepositoryAccessLe
 NGitLab.Mock.Project.ForkingAccessLevel.set -> void
 NGitLab.Mock.Project.FullName.get -> string
 NGitLab.Mock.Project.GetEffectivePermissions() -> NGitLab.Mock.EffectivePermissions
+NGitLab.Mock.Project.GetEffectivePermissions(bool includeInheritedPermissions) -> NGitLab.Mock.EffectivePermissions
 NGitLab.Mock.Project.Group.get -> NGitLab.Mock.Group
 NGitLab.Mock.Project.Hooks.get -> NGitLab.Mock.ProjectHookCollection
 NGitLab.Mock.Project.HttpUrl.get -> string

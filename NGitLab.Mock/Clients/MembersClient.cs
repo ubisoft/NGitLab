@@ -98,15 +98,8 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var group = GetGroup(groupId, GroupPermission.View);
-                if (includeInheritedMembers)
-                {
-                    var members = group.GetEffectivePermissions().Permissions;
-                    return members.Select(member => member.ToMembershipClient());
-                }
-
-                return group.Permissions
-                    .Select(p => p.ToUserMembership())
-                    .Where(m => m is not null);
+                var members = group.GetEffectivePermissions(includeInheritedMembers).Permissions;
+                return members.Select(member => member.ToMembershipClient());
             }
         }
 
@@ -125,16 +118,8 @@ namespace NGitLab.Mock.Clients
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(projectId, ProjectPermission.View);
-
-                if (includeInheritedMembers)
-                {
-                    var members = project.GetEffectivePermissions().Permissions;
-                    return members.Select(member => member.ToMembershipClient());
-                }
-
-                return project.Permissions
-                    .Select(p => p.ToUserMembership())
-                    .Where(m => m is not null);
+                var members = project.GetEffectivePermissions(includeInheritedMembers).Permissions;
+                return members.Select(member => member.ToMembershipClient());
             }
         }
 
