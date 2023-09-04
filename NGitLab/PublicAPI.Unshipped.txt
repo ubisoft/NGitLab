@@ -35,6 +35,10 @@ NGitLab.GetCommitsRequest.PerPage.get -> uint
 NGitLab.GetCommitsRequest.PerPage.set -> void
 NGitLab.GetCommitsRequest.RefName.get -> string
 NGitLab.GetCommitsRequest.RefName.set -> void
+NGitLab.GetCommitsRequest.Since.get -> System.DateTime?
+NGitLab.GetCommitsRequest.Since.set -> void
+NGitLab.GetCommitsRequest.Until.get -> System.DateTime?
+NGitLab.GetCommitsRequest.Until.set -> void
 NGitLab.GitLabClient
 NGitLab.GitLabClient.AdvancedSearch.get -> NGitLab.ISearchClient
 NGitLab.GitLabClient.Deployments.get -> NGitLab.IDeploymentClient

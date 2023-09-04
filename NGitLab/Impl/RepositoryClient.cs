@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -83,6 +85,16 @@ namespace NGitLab.Impl
             if (request.FirstParent != null)
             {
                 lst.Add($"first_parent={Uri.EscapeDataString(request.FirstParent.ToString())}");
+            }
+
+            if (request.Since.HasValue)
+            {
+                lst.Add($"since={WebUtility.UrlEncode(request.Since.Value.ToString("s", CultureInfo.InvariantCulture))}");
+            }
+
+            if (request.Until.HasValue)
+            {
+                lst.Add($"until={WebUtility.UrlEncode(request.Until.Value.ToString("s", CultureInfo.InvariantCulture))}");
             }
 
             var perPage = request.MaxResults > 0 ? Math.Min(request.MaxResults, request.PerPage) : request.PerPage;
