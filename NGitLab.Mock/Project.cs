@@ -154,13 +154,18 @@ namespace NGitLab.Mock
             Group.Projects.Remove(this);
         }
 
-        public EffectivePermissions GetEffectivePermissions()
+        public EffectivePermissions GetEffectivePermissions() => GetEffectivePermissions(includeInheritedPermissions: true);
+
+        public EffectivePermissions GetEffectivePermissions(bool includeInheritedPermissions)
         {
             var result = new Dictionary<User, AccessLevel>();
 
-            foreach (var effectivePermission in Group.GetEffectivePermissions().Permissions)
+            if (includeInheritedPermissions)
             {
-                Add(effectivePermission.User, effectivePermission.AccessLevel);
+                foreach (var effectivePermission in Group.GetEffectivePermissions(includeInheritedPermissions).Permissions)
+                {
+                    Add(effectivePermission.User, effectivePermission.AccessLevel);
+                }
             }
 
             foreach (var permission in Permissions)
@@ -171,7 +176,7 @@ namespace NGitLab.Mock
                 }
                 else
                 {
-                    foreach (var effectivePermission in permission.Group.GetEffectivePermissions().Permissions)
+                    foreach (var effectivePermission in permission.Group.GetEffectivePermissions(includeInheritedPermissions).Permissions)
                     {
                         Add(effectivePermission.User, effectivePermission.AccessLevel);
                     }

@@ -117,13 +117,15 @@ namespace NGitLab.Mock
 
         public IEnumerable<Project> AllProjects => Projects.Concat(DescendantGroups.SelectMany(group => group.Projects));
 
-        public EffectivePermissions GetEffectivePermissions()
+        public EffectivePermissions GetEffectivePermissions() => GetEffectivePermissions(includeInheritedPermissions: true);
+
+        public EffectivePermissions GetEffectivePermissions(bool includeInheritedPermissions)
         {
             var result = new Dictionary<User, AccessLevel>();
 
-            if (Parent != null)
+            if (Parent != null && includeInheritedPermissions)
             {
-                foreach (var effectivePermission in Parent.GetEffectivePermissions().Permissions)
+                foreach (var effectivePermission in Parent.GetEffectivePermissions(includeInheritedPermissions).Permissions)
                 {
                     Add(effectivePermission.User, effectivePermission.AccessLevel);
                 }
@@ -137,7 +139,7 @@ namespace NGitLab.Mock
                 }
                 else
                 {
-                    foreach (var effectivePermission in permission.Group.GetEffectivePermissions().Permissions)
+                    foreach (var effectivePermission in permission.Group.GetEffectivePermissions(includeInheritedPermissions).Permissions)
                     {
                         Add(effectivePermission.User, effectivePermission.AccessLevel);
                     }
