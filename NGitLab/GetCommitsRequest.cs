@@ -1,4 +1,6 @@
-﻿namespace NGitLab
+﻿using System;
+
+namespace NGitLab
 {
     public class GetCommitsRequest
     {
@@ -13,5 +15,9 @@
         public int MaxResults { get; set; }
 
         public uint PerPage { get; set; } = DefaultPerPage;
+
+        public DateTime? Since { get; set; }
+
+        public DateTime? Until { get; set; }
     }
 }
