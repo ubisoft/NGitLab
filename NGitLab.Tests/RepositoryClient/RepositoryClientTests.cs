@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -140,7 +139,7 @@ namespace NGitLab.Tests.RepositoryClient
 
             var defaultBranch = context.Project.DefaultBranch;
             var since = DateTime.UtcNow;
-            var expectedSinceValue = WebUtility.UrlEncode(since.ToString("s", CultureInfo.InvariantCulture));
+            var expectedSinceValue = Uri.EscapeDataString(since.ToString("s", CultureInfo.InvariantCulture));
             var commitRequest = new GetCommitsRequest
             {
                 RefName = defaultBranch,
@@ -188,7 +187,7 @@ namespace NGitLab.Tests.RepositoryClient
 
             var defaultBranch = context.Project.DefaultBranch;
             var until = DateTime.UtcNow;
-            var expectedUntilValue = WebUtility.UrlEncode(until.ToString("s", CultureInfo.InvariantCulture));
+            var expectedUntilValue = Uri.EscapeDataString(until.ToString("s", CultureInfo.InvariantCulture));
             var commitRequest = new GetCommitsRequest
             {
                 RefName = defaultBranch,
