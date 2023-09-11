@@ -25,6 +25,8 @@ namespace NGitLab.Impl
 
             public string JsonData { get; }
 
+            public FileContent FileContent { get; }
+
             public FormDataContent FormData { get; }
 
             private MethodType Method { get; }
@@ -60,7 +62,11 @@ namespace NGitLab.Impl
                     Headers.Add("User-Agent", options.UserAgent);
                 }
 
-                if (data is FormDataContent formData)
+                if (data is FileContent fileContent)
+                {
+                    FileContent = fileContent;
+                }
+                else if (data is FormDataContent formData)
                 {
                     FormData = formData;
                 }
@@ -165,7 +171,11 @@ namespace NGitLab.Impl
 
                 if (HasOutput)
                 {
-                    if (FormData != null)
+                    if (FileContent != null)
+                    {
+                        AddFileContent(request, options);
+                    }
+                    else if (FormData != null)
                     {
                         AddFileData(request, options);
                     }
@@ -180,6 +190,11 @@ namespace NGitLab.Impl
                 }
 
                 return request;
+            }
+
+            private void AddFileContent(HttpWebRequest request, RequestOptions options)
+            {
+                FileContent.Stream.CopyTo(options.GetRequestStream(request));
             }
 
             private void AddJsonData(HttpWebRequest request, RequestOptions options)

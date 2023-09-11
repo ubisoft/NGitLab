@@ -2,6 +2,8 @@
 {
     public interface IGitLabClient
     {
+        IPackageClient Packages { get; }
+
         IUserClient Users { get; }
 
         IProjectClient Projects { get; }
