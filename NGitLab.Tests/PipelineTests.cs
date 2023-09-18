@@ -216,14 +216,24 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
             var pipelineClient = context.Client.GetPipelines(project.Id);
-            JobTests.AddGitLabCiFile(context.Client, project);
 
-            var triggers = context.Client.GetTriggers(project.Id);
-            var trigger = triggers.Create("Test Trigger");
-            var ciJobToken = trigger.Token;
+            using (await context.StartRunnerForOneJobAsync(project.Id))
+            {
+                JobTests.AddGitLabCiFile(context.Client, project, pipelineSucceeds: false);
+                var pipeline = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All.FirstOrDefault(), pipeline =>
+                {
+                    if (pipeline != null)
+                    {
+                        TestContext.WriteLine("Pipeline status: " + pipeline.Status);
+                        return pipeline.Status is JobStatus.Failed;
+                    }
 
-            var pipeline = pipelineClient.CreatePipelineWithTrigger(ciJobToken, project.DefaultBranch, new Dictionary<string, string>(StringComparer.Ordinal) { { "Test", "HelloWorld" } });
-            var retriedPipeline = pipelineClient.RetryAsync(pipeline.Id);
+                    return false;
+                }, TimeSpan.FromMinutes(2));
+
+                var retriedPipeline = await pipelineClient.RetryAsync(pipeline.Id);
+                Assert.AreNotEqual(JobStatus.Failed, retriedPipeline.Status); // Should be created or running
+            }
         }
     }
 }

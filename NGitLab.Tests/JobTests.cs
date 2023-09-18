@@ -10,7 +10,7 @@ namespace NGitLab.Tests
 {
     public class JobTests
     {
-        internal static void AddGitLabCiFile(IGitLabClient client, Project project, int jobCount = 1, bool manualAction = false, string branch = null)
+        internal static void AddGitLabCiFile(IGitLabClient client, Project project, int jobCount = 1, bool manualAction = false, string branch = null, bool pipelineSucceeds = true)
         {
             var content = @"
 variables:
@@ -24,6 +24,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
   script:
     - echo test
     - echo test > file{i.ToString(CultureInfo.InvariantCulture)}.txt
+    - exit {(pipelineSucceeds ? "0" : "1")}
   artifacts:
     paths:
       - '*.txt'
