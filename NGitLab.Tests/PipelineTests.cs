@@ -200,13 +200,30 @@ namespace NGitLab.Tests
             var trigger = triggers.Create("Test Trigger");
             var ciJobToken = trigger.Token;
 
-            var pipeline = pipelineClient.CreatePipelineWithTrigger(ciJobToken, project.DefaultBranch, new Dictionary<string, string>(StringComparer.InvariantCulture) { { "Test", "HelloWorld" } });
+            var pipeline = pipelineClient.CreatePipelineWithTrigger(ciJobToken, project.DefaultBranch, new Dictionary<string, string>(StringComparer.Ordinal) { { "Test", "HelloWorld" } });
 
             var variables = pipelineClient.GetVariables(pipeline.Id);
 
             Assert.IsTrue(variables.Any(v =>
-                v.Key.Equals("Test", StringComparison.InvariantCulture) &&
-                v.Value.Equals("HelloWorld", StringComparison.InvariantCulture)));
+                v.Key.Equals("Test", StringComparison.Ordinal) &&
+                v.Value.Equals("HelloWorld", StringComparison.Ordinal)));
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_retry()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var pipelineClient = context.Client.GetPipelines(project.Id);
+            JobTests.AddGitLabCiFile(context.Client, project);
+
+            var triggers = context.Client.GetTriggers(project.Id);
+            var trigger = triggers.Create("Test Trigger");
+            var ciJobToken = trigger.Token;
+
+            var pipeline = pipelineClient.CreatePipelineWithTrigger(ciJobToken, project.DefaultBranch, new Dictionary<string, string>(StringComparer.Ordinal) { { "Test", "HelloWorld" } });
+            var retriedPipeline = pipelineClient.RetryAsync(pipeline.Id);
         }
     }
 }

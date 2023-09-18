@@ -115,5 +115,7 @@ namespace NGitLab
         /// </summary>
         /// <param name="query"></param>
         GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineBridgeQuery query);
+
+        Task<Pipeline> RetryAsync(int pipelineId, CancellationToken cancellationToken = default);
     }
 }
