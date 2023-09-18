@@ -209,5 +209,11 @@ namespace NGitLab.Impl
             url = Utils.AddParameter(url, "scope", query.Scope);
             return url;
         }
+
+        public Task<Pipeline> RetryAsync(int pipelineId, CancellationToken cancellationToken = default)
+        {
+            var url = $"{_pipelinesPath}/{pipelineId.ToStringInvariant()}/retry";
+            return _api.Post().ToAsync<Pipeline>(url, cancellationToken);
+        }
     }
 }

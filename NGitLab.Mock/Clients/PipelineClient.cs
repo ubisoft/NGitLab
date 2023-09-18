@@ -291,5 +291,19 @@ namespace NGitLab.Mock.Clients
         {
             return GitLabCollectionResponse.Create(GetVariables(pipelineId));
         }
+
+        public Task<Models.Pipeline> RetryAsync(int pipelineId, CancellationToken cancellationToken = default)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var jobs = _jobClient.GetJobs(JobScopeMask.Failed).Where(j => j.Pipeline.Id == pipelineId);
+                foreach (var job in jobs)
+                {
+                    _jobClient.RunAction(job.Id, JobAction.Retry);
+                }
+
+                return Task.FromResult(this[pipelineId]);
+            }
+        }
     }
 }

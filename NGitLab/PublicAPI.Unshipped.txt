@@ -685,6 +685,7 @@ NGitLab.Impl.PipelineClient.GetTestReportsSummary(int pipelineId) -> NGitLab.Mod
 NGitLab.Impl.PipelineClient.GetVariables(int pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
 NGitLab.Impl.PipelineClient.GetVariablesAsync(int pipelineId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineVariable>
 NGitLab.Impl.PipelineClient.PipelineClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.PipelineClient.RetryAsync(int pipelineId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.Impl.PipelineClient.Search(NGitLab.Models.PipelineQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.Impl.PipelineClient.SearchAsync(NGitLab.Models.PipelineQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
 NGitLab.Impl.PipelineClient.this[int id].get -> NGitLab.Models.Pipeline
@@ -857,6 +858,7 @@ NGitLab.IPipelineClient.GetTestReports(int pipelineId) -> NGitLab.Models.TestRep
 NGitLab.IPipelineClient.GetTestReportsSummary(int pipelineId) -> NGitLab.Models.TestReportSummary
 NGitLab.IPipelineClient.GetVariables(int pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
 NGitLab.IPipelineClient.GetVariablesAsync(int pipelineId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineVariable>
+NGitLab.IPipelineClient.RetryAsync(int pipelineId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.IPipelineClient.Search(NGitLab.Models.PipelineQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.IPipelineClient.SearchAsync(NGitLab.Models.PipelineQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
 NGitLab.IPipelineClient.this[int id].get -> NGitLab.Models.Pipeline
