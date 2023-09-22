@@ -157,7 +157,7 @@ namespace NGitLab.Mock
 
         public Commit Commit(User user, string message)
         {
-            return Commit(user, message, targetBranch: null, new[] { File.CreateFromText("test.txt", Guid.NewGuid().ToString()) });
+            return Commit(user, message, targetBranch: null, new[] { File.CreateFromText("test.txt", Guid.NewGuid().ToString()) }, Enumerable.Empty<string>());
         }
 
         public Commit Commit(User user, string message, IEnumerable<File> files)
@@ -166,6 +166,11 @@ namespace NGitLab.Mock
         }
 
         public Commit Commit(User user, string message, string targetBranch, IEnumerable<File> files)
+        {
+            return Commit(user, message, targetBranch, files, Enumerable.Empty<string>());
+        }
+
+        public Commit Commit(User user, string message, string targetBranch, IEnumerable<File> files, IEnumerable<string> submodules)
         {
             var repository = GetGitRepository();
             if (targetBranch != null)
@@ -179,6 +184,11 @@ namespace NGitLab.Mock
                 Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
                 System.IO.File.WriteAllBytes(fullPath, file.Content);
                 repository.Index.Add(file.Path);
+            }
+
+            foreach (var submodule in submodules)
+            {
+                repository.Index.Add(submodule);
             }
 
             repository.Index.Write();

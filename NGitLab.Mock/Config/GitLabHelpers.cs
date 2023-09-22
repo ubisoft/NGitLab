@@ -449,6 +449,20 @@ namespace NGitLab.Mock.Config
         }
 
         /// <summary>
+        /// Add a submodule in commit
+        /// </summary>
+        public static GitLabCommit WithSubModule(this GitLabCommit commit, string projectName)
+        {
+            return Configure(commit, _ =>
+            {
+                commit.SubModules.Add(new GitLabSubModuleDescriptor
+                {
+                    ProjectName = projectName,
+                });
+            });
+        }
+
+        /// <summary>
         /// Add an issue description in project
         /// </summary>
         /// <param name="project">Project.</param>
@@ -1173,7 +1187,7 @@ namespace NGitLab.Mock.Config
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "git",
-                        Arguments = $"clone {project.CloneParameters} \"{prj.SshUrl}\" \"{Path.GetFileName(project.ClonePath)}\"",
+                        Arguments = $"-c protocol.file.allow=always clone {project.CloneParameters} \"{prj.SshUrl}\" \"{Path.GetFileName(project.ClonePath)}\" --recursive",
                         RedirectStandardError = true,
                         UseShellExecute = false,
                         WorkingDirectory = folderPath,
@@ -1222,9 +1236,12 @@ namespace NGitLab.Mock.Config
                     prj.Repository.CreateBranch(commit.SourceBranch);
 
                 var files = commit.Files.Count == 0
-                    ? new[] { File.CreateFromText("test.txt", Guid.NewGuid().ToString()) }
-                    : commit.Files.Select(x => File.CreateFromText(x.Path, x.Content ?? string.Empty));
-                cmt = prj.Repository.Commit(user, commit.Message ?? Guid.NewGuid().ToString("D"), commit.SourceBranch, files);
+                    ? new List<File>() { File.CreateFromText("test.txt", Guid.NewGuid().ToString()) }
+                    : commit.Files.Select(x => File.CreateFromText(x.Path, x.Content ?? string.Empty)).ToList();
+
+                var submodules = CreateSubModules(server, prj, commit);
+
+                cmt = prj.Repository.Commit(user, commit.Message ?? Guid.NewGuid().ToString("D"), commit.SourceBranch, files, submodules);
             }
             else
             {
@@ -1239,6 +1256,39 @@ namespace NGitLab.Mock.Config
             }
 
             return cmt;
+        }
+
+        private static IEnumerable<string> CreateSubModules(GitLabServer server, Project prj, GitLabCommit commit)
+        {
+            List<string> submodules = new();
+            foreach (var submodule in commit.SubModules)
+            {
+                var subModuleProject = server.AllProjects.FirstOrDefault(x =>
+                    x.Name.Equals(submodule.ProjectName, StringComparison.OrdinalIgnoreCase));
+                if (subModuleProject is null)
+                {
+                    throw new GitLabException($"Project {submodule.ProjectName} can't be found.");
+                }
+
+                if (!subModuleProject.Repository.GetCommits().Any())
+                {
+                    throw new GitLabException("Project added as a module must have least one commit.");
+                }
+
+                using var process = Process.Start(
+                    new ProcessStartInfo("git", $"-c protocol.file.allow=always submodule add {subModuleProject.SshUrl} {subModuleProject.Name}")
+                    {
+                        WorkingDirectory = prj.Repository.FullPath,
+                    });
+
+                process.WaitForExit();
+                if (process.ExitCode != 0)
+                    throw new GitLabException("Cannot add submodule");
+
+                submodules.Add(subModuleProject.Name);
+            }
+
+            return submodules;
         }
 
         private static void CreateLabel(Group group, GitLabLabel label)
