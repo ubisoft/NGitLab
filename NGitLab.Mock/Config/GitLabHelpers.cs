@@ -1278,12 +1278,17 @@ namespace NGitLab.Mock.Config
                 using var process = Process.Start(
                     new ProcessStartInfo("git", $"-c protocol.file.allow=always submodule add {subModuleProject.SshUrl} {subModuleProject.Name}")
                     {
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
                         WorkingDirectory = prj.Repository.FullPath,
                     });
 
                 process.WaitForExit();
                 if (process.ExitCode != 0)
-                    throw new GitLabException("Cannot add submodule");
+                {
+                    var error = process.StandardError.ReadToEnd();
+                    throw new GitLabException($"Cannot add submodule: {error}");
+                }
 
                 submodules.Add(subModuleProject.Name);
             }
