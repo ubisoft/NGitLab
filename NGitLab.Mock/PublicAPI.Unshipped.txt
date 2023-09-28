@@ -124,6 +124,7 @@ NGitLab.Mock.Config.GitLabCommit.DeleteSourceBranch.get -> bool
 NGitLab.Mock.Config.GitLabCommit.DeleteSourceBranch.set -> void
 NGitLab.Mock.Config.GitLabCommit.FromBranch.get -> string
 NGitLab.Mock.Config.GitLabCommit.FromBranch.set -> void
+NGitLab.Mock.Config.GitLabCommit.SubModules.get -> System.Collections.Generic.IList<NGitLab.Mock.Config.GitLabSubModuleDescriptor>
 NGitLab.Mock.Config.GitLabConfig.DefaultBranch.get -> string
 NGitLab.Mock.Config.GitLabConfig.DefaultBranch.set -> void
 NGitLab.Mock.Config.GitLabConfig.DefaultUser.get -> string
@@ -210,6 +211,10 @@ NGitLab.Mock.Config.GitLabReleaseInfo.ReleasedAt.set -> void
 NGitLab.Mock.Config.GitLabReleaseInfo.TagName.get -> string
 NGitLab.Mock.Config.GitLabReleaseInfo.TagName.set -> void
 NGitLab.Mock.Config.GitLabReleaseInfoCollection
+NGitLab.Mock.Config.GitLabSubModuleDescriptor
+NGitLab.Mock.Config.GitLabSubModuleDescriptor.GitLabSubModuleDescriptor() -> void
+NGitLab.Mock.Config.GitLabSubModuleDescriptor.ProjectName.get -> string
+NGitLab.Mock.Config.GitLabSubModuleDescriptor.ProjectName.init -> void
 NGitLab.Mock.EffectivePermissions
 NGitLab.Mock.EffectivePermissions.GetAccessLevel(NGitLab.Mock.User user) -> NGitLab.Models.AccessLevel?
 NGitLab.Mock.EffectivePermissions.GetEffectivePermission(NGitLab.Mock.User user) -> NGitLab.Mock.EffectiveUserPermission
@@ -956,6 +961,7 @@ NGitLab.Mock.Repository.Checkout(string committishOrBranchNameSpec) -> void
 NGitLab.Mock.Repository.CherryPick(NGitLab.Models.CommitCherryPick commitCherryPick) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.Commit(NGitLab.Mock.User user, string message) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.Commit(NGitLab.Mock.User user, string message, string targetBranch, System.Collections.Generic.IEnumerable<NGitLab.Mock.File> files) -> LibGit2Sharp.Commit
+NGitLab.Mock.Repository.Commit(NGitLab.Mock.User user, string message, string targetBranch, System.Collections.Generic.IEnumerable<NGitLab.Mock.File> files, System.Collections.Generic.IEnumerable<string> submodules) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.Commit(NGitLab.Mock.User user, string message, System.Collections.Generic.IEnumerable<NGitLab.Mock.File> files) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.Commit(NGitLab.Models.CommitCreate commitCreate) -> LibGit2Sharp.Commit
 NGitLab.Mock.Repository.CreateAndCheckoutBranch(string branchName) -> LibGit2Sharp.Branch
@@ -1230,6 +1236,7 @@ static NGitLab.Mock.Config.GitLabHelpers.WithMilestone(this NGitLab.Mock.Config.
 static NGitLab.Mock.Config.GitLabHelpers.WithPipeline(this NGitLab.Mock.Config.GitLabProject project, string ref, System.Action<NGitLab.Mock.Config.GitLabPipeline> configure) -> NGitLab.Mock.Config.GitLabProject
 static NGitLab.Mock.Config.GitLabHelpers.WithProject(this NGitLab.Mock.Config.GitLabConfig config, string name = null, int id = 0, string namespace = null, string description = null, string defaultBranch = null, NGitLab.Models.VisibilityLevel visibility = NGitLab.Models.VisibilityLevel.Internal, bool initialCommit = false, bool addDefaultUserAsMaintainer = false, string clonePath = null, string cloneParameters = null, System.Action<NGitLab.Mock.Config.GitLabProject> configure = null) -> NGitLab.Mock.Config.GitLabConfig
 static NGitLab.Mock.Config.GitLabHelpers.WithRelease(this NGitLab.Mock.Config.GitLabProject project, string author, string tagName, System.DateTime? createdAt = null, System.DateTime? releasedAt = null) -> NGitLab.Mock.Config.GitLabProject
+static NGitLab.Mock.Config.GitLabHelpers.WithSubModule(this NGitLab.Mock.Config.GitLabCommit commit, string projectName) -> NGitLab.Mock.Config.GitLabCommit
 static NGitLab.Mock.Config.GitLabHelpers.WithSystemComment(this NGitLab.Mock.Config.GitLabIssue issue, string message = null, string innerHtml = null, int id = 0, string author = null, System.DateTime? createdAt = null, System.DateTime? updatedAt = null) -> NGitLab.Mock.Config.GitLabIssue
 static NGitLab.Mock.Config.GitLabHelpers.WithSystemComment(this NGitLab.Mock.Config.GitLabMergeRequest mergeRequest, string message = null, string innerHtml = null, int id = 0, string author = null, System.DateTime? createdAt = null, System.DateTime? updatedAt = null) -> NGitLab.Mock.Config.GitLabMergeRequest
 static NGitLab.Mock.Config.GitLabHelpers.WithUser(this NGitLab.Mock.Config.GitLabConfig config, string username, string name = null, string email = null, string avatarUrl = null, bool isAdmin = false, bool isDefault = false, System.Action<NGitLab.Mock.Config.GitLabUser> configure = null) -> NGitLab.Mock.Config.GitLabConfig

@@ -38,6 +38,49 @@ namespace NGitLab.Mock.Tests
         }
 
         [Test]
+        public void Test_project_with_submodules()
+        {
+            using var tempDir = TemporaryDirectory.Create();
+            using var server = new GitLabConfig()
+                .WithUser("Test", isDefault: true)
+                .WithProject("ModuleA", configure: x => x.WithCommit(configure: c => c.WithFile("A.txt")))
+                .WithProject("ModuleB", configure: x => x.WithCommit(configure: c => c.WithFile("B.txt")))
+                .WithProject("Test", clonePath: tempDir.FullPath, configure: x =>
+                    x.WithCommit("Init", configure: c
+                        => c.WithSubModule("ModuleA")
+                            .WithSubModule("ModuleB")))
+                .BuildServer();
+
+            Assert.IsTrue(Directory.Exists(tempDir.GetFullPath(".git")));
+            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleA/.git")));
+            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleA/A.txt")));
+            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/.git")));
+            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/B.txt")));
+        }
+
+        [Test]
+        public void Test_project_with_nested_submodules()
+        {
+            using var tempDir = TemporaryDirectory.Create();
+            using var server = new GitLabConfig()
+                .WithUser("Test", isDefault: true)
+                .WithProject("ModuleA", configure: x => x.WithCommit(configure: c => c.WithFile("A.txt")))
+                .WithProject("ModuleB", configure: x => x.WithCommit(configure: c
+                                                                         => c.WithFile("B.txt")
+                                                                             .WithSubModule("ModuleA")))
+                .WithProject("Test", clonePath: tempDir.FullPath, configure: x =>
+                    x.WithCommit(configure: c
+                        => c.WithSubModule("ModuleB")))
+                .BuildServer();
+
+            Assert.IsTrue(Directory.Exists(tempDir.GetFullPath(".git")));
+            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/.git")));
+            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/B.txt")));
+            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/ModuleA/.git")));
+            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/ModuleA/A.txt")));
+        }
+
+        [Test]
         public void Test_projects_created_url_ends_with_namespace_and_name()
         {
             using var server = new GitLabConfig()
