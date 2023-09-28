@@ -199,13 +199,21 @@ namespace NGitLab.Tests.Docker
 
                 foreach (var headerValue in headerValues)
                 {
+                    sb.Append(headerName).Append(": ");
                     if (string.Equals(headerName, "Private-Token", StringComparison.OrdinalIgnoreCase))
                     {
-                        sb.Append("Private-Token").Append(": ****** ").AppendLine();
+                        sb.AppendLine("******");
+                    }
+                    else if (string.Equals(headerName, "Authorization", StringComparison.OrdinalIgnoreCase))
+                    {
+                        const string BearerTokenPrefix = "Bearer ";
+                        if (headerValue.StartsWith(BearerTokenPrefix, StringComparison.Ordinal))
+                            sb.Append(BearerTokenPrefix);
+                        sb.AppendLine("******");
                     }
                     else
                     {
-                        sb.Append(headerName).Append(": ").Append(headerValue).AppendLine();
+                        sb.AppendLine(headerValue);
                     }
                 }
             }

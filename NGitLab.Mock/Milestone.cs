@@ -7,6 +7,8 @@ namespace NGitLab.Mock
     {
         public Project Project => Parent as Project;
 
+        public Group Group => Parent as Group;
+
         public int Id { get; set; }
 
         public int Iid { get; set; }

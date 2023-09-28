@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using NGitLab.Extensions;
@@ -24,7 +25,7 @@ namespace NGitLab.Impl
 
         public ITagClient Tags => new TagClient(_api, _repoPath);
 
-        public IContributorClient Contributors => new ContributorClient(_api, _repoPath, _projectId);
+        public IContributorClient Contributors => new ContributorClient(_api, _repoPath);
 
         public IEnumerable<Tree> Tree => _api.Get().GetAll<Tree>(_repoPath + "/tree");
 
@@ -83,6 +84,16 @@ namespace NGitLab.Impl
             if (request.FirstParent != null)
             {
                 lst.Add($"first_parent={Uri.EscapeDataString(request.FirstParent.ToString())}");
+            }
+
+            if (request.Since.HasValue)
+            {
+                lst.Add($"since={Uri.EscapeDataString(request.Since.Value.ToString("s", CultureInfo.InvariantCulture))}");
+            }
+
+            if (request.Until.HasValue)
+            {
+                lst.Add($"until={Uri.EscapeDataString(request.Until.Value.ToString("s", CultureInfo.InvariantCulture))}");
             }
 
             var perPage = request.MaxResults > 0 ? Math.Min(request.MaxResults, request.PerPage) : request.PerPage;

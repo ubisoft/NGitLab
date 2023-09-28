@@ -11,7 +11,6 @@ namespace NGitLab.Models
         [JsonPropertyName("name")]
         public string Name;
 
-        [Required]
         [JsonPropertyName("namespace_id")]
         public string NamespaceId;
 
@@ -35,12 +34,18 @@ namespace NGitLab.Models
         [JsonIgnore]
         public bool WallEnabled;
 
+        [JsonPropertyName("merge_pipelines_enabled")]
+        public bool MergePipelinesEnabled;
+
         [JsonPropertyName("merge_requests_enabled")]
         [Obsolete("Deprecated by GitLab. Use MergeRequestsAccessLevel instead")]
         public bool MergeRequestsEnabled;
 
         [JsonPropertyName("merge_requests_access_level")]
         public string MergeRequestsAccessLevel;
+
+        [JsonPropertyName("merge_trains_enabled")]
+        public bool MergeTrainsEnabled;
 
         [JsonPropertyName("snippets_enabled")]
         [Obsolete("Deprecated by GitLab. Use SnippetsAccessLevel instead")]

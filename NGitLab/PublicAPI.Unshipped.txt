@@ -35,6 +35,10 @@ NGitLab.GetCommitsRequest.PerPage.get -> uint
 NGitLab.GetCommitsRequest.PerPage.set -> void
 NGitLab.GetCommitsRequest.RefName.get -> string
 NGitLab.GetCommitsRequest.RefName.set -> void
+NGitLab.GetCommitsRequest.Since.get -> System.DateTime?
+NGitLab.GetCommitsRequest.Since.set -> void
+NGitLab.GetCommitsRequest.Until.get -> System.DateTime?
+NGitLab.GetCommitsRequest.Until.set -> void
 NGitLab.GitLabClient
 NGitLab.GitLabClient.AdvancedSearch.get -> NGitLab.ISearchClient
 NGitLab.GitLabClient.Deployments.get -> NGitLab.IDeploymentClient
@@ -249,6 +253,7 @@ NGitLab.IIssueClient.ClosedBy(int projectId, int issueIid) -> System.Collections
 NGitLab.IIssueClient.ClosedByAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
 NGitLab.IIssueClient.Create(NGitLab.Models.IssueCreate issueCreate) -> NGitLab.Models.Issue
 NGitLab.IIssueClient.CreateAsync(NGitLab.Models.IssueCreate issueCreate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
+NGitLab.IIssueClient.CreateLinkBetweenIssues(int sourceProjectId, int sourceIssueId, int targetProjectId, int targetIssueId) -> bool
 NGitLab.IIssueClient.Edit(NGitLab.Models.IssueEdit issueEdit) -> NGitLab.Models.Issue
 NGitLab.IIssueClient.EditAsync(NGitLab.Models.IssueEdit issueEdit, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
 NGitLab.IIssueClient.ForGroupsAsync(int groupId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
@@ -263,6 +268,7 @@ NGitLab.IIssueClient.GetAsync(int projectId, NGitLab.Models.IssueQuery query) ->
 NGitLab.IIssueClient.GetAsync(NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.GetById(int issueId) -> NGitLab.Models.Issue
 NGitLab.IIssueClient.GetByIdAsync(int issueId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
+NGitLab.IIssueClient.LinkedToAsync(int projectId, int issueId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.IIssueClient.RelatedTo(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.IIssueClient.RelatedToAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
@@ -362,6 +368,8 @@ NGitLab.IMergeRequestDiscussionClient
 NGitLab.IMergeRequestDiscussionClient.Add(NGitLab.Models.MergeRequestDiscussionCreate discussion) -> NGitLab.Models.MergeRequestDiscussion
 NGitLab.IMergeRequestDiscussionClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestDiscussion>
 NGitLab.IMergeRequestDiscussionClient.Delete(string discussionId, long commentId) -> void
+NGitLab.IMergeRequestDiscussionClient.Get(string id) -> NGitLab.Models.MergeRequestDiscussion
+NGitLab.IMergeRequestDiscussionClient.GetAsync(string id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.MergeRequestDiscussion>
 NGitLab.IMergeRequestDiscussionClient.Resolve(NGitLab.Models.MergeRequestDiscussionResolve resolve) -> NGitLab.Models.MergeRequestDiscussion
 NGitLab.IMilestoneClient
 NGitLab.IMilestoneClient.Activate(int milestoneId) -> NGitLab.Models.Milestone
@@ -371,6 +379,7 @@ NGitLab.IMilestoneClient.Close(int milestoneId) -> NGitLab.Models.Milestone
 NGitLab.IMilestoneClient.Create(NGitLab.Models.MilestoneCreate milestone) -> NGitLab.Models.Milestone
 NGitLab.IMilestoneClient.Delete(int milestoneId) -> void
 NGitLab.IMilestoneClient.Get(NGitLab.Models.MilestoneQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Milestone>
+NGitLab.IMilestoneClient.GetMergeRequests(int milestoneId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.IMilestoneClient.Scope.get -> NGitLab.Impl.MilestoneScope
 NGitLab.IMilestoneClient.this[int id].get -> NGitLab.Models.Milestone
 NGitLab.IMilestoneClient.Update(int milestoneId, NGitLab.Models.MilestoneUpdate milestone) -> NGitLab.Models.Milestone
@@ -498,6 +507,7 @@ NGitLab.Impl.IssueClient.ClosedBy(int projectId, int issueIid) -> System.Collect
 NGitLab.Impl.IssueClient.ClosedByAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
 NGitLab.Impl.IssueClient.Create(NGitLab.Models.IssueCreate issueCreate) -> NGitLab.Models.Issue
 NGitLab.Impl.IssueClient.CreateAsync(NGitLab.Models.IssueCreate issueCreate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
+NGitLab.Impl.IssueClient.CreateLinkBetweenIssues(int sourceProjectId, int sourceIssueId, int targetProjectId, int targetIssueId) -> bool
 NGitLab.Impl.IssueClient.Edit(NGitLab.Models.IssueEdit issueEdit) -> NGitLab.Models.Issue
 NGitLab.Impl.IssueClient.EditAsync(NGitLab.Models.IssueEdit issueEdit, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.ForGroupsAsync(int groupId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
@@ -513,6 +523,7 @@ NGitLab.Impl.IssueClient.GetAsync(NGitLab.Models.IssueQuery query) -> NGitLab.Gi
 NGitLab.Impl.IssueClient.GetById(int issueId) -> NGitLab.Models.Issue
 NGitLab.Impl.IssueClient.GetByIdAsync(int issueId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.IssueClient(NGitLab.Impl.API api) -> void
+NGitLab.Impl.IssueClient.LinkedToAsync(int projectId, int issueId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.RelatedTo(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.Impl.IssueClient.RelatedToAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
@@ -619,6 +630,8 @@ NGitLab.Impl.MergeRequestDiscussionClient
 NGitLab.Impl.MergeRequestDiscussionClient.Add(NGitLab.Models.MergeRequestDiscussionCreate comment) -> NGitLab.Models.MergeRequestDiscussion
 NGitLab.Impl.MergeRequestDiscussionClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestDiscussion>
 NGitLab.Impl.MergeRequestDiscussionClient.Delete(string discussionId, long commentId) -> void
+NGitLab.Impl.MergeRequestDiscussionClient.Get(string id) -> NGitLab.Models.MergeRequestDiscussion
+NGitLab.Impl.MergeRequestDiscussionClient.GetAsync(string id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.MergeRequestDiscussion>
 NGitLab.Impl.MergeRequestDiscussionClient.MergeRequestDiscussionClient(NGitLab.Impl.API api, string projectPath, int mergeRequestIid) -> void
 NGitLab.Impl.MergeRequestDiscussionClient.Resolve(NGitLab.Models.MergeRequestDiscussionResolve resolve) -> NGitLab.Models.MergeRequestDiscussion
 NGitLab.Impl.MethodType
@@ -638,6 +651,7 @@ NGitLab.Impl.MilestoneClient.Close(int milestoneId) -> NGitLab.Models.Milestone
 NGitLab.Impl.MilestoneClient.Create(NGitLab.Models.MilestoneCreate milestone) -> NGitLab.Models.Milestone
 NGitLab.Impl.MilestoneClient.Delete(int milestoneId) -> void
 NGitLab.Impl.MilestoneClient.Get(NGitLab.Models.MilestoneQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Milestone>
+NGitLab.Impl.MilestoneClient.GetMergeRequests(int milestoneId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.Impl.MilestoneClient.MilestoneClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.MilestoneClient.Scope.get -> NGitLab.Impl.MilestoneScope
 NGitLab.Impl.MilestoneClient.this[int id].get -> NGitLab.Models.Milestone
@@ -671,6 +685,7 @@ NGitLab.Impl.PipelineClient.GetTestReportsSummary(int pipelineId) -> NGitLab.Mod
 NGitLab.Impl.PipelineClient.GetVariables(int pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
 NGitLab.Impl.PipelineClient.GetVariablesAsync(int pipelineId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineVariable>
 NGitLab.Impl.PipelineClient.PipelineClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.PipelineClient.RetryAsync(int pipelineId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.Impl.PipelineClient.Search(NGitLab.Models.PipelineQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.Impl.PipelineClient.SearchAsync(NGitLab.Models.PipelineQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
 NGitLab.Impl.PipelineClient.this[int id].get -> NGitLab.Models.Pipeline
@@ -843,6 +858,7 @@ NGitLab.IPipelineClient.GetTestReports(int pipelineId) -> NGitLab.Models.TestRep
 NGitLab.IPipelineClient.GetTestReportsSummary(int pipelineId) -> NGitLab.Models.TestReportSummary
 NGitLab.IPipelineClient.GetVariables(int pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
 NGitLab.IPipelineClient.GetVariablesAsync(int pipelineId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineVariable>
+NGitLab.IPipelineClient.RetryAsync(int pipelineId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.IPipelineClient.Search(NGitLab.Models.PipelineQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.IPipelineClient.SearchAsync(NGitLab.Models.PipelineQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
 NGitLab.IPipelineClient.this[int id].get -> NGitLab.Models.Pipeline
@@ -1365,6 +1381,20 @@ NGitLab.Models.DeploymentStatus.created = 0 -> NGitLab.Models.DeploymentStatus
 NGitLab.Models.DeploymentStatus.failed = 3 -> NGitLab.Models.DeploymentStatus
 NGitLab.Models.DeploymentStatus.running = 1 -> NGitLab.Models.DeploymentStatus
 NGitLab.Models.DeploymentStatus.success = 2 -> NGitLab.Models.DeploymentStatus
+NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.BlockedStatus = 0 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.BrokenStatus = 1 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.Checking = 2 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.CiMustPass = 4 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.CiStillRunning = 5 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.DiscussionsNotResolved = 6 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.DraftStatus = 7 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.ExternalStatusChecks = 8 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.Mergeable = 9 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.NotApproved = 10 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.NotOpen = 11 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.PoliciesDenied = 12 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.Unchecked = 3 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.Diff
 NGitLab.Models.Diff.AMode -> string
 NGitLab.Models.Diff.BMode -> string
@@ -2049,6 +2079,8 @@ NGitLab.Models.MergeRequest.ClosedAt -> System.DateTime?
 NGitLab.Models.MergeRequest.ClosedBy -> NGitLab.Models.User
 NGitLab.Models.MergeRequest.CreatedAt -> System.DateTime
 NGitLab.Models.MergeRequest.Description -> string
+NGitLab.Models.MergeRequest.DetailedMergeStatus.get -> NGitLab.DynamicEnum<NGitLab.Models.DetailedMergeStatus>
+NGitLab.Models.MergeRequest.DetailedMergeStatus.set -> void
 NGitLab.Models.MergeRequest.DiffRefs -> NGitLab.Models.DiffRefs
 NGitLab.Models.MergeRequest.DivergedCommitsCount.get -> int?
 NGitLab.Models.MergeRequest.DivergedCommitsCount.set -> void
@@ -2261,6 +2293,7 @@ NGitLab.Models.MergeRequestStateEvent.close = 0 -> NGitLab.Models.MergeRequestSt
 NGitLab.Models.MergeRequestStateEvent.merge = 2 -> NGitLab.Models.MergeRequestStateEvent
 NGitLab.Models.MergeRequestStateEvent.reopen = 1 -> NGitLab.Models.MergeRequestStateEvent
 NGitLab.Models.MergeRequestUpdate
+NGitLab.Models.MergeRequestUpdate.AddLabels -> string
 NGitLab.Models.MergeRequestUpdate.AllowCollaboration -> bool?
 NGitLab.Models.MergeRequestUpdate.AssigneeId -> int?
 NGitLab.Models.MergeRequestUpdate.AssigneeIds -> int[]
@@ -2269,6 +2302,7 @@ NGitLab.Models.MergeRequestUpdate.Labels -> string
 NGitLab.Models.MergeRequestUpdate.MergeRequestUpdate() -> void
 NGitLab.Models.MergeRequestUpdate.MilestoneId -> int?
 NGitLab.Models.MergeRequestUpdate.NewState -> string
+NGitLab.Models.MergeRequestUpdate.RemoveLabels -> string
 NGitLab.Models.MergeRequestUpdate.RemoveSourceBranch -> bool?
 NGitLab.Models.MergeRequestUpdate.ReviewerIds -> int[]
 NGitLab.Models.MergeRequestUpdate.SourceBranch -> string
@@ -2305,9 +2339,11 @@ NGitLab.Models.Milestone
 NGitLab.Models.Milestone.CreatedAt -> System.DateTime
 NGitLab.Models.Milestone.Description -> string
 NGitLab.Models.Milestone.DueDate -> string
+NGitLab.Models.Milestone.GroupId -> int?
 NGitLab.Models.Milestone.Id -> int
 NGitLab.Models.Milestone.Iid -> int
 NGitLab.Models.Milestone.Milestone() -> void
+NGitLab.Models.Milestone.ProjectId -> int?
 NGitLab.Models.Milestone.StartDate -> string
 NGitLab.Models.Milestone.State -> string
 NGitLab.Models.Milestone.Title -> string
@@ -2532,8 +2568,10 @@ NGitLab.Models.Project.LastActivityAt -> System.DateTime
 NGitLab.Models.Project.LfsEnabled -> bool
 NGitLab.Models.Project.Links -> NGitLab.Models.ProjectLinks
 NGitLab.Models.Project.MergeMethod -> string
+NGitLab.Models.Project.MergePipelinesEnabled -> bool
 NGitLab.Models.Project.MergeRequestsAccessLevel -> string
 NGitLab.Models.Project.MergeRequestsEnabled -> bool
+NGitLab.Models.Project.MergeTrainsEnabled -> bool
 NGitLab.Models.Project.Mirror -> bool
 NGitLab.Models.Project.MirrorOverwritesDivergedBranches -> bool
 NGitLab.Models.Project.MirrorTriggerBuilds -> bool
@@ -2580,8 +2618,10 @@ NGitLab.Models.ProjectCreate.Description -> string
 NGitLab.Models.ProjectCreate.ImportUrl -> string
 NGitLab.Models.ProjectCreate.IssuesAccessLevel -> string
 NGitLab.Models.ProjectCreate.IssuesEnabled -> bool
+NGitLab.Models.ProjectCreate.MergePipelinesEnabled -> bool
 NGitLab.Models.ProjectCreate.MergeRequestsAccessLevel -> string
 NGitLab.Models.ProjectCreate.MergeRequestsEnabled -> bool
+NGitLab.Models.ProjectCreate.MergeTrainsEnabled -> bool
 NGitLab.Models.ProjectCreate.Name -> string
 NGitLab.Models.ProjectCreate.NamespaceId -> string
 NGitLab.Models.ProjectCreate.Path -> string
@@ -2748,10 +2788,14 @@ NGitLab.Models.ProjectUpdate.JobsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.JobsEnabled.set -> void
 NGitLab.Models.ProjectUpdate.LfsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.LfsEnabled.set -> void
+NGitLab.Models.ProjectUpdate.MergePipelinesEnabled.get -> bool
+NGitLab.Models.ProjectUpdate.MergePipelinesEnabled.set -> void
 NGitLab.Models.ProjectUpdate.MergeRequestsAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.MergeRequestsAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.MergeRequestsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.MergeRequestsEnabled.set -> void
+NGitLab.Models.ProjectUpdate.MergeTrainsEnabled.get -> bool
+NGitLab.Models.ProjectUpdate.MergeTrainsEnabled.set -> void
 NGitLab.Models.ProjectUpdate.Name.get -> string
 NGitLab.Models.ProjectUpdate.Name.set -> void
 NGitLab.Models.ProjectUpdate.OnlyAllowMergeIfAllDiscussionsAreResolved.get -> bool?

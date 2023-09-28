@@ -293,5 +293,23 @@ namespace NGitLab.Tests
 
             Assert.AreEqual(updatedDueDate, updatedIssue.DueDate);
         }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_linked_issue()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var issuesClient = context.Client.Issues;
+
+            var issue1 = await issuesClient.CreateAsync(new IssueCreate { ProjectId = project.Id, Title = "title1" });
+            var issue2 = await issuesClient.CreateAsync(new IssueCreate { ProjectId = project.Id, Title = "title2", Description = "related to #1" });
+            var linked = issuesClient.CreateLinkBetweenIssues(project.Id, issue1.IssueId, project.Id, issue2.IssueId);
+            Assert.IsTrue(linked, "Expected true for create Link between issues");
+            var issues = issuesClient.LinkedToAsync(project.Id, issue1.IssueId).ToList();
+
+            // for now, no API to link issues so not links exist but API should not throw
+            Assert.AreEqual(1, issues.Count, "Expected 1. Got {0}", issues.Count);
+        }
     }
 }

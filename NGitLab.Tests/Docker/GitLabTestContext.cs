@@ -199,10 +199,10 @@ namespace NGitLab.Tests.Docker
             return client.Groups.Create(groupCreate);
         }
 
-        public (Project Project, MergeRequest MergeRequest) CreateMergeRequest()
+        public (Project Project, MergeRequest MergeRequest) CreateMergeRequest(Action<MergeRequestCreate> configure = null, Action<ProjectCreate> configureProject = null)
         {
             var client = Client;
-            var project = CreateProject(initializeWithCommits: true);
+            var project = CreateProject(configureProject, initializeWithCommits: true);
 
             const string BranchForMRName = "branch-for-mr";
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Create(new FileUpsert { Branch = project.DefaultBranch, CommitMessage = "test", Content = "test", Path = "test.md" }));
@@ -224,12 +224,15 @@ namespace NGitLab.Tests.Docker
 
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Update(new FileUpsert { Branch = BranchForMRName, CommitMessage = "test", Content = "test2", Path = "test.md" }));
 
-            var mr = client.GetMergeRequest(project.Id).Create(new MergeRequestCreate
+            var mergeRequestCreate = new MergeRequestCreate
             {
                 SourceBranch = BranchForMRName,
                 TargetBranch = project.DefaultBranch,
                 Title = "test",
-            });
+            };
+
+            configure?.Invoke(mergeRequestCreate);
+            var mr = client.GetMergeRequest(project.Id).Create(mergeRequestCreate);
 
             return (project, mr);
         }
@@ -255,13 +258,20 @@ namespace NGitLab.Tests.Docker
             return RandomNumberGenerator.GetInt32(0, int.MaxValue);
         }
 
-        public void ReportTestAsInconclusiveIfVersionOutOfRange(VersionRange versionRange)
+        public bool IsGitLabVersionInRange(VersionRange versionRange, out string gitLabVersion)
         {
-            var gitLabVersion = Client.Version.Get();
-            if (!NuGetVersion.TryParse(gitLabVersion.Version, out var currentVersion))
-                return;
-            if (!versionRange.Satisfies(currentVersion))
-                Assert.Inconclusive($"Test supported in version range '{versionRange}', but currently running against '{currentVersion}'");
+            var currentVersion = Client.Version.Get();
+            gitLabVersion = currentVersion.Version;
+
+            // Although a GitLab version is not a NuGet version, let's consider it as one to determine range inclusion
+            return NuGetVersion.TryParse(gitLabVersion, out var nuGetVersion) &&
+                   versionRange.Satisfies(nuGetVersion);
+        }
+
+        public void ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange versionRange)
+        {
+            if (!IsGitLabVersionInRange(versionRange, out var gitLabVersion))
+                Assert.Inconclusive($"Test supported by GitLab '{versionRange}', but currently running against '{gitLabVersion}'");
         }
 
         private IGitLabClient CreateClient(string token)

@@ -34,6 +34,11 @@ namespace NGitLab.Mock.Config
         {
         }
 
+        internal GitLabMilestonesCollection(GitLabGroup parent)
+            : base(parent)
+        {
+        }
+
         internal override void SetItem(GitLabMilestone item)
         {
             if (item == null)

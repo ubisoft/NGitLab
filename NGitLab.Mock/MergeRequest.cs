@@ -147,6 +147,8 @@ namespace NGitLab.Mock
             }
         }
 
+        public Milestone Milestone { get; set; }
+
         public IList<string> Labels { get; } = new List<string>();
 
         public NoteCollection<MergeRequestComment> Comments { get; }

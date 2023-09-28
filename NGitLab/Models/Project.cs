@@ -69,12 +69,18 @@ namespace NGitLab.Models
         [JsonPropertyName("issues_access_level")]
         public string IssuesAccessLevel;
 
+        [JsonPropertyName("merge_pipelines_enabled")]
+        public bool MergePipelinesEnabled;
+
         [JsonPropertyName("merge_requests_enabled")]
         [Obsolete("Deprecated by GitLab. Use MergeRequestsAccessLevel instead")]
         public bool MergeRequestsEnabled;
 
         [JsonPropertyName("merge_requests_access_level")]
         public string MergeRequestsAccessLevel;
+
+        [JsonPropertyName("merge_trains_enabled")]
+        public bool MergeTrainsEnabled;
 
         [JsonPropertyName("repository_access_level")]
         public RepositoryAccessLevel RepositoryAccessLevel;

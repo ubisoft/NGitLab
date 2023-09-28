@@ -11,13 +11,12 @@ namespace NGitLab.Mock
     internal sealed class MilestoneClient : ClientBase, IMilestoneClient
     {
         private readonly int _resourceId;
-        private readonly MilestoneScope _scope;
 
         public MilestoneClient(ClientContext context, int id, MilestoneScope scope)
             : base(context)
         {
             _resourceId = id;
-            _scope = scope;
+            Scope = scope;
         }
 
         public Models.Milestone this[int id]
@@ -26,35 +25,46 @@ namespace NGitLab.Mock
             {
                 using (Context.BeginOperationScope())
                 {
-                    var project = GetProject(_resourceId, ProjectPermission.View);
-                    return FindMilestone(id, project)?.ToClientMilestone();
+                    return GetMilestone(id, false).ToClientMilestone();
                 }
             }
         }
 
         public IEnumerable<Models.Milestone> All => Get(new MilestoneQuery());
 
-        public MilestoneScope Scope => throw new NotImplementedException();
+        public MilestoneScope Scope { get; }
 
         public Models.Milestone Activate(int milestoneId)
         {
             using (Context.BeginOperationScope())
             {
-                var milestone = new Milestone();
-
-                if (_scope == MilestoneScope.Groups)
-                {
-                    var group = GetGroup(_resourceId, GroupPermission.Edit);
-                    milestone = FindMilestone(milestoneId, group) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
-                }
-                else if (_scope == MilestoneScope.Projects)
-                {
-                    var project = GetProject(_resourceId, ProjectPermission.Edit);
-                    milestone = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
-                }
-
+                var milestone = GetMilestone(milestoneId, true);
                 milestone.State = MilestoneState.active;
                 return milestone.ToClientMilestone();
+            }
+        }
+
+        public IEnumerable<Models.MergeRequest> GetMergeRequests(int milestoneId)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var milestone = GetMilestone(milestoneId, false);
+                IEnumerable<MergeRequest> mergeRequests;
+
+                switch (Scope)
+                {
+                    case MilestoneScope.Groups:
+                        mergeRequests = milestone.Group.MergeRequests;
+                        break;
+                    case MilestoneScope.Projects:
+                        mergeRequests = milestone.Project.MergeRequests;
+                        break;
+                    default:
+                        throw new NotSupportedException($"{Scope} milestone is not supported yet.");
+                }
+
+                mergeRequests = mergeRequests.Where(mr => mr.Milestone == milestone);
+                return mergeRequests.Select(mr => mr.ToMergeRequestClient());
             }
         }
 
@@ -67,19 +77,7 @@ namespace NGitLab.Mock
         {
             using (Context.BeginOperationScope())
             {
-                var milestone = new Milestone();
-
-                if (_scope == MilestoneScope.Groups)
-                {
-                    var group = GetGroup(_resourceId, GroupPermission.Edit);
-                    milestone = FindMilestone(milestoneId, group) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
-                }
-                else if (_scope == MilestoneScope.Projects)
-                {
-                    var project = GetProject(_resourceId, ProjectPermission.Edit);
-                    milestone = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
-                }
-
+                var milestone = GetMilestone(milestoneId, true);
                 milestone.State = MilestoneState.closed;
                 return milestone.ToClientMilestone();
             }
@@ -97,15 +95,18 @@ namespace NGitLab.Mock
                     StartDate = string.IsNullOrEmpty(milestone.StartDate) ? DateTimeOffset.UtcNow : DateTimeOffset.Parse(milestone.StartDate),
                 };
 
-                if (_scope == MilestoneScope.Groups)
+                switch (Scope)
                 {
-                    var group = GetGroup(_resourceId, GroupPermission.Edit);
-                    group.Milestones.Add(ms);
-                }
-                else if (_scope == MilestoneScope.Projects)
-                {
-                    var project = GetProject(_resourceId, ProjectPermission.Edit);
-                    project.Milestones.Add(ms);
+                    case MilestoneScope.Groups:
+                        var group = GetGroup(_resourceId, GroupPermission.Edit);
+                        group.Milestones.Add(ms);
+                        break;
+                    case MilestoneScope.Projects:
+                        var project = GetProject(_resourceId, ProjectPermission.Edit);
+                        project.Milestones.Add(ms);
+                        break;
+                    default:
+                        throw new NotSupportedException($"{Scope} milestone is not supported yet.");
                 }
 
                 return ms.ToClientMilestone();
@@ -116,17 +117,17 @@ namespace NGitLab.Mock
         {
             using (Context.BeginOperationScope())
             {
-                if (_scope == MilestoneScope.Groups)
+                var milestone = GetMilestone(milestoneId, true);
+                switch (Scope)
                 {
-                    var group = GetGroup(_resourceId, GroupPermission.Edit);
-                    var milestone = FindMilestone(milestoneId, group) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
-                    group.Milestones.Remove(milestone);
-                }
-                else if (_scope == MilestoneScope.Projects)
-                {
-                    var project = GetProject(_resourceId, ProjectPermission.Edit);
-                    var milestone = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
-                    project.Milestones.Remove(milestone);
+                    case MilestoneScope.Groups:
+                        milestone.Group.Milestones.Remove(milestone);
+                        break;
+                    case MilestoneScope.Projects:
+                        milestone.Project.Milestones.Remove(milestone);
+                        break;
+                    default:
+                        throw new NotSupportedException($"{Scope} milestone is not supported yet.");
                 }
             }
         }
@@ -135,17 +136,20 @@ namespace NGitLab.Mock
         {
             using (Context.BeginOperationScope())
             {
-                IEnumerable<Milestone> milestones = new List<Milestone>();
+                IEnumerable<Milestone> milestones;
 
-                if (_scope == MilestoneScope.Groups)
+                switch (Scope)
                 {
-                    var group = GetGroup(_resourceId, GroupPermission.View);
-                    milestones = milestones.Concat(group.Milestones);
-                }
-                else if (_scope == MilestoneScope.Projects)
-                {
-                    var project = GetProject(_resourceId, ProjectPermission.View);
-                    milestones = milestones.Concat(project.Milestones);
+                    case MilestoneScope.Groups:
+                        var group = GetGroup(_resourceId, GroupPermission.View);
+                        milestones = group.Milestones;
+                        break;
+                    case MilestoneScope.Projects:
+                        var project = GetProject(_resourceId, ProjectPermission.View);
+                        milestones = project.Milestones;
+                        break;
+                    default:
+                        throw new NotSupportedException($"{Scope} milestone is not supported yet.");
                 }
 
                 if (query.State != null)
@@ -166,18 +170,7 @@ namespace NGitLab.Mock
         {
             using (Context.BeginOperationScope())
             {
-                var ms = new Milestone();
-
-                if (_scope == MilestoneScope.Groups)
-                {
-                    var group = GetGroup(_resourceId, GroupPermission.Edit);
-                    ms = FindMilestone(milestoneId, group) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
-                }
-                else if (_scope == MilestoneScope.Projects)
-                {
-                    var project = GetProject(_resourceId, ProjectPermission.Edit);
-                    ms = FindMilestone(milestoneId, project) ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
-                }
+                var ms = GetMilestone(milestoneId, true);
 
                 if (!string.IsNullOrEmpty(milestone.Title))
                 {
@@ -203,14 +196,25 @@ namespace NGitLab.Mock
             }
         }
 
-        private static Milestone FindMilestone(int id, Project project)
+        private Milestone GetMilestone(int milestoneId, bool editing)
         {
-            return project.Milestones.FirstOrDefault(x => x.Id == id);
-        }
+            Milestone milestone;
 
-        private static Milestone FindMilestone(int id, Group group)
-        {
-            return group.Milestones.FirstOrDefault(x => x.Id == id);
+            switch (Scope)
+            {
+                case MilestoneScope.Groups:
+                    var group = GetGroup(_resourceId, editing ? GroupPermission.Edit : GroupPermission.View);
+                    milestone = group.Milestones.FirstOrDefault(x => x.Id == milestoneId);
+                    break;
+                case MilestoneScope.Projects:
+                    var project = GetProject(_resourceId, editing ? ProjectPermission.Edit : ProjectPermission.View);
+                    milestone = project.Milestones.FirstOrDefault(x => x.Id == milestoneId);
+                    break;
+                default:
+                    throw new NotSupportedException($"{Scope} milestone is not supported yet.");
+            }
+
+            return milestone ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
         }
     }
 }

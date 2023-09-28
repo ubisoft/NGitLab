@@ -48,7 +48,11 @@ namespace NGitLab.Impl
 
                 if (apiToken != null)
                 {
-                    Headers.Add("Private-Token", apiToken);
+                    // Use the 'Authorization: Bearer token' header as this provides flexibility to use
+                    // personal, project, group and OAuth tokens. The 'PRIVATE-TOKEN' header does not
+                    // provide OAuth token support.
+                    // Reference: https://docs.gitlab.com/ee/api/rest/#personalprojectgroup-access-tokens
+                    Headers.Add(HttpRequestHeader.Authorization, string.Concat("Bearer ", apiToken));
                 }
 
                 if (!string.IsNullOrEmpty(options?.UserAgent))

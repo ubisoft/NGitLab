@@ -23,7 +23,7 @@ jobs:
   create_nuget:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # Get all the history so MinGit can compute the version
     - name: Setup .NET Core (latest)
@@ -51,12 +51,8 @@ jobs:
         # Keep in sync with the version in GitLabDockerContainer.cs
         # Available tags: https://hub.docker.com/r/gitlab/gitlab-ee/tags
         gitlab: [
-          'gitlab/gitlab-ee:15.0.5-ee.0',
-          'gitlab/gitlab-ee:15.1.6-ee.0',
           'gitlab/gitlab-ee:15.4.6-ee.0',
-          'gitlab/gitlab-ee:15.6.8-ee.0',
-          # Several MR-related tests fail against the following version. We need to investigate...
-          # 'gitlab/gitlab-ee:15.10.0-ee.0',
+          'gitlab/gitlab-ee:15.11.9-ee.0',
         ]
         configuration: [ Release ]
       fail-fast: false
@@ -69,7 +65,7 @@ jobs:
           GITLAB_OMNIBUS_CONFIG: "external_url 'http://localhost:48624/'"
           GITLAB_ROOT_PASSWORD: "Pa$$w0rd"
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup .NET Core (latest)
       uses: actions/setup-dotnet@v3
     - run: |

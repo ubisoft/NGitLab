@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -14,7 +16,12 @@ namespace NGitLab.Tests
             var (project, mergeRequest) = context.CreateMergeRequest();
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
             var mergeRequestChanges = mergeRequestClient.Changes(mergeRequest.Iid);
-            var changes = mergeRequestChanges.MergeRequestChange.Changes;
+
+            var changes = await GitLabTestContext.RetryUntilAsync(
+                () => mergeRequestChanges.MergeRequestChange.Changes,
+                changes => changes.Any(),
+                TimeSpan.FromSeconds(10));
+
             Assert.AreEqual(1, changes.Length);
             Assert.AreEqual(100644, changes[0].AMode);
             Assert.AreEqual(100644, changes[0].BMode);

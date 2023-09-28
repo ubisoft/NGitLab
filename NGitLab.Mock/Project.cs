@@ -68,7 +68,7 @@ namespace NGitLab.Mock
 
         public Project ForkedFrom { get; internal set; }
 
-        public RepositoryAccessLevel ForkingAccessLevel { get; set; }
+        public RepositoryAccessLevel ForkingAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
 
         public string ImportStatus { get; set; }
 
@@ -154,13 +154,18 @@ namespace NGitLab.Mock
             Group.Projects.Remove(this);
         }
 
-        public EffectivePermissions GetEffectivePermissions()
+        public EffectivePermissions GetEffectivePermissions() => GetEffectivePermissions(includeInheritedPermissions: true);
+
+        public EffectivePermissions GetEffectivePermissions(bool includeInheritedPermissions)
         {
             var result = new Dictionary<User, AccessLevel>();
 
-            foreach (var effectivePermission in Group.GetEffectivePermissions().Permissions)
+            if (includeInheritedPermissions)
             {
-                Add(effectivePermission.User, effectivePermission.AccessLevel);
+                foreach (var effectivePermission in Group.GetEffectivePermissions(includeInheritedPermissions).Permissions)
+                {
+                    Add(effectivePermission.User, effectivePermission.AccessLevel);
+                }
             }
 
             foreach (var permission in Permissions)
@@ -171,7 +176,7 @@ namespace NGitLab.Mock
                 }
                 else
                 {
-                    foreach (var effectivePermission in permission.Group.GetEffectivePermissions().Permissions)
+                    foreach (var effectivePermission in permission.Group.GetEffectivePermissions(includeInheritedPermissions).Permissions)
                     {
                         Add(effectivePermission.User, effectivePermission.AccessLevel);
                     }
@@ -397,6 +402,25 @@ namespace NGitLab.Mock
             newProject.Permissions.Add(new Permission(user, AccessLevel.Maintainer));
             group.Projects.Add(newProject);
             return newProject;
+        }
+
+        /// <summary>
+        /// https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html#bot-users-for-projects
+        /// </summary>
+        /// <param name="tokenName">Name of the token</param>
+        /// <param name="accessLevel">AccessLevel to give to the bot user</param>
+        /// <returns>Bot user that have been added to the project</returns>
+        public User CreateBotUser(string tokenName, AccessLevel accessLevel)
+        {
+            var botUsername = $"project_{Id}_bot_{Guid.NewGuid():D}";
+            var bot = new User(botUsername)
+            {
+                Name = tokenName,
+                Email = $"{botUsername}@noreply.example.com",
+            };
+            Permissions.Add(new Permission(bot, accessLevel));
+            Server.Users.Add(bot);
+            return bot;
         }
 
         public Models.Project ToClientProject(User currentUser)

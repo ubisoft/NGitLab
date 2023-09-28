@@ -27,7 +27,7 @@ namespace NGitLab.Tests.Docker
         public const string ImageName = "gitlab/gitlab-ee";
 
         // https://hub.docker.com/r/gitlab/gitlab-ee/tags/
-        public const string GitLabDockerVersion = "14.10.5-ee.0"; // Keep in sync with .github/workflows/ci.yml
+        public const string GitLabDockerVersion = "15.4.6-ee.0"; // Keep in sync with .github/workflows/ci.yml
 
         private static string s_creationErrorMessage;
         private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
@@ -106,6 +106,10 @@ namespace NGitLab.Tests.Docker
             try
             {
                 await client.Images.ListImagesAsync(new ImagesListParameters()).ConfigureAwait(false);
+            }
+            catch (ArgumentOutOfRangeException ex) when (ex.Message.StartsWith("The added or subtracted value results in an un-representable DateTime.", StringComparison.Ordinal))
+            {
+                // Ignore https://github.com/rancher-sandbox/rancher-desktop/issues/5145
             }
             catch (Exception ex)
             {

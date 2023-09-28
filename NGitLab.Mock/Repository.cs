@@ -502,7 +502,7 @@ namespace NGitLab.Mock
                 Ref = @ref,
                 BlobId = ((Blob)commit[filePath].Target).Id.ToString(),
                 CommitId = commit.Sha,
-                LastCommitId = repo.GetLastCommitForFileChanges(filePath).Sha,
+                LastCommitId = repo.GetLastCommitForFileChanges(filePath)?.Sha,
             };
         }
 
