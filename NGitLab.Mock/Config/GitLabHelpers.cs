@@ -1337,7 +1337,7 @@ namespace NGitLab.Mock.Config
                 }
 
                 using var process = Process.Start(
-                    new ProcessStartInfo("git", $"-c protocol.file.allow=always submodule add {subModuleProject.SshUrl} {subModuleProject.Name}")
+                    new ProcessStartInfo("git", $"-c protocol.file.allow=always submodule add \"{subModuleProject.SshUrl}\" \"{subModuleProject.Name}\"")
                     {
                         RedirectStandardError = true,
                         UseShellExecute = false,
