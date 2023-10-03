@@ -12,7 +12,7 @@ namespace NGitLab.Impl
         public SshKeyClient(API api, int? userId)
         {
             _api = api;
-            _url = userId != null ? $"users/{userId}/keys" : "user/keys";
+            _url = userId != null ? $"users/{userId.Value.ToStringInvariant()}/keys" : "user/keys";
         }
 
         public IEnumerable<SshKey> All => _api.Get().GetAll<SshKey>(_url);
