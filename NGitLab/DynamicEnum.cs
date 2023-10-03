@@ -46,7 +46,7 @@ namespace NGitLab
                    StringComparer.OrdinalIgnoreCase.Equals(StringValue, other.StringValue);
         }
 
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             return obj is DynamicEnum<TEnum> other && Equals(other);
         }
