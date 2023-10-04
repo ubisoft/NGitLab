@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using NGitLab.Models;
@@ -38,7 +37,7 @@ namespace NGitLab.Impl.Json
                 foreach (var mapping in _enumType.GetEnumMappings())
                 {
                     enumValues.Add((TEnum)mapping.EnumValue);
-                    stringValues.Add(mapping.StringValue ?? mapping.EnumValue.ToString(CultureInfo.InvariantCulture));
+                    stringValues.Add(mapping.StringValue ?? mapping.EnumValue.ToString());
                 }
 
                 _stringToEnumValues = new Dictionary<string, TEnum>(stringValues.Count, StringComparer.OrdinalIgnoreCase);
