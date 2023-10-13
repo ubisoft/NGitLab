@@ -675,6 +675,11 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public Task<TimeStats> TimeStatsAsync(int projectId, int mergeRequestIid, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         public IMergeRequestDiscussionClient Discussions(int mergeRequestIid)
         {
             AssertProjectId();

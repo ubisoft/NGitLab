@@ -10,6 +10,8 @@ namespace NGitLab.Impl
 {
     public class MergeRequestClient : IMergeRequestClient
     {
+        private const string TimeStatsUrl = "/projects/{0}/merge_requests/{1}/time_stats";
+
         private readonly API _api;
         private readonly string _projectPath;
 
@@ -150,6 +152,11 @@ namespace NGitLab.Impl
         public GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(int mergeRequestIid)
         {
             return _api.Get().GetAllAsync<MergeRequestVersion>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/versions");
+        }
+
+        public Task<TimeStats> TimeStatsAsync(int projectId, int mergeRequestIid, CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<TimeStats>(string.Format(CultureInfo.InvariantCulture, TimeStatsUrl, projectId, mergeRequestIid), cancellationToken);
         }
 
         public IMergeRequestCommentClient Comments(int mergeRequestIid) => new MergeRequestCommentClient(_api, _projectPath, mergeRequestIid);

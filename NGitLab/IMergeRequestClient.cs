@@ -58,5 +58,13 @@ namespace NGitLab
         IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid);
 
         IEnumerable<Issue> ClosesIssues(int mergeRequestIid);
+
+        /// <summary>
+        /// Get time tracking statistics
+        /// </summary>
+        /// <param name="projectId">The project id.</param>
+        /// <param name="mergeRequestIid">The id of the merge request in the project's scope.</param>
+        /// <returns>The time tracking statistics of the merge request.</returns>
+        Task<TimeStats> TimeStatsAsync(int projectId, int mergeRequestIid, CancellationToken cancellationToken = default);
     }
 }
