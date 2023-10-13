@@ -1817,6 +1817,7 @@ NGitLab.Models.IssueClone.WithNotes.get -> bool
 NGitLab.Models.IssueClone.WithNotes.set -> void
 NGitLab.Models.IssueCreate
 NGitLab.Models.IssueCreate.AssigneeId -> int?
+NGitLab.Models.IssueCreate.AssigneeIds -> int[]
 NGitLab.Models.IssueCreate.Confidential -> bool
 NGitLab.Models.IssueCreate.Description -> string
 NGitLab.Models.IssueCreate.DueDate -> System.DateTime?
@@ -1830,6 +1831,7 @@ NGitLab.Models.IssueCreate.ProjectId.set -> void
 NGitLab.Models.IssueCreate.Title -> string
 NGitLab.Models.IssueEdit
 NGitLab.Models.IssueEdit.AssigneeId -> int?
+NGitLab.Models.IssueEdit.AssigneeIds -> int[]
 NGitLab.Models.IssueEdit.Description -> string
 NGitLab.Models.IssueEdit.DueDate -> System.DateTime?
 NGitLab.Models.IssueEdit.EpicId -> int?
