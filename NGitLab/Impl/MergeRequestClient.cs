@@ -11,13 +11,11 @@ namespace NGitLab.Impl
     public class MergeRequestClient : IMergeRequestClient
     {
         private readonly API _api;
-        private readonly int _projectId;
         private readonly string _projectPath;
 
         public MergeRequestClient(API api, int projectId)
         {
             _api = api;
-            _projectId = projectId;
             _projectPath = Project.Url + "/" + projectId.ToStringInvariant();
         }
 
@@ -88,8 +86,6 @@ namespace NGitLab.Impl
         {
             if (mergeRequest == null)
                 throw new ArgumentNullException(nameof(mergeRequest));
-
-            mergeRequest.TargetProjectId ??= _projectId;
 
             return _api
                 .Post().With(mergeRequest)
