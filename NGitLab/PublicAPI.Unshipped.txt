@@ -2118,6 +2118,7 @@ NGitLab.Models.MergeRequest.UpdatedAt -> System.DateTime
 NGitLab.Models.MergeRequest.Upvotes -> int
 NGitLab.Models.MergeRequest.User.get -> NGitLab.Models.MergeRequestUserInfo
 NGitLab.Models.MergeRequest.User.set -> void
+NGitLab.Models.MergeRequest.UserNotesCount -> int
 NGitLab.Models.MergeRequest.WebUrl -> string
 NGitLab.Models.MergeRequest.WorkInProgress -> bool?
 NGitLab.Models.MergeRequestAccept
