@@ -23,6 +23,8 @@ namespace NGitLab
 
         byte[] GetJobArtifacts(int jobId);
 
+        byte[] GetJobArtifact(int jobId, string path);
+
         string GetTrace(int jobId);
 
         Task<string> GetTraceAsync(int jobId, CancellationToken cancellationToken = default);

@@ -45,6 +45,11 @@ namespace NGitLab.Mock.Clients
             throw new NotImplementedException();
         }
 
+        public byte[] GetJobArtifact(int jobId, string path)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Models.Job> GetJobs(JobScopeMask scope)
         {
             return GetJobs(new JobQuery { Scope = scope });
