@@ -354,7 +354,7 @@ NGitLab.IMergeRequestClient.Rebase(int mergeRequestIid) -> NGitLab.Models.Rebase
 NGitLab.IMergeRequestClient.RebaseAsync(int mergeRequestIid, NGitLab.Models.MergeRequestRebase options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.RebaseResult>
 NGitLab.IMergeRequestClient.Reopen(int mergeRequestIid) -> NGitLab.Models.MergeRequest
 NGitLab.IMergeRequestClient.this[int iid].get -> NGitLab.Models.MergeRequest
-NGitLab.IMergeRequestClient.TimeStatsAsync(int projectId, int mergeRequestIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
+NGitLab.IMergeRequestClient.TimeStatsAsync(int mergeRequestIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
 NGitLab.IMergeRequestClient.Update(int mergeRequestIid, NGitLab.Models.MergeRequestUpdate mergeRequest) -> NGitLab.Models.MergeRequest
 NGitLab.IMergeRequestCommentClient
 NGitLab.IMergeRequestCommentClient.Add(NGitLab.Models.MergeRequestComment comment) -> NGitLab.Models.MergeRequestComment
@@ -616,7 +616,7 @@ NGitLab.Impl.MergeRequestClient.Rebase(int mergeRequestIid) -> NGitLab.Models.Re
 NGitLab.Impl.MergeRequestClient.RebaseAsync(int mergeRequestIid, NGitLab.Models.MergeRequestRebase options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.RebaseResult>
 NGitLab.Impl.MergeRequestClient.Reopen(int mergeRequestIid) -> NGitLab.Models.MergeRequest
 NGitLab.Impl.MergeRequestClient.this[int iid].get -> NGitLab.Models.MergeRequest
-NGitLab.Impl.MergeRequestClient.TimeStatsAsync(int projectId, int mergeRequestIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
+NGitLab.Impl.MergeRequestClient.TimeStatsAsync(int mergeRequestIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
 NGitLab.Impl.MergeRequestClient.Update(int mergeRequestIid, NGitLab.Models.MergeRequestUpdate mergeRequest) -> NGitLab.Models.MergeRequest
 NGitLab.Impl.MergeRequestCommentClient
 NGitLab.Impl.MergeRequestCommentClient.Add(NGitLab.Models.MergeRequestComment comment) -> NGitLab.Models.MergeRequestComment
