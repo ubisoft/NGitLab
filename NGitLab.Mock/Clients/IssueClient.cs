@@ -84,7 +84,7 @@ namespace NGitLab.Mock.Clients
                 if (issueEdit.MilestoneId.HasValue)
                 {
                     issueToModify.Milestone = GetMilestone(projectId, issueEdit.MilestoneId.Value);
-                    Server.ResourceMilestoneEvents.CreateResourceMilestoneEvents(Context.User, issueToModify.Id, prevMilestone, issueToModify.Milestone);
+                    Server.ResourceMilestoneEvents.CreateResourceMilestoneEvents(Context.User, issueToModify.Id, prevMilestone, issueToModify.Milestone, "Issue");
                 }
 
                 issueToModify.Title = issueEdit.Title;

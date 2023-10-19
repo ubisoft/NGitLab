@@ -263,6 +263,27 @@ namespace NGitLab.Mock.Clients
 
                 mergeRequest.ClosedAt = DateTimeOffset.UtcNow;
                 mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
+
+                var currentUser = Context.User;
+                Server.ResourceStateEvents.Add(new ResourceStateEvent()
+                {
+                    ResourceId = mergeRequest.Id,
+                    CreatedAt = DateTime.UtcNow,
+                    Id = Server.GetNewResourceLabelEventId(),
+                    State = "closed",
+                    User = new Author()
+                    {
+                        Id = currentUser.Id,
+                        Email = currentUser.Email,
+                        AvatarUrl = currentUser.AvatarUrl,
+                        Name = currentUser.Name,
+                        State = currentUser.State.ToString(),
+                        Username = currentUser.UserName,
+                        CreatedAt = currentUser.CreatedAt,
+                        WebUrl = currentUser.WebUrl,
+                    },
+                    ResourceType = "MergeRequest",
+                });
                 return mergeRequest.ToMergeRequestClient();
             }
         }
@@ -333,16 +354,22 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        private static void SetLabels(MergeRequest mergeRequest, string labels)
+        private void SetLabels(MergeRequest mergeRequest, string labels)
         {
             if (labels != null)
             {
-                mergeRequest.Labels.Clear();
-                foreach (var label in labels.Split(','))
+                var newLabels = labels.Split(',');
+                if (labels is not null)
                 {
-                    if (!string.IsNullOrEmpty(label))
+                    Server.ResourceLabelEvents.CreateResourceLabelEvents(Context.User, mergeRequest.Labels.ToArray(), newLabels, mergeRequest.Id);
+                }
+
+                mergeRequest.Labels.Clear();
+                foreach (var newLabel in newLabels)
+                {
+                    if (!string.IsNullOrEmpty(newLabel))
                     {
-                        mergeRequest.Labels.Add(label);
+                        mergeRequest.Labels.Add(newLabel);
                     }
                 }
             }
@@ -572,6 +599,27 @@ namespace NGitLab.Mock.Clients
 
                 mergeRequest.ClosedAt = null;
                 mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
+
+                var currentUser = Context.User;
+                Server.ResourceStateEvents.Add(new ResourceStateEvent()
+                {
+                    ResourceId = mergeRequest.Id,
+                    CreatedAt = DateTime.UtcNow,
+                    Id = Server.GetNewResourceLabelEventId(),
+                    State = "reopened",
+                    User = new Author()
+                    {
+                        Id = currentUser.Id,
+                        Email = currentUser.Email,
+                        AvatarUrl = currentUser.AvatarUrl,
+                        Name = currentUser.Name,
+                        State = currentUser.State.ToString(),
+                        Username = currentUser.UserName,
+                        CreatedAt = currentUser.CreatedAt,
+                        WebUrl = currentUser.WebUrl,
+                    },
+                    ResourceType = "MergeRequest",
+                });
                 return mergeRequest.ToMergeRequestClient();
             }
         }

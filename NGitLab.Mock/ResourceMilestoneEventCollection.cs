@@ -42,24 +42,24 @@ namespace NGitLab.Mock
             return this.Select(rle => rle.Id).DefaultIfEmpty().Max() + 1;
         }
 
-        internal void CreateResourceMilestoneEvents(User currentUser, int resourceId, Milestone previousMilestone, Milestone newMilestone)
+        internal void CreateResourceMilestoneEvents(User currentUser, int resourceId, Milestone previousMilestone, Milestone newMilestone, string resourceType)
         {
             if (previousMilestone is null)
             {
-                CreateResourceMilestoneEvent(currentUser, resourceId, newMilestone, ResourceMilestoneEventAction.Add);
+                CreateResourceMilestoneEvent(currentUser, resourceId, newMilestone, ResourceMilestoneEventAction.Add, resourceType);
             }
             else if (newMilestone is not null && previousMilestone is not null)
             {
                 if (newMilestone.Id != previousMilestone.Id)
                 {
-                    CreateResourceMilestoneEvent(currentUser, resourceId, previousMilestone, ResourceMilestoneEventAction.Remove);
+                    CreateResourceMilestoneEvent(currentUser, resourceId, previousMilestone, ResourceMilestoneEventAction.Remove, resourceType);
                 }
 
-                CreateResourceMilestoneEvent(currentUser, resourceId, newMilestone, ResourceMilestoneEventAction.Add);
+                CreateResourceMilestoneEvent(currentUser, resourceId, newMilestone, ResourceMilestoneEventAction.Add, resourceType);
             }
         }
 
-        internal void CreateResourceMilestoneEvent(User currentUser, int resourceId, Milestone milestone, ResourceMilestoneEventAction action)
+        internal void CreateResourceMilestoneEvent(User currentUser, int resourceId, Milestone milestone, ResourceMilestoneEventAction action, string resourceType)
         {
             Server.ResourceMilestoneEvents.Add(new ResourceMilestoneEvent()
             {
@@ -79,7 +79,7 @@ namespace NGitLab.Mock
                     CreatedAt = currentUser.CreatedAt,
                     WebUrl = currentUser.WebUrl,
                 },
-                ResourceType = "issue",
+                ResourceType = resourceType,
             });
         }
     }
