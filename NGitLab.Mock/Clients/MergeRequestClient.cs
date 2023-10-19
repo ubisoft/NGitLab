@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -680,6 +681,66 @@ namespace NGitLab.Mock.Clients
             AssertProjectId();
 
             return new MergeRequestDiscussionClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
+        }
+
+        public IEnumerable<Models.ResourceLabelEvent> ResourceLabelEvents(int projectId, int mergeRequestIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
+                return Server.ResourceLabelEvents.Get(mergeRequest.Id).Select(rle => rle.ToClientResourceLabelEvent());
+            }
+        }
+
+        public GitLabCollectionResponse<Models.ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int mergeRequestIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
+                var resourceLabelEvents = Server.ResourceLabelEvents.Get(mergeRequest.Id);
+
+                return GitLabCollectionResponse.Create(resourceLabelEvents.Select(rle => rle.ToClientResourceLabelEvent()));
+            }
+        }
+
+        public IEnumerable<Models.ResourceMilestoneEvent> ResourceMilestoneEvents(int projectId, int mergeRequestIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
+                return Server.ResourceMilestoneEvents.Get(mergeRequest.Id).Select(rme => rme.ToClientResourceMilestoneEvent());
+            }
+        }
+
+        public GitLabCollectionResponse<Models.ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int mergeRequestIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
+                var resourceMilestoneEvents = Server.ResourceMilestoneEvents.Get(mergeRequest.Id);
+
+                return GitLabCollectionResponse.Create(resourceMilestoneEvents.Select(rme => rme.ToClientResourceMilestoneEvent()));
+            }
+        }
+
+        public IEnumerable<Models.ResourceStateEvent> ResourceStateEvents(int projectId, int mergeRequestIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
+                return Server.ResourceStateEvents.Get(mergeRequest.Id).Select(rle => rle.ToClientResourceStateEvent());
+            }
+        }
+
+        public GitLabCollectionResponse<Models.ResourceStateEvent> ResourceStateEventsAsync(int projectId, int mergeRequestIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
+                var resourceStateEvents = Server.ResourceStateEvents.Get(mergeRequest.Id);
+
+                return GitLabCollectionResponse.Create(resourceStateEvents.Select(rle => rle.ToClientResourceStateEvent()));
+            }
         }
     }
 }

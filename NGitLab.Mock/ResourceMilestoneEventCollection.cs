@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NGitLab.Models;
 
 namespace NGitLab.Mock
 {
@@ -39,6 +40,47 @@ namespace NGitLab.Mock
         private int GetNewId()
         {
             return this.Select(rle => rle.Id).DefaultIfEmpty().Max() + 1;
+        }
+
+        internal void CreateResourceMilestoneEvents(User currentUser, int resourceId, Milestone previousMilestone, Milestone newMilestone)
+        {
+            if (previousMilestone is null)
+            {
+                CreateResourceMilestoneEvent(currentUser, resourceId, newMilestone, ResourceMilestoneEventAction.Add);
+            }
+            else if (newMilestone is not null && previousMilestone is not null)
+            {
+                if (newMilestone.Id != previousMilestone.Id)
+                {
+                    CreateResourceMilestoneEvent(currentUser, resourceId, previousMilestone, ResourceMilestoneEventAction.Remove);
+                }
+
+                CreateResourceMilestoneEvent(currentUser, resourceId, newMilestone, ResourceMilestoneEventAction.Add);
+            }
+        }
+
+        internal void CreateResourceMilestoneEvent(User currentUser, int resourceId, Milestone milestone, ResourceMilestoneEventAction action)
+        {
+            Server.ResourceMilestoneEvents.Add(new ResourceMilestoneEvent()
+            {
+                Action = action,
+                Milestone = milestone,
+                ResourceId = resourceId,
+                CreatedAt = DateTime.UtcNow,
+                Id = Server.GetNewResourceLabelEventId(),
+                User = new Author()
+                {
+                    Id = currentUser.Id,
+                    Email = currentUser.Email,
+                    AvatarUrl = currentUser.AvatarUrl,
+                    Name = currentUser.Name,
+                    State = currentUser.State.ToString(),
+                    Username = currentUser.UserName,
+                    CreatedAt = currentUser.CreatedAt,
+                    WebUrl = currentUser.WebUrl,
+                },
+                ResourceType = "issue",
+            });
         }
     }
 }

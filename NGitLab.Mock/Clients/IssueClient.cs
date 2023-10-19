@@ -84,7 +84,7 @@ namespace NGitLab.Mock.Clients
                 if (issueEdit.MilestoneId.HasValue)
                 {
                     issueToModify.Milestone = GetMilestone(projectId, issueEdit.MilestoneId.Value);
-                    CreateResourceMilestoneEvents(issueToModify.Id, prevMilestone, issueToModify.Milestone);
+                    Server.ResourceMilestoneEvents.CreateResourceMilestoneEvents(Context.User, issueToModify.Id, prevMilestone, issueToModify.Milestone);
                 }
 
                 issueToModify.Title = issueEdit.Title;
@@ -107,7 +107,7 @@ namespace NGitLab.Mock.Clients
 
                 if (labelsEdit is not null)
                 {
-                    CreateResourceLabelEvents(issueToModify.Labels, labelsEdit, issueToModify.Id);
+                    Server.ResourceLabelEvents.CreateResourceLabelEvents(Context.User, issueToModify.Labels, labelsEdit, issueToModify.Id);
                     issueToModify.Labels = labelsEdit;
                 }
 
@@ -450,107 +450,6 @@ namespace NGitLab.Mock.Clients
             }
 
             return issues;
-        }
-
-        private void CreateResourceLabelEvents(string[] previousLabels, string[] newLabels, int resourceId)
-        {
-            var currentUser = Context.User;
-
-            foreach (var label in previousLabels)
-            {
-                if (!newLabels.Any(l => string.Equals(l, label, StringComparison.OrdinalIgnoreCase)))
-                {
-                    Server.ResourceLabelEvents.Add(new ResourceLabelEvent()
-                    {
-                        Action = ResourceLabelEventAction.Remove,
-                        Label = new Label() { Name = label },
-                        ResourceId = resourceId,
-                        CreatedAt = DateTime.UtcNow,
-                        Id = Server.GetNewResourceLabelEventId(),
-                        User = new Author()
-                        {
-                            Id = currentUser.Id,
-                            Email = currentUser.Email,
-                            AvatarUrl = currentUser.AvatarUrl,
-                            Name = currentUser.Name,
-                            State = currentUser.State.ToString(),
-                            Username = currentUser.UserName,
-                            CreatedAt = currentUser.CreatedAt,
-                            WebUrl = currentUser.WebUrl,
-                        },
-                        ResourceType = "issue",
-                    });
-                }
-            }
-
-            foreach (var label in newLabels)
-            {
-                if (!previousLabels.Any(l => string.Equals(l, label, StringComparison.OrdinalIgnoreCase)))
-                {
-                    Server.ResourceLabelEvents.Add(new ResourceLabelEvent()
-                    {
-                        Action = ResourceLabelEventAction.Add,
-                        Label = new Label() { Name = label },
-                        ResourceId = resourceId,
-                        CreatedAt = DateTime.UtcNow,
-                        Id = Server.GetNewResourceLabelEventId(),
-                        User = new Author()
-                        {
-                            Id = currentUser.Id,
-                            Email = currentUser.Email,
-                            AvatarUrl = currentUser.AvatarUrl,
-                            Name = currentUser.Name,
-                            State = currentUser.State.ToString(),
-                            Username = currentUser.UserName,
-                            CreatedAt = currentUser.CreatedAt,
-                            WebUrl = currentUser.WebUrl,
-                        },
-                        ResourceType = "issue",
-                    });
-                }
-            }
-        }
-
-        private void CreateResourceMilestoneEvents(int resourceId, Milestone previousMilestone, Milestone newMilestone)
-        {
-            if (previousMilestone is null)
-            {
-                CreateResourceMilestoneEvent(resourceId, newMilestone, ResourceMilestoneEventAction.Add);
-            }
-            else if (newMilestone is not null && previousMilestone is not null)
-            {
-                if (newMilestone.Id != previousMilestone.Id)
-                {
-                    CreateResourceMilestoneEvent(resourceId, previousMilestone, ResourceMilestoneEventAction.Remove);
-                }
-
-                CreateResourceMilestoneEvent(resourceId, newMilestone, ResourceMilestoneEventAction.Add);
-            }
-        }
-
-        private void CreateResourceMilestoneEvent(int resourceId, Milestone milestone, ResourceMilestoneEventAction action)
-        {
-            var currentUser = Context.User;
-            Server.ResourceMilestoneEvents.Add(new ResourceMilestoneEvent()
-            {
-                Action = action,
-                Milestone = milestone,
-                ResourceId = resourceId,
-                CreatedAt = DateTime.UtcNow,
-                Id = Server.GetNewResourceLabelEventId(),
-                User = new Author()
-                {
-                    Id = currentUser.Id,
-                    Email = currentUser.Email,
-                    AvatarUrl = currentUser.AvatarUrl,
-                    Name = currentUser.Name,
-                    State = currentUser.State.ToString(),
-                    Username = currentUser.UserName,
-                    CreatedAt = currentUser.CreatedAt,
-                    WebUrl = currentUser.WebUrl,
-                },
-                ResourceType = "issue",
-            });
         }
     }
 }
