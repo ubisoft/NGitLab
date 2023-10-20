@@ -165,29 +165,14 @@ namespace NGitLab.Impl
 
         public IMergeRequestChangeClient Changes(int mergeRequestIid) => new MergeRequestChangeClient(_api, _projectPath, mergeRequestIid);
 
-        public IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int mergeRequestIid)
-        {
-            return _api.Get().GetAll<ResourceLabelEvent>(string.Format(CultureInfo.InvariantCulture, ResourceLabelEventUrl, projectId, mergeRequestIid));
-        }
-
         public GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int mergeRequestIid)
         {
             return _api.Get().GetAllAsync<ResourceLabelEvent>(string.Format(CultureInfo.InvariantCulture, ResourceLabelEventUrl, projectId, mergeRequestIid));
         }
 
-        public IEnumerable<ResourceMilestoneEvent> ResourceMilestoneEvents(int projectId, int mergeRequestIid)
-        {
-            return _api.Get().GetAll<ResourceMilestoneEvent>(string.Format(CultureInfo.InvariantCulture, ResourceMilestoneEventUrl, projectId, mergeRequestIid));
-        }
-
         public GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int mergeRequestIid)
         {
             return _api.Get().GetAllAsync<ResourceMilestoneEvent>(string.Format(CultureInfo.InvariantCulture, ResourceMilestoneEventUrl, projectId, mergeRequestIid));
-        }
-
-        public IEnumerable<ResourceStateEvent> ResourceStateEvents(int projectId, int mergeRequestIid)
-        {
-            return _api.Get().GetAll<ResourceStateEvent>(string.Format(CultureInfo.InvariantCulture, ResourceStateEventUrl, projectId, mergeRequestIid));
         }
 
         public GitLabCollectionResponse<ResourceStateEvent> ResourceStateEventsAsync(int projectId, int mergeRequestIid)

@@ -264,26 +264,7 @@ namespace NGitLab.Mock.Clients
                 mergeRequest.ClosedAt = DateTimeOffset.UtcNow;
                 mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
 
-                var currentUser = Context.User;
-                Server.ResourceStateEvents.Add(new ResourceStateEvent()
-                {
-                    ResourceId = mergeRequest.Id,
-                    CreatedAt = DateTime.UtcNow,
-                    Id = Server.GetNewResourceLabelEventId(),
-                    State = "closed",
-                    User = new Author()
-                    {
-                        Id = currentUser.Id,
-                        Email = currentUser.Email,
-                        AvatarUrl = currentUser.AvatarUrl,
-                        Name = currentUser.Name,
-                        State = currentUser.State.ToString(),
-                        Username = currentUser.UserName,
-                        CreatedAt = currentUser.CreatedAt,
-                        WebUrl = currentUser.WebUrl,
-                    },
-                    ResourceType = "MergeRequest",
-                });
+                Server.ResourceStateEvents.CreateResourceStateEvent(Context.User, "closed", mergeRequest.Id, "MergeRequest");
                 return mergeRequest.ToMergeRequestClient();
             }
         }
@@ -600,26 +581,7 @@ namespace NGitLab.Mock.Clients
                 mergeRequest.ClosedAt = null;
                 mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
 
-                var currentUser = Context.User;
-                Server.ResourceStateEvents.Add(new ResourceStateEvent()
-                {
-                    ResourceId = mergeRequest.Id,
-                    CreatedAt = DateTime.UtcNow,
-                    Id = Server.GetNewResourceLabelEventId(),
-                    State = "reopened",
-                    User = new Author()
-                    {
-                        Id = currentUser.Id,
-                        Email = currentUser.Email,
-                        AvatarUrl = currentUser.AvatarUrl,
-                        Name = currentUser.Name,
-                        State = currentUser.State.ToString(),
-                        Username = currentUser.UserName,
-                        CreatedAt = currentUser.CreatedAt,
-                        WebUrl = currentUser.WebUrl,
-                    },
-                    ResourceType = "MergeRequest",
-                });
+                Server.ResourceStateEvents.CreateResourceStateEvent(Context.User, "reopened", mergeRequest.Id, "MergeRequest");
                 return mergeRequest.ToMergeRequestClient();
             }
         }
@@ -731,15 +693,6 @@ namespace NGitLab.Mock.Clients
             return new MergeRequestDiscussionClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
         }
 
-        public IEnumerable<Models.ResourceLabelEvent> ResourceLabelEvents(int projectId, int mergeRequestIid)
-        {
-            using (Context.BeginOperationScope())
-            {
-                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
-                return Server.ResourceLabelEvents.Get(mergeRequest.Id).Select(rle => rle.ToClientResourceLabelEvent());
-            }
-        }
-
         public GitLabCollectionResponse<Models.ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int mergeRequestIid)
         {
             using (Context.BeginOperationScope())
@@ -751,15 +704,6 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public IEnumerable<Models.ResourceMilestoneEvent> ResourceMilestoneEvents(int projectId, int mergeRequestIid)
-        {
-            using (Context.BeginOperationScope())
-            {
-                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
-                return Server.ResourceMilestoneEvents.Get(mergeRequest.Id).Select(rme => rme.ToClientResourceMilestoneEvent());
-            }
-        }
-
         public GitLabCollectionResponse<Models.ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int mergeRequestIid)
         {
             using (Context.BeginOperationScope())
@@ -768,15 +712,6 @@ namespace NGitLab.Mock.Clients
                 var resourceMilestoneEvents = Server.ResourceMilestoneEvents.Get(mergeRequest.Id);
 
                 return GitLabCollectionResponse.Create(resourceMilestoneEvents.Select(rme => rme.ToClientResourceMilestoneEvent()));
-            }
-        }
-
-        public IEnumerable<Models.ResourceStateEvent> ResourceStateEvents(int projectId, int mergeRequestIid)
-        {
-            using (Context.BeginOperationScope())
-            {
-                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
-                return Server.ResourceStateEvents.Get(mergeRequest.Id).Select(rle => rle.ToClientResourceStateEvent());
             }
         }
 

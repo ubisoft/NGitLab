@@ -81,8 +81,6 @@ namespace NGitLab
         /// <param name="projectId">The project id.</param>
         /// <param name="mergeRequestIid">The id of the merge request in the project's scope.</param>
         /// <returns>A collection of the resource milestone events linked to this merge request.</returns>
-        IEnumerable<ResourceMilestoneEvent> ResourceMilestoneEvents(int projectId, int mergeRequestIid);
-
         GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int mergeRequestIid);
 
         /// <summary>
@@ -94,8 +92,6 @@ namespace NGitLab
         /// <param name="projectId">The project id.</param>
         /// <param name="mergeRequestIid">The id of the merge request in the project's scope.</param>
         /// <returns>A collection of the resource state events linked to this merge request.</returns>
-        IEnumerable<ResourceStateEvent> ResourceStateEvents(int projectId, int mergeRequestIid);
-
         GitLabCollectionResponse<ResourceStateEvent> ResourceStateEventsAsync(int projectId, int mergeRequestIid);
     }
 }

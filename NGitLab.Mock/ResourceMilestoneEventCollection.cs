@@ -61,7 +61,7 @@ namespace NGitLab.Mock
 
         internal void CreateResourceMilestoneEvent(User currentUser, int resourceId, Milestone milestone, ResourceMilestoneEventAction action, string resourceType)
         {
-            Server.ResourceMilestoneEvents.Add(new ResourceMilestoneEvent()
+            Add(new ResourceMilestoneEvent()
             {
                 Action = action,
                 Milestone = milestone,
