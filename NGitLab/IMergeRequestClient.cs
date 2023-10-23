@@ -68,8 +68,6 @@ namespace NGitLab
         /// <param name="projectId">The project id.</param>
         /// <param name="mergeRequestIid">The id of the merge request in the project's scope.</param>
         /// <returns>A collection of the resource label events linked to this merge request.</returns>
-        IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int mergeRequestIid);
-
         GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int mergeRequestIid);
 
         /// <summary>

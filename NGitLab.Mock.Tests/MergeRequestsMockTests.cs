@@ -290,5 +290,73 @@ namespace NGitLab.Mock.Tests
             var pipeline = project.Pipelines.Add(branch, JobStatus.Success, user);
             Assert.AreEqual(pipeline, mr.HeadPipeline, "A pipeline was just created on the source branch");
         }
+
+        [Test]
+        public void Test_merge_request_resource_state_events_found_on_close_and_reopen()
+        {
+            using var server = new GitLabConfig()
+                .WithUser("user1", isDefault: true)
+                .WithUser("user2")
+                .WithProject("Test", configure: project => project
+                    .WithMergeRequest("branch-01", title: "Merge request 1", author: "user1", assignee: "user2"))
+                .BuildServer();
+
+            var client = server.CreateClient("user1");
+            var projectId = server.AllProjects.First().Id;
+            var mrClient = client.GetMergeRequest(projectId);
+            var mergeRequest = mrClient.Get(new MergeRequestQuery { Scope = "created_by_me" }).First();
+
+            mrClient.Close(mergeRequest.Iid);
+            mrClient.Reopen(mergeRequest.Iid);
+
+            var resourceStateEvents = mrClient.ResourceStateEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToList();
+            Assert.AreEqual(2, resourceStateEvents.Count);
+
+            var closeStateEvents = resourceStateEvents.Where(e => string.Equals(e.State, "closed", StringComparison.Ordinal)).ToArray();
+            Assert.AreEqual(1, closeStateEvents.Length);
+
+            var reopenMilestoneEvents = resourceStateEvents.Where(e => string.Equals(e.State, "reopened", StringComparison.Ordinal)).ToArray();
+            Assert.AreEqual(1, reopenMilestoneEvents.Length);
+        }
+
+        [Test]
+        public void Test_merge_request_resource_label_events_found_on_close_and_reopen()
+        {
+            using var server = new GitLabConfig()
+                .WithUser("user1", isDefault: true)
+                .WithUser("user2")
+                .WithProject("Test", configure: project => project
+                    .WithMergeRequest("branch-01", title: "Merge request 1", author: "user1", assignee: "user2"))
+                .BuildServer();
+
+            var client = server.CreateClient("user1");
+            var projectId = server.AllProjects.First().Id;
+            var mrClient = client.GetMergeRequest(projectId);
+            var mergeRequest = mrClient.Get(new MergeRequestQuery { Scope = "created_by_me" }).First();
+
+            mrClient.Update(mergeRequest.Iid, new MergeRequestUpdate()
+            {
+                AddLabels = "first,second,three",
+            });
+
+            mrClient.Update(mergeRequest.Iid, new MergeRequestUpdate()
+            {
+                RemoveLabels = "second",
+            });
+
+            mrClient.Update(mergeRequest.Iid, new MergeRequestUpdate()
+            {
+                Labels = "first,second",
+            });
+
+            var resourceLabelEvents = mrClient.ResourceLabelEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToList();
+            Assert.AreEqual(6, resourceLabelEvents.Count);
+
+            var addLabelEvents = resourceLabelEvents.Where(e => e.Action == ResourceLabelEventAction.Add).ToArray();
+            Assert.AreEqual(4, addLabelEvents.Length);
+
+            var removeLabelEvents = resourceLabelEvents.Where(e => e.Action == ResourceLabelEventAction.Remove).ToArray();
+            Assert.AreEqual(2, removeLabelEvents.Length);
+        }
     }
 }

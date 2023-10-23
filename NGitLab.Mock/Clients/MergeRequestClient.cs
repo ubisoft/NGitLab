@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
+using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Mock.Internals;
@@ -329,20 +330,35 @@ namespace NGitLab.Mock.Clients
                 mergeRequest.Description = mergeRequestCreate.Description;
                 mergeRequest.ShouldRemoveSourceBranch = mergeRequestCreate.RemoveSourceBranch;
                 mergeRequest.Squash = mergeRequestCreate.Squash;
-                SetLabels(mergeRequest, mergeRequestCreate.Labels);
+                SetLabels(mergeRequest, mergeRequestCreate.Labels, labelsToAdd: null, labelsToRemove: null);
 
                 return mergeRequest.ToMergeRequestClient();
             }
         }
 
-        private void SetLabels(MergeRequest mergeRequest, string labels)
+        private void SetLabels(MergeRequest mergeRequest, string labels, string labelsToAdd, string labelsToRemove)
         {
-            if (labels != null)
+            if (labels is not null || labelsToAdd is not null || labelsToRemove is not null)
             {
-                var newLabels = labels.Split(',');
+                var newLabels = mergeRequest.Labels.ToArray();
                 if (labels is not null)
                 {
-                    Server.ResourceLabelEvents.CreateResourceLabelEvents(Context.User, mergeRequest.Labels.ToArray(), newLabels, mergeRequest.Id);
+                    newLabels = labels.Split(',').Distinct(StringComparer.Ordinal).ToArray();
+                }
+
+                if (labelsToAdd is not null)
+                {
+                    newLabels = newLabels.Concat(labelsToAdd.Split(',')).Distinct(StringComparer.Ordinal).ToArray();
+                }
+
+                if (labelsToRemove is not null)
+                {
+                    newLabels = newLabels.Except(labelsToRemove.Split(','), StringComparer.Ordinal).Distinct(StringComparer.Ordinal).ToArray();
+                }
+
+                if (newLabels is not null)
+                {
+                    Server.ResourceLabelEvents.CreateResourceLabelEvents(Context.User, mergeRequest.Labels.ToArray(), newLabels, mergeRequest.Id, "MergeRequest");
                 }
 
                 mergeRequest.Labels.Clear();
@@ -669,7 +685,7 @@ namespace NGitLab.Mock.Clients
                     mergeRequest.Title = mergeRequestUpdate.Title;
                 }
 
-                SetLabels(mergeRequest, mergeRequestUpdate.Labels);
+                SetLabels(mergeRequest, mergeRequestUpdate.Labels, mergeRequestUpdate.AddLabels, mergeRequestUpdate.RemoveLabels);
 
                 mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
                 return mergeRequest.ToMergeRequestClient();

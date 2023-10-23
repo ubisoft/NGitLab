@@ -42,7 +42,7 @@ namespace NGitLab.Mock
             return this.Select(rle => rle.Id).DefaultIfEmpty().Max() + 1;
         }
 
-        internal void CreateResourceLabelEvents(User currentUser, string[] previousLabels, string[] newLabels, int resourceId)
+        internal void CreateResourceLabelEvents(User currentUser, string[] previousLabels, string[] newLabels, int resourceId, string resourceType)
         {
             foreach (var label in previousLabels)
             {
@@ -66,7 +66,7 @@ namespace NGitLab.Mock
                             CreatedAt = currentUser.CreatedAt,
                             WebUrl = currentUser.WebUrl,
                         },
-                        ResourceType = "issue",
+                        ResourceType = resourceType,
                     });
                 }
             }
@@ -93,7 +93,7 @@ namespace NGitLab.Mock
                             CreatedAt = currentUser.CreatedAt,
                             WebUrl = currentUser.WebUrl,
                         },
-                        ResourceType = "issue",
+                        ResourceType = resourceType,
                     });
                 }
             }
