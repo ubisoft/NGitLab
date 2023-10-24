@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
-using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Mock.Internals;
@@ -646,6 +645,13 @@ namespace NGitLab.Mock.Clients
 
                         mergeRequest.Assignee = new UserRef(user);
                     }
+                }
+
+                if (mergeRequestUpdate.MilestoneId != null)
+                {
+                    var prevMilestone = mergeRequest.Milestone;
+                    mergeRequest.Milestone = GetMilestone(project.Id, mergeRequestUpdate.MilestoneId.Value);
+                    Server.ResourceMilestoneEvents.CreateResourceMilestoneEvents(Context.User, mergeRequest.Id, prevMilestone, mergeRequest.Milestone, "MergeRequest");
                 }
 
                 if (mergeRequestUpdate.ReviewerIds != null)

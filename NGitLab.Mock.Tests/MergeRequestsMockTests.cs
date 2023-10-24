@@ -320,7 +320,7 @@ namespace NGitLab.Mock.Tests
         }
 
         [Test]
-        public void Test_merge_request_resource_label_events_found_on_close_and_reopen()
+        public void Test_merge_request_resource_label_events_found()
         {
             using var server = new GitLabConfig()
                 .WithUser("user1", isDefault: true)
@@ -357,6 +357,47 @@ namespace NGitLab.Mock.Tests
 
             var removeLabelEvents = resourceLabelEvents.Where(e => e.Action == ResourceLabelEventAction.Remove).ToArray();
             Assert.AreEqual(2, removeLabelEvents.Length);
+        }
+
+        [Test]
+        public void Test_merge_request_resource_milestone_events_found()
+        {
+            using var server = new GitLabConfig()
+                .WithUser("user1", isDefault: true)
+                .WithUser("user2")
+                .WithProject("Test", configure: project => project
+                    .WithMergeRequest("branch-01", title: "Merge request 1", author: "user1", assignee: "user2")
+                    .WithMilestone("Milestone 1")
+                    .WithMilestone("Milestone 2"))
+                .BuildServer();
+
+            var client = server.CreateClient("user1");
+            var projectId = server.AllProjects.First().Id;
+            var mrClient = client.GetMergeRequest(projectId);
+            var mergeRequest = mrClient.Get(new MergeRequestQuery { Scope = "created_by_me" }).First();
+            var milestones = client.GetMilestone(1).All.ToArray();
+
+            mrClient.Update(mergeRequest.Iid, new MergeRequestUpdate()
+            {
+                MilestoneId = milestones[0].Id,
+            });
+
+            mrClient.Update(mergeRequest.Iid, new MergeRequestUpdate()
+            {
+                MilestoneId = milestones[1].Id,
+            });
+
+            var resourceMilestoneEvents = mrClient.ResourceMilestoneEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToList();
+            Assert.AreEqual(3, resourceMilestoneEvents.Count);
+
+            var removeMilestoneEvents = resourceMilestoneEvents.Where(e => e.Action == ResourceMilestoneEventAction.Remove).ToArray();
+            Assert.AreEqual(1, removeMilestoneEvents.Length);
+            Assert.AreEqual(milestones[0].Id, removeMilestoneEvents[0].Milestone.Id);
+
+            var addMilestoneEvents = resourceMilestoneEvents.Where(e => e.Action == ResourceMilestoneEventAction.Add).ToArray();
+            Assert.AreEqual(2, addMilestoneEvents.Length);
+            Assert.AreEqual(milestones[0].Id, addMilestoneEvents[0].Milestone.Id);
+            Assert.AreEqual(milestones[1].Id, addMilestoneEvents[1].Milestone.Id);
         }
     }
 }
