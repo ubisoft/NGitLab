@@ -309,8 +309,8 @@ namespace NGitLab.Mock.Tests
             mrClient.Close(mergeRequest.Iid);
             mrClient.Reopen(mergeRequest.Iid);
 
-            var resourceStateEvents = mrClient.ResourceStateEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToList();
-            Assert.AreEqual(2, resourceStateEvents.Count);
+            var resourceStateEvents = mrClient.ResourceStateEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToArray();
+            Assert.AreEqual(2, resourceStateEvents.Length);
 
             var closeStateEvents = resourceStateEvents.Where(e => string.Equals(e.State, "closed", StringComparison.Ordinal)).ToArray();
             Assert.AreEqual(1, closeStateEvents.Length);
@@ -336,7 +336,7 @@ namespace NGitLab.Mock.Tests
 
             mrClient.Update(mergeRequest.Iid, new MergeRequestUpdate()
             {
-                AddLabels = "first,second,three",
+                AddLabels = "first,second,third",
             });
 
             mrClient.Update(mergeRequest.Iid, new MergeRequestUpdate()
@@ -349,8 +349,16 @@ namespace NGitLab.Mock.Tests
                 Labels = "first,second",
             });
 
-            var resourceLabelEvents = mrClient.ResourceLabelEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToList();
-            Assert.AreEqual(6, resourceLabelEvents.Count);
+            /* We're expecting this sequence
+             * 1. Add first
+             * 1. Add second
+             * 1. Add third
+             * 2. Remove second
+             * 3. Add second
+             * 3. Remove third
+             */
+            var resourceLabelEvents = mrClient.ResourceLabelEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToArray();
+            Assert.AreEqual(6, resourceLabelEvents.Length);
 
             var addLabelEvents = resourceLabelEvents.Where(e => e.Action == ResourceLabelEventAction.Add).ToArray();
             Assert.AreEqual(4, addLabelEvents.Length);
@@ -387,8 +395,13 @@ namespace NGitLab.Mock.Tests
                 MilestoneId = milestones[1].Id,
             });
 
-            var resourceMilestoneEvents = mrClient.ResourceMilestoneEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToList();
-            Assert.AreEqual(3, resourceMilestoneEvents.Count);
+            /* We're expecting this sequence
+             * 1. Add milestone 1
+             * 2. Remove milestone 1
+             * 2. Add milestone 2
+             */
+            var resourceMilestoneEvents = mrClient.ResourceMilestoneEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToArray();
+            Assert.AreEqual(3, resourceMilestoneEvents.Length);
 
             var removeMilestoneEvents = resourceMilestoneEvents.Where(e => e.Action == ResourceMilestoneEventAction.Remove).ToArray();
             Assert.AreEqual(1, removeMilestoneEvents.Length);
