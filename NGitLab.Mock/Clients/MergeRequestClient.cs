@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients
@@ -262,6 +263,8 @@ namespace NGitLab.Mock.Clients
 
                 mergeRequest.ClosedAt = DateTimeOffset.UtcNow;
                 mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
+
+                Server.ResourceStateEvents.CreateResourceStateEvent(Context.User, "closed", mergeRequest.Id, "MergeRequest");
                 return mergeRequest.ToMergeRequestClient();
             }
         }
@@ -326,22 +329,43 @@ namespace NGitLab.Mock.Clients
                 mergeRequest.Description = mergeRequestCreate.Description;
                 mergeRequest.ShouldRemoveSourceBranch = mergeRequestCreate.RemoveSourceBranch;
                 mergeRequest.Squash = mergeRequestCreate.Squash;
-                SetLabels(mergeRequest, mergeRequestCreate.Labels);
+                SetLabels(mergeRequest, mergeRequestCreate.Labels, labelsToAdd: null, labelsToRemove: null);
 
                 return mergeRequest.ToMergeRequestClient();
             }
         }
 
-        private static void SetLabels(MergeRequest mergeRequest, string labels)
+        private void SetLabels(MergeRequest mergeRequest, string labels, string labelsToAdd, string labelsToRemove)
         {
-            if (labels != null)
+            if (labels is not null || labelsToAdd is not null || labelsToRemove is not null)
             {
-                mergeRequest.Labels.Clear();
-                foreach (var label in labels.Split(','))
+                var newLabels = mergeRequest.Labels.ToArray();
+                if (labels is not null)
                 {
-                    if (!string.IsNullOrEmpty(label))
+                    newLabels = labels.Split(',').Distinct(StringComparer.Ordinal).ToArray();
+                }
+
+                if (labelsToAdd is not null)
+                {
+                    newLabels = newLabels.Concat(labelsToAdd.Split(',')).Distinct(StringComparer.Ordinal).ToArray();
+                }
+
+                if (labelsToRemove is not null)
+                {
+                    newLabels = newLabels.Except(labelsToRemove.Split(','), StringComparer.Ordinal).Distinct(StringComparer.Ordinal).ToArray();
+                }
+
+                if (newLabels is not null)
+                {
+                    Server.ResourceLabelEvents.CreateResourceLabelEvents(Context.User, mergeRequest.Labels.ToArray(), newLabels, mergeRequest.Id, "MergeRequest");
+                }
+
+                mergeRequest.Labels.Clear();
+                foreach (var newLabel in newLabels)
+                {
+                    if (!string.IsNullOrEmpty(newLabel))
                     {
-                        mergeRequest.Labels.Add(label);
+                        mergeRequest.Labels.Add(newLabel);
                     }
                 }
             }
@@ -571,6 +595,8 @@ namespace NGitLab.Mock.Clients
 
                 mergeRequest.ClosedAt = null;
                 mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
+
+                Server.ResourceStateEvents.CreateResourceStateEvent(Context.User, "reopened", mergeRequest.Id, "MergeRequest");
                 return mergeRequest.ToMergeRequestClient();
             }
         }
@@ -621,6 +647,13 @@ namespace NGitLab.Mock.Clients
                     }
                 }
 
+                if (mergeRequestUpdate.MilestoneId != null)
+                {
+                    var prevMilestone = mergeRequest.Milestone;
+                    mergeRequest.Milestone = GetMilestone(project.Id, mergeRequestUpdate.MilestoneId.Value);
+                    Server.ResourceMilestoneEvents.CreateResourceMilestoneEvents(Context.User, mergeRequest.Id, prevMilestone, mergeRequest.Milestone, "MergeRequest");
+                }
+
                 if (mergeRequestUpdate.ReviewerIds != null)
                 {
                     foreach (var reviewerId in mergeRequestUpdate.ReviewerIds)
@@ -658,7 +691,7 @@ namespace NGitLab.Mock.Clients
                     mergeRequest.Title = mergeRequestUpdate.Title;
                 }
 
-                SetLabels(mergeRequest, mergeRequestUpdate.Labels);
+                SetLabels(mergeRequest, mergeRequestUpdate.Labels, mergeRequestUpdate.AddLabels, mergeRequestUpdate.RemoveLabels);
 
                 mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
                 return mergeRequest.ToMergeRequestClient();
@@ -685,6 +718,39 @@ namespace NGitLab.Mock.Clients
             AssertProjectId();
 
             return new MergeRequestDiscussionClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
+        }
+
+        public GitLabCollectionResponse<Models.ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int mergeRequestIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
+                var resourceLabelEvents = Server.ResourceLabelEvents.Get(mergeRequest.Id);
+
+                return GitLabCollectionResponse.Create(resourceLabelEvents.Select(rle => rle.ToClientResourceLabelEvent()));
+            }
+        }
+
+        public GitLabCollectionResponse<Models.ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int mergeRequestIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
+                var resourceMilestoneEvents = Server.ResourceMilestoneEvents.Get(mergeRequest.Id);
+
+                return GitLabCollectionResponse.Create(resourceMilestoneEvents.Select(rme => rme.ToClientResourceMilestoneEvent()));
+            }
+        }
+
+        public GitLabCollectionResponse<Models.ResourceStateEvent> ResourceStateEventsAsync(int projectId, int mergeRequestIid)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var mergeRequest = GetMergeRequest(projectId, mergeRequestIid);
+                var resourceStateEvents = Server.ResourceStateEvents.Get(mergeRequest.Id);
+
+                return GitLabCollectionResponse.Create(resourceStateEvents.Select(rle => rle.ToClientResourceStateEvent()));
+            }
         }
     }
 }

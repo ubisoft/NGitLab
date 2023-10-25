@@ -353,6 +353,9 @@ NGitLab.IMergeRequestClient.GetVersionsAsync(int mergeRequestIid) -> NGitLab.Git
 NGitLab.IMergeRequestClient.Rebase(int mergeRequestIid) -> NGitLab.Models.RebaseResult
 NGitLab.IMergeRequestClient.RebaseAsync(int mergeRequestIid, NGitLab.Models.MergeRequestRebase options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.RebaseResult>
 NGitLab.IMergeRequestClient.Reopen(int mergeRequestIid) -> NGitLab.Models.MergeRequest
+NGitLab.IMergeRequestClient.ResourceLabelEventsAsync(int projectId, int mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceLabelEvent>
+NGitLab.IMergeRequestClient.ResourceMilestoneEventsAsync(int projectId, int mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceMilestoneEvent>
+NGitLab.IMergeRequestClient.ResourceStateEventsAsync(int projectId, int mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceStateEvent>
 NGitLab.IMergeRequestClient.this[int iid].get -> NGitLab.Models.MergeRequest
 NGitLab.IMergeRequestClient.TimeStatsAsync(int mergeRequestIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
 NGitLab.IMergeRequestClient.Update(int mergeRequestIid, NGitLab.Models.MergeRequestUpdate mergeRequest) -> NGitLab.Models.MergeRequest
@@ -615,6 +618,9 @@ NGitLab.Impl.MergeRequestClient.MergeRequestClient(NGitLab.Impl.API api, int pro
 NGitLab.Impl.MergeRequestClient.Rebase(int mergeRequestIid) -> NGitLab.Models.RebaseResult
 NGitLab.Impl.MergeRequestClient.RebaseAsync(int mergeRequestIid, NGitLab.Models.MergeRequestRebase options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.RebaseResult>
 NGitLab.Impl.MergeRequestClient.Reopen(int mergeRequestIid) -> NGitLab.Models.MergeRequest
+NGitLab.Impl.MergeRequestClient.ResourceLabelEventsAsync(int projectId, int mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceLabelEvent>
+NGitLab.Impl.MergeRequestClient.ResourceMilestoneEventsAsync(int projectId, int mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceMilestoneEvent>
+NGitLab.Impl.MergeRequestClient.ResourceStateEventsAsync(int projectId, int mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceStateEvent>
 NGitLab.Impl.MergeRequestClient.this[int iid].get -> NGitLab.Models.MergeRequest
 NGitLab.Impl.MergeRequestClient.TimeStatsAsync(int mergeRequestIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
 NGitLab.Impl.MergeRequestClient.Update(int mergeRequestIid, NGitLab.Models.MergeRequestUpdate mergeRequest) -> NGitLab.Models.MergeRequest

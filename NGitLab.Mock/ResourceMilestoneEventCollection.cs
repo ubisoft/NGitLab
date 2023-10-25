@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NGitLab.Models;
 
 namespace NGitLab.Mock
 {
@@ -39,6 +40,47 @@ namespace NGitLab.Mock
         private int GetNewId()
         {
             return this.Select(rle => rle.Id).DefaultIfEmpty().Max() + 1;
+        }
+
+        internal void CreateResourceMilestoneEvents(User currentUser, int resourceId, Milestone previousMilestone, Milestone newMilestone, string resourceType)
+        {
+            if (previousMilestone is null)
+            {
+                CreateResourceMilestoneEvent(currentUser, resourceId, newMilestone, ResourceMilestoneEventAction.Add, resourceType);
+            }
+            else if (newMilestone is not null && previousMilestone is not null)
+            {
+                if (newMilestone.Id != previousMilestone.Id)
+                {
+                    CreateResourceMilestoneEvent(currentUser, resourceId, previousMilestone, ResourceMilestoneEventAction.Remove, resourceType);
+                }
+
+                CreateResourceMilestoneEvent(currentUser, resourceId, newMilestone, ResourceMilestoneEventAction.Add, resourceType);
+            }
+        }
+
+        internal void CreateResourceMilestoneEvent(User currentUser, int resourceId, Milestone milestone, ResourceMilestoneEventAction action, string resourceType)
+        {
+            Add(new ResourceMilestoneEvent()
+            {
+                Action = action,
+                Milestone = milestone,
+                ResourceId = resourceId,
+                CreatedAt = DateTime.UtcNow,
+                Id = Server.GetNewResourceLabelEventId(),
+                User = new Author()
+                {
+                    Id = currentUser.Id,
+                    Email = currentUser.Email,
+                    AvatarUrl = currentUser.AvatarUrl,
+                    Name = currentUser.Name,
+                    State = currentUser.State.ToString(),
+                    Username = currentUser.UserName,
+                    CreatedAt = currentUser.CreatedAt,
+                    WebUrl = currentUser.WebUrl,
+                },
+                ResourceType = resourceType,
+            });
         }
     }
 }
