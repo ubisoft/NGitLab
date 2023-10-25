@@ -66,6 +66,7 @@ namespace NGitLab
         /// <returns>The time tracking statistics of the merge request.</returns>
         Task<TimeStats> TimeStatsAsync(int mergeRequestIid, CancellationToken cancellationToken = default);
 
+        /// <summary>
         /// Gets the resource label events.
         ///
         /// url like GET /projects/:id/merge_requests/:merge_request_iid/resource_label_events
