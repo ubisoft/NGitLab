@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -9,10 +10,16 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _approvalRulesUrl;
 
+        [Obsolete("Use long or namespaced path string as projectId instead.")]
         public ProjectLevelApprovalRulesClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public ProjectLevelApprovalRulesClient(API api, ProjectId projectId)
         {
             _api = api;
-            _approvalRulesUrl = $"{Project.Url}/{projectId.ToStringInvariant()}/approval_rules";
+            _approvalRulesUrl = $"{Project.Url}/{projectId.ValueAsUriParameter}/approval_rules";
         }
 
         public List<ApprovalRule> GetProjectLevelApprovalRules()

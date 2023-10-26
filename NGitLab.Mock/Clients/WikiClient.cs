@@ -8,10 +8,10 @@ namespace NGitLab.Mock.Clients
     {
         private readonly int _projectId;
 
-        public WikiClient(ClientContext context, int projectId)
+        public WikiClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = projectId;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
         }
 
         public WikiPage this[string slug] => throw new NotImplementedException();

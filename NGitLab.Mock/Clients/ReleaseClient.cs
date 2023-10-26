@@ -13,10 +13,10 @@ namespace NGitLab.Mock.Clients
     {
         private readonly int _projectId;
 
-        public ReleaseClient(ClientContext context, int projectId)
+        public ReleaseClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = projectId;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
         }
 
         public IEnumerable<Models.ReleaseInfo> All

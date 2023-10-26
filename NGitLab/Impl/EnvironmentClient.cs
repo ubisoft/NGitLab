@@ -12,10 +12,16 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _environmentsPath;
 
+        [Obsolete("Use long or namespaced path string as projectId instead.")]
         public EnvironmentClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public EnvironmentClient(API api, ProjectId projectId)
         {
             _api = api;
-            _environmentsPath = $"{Project.Url}/{projectId.ToStringInvariant()}/environments";
+            _environmentsPath = $"{Project.Url}/{projectId.ValueAsUriParameter}/environments";
         }
 
         public IEnumerable<EnvironmentInfo> All => _api.Get().GetAll<EnvironmentInfo>(_environmentsPath);

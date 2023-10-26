@@ -1263,9 +1263,11 @@ static NGitLab.Mock.Config.GitLabHelpers.WithProject(this NGitLab.Mock.Config.Gi
 static NGitLab.Mock.Config.GitLabHelpers.WithTag(this NGitLab.Mock.Config.GitLabCommit commit, string name) -> NGitLab.Mock.Config.GitLabCommit
 static NGitLab.Mock.Config.GitLabHelpers.WithUser(this NGitLab.Mock.Config.GitLabConfig config, string username, System.Action<NGitLab.Mock.Config.GitLabUser> configure) -> NGitLab.Mock.Config.GitLabConfig
 static NGitLab.Mock.GitLabClientMockExtensions.WithGraphQLClient(this NGitLab.IGitLabClient client, NGitLab.IGraphQLClient graphQLClient) -> NGitLab.IGitLabClient
+static NGitLab.Mock.GroupExtensions.FindById(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Group> groups, long id) -> NGitLab.Mock.Group
+static NGitLab.Mock.GroupExtensions.FindByNamespacedPath(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Group> groups, string pathWithNamespace) -> NGitLab.Mock.Group
 static NGitLab.Mock.GroupExtensions.FindGroup(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Group> groups, string idOrPathWithNamespace) -> NGitLab.Mock.Group
-static NGitLab.Mock.GroupExtensions.FindGroupById(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Group> groups, int id) -> NGitLab.Mock.Group
-static NGitLab.Mock.ProjectExtensions.FindById(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Project> projects, int id) -> NGitLab.Mock.Project
+static NGitLab.Mock.ProjectExtensions.FindById(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Project> projects, long id) -> NGitLab.Mock.Project
+static NGitLab.Mock.ProjectExtensions.FindByNamespacedPath(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Project> projects, string pathWithNamespace) -> NGitLab.Mock.Project
 static NGitLab.Mock.ProjectExtensions.FindProject(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Project> projects, string idOrPathWithNamespace) -> NGitLab.Mock.Project
 static NGitLab.Mock.StringExtensions.Contains(this string source, string toCheck, System.StringComparison comparison) -> bool
 static NGitLab.Mock.TemporaryDirectory.Create() -> NGitLab.Mock.TemporaryDirectory

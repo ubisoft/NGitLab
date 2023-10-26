@@ -11,10 +11,10 @@ namespace NGitLab.Mock.Clients
     {
         private readonly int _projectId;
 
-        public RepositoryClient(ClientContext context, int projectId)
+        public RepositoryClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = projectId;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
         }
 
         public ITagClient Tags => new TagClient(Context, _projectId);

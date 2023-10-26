@@ -9,10 +9,10 @@ namespace NGitLab.Mock.Clients
     {
         private readonly int _projectId;
 
-        public CommitStatusClient(ClientContext context, int projectId)
+        public CommitStatusClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = projectId;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
         }
 
         public CommitStatusCreate AddOrUpdate(CommitStatusCreate status)

@@ -14,11 +14,17 @@ namespace NGitLab.Impl
         private readonly string _repoPath;
         private readonly string _projectPath;
 
+        [Obsolete("Use long or namespaced path string as projectId instead.")]
         public RepositoryClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public RepositoryClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectPath = Project.Url + "/" + projectId.ToStringInvariant();
-            _repoPath = _projectPath + "/repository";
+            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter}";
+            _repoPath = $"{_projectPath}/repository";
         }
 
         public ITagClient Tags => new TagClient(_api, _repoPath);

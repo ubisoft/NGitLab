@@ -19,10 +19,10 @@ namespace NGitLab.Mock.Clients
         {
         }
 
-        public MergeRequestClient(ClientContext context, int projectId)
+        public MergeRequestClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = projectId;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
         }
 
         private void AssertProjectId()

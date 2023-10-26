@@ -8,10 +8,10 @@ namespace NGitLab.Mock.Clients
     {
         private readonly int _groupId;
 
-        public GroupBadgeClient(ClientContext context, int groupId)
+        public GroupBadgeClient(ClientContext context, GroupId groupId)
             : base(context)
         {
-            _groupId = groupId;
+            _groupId = Server.AllGroups.FindGroup(groupId.ValueAsUriParameter).Id;
         }
 
         public Models.Badge this[int id]

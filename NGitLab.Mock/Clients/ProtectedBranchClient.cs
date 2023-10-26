@@ -8,10 +8,10 @@ namespace NGitLab.Mock.Clients
     {
         private readonly int _projectId;
 
-        public ProtectedBranchClient(ClientContext context, int projectId)
+        public ProtectedBranchClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = projectId;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
         }
 
         public Models.ProtectedBranch GetProtectedBranch(string branchName)

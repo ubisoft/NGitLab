@@ -14,11 +14,11 @@ namespace NGitLab.Mock.Clients
         {
         }
 
-        public EventClient(ClientContext context, int? userId = null, int? projectId = null)
+        public EventClient(ClientContext context, int? userId = null, ProjectId projectId = null)
             : base(context)
         {
             _userId = userId;
-            _projectId = projectId;
+            _projectId = projectId is null ? null : Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
         }
 
         IEnumerable<Models.Event> IEventClient.Get(EventQuery query)

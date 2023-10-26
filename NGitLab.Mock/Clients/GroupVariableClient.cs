@@ -8,10 +8,10 @@ namespace NGitLab.Mock.Clients
     {
         private readonly int _groupId;
 
-        public GroupVariableClient(ClientContext context, int groupId)
+        public GroupVariableClient(ClientContext context, GroupId groupId)
             : base(context)
         {
-            _groupId = groupId;
+            _groupId = Server.AllGroups.FindGroup(groupId.ValueAsUriParameter).Id;
         }
 
         public Variable this[string key] => throw new NotImplementedException();
