@@ -12,16 +12,10 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _milestonePath;
 
-        [Obsolete("Use long or namespaced path string as id instead.")]
-        internal MilestoneClient(API api, MilestoneScope scope, int id)
-            : this(api, scope, (long)id)
-        {
-        }
-
-        internal MilestoneClient(API api, MilestoneScope scope, IdOrNamespacedPath projectId)
+        internal MilestoneClient(API api, MilestoneScope scope, IdOrNamespacedPath id)
         {
             _api = api;
-            _milestonePath = $"/{scope.ToString().ToLowerInvariant()}/{projectId.ValueAsUriParameter}/milestones";
+            _milestonePath = $"/{scope.ToString().ToLowerInvariant()}/{id.ValueAsUriParameter}/milestones";
             Scope = scope;
         }
 
