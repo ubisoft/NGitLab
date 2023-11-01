@@ -38,6 +38,9 @@ public class MergeRequest
     [JsonPropertyName("downvotes")]
     public int Downvotes;
 
+    [JsonPropertyName("draft")]
+    public bool Draft;
+
     [JsonPropertyName("upvotes")]
     public int Upvotes;
 
