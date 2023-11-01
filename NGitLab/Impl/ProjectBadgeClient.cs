@@ -7,7 +7,7 @@ namespace NGitLab.Impl
     internal sealed class ProjectBadgeClient : BadgeClient, IProjectBadgeClient
     {
         public ProjectBadgeClient(API api, ProjectId projectId)
-            : base(api, $"{Project.Url}/{projectId.ValueAsUriParameter}")
+            : base(api, $"{Project.Url}/{projectId.ValueAsUriParameter()}")
         {
         }
 

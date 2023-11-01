@@ -18,7 +18,7 @@ namespace NGitLab.Mock.Clients
             : base(context)
         {
             _jobClient = jobClient;
-            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
         }
 
         public Models.Pipeline this[int id]

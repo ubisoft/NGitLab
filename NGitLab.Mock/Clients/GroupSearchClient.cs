@@ -12,7 +12,7 @@ namespace NGitLab.Mock.Clients
             : base(context)
         {
             _context = context;
-            _groupId = Server.AllGroups.FindGroup(groupId.ValueAsUriParameter).Id;
+            _groupId = Server.AllGroups.FindGroup(groupId.ValueAsUriParameter()).Id;
         }
 
         public GitLabCollectionResponse<SearchBlob> GetBlobsAsync(SearchQuery query)

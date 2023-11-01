@@ -12,7 +12,7 @@ namespace NGitLab.Impl
         public ProtectedBranchClient(API api, ProjectId projectId)
         {
             _api = api;
-            _protectedBranchesUrl = $"{Project.Url}/{projectId.ValueAsUriParameter}/protected_branches";
+            _protectedBranchesUrl = $"{Project.Url}/{projectId.ValueAsUriParameter()}/protected_branches";
         }
 
         public ProtectedBranch ProtectBranch(BranchProtect branchProtect)

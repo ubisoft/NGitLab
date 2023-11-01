@@ -23,7 +23,7 @@ namespace NGitLab.Impl
         public RepositoryClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter}";
+            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
             _repoPath = $"{_projectPath}/repository";
         }
 

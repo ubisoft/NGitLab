@@ -19,7 +19,7 @@ namespace NGitLab.Impl
         public TriggerClient(API api, ProjectId projectId)
         {
             _api = api;
-            _triggersPath = $"{Project.Url}/{projectId.ValueAsUriParameter}/triggers";
+            _triggersPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}/triggers";
         }
 
         public Trigger this[int id] => _api.Get().To<Trigger>(_triggersPath + "/" + id.ToStringInvariant());

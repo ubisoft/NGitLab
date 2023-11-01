@@ -17,7 +17,7 @@ namespace NGitLab.Impl
         public ReleaseClient(API api, ProjectId projectId)
         {
             _api = api;
-            var projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter}";
+            var projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
             _releasesPath = $"{projectPath}/releases";
         }
 

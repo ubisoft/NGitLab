@@ -21,7 +21,7 @@ namespace NGitLab.Impl
         public ProjectIssueNoteClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectId = projectId.ValueAsUriParameter;
+            _projectId = projectId.ValueAsUriParameter();
         }
 
         public IEnumerable<ProjectIssueNote> ForIssue(int issueId)

@@ -25,7 +25,7 @@ namespace NGitLab.Impl
         public MergeRequestClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter}";
+            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
         }
 
         public MergeRequestClient(API api)

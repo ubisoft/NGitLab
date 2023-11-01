@@ -24,7 +24,7 @@ namespace NGitLab.Impl
         public PipelineClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter}";
+            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
             _pipelinesPath = $"{_projectPath}/pipelines";
         }
 

@@ -12,7 +12,7 @@ namespace NGitLab.Mock.Clients
             : base(context)
         {
             _context = context;
-            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
         }
 
         public GitLabCollectionResponse<SearchBlob> GetBlobsAsync(SearchQuery query)

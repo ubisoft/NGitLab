@@ -22,7 +22,7 @@ namespace NGitLab.Impl
         public JobClient(API api, ProjectId projectId)
         {
             _api = api;
-            _jobsPath = $"{Project.Url}/{projectId.ValueAsUriParameter}/jobs";
+            _jobsPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}/jobs";
         }
 
         public IEnumerable<Job> GetJobs(JobScopeMask scope)

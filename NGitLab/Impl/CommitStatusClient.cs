@@ -20,7 +20,7 @@ namespace NGitLab.Impl
         {
             _api = api;
 
-            var projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter}";
+            var projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
             _statusCreatePath = $"{projectPath}/statuses";
             _statusPath = $"{projectPath}/repository/commits";
         }

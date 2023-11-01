@@ -112,7 +112,7 @@ namespace NGitLab
             => GetProjectEvents((long)projectId);
 
         public IEventClient GetProjectEvents(ProjectId projectId)
-            => new EventClient(_api, $"projects/{projectId.ValueAsUriParameter}/events");
+            => new EventClient(_api, $"projects/{projectId.ValueAsUriParameter()}/events");
 
         public IRepositoryClient GetRepository(int projectId)
             => GetRepository((long)projectId);
@@ -238,12 +238,12 @@ namespace NGitLab
             => GetGroupSearchClient((long)groupId);
 
         public ISearchClient GetGroupSearchClient(GroupId groupId)
-            => new SearchClient(_api, $"/groups/{groupId.ValueAsUriParameter}/search");
+            => new SearchClient(_api, $"/groups/{groupId.ValueAsUriParameter()}/search");
 
         public ISearchClient GetProjectSearchClient(int projectId)
             => GetProjectSearchClient((long)projectId);
 
         public ISearchClient GetProjectSearchClient(ProjectId projectId)
-            => new SearchClient(_api, $"/projects/{projectId.ValueAsUriParameter}/search");
+            => new SearchClient(_api, $"/projects/{projectId.ValueAsUriParameter()}/search");
     }
 }

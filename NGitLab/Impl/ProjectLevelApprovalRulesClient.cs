@@ -19,7 +19,7 @@ namespace NGitLab.Impl
         public ProjectLevelApprovalRulesClient(API api, ProjectId projectId)
         {
             _api = api;
-            _approvalRulesUrl = $"{Project.Url}/{projectId.ValueAsUriParameter}/approval_rules";
+            _approvalRulesUrl = $"{Project.Url}/{projectId.ValueAsUriParameter()}/approval_rules";
         }
 
         public List<ApprovalRule> GetProjectLevelApprovalRules()

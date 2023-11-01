@@ -19,7 +19,7 @@ namespace NGitLab.Impl
         public WikiClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter}";
+            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
         }
 
         public IEnumerable<WikiPage> All => _api.Get().GetAll<WikiPage>(_projectPath + "/wikis");

@@ -1,4 +1,4 @@
-﻿abstract NGitLab.GitLabCollectionResponse<T>.GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerator<T>
+abstract NGitLab.GitLabCollectionResponse<T>.GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerator<T>
 abstract NGitLab.GitLabCollectionResponse<T>.GetEnumerator() -> System.Collections.Generic.IEnumerator<T>
 const NGitLab.Impl.GroupsClient.Url = "/groups" -> string
 const NGitLab.Impl.LabelClient.GroupLabelUrl = "/groups/{0}/labels" -> string
@@ -1753,6 +1753,7 @@ NGitLab.Models.GroupCreate.SharedRunnersMinutesLimit.get -> int?
 NGitLab.Models.GroupCreate.SharedRunnersMinutesLimit.set -> void
 NGitLab.Models.GroupCreate.Visibility -> NGitLab.Models.VisibilityLevel
 NGitLab.Models.GroupId
+NGitLab.Models.GroupId.GroupId() -> void
 NGitLab.Models.GroupId.GroupId(long id) -> void
 NGitLab.Models.GroupId.GroupId(NGitLab.Models.Group group) -> void
 NGitLab.Models.GroupId.GroupId(string path) -> void
@@ -1850,9 +1851,8 @@ NGitLab.Models.Identity.ExternUid -> string
 NGitLab.Models.Identity.Identity() -> void
 NGitLab.Models.Identity.Provider -> string
 NGitLab.Models.Identity.SamlProviderId -> int?
-NGitLab.Models.IdOrNamespacedPath
-NGitLab.Models.IdOrNamespacedPath.IdOrNamespacedPath(long id) -> void
-NGitLab.Models.IdOrNamespacedPath.IdOrNamespacedPath(string path) -> void
+NGitLab.Models.IdOrPathExtensions
+NGitLab.Models.IidOrPathAddressable
 NGitLab.Models.Issue
 NGitLab.Models.Issue.Assignee -> NGitLab.Models.Assignee
 NGitLab.Models.Issue.Assignees -> NGitLab.Models.Assignee[]
@@ -2741,6 +2741,7 @@ NGitLab.Models.ProjectHookUpsert.TagPushEvents -> bool
 NGitLab.Models.ProjectHookUpsert.Token -> string
 NGitLab.Models.ProjectHookUpsert.Url -> System.Uri
 NGitLab.Models.ProjectId
+NGitLab.Models.ProjectId.ProjectId() -> void
 NGitLab.Models.ProjectId.ProjectId(long id) -> void
 NGitLab.Models.ProjectId.ProjectId(NGitLab.Models.Project project) -> void
 NGitLab.Models.ProjectId.ProjectId(string path) -> void
@@ -3726,8 +3727,9 @@ override NGitLab.Models.Blame.GetHashCode() -> int
 override NGitLab.Models.BlameCommit.Equals(object obj) -> bool
 override NGitLab.Models.BlameCommit.GetHashCode() -> int
 override NGitLab.Models.Event.ToString() -> string
-override NGitLab.Models.IdOrNamespacedPath.ToString() -> string
+override NGitLab.Models.GroupId.ToString() -> string
 override NGitLab.Models.MergeRequest.ToString() -> string
+override NGitLab.Models.ProjectId.ToString() -> string
 override NGitLab.Models.QueryAssigneeId.ToString() -> string
 override NGitLab.Sha1.Equals(object obj) -> bool
 override NGitLab.Sha1.GetHashCode() -> int
@@ -3743,8 +3745,8 @@ static NGitLab.Models.FileUpsert.Base64Encode(string plainText) -> string
 static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(long id) -> NGitLab.Models.GroupId
 static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(NGitLab.Models.Group group) -> NGitLab.Models.GroupId
 static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(string path) -> NGitLab.Models.GroupId
-static NGitLab.Models.IdOrNamespacedPath.implicit operator NGitLab.Models.IdOrNamespacedPath(long id) -> NGitLab.Models.IdOrNamespacedPath
-static NGitLab.Models.IdOrNamespacedPath.implicit operator NGitLab.Models.IdOrNamespacedPath(string path) -> NGitLab.Models.IdOrNamespacedPath
+static NGitLab.Models.IdOrPathExtensions.ValueAsString(this NGitLab.Models.IidOrPathAddressable idOrPath) -> string
+static NGitLab.Models.IdOrPathExtensions.ValueAsUriParameter(this NGitLab.Models.IidOrPathAddressable idOrPath) -> string
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(long id) -> NGitLab.Models.ProjectId
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(NGitLab.Models.Project project) -> NGitLab.Models.ProjectId
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(string path) -> NGitLab.Models.ProjectId

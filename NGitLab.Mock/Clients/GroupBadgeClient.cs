@@ -11,7 +11,7 @@ namespace NGitLab.Mock.Clients
         public GroupBadgeClient(ClientContext context, GroupId groupId)
             : base(context)
         {
-            _groupId = Server.AllGroups.FindGroup(groupId.ValueAsUriParameter).Id;
+            _groupId = Server.AllGroups.FindGroup(groupId.ValueAsUriParameter()).Id;
         }
 
         public Models.Badge this[int id]

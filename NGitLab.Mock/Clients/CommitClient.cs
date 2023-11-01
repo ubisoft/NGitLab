@@ -12,7 +12,7 @@ namespace NGitLab.Mock.Clients
         public CommitClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
         }
 
         public Commit Create(CommitCreate commit)

@@ -21,7 +21,7 @@ namespace NGitLab.Impl
         public EnvironmentClient(API api, ProjectId projectId)
         {
             _api = api;
-            _environmentsPath = $"{Project.Url}/{projectId.ValueAsUriParameter}/environments";
+            _environmentsPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}/environments";
         }
 
         public IEnumerable<EnvironmentInfo> All => _api.Get().GetAll<EnvironmentInfo>(_environmentsPath);

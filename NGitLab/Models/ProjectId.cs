@@ -1,20 +1,29 @@
+using System;
+
 namespace NGitLab.Models
 {
-    public record ProjectId : IdOrNamespacedPath
+    public readonly struct ProjectId : IidOrPathAddressable
     {
+        private readonly long _id;
+        private readonly string _path;
+
+        long IidOrPathAddressable.Id => _id;
+
+        string IidOrPathAddressable.Path => _path;
+
         public ProjectId(long id)
-            : base(id)
         {
+            _id = id;
         }
 
         public ProjectId(string path)
-            : base(path)
         {
+            _path = path ?? throw new ArgumentNullException(nameof(path));
         }
 
         public ProjectId(Project project)
-            : base(project.Id)
         {
+            _id = project?.Id ?? throw new ArgumentNullException(nameof(project));
         }
 
         public static implicit operator ProjectId(long id) => new(id);
@@ -22,5 +31,7 @@ namespace NGitLab.Models
         public static implicit operator ProjectId(string path) => new(path);
 
         public static implicit operator ProjectId(Project project) => new(project);
+
+        public override string ToString() => this.ValueAsString();
     }
 }

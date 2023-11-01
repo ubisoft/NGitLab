@@ -12,16 +12,16 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _milestonePath;
 
-        internal MilestoneClient(API api, MilestoneScope scope, IdOrNamespacedPath id)
+        internal MilestoneClient(API api, MilestoneScope scope, IidOrPathAddressable id)
         {
             _api = api;
-            _milestonePath = $"/{scope.ToString().ToLowerInvariant()}/{id.ValueAsUriParameter}/milestones";
+            _milestonePath = $"/{scope.ToString().ToLowerInvariant()}/{id.ValueAsUriParameter()}/milestones";
             Scope = scope;
         }
 
         [Obsolete("Use GitLabClient.GetMilestone() or GitLabClient.GetGroupMilestone() instead.")]
         public MilestoneClient(API api, int projectId)
-            : this(api, MilestoneScope.Projects, projectId)
+            : this(api, MilestoneScope.Projects, (ProjectId)projectId)
         {
         }
 

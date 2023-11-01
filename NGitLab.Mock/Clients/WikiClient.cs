@@ -11,7 +11,7 @@ namespace NGitLab.Mock.Clients
         public WikiClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
         }
 
         public WikiPage this[string slug] => throw new NotImplementedException();

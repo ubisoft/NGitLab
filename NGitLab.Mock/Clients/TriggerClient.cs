@@ -11,7 +11,7 @@ namespace NGitLab.Mock.Clients
         public TriggerClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter).Id;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
         }
 
         public Trigger this[int id] => throw new NotImplementedException();

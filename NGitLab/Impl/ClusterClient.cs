@@ -18,7 +18,7 @@ namespace NGitLab.Impl
         public ClusterClient(API api, ProjectId projectId)
         {
             _api = api;
-            _environmentsPath = $"{Project.Url}/{projectId.ValueAsUriParameter}/clusters";
+            _environmentsPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}/clusters";
         }
 
         public IEnumerable<ClusterInfo> All => _api.Get().GetAll<ClusterInfo>(_environmentsPath);
