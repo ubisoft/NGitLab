@@ -60,6 +60,13 @@ namespace NGitLab
         IEnumerable<Issue> ClosesIssues(int mergeRequestIid);
 
         /// <summary>
+        /// Get time tracking statistics
+        /// </summary>
+        /// <param name="mergeRequestIid">The id of the merge request in the project's scope.</param>
+        /// <returns>The time tracking statistics of the merge request.</returns>
+        Task<TimeStats> TimeStatsAsync(int mergeRequestIid, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Gets the resource label events.
         ///
         /// url like GET /projects/:id/merge_requests/:merge_request_iid/resource_label_events
