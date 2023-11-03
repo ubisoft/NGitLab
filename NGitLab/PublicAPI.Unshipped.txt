@@ -1854,7 +1854,7 @@ NGitLab.Models.Identity.Identity() -> void
 NGitLab.Models.Identity.Provider -> string
 NGitLab.Models.Identity.SamlProviderId -> int?
 NGitLab.Models.IdOrPathExtensions
-NGitLab.Models.IidOrPathAddressable
+NGitLab.Models.IIdOrPathAddressable
 NGitLab.Models.Issue
 NGitLab.Models.Issue.Assignee -> NGitLab.Models.Assignee
 NGitLab.Models.Issue.Assignees -> NGitLab.Models.Assignee[]
@@ -3747,8 +3747,8 @@ static NGitLab.Models.FileUpsert.Base64Encode(string plainText) -> string
 static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(long id) -> NGitLab.Models.GroupId
 static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(NGitLab.Models.Group group) -> NGitLab.Models.GroupId
 static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(string path) -> NGitLab.Models.GroupId
-static NGitLab.Models.IdOrPathExtensions.ValueAsString(this NGitLab.Models.IidOrPathAddressable idOrPath) -> string
-static NGitLab.Models.IdOrPathExtensions.ValueAsUriParameter(this NGitLab.Models.IidOrPathAddressable idOrPath) -> string
+static NGitLab.Models.IdOrPathExtensions.ValueAsString(this NGitLab.Models.IIdOrPathAddressable idOrPath) -> string
+static NGitLab.Models.IdOrPathExtensions.ValueAsUriParameter(this NGitLab.Models.IIdOrPathAddressable idOrPath) -> string
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(long id) -> NGitLab.Models.ProjectId
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(NGitLab.Models.Project project) -> NGitLab.Models.ProjectId
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(string path) -> NGitLab.Models.ProjectId

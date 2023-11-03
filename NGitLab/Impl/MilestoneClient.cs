@@ -12,7 +12,7 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _milestonePath;
 
-        internal MilestoneClient(API api, MilestoneScope scope, IidOrPathAddressable id)
+        internal MilestoneClient(API api, MilestoneScope scope, IIdOrPathAddressable id)
         {
             _api = api;
             _milestonePath = $"/{scope.ToString().ToLowerInvariant()}/{id.ValueAsUriParameter()}/milestones";

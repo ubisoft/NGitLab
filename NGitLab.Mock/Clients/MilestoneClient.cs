@@ -12,7 +12,7 @@ namespace NGitLab.Mock
     {
         private readonly int _resourceId;
 
-        public MilestoneClient(ClientContext context, IidOrPathAddressable id, MilestoneScope scope)
+        public MilestoneClient(ClientContext context, IIdOrPathAddressable id, MilestoneScope scope)
             : base(context)
         {
             _resourceId = scope switch

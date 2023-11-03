@@ -2,7 +2,7 @@
 
 namespace NGitLab.Models
 {
-    public interface IidOrPathAddressable
+    public interface IIdOrPathAddressable
     {
         internal long Id { get; }
 

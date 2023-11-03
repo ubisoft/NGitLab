@@ -2,14 +2,14 @@ using System;
 
 namespace NGitLab.Models
 {
-    public readonly struct GroupId : IidOrPathAddressable
+    public readonly struct GroupId : IIdOrPathAddressable
     {
         private readonly long _id;
         private readonly string _path;
 
-        long IidOrPathAddressable.Id => _id;
+        long IIdOrPathAddressable.Id => _id;
 
-        string IidOrPathAddressable.Path => _path;
+        string IIdOrPathAddressable.Path => _path;
 
         public GroupId(long id)
         {
