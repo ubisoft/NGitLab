@@ -62,6 +62,7 @@ public class MergeRequest
     [JsonPropertyName("target_project_id")]
     public int TargetProjectId;
 
+    [Obsolete("Deprecated by GitLab. Use Draft instead")]
     [JsonPropertyName("work_in_progress")]
     public bool? WorkInProgress;
 
