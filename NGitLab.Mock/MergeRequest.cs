@@ -290,6 +290,7 @@ namespace NGitLab.Mock
                 MergedAt = MergedAt?.UtcDateTime,
                 ClosedAt = ClosedAt?.UtcDateTime,
                 Description = Description,
+                Draft = Draft,
                 Id = Id,
                 Iid = Iid,
                 ProjectId = Project.Id,
