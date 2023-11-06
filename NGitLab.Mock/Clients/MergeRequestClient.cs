@@ -532,7 +532,7 @@ namespace NGitLab.Mock.Clients
 
                 if (query.Wip != null)
                 {
-                    mergeRequests = mergeRequests.Where(mr => (bool)query.Wip ? mr.WorkInProgress : !mr.WorkInProgress);
+                    mergeRequests = mergeRequests.Where(mr => (bool)query.Wip ? mr.Draft : !mr.Draft);
                 }
             }
 

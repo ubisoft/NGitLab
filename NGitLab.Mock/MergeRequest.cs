@@ -153,9 +153,13 @@ namespace NGitLab.Mock
 
         public NoteCollection<MergeRequestComment> Comments { get; }
 
+        [Obsolete("Deprecated by GitLab. Use Draft instead")]
         public bool WorkInProgress => Title is not null &&
             (Title.StartsWith("WIP:", StringComparison.OrdinalIgnoreCase) ||
              Title.StartsWith("Draft:", StringComparison.OrdinalIgnoreCase));
+
+        public bool Draft => Title is not null &&
+             Title.StartsWith("Draft:", StringComparison.OrdinalIgnoreCase);
 
         public IList<UserRef> Approvers { get; } = new List<UserRef>();
 
@@ -286,6 +290,7 @@ namespace NGitLab.Mock
                 MergedAt = MergedAt?.UtcDateTime,
                 ClosedAt = ClosedAt?.UtcDateTime,
                 Description = Description,
+                Draft = Draft,
                 Id = Id,
                 Iid = Iid,
                 ProjectId = Project.Id,
