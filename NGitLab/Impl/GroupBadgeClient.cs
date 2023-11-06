@@ -1,12 +1,11 @@
-﻿using NGitLab.Extensions;
-using NGitLab.Models;
+﻿using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
     internal sealed class GroupBadgeClient : BadgeClient, IGroupBadgeClient
     {
-        public GroupBadgeClient(API api, int projectId)
-            : base(api, Group.Url + "/" + projectId.ToStringInvariant())
+        public GroupBadgeClient(API api, GroupId groupId)
+            : base(api, $"{Group.Url}/{groupId.ValueAsUriParameter()}")
         {
         }
     }

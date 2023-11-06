@@ -16,10 +16,16 @@ namespace NGitLab.Impl
         private readonly string _projectPath;
         private readonly API _api;
 
+        [Obsolete("Use long or namespaced path string as projectId instead.")]
         public MergeRequestClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public MergeRequestClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectPath = Project.Url + "/" + projectId.ToStringInvariant();
+            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
         }
 
         public MergeRequestClient(API api)

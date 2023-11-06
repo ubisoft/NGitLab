@@ -8,10 +8,10 @@ namespace NGitLab.Mock.Clients
     {
         private readonly int _projectId;
 
-        public ProjectIssueNoteClient(ClientContext context, int projectId)
+        public ProjectIssueNoteClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = projectId;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
         }
 
         public Models.ProjectIssueNote Create(ProjectIssueNoteCreate create)

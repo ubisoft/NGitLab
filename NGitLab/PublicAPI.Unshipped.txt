@@ -1,4 +1,4 @@
-﻿abstract NGitLab.GitLabCollectionResponse<T>.GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerator<T>
+abstract NGitLab.GitLabCollectionResponse<T>.GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerator<T>
 abstract NGitLab.GitLabCollectionResponse<T>.GetEnumerator() -> System.Collections.Generic.IEnumerator<T>
 const NGitLab.Impl.GroupsClient.Url = "/groups" -> string
 const NGitLab.Impl.LabelClient.GroupLabelUrl = "/groups/{0}/labels" -> string
@@ -44,30 +44,53 @@ NGitLab.GitLabClient.AdvancedSearch.get -> NGitLab.ISearchClient
 NGitLab.GitLabClient.Deployments.get -> NGitLab.IDeploymentClient
 NGitLab.GitLabClient.Epics.get -> NGitLab.IEpicClient
 NGitLab.GitLabClient.GetClusterClient(int projectId) -> NGitLab.IClusterClient
+NGitLab.GitLabClient.GetClusterClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IClusterClient
 NGitLab.GitLabClient.GetCommits(int projectId) -> NGitLab.ICommitClient
+NGitLab.GitLabClient.GetCommits(NGitLab.Models.ProjectId projectId) -> NGitLab.ICommitClient
 NGitLab.GitLabClient.GetCommitStatus(int projectId) -> NGitLab.ICommitStatusClient
+NGitLab.GitLabClient.GetCommitStatus(NGitLab.Models.ProjectId projectId) -> NGitLab.ICommitStatusClient
 NGitLab.GitLabClient.GetEnvironmentClient(int projectId) -> NGitLab.IEnvironmentClient
+NGitLab.GitLabClient.GetEnvironmentClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IEnvironmentClient
 NGitLab.GitLabClient.GetEvents() -> NGitLab.IEventClient
 NGitLab.GitLabClient.GetGroupBadgeClient(int groupId) -> NGitLab.IGroupBadgeClient
+NGitLab.GitLabClient.GetGroupBadgeClient(NGitLab.Models.GroupId groupId) -> NGitLab.IGroupBadgeClient
 NGitLab.GitLabClient.GetGroupMilestone(int groupId) -> NGitLab.IMilestoneClient
+NGitLab.GitLabClient.GetGroupMilestone(NGitLab.Models.GroupId groupId) -> NGitLab.IMilestoneClient
 NGitLab.GitLabClient.GetGroupSearchClient(int groupId) -> NGitLab.ISearchClient
+NGitLab.GitLabClient.GetGroupSearchClient(NGitLab.Models.GroupId groupId) -> NGitLab.ISearchClient
 NGitLab.GitLabClient.GetGroupVariableClient(int groupId) -> NGitLab.IGroupVariableClient
+NGitLab.GitLabClient.GetGroupVariableClient(NGitLab.Models.GroupId groupId) -> NGitLab.IGroupVariableClient
 NGitLab.GitLabClient.GetJobs(int projectId) -> NGitLab.IJobClient
+NGitLab.GitLabClient.GetJobs(NGitLab.Models.ProjectId projectId) -> NGitLab.IJobClient
 NGitLab.GitLabClient.GetMergeRequest(int projectId) -> NGitLab.IMergeRequestClient
+NGitLab.GitLabClient.GetMergeRequest(NGitLab.Models.ProjectId projectId) -> NGitLab.IMergeRequestClient
 NGitLab.GitLabClient.GetMilestone(int projectId) -> NGitLab.IMilestoneClient
+NGitLab.GitLabClient.GetMilestone(NGitLab.Models.ProjectId projectId) -> NGitLab.IMilestoneClient
 NGitLab.GitLabClient.GetPipelines(int projectId) -> NGitLab.IPipelineClient
+NGitLab.GitLabClient.GetPipelines(NGitLab.Models.ProjectId projectId) -> NGitLab.IPipelineClient
 NGitLab.GitLabClient.GetProjectBadgeClient(int projectId) -> NGitLab.IProjectBadgeClient
+NGitLab.GitLabClient.GetProjectBadgeClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectBadgeClient
 NGitLab.GitLabClient.GetProjectEvents(int projectId) -> NGitLab.IEventClient
+NGitLab.GitLabClient.GetProjectEvents(NGitLab.Models.ProjectId projectId) -> NGitLab.IEventClient
 NGitLab.GitLabClient.GetProjectIssueNoteClient(int projectId) -> NGitLab.IProjectIssueNoteClient
+NGitLab.GitLabClient.GetProjectIssueNoteClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectIssueNoteClient
 NGitLab.GitLabClient.GetProjectLevelApprovalRulesClient(int projectId) -> NGitLab.IProjectLevelApprovalRulesClient
+NGitLab.GitLabClient.GetProjectLevelApprovalRulesClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectLevelApprovalRulesClient
 NGitLab.GitLabClient.GetProjectSearchClient(int projectId) -> NGitLab.ISearchClient
+NGitLab.GitLabClient.GetProjectSearchClient(NGitLab.Models.ProjectId projectId) -> NGitLab.ISearchClient
 NGitLab.GitLabClient.GetProjectVariableClient(int projectId) -> NGitLab.IProjectVariableClient
+NGitLab.GitLabClient.GetProjectVariableClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectVariableClient
 NGitLab.GitLabClient.GetProtectedBranchClient(int projectId) -> NGitLab.IProtectedBranchClient
+NGitLab.GitLabClient.GetProtectedBranchClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProtectedBranchClient
 NGitLab.GitLabClient.GetReleases(int projectId) -> NGitLab.IReleaseClient
+NGitLab.GitLabClient.GetReleases(NGitLab.Models.ProjectId projectId) -> NGitLab.IReleaseClient
 NGitLab.GitLabClient.GetRepository(int projectId) -> NGitLab.IRepositoryClient
+NGitLab.GitLabClient.GetRepository(NGitLab.Models.ProjectId projectId) -> NGitLab.IRepositoryClient
 NGitLab.GitLabClient.GetTriggers(int projectId) -> NGitLab.ITriggerClient
+NGitLab.GitLabClient.GetTriggers(NGitLab.Models.ProjectId projectId) -> NGitLab.ITriggerClient
 NGitLab.GitLabClient.GetUserEvents(int userId) -> NGitLab.IEventClient
 NGitLab.GitLabClient.GetWikiClient(int projectId) -> NGitLab.IWikiClient
+NGitLab.GitLabClient.GetWikiClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IWikiClient
 NGitLab.GitLabClient.GitLabClient(string hostUrl, string apiToken) -> void
 NGitLab.GitLabClient.GitLabClient(string hostUrl, string apiToken, NGitLab.RequestOptions options) -> void
 NGitLab.GitLabClient.GitLabClient(string hostUrl, string userName, string password) -> void
@@ -161,30 +184,53 @@ NGitLab.IGitLabClient.AdvancedSearch.get -> NGitLab.ISearchClient
 NGitLab.IGitLabClient.Deployments.get -> NGitLab.IDeploymentClient
 NGitLab.IGitLabClient.Epics.get -> NGitLab.IEpicClient
 NGitLab.IGitLabClient.GetClusterClient(int projectId) -> NGitLab.IClusterClient
+NGitLab.IGitLabClient.GetClusterClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IClusterClient
 NGitLab.IGitLabClient.GetCommits(int projectId) -> NGitLab.ICommitClient
+NGitLab.IGitLabClient.GetCommits(NGitLab.Models.ProjectId projectId) -> NGitLab.ICommitClient
 NGitLab.IGitLabClient.GetCommitStatus(int projectId) -> NGitLab.ICommitStatusClient
+NGitLab.IGitLabClient.GetCommitStatus(NGitLab.Models.ProjectId projectId) -> NGitLab.ICommitStatusClient
 NGitLab.IGitLabClient.GetEnvironmentClient(int projectId) -> NGitLab.IEnvironmentClient
+NGitLab.IGitLabClient.GetEnvironmentClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IEnvironmentClient
 NGitLab.IGitLabClient.GetEvents() -> NGitLab.IEventClient
 NGitLab.IGitLabClient.GetGroupBadgeClient(int groupId) -> NGitLab.IGroupBadgeClient
+NGitLab.IGitLabClient.GetGroupBadgeClient(NGitLab.Models.GroupId groupId) -> NGitLab.IGroupBadgeClient
 NGitLab.IGitLabClient.GetGroupMilestone(int groupId) -> NGitLab.IMilestoneClient
+NGitLab.IGitLabClient.GetGroupMilestone(NGitLab.Models.GroupId groupId) -> NGitLab.IMilestoneClient
 NGitLab.IGitLabClient.GetGroupSearchClient(int groupId) -> NGitLab.ISearchClient
+NGitLab.IGitLabClient.GetGroupSearchClient(NGitLab.Models.GroupId groupId) -> NGitLab.ISearchClient
 NGitLab.IGitLabClient.GetGroupVariableClient(int groupId) -> NGitLab.IGroupVariableClient
+NGitLab.IGitLabClient.GetGroupVariableClient(NGitLab.Models.GroupId groupId) -> NGitLab.IGroupVariableClient
 NGitLab.IGitLabClient.GetJobs(int projectId) -> NGitLab.IJobClient
+NGitLab.IGitLabClient.GetJobs(NGitLab.Models.ProjectId projectId) -> NGitLab.IJobClient
 NGitLab.IGitLabClient.GetMergeRequest(int projectId) -> NGitLab.IMergeRequestClient
+NGitLab.IGitLabClient.GetMergeRequest(NGitLab.Models.ProjectId projectId) -> NGitLab.IMergeRequestClient
 NGitLab.IGitLabClient.GetMilestone(int projectId) -> NGitLab.IMilestoneClient
+NGitLab.IGitLabClient.GetMilestone(NGitLab.Models.ProjectId projectId) -> NGitLab.IMilestoneClient
 NGitLab.IGitLabClient.GetPipelines(int projectId) -> NGitLab.IPipelineClient
+NGitLab.IGitLabClient.GetPipelines(NGitLab.Models.ProjectId projectId) -> NGitLab.IPipelineClient
 NGitLab.IGitLabClient.GetProjectBadgeClient(int projectId) -> NGitLab.IProjectBadgeClient
+NGitLab.IGitLabClient.GetProjectBadgeClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectBadgeClient
 NGitLab.IGitLabClient.GetProjectEvents(int projectId) -> NGitLab.IEventClient
+NGitLab.IGitLabClient.GetProjectEvents(NGitLab.Models.ProjectId projectId) -> NGitLab.IEventClient
 NGitLab.IGitLabClient.GetProjectIssueNoteClient(int projectId) -> NGitLab.IProjectIssueNoteClient
+NGitLab.IGitLabClient.GetProjectIssueNoteClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectIssueNoteClient
 NGitLab.IGitLabClient.GetProjectLevelApprovalRulesClient(int projectId) -> NGitLab.IProjectLevelApprovalRulesClient
+NGitLab.IGitLabClient.GetProjectLevelApprovalRulesClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectLevelApprovalRulesClient
 NGitLab.IGitLabClient.GetProjectSearchClient(int projectId) -> NGitLab.ISearchClient
+NGitLab.IGitLabClient.GetProjectSearchClient(NGitLab.Models.ProjectId projectId) -> NGitLab.ISearchClient
 NGitLab.IGitLabClient.GetProjectVariableClient(int projectId) -> NGitLab.IProjectVariableClient
+NGitLab.IGitLabClient.GetProjectVariableClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectVariableClient
 NGitLab.IGitLabClient.GetProtectedBranchClient(int projectId) -> NGitLab.IProtectedBranchClient
+NGitLab.IGitLabClient.GetProtectedBranchClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProtectedBranchClient
 NGitLab.IGitLabClient.GetReleases(int projectId) -> NGitLab.IReleaseClient
+NGitLab.IGitLabClient.GetReleases(NGitLab.Models.ProjectId projectId) -> NGitLab.IReleaseClient
 NGitLab.IGitLabClient.GetRepository(int projectId) -> NGitLab.IRepositoryClient
+NGitLab.IGitLabClient.GetRepository(NGitLab.Models.ProjectId projectId) -> NGitLab.IRepositoryClient
 NGitLab.IGitLabClient.GetTriggers(int projectId) -> NGitLab.ITriggerClient
+NGitLab.IGitLabClient.GetTriggers(NGitLab.Models.ProjectId projectId) -> NGitLab.ITriggerClient
 NGitLab.IGitLabClient.GetUserEvents(int userId) -> NGitLab.IEventClient
 NGitLab.IGitLabClient.GetWikiClient(int projectId) -> NGitLab.IWikiClient
+NGitLab.IGitLabClient.GetWikiClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IWikiClient
 NGitLab.IGitLabClient.GraphQL.get -> NGitLab.IGraphQLClient
 NGitLab.IGitLabClient.Groups.get -> NGitLab.IGroupsClient
 NGitLab.IGitLabClient.Issues.get -> NGitLab.IIssueClient
@@ -413,9 +459,11 @@ NGitLab.Impl.BranchClient.Unprotect(string name) -> NGitLab.Models.Branch
 NGitLab.Impl.ClusterClient
 NGitLab.Impl.ClusterClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.ClusterInfo>
 NGitLab.Impl.ClusterClient.ClusterClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.ClusterClient.ClusterClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.CommitClient
 NGitLab.Impl.CommitClient.CherryPick(NGitLab.Models.CommitCherryPick cherryPick) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.CommitClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.CommitClient.CommitClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.CommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
@@ -424,6 +472,7 @@ NGitLab.Impl.CommitStatusClient
 NGitLab.Impl.CommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
 NGitLab.Impl.CommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
 NGitLab.Impl.CommitStatusClient.CommitStatusClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.CommitStatusClient.CommitStatusClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.DeploymentClient
 NGitLab.Impl.DeploymentClient.DeploymentClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.DeploymentClient.Get(int projectId, NGitLab.Models.DeploymentQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Deployment>
@@ -440,6 +489,7 @@ NGitLab.Impl.EnvironmentClient.Create(string name, string externalUrl) -> NGitLa
 NGitLab.Impl.EnvironmentClient.Delete(int environmentId) -> void
 NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.EnvironmentClient.GetById(int environmentId) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.GetByIdAsync(int environmentId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.EnvironmentInfo>
 NGitLab.Impl.EnvironmentClient.GetEnvironmentsAsync(NGitLab.Models.EnvironmentQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.EnvironmentInfo>
@@ -550,6 +600,7 @@ NGitLab.Impl.JobClient.GetJobsAsync(NGitLab.Models.JobQuery query) -> NGitLab.Gi
 NGitLab.Impl.JobClient.GetTrace(int jobId) -> string
 NGitLab.Impl.JobClient.GetTraceAsync(int jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string>
 NGitLab.Impl.JobClient.JobClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.JobClient.JobClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.JobClient.RunAction(int jobId, NGitLab.Models.JobAction action) -> NGitLab.Models.Job
 NGitLab.Impl.JobClient.RunActionAsync(int jobId, NGitLab.Models.JobAction action, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.Impl.LabelClient
@@ -615,6 +666,7 @@ NGitLab.Impl.MergeRequestClient.GetPipelines(int mergeRequestIid) -> System.Coll
 NGitLab.Impl.MergeRequestClient.GetVersionsAsync(int mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequestVersion>
 NGitLab.Impl.MergeRequestClient.MergeRequestClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.MergeRequestClient.MergeRequestClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.MergeRequestClient.MergeRequestClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.MergeRequestClient.Rebase(int mergeRequestIid) -> NGitLab.Models.RebaseResult
 NGitLab.Impl.MergeRequestClient.RebaseAsync(int mergeRequestIid, NGitLab.Models.MergeRequestRebase options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.RebaseResult>
 NGitLab.Impl.MergeRequestClient.Reopen(int mergeRequestIid) -> NGitLab.Models.MergeRequest
@@ -695,6 +747,7 @@ NGitLab.Impl.PipelineClient.GetTestReportsSummary(int pipelineId) -> NGitLab.Mod
 NGitLab.Impl.PipelineClient.GetVariables(int pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
 NGitLab.Impl.PipelineClient.GetVariablesAsync(int pipelineId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineVariable>
 NGitLab.Impl.PipelineClient.PipelineClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.PipelineClient.PipelineClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.PipelineClient.RetryAsync(int pipelineId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.Impl.PipelineClient.Search(NGitLab.Models.PipelineQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.Impl.PipelineClient.SearchAsync(NGitLab.Models.PipelineQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
@@ -735,11 +788,13 @@ NGitLab.Impl.ProjectIssueNoteClient.Edit(NGitLab.Models.ProjectIssueNoteEdit edi
 NGitLab.Impl.ProjectIssueNoteClient.ForIssue(int issueId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ProjectIssueNote>
 NGitLab.Impl.ProjectIssueNoteClient.Get(int issueId, int noteId) -> NGitLab.Models.ProjectIssueNote
 NGitLab.Impl.ProjectIssueNoteClient.ProjectIssueNoteClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.ProjectIssueNoteClient.ProjectIssueNoteClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.ProjectLevelApprovalRulesClient
 NGitLab.Impl.ProjectLevelApprovalRulesClient.CreateProjectLevelRule(NGitLab.Models.ApprovalRuleCreate approvalRuleCreate) -> NGitLab.Models.ApprovalRule
 NGitLab.Impl.ProjectLevelApprovalRulesClient.DeleteProjectLevelRule(int approvalRuleIdToDelete) -> void
 NGitLab.Impl.ProjectLevelApprovalRulesClient.GetProjectLevelApprovalRules() -> System.Collections.Generic.List<NGitLab.Models.ApprovalRule>
 NGitLab.Impl.ProjectLevelApprovalRulesClient.ProjectLevelApprovalRulesClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.ProjectLevelApprovalRulesClient.ProjectLevelApprovalRulesClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.ProjectLevelApprovalRulesClient.UpdateProjectLevelApprovalRule(int approvalRuleIdToUpdate, NGitLab.Models.ApprovalRuleUpdate approvalRuleUpdate) -> NGitLab.Models.ApprovalRule
 NGitLab.Impl.RepositoryClient
 NGitLab.Impl.RepositoryClient.Branches.get -> NGitLab.IBranchClient
@@ -759,6 +814,7 @@ NGitLab.Impl.RepositoryClient.GetTree(string path, string ref, bool recursive) -
 NGitLab.Impl.RepositoryClient.GetTreeAsync(NGitLab.Models.RepositoryGetTreeOptions options) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Tree>
 NGitLab.Impl.RepositoryClient.ProjectHooks.get -> NGitLab.IProjectHooksClient
 NGitLab.Impl.RepositoryClient.RepositoryClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.RepositoryClient.RepositoryClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.RepositoryClient.Tags.get -> NGitLab.ITagClient
 NGitLab.Impl.RepositoryClient.Tree.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
 NGitLab.Impl.RunnerClient
@@ -815,6 +871,7 @@ NGitLab.Impl.TriggerClient.All.get -> System.Collections.Generic.IEnumerable<NGi
 NGitLab.Impl.TriggerClient.Create(string description) -> NGitLab.Models.Trigger
 NGitLab.Impl.TriggerClient.this[int id].get -> NGitLab.Models.Trigger
 NGitLab.Impl.TriggerClient.TriggerClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.TriggerClient.TriggerClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.UserClient
 NGitLab.Impl.UserClient.Activate(int userId) -> void
 NGitLab.Impl.UserClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
@@ -844,6 +901,7 @@ NGitLab.Impl.WikiClient.Delete(string slug) -> void
 NGitLab.Impl.WikiClient.this[string slug].get -> NGitLab.Models.WikiPage
 NGitLab.Impl.WikiClient.Update(string slug, NGitLab.Models.WikiPageUpdate wikiPage) -> NGitLab.Models.WikiPage
 NGitLab.Impl.WikiClient.WikiClient(NGitLab.Impl.API api, int projectId) -> void
+NGitLab.Impl.WikiClient.WikiClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.INamespacesClient
 NGitLab.INamespacesClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Namespace>
 NGitLab.INamespacesClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Namespace>
@@ -1696,6 +1754,11 @@ NGitLab.Models.GroupCreate.RequestAccessEnabled -> bool
 NGitLab.Models.GroupCreate.SharedRunnersMinutesLimit.get -> int?
 NGitLab.Models.GroupCreate.SharedRunnersMinutesLimit.set -> void
 NGitLab.Models.GroupCreate.Visibility -> NGitLab.Models.VisibilityLevel
+NGitLab.Models.GroupId
+NGitLab.Models.GroupId.GroupId() -> void
+NGitLab.Models.GroupId.GroupId(long id) -> void
+NGitLab.Models.GroupId.GroupId(NGitLab.Models.Group group) -> void
+NGitLab.Models.GroupId.GroupId(string path) -> void
 NGitLab.Models.GroupLabelCreate
 NGitLab.Models.GroupLabelCreate.Color.get -> string
 NGitLab.Models.GroupLabelCreate.Color.set -> void
@@ -1790,6 +1853,8 @@ NGitLab.Models.Identity.ExternUid -> string
 NGitLab.Models.Identity.Identity() -> void
 NGitLab.Models.Identity.Provider -> string
 NGitLab.Models.Identity.SamlProviderId -> int?
+NGitLab.Models.IdOrPathExtensions
+NGitLab.Models.IIdOrPathAddressable
 NGitLab.Models.Issue
 NGitLab.Models.Issue.Assignee -> NGitLab.Models.Assignee
 NGitLab.Models.Issue.Assignees -> NGitLab.Models.Assignee[]
@@ -2678,6 +2743,11 @@ NGitLab.Models.ProjectHookUpsert.PushEvents -> bool
 NGitLab.Models.ProjectHookUpsert.TagPushEvents -> bool
 NGitLab.Models.ProjectHookUpsert.Token -> string
 NGitLab.Models.ProjectHookUpsert.Url -> System.Uri
+NGitLab.Models.ProjectId
+NGitLab.Models.ProjectId.ProjectId() -> void
+NGitLab.Models.ProjectId.ProjectId(long id) -> void
+NGitLab.Models.ProjectId.ProjectId(NGitLab.Models.Project project) -> void
+NGitLab.Models.ProjectId.ProjectId(string path) -> void
 NGitLab.Models.ProjectIssueNote
 NGitLab.Models.ProjectIssueNote.Attachment -> string
 NGitLab.Models.ProjectIssueNote.Author -> NGitLab.Models.Author
@@ -3660,7 +3730,9 @@ override NGitLab.Models.Blame.GetHashCode() -> int
 override NGitLab.Models.BlameCommit.Equals(object obj) -> bool
 override NGitLab.Models.BlameCommit.GetHashCode() -> int
 override NGitLab.Models.Event.ToString() -> string
+override NGitLab.Models.GroupId.ToString() -> string
 override NGitLab.Models.MergeRequest.ToString() -> string
+override NGitLab.Models.ProjectId.ToString() -> string
 override NGitLab.Models.QueryAssigneeId.ToString() -> string
 override NGitLab.Sha1.Equals(object obj) -> bool
 override NGitLab.Sha1.GetHashCode() -> int
@@ -3673,6 +3745,14 @@ static NGitLab.GitLabClient.Connect(string hostUrl, string apiToken) -> NGitLab.
 static NGitLab.GitLabClient.Connect(string hostUrl, string username, string password) -> NGitLab.GitLabClient
 static NGitLab.Models.FileData.Base64Decode(string base64EncodedData) -> string
 static NGitLab.Models.FileUpsert.Base64Encode(string plainText) -> string
+static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(long id) -> NGitLab.Models.GroupId
+static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(NGitLab.Models.Group group) -> NGitLab.Models.GroupId
+static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(string path) -> NGitLab.Models.GroupId
+static NGitLab.Models.IdOrPathExtensions.ValueAsString(this NGitLab.Models.IIdOrPathAddressable idOrPath) -> string
+static NGitLab.Models.IdOrPathExtensions.ValueAsUriParameter(this NGitLab.Models.IIdOrPathAddressable idOrPath) -> string
+static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(long id) -> NGitLab.Models.ProjectId
+static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(NGitLab.Models.Project project) -> NGitLab.Models.ProjectId
+static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(string path) -> NGitLab.Models.ProjectId
 static NGitLab.Models.QueryAssigneeId.Any.get -> NGitLab.Models.QueryAssigneeId
 static NGitLab.Models.QueryAssigneeId.implicit operator NGitLab.Models.QueryAssigneeId(int id) -> NGitLab.Models.QueryAssigneeId
 static NGitLab.Models.QueryAssigneeId.None.get -> NGitLab.Models.QueryAssigneeId

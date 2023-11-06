@@ -12,10 +12,15 @@ namespace NGitLab.Mock
     {
         private readonly int _resourceId;
 
-        public MilestoneClient(ClientContext context, int id, MilestoneScope scope)
+        public MilestoneClient(ClientContext context, IIdOrPathAddressable id, MilestoneScope scope)
             : base(context)
         {
-            _resourceId = id;
+            _resourceId = scope switch
+            {
+                MilestoneScope.Groups => Server.AllGroups.FindGroup(id.ValueAsUriParameter()).Id,
+                MilestoneScope.Projects => Server.AllProjects.FindProject(id.ValueAsUriParameter()).Id,
+                _ => throw new NotSupportedException($"{scope} milestone is not supported yet."),
+            };
             Scope = scope;
         }
 

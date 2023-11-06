@@ -235,7 +235,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var group = Server.AllGroups.FindGroupById(id);
+                var group = Server.AllGroups.FindById(id);
                 if (group == null || !group.CanUserViewGroup(Context.User))
                     throw new GitLabNotFoundException();
 

@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
 {
     internal sealed class ProjectBadgeClient : BadgeClient, IProjectBadgeClient
     {
-        public ProjectBadgeClient(API api, int projectId)
-            : base(api, Project.Url + $"/{projectId.ToStringInvariant()}")
+        public ProjectBadgeClient(API api, ProjectId projectId)
+            : base(api, $"{Project.Url}/{projectId.ValueAsUriParameter()}")
         {
         }
 

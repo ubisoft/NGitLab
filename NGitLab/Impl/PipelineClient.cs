@@ -15,11 +15,17 @@ namespace NGitLab.Impl
         private readonly string _projectPath;
         private readonly string _pipelinesPath;
 
+        [Obsolete("Use long or namespaced path string as projectId instead.")]
         public PipelineClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public PipelineClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectPath = $"{Project.Url}/{projectId.ToStringInvariant()}";
-            _pipelinesPath = $"{Project.Url}/{projectId.ToStringInvariant()}/pipelines";
+            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
+            _pipelinesPath = $"{_projectPath}/pipelines";
         }
 
         public IEnumerable<PipelineBasic> All => _api.Get().GetAll<PipelineBasic>(_pipelinesPath);

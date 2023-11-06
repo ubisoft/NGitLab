@@ -13,10 +13,16 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _jobsPath;
 
+        [Obsolete("Use long or namespaced path string as projectId instead.")]
         public JobClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public JobClient(API api, ProjectId projectId)
         {
             _api = api;
-            _jobsPath = $"{Project.Url}/{projectId.ToStringInvariant()}/jobs";
+            _jobsPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}/jobs";
         }
 
         public IEnumerable<Job> GetJobs(JobScopeMask scope)

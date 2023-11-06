@@ -10,10 +10,10 @@ namespace NGitLab.Mock.Clients
     {
         private readonly int _projectId;
 
-        public EnvironmentClient(ClientContext context, int projectId)
+        public EnvironmentClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = projectId;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
         }
 
         public IEnumerable<EnvironmentInfo> All => throw new NotImplementedException();
