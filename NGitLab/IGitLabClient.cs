@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -36,7 +37,7 @@ namespace NGitLab
         /// <summary>
         /// Returns the events that occurred in the specified project.
         /// </summary>
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IEventClient GetProjectEvents(int projectId);
 
         /// <summary>
@@ -44,42 +45,42 @@ namespace NGitLab
         /// </summary>
         IEventClient GetProjectEvents(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IRepositoryClient GetRepository(int projectId);
 
         IRepositoryClient GetRepository(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         ICommitClient GetCommits(int projectId);
 
         ICommitClient GetCommits(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         ICommitStatusClient GetCommitStatus(int projectId);
 
         ICommitStatusClient GetCommitStatus(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IPipelineClient GetPipelines(int projectId);
 
         IPipelineClient GetPipelines(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         ITriggerClient GetTriggers(int projectId);
 
         ITriggerClient GetTriggers(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IJobClient GetJobs(int projectId);
 
         IJobClient GetJobs(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IMergeRequestClient GetMergeRequest(int projectId);
 
         IMergeRequestClient GetMergeRequest(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IMilestoneClient GetMilestone(int projectId);
 
         IMilestoneClient GetMilestone(ProjectId projectId);
@@ -89,7 +90,7 @@ namespace NGitLab
 
         IMilestoneClient GetGroupMilestone(GroupId groupId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IReleaseClient GetReleases(int projectId);
 
         IReleaseClient GetReleases(ProjectId projectId);
@@ -112,27 +113,27 @@ namespace NGitLab
 
         ISearchClient AdvancedSearch { get; }
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId);
 
         IProjectIssueNoteClient GetProjectIssueNoteClient(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IEnvironmentClient GetEnvironmentClient(int projectId);
 
         IEnvironmentClient GetEnvironmentClient(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IClusterClient GetClusterClient(int projectId);
 
         IClusterClient GetClusterClient(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IWikiClient GetWikiClient(int projectId);
 
         IWikiClient GetWikiClient(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IProjectBadgeClient GetProjectBadgeClient(int projectId);
 
         IProjectBadgeClient GetProjectBadgeClient(ProjectId projectId);
@@ -142,7 +143,7 @@ namespace NGitLab
 
         IGroupBadgeClient GetGroupBadgeClient(GroupId groupId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IProjectVariableClient GetProjectVariableClient(int projectId);
 
         IProjectVariableClient GetProjectVariableClient(ProjectId projectId);
@@ -152,12 +153,12 @@ namespace NGitLab
 
         IGroupVariableClient GetGroupVariableClient(GroupId groupId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId);
 
         IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IProtectedBranchClient GetProtectedBranchClient(int projectId);
 
         IProtectedBranchClient GetProtectedBranchClient(ProjectId projectId);
@@ -167,7 +168,7 @@ namespace NGitLab
 
         public ISearchClient GetGroupSearchClient(GroupId groupId);
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public ISearchClient GetProjectSearchClient(int projectId);
 
         public ISearchClient GetProjectSearchClient(ProjectId projectId);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _jobsPath;
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public JobClient(API api, int projectId)
             : this(api, (long)projectId)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Extensions;
@@ -12,7 +13,7 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _environmentsPath;
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public EnvironmentClient(API api, int projectId)
             : this(api, (long)projectId)
         {
