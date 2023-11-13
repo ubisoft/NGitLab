@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net;
 using NGitLab.Models;
 
@@ -10,7 +11,7 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _projectPath;
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public WikiClient(API api, int projectId)
             : this(api, (long)projectId)
         {
