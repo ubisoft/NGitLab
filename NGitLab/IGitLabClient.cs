@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab
@@ -85,7 +84,7 @@ namespace NGitLab
 
         IMilestoneClient GetMilestone(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as groupId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IMilestoneClient GetGroupMilestone(int groupId);
 
         IMilestoneClient GetGroupMilestone(GroupId groupId);
@@ -138,7 +137,7 @@ namespace NGitLab
 
         IProjectBadgeClient GetProjectBadgeClient(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as groupId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IGroupBadgeClient GetGroupBadgeClient(int groupId);
 
         IGroupBadgeClient GetGroupBadgeClient(GroupId groupId);
@@ -148,7 +147,7 @@ namespace NGitLab
 
         IProjectVariableClient GetProjectVariableClient(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as groupId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         IGroupVariableClient GetGroupVariableClient(int groupId);
 
         IGroupVariableClient GetGroupVariableClient(GroupId groupId);
@@ -163,7 +162,7 @@ namespace NGitLab
 
         IProtectedBranchClient GetProtectedBranchClient(ProjectId projectId);
 
-        [Obsolete("Use long or namespaced path string as groupId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public ISearchClient GetGroupSearchClient(int groupId);
 
         public ISearchClient GetGroupSearchClient(GroupId groupId);
