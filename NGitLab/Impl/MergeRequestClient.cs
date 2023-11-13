@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace NGitLab.Impl
         private readonly string _projectPath;
         private readonly API _api;
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public MergeRequestClient(API api, int projectId)
             : this(api, (long)projectId)
         {

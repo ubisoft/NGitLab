@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -10,7 +10,7 @@ namespace NGitLab.Impl
         private readonly string _statusCreatePath;
         private readonly string _statusPath;
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public CommitStatusClient(API api, int projectId)
             : this(api, (long)projectId)
         {

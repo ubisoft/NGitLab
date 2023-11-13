@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,7 +16,7 @@ namespace NGitLab.Impl
         private readonly string _projectPath;
         private readonly string _pipelinesPath;
 
-        [Obsolete("Use long or namespaced path string as projectId instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public PipelineClient(API api, int projectId)
             : this(api, (long)projectId)
         {
