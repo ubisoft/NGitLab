@@ -403,7 +403,18 @@ namespace NGitLab.Mock
 
             if (!string.IsNullOrEmpty(@ref))
             {
-                filter.IncludeReachableFrom = @ref;
+                // @ref can represent a revision range:
+                // https://docs.gitlab.com/ee/api/commits.html#list-repository-commits
+                var range = @ref.Split(new[] { ".." }, StringSplitOptions.None);
+                if (range.Length == 2)
+                {
+                    filter.ExcludeReachableFrom = range[0];
+                    filter.IncludeReachableFrom = range[1];
+                }
+                else
+                {
+                    filter.IncludeReachableFrom = @ref;
+                }
             }
 
             try
