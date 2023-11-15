@@ -190,7 +190,7 @@ namespace NGitLab.Mock.Clients
         {
             using (Context.BeginOperationScope())
             {
-                var project = Server.AllProjects.SingleOrDefault(p => p.RunnersToken == request.Token);
+                var project = Server.AllProjects.SingleOrDefault(p => string.Equals(p.RunnersToken, request.Token, StringComparison.Ordinal));
                 var runner = project.AddRunner(null, request.Description, request.Active ?? false, request.Locked ?? true, false, request.RunUntagged ?? false);
                 return runner.ToClientRunner(Context.User);
             }
