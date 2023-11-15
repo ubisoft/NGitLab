@@ -57,14 +57,26 @@ namespace NGitLab.Mock.Clients
             }
         }
 
-        public void Delete(Models.Runner runner)
-        {
-            throw new NotImplementedException();
-        }
+        public void Delete(Models.Runner runner) => Delete(runner.Id);
 
         public void Delete(int runnerId)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var projects = Server.AllProjects.Where(p => p.EnabledRunners.Any(r => r.Id == runnerId));
+                if (!projects.Any())
+                {
+                    throw new GitLabException("Bad Request. Runner is not found in any project");
+                }
+
+                if (projects.Take(2).Count() > 1)
+                {
+                    throw new GitLabException("Bad Request. Runner is enabled in multiple projects");
+                }
+
+                var project = GetProject(projects.Single().Id, ProjectPermission.Edit);
+                project.RemoveRunner(runnerId);
+            }
         }
 
         public Models.Runner Update(int runnerId, RunnerUpdate runnerUpdate)
@@ -174,9 +186,14 @@ namespace NGitLab.Mock.Clients
             return GetOwnedRunners().FirstOrDefault(runner => runner.Id == id) ?? throw new GitLabNotFoundException();
         }
 
-        Models.Runner IRunnerClient.Register(RunnerRegister request)
+        public Models.Runner Register(RunnerRegister request)
         {
-            throw new NotImplementedException();
+            using (Context.BeginOperationScope())
+            {
+                var project = Server.AllProjects.SingleOrDefault(p => p.RunnersToken == request.Token);
+                var runner = project.AddRunner(null, request.Description, request.Active ?? false, request.Locked ?? true, false, request.RunUntagged ?? false);
+                return runner.ToClientRunner(Context.User);
+            }
         }
     }
 }

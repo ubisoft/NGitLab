@@ -33,6 +33,7 @@ namespace NGitLab.Mock
             Releases = new ReleaseCollection(this);
             ProtectedBranches = new ProtectedBranchCollection(this);
             ApprovalsBeforeMerge = 0;
+            RunnersToken = Server.MakeRegistrationToken();
         }
 
         public int Id { get; set; }
@@ -148,6 +149,8 @@ namespace NGitLab.Mock
         public ProjectStatistics Statistics { get; set; }
 
         public ProtectedBranchCollection ProtectedBranches { get; }
+
+        public string RunnersToken { get; }
 
         public void Remove()
         {
@@ -345,6 +348,11 @@ namespace NGitLab.Mock
             return mr;
         }
 
+        public bool RemoveRunner(int runnerId)
+        {
+            return RegisteredRunners.Remove(runnerId);
+        }
+
         public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged, int id)
         {
             var runner = new Runner
@@ -372,6 +380,11 @@ namespace NGitLab.Mock
         public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared)
         {
             return AddRunner(name, description, active, locked, isShared, runUntagged: false, default);
+        }
+
+        public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged)
+        {
+            return AddRunner(name, description, active, locked, isShared, runUntagged, default);
         }
 
         public Project Fork(User user)

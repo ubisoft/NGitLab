@@ -785,6 +785,7 @@ NGitLab.Mock.Project
 NGitLab.Mock.Project.AccessibleMergeRequests.get -> bool
 NGitLab.Mock.Project.AccessibleMergeRequests.set -> void
 NGitLab.Mock.Project.AddRunner(string name, string description, bool active, bool locked, bool isShared) -> NGitLab.Mock.Runner
+NGitLab.Mock.Project.AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged) -> NGitLab.Mock.Runner
 NGitLab.Mock.Project.AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged, int id) -> NGitLab.Mock.Runner
 NGitLab.Mock.Project.AllThreadsMustBeResolvedToMerge.get -> bool
 NGitLab.Mock.Project.AllThreadsMustBeResolvedToMerge.set -> void
@@ -858,9 +859,11 @@ NGitLab.Mock.Project.ProtectedBranches.get -> NGitLab.Mock.ProtectedBranchCollec
 NGitLab.Mock.Project.RegisteredRunners.get -> NGitLab.Mock.RunnerCollection
 NGitLab.Mock.Project.Releases.get -> NGitLab.Mock.ReleaseCollection
 NGitLab.Mock.Project.Remove() -> void
+NGitLab.Mock.Project.RemoveRunner(int runnerId) -> bool
 NGitLab.Mock.Project.Repository.get -> NGitLab.Mock.Repository
 NGitLab.Mock.Project.RepositoryAccessLevel.get -> NGitLab.Models.RepositoryAccessLevel
 NGitLab.Mock.Project.RepositoryAccessLevel.set -> void
+NGitLab.Mock.Project.RunnersToken.get -> string
 NGitLab.Mock.Project.SshUrl.get -> string
 NGitLab.Mock.Project.Statistics.get -> NGitLab.Models.ProjectStatistics
 NGitLab.Mock.Project.Statistics.set -> void
@@ -1085,6 +1088,7 @@ NGitLab.Mock.Runner.Token.set -> void
 NGitLab.Mock.Runner.Version.get -> string
 NGitLab.Mock.Runner.Version.set -> void
 NGitLab.Mock.RunnerCollection
+NGitLab.Mock.RunnerCollection.Remove(int id) -> bool
 NGitLab.Mock.RunnerCollection.RunnerCollection(NGitLab.Mock.Project parent) -> void
 NGitLab.Mock.RunnerRef
 NGitLab.Mock.RunnerRef.Id.get -> int
