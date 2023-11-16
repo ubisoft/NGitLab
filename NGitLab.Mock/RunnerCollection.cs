@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace NGitLab.Mock
 {
@@ -22,7 +23,15 @@ namespace NGitLab.Mock
                 item.Id = Server.GetNewRunnerId();
             }
 
+            item.Token ??= Server.GetNewRunnerToken();
+
             base.Add(item);
+        }
+
+        public bool Remove(int id)
+        {
+            var r = this.SingleOrDefault(r => r.Id == id);
+            return Remove(r);
         }
     }
 }

@@ -27,6 +27,8 @@ namespace NGitLab.Mock
         private int _lastResourceLabelEventId = 10000;
         private int _lastResourceMilestoneEventId = 10000;
         private int _lastResourceStateEventId = 10000;
+        private int _lastTokenId = 10000;
+        private int _lastRegistrationTokenId = 10000;
 
         public event EventHandler ClientOperation;
 
@@ -130,9 +132,24 @@ namespace NGitLab.Mock
 
         internal int GetNewResourceStateEventId() => Interlocked.Increment(ref _lastResourceStateEventId);
 
+        internal string GetNewRunnerToken() => MakeToken(Convert.ToString(Interlocked.Increment(ref _lastTokenId)));
+
+        internal string GetNewRegistrationToken() => MakeRegistrationToken(Convert.ToString(Interlocked.Increment(ref _lastRegistrationTokenId)));
+
         internal string MakeUrl(string relativeUrl)
         {
             return new Uri(Url, relativeUrl).AbsoluteUri;
+        }
+
+        internal static string MakeToken(string id, string prefix = "")
+        {
+            return prefix + id.PadLeft(20, '0');
+        }
+
+        internal static string MakeRegistrationToken(string id)
+        {
+            // Prefix is hardcoded: https://gitlab.com/gitlab-org/gitlab/-/issues/388379
+            return MakeToken(id, "GR1348941");
         }
 
         internal void RaiseOnClientOperation()
