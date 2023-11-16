@@ -141,13 +141,14 @@ namespace NGitLab.Mock
             return new Uri(Url, relativeUrl).AbsoluteUri;
         }
 
-        internal string MakeToken(string id, string prefix = "")
+        internal static string MakeToken(string id, string prefix = "")
         {
             return prefix + id.PadLeft(20, '0');
         }
 
-        internal string MakeRegistrationToken(string id)
+        internal static string MakeRegistrationToken(string id)
         {
+            // Prefix is hardcoded: https://gitlab.com/gitlab-org/gitlab/-/issues/388379
             return MakeToken(id, "GR1348941");
         }
 

@@ -69,7 +69,7 @@ namespace NGitLab.Mock.Clients
                     throw new GitLabBadRequestException("Runner is not found in any project");
                 }
 
-                if (projects.Take(2).Count() > 1)
+                if (projects.Skip(1).Any())
                 {
                     throw new GitLabBadRequestException("Runner is enabled in multiple projects");
                 }
@@ -142,7 +142,7 @@ namespace NGitLab.Mock.Clients
 
                 if (project.EnabledRunners.Contains(runnerReference))
                 {
-                    throw new GitLabException("Bad Request. Runner has already been taken");
+                    throw new GitLabBadRequestException("Runner has already been taken");
                 }
 
                 project.EnabledRunners.Add(runnerReference);

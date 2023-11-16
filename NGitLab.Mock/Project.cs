@@ -149,7 +149,7 @@ namespace NGitLab.Mock
 
         public ProtectedBranchCollection ProtectedBranches { get; }
 
-        public string RunnersToken { get; set; }
+        public string RunnersToken { get; internal set; }
 
         public void Remove()
         {
