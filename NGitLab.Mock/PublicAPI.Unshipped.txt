@@ -864,7 +864,6 @@ NGitLab.Mock.Project.Repository.get -> NGitLab.Mock.Repository
 NGitLab.Mock.Project.RepositoryAccessLevel.get -> NGitLab.Models.RepositoryAccessLevel
 NGitLab.Mock.Project.RepositoryAccessLevel.set -> void
 NGitLab.Mock.Project.RunnersToken.get -> string
-NGitLab.Mock.Project.RunnersToken.set -> void
 NGitLab.Mock.Project.SshUrl.get -> string
 NGitLab.Mock.Project.Statistics.get -> NGitLab.Models.ProjectStatistics
 NGitLab.Mock.Project.Statistics.set -> void
