@@ -71,7 +71,7 @@ namespace NGitLab.Mock.Clients
 
                 if (projects.Take(2).Count() > 1)
                 {
-                    throw new GitLabException("Bad Request. Runner is enabled in multiple projects");
+                    throw new GitLabBadRequestException("Runner is enabled in multiple projects");
                 }
 
                 var project = GetProject(projects.Single().Id, ProjectPermission.Edit);
