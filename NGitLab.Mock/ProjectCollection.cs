@@ -32,6 +32,8 @@ namespace NGitLab.Mock
                 project.Id = Server.GetNewProjectId();
             }
 
+            project.RunnersToken ??= Server.GetNewRegistrationToken();
+
             base.Add(project);
         }
     }

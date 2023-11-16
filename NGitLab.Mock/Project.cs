@@ -33,7 +33,6 @@ namespace NGitLab.Mock
             Releases = new ReleaseCollection(this);
             ProtectedBranches = new ProtectedBranchCollection(this);
             ApprovalsBeforeMerge = 0;
-            RunnersToken = Server.MakeRegistrationToken();
         }
 
         public int Id { get; set; }
@@ -150,7 +149,7 @@ namespace NGitLab.Mock
 
         public ProtectedBranchCollection ProtectedBranches { get; }
 
-        public string RunnersToken { get; }
+        public string RunnersToken { get; set; }
 
         public void Remove()
         {
