@@ -16,7 +16,7 @@ namespace NGitLab.Tests
             var compareResults = context.Client.GetRepository(project.Id).Compare(new CompareQuery(project.DefaultBranch, project.DefaultBranch));
 
             Assert.IsNotNull(compareResults);
-            Assert.IsTrue(compareResults.Commits.Length == 0);
+            Assert.AreEqual(0, compareResults.Commits.Length);
         }
 
         [Test]
