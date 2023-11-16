@@ -66,7 +66,7 @@ namespace NGitLab.Mock.Clients
                 var projects = Server.AllProjects.Where(p => p.EnabledRunners.Any(r => r.Id == runnerId));
                 if (!projects.Any())
                 {
-                    throw new GitLabException("Bad Request. Runner is not found in any project");
+                    throw new GitLabBadRequestException("Runner is not found in any project");
                 }
 
                 if (projects.Take(2).Count() > 1)
