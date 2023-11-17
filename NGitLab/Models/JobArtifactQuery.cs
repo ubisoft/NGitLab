@@ -2,7 +2,7 @@
 
 namespace NGitLab.Models
 {
-    public class JobArtifactQuery
+    public sealed class JobArtifactQuery
     {
         [JsonPropertyName("ref_name")]
         public string RefName;
