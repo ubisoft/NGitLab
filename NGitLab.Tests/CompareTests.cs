@@ -63,7 +63,7 @@ namespace NGitLab.Tests
 
             Assert.Catch< GitLabException>(() =>
             {
-                var compareResults = context.Client.GetRepository(project.Id).Compare(new CompareQuery(project.DefaultBranch, "testblub"));
+                context.Client.GetRepository(project.Id).Compare(new CompareQuery(project.DefaultBranch, "testblub"));
             }, "404 Ref Not Found", null);
         }
     }
