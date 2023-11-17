@@ -26,11 +26,17 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject(initializeWithCommits: true);
 
+            var devTestBranchCreate = new BranchCreate();
+            devTestBranchCreate.Ref = project.DefaultBranch;
+            devTestBranchCreate.Name = "devtest";
+
+            context.Client.GetRepository(project.Id).Branches.Create(devTestBranchCreate);
+
             context.Client.GetRepository(project.Id).Files.Create(new FileUpsert
             {
                 Branch = "devtest",
                 CommitMessage = "file to be compared",
-                Path = "compare.txt",
+                Path = "compare1.txt",
                 RawContent = "compare me",
             });
 
@@ -38,7 +44,7 @@ namespace NGitLab.Tests
             {
                 Branch = "devtest",
                 CommitMessage = "file to be compared, too",
-                Path = "compare.txt",
+                Path = "compare2.txt",
                 RawContent = "compare me now",
             });
 
@@ -54,10 +60,11 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject(initializeWithCommits: true);
-            var compareResults = context.Client.GetRepository(project.Id).Compare(new CompareQuery(project.DefaultBranch, "testblub"));
 
-            Assert.IsNotNull(compareResults);
-            Assert.IsTrue(compareResults.Commits.Length == 0);
+            Assert.Catch< GitLabException>(() =>
+            {
+                var compareResults = context.Client.GetRepository(project.Id).Compare(new CompareQuery(project.DefaultBranch, "testblub"));
+            }, "404 Ref Not Found", null);
         }
     }
 }
