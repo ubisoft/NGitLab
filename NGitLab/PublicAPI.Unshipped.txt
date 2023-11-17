@@ -2033,6 +2033,11 @@ NGitLab.Models.JobAction.Cancel = 0 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Erase = 2 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Play = 3 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Retry = 1 -> NGitLab.Models.JobAction
+NGitLab.Models.JobArtifactQuery
+NGitLab.Models.JobArtifactQuery.ArtifactPath -> string
+NGitLab.Models.JobArtifactQuery.JobArtifactQuery() -> void
+NGitLab.Models.JobArtifactQuery.JobName -> string
+NGitLab.Models.JobArtifactQuery.RefName -> string
 NGitLab.Models.JobBasic
 NGitLab.Models.JobBasic.Commit.get -> NGitLab.Models.Commit
 NGitLab.Models.JobBasic.JobBasic() -> void
