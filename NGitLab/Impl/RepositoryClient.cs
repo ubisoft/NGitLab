@@ -112,6 +112,11 @@ namespace NGitLab.Impl
             return allCommits.Take(request.MaxResults);
         }
 
+        public CompareResults Compare(CompareQuery query)
+        {
+            return _api.Get().To<CompareResults>(_repoPath + $@"/compare?from={query.Source}&to={query.Target}");
+        }
+
         public Commit GetCommit(Sha1 sha) => _api.Get().To<Commit>(_repoPath + "/commits/" + sha);
 
         public IEnumerable<Diff> GetCommitDiff(Sha1 sha) => _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");

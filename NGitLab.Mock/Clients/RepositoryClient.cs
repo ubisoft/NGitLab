@@ -122,5 +122,10 @@ namespace NGitLab.Mock.Clients
         {
             return commit.ToCommitClient(project);
         }
+
+        public CompareResults Compare(CompareQuery query)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

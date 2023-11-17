@@ -48,5 +48,10 @@ namespace NGitLab
         IBranchClient Branches { get; }
 
         IProjectHooksClient ProjectHooks { get; }
+
+        /// <summary>
+        /// Compare two branches/tags/commit hashes
+        /// </summary>
+        CompareResults Compare(CompareQuery query);
     }
 }
