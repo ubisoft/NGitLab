@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NGitLab.Extensions;
+using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -10,13 +10,19 @@ namespace NGitLab.Impl
         private readonly string _statusCreatePath;
         private readonly string _statusPath;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public CommitStatusClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public CommitStatusClient(API api, ProjectId projectId)
         {
             _api = api;
 
-            var projectPath = Project.Url + "/" + projectId.ToStringInvariant();
-            _statusCreatePath = projectPath + "/statuses";
-            _statusPath = projectPath + "/repository/commits";
+            var projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
+            _statusCreatePath = $"{projectPath}/statuses";
+            _statusPath = $"{projectPath}/repository/commits";
         }
 
         public IEnumerable<CommitStatus> AllBySha(string commitSha) => _api.Get().GetAll<CommitStatus>($"{_statusPath}/{commitSha}/statuses");

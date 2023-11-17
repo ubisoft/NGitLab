@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -9,12 +10,18 @@ namespace NGitLab.Impl
         private const string SingleNoteIssueUrl = "/projects/{0}/issues/{1}/notes/{2}";
 
         private readonly API _api;
-        private readonly int _projectId;
+        private readonly string _projectId;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public ProjectIssueNoteClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public ProjectIssueNoteClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectId = projectId;
+            _projectId = projectId.ValueAsUriParameter();
         }
 
         public IEnumerable<ProjectIssueNote> ForIssue(int issueId)

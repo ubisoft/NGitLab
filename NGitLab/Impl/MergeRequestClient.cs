@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,15 +11,22 @@ namespace NGitLab.Impl
 {
     public class MergeRequestClient : IMergeRequestClient
     {
-        private readonly API _api;
-        private readonly int _projectId;
+        private const string ResourceLabelEventUrl = "/projects/{0}/merge_requests/{1}/resource_label_events";
+        private const string ResourceMilestoneEventUrl = "/projects/{0}/merge_requests/{1}/resource_milestone_events";
+        private const string ResourceStateEventUrl = "/projects/{0}/merge_requests/{1}/resource_state_events";
         private readonly string _projectPath;
+        private readonly API _api;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public MergeRequestClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public MergeRequestClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectId = projectId;
-            _projectPath = Project.Url + "/" + projectId.ToStringInvariant();
+            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
         }
 
         public MergeRequestClient(API api)
@@ -89,8 +97,6 @@ namespace NGitLab.Impl
             if (mergeRequest == null)
                 throw new ArgumentNullException(nameof(mergeRequest));
 
-            mergeRequest.TargetProjectId ??= _projectId;
-
             return _api
                 .Post().With(mergeRequest)
                 .To<MergeRequest>(_projectPath + "/merge_requests");
@@ -156,6 +162,11 @@ namespace NGitLab.Impl
             return _api.Get().GetAllAsync<MergeRequestVersion>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/versions");
         }
 
+        public Task<TimeStats> TimeStatsAsync(int mergeRequestIid, CancellationToken cancellationToken = default)
+        {
+            return _api.Get().ToAsync<TimeStats>(_projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/time_stats", cancellationToken);
+        }
+
         public IMergeRequestCommentClient Comments(int mergeRequestIid) => new MergeRequestCommentClient(_api, _projectPath, mergeRequestIid);
 
         public IMergeRequestDiscussionClient Discussions(int mergeRequestIid) => new MergeRequestDiscussionClient(_api, _projectPath, mergeRequestIid);
@@ -165,5 +176,20 @@ namespace NGitLab.Impl
         public IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid) => new MergeRequestApprovalClient(_api, _projectPath, mergeRequestIid);
 
         public IMergeRequestChangeClient Changes(int mergeRequestIid) => new MergeRequestChangeClient(_api, _projectPath, mergeRequestIid);
+
+        public GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int mergeRequestIid)
+        {
+            return _api.Get().GetAllAsync<ResourceLabelEvent>(string.Format(CultureInfo.InvariantCulture, ResourceLabelEventUrl, projectId, mergeRequestIid));
+        }
+
+        public GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int mergeRequestIid)
+        {
+            return _api.Get().GetAllAsync<ResourceMilestoneEvent>(string.Format(CultureInfo.InvariantCulture, ResourceMilestoneEventUrl, projectId, mergeRequestIid));
+        }
+
+        public GitLabCollectionResponse<ResourceStateEvent> ResourceStateEventsAsync(int projectId, int mergeRequestIid)
+        {
+            return _api.Get().GetAllAsync<ResourceStateEvent>(string.Format(CultureInfo.InvariantCulture, ResourceStateEventUrl, projectId, mergeRequestIid));
+        }
     }
 }

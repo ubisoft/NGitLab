@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -10,7 +11,7 @@ namespace NGitLab.Tests
 {
     public class JobTests
     {
-        internal static void AddGitLabCiFile(IGitLabClient client, Project project, int jobCount = 1, bool manualAction = false, string branch = null)
+        internal static void AddGitLabCiFile(IGitLabClient client, Project project, int jobCount = 1, bool manualAction = false, string branch = null, bool pipelineSucceeds = true)
         {
             var content = @"
 variables:
@@ -24,6 +25,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
   script:
     - echo test
     - echo test > file{i.ToString(CultureInfo.InvariantCulture)}.txt
+    - exit {(pipelineSucceeds ? "0" : "1")}
   artifacts:
     paths:
       - '*.txt'
@@ -200,6 +202,28 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
                 var artifacts = jobsClient.GetJobArtifacts(job.Id);
 
                 Assert.IsNotEmpty(artifacts);
+            }
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_job_artifact()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var jobsClient = context.Client.GetJobs(project.Id);
+            using (await context.StartRunnerForOneJobAsync(project.Id))
+            {
+                AddGitLabCiFile(context.Client, project);
+                var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Success), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+                var job = jobs.Single();
+                Assert.AreEqual(JobStatus.Success, job.Status);
+
+                var artifact = jobsClient.GetJobArtifact(job.Id, "file0.txt");
+                Assert.IsNotEmpty(artifact);
+
+                var content = Encoding.ASCII.GetString(artifact).Trim();
+                Assert.AreEqual("test", content);
             }
         }
     }

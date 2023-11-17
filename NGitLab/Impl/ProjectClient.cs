@@ -71,7 +71,7 @@ namespace NGitLab.Impl
                     // This is the default, it returns all visible projects.
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(query), $"'{nameof(query.Scope)}' has unknown value '{query.Scope}'");
             }
 
             url = Utils.AddParameter(url, "archived", query.Archived);

@@ -80,6 +80,32 @@ namespace NGitLab.Mock.Tests
         }
 
         [Test]
+        public void Test_GetCommitsBetweenTwoRefs()
+        {
+            // Arrange
+            using var server = new GitLabConfig()
+                .WithUser("user1", isDefault: true)
+                .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, defaultBranch: "main", configure: project => project
+                    .WithCommit("Initial commit")
+                    .WithCommit("Commit for branch_1", sourceBranch: "branch_1")
+                    .WithCommit("Yet another commit for branch_1"))
+                .BuildServer();
+
+            var client = server.CreateClient();
+            var repository = client.GetRepository(1);
+
+            // Act
+            var intermediateCommits = repository.GetCommits("main..branch_1");
+
+            // Assert
+            CollectionAssert.AreEqual(new[]
+            {
+                "Yet another commit for branch_1",
+                "Commit for branch_1",
+            }, intermediateCommits.Select(c => c.Title));
+        }
+
+        [Test]
         public void Test_commits_can_be_cherry_pick()
         {
             using var server = new GitLabConfig()

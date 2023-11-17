@@ -12,16 +12,16 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _milestonePath;
 
-        internal MilestoneClient(API api, MilestoneScope scope, int id)
+        internal MilestoneClient(API api, MilestoneScope scope, IIdOrPathAddressable id)
         {
             _api = api;
-            _milestonePath = $"/{scope.ToString().ToLowerInvariant()}/{id.ToStringInvariant()}/milestones";
+            _milestonePath = $"/{scope.ToString().ToLowerInvariant()}/{id.ValueAsUriParameter()}/milestones";
             Scope = scope;
         }
 
         [Obsolete("Use GitLabClient.GetMilestone() or GitLabClient.GetGroupMilestone() instead.")]
         public MilestoneClient(API api, int projectId)
-            : this(api, MilestoneScope.Projects, projectId)
+            : this(api, MilestoneScope.Projects, (ProjectId)projectId)
         {
         }
 
@@ -56,6 +56,9 @@ namespace NGitLab.Impl
         public Milestone Activate(int milestoneId) => _api
             .Put().With(new MilestoneUpdateState { NewState = nameof(MilestoneStateEvent.activate) })
             .To<Milestone>($"{_milestonePath}/{milestoneId.ToStringInvariant()}");
+
+        public IEnumerable<MergeRequest> GetMergeRequests(int milestoneId) => _api
+            .Get().GetAll<MergeRequest>($"{_milestonePath}/{milestoneId.ToStringInvariant()}/merge_requests");
 
         public void Delete(int milestoneId) => _api
             .Delete()

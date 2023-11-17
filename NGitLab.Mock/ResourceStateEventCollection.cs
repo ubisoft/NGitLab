@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NGitLab.Models;
 
 namespace NGitLab.Mock
 {
@@ -39,6 +40,29 @@ namespace NGitLab.Mock
         private int GetNewId()
         {
             return this.Select(rle => rle.Id).DefaultIfEmpty().Max() + 1;
+        }
+
+        internal void CreateResourceStateEvent(User currentUser, string state, int id, string resourceType)
+        {
+            Add(new ResourceStateEvent()
+            {
+                ResourceId = id,
+                CreatedAt = DateTime.UtcNow,
+                Id = Server.GetNewResourceLabelEventId(),
+                State = state,
+                User = new Author()
+                {
+                    Id = currentUser.Id,
+                    Email = currentUser.Email,
+                    AvatarUrl = currentUser.AvatarUrl,
+                    Name = currentUser.Name,
+                    State = currentUser.State.ToString(),
+                    Username = currentUser.UserName,
+                    CreatedAt = currentUser.CreatedAt,
+                    WebUrl = currentUser.WebUrl,
+                },
+                ResourceType = resourceType,
+            });
         }
     }
 }

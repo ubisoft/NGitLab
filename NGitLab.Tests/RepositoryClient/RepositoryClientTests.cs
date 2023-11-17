@@ -132,6 +132,102 @@ namespace NGitLab.Tests.RepositoryClient
 
         [Test]
         [NGitLabRetry]
+        public async Task GetCommitsSince()
+        {
+            // Arrange
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+            var defaultBranch = context.Project.DefaultBranch;
+            var since = DateTime.UtcNow;
+            var expectedSinceValue = Uri.EscapeDataString(since.ToString("s", CultureInfo.InvariantCulture));
+            var commitRequest = new GetCommitsRequest
+            {
+                RefName = defaultBranch,
+                Since = since,
+            };
+
+            // Act
+            var commits = context.RepositoryClient.GetCommits(commitRequest).ToArray();
+
+            // Assert
+            var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
+
+            Assert.True(lastRequestQueryString.Contains($"since={expectedSinceValue}"));
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task GetCommitsDoesntIncludeSinceWhenNotSpecified()
+        {
+            // Arrange
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+            var defaultBranch = context.Project.DefaultBranch;
+            var commitRequest = new GetCommitsRequest
+            {
+                RefName = defaultBranch,
+                Since = null,
+            };
+
+            // Act
+            var commits = context.RepositoryClient.GetCommits(commitRequest).ToArray();
+
+            // Assert
+            var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
+
+            Assert.False(lastRequestQueryString.Contains("since="));
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task GetCommitsUntil()
+        {
+            // Arrange
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+            var defaultBranch = context.Project.DefaultBranch;
+            var until = DateTime.UtcNow;
+            var expectedUntilValue = Uri.EscapeDataString(until.ToString("s", CultureInfo.InvariantCulture));
+            var commitRequest = new GetCommitsRequest
+            {
+                RefName = defaultBranch,
+                Until = until,
+            };
+
+            // Act
+            var commits = context.RepositoryClient.GetCommits(commitRequest).ToArray();
+
+            // Assert
+            var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
+
+            Assert.True(lastRequestQueryString.Contains($"until={expectedUntilValue}"));
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task GetCommitsDoesntIncludeUntilWhenNotSpecified()
+        {
+            // Arrange
+            using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 5);
+
+            var defaultBranch = context.Project.DefaultBranch;
+            var commitRequest = new GetCommitsRequest
+            {
+                RefName = defaultBranch,
+                Until = null,
+            };
+
+            // Act
+            var commits = context.RepositoryClient.GetCommits(commitRequest).ToArray();
+
+            // Assert
+            var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
+
+            Assert.False(lastRequestQueryString.Contains("until="));
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task GetCommitDiff()
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);

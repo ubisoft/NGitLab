@@ -29,7 +29,7 @@ namespace NGitLab.Mock.Clients
 
             var group = id switch
             {
-                int idInt => Server.AllGroups.FindGroupById(idInt),
+                int idInt => Server.AllGroups.FindById(idInt),
                 string idStr => Server.AllGroups.FindGroup(idStr),
                 _ => throw new ArgumentException($"Id of type '{id.GetType()}' is not supported"),
             };

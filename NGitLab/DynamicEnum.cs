@@ -35,23 +35,23 @@ namespace NGitLab
             StringValue = stringValue;
         }
 
-        public bool Equals(TEnum other)
+        public readonly bool Equals(TEnum other)
         {
             return Equals(EnumValue, other);
         }
 
-        public bool Equals(DynamicEnum<TEnum> other)
+        public readonly bool Equals(DynamicEnum<TEnum> other)
         {
             return EqualityComparer<TEnum?>.Default.Equals(EnumValue, other.EnumValue) &&
                    StringComparer.OrdinalIgnoreCase.Equals(StringValue, other.StringValue);
         }
 
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             return obj is DynamicEnum<TEnum> other && Equals(other);
         }
 
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return EqualityComparer<TEnum?>.Default.GetHashCode(EnumValue);
         }
@@ -64,7 +64,7 @@ namespace NGitLab
 
         public static bool operator !=(DynamicEnum<TEnum> obj1, TEnum obj2) => !obj1.Equals(obj2);
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             return StringValue ?? EnumValue?.ToString() ?? string.Empty;
         }

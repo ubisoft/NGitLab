@@ -200,13 +200,40 @@ namespace NGitLab.Tests
             var trigger = triggers.Create("Test Trigger");
             var ciJobToken = trigger.Token;
 
-            var pipeline = pipelineClient.CreatePipelineWithTrigger(ciJobToken, project.DefaultBranch, new Dictionary<string, string>(StringComparer.InvariantCulture) { { "Test", "HelloWorld" } });
+            var pipeline = pipelineClient.CreatePipelineWithTrigger(ciJobToken, project.DefaultBranch, new Dictionary<string, string>(StringComparer.Ordinal) { { "Test", "HelloWorld" } });
 
             var variables = pipelineClient.GetVariables(pipeline.Id);
 
             Assert.IsTrue(variables.Any(v =>
-                v.Key.Equals("Test", StringComparison.InvariantCulture) &&
-                v.Value.Equals("HelloWorld", StringComparison.InvariantCulture)));
+                v.Key.Equals("Test", StringComparison.Ordinal) &&
+                v.Value.Equals("HelloWorld", StringComparison.Ordinal)));
+        }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_retry()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var pipelineClient = context.Client.GetPipelines(project.Id);
+
+            using (await context.StartRunnerForOneJobAsync(project.Id))
+            {
+                JobTests.AddGitLabCiFile(context.Client, project, pipelineSucceeds: false);
+                var pipeline = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All.FirstOrDefault(), pipeline =>
+                {
+                    if (pipeline != null)
+                    {
+                        TestContext.WriteLine("Pipeline status: " + pipeline.Status);
+                        return pipeline.Status is JobStatus.Failed;
+                    }
+
+                    return false;
+                }, TimeSpan.FromMinutes(2));
+
+                var retriedPipeline = await pipelineClient.RetryAsync(pipeline.Id);
+                Assert.AreNotEqual(JobStatus.Failed, retriedPipeline.Status); // Should be created or running
+            }
         }
     }
 }

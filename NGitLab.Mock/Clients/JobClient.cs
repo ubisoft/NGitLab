@@ -13,10 +13,10 @@ namespace NGitLab.Mock.Clients
     {
         private readonly int _projectId;
 
-        public JobClient(ClientContext context, int projectId)
+        public JobClient(ClientContext context, ProjectId projectId)
             : base(context)
         {
-            _projectId = projectId;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
         }
 
         public Models.Job Get(int jobId)
@@ -41,6 +41,11 @@ namespace NGitLab.Mock.Clients
         }
 
         public byte[] GetJobArtifacts(int jobId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] GetJobArtifact(int jobId, string path)
         {
             throw new NotImplementedException();
         }

@@ -1,37 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Linq;
 
 namespace NGitLab.Mock
 {
     public static class ProjectExtensions
     {
-        public static Project FindProject(this IEnumerable<Project> projects, string idOrPathWithNamespace)
+        public static Project FindById(this IEnumerable<Project> projects, long id)
         {
-            foreach (var project in projects)
-            {
-                if (string.Equals(project.Id.ToString(CultureInfo.InvariantCulture), idOrPathWithNamespace, StringComparison.Ordinal))
-                    return project;
-            }
-
-            foreach (var project in projects)
-            {
-                if (string.Equals(project.PathWithNamespace, idOrPathWithNamespace, StringComparison.OrdinalIgnoreCase))
-                    return project;
-            }
-
-            return null;
+            return projects.FirstOrDefault(project => project.Id == id);
         }
 
-        public static Project FindById(this IEnumerable<Project> projects, int id)
+        public static Project FindByNamespacedPath(this IEnumerable<Project> projects, string pathWithNamespace)
         {
-            foreach (var project in projects)
-            {
-                if (project.Id == id)
-                    return project;
-            }
+            return projects.FirstOrDefault(project => string.Equals(project.PathWithNamespace, pathWithNamespace, StringComparison.OrdinalIgnoreCase));
+        }
 
-            return null;
+        public static Project FindProject(this IEnumerable<Project> projects, string idOrPathWithNamespace)
+        {
+            return long.TryParse(idOrPathWithNamespace, out var id)
+                ? FindById(projects, id)
+                : FindByNamespacedPath(projects, idOrPathWithNamespace);
         }
     }
 }

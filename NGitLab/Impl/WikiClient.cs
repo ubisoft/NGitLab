@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net;
-using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -11,10 +11,16 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _projectPath;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public WikiClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public WikiClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectPath = Project.Url + "/" + projectId.ToStringInvariant();
+            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
         }
 
         public IEnumerable<WikiPage> All => _api.Get().GetAll<WikiPage>(_projectPath + "/wikis");

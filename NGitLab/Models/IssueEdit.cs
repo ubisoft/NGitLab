@@ -28,6 +28,9 @@ namespace NGitLab.Models
         [JsonPropertyName("assignee_id")]
         public int? AssigneeId;
 
+        [JsonPropertyName("assignee_ids")]
+        public int[] AssigneeIds;
+
         [JsonPropertyName("milestone_id")]
         public int? MilestoneId;
 

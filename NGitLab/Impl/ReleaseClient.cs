@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl
@@ -14,11 +13,11 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _releasesPath;
 
-        public ReleaseClient(API api, int projectId)
+        public ReleaseClient(API api, ProjectId projectId)
         {
             _api = api;
-            var projectPath = Project.Url + "/" + projectId.ToStringInvariant();
-            _releasesPath = projectPath + "/releases";
+            var projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
+            _releasesPath = $"{projectPath}/releases";
         }
 
         public IEnumerable<ReleaseInfo> All => _api.Get().GetAll<ReleaseInfo>(_releasesPath);

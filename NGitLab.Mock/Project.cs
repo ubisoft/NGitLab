@@ -149,18 +149,25 @@ namespace NGitLab.Mock
 
         public ProtectedBranchCollection ProtectedBranches { get; }
 
+        public string RunnersToken { get; internal set; }
+
         public void Remove()
         {
             Group.Projects.Remove(this);
         }
 
-        public EffectivePermissions GetEffectivePermissions()
+        public EffectivePermissions GetEffectivePermissions() => GetEffectivePermissions(includeInheritedPermissions: true);
+
+        public EffectivePermissions GetEffectivePermissions(bool includeInheritedPermissions)
         {
             var result = new Dictionary<User, AccessLevel>();
 
-            foreach (var effectivePermission in Group.GetEffectivePermissions().Permissions)
+            if (includeInheritedPermissions)
             {
-                Add(effectivePermission.User, effectivePermission.AccessLevel);
+                foreach (var effectivePermission in Group.GetEffectivePermissions(includeInheritedPermissions).Permissions)
+                {
+                    Add(effectivePermission.User, effectivePermission.AccessLevel);
+                }
             }
 
             foreach (var permission in Permissions)
@@ -171,7 +178,7 @@ namespace NGitLab.Mock
                 }
                 else
                 {
-                    foreach (var effectivePermission in permission.Group.GetEffectivePermissions().Permissions)
+                    foreach (var effectivePermission in permission.Group.GetEffectivePermissions(includeInheritedPermissions).Permissions)
                     {
                         Add(effectivePermission.User, effectivePermission.AccessLevel);
                     }
@@ -340,6 +347,11 @@ namespace NGitLab.Mock
             return mr;
         }
 
+        public bool RemoveRunner(int runnerId)
+        {
+            return RegisteredRunners.Remove(runnerId);
+        }
+
         public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged, int id)
         {
             var runner = new Runner
@@ -367,6 +379,11 @@ namespace NGitLab.Mock
         public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared)
         {
             return AddRunner(name, description, active, locked, isShared, runUntagged: false, default);
+        }
+
+        public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged)
+        {
+            return AddRunner(name, description, active, locked, isShared, runUntagged, default);
         }
 
         public Project Fork(User user)

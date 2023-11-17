@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -9,10 +10,16 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _triggersPath;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public TriggerClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public TriggerClient(API api, ProjectId projectId)
         {
             _api = api;
-            _triggersPath = $"{Project.Url}/{projectId.ToStringInvariant()}/triggers";
+            _triggersPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}/triggers";
         }
 
         public Trigger this[int id] => _api.Get().To<Trigger>(_triggersPath + "/" + id.ToStringInvariant());

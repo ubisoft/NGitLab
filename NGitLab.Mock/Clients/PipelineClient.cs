@@ -14,11 +14,11 @@ namespace NGitLab.Mock.Clients
         private readonly int _projectId;
         private readonly IJobClient _jobClient;
 
-        public PipelineClient(ClientContext context, IJobClient jobClient, int projectId)
+        public PipelineClient(ClientContext context, IJobClient jobClient, ProjectId projectId)
             : base(context)
         {
             _jobClient = jobClient;
-            _projectId = projectId;
+            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
         }
 
         public Models.Pipeline this[int id]
@@ -290,6 +290,20 @@ namespace NGitLab.Mock.Clients
         public GitLabCollectionResponse<PipelineVariable> GetVariablesAsync(int pipelineId)
         {
             return GitLabCollectionResponse.Create(GetVariables(pipelineId));
+        }
+
+        public Task<Models.Pipeline> RetryAsync(int pipelineId, CancellationToken cancellationToken = default)
+        {
+            using (Context.BeginOperationScope())
+            {
+                var jobs = _jobClient.GetJobs(JobScopeMask.Failed).Where(j => j.Pipeline.Id == pipelineId);
+                foreach (var job in jobs)
+                {
+                    _jobClient.RunAction(job.Id, JobAction.Retry);
+                }
+
+                return Task.FromResult(this[pipelineId]);
+            }
         }
     }
 }

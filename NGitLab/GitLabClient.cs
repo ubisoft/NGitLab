@@ -1,6 +1,7 @@
 ﻿using System;
 using NGitLab.Extensions;
 using NGitLab.Impl;
+using NGitLab.Models;
 
 namespace NGitLab
 {
@@ -95,133 +96,154 @@ namespace NGitLab
 
         [Obsolete("Use GitLabClient constructor instead")]
         public static GitLabClient Connect(string hostUrl, string apiToken)
-        {
-            return new GitLabClient(hostUrl, apiToken);
-        }
+            => new(hostUrl, apiToken);
 
         [Obsolete("Use GitLabClient constructor instead")]
         public static GitLabClient Connect(string hostUrl, string username, string password)
-        {
-            return new GitLabClient(hostUrl, username, password);
-        }
+            => new(hostUrl, username, password);
 
         public IEventClient GetEvents()
-        {
-            return new EventClient(_api, "events");
-        }
+            => new EventClient(_api, "events");
 
         public IEventClient GetUserEvents(int userId)
-        {
-            return new EventClient(_api, $"users/{userId.ToStringInvariant()}/events");
-        }
+            => new EventClient(_api, $"users/{userId.ToStringInvariant()}/events");
 
         public IEventClient GetProjectEvents(int projectId)
-        {
-            return new EventClient(_api, $"projects/{projectId.ToStringInvariant()}/events");
-        }
+            => GetProjectEvents((long)projectId);
+
+        public IEventClient GetProjectEvents(ProjectId projectId)
+            => new EventClient(_api, $"projects/{projectId.ValueAsUriParameter()}/events");
 
         public IRepositoryClient GetRepository(int projectId)
-        {
-            return new RepositoryClient(_api, projectId);
-        }
+            => GetRepository((long)projectId);
+
+        public IRepositoryClient GetRepository(ProjectId projectId)
+            => new RepositoryClient(_api, projectId);
 
         public ICommitClient GetCommits(int projectId)
-        {
-            return new CommitClient(_api, projectId);
-        }
+            => GetCommits((long)projectId);
+
+        public ICommitClient GetCommits(ProjectId projectId)
+            => new CommitClient(_api, projectId);
 
         public ICommitStatusClient GetCommitStatus(int projectId)
-        {
-            return new CommitStatusClient(_api, projectId);
-        }
+            => GetCommitStatus((long)projectId);
+
+        public ICommitStatusClient GetCommitStatus(ProjectId projectId)
+            => new CommitStatusClient(_api, projectId);
 
         public IPipelineClient GetPipelines(int projectId)
-        {
-            return new PipelineClient(_api, projectId);
-        }
+            => GetPipelines((long)projectId);
+
+        public IPipelineClient GetPipelines(ProjectId projectId)
+            => new PipelineClient(_api, projectId);
 
         public ITriggerClient GetTriggers(int projectId)
-        {
-            return new TriggerClient(_api, projectId);
-        }
+            => GetTriggers((long)projectId);
+
+        public ITriggerClient GetTriggers(ProjectId projectId)
+            => new TriggerClient(_api, projectId);
 
         public IJobClient GetJobs(int projectId)
-        {
-            return new JobClient(_api, projectId);
-        }
+            => GetJobs((long)projectId);
+
+        public IJobClient GetJobs(ProjectId projectId)
+            => new JobClient(_api, projectId);
 
         public IMergeRequestClient GetMergeRequest(int projectId)
-        {
-            return new MergeRequestClient(_api, projectId);
-        }
+            => GetMergeRequest((long)projectId);
+
+        public IMergeRequestClient GetMergeRequest(ProjectId projectId)
+            => new MergeRequestClient(_api, projectId);
 
         public IMilestoneClient GetMilestone(int projectId)
-        {
-            return new MilestoneClient(_api, MilestoneScope.Projects, projectId);
-        }
+            => GetMilestone((long)projectId);
+
+        public IMilestoneClient GetMilestone(ProjectId projectId)
+            => new MilestoneClient(_api, MilestoneScope.Projects, projectId);
 
         public IMilestoneClient GetGroupMilestone(int groupId)
-        {
-            return new MilestoneClient(_api, MilestoneScope.Groups, groupId);
-        }
+            => GetGroupMilestone((long)groupId);
+
+        public IMilestoneClient GetGroupMilestone(GroupId groupId)
+            => new MilestoneClient(_api, MilestoneScope.Groups, groupId);
 
         public IReleaseClient GetReleases(int projectId)
-        {
-            return new ReleaseClient(_api, projectId);
-        }
+            => GetReleases((long)projectId);
+
+        public IReleaseClient GetReleases(ProjectId projectId)
+            => new ReleaseClient(_api, projectId);
 
         public IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId)
-        {
-            return new ProjectIssueNoteClient(_api, projectId);
-        }
+            => GetProjectIssueNoteClient((long)projectId);
+
+        public IProjectIssueNoteClient GetProjectIssueNoteClient(ProjectId projectId)
+            => new ProjectIssueNoteClient(_api, projectId);
 
         public IEnvironmentClient GetEnvironmentClient(int projectId)
-        {
-            return new EnvironmentClient(_api, projectId);
-        }
+            => GetEnvironmentClient((long)projectId);
+
+        public IEnvironmentClient GetEnvironmentClient(ProjectId projectId)
+            => new EnvironmentClient(_api, projectId);
 
         public IClusterClient GetClusterClient(int projectId)
-        {
-            return new ClusterClient(_api, projectId);
-        }
+            => GetClusterClient((long)projectId);
+
+        public IClusterClient GetClusterClient(ProjectId projectId)
+            => new ClusterClient(_api, projectId);
 
         public IWikiClient GetWikiClient(int projectId)
-        {
-            return new WikiClient(_api, projectId);
-        }
+            => GetWikiClient((long)projectId);
+
+        public IWikiClient GetWikiClient(ProjectId projectId)
+            => new WikiClient(_api, projectId);
 
         public IProjectBadgeClient GetProjectBadgeClient(int projectId)
-        {
-            return new ProjectBadgeClient(_api, projectId);
-        }
+            => GetProjectBadgeClient((long)projectId);
+
+        public IProjectBadgeClient GetProjectBadgeClient(ProjectId projectId)
+            => new ProjectBadgeClient(_api, projectId);
 
         public IGroupBadgeClient GetGroupBadgeClient(int groupId)
-        {
-            return new GroupBadgeClient(_api, groupId);
-        }
+            => GetGroupBadgeClient((long)groupId);
+
+        public IGroupBadgeClient GetGroupBadgeClient(GroupId groupId)
+            => new GroupBadgeClient(_api, groupId);
 
         public IProjectVariableClient GetProjectVariableClient(int projectId)
-        {
-            return new ProjectVariableClient(_api, projectId);
-        }
+            => GetProjectVariableClient((long)projectId);
+
+        public IProjectVariableClient GetProjectVariableClient(ProjectId projectId)
+            => new ProjectVariableClient(_api, projectId);
 
         public IGroupVariableClient GetGroupVariableClient(int groupId)
-        {
-            return new GroupVariableClient(_api, groupId);
-        }
+            => GetGroupVariableClient((long)groupId);
+
+        public IGroupVariableClient GetGroupVariableClient(GroupId groupId)
+            => new GroupVariableClient(_api, groupId);
 
         public IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId)
-        {
-            return new ProjectLevelApprovalRulesClient(_api, projectId);
-        }
+            => GetProjectLevelApprovalRulesClient((long)projectId);
+
+        public IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(ProjectId projectId)
+            => new ProjectLevelApprovalRulesClient(_api, projectId);
 
         public IProtectedBranchClient GetProtectedBranchClient(int projectId)
+            => GetProtectedBranchClient((long)projectId);
+
+        public IProtectedBranchClient GetProtectedBranchClient(ProjectId projectId)
             => new ProtectedBranchClient(_api, projectId);
 
         public ISearchClient GetGroupSearchClient(int groupId)
-            => new SearchClient(_api, $"/groups/{groupId.ToStringInvariant()}/search");
+            => GetGroupSearchClient((long)groupId);
+
+        public ISearchClient GetGroupSearchClient(GroupId groupId)
+            => new SearchClient(_api, $"/groups/{groupId.ValueAsUriParameter()}/search");
 
         public ISearchClient GetProjectSearchClient(int projectId)
-            => new SearchClient(_api, $"/projects/{projectId.ToStringInvariant()}/search");
+            => GetProjectSearchClient((long)projectId);
+
+        public ISearchClient GetProjectSearchClient(ProjectId projectId)
+            => new SearchClient(_api, $"/projects/{projectId.ValueAsUriParameter()}/search");
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,10 +14,16 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _jobsPath;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public JobClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public JobClient(API api, ProjectId projectId)
         {
             _api = api;
-            _jobsPath = $"{Project.Url}/{projectId.ToStringInvariant()}/jobs";
+            _jobsPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}/jobs";
         }
 
         public IEnumerable<Job> GetJobs(JobScopeMask scope)
@@ -74,6 +81,18 @@ namespace NGitLab.Impl
         {
             byte[] result = null;
             _api.Get().Stream($"{_jobsPath}/{jobId.ToStringInvariant()}/artifacts", s =>
+            {
+                using var ms = new MemoryStream();
+                s.CopyTo(ms);
+                result = ms.ToArray();
+            });
+            return result;
+        }
+
+        public byte[] GetJobArtifact(int jobId, string path)
+        {
+            byte[] result = null;
+            _api.Get().Stream($"{_jobsPath}/{jobId.ToStringInvariant()}/artifacts/{path}", s =>
             {
                 using var ms = new MemoryStream();
                 s.CopyTo(ms);

@@ -24,6 +24,11 @@ namespace NGitLab.Mock.Config
         /// </summary>
         public IList<GitLabFileDescriptor> Files { get; } = new List<GitLabFileDescriptor>();
 
+        /// <summary>
+        /// Submodules added at this commit
+        /// </summary>
+        public IList<GitLabSubModuleDescriptor> SubModules { get; } = new List<GitLabSubModuleDescriptor>();
+
         public IList<string> Tags { get; } = new List<string>();
 
         /// <summary>

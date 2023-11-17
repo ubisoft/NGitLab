@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using NGitLab.Extensions;
@@ -12,14 +14,18 @@ namespace NGitLab.Impl
         private readonly API _api;
         private readonly string _repoPath;
         private readonly string _projectPath;
-        private readonly int _projectId;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public RepositoryClient(API api, int projectId)
+            : this(api, (long)projectId)
+        {
+        }
+
+        public RepositoryClient(API api, ProjectId projectId)
         {
             _api = api;
-            _projectId = projectId;
-            _projectPath = Project.Url + "/" + projectId.ToStringInvariant();
-            _repoPath = _projectPath + "/repository";
+            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
+            _repoPath = $"{_projectPath}/repository";
         }
 
         public ITagClient Tags => new TagClient(_api, _repoPath);
@@ -83,6 +89,16 @@ namespace NGitLab.Impl
             if (request.FirstParent != null)
             {
                 lst.Add($"first_parent={Uri.EscapeDataString(request.FirstParent.ToString())}");
+            }
+
+            if (request.Since.HasValue)
+            {
+                lst.Add($"since={Uri.EscapeDataString(request.Since.Value.ToString("s", CultureInfo.InvariantCulture))}");
+            }
+
+            if (request.Until.HasValue)
+            {
+                lst.Add($"until={Uri.EscapeDataString(request.Until.Value.ToString("s", CultureInfo.InvariantCulture))}");
             }
 
             var perPage = request.MaxResults > 0 ? Math.Min(request.MaxResults, request.PerPage) : request.PerPage;
