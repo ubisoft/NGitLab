@@ -5,12 +5,12 @@ namespace NGitLab.Models
     public class JobArtifactQuery
     {
         [JsonPropertyName("ref_name")]
-        public string RefName;
+        public string RefName { get; set; }
 
         [JsonPropertyName("artifact_path")]
-        public string ArtifactPath;
+        public string ArtifactPath { get; set; }
 
         [JsonPropertyName("job")]
-        public string JobName;
+        public string JobName { get; set; }
     }
 }
