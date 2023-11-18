@@ -459,6 +459,7 @@ namespace NGitLab.Mock
                 WebUrl = WebUrl,
                 BuildTimeout = (int)BuildTimeout.TotalMinutes,
                 RepositoryAccessLevel = RepositoryAccessLevel,
+                RunnersToken = RunnersToken,
                 LfsEnabled = LfsEnabled,
                 Archived = Archived,
                 ApprovalsBeforeMerge = ApprovalsBeforeMerge,
