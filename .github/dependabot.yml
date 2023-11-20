@@ -32,3 +32,8 @@ updates:
       interval: weekly
     rebase-strategy: auto
     open-pull-requests-limit: 20
+    groups:
+      ms-dependencies:
+        patterns:
+          - "Microsoft.*"
+          - "System.*"
