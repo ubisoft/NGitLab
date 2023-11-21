@@ -3419,8 +3419,12 @@ NGitLab.Models.Tag
 NGitLab.Models.Tag.Commit -> NGitLab.Models.CommitInfo
 NGitLab.Models.Tag.Message -> string
 NGitLab.Models.Tag.Name -> string
+NGitLab.Models.Tag.Protected.get -> bool
+NGitLab.Models.Tag.Protected.set -> void
 NGitLab.Models.Tag.Release -> NGitLab.Models.ReleaseInfo
 NGitLab.Models.Tag.Tag() -> void
+NGitLab.Models.Tag.Target.get -> NGitLab.Sha1
+NGitLab.Models.Tag.Target.set -> void
 NGitLab.Models.TagCreate
 NGitLab.Models.TagCreate.Message -> string
 NGitLab.Models.TagCreate.Name -> string
