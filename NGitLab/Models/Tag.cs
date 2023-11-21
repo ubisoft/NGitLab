@@ -15,5 +15,11 @@ namespace NGitLab.Models
 
         [JsonPropertyName("release")]
         public ReleaseInfo Release;
+
+        [JsonPropertyName("target")]
+        public Sha1 Target { get; set; }
+
+        [JsonPropertyName("protected")]
+        public bool Protected { get; set; }
     }
 }
