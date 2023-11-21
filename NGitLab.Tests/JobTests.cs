@@ -226,5 +226,32 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
                 Assert.AreEqual("test", content);
             }
         }
+
+        [Test]
+        [NGitLabRetry]
+        public async Task Test_get_job_artifact_query()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var jobsClient = context.Client.GetJobs(project.Id);
+            using (await context.StartRunnerForOneJobAsync(project.Id))
+            {
+                AddGitLabCiFile(context.Client, project);
+                var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Success), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+                var job = jobs.Single();
+                Assert.AreEqual(JobStatus.Success, job.Status);
+
+                var query = new JobArtifactQuery();
+                query.RefName = project.DefaultBranch;
+                query.JobName = job.Name;
+                query.ArtifactPath = "file0.txt";
+
+                var artifact = jobsClient.GetJobArtifact(query);
+                Assert.IsNotEmpty(artifact);
+
+                var content = Encoding.ASCII.GetString(artifact).Trim();
+                Assert.AreEqual("test", content);
+            }
+        }
     }
 }

@@ -101,6 +101,18 @@ namespace NGitLab.Impl
             return result;
         }
 
+        public byte[] GetJobArtifact(JobArtifactQuery query)
+        {
+            byte[] result = null;
+            _api.Get().Stream($"{_jobsPath}/artifacts/{query.RefName}/raw/{query.ArtifactPath}?job={query.JobName}", s =>
+            {
+                using var ms = new MemoryStream();
+                s.CopyTo(ms);
+                result = ms.ToArray();
+            });
+            return result;
+        }
+
         public string GetTrace(int jobId)
         {
             var result = string.Empty;

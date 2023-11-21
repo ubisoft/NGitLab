@@ -329,6 +329,7 @@ NGitLab.IJobClient
 NGitLab.IJobClient.Get(int jobId) -> NGitLab.Models.Job
 NGitLab.IJobClient.GetAsync(int jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.IJobClient.GetJobArtifact(int jobId, string path) -> byte[]
+NGitLab.IJobClient.GetJobArtifact(NGitLab.Models.JobArtifactQuery query) -> byte[]
 NGitLab.IJobClient.GetJobArtifacts(int jobId) -> byte[]
 NGitLab.IJobClient.GetJobs(NGitLab.Models.JobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IJobClient.GetJobs(NGitLab.Models.JobScopeMask scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
@@ -593,6 +594,7 @@ NGitLab.Impl.JobClient
 NGitLab.Impl.JobClient.Get(int jobId) -> NGitLab.Models.Job
 NGitLab.Impl.JobClient.GetAsync(int jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.Impl.JobClient.GetJobArtifact(int jobId, string path) -> byte[]
+NGitLab.Impl.JobClient.GetJobArtifact(NGitLab.Models.JobArtifactQuery query) -> byte[]
 NGitLab.Impl.JobClient.GetJobArtifacts(int jobId) -> byte[]
 NGitLab.Impl.JobClient.GetJobs(NGitLab.Models.JobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.JobClient.GetJobs(NGitLab.Models.JobScopeMask scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
@@ -2031,6 +2033,14 @@ NGitLab.Models.JobAction.Cancel = 0 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Erase = 2 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Play = 3 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Retry = 1 -> NGitLab.Models.JobAction
+NGitLab.Models.JobArtifactQuery
+NGitLab.Models.JobArtifactQuery.ArtifactPath.get -> string
+NGitLab.Models.JobArtifactQuery.ArtifactPath.set -> void
+NGitLab.Models.JobArtifactQuery.JobArtifactQuery() -> void
+NGitLab.Models.JobArtifactQuery.JobName.get -> string
+NGitLab.Models.JobArtifactQuery.JobName.set -> void
+NGitLab.Models.JobArtifactQuery.RefName.get -> string
+NGitLab.Models.JobArtifactQuery.RefName.set -> void
 NGitLab.Models.JobBasic
 NGitLab.Models.JobBasic.Commit.get -> NGitLab.Models.Commit
 NGitLab.Models.JobBasic.JobBasic() -> void

@@ -61,7 +61,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject(initializeWithCommits: true);
 
-            Assert.Catch< GitLabException>(() =>
+            Assert.Catch<GitLabException>(() =>
             {
                 context.Client.GetRepository(project.Id).Compare(new CompareQuery(project.DefaultBranch, "testblub"));
             }, "404 Ref Not Found", null);
