@@ -1295,11 +1295,11 @@ NGitLab.Models.BranchCreate.BranchCreate() -> void
 NGitLab.Models.BranchCreate.Name -> string
 NGitLab.Models.BranchCreate.Ref -> string
 NGitLab.Models.BranchProtect
-NGitLab.Models.BranchProtect.AllowedToMerge.get -> NGitLab.Models.AccessLevelInfo[]
+NGitLab.Models.BranchProtect.AllowedToMerge.get -> NGitLab.Models.AccessControl[]
 NGitLab.Models.BranchProtect.AllowedToMerge.set -> void
-NGitLab.Models.BranchProtect.AllowedToPush.get -> NGitLab.Models.AccessLevelInfo[]
+NGitLab.Models.BranchProtect.AllowedToPush.get -> NGitLab.Models.AccessControl[]
 NGitLab.Models.BranchProtect.AllowedToPush.set -> void
-NGitLab.Models.BranchProtect.AllowedToUnprotect.get -> NGitLab.Models.AccessLevelInfo[]
+NGitLab.Models.BranchProtect.AllowedToUnprotect.get -> NGitLab.Models.AccessControl[]
 NGitLab.Models.BranchProtect.AllowedToUnprotect.set -> void
 NGitLab.Models.BranchProtect.AllowForcePush.get -> bool
 NGitLab.Models.BranchProtect.AllowForcePush.set -> void
