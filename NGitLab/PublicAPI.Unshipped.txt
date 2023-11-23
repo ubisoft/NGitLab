@@ -82,6 +82,7 @@ NGitLab.GitLabClient.GetProjectVariableClient(int projectId) -> NGitLab.IProject
 NGitLab.GitLabClient.GetProjectVariableClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectVariableClient
 NGitLab.GitLabClient.GetProtectedBranchClient(int projectId) -> NGitLab.IProtectedBranchClient
 NGitLab.GitLabClient.GetProtectedBranchClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProtectedBranchClient
+NGitLab.GitLabClient.GetProtectedTagClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProtectedTagClient
 NGitLab.GitLabClient.GetReleases(int projectId) -> NGitLab.IReleaseClient
 NGitLab.GitLabClient.GetReleases(NGitLab.Models.ProjectId projectId) -> NGitLab.IReleaseClient
 NGitLab.GitLabClient.GetRepository(int projectId) -> NGitLab.IRepositoryClient
@@ -222,6 +223,7 @@ NGitLab.IGitLabClient.GetProjectVariableClient(int projectId) -> NGitLab.IProjec
 NGitLab.IGitLabClient.GetProjectVariableClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectVariableClient
 NGitLab.IGitLabClient.GetProtectedBranchClient(int projectId) -> NGitLab.IProtectedBranchClient
 NGitLab.IGitLabClient.GetProtectedBranchClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProtectedBranchClient
+NGitLab.IGitLabClient.GetProtectedTagClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProtectedTagClient
 NGitLab.IGitLabClient.GetReleases(int projectId) -> NGitLab.IReleaseClient
 NGitLab.IGitLabClient.GetReleases(NGitLab.Models.ProjectId projectId) -> NGitLab.IReleaseClient
 NGitLab.IGitLabClient.GetRepository(int projectId) -> NGitLab.IRepositoryClient
@@ -798,6 +800,16 @@ NGitLab.Impl.ProjectLevelApprovalRulesClient.GetProjectLevelApprovalRules() -> S
 NGitLab.Impl.ProjectLevelApprovalRulesClient.ProjectLevelApprovalRulesClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.ProjectLevelApprovalRulesClient.ProjectLevelApprovalRulesClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.ProjectLevelApprovalRulesClient.UpdateProjectLevelApprovalRule(int approvalRuleIdToUpdate, NGitLab.Models.ApprovalRuleUpdate approvalRuleUpdate) -> NGitLab.Models.ApprovalRule
+NGitLab.Impl.ProtectedTagClient
+NGitLab.Impl.ProtectedTagClient.GetProtectedTag(string name) -> NGitLab.Models.ProtectedTag
+NGitLab.Impl.ProtectedTagClient.GetProtectedTagAsync(string name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.ProtectedTag>
+NGitLab.Impl.ProtectedTagClient.GetProtectedTags() -> System.Collections.Generic.IEnumerable<NGitLab.Models.ProtectedTag>
+NGitLab.Impl.ProtectedTagClient.GetProtectedTagsAsync() -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ProtectedTag>
+NGitLab.Impl.ProtectedTagClient.ProtectedTagClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
+NGitLab.Impl.ProtectedTagClient.ProtectTag(NGitLab.Models.TagProtect protect) -> NGitLab.Models.ProtectedTag
+NGitLab.Impl.ProtectedTagClient.ProtectTagAsync(NGitLab.Models.TagProtect protect, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.ProtectedTag>
+NGitLab.Impl.ProtectedTagClient.UnprotectTag(string name) -> void
+NGitLab.Impl.ProtectedTagClient.UnprotectTagAsync(string name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.RepositoryClient
 NGitLab.Impl.RepositoryClient.Branches.get -> NGitLab.IBranchClient
 NGitLab.Impl.RepositoryClient.Commits.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
@@ -989,6 +1001,15 @@ NGitLab.IProtectedBranchClient.GetProtectedBranch(string branchName) -> NGitLab.
 NGitLab.IProtectedBranchClient.GetProtectedBranches(string search = null) -> NGitLab.Models.ProtectedBranch[]
 NGitLab.IProtectedBranchClient.ProtectBranch(NGitLab.Models.BranchProtect branchProtect) -> NGitLab.Models.ProtectedBranch
 NGitLab.IProtectedBranchClient.UnprotectBranch(string branchName) -> void
+NGitLab.IProtectedTagClient
+NGitLab.IProtectedTagClient.GetProtectedTag(string name) -> NGitLab.Models.ProtectedTag
+NGitLab.IProtectedTagClient.GetProtectedTagAsync(string name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.ProtectedTag>
+NGitLab.IProtectedTagClient.GetProtectedTags() -> System.Collections.Generic.IEnumerable<NGitLab.Models.ProtectedTag>
+NGitLab.IProtectedTagClient.GetProtectedTagsAsync() -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ProtectedTag>
+NGitLab.IProtectedTagClient.ProtectTag(NGitLab.Models.TagProtect protect) -> NGitLab.Models.ProtectedTag
+NGitLab.IProtectedTagClient.ProtectTagAsync(NGitLab.Models.TagProtect protect, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.ProtectedTag>
+NGitLab.IProtectedTagClient.UnprotectTag(string name) -> void
+NGitLab.IProtectedTagClient.UnprotectTagAsync(string name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IReleaseClient
 NGitLab.IReleaseClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.ReleaseInfo>
 NGitLab.IReleaseClient.Create(NGitLab.Models.ReleaseCreate data) -> NGitLab.Models.ReleaseInfo
@@ -1118,6 +1139,8 @@ NGitLab.JobStatus.WaitingForResource = 11 -> NGitLab.JobStatus
 NGitLab.MergeRequestChangeClient
 NGitLab.MergeRequestChangeClient.MergeRequestChange.get -> NGitLab.Models.MergeRequestChange
 NGitLab.MergeRequestChangeClient.MergeRequestChangeClient(NGitLab.Impl.API api, string projectPath, int mergeRequestIid) -> void
+NGitLab.Models.AccessControl
+NGitLab.Models.AccessControl.AccessControl() -> void
 NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Admin = 60 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Developer = 30 -> NGitLab.Models.AccessLevel
@@ -1127,12 +1150,18 @@ NGitLab.Models.AccessLevel.Master = 40 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.NoAccess = 0 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Owner = 50 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Reporter = 20 -> NGitLab.Models.AccessLevel
+NGitLab.Models.AccessLevelControl
+NGitLab.Models.AccessLevelControl.AccessLevel.get -> NGitLab.Models.AccessLevel
+NGitLab.Models.AccessLevelControl.AccessLevel.set -> void
+NGitLab.Models.AccessLevelControl.AccessLevelControl() -> void
 NGitLab.Models.AccessLevelInfo
 NGitLab.Models.AccessLevelInfo.AccessLevel.get -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevelInfo.AccessLevel.set -> void
 NGitLab.Models.AccessLevelInfo.AccessLevelInfo() -> void
 NGitLab.Models.AccessLevelInfo.Description.get -> string
 NGitLab.Models.AccessLevelInfo.Description.set -> void
+NGitLab.Models.AccessLevelInfo.Id.get -> int
+NGitLab.Models.AccessLevelInfo.Id.set -> void
 NGitLab.Models.ApprovalRule
 NGitLab.Models.ApprovalRule.ApprovalRule() -> void
 NGitLab.Models.ApprovalRule.ApprovalsRequired.get -> int
@@ -1781,6 +1810,10 @@ NGitLab.Models.GroupId.GroupId() -> void
 NGitLab.Models.GroupId.GroupId(long id) -> void
 NGitLab.Models.GroupId.GroupId(NGitLab.Models.Group group) -> void
 NGitLab.Models.GroupId.GroupId(string path) -> void
+NGitLab.Models.GroupIdControl
+NGitLab.Models.GroupIdControl.GroupId.get -> long
+NGitLab.Models.GroupIdControl.GroupId.set -> void
+NGitLab.Models.GroupIdControl.GroupIdControl() -> void
 NGitLab.Models.GroupLabelCreate
 NGitLab.Models.GroupLabelCreate.Color.get -> string
 NGitLab.Models.GroupLabelCreate.Color.set -> void
@@ -2958,6 +2991,12 @@ NGitLab.Models.ProtectedBranch.Name.set -> void
 NGitLab.Models.ProtectedBranch.ProtectedBranch() -> void
 NGitLab.Models.ProtectedBranch.PushAccessLevels.get -> NGitLab.Models.AccessLevelInfo[]
 NGitLab.Models.ProtectedBranch.PushAccessLevels.set -> void
+NGitLab.Models.ProtectedTag
+NGitLab.Models.ProtectedTag.CreateAccessLevels.get -> NGitLab.Models.AccessLevelInfo[]
+NGitLab.Models.ProtectedTag.CreateAccessLevels.set -> void
+NGitLab.Models.ProtectedTag.Name.get -> string
+NGitLab.Models.ProtectedTag.Name.set -> void
+NGitLab.Models.ProtectedTag.ProtectedTag() -> void
 NGitLab.Models.PushData
 NGitLab.Models.PushData.Action.get -> NGitLab.Models.PushDataAction
 NGitLab.Models.PushData.Action.set -> void
@@ -3431,6 +3470,14 @@ NGitLab.Models.TagCreate.Name -> string
 NGitLab.Models.TagCreate.Ref -> string
 NGitLab.Models.TagCreate.ReleaseDescription -> string
 NGitLab.Models.TagCreate.TagCreate() -> void
+NGitLab.Models.TagProtect
+NGitLab.Models.TagProtect.AllowedToCreate.get -> NGitLab.Models.AccessControl[]
+NGitLab.Models.TagProtect.AllowedToCreate.set -> void
+NGitLab.Models.TagProtect.CreateAccessLevel.get -> NGitLab.Models.AccessLevel?
+NGitLab.Models.TagProtect.CreateAccessLevel.set -> void
+NGitLab.Models.TagProtect.Name.get -> string
+NGitLab.Models.TagProtect.Name.set -> void
+NGitLab.Models.TagProtect.TagProtect(string name) -> void
 NGitLab.Models.TagQuery
 NGitLab.Models.TagQuery.OrderBy.get -> string
 NGitLab.Models.TagQuery.OrderBy.set -> void
@@ -3592,6 +3639,10 @@ NGitLab.Models.User.UsingLicenseSeat -> bool
 NGitLab.Models.User.WebsiteURL -> string
 NGitLab.Models.User.WebURL -> string
 NGitLab.Models.User.WorkInformation -> string
+NGitLab.Models.UserIdControl
+NGitLab.Models.UserIdControl.UserId.get -> long
+NGitLab.Models.UserIdControl.UserId.set -> void
+NGitLab.Models.UserIdControl.UserIdControl() -> void
 NGitLab.Models.UserToken
 NGitLab.Models.UserToken.Active.get -> bool
 NGitLab.Models.UserToken.Active.set -> void

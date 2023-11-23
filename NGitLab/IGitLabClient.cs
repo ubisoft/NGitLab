@@ -162,6 +162,8 @@ namespace NGitLab
 
         IProtectedBranchClient GetProtectedBranchClient(ProjectId projectId);
 
+        IProtectedTagClient GetProtectedTagClient(ProjectId projectId);
+
         [EditorBrowsable(EditorBrowsableState.Never)]
         public ISearchClient GetGroupSearchClient(int groupId);
 
