@@ -21,8 +21,22 @@ namespace NGitLab.Tests
                 PushAccessLevel = AccessLevel.Maintainer,
                 MergeAccessLevel = AccessLevel.NoAccess,
                 AllowForcePush = true,
-                AllowedToPush = new AccessControl[] { new AccessLevelControl { AccessLevel = AccessLevel.Admin } },
-                AllowedToUnprotect = new AccessControl[] { new AccessLevelControl { AccessLevel = AccessLevel.Admin } },
+                AllowedToPush = new[]
+                {
+                    new AccessLevelInfo
+                    {
+                        AccessLevel = AccessLevel.Admin,
+                        Description = "Admin",
+                    },
+                },
+                AllowedToUnprotect = new[]
+                {
+                    new AccessLevelInfo
+                    {
+                        AccessLevel = AccessLevel.Admin,
+                        Description = "Example",
+                    },
+                },
             };
 
             // Protect branch

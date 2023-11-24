@@ -25,13 +25,13 @@ namespace NGitLab.Models
         public bool AllowForcePush { get; set; } = false;
 
         [JsonPropertyName("allowed_to_merge")]
-        public AccessControl[] AllowedToMerge { get; set; }
+        public AccessLevelInfo[] AllowedToMerge { get; set; }
 
         [JsonPropertyName("allowed_to_push")]
-        public AccessControl[] AllowedToPush { get; set; }
+        public AccessLevelInfo[] AllowedToPush { get; set; }
 
         [JsonPropertyName("allowed_to_unprotect")]
-        public AccessControl[] AllowedToUnprotect { get; set; }
+        public AccessLevelInfo[] AllowedToUnprotect { get; set; }
 
         [JsonPropertyName("code_owner_approval_required")]
         public bool CodeOwnerApprovalRequired { get; set; } = false;
