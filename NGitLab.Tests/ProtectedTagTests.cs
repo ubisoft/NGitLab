@@ -36,15 +36,15 @@ namespace NGitLab.Tests
             };
             var protectedTag = await protectedTagClient.ProtectTagAsync(tagProtect).ConfigureAwait(false);
             Assert.AreEqual(protectedTag.Name, tagProtect.Name);
-            var accessList = protectedTag.CreateAccessLevels.Select(level => level.AccessLevel).ToList();
-            Assert.Contains(AccessLevel.NoAccess, accessList);
-            Assert.Contains(AccessLevel.Maintainer, accessList);
+            var accessLevels = protectedTag.CreateAccessLevels.Select(level => level.AccessLevel).ToArray();
+            Assert.Contains(AccessLevel.NoAccess, accessLevels);
+            Assert.Contains(AccessLevel.Maintainer, accessLevels);
 
             var getProtectedTag = await protectedTagClient.GetProtectedTagAsync(tagProtectName).ConfigureAwait(false);
             Assert.AreEqual(protectedTag.Name, getProtectedTag.Name);
-            accessList = getProtectedTag.CreateAccessLevels.Select(level => level.AccessLevel).ToList();
-            Assert.Contains(AccessLevel.NoAccess, accessList);
-            Assert.Contains(AccessLevel.Maintainer, accessList);
+            accessLevels = getProtectedTag.CreateAccessLevels.Select(level => level.AccessLevel).ToArray();
+            Assert.Contains(AccessLevel.NoAccess, accessLevels);
+            Assert.Contains(AccessLevel.Maintainer, accessLevels);
 
             var tag = await tagClient.GetByNameAsync(tagName).ConfigureAwait(false);
             Assert.True(tag.Protected);
