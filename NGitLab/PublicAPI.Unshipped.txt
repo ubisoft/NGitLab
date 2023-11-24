@@ -1160,8 +1160,6 @@ NGitLab.Models.AccessLevelInfo.AccessLevel.set -> void
 NGitLab.Models.AccessLevelInfo.AccessLevelInfo() -> void
 NGitLab.Models.AccessLevelInfo.Description.get -> string
 NGitLab.Models.AccessLevelInfo.Description.set -> void
-NGitLab.Models.AccessLevelInfo.Id.get -> int
-NGitLab.Models.AccessLevelInfo.Id.set -> void
 NGitLab.Models.ApprovalRule
 NGitLab.Models.ApprovalRule.ApprovalRule() -> void
 NGitLab.Models.ApprovalRule.ApprovalsRequired.get -> int
