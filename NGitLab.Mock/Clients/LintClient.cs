@@ -30,10 +30,7 @@ namespace NGitLab.Mock.Clients
                 var lintCi = project.LintCIs.FirstOrDefault(ci =>
                 {
                     return string.Equals(ci.Ref, @ref, StringComparison.Ordinal);
-                });
-
-                if (lintCi is null)
-                    throw new GitLabNotFoundException($"ref '{@ref}' not found");
+                }) ?? new LintCI(@ref, valid: false, "Reference not found");
 
                 return new Models.LintCI
                 {
