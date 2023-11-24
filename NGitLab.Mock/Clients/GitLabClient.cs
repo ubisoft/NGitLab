@@ -140,6 +140,11 @@ namespace NGitLab.Mock.Clients
 
         public IProtectedBranchClient GetProtectedBranchClient(ProjectId projectId) => new ProtectedBranchClient(Context, projectId);
 
+        public IProtectedTagClient GetProtectedTagClient(ProjectId projectId)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public ISearchClient GetGroupSearchClient(int groupId) => GetGroupSearchClient((long)groupId);
 
         public ISearchClient GetGroupSearchClient(GroupId groupId) => new GroupSearchClient(Context, groupId);

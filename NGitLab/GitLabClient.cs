@@ -234,6 +234,9 @@ namespace NGitLab
         public IProtectedBranchClient GetProtectedBranchClient(ProjectId projectId)
             => new ProtectedBranchClient(_api, projectId);
 
+        public IProtectedTagClient GetProtectedTagClient(ProjectId projectId)
+            => new ProtectedTagClient(_api, projectId);
+
         public ISearchClient GetGroupSearchClient(int groupId)
             => GetGroupSearchClient((long)groupId);
 
