@@ -587,6 +587,13 @@ NGitLab.Mock.LabelsCollection.Add(string name = null, string color = null, strin
 NGitLab.Mock.LabelsCollection.GetById(int id) -> NGitLab.Mock.Label
 NGitLab.Mock.LabelsCollection.GetByName(string name) -> NGitLab.Mock.Label
 NGitLab.Mock.LabelsCollection.LabelsCollection(NGitLab.Mock.GitLabObject parent) -> void
+NGitLab.Mock.LintCI
+NGitLab.Mock.LintCI.Errors.get -> string[]
+NGitLab.Mock.LintCI.LintCI(string ref, bool valid, params string[] errors) -> void
+NGitLab.Mock.LintCI.Ref.get -> string
+NGitLab.Mock.LintCI.Valid.get -> bool
+NGitLab.Mock.LintCICollection
+NGitLab.Mock.LintCICollection.LintCICollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.MergeRequest
 NGitLab.Mock.MergeRequest.Accept(NGitLab.Mock.User user) -> void
 NGitLab.Mock.MergeRequest.Approvers.get -> System.Collections.Generic.IList<NGitLab.Mock.UserRef>
@@ -833,6 +840,7 @@ NGitLab.Mock.Project.Jobs.get -> NGitLab.Mock.JobCollection
 NGitLab.Mock.Project.Labels.get -> NGitLab.Mock.LabelsCollection
 NGitLab.Mock.Project.LfsEnabled.get -> bool
 NGitLab.Mock.Project.LfsEnabled.set -> void
+NGitLab.Mock.Project.LintCIs.get -> NGitLab.Mock.LintCICollection
 NGitLab.Mock.Project.MergeMethod.get -> string
 NGitLab.Mock.Project.MergeMethod.set -> void
 NGitLab.Mock.Project.MergeRequests.get -> NGitLab.Mock.MergeRequestCollection
