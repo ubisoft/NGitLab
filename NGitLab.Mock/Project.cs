@@ -17,6 +17,7 @@ namespace NGitLab.Mock
             Name = name ?? throw new ArgumentNullException(nameof(name));
 
             Permissions = new PermissionCollection(this);
+            LintCIs = new LintCICollection(this);
             Hooks = new ProjectHookCollection(this);
             Repository = new Repository(this);
             RegisteredRunners = new RunnerCollection(this);
@@ -102,6 +103,8 @@ namespace NGitLab.Mock
         public RepositoryAccessLevel RepositoryAccessLevel { get; set; } = RepositoryAccessLevel.Enabled;
 
         public PermissionCollection Permissions { get; }
+
+        public LintCICollection LintCIs { get; }
 
         public Repository Repository { get; }
 
