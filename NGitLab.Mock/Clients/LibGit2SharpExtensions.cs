@@ -9,7 +9,8 @@ namespace NGitLab.Mock.Clients
     {
         public static Commit ToCommitClient(this LibGit2Sharp.Commit commit, Project project)
         {
-            var commitInfo = project.CommitInfos.SingleOrDefault(c => string.Equals(c.Sha, commit.Sha, StringComparison.Ordinal));
+            var commitSha = new Sha1(commit.Sha);
+            var commitInfo = project.CommitInfos.SingleOrDefault(c => commitSha.Equals(new Sha1(c.Sha)));
             return new Commit
             {
                 AuthoredDate = commit.Author.When.UtcDateTime,
