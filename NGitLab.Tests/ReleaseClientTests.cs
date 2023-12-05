@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
+using NuGet.Versioning;
 using NUnit.Framework;
 
 namespace NGitLab.Tests.Release
@@ -29,6 +30,9 @@ namespace NGitLab.Tests.Release
                 TagName = tag.Name,
                 Description = "test",
             });
+
+            if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.5,)"), out _))
+                Assert.AreEqual(ReleasesAccessLevel.Enabled, project.ReleasesAccessLevel);
 
             Assert.That(release.TagName, Is.EqualTo("0.7"));
             Assert.That(release.Name, Is.EqualTo("0.7"));
