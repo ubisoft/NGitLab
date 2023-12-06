@@ -30,6 +30,7 @@ namespace NGitLab.Tests.Release
                 Description = "test",
             });
 
+            Assert.AreEqual(ReleasesAccessLevel.Enabled, project.ReleasesAccessLevel);
             Assert.That(release.TagName, Is.EqualTo("0.7"));
             Assert.That(release.Name, Is.EqualTo("0.7"));
             Assert.That(release.Description, Is.EqualTo("test"));

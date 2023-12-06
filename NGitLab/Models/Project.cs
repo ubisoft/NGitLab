@@ -212,5 +212,8 @@ namespace NGitLab.Models
 
         [JsonPropertyName("permissions")]
         public ProjectPermissions Permissions;
+
+        [JsonPropertyName("releases_access_level")]
+        public ReleasesAccessLevel ReleasesAccessLevel { get; set; }
     }
 }

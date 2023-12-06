@@ -300,11 +300,11 @@ namespace NGitLab.Tests.Docker
                 if (!File.Exists(path))
                 {
                     Uri url;
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    if (OperatingSystem.IsWindows())
                     {
                         url = new Uri($"https://gitlab-runner-downloads.s3.amazonaws.com/v{version}/binaries/gitlab-runner-windows-amd64.exe");
                     }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    else if (OperatingSystem.IsLinux())
                     {
                         url = new Uri($"https://gitlab-runner-downloads.s3.amazonaws.com/v{version}/binaries/gitlab-runner-linux-amd64");
                     }
@@ -335,7 +335,7 @@ namespace NGitLab.Tests.Docker
                 }
 
                 TestContext.WriteLine("Test runner downloaded");
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (OperatingSystem.IsLinux())
                 {
                     using var chmodProcess = Process.Start("chmod", "+x \"" + path + "\"");
                     chmodProcess.WaitForExit();
@@ -379,7 +379,7 @@ namespace NGitLab.Tests.Docker
                         "run-single",
                         "--url", DockerContainer.GitLabUrl.ToString(),
                         "--executor", "shell",
-                        "--shell", RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "powershell" : "pwsh",
+                        "--shell", OperatingSystem.IsWindows() ? "powershell" : "pwsh",
                         "--builds-dir", buildDir,
                         "--wait-timeout", "240", // in seconds
                         "--token", runner.Token,

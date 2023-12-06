@@ -2731,6 +2731,8 @@ NGitLab.Models.Project.PrintingMergeRequestsLinkEnabled -> bool
 NGitLab.Models.Project.Project() -> void
 NGitLab.Models.Project.Public -> bool
 NGitLab.Models.Project.PublicJobs -> bool
+NGitLab.Models.Project.ReleasesAccessLevel.get -> NGitLab.Models.ReleasesAccessLevel
+NGitLab.Models.Project.ReleasesAccessLevel.set -> void
 NGitLab.Models.Project.RepositoryAccessLevel -> NGitLab.Models.RepositoryAccessLevel
 NGitLab.Models.Project.RepositoryStorage -> string
 NGitLab.Models.Project.RequestAccessEnabled -> bool
@@ -3146,6 +3148,10 @@ NGitLab.Models.ReleaseQuery.PerPage.set -> void
 NGitLab.Models.ReleaseQuery.ReleaseQuery() -> void
 NGitLab.Models.ReleaseQuery.Sort.get -> string
 NGitLab.Models.ReleaseQuery.Sort.set -> void
+NGitLab.Models.ReleasesAccessLevel
+NGitLab.Models.ReleasesAccessLevel.Disabled = 0 -> NGitLab.Models.ReleasesAccessLevel
+NGitLab.Models.ReleasesAccessLevel.Enabled = 2 -> NGitLab.Models.ReleasesAccessLevel
+NGitLab.Models.ReleasesAccessLevel.Private = 1 -> NGitLab.Models.ReleasesAccessLevel
 NGitLab.Models.ReleaseUpdate
 NGitLab.Models.ReleaseUpdate.Description.get -> string
 NGitLab.Models.ReleaseUpdate.Description.set -> void

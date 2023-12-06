@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,7 +26,7 @@ namespace NGitLab.Tests.Docker
         public const string ImageName = "gitlab/gitlab-ee";
 
         // https://hub.docker.com/r/gitlab/gitlab-ee/tags/
-        public const string GitLabDockerVersion = "15.4.6-ee.0"; // Keep in sync with .github/workflows/ci.yml
+        public const string GitLabDockerVersion = "15.11.9-ee.0"; // Keep in sync with .github/workflows/ci.yml
 
         private static string s_creationErrorMessage;
         private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
@@ -156,7 +155,7 @@ namespace NGitLab.Tests.Docker
 
             // Spawn the container
             // https://docs.gitlab.com/omnibus/settings/configuration.html
-            using var conf = new DockerClientConfiguration(new Uri(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "npipe://./pipe/docker_engine" : "unix:///var/run/docker.sock"));
+            using var conf = new DockerClientConfiguration(new Uri(OperatingSystem.IsWindows() ? "npipe://./pipe/docker_engine" : "unix:///var/run/docker.sock"));
             using var client = conf.CreateClient();
             await ValidateDockerIsEnabled(client);
 
