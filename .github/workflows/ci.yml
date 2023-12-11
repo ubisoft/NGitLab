@@ -27,7 +27,7 @@ jobs:
       with:
         fetch-depth: 0 # Get all the history so MinGit can compute the version
     - name: Setup .NET Core (latest)
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
     - run: dotnet pack NGitLab.sln --configuration Release --output ${{ env.NuGetDirectory }} /bl
     - uses: actions/upload-artifact@v3
       with:
@@ -67,7 +67,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET Core (latest)
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
     - run: |
         $value = "${{ matrix.gitlab }}-${{ matrix.configuration }}".Replace(':', '-').Replace('/', '-')
         "artifact_name=test-results-$value" >> $env:GITHUB_OUTPUT
@@ -101,7 +101,7 @@ jobs:
         name: nuget
         path: ${{ env.NuGetDirectory }}
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
     - run: |
         Write-Host "Current ref: $env:GITHUB_REF"
         Write-Host "Searching nupkg in folder: ${{ env.NuGetDirectory }}"
