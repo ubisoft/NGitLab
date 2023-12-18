@@ -29,13 +29,13 @@ jobs:
     - name: Setup .NET Core (latest)
       uses: actions/setup-dotnet@v4
     - run: dotnet pack NGitLab.sln --configuration Release --output ${{ env.NuGetDirectory }} /bl
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: nuget
         if-no-files-found: error
         retention-days: 7
         path: ${{ env.NuGetDirectory }}/**/*
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: binlogs
         if-no-files-found: error
@@ -75,7 +75,7 @@ jobs:
       id: set-artifact-name
     - run: dotnet test --configuration ${{ matrix.configuration }} --logger trx --results-directory "${{ env.TestResultsDirectory }}" --collect:"XPlat Code Coverage" /p:RunAnalyzers=false
       name: Run tests
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       if: always()
       with:
         name: ${{ steps.set-artifact-name.outputs.artifact_name }}
