@@ -2234,6 +2234,8 @@ NGitLab.Models.MergeRequest.Labels -> string[]
 NGitLab.Models.MergeRequest.MergeCommitSha -> string
 NGitLab.Models.MergeRequest.MergedAt -> System.DateTime?
 NGitLab.Models.MergeRequest.MergedBy -> NGitLab.Models.User
+NGitLab.Models.MergeRequest.MergeError.get -> string
+NGitLab.Models.MergeRequest.MergeError.set -> void
 NGitLab.Models.MergeRequest.MergeRequest() -> void
 NGitLab.Models.MergeRequest.MergeStatus -> string
 NGitLab.Models.MergeRequest.MergeWhenPipelineSucceeds -> bool

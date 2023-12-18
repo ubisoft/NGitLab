@@ -147,5 +147,8 @@ public class MergeRequest
     [JsonPropertyName("detailed_merge_status")]
     public DynamicEnum<DetailedMergeStatus> DetailedMergeStatus { get; set; }
 
+    [JsonPropertyName("merge_error")]
+    public string MergeError { get; set; }
+
     public override string ToString() => $"!{Id.ToStringInvariant()}: {Title}";
 }
