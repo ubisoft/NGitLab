@@ -29,6 +29,21 @@ namespace NGitLab.Impl
             return Equals(values, null) ? url : AddParameterInternal(url, parameterName, string.Join(",", values));
         }
 
+        public static string AddArrayParameter(string url, string parameterName, string[] values)
+        {
+            if (Equals(values, null))
+            {
+                return url;
+            }
+
+            foreach (var value in values)
+            {
+                url = AddParameterInternal(url, $"{parameterName}[]", value);
+            }
+
+            return url;
+        }
+
         public static string AddOrderBy(string url, string orderBy = null, bool supportKeysetPagination = true)
         {
             if (supportKeysetPagination && (string.IsNullOrEmpty(orderBy) || string.Equals(orderBy, "id", StringComparison.Ordinal)))

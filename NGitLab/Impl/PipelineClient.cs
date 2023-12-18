@@ -84,7 +84,7 @@ namespace NGitLab.Impl
         private string CreateGetJobsUrl(PipelineJobQuery query)
         {
             var url = $"{_pipelinesPath}/{query.PipelineId.ToStringInvariant()}/jobs";
-            url = Utils.AddParameter(url, "scope", query.Scope);
+            url = Utils.AddArrayParameter(url, "scope", query.Scope);
             url = Utils.AddParameter(url, "include_retried", query.IncludeRetried);
             return url;
         }
@@ -213,7 +213,7 @@ namespace NGitLab.Impl
         private string CreateGetBridgesUrl(PipelineBridgeQuery query)
         {
             var url = $"{_pipelinesPath}/{query.PipelineId.ToStringInvariant()}/bridges";
-            url = Utils.AddParameter(url, "scope", query.Scope);
+            url = Utils.AddArrayParameter(url, "scope", query.Scope);
             return url;
         }
 
