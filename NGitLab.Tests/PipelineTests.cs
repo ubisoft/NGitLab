@@ -76,6 +76,26 @@ namespace NGitLab.Tests
 
         [Test]
         [NGitLabRetry]
+        public async Task Test_can_list_jobs_from_pipeline()
+        {
+            using var context = await GitLabTestContext.CreateAsync();
+            var project = context.CreateProject();
+            var pipelineClient = context.Client.GetPipelines(project.Id);
+            JobTests.AddGitLabCiFile(context.Client, project);
+
+            var pipelines = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All, p => p.Any(), TimeSpan.FromSeconds(120));
+            var pipeline = pipelines.First();
+
+            var pipelineJobQuery = new PipelineJobQuery
+            {
+                PipelineId = pipeline.Id, Scope = new[] { "success", "pending" },
+            };
+            var allJobs = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.GetJobsAsync(pipelineJobQuery).ToList(), p => p.Any(), TimeSpan.FromSeconds(120));
+            Assert.That(allJobs.Any());
+        }
+
+        [Test]
+        [NGitLabRetry]
         public async Task Test_search_for_pipeline()
         {
             using var context = await GitLabTestContext.CreateAsync();
