@@ -17,19 +17,19 @@ namespace NGitLab.Tests
             var branchClient = context.Client.GetRepository(project.Id).Branches;
             var currentUser = context.Client.Users.Current;
 
-            var masterBranch = branchClient[project.DefaultBranch];
-            Assert.That(masterBranch, Is.Not.Null);
+            var defaultBranch = branchClient[project.DefaultBranch];
+            Assert.That(defaultBranch, Is.Not.Null);
 
-            var commit = masterBranch.Commit;
+            var commit = defaultBranch.Commit;
             Assert.That(commit, Is.Not.Null);
 
             Assert.That(commit.Id.ToString(), Has.Length.EqualTo(40));
             Assert.That(commit.ShortId, Has.Length.GreaterThan(7));
 
             var fiveMinutesAgo = DateTime.UtcNow - TimeSpan.FromMinutes(5);
-            Assert.That(fiveMinutesAgo, Is.LessThan(commit.CreatedAt));
+            Assert.That(commit.CreatedAt, Is.GreaterThan(fiveMinutesAgo));
 
-            Assert.That(commit.Parents, Has.Length.GreaterThan(1));
+            Assert.That(commit.Parents, Has.Length.EqualTo(1));
 
             Assert.That(commit.Title, Is.EqualTo("add test file 2"));
             Assert.That(commit.Message, Is.EqualTo("add test file 2"));

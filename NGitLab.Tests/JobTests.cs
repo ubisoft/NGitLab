@@ -91,8 +91,8 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
                 }),
                 jobs => jobs.Any(), TimeSpan.FromMinutes(2));
 
-            Assert.That(jobs.First().Status == JobStatus.Canceled, Is.True);
-            Assert.That(jobs.Last().Status == JobStatus.Pending, Is.True);
+            Assert.That(jobs.First().Status, Is.EqualTo(JobStatus.Canceled));
+            Assert.That(jobs.Last().Status, Is.EqualTo(JobStatus.Pending));
         }
 
         [Test]

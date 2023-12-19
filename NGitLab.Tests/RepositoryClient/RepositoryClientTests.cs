@@ -152,7 +152,7 @@ namespace NGitLab.Tests.RepositoryClient
             // Assert
             var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
 
-            Assert.That(lastRequestQueryString.Contains($"since={expectedSinceValue}"), Is.True);
+            Assert.That(lastRequestQueryString, Does.Contain($"since={expectedSinceValue}"));
         }
 
         [Test]
@@ -175,7 +175,7 @@ namespace NGitLab.Tests.RepositoryClient
             // Assert
             var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
 
-            Assert.That(lastRequestQueryString.Contains("since="), Is.False);
+            Assert.That(lastRequestQueryString, Does.Not.Contain("since="));
         }
 
         [Test]
@@ -200,7 +200,7 @@ namespace NGitLab.Tests.RepositoryClient
             // Assert
             var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
 
-            Assert.That(lastRequestQueryString.Contains($"until={expectedUntilValue}"), Is.True);
+            Assert.That(lastRequestQueryString, Does.Contain($"until={expectedUntilValue}"));
         }
 
         [Test]
@@ -223,7 +223,7 @@ namespace NGitLab.Tests.RepositoryClient
             // Assert
             var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
 
-            Assert.That(lastRequestQueryString.Contains("until="), Is.False);
+            Assert.That(lastRequestQueryString, Does.Not.Contain("until="));
         }
 
         [Test]
