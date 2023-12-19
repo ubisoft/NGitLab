@@ -22,13 +22,13 @@ namespace NGitLab.Tests
                 changes => changes.Any(),
                 TimeSpan.FromSeconds(10));
 
-            Assert.AreEqual(1, changes.Length);
-            Assert.AreEqual(100644, changes[0].AMode);
-            Assert.AreEqual(100644, changes[0].BMode);
-            Assert.IsFalse(changes[0].DeletedFile);
-            Assert.IsFalse(changes[0].NewFile);
-            Assert.IsFalse(changes[0].RenamedFile);
-            Assert.AreEqual("@@ -1 +1 @@\n-test\n\\ No newline at end of file\n+test2\n\\ No newline at end of file\n", changes[0].Diff);
+            Assert.That(changes, Has.Length.EqualTo(1));
+            Assert.That(changes[0].AMode, Is.EqualTo(100644));
+            Assert.That(changes[0].BMode, Is.EqualTo(100644));
+            Assert.That(changes[0].DeletedFile, Is.False);
+            Assert.That(changes[0].NewFile, Is.False);
+            Assert.That(changes[0].RenamedFile, Is.False);
+            Assert.That(changes[0].Diff, Is.EqualTo("@@ -1 +1 @@\n-test\n\\ No newline at end of file\n+test2\n\\ No newline at end of file\n"));
         }
     }
 }

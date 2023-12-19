@@ -21,22 +21,22 @@ namespace NGitLab.Mock.Tests
 
             var branches = branchClient.Search("main").ToList();
             var expectedBranch = branches.Single();
-            Assert.AreEqual("main", expectedBranch.Name);
+            Assert.That(expectedBranch.Name, Is.EqualTo("main"));
 
             branches = branchClient.Search("^main$").ToList();
             expectedBranch = branches.Single();
-            Assert.AreEqual("main", expectedBranch.Name);
+            Assert.That(expectedBranch.Name, Is.EqualTo("main"));
 
             branches = branchClient.Search("^branch").ToList();
             expectedBranch = branches.Single();
-            Assert.AreEqual("branch_1", expectedBranch.Name);
+            Assert.That(expectedBranch.Name, Is.EqualTo("branch_1"));
 
             branches = branchClient.Search("1$").ToList();
             expectedBranch = branches.Single();
-            Assert.AreEqual("branch_1", expectedBranch.Name);
+            Assert.That(expectedBranch.Name, Is.EqualTo("branch_1"));
 
             branches = branchClient.Search("foobar").ToList();
-            Assert.IsEmpty(branches);
+            Assert.That(branches, Is.Empty);
         }
     }
 }

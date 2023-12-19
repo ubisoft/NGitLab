@@ -58,12 +58,12 @@ namespace NGitLab.Tests
 
             // Get all
             var comments = mergeRequestComments.All.ToArray();
-            CollectionAssert.IsNotEmpty(comments);
+            Assert.That(comments, Is.Not.Empty);
 
             // Delete
             mergeRequestComments.Delete(comment.Id);
             comments = mergeRequestComments.All.ToArray();
-            CollectionAssert.IsEmpty(comments);
+            Assert.That(comments, Is.Empty);
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace NGitLab.Tests
 
             context.Client.Projects.Archive(project.Id);
             var ex = Assert.Throws<GitLabException>(() => mergeRequestComments.Add(newComment));
-            Assert.AreEqual(ex.StatusCode, HttpStatusCode.Forbidden);
+            Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
         }
     }
 }

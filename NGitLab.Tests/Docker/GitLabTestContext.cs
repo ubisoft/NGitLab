@@ -215,12 +215,12 @@ namespace NGitLab.Tests.Docker
             });
 
             var branch = client.GetRepository(project.Id).Branches.All.FirstOrDefault(b => string.Equals(b.Name, project.DefaultBranch, StringComparison.Ordinal));
-            Assert.NotNull(branch, $"Branch '{project.DefaultBranch}' should exist");
-            Assert.IsTrue(branch.Default, $"Branch '{project.DefaultBranch}' should be the default one");
+            Assert.That(branch, Is.Not.Null, $"Branch '{project.DefaultBranch}' should exist");
+            Assert.That(branch.Default, Is.True, $"Branch '{project.DefaultBranch}' should be the default one");
 
             branch = client.GetRepository(project.Id).Branches.All.FirstOrDefault(b => string.Equals(b.Name, BranchForMRName, StringComparison.Ordinal));
-            Assert.NotNull(branch, $"Branch '{BranchForMRName}' should exist");
-            Assert.IsFalse(branch.Protected, $"Branch '{BranchForMRName}' should not be protected");
+            Assert.That(branch, Is.Not.Null, $"Branch '{BranchForMRName}' should exist");
+            Assert.That(branch.Protected, Is.False, $"Branch '{BranchForMRName}' should not be protected");
 
             s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Update(new FileUpsert { Branch = BranchForMRName, CommitMessage = "test", Content = "test2", Path = "test.md" }));
 

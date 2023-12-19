@@ -17,11 +17,11 @@ namespace NGitLab.Tests
             var tagClient = context.Client.GetRepository(project.Id).Tags;
 
             var tag = tagClient.Create(new TagCreate { Name = "protectedTag", Ref = project.DefaultBranch });
-            Assert.False(tag.Protected);
+            Assert.That(tag.Protected, Is.False);
 
             var protectedTagClient = context.Client.GetProtectedTagClient(project.Id);
             var protectedTags = protectedTagClient.GetProtectedTagsAsync();
-            Assert.False(protectedTags.Any());
+            Assert.That(protectedTags.Any(), Is.False);
 
             await ProtectedTagTest(tag.Name, tag.Name, protectedTagClient, tagClient);
             await ProtectedTagTest("*", tag.Name, protectedTagClient, tagClient);
@@ -35,27 +35,27 @@ namespace NGitLab.Tests
                 CreateAccessLevel = AccessLevel.NoAccess,
             };
             var protectedTag = await protectedTagClient.ProtectTagAsync(tagProtect).ConfigureAwait(false);
-            Assert.AreEqual(protectedTag.Name, tagProtect.Name);
+            Assert.That(tagProtect.Name, Is.EqualTo(protectedTag.Name));
             var accessLevels = protectedTag.CreateAccessLevels.Select(level => level.AccessLevel).ToArray();
-            Assert.Contains(AccessLevel.NoAccess, accessLevels);
-            Assert.Contains(AccessLevel.Maintainer, accessLevels);
+            Assert.That(accessLevels, Does.Contain(AccessLevel.NoAccess));
+            Assert.That(accessLevels, Does.Contain(AccessLevel.Maintainer));
 
             var getProtectedTag = await protectedTagClient.GetProtectedTagAsync(tagProtectName).ConfigureAwait(false);
-            Assert.AreEqual(protectedTag.Name, getProtectedTag.Name);
+            Assert.That(getProtectedTag.Name, Is.EqualTo(protectedTag.Name));
             accessLevels = getProtectedTag.CreateAccessLevels.Select(level => level.AccessLevel).ToArray();
-            Assert.Contains(AccessLevel.NoAccess, accessLevels);
-            Assert.Contains(AccessLevel.Maintainer, accessLevels);
+            Assert.That(accessLevels, Does.Contain(AccessLevel.NoAccess));
+            Assert.That(accessLevels, Does.Contain(AccessLevel.Maintainer));
 
             var tag = await tagClient.GetByNameAsync(tagName).ConfigureAwait(false);
-            Assert.True(tag.Protected);
+            Assert.That(tag.Protected, Is.True);
 
             await protectedTagClient.UnprotectTagAsync(tagProtectName).ConfigureAwait(false);
 
             var protectedTags = protectedTagClient.GetProtectedTagsAsync();
-            Assert.False(protectedTags.Any());
+            Assert.That(protectedTags.Any(), Is.False);
 
             tag = await tagClient.GetByNameAsync(tag.Name).ConfigureAwait(false);
-            Assert.False(tag.Protected);
+            Assert.That(tag.Protected, Is.False);
         }
     }
 }

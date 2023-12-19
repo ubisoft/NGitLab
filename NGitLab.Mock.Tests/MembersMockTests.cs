@@ -21,7 +21,7 @@ namespace NGitLab.Mock.Tests
                 ? client.Members.OfGroup("2")
                 : client.Members.OfGroup("2", includeInheritedMembers: false);
 
-            Assert.AreEqual(1, members.Count(), "Membership found are invalid");
+            Assert.That(members.Count(), Is.EqualTo(1), "Membership found are invalid");
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient("user1");
             var members = client.Members.OfGroup("2", includeInheritedMembers: true);
 
-            Assert.AreEqual(2, members.Count(), "Membership found are invalid");
+            Assert.That(members.Count(), Is.EqualTo(2), "Membership found are invalid");
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace NGitLab.Mock.Tests
                 ? client.Members.OfProject("1")
                 : client.Members.OfProject("1", includeInheritedMembers: false);
 
-            Assert.AreEqual(1, members.Count(), "Membership found are invalid");
+            Assert.That(members.Count(), Is.EqualTo(1), "Membership found are invalid");
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient("user1");
             var members = client.Members.OfProject("1", includeInheritedMembers: true);
 
-            Assert.AreEqual(3, members.Count(), "Membership found are invalid");
+            Assert.That(members.Count(), Is.EqualTo(3), "Membership found are invalid");
         }
     }
 }

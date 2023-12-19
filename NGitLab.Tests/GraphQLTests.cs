@@ -26,7 +26,7 @@ namespace NGitLab.Tests
 }",
             }));
 
-            StringAssert.Contains("Field 'unknownProperty' doesn't exist on type 'Project'", exception.Message);
+            Assert.That(exception.Message, Does.Contain("Field 'unknownProperty' doesn't exist on type 'Project'"));
         }
 
         [Test]
@@ -51,7 +51,7 @@ query($path: ID!)
                 },
             });
 
-            Assert.AreEqual("gid://gitlab/Project/" + project.Id.ToStringInvariant(), response.Project.Id);
+            Assert.That(response.Project.Id, Is.EqualTo("gid://gitlab/Project/" + project.Id.ToStringInvariant()));
         }
 
         private sealed class ProjectResponse

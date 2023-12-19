@@ -56,7 +56,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
             var project = context.CreateProject();
             AddGitLabCiFile(context.Client, project);
             var jobs = await GitLabTestContext.RetryUntilAsync(() => context.Client.GetJobs(project.Id).GetJobs(JobScopeMask.Pending), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
-            Assert.AreEqual(JobStatus.Pending, jobs.First().Status);
+            Assert.That(jobs.First().Status, Is.EqualTo(JobStatus.Pending));
         }
 
         [Test]
@@ -67,7 +67,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
             var project = context.CreateProject();
             AddGitLabCiFile(context.Client, project, manualAction: true);
             var jobs = await GitLabTestContext.RetryUntilAsync(() => context.Client.GetJobs(project.Id).GetJobs(JobScopeMask.Manual), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
-            Assert.AreEqual(JobStatus.Manual, jobs.First().Status);
+            Assert.That(jobs.First().Status, Is.EqualTo(JobStatus.Manual));
         }
 
         [Test]
@@ -91,8 +91,8 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
                 }),
                 jobs => jobs.Any(), TimeSpan.FromMinutes(2));
 
-            Assert.IsTrue(jobs.First().Status == JobStatus.Canceled);
-            Assert.IsTrue(jobs.Last().Status == JobStatus.Pending);
+            Assert.That(jobs.First().Status == JobStatus.Canceled, Is.True);
+            Assert.That(jobs.Last().Status == JobStatus.Pending, Is.True);
         }
 
         [Test]
@@ -105,14 +105,14 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
             AddGitLabCiFile(context.Client, project, manualAction: true);
             var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Manual), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
             var job = jobs.Single();
-            Assert.AreEqual(JobStatus.Manual, job.Status);
+            Assert.That(job.Status, Is.EqualTo(JobStatus.Manual));
 
             var playedJob = jobsClient.RunAction(job.Id, JobAction.Play);
 
-            Assert.AreEqual(job.Id, playedJob.Id);
-            Assert.AreEqual(job.Pipeline.Id, playedJob.Pipeline.Id);
-            Assert.AreEqual(job.Commit.Id, playedJob.Commit.Id);
-            Assert.AreEqual(JobStatus.Pending, playedJob.Status);
+            Assert.That(playedJob.Id, Is.EqualTo(job.Id));
+            Assert.That(playedJob.Pipeline.Id, Is.EqualTo(job.Pipeline.Id));
+            Assert.That(playedJob.Commit.Id, Is.EqualTo(job.Commit.Id));
+            Assert.That(playedJob.Status, Is.EqualTo(JobStatus.Pending));
         }
 
         [Test]
@@ -132,9 +132,9 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
 
             var retriedJob = jobsClient.RunAction(job.Id, JobAction.Retry);
 
-            Assert.AreNotEqual(job.Id, retriedJob.Id);
-            Assert.AreEqual(job.Pipeline.Id, retriedJob.Pipeline.Id);
-            Assert.AreEqual(job.Commit.Id, retriedJob.Commit.Id);
+            Assert.That(retriedJob.Id, Is.Not.EqualTo(job.Id));
+            Assert.That(retriedJob.Pipeline.Id, Is.EqualTo(job.Pipeline.Id));
+            Assert.That(retriedJob.Commit.Id, Is.EqualTo(job.Commit.Id));
         }
 
         [Test]
@@ -150,9 +150,9 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
 
             var job2 = jobsClient.Get(job.Id);
 
-            Assert.AreEqual(job.Id, job2.Id); // Same Job
-            Assert.AreEqual(job.Pipeline.Id, job2.Pipeline.Id); // Same Pipeline
-            Assert.AreEqual(job.Commit.Id, job2.Commit.Id); // Same Commit
+            Assert.That(job2.Id, Is.EqualTo(job.Id)); // Same Job
+            Assert.That(job2.Pipeline.Id, Is.EqualTo(job.Pipeline.Id)); // Same Pipeline
+            Assert.That(job2.Commit.Id, Is.EqualTo(job.Commit.Id)); // Same Commit
         }
 
         [Test]
@@ -197,11 +197,11 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
                 AddGitLabCiFile(context.Client, project);
                 var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Success), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
                 var job = jobs.Single();
-                Assert.AreEqual(JobStatus.Success, job.Status);
+                Assert.That(job.Status, Is.EqualTo(JobStatus.Success));
 
                 var artifacts = jobsClient.GetJobArtifacts(job.Id);
 
-                Assert.IsNotEmpty(artifacts);
+                Assert.That(artifacts, Is.Not.Empty);
             }
         }
 
@@ -217,13 +217,13 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
                 AddGitLabCiFile(context.Client, project);
                 var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Success), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
                 var job = jobs.Single();
-                Assert.AreEqual(JobStatus.Success, job.Status);
+                Assert.That(job.Status, Is.EqualTo(JobStatus.Success));
 
                 var artifact = jobsClient.GetJobArtifact(job.Id, "file0.txt");
-                Assert.IsNotEmpty(artifact);
+                Assert.That(artifact, Is.Not.Empty);
 
                 var content = Encoding.ASCII.GetString(artifact).Trim();
-                Assert.AreEqual("test", content);
+                Assert.That(content, Is.EqualTo("test"));
             }
         }
 
@@ -239,7 +239,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
                 AddGitLabCiFile(context.Client, project);
                 var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Success), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
                 var job = jobs.Single();
-                Assert.AreEqual(JobStatus.Success, job.Status);
+                Assert.That(job.Status, Is.EqualTo(JobStatus.Success));
 
                 var query = new JobArtifactQuery();
                 query.RefName = project.DefaultBranch;
@@ -247,10 +247,10 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
                 query.ArtifactPath = "file0.txt";
 
                 var artifact = jobsClient.GetJobArtifact(query);
-                Assert.IsNotEmpty(artifact);
+                Assert.That(artifact, Is.Not.Empty);
 
                 var content = Encoding.ASCII.GetString(artifact).Trim();
-                Assert.AreEqual("test", content);
+                Assert.That(content, Is.EqualTo("test"));
             }
         }
     }

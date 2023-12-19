@@ -19,7 +19,7 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var users = context.Client.Users.All.Take(100).ToArray(); // We don't want to enumerate all users
-            CollectionAssert.IsNotEmpty(users);
+            Assert.That(users, Is.Not.Empty);
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace NGitLab.Tests
             var current = context.Client.Users.Current;
 
             var user = context.Client.Users[current.Id];
-            Assert.IsNotNull(user);
+            Assert.That(user, Is.Not.Null);
             Assert.That(user.Username, Is.EqualTo(current.Username));
         }
 
@@ -111,17 +111,17 @@ namespace NGitLab.Tests
                 Title = "test key",
             });
 
-            Assert.IsNotNull(result);
-            StringAssert.StartsWith(generatedKey.PublicKey, result.Key);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Key, Does.StartWith(generatedKey.PublicKey));
 
             var newKey = keys.All.FirstOrDefault(k => k.Id == result.Id);
 
-            Assert.IsNotNull(newKey);
-            Assert.AreEqual(result.Key, newKey.Key);
+            Assert.That(newKey, Is.Not.Null);
+            Assert.That(newKey.Key, Is.EqualTo(result.Key));
 
             keys.Remove(result.Id);
 
-            Assert.IsNull(keys.All.FirstOrDefault(k => k.Id == result.Id));
+            Assert.That(keys.All.FirstOrDefault(k => k.Id == result.Id), Is.Null);
         }
 
         [Test]
@@ -141,8 +141,8 @@ namespace NGitLab.Tests
 
             var tokenResult = users.CreateToken(tokenRequest);
 
-            Assert.IsNotEmpty(tokenResult.Token);
-            Assert.AreEqual(tokenRequest.Name, tokenResult.Name);
+            Assert.That(tokenResult.Token, Is.Not.Empty);
+            Assert.That(tokenResult.Name, Is.EqualTo(tokenRequest.Name));
         }
 
         [Test]
@@ -151,7 +151,7 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var activities = context.AdminClient.Users.GetLastActivityDatesAsync().ToArray();
-            CollectionAssert.IsNotEmpty(activities.Where(a => string.Equals(a.Username, context.AdminClient.Users.Current.Username, StringComparison.Ordinal)));
+            Assert.That(activities.Where(a => string.Equals(a.Username, context.AdminClient.Users.Current.Username, StringComparison.Ordinal)), Is.Not.Empty);
         }
 
         [Test]
@@ -161,7 +161,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var yesterday = DateTimeOffset.UtcNow.AddDays(-1);
             var activities = context.AdminClient.Users.GetLastActivityDatesAsync(from: yesterday).ToArray();
-            CollectionAssert.IsNotEmpty(activities);
+            Assert.That(activities, Is.Not.Empty);
         }
 
         [Test]
@@ -171,7 +171,7 @@ namespace NGitLab.Tests
             using var context = await GitLabTestContext.CreateAsync();
             var tomorrow = DateTimeOffset.UtcNow.AddDays(1);
             var activities = context.AdminClient.Users.GetLastActivityDatesAsync(from: tomorrow).ToArray();
-            CollectionAssert.IsEmpty(activities);
+            Assert.That(activities, Is.Empty);
         }
 
         [Test]
@@ -179,7 +179,7 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var exception = Assert.Throws<GitLabException>(() => context.Client.Users.GetLastActivityDatesAsync().ToArray());
-            Assert.AreEqual(HttpStatusCode.Forbidden, exception.StatusCode);
+            Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
         }
 
         private static User CreateNewUser(GitLabTestContext context)

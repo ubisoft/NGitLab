@@ -46,22 +46,22 @@ namespace NGitLab.Tests
             ProtectedBranchAndBranchProtectAreEquals(branchProtect, protectedBranchClient.GetProtectedBranch(branch.Name));
 
             // Get branches
-            Assert.IsNotEmpty(protectedBranchClient.GetProtectedBranches());
+            Assert.That(protectedBranchClient.GetProtectedBranches(), Is.Not.Empty);
             var protectedBranches = protectedBranchClient.GetProtectedBranches(branch.Name);
-            Assert.IsNotEmpty(protectedBranches);
+            Assert.That(protectedBranches, Is.Not.Empty);
             ProtectedBranchAndBranchProtectAreEquals(branchProtect, protectedBranches[0]);
 
             // Unprotect branch
             protectedBranchClient.UnprotectBranch(branch.Name);
-            Assert.IsEmpty(protectedBranchClient.GetProtectedBranches(branch.Name));
+            Assert.That(protectedBranchClient.GetProtectedBranches(branch.Name), Is.Empty);
         }
 
         private static void ProtectedBranchAndBranchProtectAreEquals(BranchProtect branchProtect, ProtectedBranch protectedBranch)
         {
-            Assert.AreEqual(branchProtect.BranchName, protectedBranch.Name);
-            Assert.AreEqual(branchProtect.PushAccessLevel, protectedBranch.PushAccessLevels[0].AccessLevel);
-            Assert.AreEqual(branchProtect.MergeAccessLevel, protectedBranch.MergeAccessLevels[0].AccessLevel);
-            Assert.AreEqual(branchProtect.AllowForcePush, protectedBranch.AllowForcePush);
+            Assert.That(protectedBranch.Name, Is.EqualTo(branchProtect.BranchName));
+            Assert.That(protectedBranch.PushAccessLevels[0].AccessLevel, Is.EqualTo(branchProtect.PushAccessLevel));
+            Assert.That(protectedBranch.MergeAccessLevels[0].AccessLevel, Is.EqualTo(branchProtect.MergeAccessLevel));
+            Assert.That(protectedBranch.AllowForcePush, Is.EqualTo(branchProtect.AllowForcePush));
         }
     }
 }

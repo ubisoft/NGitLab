@@ -21,8 +21,8 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient("user1");
             var issues = client.Issues.Get(new IssueQuery { Scope = "created_by_me" }).ToArray();
 
-            Assert.AreEqual(1, issues.Length, "Issues count is invalid");
-            Assert.AreEqual("Issue 1", issues[0].Title, "Issue found is invalid");
+            Assert.That(issues, Has.Length.EqualTo(1), "Issues count is invalid");
+            Assert.That(issues[0].Title, Is.EqualTo("Issue 1"), "Issue found is invalid");
         }
 
         [Test]
@@ -39,8 +39,8 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient("user1");
             var issues = client.Issues.Get(new IssueQuery { Scope = "assigned_to_me" }).ToArray();
 
-            Assert.AreEqual(1, issues.Length, "Issues count is invalid");
-            Assert.AreEqual("Issue 2", issues[0].Title, "Issue found is invalid");
+            Assert.That(issues, Has.Length.EqualTo(1), "Issues count is invalid");
+            Assert.That(issues[0].Title, Is.EqualTo("Issue 2"), "Issue found is invalid");
         }
 
         [Test]
@@ -68,8 +68,8 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient();
 
             var issue = client.Issues.GetById(10001);
-            Assert.AreEqual(5, issue.IssueId);
-            Assert.AreEqual("Issue title", issue.Title);
+            Assert.That(issue.IssueId, Is.EqualTo(5));
+            Assert.That(issue.Title, Is.EqualTo("Issue title"));
         }
 
         [Test]
@@ -102,16 +102,16 @@ namespace NGitLab.Mock.Tests
             });
 
             var resourceMilestoneEvents = issuesClient.ResourceMilestoneEvents(projectId: 1, issueIid: 5).ToList();
-            Assert.AreEqual(3, resourceMilestoneEvents.Count);
+            Assert.That(resourceMilestoneEvents, Has.Count.EqualTo(3));
 
             var removeMilestoneEvents = resourceMilestoneEvents.Where(e => e.Action == ResourceMilestoneEventAction.Remove).ToArray();
-            Assert.AreEqual(1, removeMilestoneEvents.Length);
-            Assert.AreEqual(1, removeMilestoneEvents[0].Milestone.Id);
+            Assert.That(removeMilestoneEvents, Has.Length.EqualTo(1));
+            Assert.That(removeMilestoneEvents[0].Milestone.Id, Is.EqualTo(1));
 
             var addMilestoneEvents = resourceMilestoneEvents.Where(e => e.Action == ResourceMilestoneEventAction.Add).ToArray();
-            Assert.AreEqual(2, addMilestoneEvents.Length);
-            Assert.AreEqual(1, addMilestoneEvents[0].Milestone.Id);
-            Assert.AreEqual(2, addMilestoneEvents[1].Milestone.Id);
+            Assert.That(addMilestoneEvents, Has.Length.EqualTo(2));
+            Assert.That(addMilestoneEvents[0].Milestone.Id, Is.EqualTo(1));
+            Assert.That(addMilestoneEvents[1].Milestone.Id, Is.EqualTo(2));
         }
     }
 }

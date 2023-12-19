@@ -37,9 +37,9 @@ namespace NGitLab.Tests
 
             var approvalRule = projectLevelApprovalRulesClient.CreateProjectLevelRule(CreateTestApprovalRuleCreate(project, approvalRuleName, approvalRuleApprovalsRequired));
 
-            Assert.NotNull(approvalRule);
-            Assert.AreEqual(approvalRuleName, approvalRule.Name);
-            Assert.AreEqual(approvalRuleApprovalsRequired, approvalRule.ApprovalsRequired);
+            Assert.That(approvalRule, Is.Not.Null);
+            Assert.That(approvalRule.Name, Is.EqualTo(approvalRuleName));
+            Assert.That(approvalRule.ApprovalsRequired, Is.EqualTo(approvalRuleApprovalsRequired));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace NGitLab.Tests
 
             projectLevelApprovalRulesClient.DeleteProjectLevelRule(approvalRule.RuleId);
 
-            Assert.AreEqual(0, projectLevelApprovalRulesClient.GetProjectLevelApprovalRules().Count);
+            Assert.That(projectLevelApprovalRulesClient.GetProjectLevelApprovalRules(), Is.Empty);
         }
 
         [Test]
@@ -81,9 +81,9 @@ namespace NGitLab.Tests
                         ApprovalsRequired = approvalRuleApprovalsRequired,
                     });
 
-            Assert.NotNull(approvalRule);
-            Assert.AreEqual(approvalRuleName, approvalRule.Name);
-            Assert.AreEqual(approvalRuleApprovalsRequired, approvalRule.ApprovalsRequired);
+            Assert.That(approvalRule, Is.Not.Null);
+            Assert.That(approvalRule.Name, Is.EqualTo(approvalRuleName));
+            Assert.That(approvalRule.ApprovalsRequired, Is.EqualTo(approvalRuleApprovalsRequired));
         }
 
         [Test]
@@ -100,9 +100,9 @@ namespace NGitLab.Tests
 
             var approvalRules = projectLevelApprovalRulesClient.GetProjectLevelApprovalRules();
 
-            Assert.AreEqual(1, approvalRules.Count);
-            Assert.AreEqual(firstApprovalRuleName, approvalRules[0].Name);
-            Assert.AreEqual(firstApprovalRuleApprovalsRequired, approvalRules[0].ApprovalsRequired);
+            Assert.That(approvalRules, Has.Count.EqualTo(1));
+            Assert.That(approvalRules[0].Name, Is.EqualTo(firstApprovalRuleName));
+            Assert.That(approvalRules[0].ApprovalsRequired, Is.EqualTo(firstApprovalRuleApprovalsRequired));
         }
 
         private static ApprovalRuleCreate CreateTestApprovalRuleCreate(Project project, string approvalRuleName, int approvalsRequired)

@@ -19,9 +19,9 @@ namespace NGitLab.Tests.Milestone
 
             var milestone = CreateMilestone(context, MilestoneScope.Projects, project.Id, "my-super-milestone");
 
-            Assert.AreEqual(milestone.Id, milestoneClient[milestone.Id].Id, "Test we can get a milestone by Id");
-            Assert.IsTrue(milestoneClient.All.Any(x => x.Id == milestone.Id), "Test 'All' accessor returns the milestone");
-            Assert.IsTrue(milestoneClient.AllInState(MilestoneState.active).Any(x => x.Id == milestone.Id), "Can return all active milestone");
+            Assert.That(milestoneClient[milestone.Id].Id, Is.EqualTo(milestone.Id), "Test we can get a milestone by Id");
+            Assert.That(milestoneClient.All.Any(x => x.Id == milestone.Id), Is.True, "Test 'All' accessor returns the milestone");
+            Assert.That(milestoneClient.AllInState(MilestoneState.active).Any(x => x.Id == milestone.Id), Is.True, "Can return all active milestone");
 
             milestone = UpdateMilestone(context, MilestoneScope.Projects, project.Id, milestone);
 
@@ -29,7 +29,7 @@ namespace NGitLab.Tests.Milestone
 
             milestone = CloseMilestone(context, MilestoneScope.Projects, project.Id, milestone);
 
-            Assert.IsTrue(milestoneClient.AllInState(MilestoneState.closed).Any(x => x.Id == milestone.Id), "Can return all closed milestone");
+            Assert.That(milestoneClient.AllInState(MilestoneState.closed).Any(x => x.Id == milestone.Id), Is.True, "Can return all closed milestone");
 
             milestone = ActivateMilestone(context, MilestoneScope.Projects, project.Id, milestone);
 
@@ -46,9 +46,9 @@ namespace NGitLab.Tests.Milestone
 
             var milestone = CreateMilestone(context, MilestoneScope.Groups, group.Id, "my-super-group-milestone");
 
-            Assert.AreEqual(milestone.Id, milestoneClient[milestone.Id].Id, "Test we can get a milestone by Id");
-            Assert.IsTrue(milestoneClient.All.Any(x => x.Id == milestone.Id), "Test 'All' accessor returns the milestone");
-            Assert.IsTrue(milestoneClient.AllInState(MilestoneState.active).Any(x => x.Id == milestone.Id), "Can return all active milestone");
+            Assert.That(milestoneClient[milestone.Id].Id, Is.EqualTo(milestone.Id), "Test we can get a milestone by Id");
+            Assert.That(milestoneClient.All.Any(x => x.Id == milestone.Id), Is.True, "Test 'All' accessor returns the milestone");
+            Assert.That(milestoneClient.AllInState(MilestoneState.active).Any(x => x.Id == milestone.Id), Is.True, "Can return all active milestone");
 
             milestone = UpdateMilestone(context, MilestoneScope.Groups, group.Id, milestone);
 
@@ -56,7 +56,7 @@ namespace NGitLab.Tests.Milestone
 
             milestone = CloseMilestone(context, MilestoneScope.Groups, group.Id, milestone);
 
-            Assert.IsTrue(milestoneClient.AllInState(MilestoneState.closed).Any(x => x.Id == milestone.Id), "Can return all closed milestone");
+            Assert.That(milestoneClient.AllInState(MilestoneState.closed).Any(x => x.Id == milestone.Id), Is.True, "Can return all closed milestone");
 
             milestone = ActivateMilestone(context, MilestoneScope.Groups, group.Id, milestone);
 
@@ -77,7 +77,7 @@ namespace NGitLab.Tests.Milestone
             mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { MilestoneId = milestone.Id });
 
             var mergeRequests = milestoneClient.GetMergeRequests(milestone.Id).ToArray();
-            Assert.AreEqual(1, mergeRequests.Length, "The query retrieved all merged requests that assigned to the milestone.");
+            Assert.That(mergeRequests, Has.Length.EqualTo(1), "The query retrieved all merged requests that assigned to the milestone.");
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace NGitLab.Tests.Milestone
             mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { MilestoneId = milestone.Id });
 
             var mergeRequests = milestoneClient.GetMergeRequests(milestone.Id).ToArray();
-            Assert.AreEqual(1, mergeRequests.Length, "The query retrieved all merged requests that assigned to the milestone.");
+            Assert.That(mergeRequests, Has.Length.EqualTo(1), "The query retrieved all merged requests that assigned to the milestone.");
         }
 
         private static Models.Milestone CreateMilestone(GitLabTestContext context, MilestoneScope scope, int id, string title)

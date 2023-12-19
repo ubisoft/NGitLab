@@ -19,7 +19,7 @@ namespace NGitLab.Tests
             // Make sure at least 1 project exists
             using var context = await GitLabTestContext.CreateAsync();
             var project = context.CreateProject();
-            Assert.NotNull(project);
+            Assert.That(project, Is.Not.Null);
         }
 
         [Test]
@@ -32,8 +32,8 @@ namespace NGitLab.Tests
 
             Assert.Throws<GitLabException>(() => httpRequestor.Execute("invalidUrl"));
             Assert.That(requestOptions.ShouldRetryCalled, Is.True);
-            Assert.That(requestOptions.HandledRequests.Count, Is.EqualTo(2));
-            Assert.IsNull(requestOptions.HttpRequestSudoHeader);
+            Assert.That(requestOptions.HandledRequests, Has.Count.EqualTo(2));
+            Assert.That(requestOptions.HttpRequestSudoHeader, Is.Null);
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace NGitLab.Tests
             var httpRequestor = new HttpRequestor(context.DockerContainer.GitLabUrl.ToString(), context.DockerContainer.Credentials.UserToken, MethodType.Get, requestOptions);
             Assert.Throws<GitLabException>(() => httpRequestor.Execute("invalidUrl"));
 
-            Assert.AreEqual(TimeSpan.FromMinutes(2).TotalMilliseconds, requestOptions.HandledRequests.Single().Timeout);
+            Assert.That(requestOptions.HandledRequests.Single().Timeout, Is.EqualTo(TimeSpan.FromMinutes(2).TotalMilliseconds));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace NGitLab.Tests
             var httpRequestor = new HttpRequestor(context.DockerContainer.GitLabUrl.ToString(), context.DockerContainer.Credentials.UserToken, MethodType.Get, requestOptions);
 
             Assert.Throws<GitLabException>(() => httpRequestor.Execute("invalidUrl"));
-            Assert.AreEqual("UserToImpersonate", requestOptions.HttpRequestSudoHeader);
+            Assert.That(requestOptions.HttpRequestSudoHeader, Is.EqualTo("UserToImpersonate"));
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace NGitLab.Tests
             });
 
             // Assert
-            Assert.AreEqual(commonUserSession.Username, issue.Author.Username);
+            Assert.That(issue.Author.Username, Is.EqualTo(commonUserSession.Username));
         }
 
         [Test]
@@ -122,7 +122,7 @@ namespace NGitLab.Tests
             });
 
             // Assert
-            Assert.AreEqual(commonUserSession.Id, issue.Author.Id);
+            Assert.That(issue.Author.Id, Is.EqualTo(commonUserSession.Id));
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace NGitLab.Tests
 
             // Assert
             var actualHeaderValue = context.LastRequest.Headers[HttpRequestHeader.Authorization];
-            Assert.AreEqual(expectedHeaderValue, actualHeaderValue);
+            Assert.That(actualHeaderValue, Is.EqualTo(expectedHeaderValue));
         }
 
         private sealed class MockRequestOptions : RequestOptions

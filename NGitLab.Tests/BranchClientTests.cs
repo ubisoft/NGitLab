@@ -18,31 +18,31 @@ namespace NGitLab.Tests
             var currentUser = context.Client.Users.Current;
 
             var masterBranch = branchClient[project.DefaultBranch];
-            Assert.NotNull(masterBranch);
+            Assert.That(masterBranch, Is.Not.Null);
 
             var commit = masterBranch.Commit;
-            Assert.NotNull(commit);
+            Assert.That(commit, Is.Not.Null);
 
-            Assert.AreEqual(40, commit.Id.ToString().Length);
-            Assert.LessOrEqual(7, commit.ShortId.Length);
+            Assert.That(commit.Id.ToString(), Has.Length.EqualTo(40));
+            Assert.That(commit.ShortId, Has.Length.GreaterThan(7));
 
             var fiveMinutesAgo = DateTime.UtcNow - TimeSpan.FromMinutes(5);
-            Assert.Less(fiveMinutesAgo, commit.CreatedAt);
+            Assert.That(fiveMinutesAgo, Is.LessThan(commit.CreatedAt));
 
-            Assert.LessOrEqual(1, commit.Parents.Length);
+            Assert.That(commit.Parents, Has.Length.GreaterThan(1));
 
-            Assert.AreEqual("add test file 2", commit.Title);
-            Assert.AreEqual("add test file 2", commit.Message);
+            Assert.That(commit.Title, Is.EqualTo("add test file 2"));
+            Assert.That(commit.Message, Is.EqualTo("add test file 2"));
 
-            Assert.AreEqual(currentUser.Name, commit.AuthorName);
-            Assert.AreEqual(currentUser.Email, commit.AuthorEmail);
-            Assert.Less(fiveMinutesAgo, commit.AuthoredDate);
+            Assert.That(commit.AuthorName, Is.EqualTo(currentUser.Name));
+            Assert.That(commit.AuthorEmail, Is.EqualTo(currentUser.Email));
+            Assert.That(fiveMinutesAgo, Is.LessThan(commit.AuthoredDate));
 
-            Assert.AreEqual(currentUser.Name, commit.CommitterName);
-            Assert.AreEqual(currentUser.Email, commit.CommitterEmail);
-            Assert.Less(fiveMinutesAgo, commit.CommittedDate);
+            Assert.That(commit.CommitterName, Is.EqualTo(currentUser.Name));
+            Assert.That(commit.CommitterEmail, Is.EqualTo(currentUser.Email));
+            Assert.That(fiveMinutesAgo, Is.LessThan(commit.CommittedDate));
 
-            Assert.IsTrue(Uri.TryCreate(commit.WebUrl, UriKind.Absolute, out _));
+            Assert.That(Uri.TryCreate(commit.WebUrl, UriKind.Absolute, out _), Is.True);
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace NGitLab.Tests
 
             var branches = branchClient.Search(defaultBranch);
             var expectedBranch = branches.Single();
-            Assert.AreEqual(defaultBranch, expectedBranch.Name);
+            Assert.That(expectedBranch.Name, Is.EqualTo(defaultBranch));
 
             // This case only worked with GitLab 15.7 and later
             // https://gitlab.com/gitlab-org/gitlab/-/merge_requests/104451
@@ -69,18 +69,18 @@ namespace NGitLab.Tests
 
             branches = branchClient.Search($"^{defaultBranch[..^1]}");
             expectedBranch = branches.Single();
-            Assert.AreEqual(defaultBranch, expectedBranch.Name);
+            Assert.That(expectedBranch.Name, Is.EqualTo(defaultBranch));
 
             branches = branchClient.Search($"{defaultBranch[1..]}$");
             expectedBranch = branches.Single();
-            Assert.AreEqual(defaultBranch, expectedBranch.Name);
+            Assert.That(expectedBranch.Name, Is.EqualTo(defaultBranch));
 
             branches = branchClient.Search(defaultBranch[1..^1]);
             expectedBranch = branches.Single();
-            Assert.AreEqual(defaultBranch, expectedBranch.Name);
+            Assert.That(expectedBranch.Name, Is.EqualTo(defaultBranch));
 
             branches = branchClient.Search("foobar");
-            Assert.IsEmpty(branches);
+            Assert.That(branches, Is.Empty);
         }
     }
 }

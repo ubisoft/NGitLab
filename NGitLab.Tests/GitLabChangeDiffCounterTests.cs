@@ -37,8 +37,8 @@ namespace NGitLab.Tests
             };
             var unitUnderTest = new GitLabChangeDiffCounter();
             var diffStats = unitUnderTest.Compute(mrChange);
-            Assert.AreEqual(53, diffStats.AddedLines);
-            Assert.AreEqual(2, diffStats.DeletedLines);
+            Assert.That(diffStats.AddedLines, Is.EqualTo(53));
+            Assert.That(diffStats.DeletedLines, Is.EqualTo(2));
         }
     }
 }

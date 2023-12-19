@@ -32,17 +32,17 @@ namespace NGitLab.Tests.RepositoryClient
             };
 
             var created = hooksClient.Create(toCreate);
-            Assert.That(hooksClient.All.ToArray().Length, Is.EqualTo(1));
+            Assert.That(hooksClient.All.ToArray(), Has.Length.EqualTo(1));
 
-            Assert.AreEqual(toCreate.MergeRequestsEvents, created.MergeRequestsEvents);
-            Assert.AreEqual(toCreate.PushEvents, created.PushEvents);
-            Assert.AreEqual(toCreate.IssuesEvents, created.IssuesEvents);
-            Assert.AreEqual(toCreate.JobEvents, created.JobEvents);
-            Assert.AreEqual(toCreate.NoteEvents, created.NoteEvents);
-            Assert.AreEqual(toCreate.PipelineEvents, created.PipelineEvents);
-            Assert.AreEqual(toCreate.TagPushEvents, created.TagPushEvents);
-            Assert.AreEqual(toCreate.EnableSslVerification, created.EnableSslVerification);
-            Assert.AreEqual(toCreate.Url, created.Url);
+            Assert.That(created.MergeRequestsEvents, Is.EqualTo(toCreate.MergeRequestsEvents));
+            Assert.That(created.PushEvents, Is.EqualTo(toCreate.PushEvents));
+            Assert.That(created.IssuesEvents, Is.EqualTo(toCreate.IssuesEvents));
+            Assert.That(created.JobEvents, Is.EqualTo(toCreate.JobEvents));
+            Assert.That(created.NoteEvents, Is.EqualTo(toCreate.NoteEvents));
+            Assert.That(created.PipelineEvents, Is.EqualTo(toCreate.PipelineEvents));
+            Assert.That(created.TagPushEvents, Is.EqualTo(toCreate.TagPushEvents));
+            Assert.That(created.EnableSslVerification, Is.EqualTo(toCreate.EnableSslVerification));
+            Assert.That(created.Url, Is.EqualTo(toCreate.Url));
 
             var toUpdate = new ProjectHookUpsert
             {
@@ -59,20 +59,20 @@ namespace NGitLab.Tests.RepositoryClient
             };
 
             var updated = hooksClient.Update(created.Id, toUpdate);
-            Assert.That(hooksClient.All.ToArray().Length, Is.EqualTo(1));
+            Assert.That(hooksClient.All.ToArray(), Has.Length.EqualTo(1));
 
-            Assert.AreEqual(toUpdate.MergeRequestsEvents, updated.MergeRequestsEvents);
-            Assert.AreEqual(toUpdate.PushEvents, updated.PushEvents);
-            Assert.AreEqual(toUpdate.IssuesEvents, updated.IssuesEvents);
-            Assert.AreEqual(toUpdate.JobEvents, updated.JobEvents);
-            Assert.AreEqual(toUpdate.NoteEvents, updated.NoteEvents);
-            Assert.AreEqual(toUpdate.PipelineEvents, updated.PipelineEvents);
-            Assert.AreEqual(toUpdate.TagPushEvents, updated.TagPushEvents);
-            Assert.AreEqual(toUpdate.EnableSslVerification, updated.EnableSslVerification);
-            Assert.AreEqual(toUpdate.Url, updated.Url);
+            Assert.That(updated.MergeRequestsEvents, Is.EqualTo(toUpdate.MergeRequestsEvents));
+            Assert.That(updated.PushEvents, Is.EqualTo(toUpdate.PushEvents));
+            Assert.That(updated.IssuesEvents, Is.EqualTo(toUpdate.IssuesEvents));
+            Assert.That(updated.JobEvents, Is.EqualTo(toUpdate.JobEvents));
+            Assert.That(updated.NoteEvents, Is.EqualTo(toUpdate.NoteEvents));
+            Assert.That(updated.PipelineEvents, Is.EqualTo(toUpdate.PipelineEvents));
+            Assert.That(updated.TagPushEvents, Is.EqualTo(toUpdate.TagPushEvents));
+            Assert.That(updated.EnableSslVerification, Is.EqualTo(toUpdate.EnableSslVerification));
+            Assert.That(updated.Url, Is.EqualTo(toUpdate.Url));
 
             hooksClient.Delete(updated.Id);
-            Assert.That(hooksClient.All.ToArray().Length, Is.EqualTo(0));
+            Assert.That(hooksClient.All.ToArray(), Is.Empty);
         }
     }
 }

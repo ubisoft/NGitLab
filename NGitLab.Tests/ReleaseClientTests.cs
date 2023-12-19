@@ -30,14 +30,14 @@ namespace NGitLab.Tests.Release
                 Description = "test",
             });
 
-            Assert.AreEqual(ReleasesAccessLevel.Enabled, project.ReleasesAccessLevel);
+            Assert.That(project.ReleasesAccessLevel, Is.EqualTo(ReleasesAccessLevel.Enabled));
             Assert.That(release.TagName, Is.EqualTo("0.7"));
             Assert.That(release.Name, Is.EqualTo("0.7"));
             Assert.That(release.Description, Is.EqualTo("test"));
             Assert.That(release.Links.Self, Is.EqualTo($"{project.WebUrl}/-/releases/0.7"));
             Assert.That(release.Links.EditUrl, Is.EqualTo($"{project.WebUrl}/-/releases/0.7/edit"));
 
-            Assert.IsNotNull(releaseClient.GetAsync().FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)));
+            Assert.That(releaseClient.GetAsync().FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)), Is.Not.Null);
 
             release = releaseClient[tag.Name];
             Assert.That(release.TagName, Is.EqualTo("0.7"));
@@ -53,9 +53,9 @@ namespace NGitLab.Tests.Release
             Assert.That(release.Name, Is.EqualTo("0.7"));
             Assert.That(release.Description, Is.EqualTo("test updated"));
 
-            Assert.IsNotNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)));
+            Assert.That(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)), Is.Not.Null);
             tagsClient.Delete("0.7");
-            Assert.IsNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)));
+            Assert.That(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)), Is.Null);
         }
 
         [Test]
@@ -92,18 +92,18 @@ namespace NGitLab.Tests.Release
             });
             Assert.That(link.Name, Is.EqualTo("test link"));
             Assert.That(link.Url, Is.EqualTo("https://www.example.com"));
-            Assert.IsTrue(link.External);
+            Assert.That(link.External, Is.True);
 
             link = linksClient[link.Id.Value];
             Assert.That(link.Name, Is.EqualTo("test link"));
             Assert.That(link.Url, Is.EqualTo("https://www.example.com"));
-            Assert.IsTrue(link.External);
+            Assert.That(link.External, Is.True);
 
             linksClient.Delete(link.Id.Value);
-            Assert.IsNull(linksClient.All.FirstOrDefault(x => string.Equals(x.Name, "test link", StringComparison.Ordinal)));
+            Assert.That(linksClient.All.FirstOrDefault(x => string.Equals(x.Name, "test link", StringComparison.Ordinal)), Is.Null);
 
             tagsClient.Delete("0.7");
-            Assert.IsNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)));
+            Assert.That(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "0.7", StringComparison.Ordinal)), Is.Null);
         }
     }
 }

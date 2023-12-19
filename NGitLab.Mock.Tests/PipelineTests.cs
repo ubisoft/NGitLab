@@ -20,7 +20,7 @@ namespace NGitLab.Mock.Tests
             job.Trace = "This is a trace\nWith Multiple line";
 
             var client = server.CreateClient();
-            Assert.AreEqual(job.Trace, await client.GetJobs(project.Id).GetTraceAsync(job.Id));
+            Assert.That(await client.GetJobs(project.Id).GetTraceAsync(job.Id), Is.EqualTo(job.Trace));
         }
 
         [Test]
@@ -47,12 +47,12 @@ namespace NGitLab.Mock.Tests
 
             var client = server.CreateClient();
             var summary = client.GetPipelines(project.Id).GetTestReportsSummary(pipeline.Id);
-            Assert.AreEqual(60, summary.Total.Time);
-            Assert.AreEqual(1157, summary.Total.Count);
-            Assert.AreEqual(1157, summary.Total.Success);
-            Assert.AreEqual(0, summary.Total.Skipped);
-            Assert.AreEqual(0, summary.Total.Failed);
-            Assert.AreEqual(0, summary.Total.Error);
+            Assert.That(summary.Total.Time, Is.EqualTo(60));
+            Assert.That(summary.Total.Count, Is.EqualTo(1157));
+            Assert.That(summary.Total.Success, Is.EqualTo(1157));
+            Assert.That(summary.Total.Skipped, Is.EqualTo(0));
+            Assert.That(summary.Total.Failed, Is.EqualTo(0));
+            Assert.That(summary.Total.Error, Is.EqualTo(0));
         }
 
         [TestCase(false)]
@@ -69,7 +69,7 @@ namespace NGitLab.Mock.Tests
             {
                 project.Repository.CreateAndCheckoutBranch(branch);
                 var commit2 = project.Repository.Commit(user, "another test");
-                Assert.AreNotEqual(commit.Sha, commit2.Sha);
+                Assert.That(commit2.Sha, Is.Not.EqualTo(commit.Sha));
                 commit = commit2;
             }
             else
@@ -79,7 +79,7 @@ namespace NGitLab.Mock.Tests
 
             var pipeline = project.Pipelines.Add(branch, JobStatus.Success, user);
 
-            Assert.AreEqual(new Sha1(commit.Sha), pipeline.Sha);
+            Assert.That(pipeline.Sha, Is.EqualTo(new Sha1(commit.Sha)));
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace NGitLab.Mock.Tests
 
             var pipeline = project.Pipelines.Add(tag, JobStatus.Success, user);
 
-            Assert.AreEqual(new Sha1(commit.Sha), pipeline.Sha);
+            Assert.That(pipeline.Sha, Is.EqualTo(new Sha1(commit.Sha)));
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace NGitLab.Mock.Tests
 
             var pipeline = project.Pipelines.Add("invalid_ref", JobStatus.Success, user);
 
-            Assert.AreEqual(default(Sha1), pipeline.Sha);
+            Assert.That(pipeline.Sha, Is.EqualTo(default(Sha1)));
         }
     }
 }

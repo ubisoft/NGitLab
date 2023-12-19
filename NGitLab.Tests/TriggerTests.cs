@@ -19,12 +19,12 @@ namespace NGitLab.Tests
             var createdTrigger = triggersClient.Create("Unit_Test_Description");
             var trigger = triggersClient[createdTrigger.Id];
 
-            Assert.AreEqual("Unit_Test_Description", trigger.Description);
+            Assert.That(trigger.Description, Is.EqualTo("Unit_Test_Description"));
 
             var triggers = triggersClient.All.Take(10).ToArray();
 
-            Assert.IsNotNull(triggers);
-            Assert.IsNotEmpty(triggers);
+            Assert.That(triggers, Is.Not.Null);
+            Assert.That(triggers, Is.Not.Empty);
         }
     }
 }

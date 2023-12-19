@@ -20,7 +20,7 @@ namespace NGitLab.Tests
         public void Constructor_should_complete_api_version_when_not_set(string url, string expectedUrl)
         {
             var gitLabCredentials = new GitLabCredentials(url, "my_token");
-            Assert.AreEqual(expectedUrl, gitLabCredentials.HostUrl);
+            Assert.That(gitLabCredentials.HostUrl, Is.EqualTo(expectedUrl));
         }
     }
 }

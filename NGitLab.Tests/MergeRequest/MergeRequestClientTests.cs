@@ -20,8 +20,8 @@ namespace NGitLab.Tests
             var (project, mergeRequest) = context.CreateMergeRequest();
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
-            Assert.AreEqual(mergeRequest.Id, mergeRequestClient[mergeRequest.Iid].Id, "Test we can get a merge request by IId");
-            Assert.AreEqual(mergeRequest.Id, (await mergeRequestClient.GetByIidAsync(mergeRequest.Iid, options: null)).Id, "Test we can get a merge request by IId");
+            Assert.That(mergeRequestClient[mergeRequest.Iid].Id, Is.EqualTo(mergeRequest.Id), "Test we can get a merge request by IId");
+            Assert.That((await mergeRequestClient.GetByIidAsync(mergeRequest.Iid, options: null)).Id, Is.EqualTo(mergeRequest.Id), "Test we can get a merge request by IId");
 
             ListMergeRequest(mergeRequestClient, mergeRequest);
             mergeRequest = UpdateMergeRequest(mergeRequestClient, mergeRequest);
@@ -34,7 +34,7 @@ namespace NGitLab.Tests
                     TimeSpan.FromSeconds(120))
                 .ConfigureAwait(false);
 
-            Assert.IsFalse(context.Client.GetRepository(project.Id).Branches[mergeRequest.SourceBranch].Protected, "The source branch is protected but should not be");
+            Assert.That(context.Client.GetRepository(project.Id).Branches[mergeRequest.SourceBranch].Protected, Is.False, "The source branch is protected but should not be");
 
             TestContext.WriteLine("MR is ready to be merged");
             AcceptMergeRequest(mergeRequestClient, mergeRequest);
@@ -48,12 +48,12 @@ namespace NGitLab.Tests
             //       TimeSpan.FromSeconds(240)) // GitLab seems very slow to delete a branch on my machine...
             //   .ConfigureAwait(false);
             var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
-            Assert.IsTrue(commits.Any(), "Can return the commits");
+            Assert.That(commits.Any(), Is.True, "Can return the commits");
 
             if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.6,)"), out _))
-                Assert.IsNotNull(mergeRequest.DetailedMergeStatus.EnumValue);
+                Assert.That(mergeRequest.DetailedMergeStatus.EnumValue, Is.Not.Null);
             else
-                Assert.IsNull(mergeRequest.DetailedMergeStatus.EnumValue);
+                Assert.That(mergeRequest.DetailedMergeStatus.EnumValue, Is.Null);
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace NGitLab.Tests
             });
 
             var mr = mergeRequestClient[mergeRequest.Iid];
-            Assert.AreEqual(1, mr.DivergedCommitsCount,
+            Assert.That(mr.DivergedCommitsCount, Is.EqualTo(1),
                 "There should be a 1-commit divergence between the default branch NOW and its state at the moment the MR was created");
 
             RebaseMergeRequest(mergeRequestClient, mergeRequest);
@@ -94,7 +94,7 @@ namespace NGitLab.Tests
                 commits => commits.Any(),
                 TimeSpan.FromSeconds(10));
 
-            Assert.IsTrue(commits.Any(), "Can return the commits");
+            Assert.That(commits.Any(), Is.True, "Can return the commits");
         }
 
         [Test]
@@ -125,18 +125,18 @@ namespace NGitLab.Tests
             });
 
             var mr = mergeRequestClient[mergeRequest.Iid];
-            Assert.AreEqual(1, mr.DivergedCommitsCount,
+            Assert.That(mr.DivergedCommitsCount, Is.EqualTo(1),
                 "There should be a 1-commit divergence between the default branch NOW and its state at the moment the MR was created");
 
             var rebaseResult = await mergeRequestClient.RebaseAsync(mergeRequest.Iid, new MergeRequestRebase { SkipCi = true });
-            Assert.IsTrue(rebaseResult.RebaseInProgress);
+            Assert.That(rebaseResult.RebaseInProgress, Is.True);
 
             var commits = await GitLabTestContext.RetryUntilAsync(
                 () => mergeRequestClient.Commits(mergeRequest.Iid).All,
                 commits => commits.Any(),
                 TimeSpan.FromSeconds(10));
 
-            Assert.IsTrue(commits.Any(), "Can return the commits");
+            Assert.That(commits.Any(), Is.True, "Can return the commits");
         }
 
         [Test]
@@ -145,7 +145,7 @@ namespace NGitLab.Tests
         {
             using var context = await GitLabTestContext.CreateAsync();
             var (_, mergeRequest) = context.CreateMergeRequest();
-            Assert.AreNotEqual(mergeRequest.Id, mergeRequest.Iid);
+            Assert.That(mergeRequest.Iid, Is.Not.EqualTo(mergeRequest.Id));
         }
 
         [Test]
@@ -166,7 +166,7 @@ namespace NGitLab.Tests
                 });
             });
 
-            Assert.AreEqual("[\"You can't use same project/branch for source and target\"]", exception.ErrorMessage);
+            Assert.That(exception.ErrorMessage, Is.EqualTo("[\"You can't use same project/branch for source and target\"]"));
         }
 
         [Test]
@@ -200,7 +200,7 @@ namespace NGitLab.Tests
             var approvalClient = mergeRequestClient.ApprovalClient(mergeRequest.Iid);
             var approvers = approvalClient.Approvals.Approvers;
 
-            Assert.AreEqual(0, approvers.Length, "Initially no approver defined");
+            Assert.That(approvers, Is.Empty, "Initially no approver defined");
 
             // --- Add the exampleAdminUser as approver for this MR since adding the MR owners won't increment the number of approvers---
             var userId = context.AdminClient.Users.Current.Id;
@@ -214,8 +214,8 @@ namespace NGitLab.Tests
 
             approvers = approvalClient.Approvals.Approvers;
 
-            Assert.AreEqual(1, approvers.Length, "A single approver defined");
-            Assert.AreEqual(userId, approvers[0].User.Id, "The approver is the current user");
+            Assert.That(approvers, Has.Length.EqualTo(1), "A single approver defined");
+            Assert.That(approvers[0].User.Id, Is.EqualTo(userId), "The approver is the current user");
         }
 
         [Test]
@@ -227,10 +227,10 @@ namespace NGitLab.Tests
             var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
             var mergeRequests = mergeRequestClient.Get(new MergeRequestQuery { AssigneeId = QueryAssigneeId.None }).ToList();
-            Assert.AreEqual(1, mergeRequests.Count, "The query retrieved all open merged requests that are unassigned");
+            Assert.That(mergeRequests, Has.Count.EqualTo(1), "The query retrieved all open merged requests that are unassigned");
 
             mergeRequests = mergeRequestClient.Get(new MergeRequestQuery { AssigneeId = context.Client.Users.Current.Id }).ToList();
-            Assert.AreEqual(0, mergeRequests.Count, "The query retrieved all open merged requests that are unassigned");
+            Assert.That(mergeRequests, Is.Empty, "The query retrieved all open merged requests that are unassigned");
         }
 
         [Test]
@@ -244,10 +244,10 @@ namespace NGitLab.Tests
             mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { AssigneeId = userId });
 
             var mergeRequests = mergeRequestClient.Get(new MergeRequestQuery { AssigneeId = QueryAssigneeId.None }).ToList();
-            Assert.AreEqual(0, mergeRequests.Count, "The query retrieved all open merged requests that are unassigned");
+            Assert.That(mergeRequests, Is.Empty, "The query retrieved all open merged requests that are unassigned");
 
             mergeRequests = mergeRequestClient.Get(new MergeRequestQuery { AssigneeId = userId }).ToList();
-            Assert.AreEqual(1, mergeRequests.Count, "The query retrieved all open merged requests that are unassigned");
+            Assert.That(mergeRequests, Has.Count.EqualTo(1), "The query retrieved all open merged requests that are unassigned");
         }
 
         [Test]
@@ -262,11 +262,11 @@ namespace NGitLab.Tests
             mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { ReviewerIds = new[] { userId } });
 
             var mergeRequests = mergeRequestClient.Get(new MergeRequestQuery { ReviewerId = userId }).ToList();
-            Assert.AreEqual(1, mergeRequests.Count, "The query retrieved all open merged requests that are assigned for a reviewer");
+            Assert.That(mergeRequests, Has.Count.EqualTo(1), "The query retrieved all open merged requests that are assigned for a reviewer");
 
             var mergeRequestUpdated = mergeRequests.Single();
             var reviewers = mergeRequestUpdated.Reviewers;
-            Assert.AreEqual(1, reviewers.Length);
+            Assert.That(reviewers, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -297,7 +297,7 @@ namespace NGitLab.Tests
 
             var version = versions.First();
 
-            Assert.AreEqual(mergeRequest.Sha, version.HeadCommitSha);
+            Assert.That(version.HeadCommitSha, Is.EqualTo(mergeRequest.Sha));
         }
 
         [Test]
@@ -312,15 +312,15 @@ namespace NGitLab.Tests
 
             mergeRequest = await GitLabTestContext.RetryUntilAsync(() => mergeRequestClient[mergeRequest.Iid], p => p.HeadPipeline != null, TimeSpan.FromSeconds(120));
 
-            Assert.AreEqual(project.Id, mergeRequest.HeadPipeline?.ProjectId);
+            Assert.That(mergeRequest.HeadPipeline?.ProjectId, Is.EqualTo(project.Id));
         }
 
         private static void ListMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest mergeRequest)
         {
-            Assert.IsTrue(mergeRequestClient.All.Any(x => x.Id == mergeRequest.Id), "Test 'All' accessor returns the merge request");
-            Assert.IsFalse(mergeRequestClient.All.Any(x => x.DivergedCommitsCount.HasValue), "Listing multiple MRs will not set their DivergedCommitsCount property");
-            Assert.IsTrue(mergeRequestClient.AllInState(MergeRequestState.opened).Any(x => x.Id == mergeRequest.Id), "Can return all open requests");
-            Assert.IsFalse(mergeRequestClient.AllInState(MergeRequestState.merged).Any(x => x.Id == mergeRequest.Id), "Can return all closed requests");
+            Assert.That(mergeRequestClient.All.Any(x => x.Id == mergeRequest.Id), Is.True, "Test 'All' accessor returns the merge request");
+            Assert.That(mergeRequestClient.All.Any(x => x.DivergedCommitsCount.HasValue), Is.False, "Listing multiple MRs will not set their DivergedCommitsCount property");
+            Assert.That(mergeRequestClient.AllInState(MergeRequestState.opened).Any(x => x.Id == mergeRequest.Id), Is.True, "Can return all open requests");
+            Assert.That(mergeRequestClient.AllInState(MergeRequestState.merged).Any(x => x.Id == mergeRequest.Id), Is.False, "Can return all closed requests");
         }
 
         public static MergeRequest UpdateMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest request)
@@ -334,10 +334,10 @@ namespace NGitLab.Tests
                 TargetBranch = request.TargetBranch,
             });
 
-            Assert.AreEqual("New title", updatedMergeRequest.Title);
-            Assert.AreEqual("New description", updatedMergeRequest.Description);
-            Assert.IsFalse(updatedMergeRequest.MergeWhenPipelineSucceeds);
-            CollectionAssert.AreEqual(new[] { "a", "b" }, updatedMergeRequest.Labels);
+            Assert.That(updatedMergeRequest.Title, Is.EqualTo("New title"));
+            Assert.That(updatedMergeRequest.Description, Is.EqualTo("New description"));
+            Assert.That(updatedMergeRequest.MergeWhenPipelineSucceeds, Is.False);
+            Assert.That(updatedMergeRequest.Labels, Is.EqualTo(new[] { "a", "b" }).AsCollection);
 
             return updatedMergeRequest;
         }
@@ -349,14 +349,14 @@ namespace NGitLab.Tests
                 Title = "Second update",
             });
 
-            Assert.AreEqual("Second update", updated.Title);
-            Assert.AreEqual(mergeRequest.Description, updated.Description);
+            Assert.That(updated.Title, Is.EqualTo("Second update"));
+            Assert.That(updated.Description, Is.EqualTo(mergeRequest.Description));
         }
 
         private static void Test_can_update_labels_with_delta(IMergeRequestClient mergeRequestClient, MergeRequest mergeRequest)
         {
             // Ensure original labels are "a,b"
-            CollectionAssert.AreEqual(new[] { "a", "b" }, mergeRequest.Labels);
+            Assert.That(mergeRequest.Labels, Is.EqualTo(new[] { "a", "b" }).AsCollection);
 
             var updated = mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate
             {
@@ -364,7 +364,7 @@ namespace NGitLab.Tests
                 AddLabels = "c,d",
             });
 
-            CollectionAssert.AreEqual(new[] { "a", "c", "d" }, updated.Labels);
+            Assert.That(updated.Labels, Is.EqualTo(new[] { "a", "c", "d" }).AsCollection);
         }
 
         public static void AcceptMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest request)
@@ -391,7 +391,7 @@ namespace NGitLab.Tests
         public static void RebaseMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest mergeRequest)
         {
             var rebaseResult = mergeRequestClient.Rebase(mergeRequestIid: mergeRequest.Iid);
-            Assert.IsTrue(rebaseResult.RebaseInProgress);
+            Assert.That(rebaseResult.RebaseInProgress, Is.True);
         }
 
         public static void AcceptAndCancelMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest request)

@@ -23,9 +23,9 @@ namespace NGitLab.Tests
                 LinkUrl = "http://dummy/image.html",
             });
 
-            Assert.AreEqual(BadgeKind.Group, badge.Kind);
-            Assert.AreEqual("http://dummy/image.png", badge.ImageUrl);
-            Assert.AreEqual("http://dummy/image.html", badge.LinkUrl);
+            Assert.That(badge.Kind, Is.EqualTo(BadgeKind.Group));
+            Assert.That(badge.ImageUrl, Is.EqualTo("http://dummy/image.png"));
+            Assert.That(badge.LinkUrl, Is.EqualTo("http://dummy/image.html"));
 
             // Update
             badge = groupBadgeClient.Update(badge.Id, new BadgeUpdate
@@ -34,22 +34,22 @@ namespace NGitLab.Tests
                 LinkUrl = "http://dummy/image_edit.html",
             });
 
-            Assert.AreEqual(BadgeKind.Group, badge.Kind);
-            Assert.AreEqual("http://dummy/image_edit.png", badge.ImageUrl);
-            Assert.AreEqual("http://dummy/image_edit.html", badge.LinkUrl);
+            Assert.That(badge.Kind, Is.EqualTo(BadgeKind.Group));
+            Assert.That(badge.ImageUrl, Is.EqualTo("http://dummy/image_edit.png"));
+            Assert.That(badge.LinkUrl, Is.EqualTo("http://dummy/image_edit.html"));
 
             // Delete
             groupBadgeClient.Delete(badge.Id);
 
             var badges = groupBadgeClient.All.ToList();
-            Assert.IsEmpty(badges);
+            Assert.That(badges, Is.Empty);
 
             // All
             groupBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image1.png", LinkUrl = "http://dummy/image1.html", });
             groupBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image2.png", LinkUrl = "http://dummy/image2.html", });
             groupBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image3.png", LinkUrl = "http://dummy/image3.html", });
             badges = groupBadgeClient.All.ToList();
-            Assert.AreEqual(3, badges.Count);
+            Assert.That(badges, Has.Count.EqualTo(3));
         }
     }
 }

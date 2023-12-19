@@ -19,7 +19,7 @@ namespace NGitLab.Tests
             var groupClient = context.Client.Groups;
             var group = context.CreateGroup();
 
-            Assert.IsNotEmpty(groupClient.Accessible);
+            Assert.That(groupClient.Accessible, Is.Not.Empty);
         }
 
         [Test]
@@ -32,9 +32,9 @@ namespace NGitLab.Tests
             var project = context.Client.Projects.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture) });
 
             group = groupClient[group.Id];
-            Assert.IsNotNull(group);
-            Assert.IsNotEmpty(group.Projects);
-            Assert.AreEqual(project.Id, group.Projects[0].Id);
+            Assert.That(group, Is.Not.Null);
+            Assert.That(group.Projects, Is.Not.Empty);
+            Assert.That(group.Projects[0].Id, Is.EqualTo(project.Id));
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace NGitLab.Tests
             var group = context.CreateGroup();
 
             group = groupClient[group.FullPath];
-            Assert.IsNotNull(group);
+            Assert.That(group, Is.Not.Null);
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace NGitLab.Tests
 
             // Search
             var searchedGroup = groupClient.Search(group.Name).Single();
-            Assert.AreEqual(group.Id, searchedGroup.Id);
+            Assert.That(searchedGroup.Id, Is.EqualTo(group.Id));
 
             // Delete (operation is asynchronous so we have to retry until the project is deleted)
             // Group can be marked for deletion (https://docs.gitlab.com/ee/user/admin_area/settings/visibility_and_access_controls.html#default-deletion-adjourned-period-premium-only)
@@ -91,7 +91,7 @@ namespace NGitLab.Tests
             var groupQueryNull = new GroupQuery();
 
             // Act & Assert
-            Assert.NotNull(groupClient.Get(groupQueryNull).Take(10).ToList());
+            Assert.That(groupClient.Get(groupQueryNull).Take(10).ToList(), Is.Not.Null);
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace NGitLab.Tests
             // Assert
             foreach (var skippedGroup in skippedGroupIds)
             {
-                Assert.False(resultSkip.Any(group => group.Id == skippedGroup), $"Group {skippedGroup} found in results");
+                Assert.That(resultSkip.Any(group => group.Id == skippedGroup), Is.False, $"Group {skippedGroup} found in results");
             }
         }
 
@@ -136,7 +136,7 @@ namespace NGitLab.Tests
             var result = groupClient.Get(groupQueryNull).Count(g => string.Equals(g.Name, group1.Name, StringComparison.Ordinal));
 
             // Assert
-            Assert.AreEqual(1, result);
+            Assert.That(result, Is.EqualTo(1));
         }
 
         [Test]
@@ -157,7 +157,7 @@ namespace NGitLab.Tests
             var result = groupClient.Get(groupQueryAllAvailable);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -188,9 +188,9 @@ namespace NGitLab.Tests
             var resultById = groupClient.Get(groupQueryOrderById);
 
             // Assert
-            Assert.IsTrue(resultByName.Any());
-            Assert.IsTrue(resultByPath.Any());
-            Assert.IsTrue(resultById.Any());
+            Assert.That(resultByName.Any(), Is.True);
+            Assert.That(resultByPath.Any(), Is.True);
+            Assert.That(resultById.Any(), Is.True);
         }
 
         [Test]
@@ -216,8 +216,8 @@ namespace NGitLab.Tests
             var resultDesc = groupClient.Get(groupQueryDesc);
 
             // Assert
-            Assert.IsTrue(resultAsc.Any());
-            Assert.IsTrue(resultDesc.Any());
+            Assert.That(resultAsc.Any(), Is.True);
+            Assert.That(resultDesc.Any(), Is.True);
         }
 
         [Test]
@@ -237,7 +237,7 @@ namespace NGitLab.Tests
             var result = groupClient.Get(groupQueryWithStats);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -257,7 +257,7 @@ namespace NGitLab.Tests
             var result = groupClient.Get(groupQueryWithCustomAttributes);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -277,7 +277,7 @@ namespace NGitLab.Tests
             var result = groupClient.Get(groupQueryOwned);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -317,11 +317,11 @@ namespace NGitLab.Tests
             var result50 = groupClient.Get(groupQuery50);
 
             // Assert
-            Assert.IsTrue(result10.Any());
-            Assert.IsTrue(result20.Any());
-            Assert.IsTrue(result30.Any());
-            Assert.IsTrue(result40.Any());
-            Assert.IsTrue(result50.Any());
+            Assert.That(result10.Any(), Is.True);
+            Assert.That(result20.Any(), Is.True);
+            Assert.That(result30.Any(), Is.True);
+            Assert.That(result40.Any(), Is.True);
+            Assert.That(result50.Any(), Is.True);
         }
 
         [Test]
@@ -342,12 +342,12 @@ namespace NGitLab.Tests
             }).ToArray();
 
             group = groupClient[group.Id];
-            Assert.IsNotNull(group);
-            Assert.IsNotEmpty(projects);
+            Assert.That(group, Is.Not.Null);
+            Assert.That(projects, Is.Not.Empty);
 
             var projectResult = projects.Single();
-            Assert.AreEqual(project.Id, projectResult.Id);
-            Assert.True(projectResult.Archived);
+            Assert.That(projectResult.Id, Is.EqualTo(project.Id));
+            Assert.That(projectResult.Archived, Is.True);
         }
 
         [Test]
@@ -368,11 +368,11 @@ namespace NGitLab.Tests
             }).ToArray();
 
             group = groupClient[group.Id];
-            Assert.IsNotNull(group);
-            Assert.IsNotEmpty(projects);
+            Assert.That(group, Is.Not.Null);
+            Assert.That(projects, Is.Not.Empty);
 
             var projectResult = projects.Single();
-            Assert.AreEqual(project.Id, projectResult.Id);
+            Assert.That(projectResult.Id, Is.EqualTo(project.Id));
         }
 
         [Test]
@@ -389,7 +389,7 @@ namespace NGitLab.Tests
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroupTwo.Id);
 
             var subgroups = groupClient.GetSubgroupsByIdAsync(parentGroupOne.Id);
-            Assert.AreEqual(2, subgroups.Count());
+            Assert.That(subgroups.Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -406,7 +406,7 @@ namespace NGitLab.Tests
             var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroupTwo.Id);
 
             var subgroups = groupClient.GetSubgroupsByFullPathAsync(parentGroupOne.FullPath);
-            Assert.AreEqual(2, subgroups.Count());
+            Assert.That(subgroups.Count(), Is.EqualTo(2));
         }
 
         [Test]
@@ -430,7 +430,7 @@ namespace NGitLab.Tests
             // Assert
             foreach (var skippedGroup in skippedGroupIds)
             {
-                Assert.False(resultSkip.Any(group => group.Id == skippedGroup), $"Group {skippedGroup} found in results");
+                Assert.That(resultSkip.Any(group => group.Id == skippedGroup), Is.False, $"Group {skippedGroup} found in results");
             }
         }
 
@@ -455,7 +455,7 @@ namespace NGitLab.Tests
             // Assert
             foreach (var skippedGroup in skippedGroupIds)
             {
-                Assert.False(resultSkip.Any(group => group.Id == skippedGroup), $"Group {skippedGroup} found in results");
+                Assert.That(resultSkip.Any(group => group.Id == skippedGroup), Is.False, $"Group {skippedGroup} found in results");
             }
         }
 
@@ -481,7 +481,7 @@ namespace NGitLab.Tests
             var result = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQuery).Count(g => string.Equals(g.Name, subGroupOne.Name, StringComparison.Ordinal));
 
             // Assert
-            Assert.AreEqual(1, result);
+            Assert.That(result, Is.EqualTo(1));
         }
 
         [Test]
@@ -506,7 +506,7 @@ namespace NGitLab.Tests
             var result = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQuery).Count(g => string.Equals(g.Name, subGroupOne.Name, StringComparison.Ordinal));
 
             // Assert
-            Assert.AreEqual(1, result);
+            Assert.That(result, Is.EqualTo(1));
         }
 
         [Test]
@@ -531,7 +531,7 @@ namespace NGitLab.Tests
             var result = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryAllAvailable);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -556,7 +556,7 @@ namespace NGitLab.Tests
             var result = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryAllAvailable);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -591,9 +591,9 @@ namespace NGitLab.Tests
             var resultById = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryOrderById);
 
             // Assert
-            Assert.IsTrue(resultByName.Any());
-            Assert.IsTrue(resultByPath.Any());
-            Assert.IsTrue(resultById.Any());
+            Assert.That(resultByName.Any(), Is.True);
+            Assert.That(resultByPath.Any(), Is.True);
+            Assert.That(resultById.Any(), Is.True);
         }
 
         [Test]
@@ -628,9 +628,9 @@ namespace NGitLab.Tests
             var resultById = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryOrderById);
 
             // Assert
-            Assert.IsTrue(resultByName.Any());
-            Assert.IsTrue(resultByPath.Any());
-            Assert.IsTrue(resultById.Any());
+            Assert.That(resultByName.Any(), Is.True);
+            Assert.That(resultByPath.Any(), Is.True);
+            Assert.That(resultById.Any(), Is.True);
         }
 
         [Test]
@@ -660,8 +660,8 @@ namespace NGitLab.Tests
             var resultDesc = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryDesc);
 
             // Assert
-            Assert.IsTrue(resultAsc.Any());
-            Assert.IsTrue(resultDesc.Any());
+            Assert.That(resultAsc.Any(), Is.True);
+            Assert.That(resultDesc.Any(), Is.True);
         }
 
         [Test]
@@ -691,8 +691,8 @@ namespace NGitLab.Tests
             var resultDesc = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryDesc);
 
             // Assert
-            Assert.IsTrue(resultAsc.Any());
-            Assert.IsTrue(resultDesc.Any());
+            Assert.That(resultAsc.Any(), Is.True);
+            Assert.That(resultDesc.Any(), Is.True);
         }
 
         [Test]
@@ -716,7 +716,7 @@ namespace NGitLab.Tests
             var result = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryWithStats);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -740,7 +740,7 @@ namespace NGitLab.Tests
             var result = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryWithStats);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -764,7 +764,7 @@ namespace NGitLab.Tests
             var result = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryWithCustomAttributes);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -788,7 +788,7 @@ namespace NGitLab.Tests
             var result = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryWithCustomAttributes);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -812,7 +812,7 @@ namespace NGitLab.Tests
             var result = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryOwned);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -836,7 +836,7 @@ namespace NGitLab.Tests
             var result = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryOwned);
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -880,11 +880,11 @@ namespace NGitLab.Tests
             var resultOwner = groupClient.GetSubgroupsByIdAsync(parentGroup.Id, groupQueryOwner);
 
             // Assert
-            Assert.IsTrue(resultGuest.Any());
-            Assert.IsTrue(resultReporter.Any());
-            Assert.IsTrue(resultDeveloper.Any());
-            Assert.IsTrue(resultMantainer.Any());
-            Assert.IsTrue(resultOwner.Any());
+            Assert.That(resultGuest.Any(), Is.True);
+            Assert.That(resultReporter.Any(), Is.True);
+            Assert.That(resultDeveloper.Any(), Is.True);
+            Assert.That(resultMantainer.Any(), Is.True);
+            Assert.That(resultOwner.Any(), Is.True);
         }
 
         [Test]
@@ -928,11 +928,11 @@ namespace NGitLab.Tests
             var resultOwner = groupClient.GetSubgroupsByFullPathAsync(parentGroup.FullPath, groupQueryOwner);
 
             // Assert
-            Assert.IsTrue(resultGuest.Any());
-            Assert.IsTrue(resultReporter.Any());
-            Assert.IsTrue(resultDeveloper.Any());
-            Assert.IsTrue(resultMantainer.Any());
-            Assert.IsTrue(resultOwner.Any());
+            Assert.That(resultGuest.Any(), Is.True);
+            Assert.That(resultReporter.Any(), Is.True);
+            Assert.That(resultDeveloper.Any(), Is.True);
+            Assert.That(resultMantainer.Any(), Is.True);
+            Assert.That(resultOwner.Any(), Is.True);
         }
     }
 }

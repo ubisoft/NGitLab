@@ -18,8 +18,8 @@ namespace NGitLab.Tests
             var project = context.CreateProject(initializeWithCommits: true);
 
             var commit = context.Client.GetCommits(project.Id).GetCommit(project.DefaultBranch);
-            Assert.IsNotNull(commit.Message);
-            Assert.IsNotNull(commit.ShortId);
+            Assert.That(commit.Message, Is.Not.Null);
+            Assert.That(commit.ShortId, Is.Not.Null);
         }
 
         [Test]
@@ -45,9 +45,9 @@ namespace NGitLab.Tests
             });
 
             var commit = context.Client.GetCommits(project.Id).GetCommit(project.DefaultBranch);
-            Assert.AreEqual(4, commit.Stats.Additions);
-            Assert.AreEqual(1, commit.Stats.Deletions);
-            Assert.AreEqual(5, commit.Stats.Total);
+            Assert.That(commit.Stats.Additions, Is.EqualTo(4));
+            Assert.That(commit.Stats.Deletions, Is.EqualTo(1));
+            Assert.That(commit.Stats.Total, Is.EqualTo(5));
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace NGitLab.Tests
                 TimeSpan.FromSeconds(10));
 
             var mergeRequest = mergeRequests.Single();
-            Assert.AreEqual(mergeRequestTitle, mergeRequest.Title);
+            Assert.That(mergeRequest.Title, Is.EqualTo(mergeRequestTitle));
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace NGitLab.Tests
             });
 
             var latestCommit = commitClient.GetCommit(project.DefaultBranch);
-            Assert.AreEqual(cherryPickedCommit.Id, latestCommit.Id);
+            Assert.That(latestCommit.Id, Is.EqualTo(cherryPickedCommit.Id));
         }
     }
 }

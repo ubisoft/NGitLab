@@ -23,10 +23,10 @@ namespace NGitLab.Mock.Tests
 
             // Act/Assert
             var tag = await tagClient.GetByNameAsync("1.0.0");
-            Assert.AreEqual("1.0.0", tag.Name);
+            Assert.That(tag.Name, Is.EqualTo("1.0.0"));
 
             var ex = Assert.ThrowsAsync<GitLabException>(() => tagClient.GetByNameAsync("1.0.1"));
-            Assert.AreEqual(HttpStatusCode.NotFound, ex.StatusCode);
+            Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
     }
 }

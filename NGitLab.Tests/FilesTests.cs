@@ -29,16 +29,16 @@ namespace NGitLab.Tests
             filesClient.Create(fileUpsert);
 
             var file = filesClient.Get(fileName, project.DefaultBranch);
-            Assert.IsNotNull(file);
-            Assert.AreEqual(fileName, file.Name);
-            Assert.AreEqual("test", file.DecodedContent);
+            Assert.That(file, Is.Not.Null);
+            Assert.That(file.Name, Is.EqualTo(fileName));
+            Assert.That(file.DecodedContent, Is.EqualTo("test"));
 
             fileUpsert.RawContent = "test2";
             filesClient.Update(fileUpsert);
 
             file = filesClient.Get(fileName, project.DefaultBranch);
-            Assert.IsNotNull(file);
-            Assert.AreEqual("test2", file.DecodedContent);
+            Assert.That(file, Is.Not.Null);
+            Assert.That(file.DecodedContent, Is.EqualTo("test2"));
 
             var fileDelete = new FileDelete
             {
@@ -73,19 +73,19 @@ namespace NGitLab.Tests
 
             var blameArray1 = filesClient.Blame(fileName, project.DefaultBranch);
 
-            Assert.AreEqual(1, blameArray1.Length);
-            Assert.IsNotNull(blameArray1);
+            Assert.That(blameArray1, Has.Length.EqualTo(1));
+            Assert.That(blameArray1, Is.Not.Null);
 
             var firstBlameInfo = blameArray1[0];
 
-            Assert.AreEqual(content1, string.Join(Environment.NewLine, firstBlameInfo.Lines));
-            Assert.AreEqual(fileUpsert1.CommitMessage, firstBlameInfo.Commit.Message);
-            Assert.NotNull(firstBlameInfo.Commit.CommittedDate);
-            Assert.IsNotEmpty(firstBlameInfo.Commit.AuthorEmail);
-            Assert.IsNotEmpty(firstBlameInfo.Commit.AuthorName);
-            Assert.IsNotEmpty(firstBlameInfo.Commit.CommitterEmail);
-            Assert.IsNotEmpty(firstBlameInfo.Commit.CommitterName);
-            Assert.NotNull(firstBlameInfo.Commit.AuthoredDate);
+            Assert.That(string.Join(Environment.NewLine, firstBlameInfo.Lines), Is.EqualTo(content1));
+            Assert.That(firstBlameInfo.Commit.Message, Is.EqualTo(fileUpsert1.CommitMessage));
+            Assert.That(firstBlameInfo.Commit.CommittedDate, Is.Not.EqualTo(default(DateTime)));
+            Assert.That(firstBlameInfo.Commit.AuthorEmail, Is.Not.Empty);
+            Assert.That(firstBlameInfo.Commit.AuthorName, Is.Not.Empty);
+            Assert.That(firstBlameInfo.Commit.CommitterEmail, Is.Not.Empty);
+            Assert.That(firstBlameInfo.Commit.CommitterName, Is.Not.Empty);
+            Assert.That(firstBlameInfo.Commit.AuthoredDate, Is.Not.EqualTo(default(DateTime)));
 
             var content2 = "second line";
             var fileUpsert2 = new FileUpsert
@@ -100,19 +100,19 @@ namespace NGitLab.Tests
 
             var blameArray2 = filesClient.Blame(fileName, project.DefaultBranch);
 
-            Assert.AreEqual(2, blameArray2.Length);
-            Assert.AreEqual(firstBlameInfo, blameArray2[0]);
+            Assert.That(blameArray2, Has.Length.EqualTo(2));
+            Assert.That(blameArray2[0], Is.EqualTo(firstBlameInfo));
 
             var secondBlameInfo = blameArray2[1];
 
-            Assert.AreEqual(content2, string.Join(Environment.NewLine, secondBlameInfo.Lines));
-            Assert.AreEqual(fileUpsert2.CommitMessage, secondBlameInfo.Commit.Message);
-            Assert.NotNull(secondBlameInfo.Commit.CommittedDate);
-            Assert.IsNotEmpty(secondBlameInfo.Commit.AuthorEmail);
-            Assert.IsNotEmpty(secondBlameInfo.Commit.AuthorName);
-            Assert.IsNotEmpty(secondBlameInfo.Commit.CommitterEmail);
-            Assert.IsNotEmpty(secondBlameInfo.Commit.CommitterName);
-            Assert.NotNull(secondBlameInfo.Commit.AuthoredDate);
+            Assert.That(string.Join(Environment.NewLine, secondBlameInfo.Lines), Is.EqualTo(content2));
+            Assert.That(secondBlameInfo.Commit.Message, Is.EqualTo(fileUpsert2.CommitMessage));
+            Assert.That(secondBlameInfo.Commit.CommittedDate, Is.Not.EqualTo(default(DateTime)));
+            Assert.That(secondBlameInfo.Commit.AuthorEmail, Is.Not.Empty);
+            Assert.That(secondBlameInfo.Commit.AuthorName, Is.Not.Empty);
+            Assert.That(secondBlameInfo.Commit.CommitterEmail, Is.Not.Empty);
+            Assert.That(secondBlameInfo.Commit.CommitterName, Is.Not.Empty);
+            Assert.That(secondBlameInfo.Commit.AuthoredDate, Is.Not.EqualTo(default(DateTime)));
 
             var fileDelete = new FileDelete
             {
@@ -145,8 +145,8 @@ namespace NGitLab.Tests
 
             var initialBlame = filesClient.Blame(fileName, project.DefaultBranch);
 
-            Assert.IsNotNull(initialBlame);
-            Assert.AreEqual(1, initialBlame.Length);
+            Assert.That(initialBlame, Is.Not.Null);
+            Assert.That(initialBlame, Has.Length.EqualTo(1));
 
             var initialBlameInfo = initialBlame[0];
 
@@ -163,8 +163,8 @@ namespace NGitLab.Tests
 
             var blameById = filesClient.Blame(fileName, initialBlameInfo.Commit.Id.ToString());
 
-            Assert.AreEqual(1, blameById.Length);
-            Assert.AreEqual(initialBlameInfo, blameById[0]);
+            Assert.That(blameById, Has.Length.EqualTo(1));
+            Assert.That(blameById[0], Is.EqualTo(initialBlameInfo));
 
             var fileDelete = new FileDelete
             {
@@ -197,18 +197,15 @@ namespace NGitLab.Tests
 
             var realBlame = filesClient.Blame(fileName, project.DefaultBranch);
 
-            Assert.IsNotNull(realBlame);
-            Assert.AreEqual(1, realBlame.Length);
+            Assert.That(realBlame, Is.Not.Null);
+            Assert.That(realBlame, Has.Length.EqualTo(1));
 
             var realBlameInfo = realBlame[0];
 
             var dummyBlameInfo = new Blame();
 
-            Assert.AreNotEqual(dummyBlameInfo, realBlameInfo);
-            Assert.AreNotEqual(realBlameInfo, null);
-            Assert.AreNotEqual(null, realBlameInfo);
-            Assert.AreEqual(realBlameInfo, realBlameInfo);
-            Assert.AreEqual(dummyBlameInfo, dummyBlameInfo);
+            Assert.That(realBlameInfo, Is.Not.EqualTo(dummyBlameInfo));
+            Assert.That(realBlameInfo, Is.Not.Null);
 
             var fileDelete = new FileDelete
             {
@@ -239,8 +236,8 @@ namespace NGitLab.Tests
             filesClient.Create(fileUpsert);
 
             var file = filesClient.Get(fileName, project.DefaultBranch);
-            Assert.AreEqual("77u/YQ==", file.Content);
-            Assert.AreEqual("a", file.DecodedContent);
+            Assert.That(file.Content, Is.EqualTo("77u/YQ=="));
+            Assert.That(file.DecodedContent, Is.EqualTo("a"));
         }
     }
 }

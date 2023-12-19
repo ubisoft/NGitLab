@@ -20,7 +20,7 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient();
             var commit = client.GetCommits(1).GetCommit("branch-01");
 
-            Assert.AreEqual("Create branch", commit.Message.TrimEnd('\r', '\n'));
+            Assert.That(commit.Message.TrimEnd('\r', '\n'), Is.EqualTo("Create branch"));
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient();
             var commit = client.GetCommits(1).GetCommit("1.0.0");
 
-            Assert.AreEqual("Changes with tag", commit.Message.TrimEnd('\r', '\n'));
+            Assert.That(commit.Message.TrimEnd('\r', '\n'), Is.EqualTo("Changes with tag"));
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace NGitLab.Mock.Tests
             var tags = client.GetRepository(1).Tags.All.ToArray();
 
             Assert.That(tags, Has.One.Items);
-            Assert.AreEqual("1.0.0", tags[0].Name);
+            Assert.That(tags[0].Name, Is.EqualTo("1.0.0"));
         }
 
         [Test]
@@ -72,11 +72,11 @@ namespace NGitLab.Mock.Tests
             var commitFromBranch1 = repository.GetCommits("branch_1").FirstOrDefault();
             var commitFromBranch2 = repository.GetCommits("branch_2").FirstOrDefault();
 
-            Assert.NotNull(commitFromBranch1);
-            Assert.NotNull(commitFromBranch2);
-            Assert.IsNotEmpty(commitFromBranch1.Parents);
-            Assert.IsNotEmpty(commitFromBranch2.Parents);
-            Assert.AreEqual(commitFromBranch1.Parents[0], commitFromBranch2.Parents[0]);
+            Assert.That(commitFromBranch1, Is.Not.Null);
+            Assert.That(commitFromBranch2, Is.Not.Null);
+            Assert.That(commitFromBranch1.Parents, Is.Not.Empty);
+            Assert.That(commitFromBranch2.Parents, Is.Not.Empty);
+            Assert.That(commitFromBranch2.Parents[0], Is.EqualTo(commitFromBranch1.Parents[0]));
         }
 
         [Test]
@@ -98,11 +98,11 @@ namespace NGitLab.Mock.Tests
             var intermediateCommits = repository.GetCommits("main..branch_1");
 
             // Assert
-            CollectionAssert.AreEqual(new[]
+            Assert.That(intermediateCommits.Select(c => c.Title), Is.EqualTo(new[]
             {
                 "Yet another commit for branch_1",
                 "Commit for branch_1",
-            }, intermediateCommits.Select(c => c.Title));
+            }).AsCollection);
         }
 
         [Test]
@@ -118,14 +118,14 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient();
             var repository = client.GetRepository(1);
             var commitFromBranch1 = repository.GetCommits("branch_1").FirstOrDefault();
-            Assert.NotNull(commitFromBranch1);
+            Assert.That(commitFromBranch1, Is.Not.Null);
 
             var cherryPicked = client.GetCommits(1).CherryPick(new CommitCherryPick
             {
                 Sha = commitFromBranch1.Id,
                 Branch = "main",
             });
-            Assert.NotNull(cherryPicked);
+            Assert.That(cherryPicked, Is.Not.Null);
         }
     }
 }

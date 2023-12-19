@@ -20,12 +20,12 @@ namespace NGitLab.Tests.Impl
 }";
             var obj = Serializer.Deserialize<MyDataContract>(json);
 
-            Assert.NotNull(obj);
-            Assert.AreEqual(false, obj.SomeBool);
-            Assert.AreEqual(DateTime.MinValue, obj.SomeDateTime);
-            Assert.AreEqual(0.0, obj.SomeDouble);
-            Assert.AreEqual(0, obj.SomeInt32);
-            Assert.AreEqual(0L, obj.SomeInt64);
+            Assert.That(obj, Is.Not.Null);
+            Assert.That(obj.SomeBool, Is.EqualTo(false));
+            Assert.That(obj.SomeDateTime, Is.EqualTo(DateTime.MinValue));
+            Assert.That(obj.SomeDouble, Is.EqualTo(0.0));
+            Assert.That(obj.SomeInt32, Is.EqualTo(0));
+            Assert.That(obj.SomeInt64, Is.EqualTo(0L));
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace NGitLab.Tests.Impl
         {
             var json = @"{ ""a_uint32"": null }";
             var ex = Assert.Throws<JsonException>(() => Serializer.Deserialize<MyDataContract>(json));
-            StringAssert.StartsWith("The JSON value could not be converted to System.UInt32.", ex.Message);
+            Assert.That(ex.Message, Does.StartWith("The JSON value could not be converted to System.UInt32."));
         }
 
         [Test]
@@ -41,8 +41,8 @@ namespace NGitLab.Tests.Impl
         {
             var json = @"{ ""an_int32"": ""1234"" }";
             var obj = Serializer.Deserialize<MyDataContract>(json);
-            Assert.NotNull(obj);
-            Assert.AreEqual(1234, obj.SomeInt32);
+            Assert.That(obj, Is.Not.Null);
+            Assert.That(obj.SomeInt32, Is.EqualTo(1234));
         }
 
         [Test]
@@ -50,8 +50,8 @@ namespace NGitLab.Tests.Impl
         {
             var json = @"{ ""an_int64"": ""-1234"" }";
             var obj = Serializer.Deserialize<MyDataContract>(json);
-            Assert.NotNull(obj);
-            Assert.AreEqual(-1234L, obj.SomeInt64);
+            Assert.That(obj, Is.Not.Null);
+            Assert.That(obj.SomeInt64, Is.EqualTo(-1234L));
         }
 
         [Test]
@@ -59,8 +59,8 @@ namespace NGitLab.Tests.Impl
         {
             var json = @"{ ""a_double"": ""-1234.5"" }";
             var obj = Serializer.Deserialize<MyDataContract>(json);
-            Assert.NotNull(obj);
-            Assert.AreEqual(-1234.5d, obj.SomeDouble);
+            Assert.That(obj, Is.Not.Null);
+            Assert.That(obj.SomeDouble, Is.EqualTo(-1234.5d));
         }
 
         [TestCase("2022-01-12", DateTimeKind.Unspecified)]
@@ -70,9 +70,9 @@ namespace NGitLab.Tests.Impl
         {
             var json = $@"{{ ""a_date_time"": ""{input}"" }}";
             var obj = Serializer.Deserialize<MyDataContract>(json);
-            Assert.NotNull(obj);
-            Assert.AreEqual(kind, obj.SomeDateTime.Kind);
-            Assert.AreEqual(new DateTime(2022, 1, 12).Date, obj.SomeDateTime.Date);
+            Assert.That(obj, Is.Not.Null);
+            Assert.That(obj.SomeDateTime.Kind, Is.EqualTo(kind));
+            Assert.That(obj.SomeDateTime.Date, Is.EqualTo(new DateTime(2022, 1, 12).Date));
         }
 
         public class MyDataContract

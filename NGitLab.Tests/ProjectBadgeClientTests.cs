@@ -21,7 +21,7 @@ namespace NGitLab.Tests
             badges.ForEach(b => projectBadgeClient.Delete(b.Id));
 
             badges = projectBadgeClient.ProjectsOnly.ToList();
-            Assert.IsEmpty(badges);
+            Assert.That(badges, Is.Empty);
 
             // Create
             var badge = projectBadgeClient.Create(new BadgeCreate
@@ -30,9 +30,9 @@ namespace NGitLab.Tests
                 LinkUrl = "http://dummy/image.html",
             });
 
-            Assert.AreEqual(BadgeKind.Project, badge.Kind);
-            Assert.AreEqual("http://dummy/image.png", badge.ImageUrl);
-            Assert.AreEqual("http://dummy/image.html", badge.LinkUrl);
+            Assert.That(badge.Kind, Is.EqualTo(BadgeKind.Project));
+            Assert.That(badge.ImageUrl, Is.EqualTo("http://dummy/image.png"));
+            Assert.That(badge.LinkUrl, Is.EqualTo("http://dummy/image.html"));
 
             // Update
             badge = projectBadgeClient.Update(badge.Id, new BadgeUpdate
@@ -41,22 +41,22 @@ namespace NGitLab.Tests
                 LinkUrl = "http://dummy/image_edit.html",
             });
 
-            Assert.AreEqual(BadgeKind.Project, badge.Kind);
-            Assert.AreEqual("http://dummy/image_edit.png", badge.ImageUrl);
-            Assert.AreEqual("http://dummy/image_edit.html", badge.LinkUrl);
+            Assert.That(badge.Kind, Is.EqualTo(BadgeKind.Project));
+            Assert.That(badge.ImageUrl, Is.EqualTo("http://dummy/image_edit.png"));
+            Assert.That(badge.LinkUrl, Is.EqualTo("http://dummy/image_edit.html"));
 
             // Delete
             projectBadgeClient.Delete(badge.Id);
 
             badges = projectBadgeClient.ProjectsOnly.ToList();
-            Assert.IsEmpty(badges);
+            Assert.That(badges, Is.Empty);
 
             // All
             projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image1.png", LinkUrl = "http://dummy/image1.html", });
             projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image2.png", LinkUrl = "http://dummy/image2.html", });
             projectBadgeClient.Create(new BadgeCreate { ImageUrl = "http://dummy/image3.png", LinkUrl = "http://dummy/image3.html", });
             badges = projectBadgeClient.ProjectsOnly.ToList();
-            Assert.AreEqual(3, badges.Count);
+            Assert.That(badges, Has.Count.EqualTo(3));
         }
     }
 }
