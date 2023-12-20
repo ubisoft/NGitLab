@@ -21,9 +21,9 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient();
             var labels = client.Labels.ForProject(1).ToArray();
 
-            Assert.AreEqual(2, labels.Length, "Labels count is invalid");
-            Assert.IsTrue(labels.Any(x => string.Equals(x.Name, "test1", StringComparison.Ordinal)), "Label test1 not found");
-            Assert.IsTrue(labels.Any(x => string.Equals(x.Name, "test2", StringComparison.Ordinal)), "Label test2 not found");
+            Assert.That(labels, Has.Length.EqualTo(2), "Labels count is invalid");
+            Assert.That(labels.Any(x => string.Equals(x.Name, "test1", StringComparison.Ordinal)), Is.True, "Label test1 not found");
+            Assert.That(labels.Any(x => string.Equals(x.Name, "test2", StringComparison.Ordinal)), Is.True, "Label test2 not found");
         }
 
         [Test]
@@ -38,8 +38,8 @@ namespace NGitLab.Mock.Tests
             client.Labels.Create(new LabelCreate { Id = 1, Name = "test1" });
             var labels = client.Labels.ForProject(1).ToArray();
 
-            Assert.AreEqual(1, labels.Length, "Labels count is invalid");
-            Assert.AreEqual("test1", labels[0].Name, "Label not found");
+            Assert.That(labels, Has.Length.EqualTo(1), "Labels count is invalid");
+            Assert.That(labels[0].Name, Is.EqualTo("test1"), "Label not found");
         }
 
         [Test]
@@ -55,8 +55,8 @@ namespace NGitLab.Mock.Tests
             client.Labels.Edit(new LabelEdit { Id = 1, Name = "test1", NewName = "test2" });
             var labels = client.Labels.ForProject(1).ToArray();
 
-            Assert.AreEqual(1, labels.Length, "Labels count is invalid");
-            Assert.AreEqual("test2", labels[0].Name, "Label not found");
+            Assert.That(labels, Has.Length.EqualTo(1), "Labels count is invalid");
+            Assert.That(labels[0].Name, Is.EqualTo("test2"), "Label not found");
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace NGitLab.Mock.Tests
             client.Labels.Delete(new LabelDelete { Id = 1, Name = "test1" });
             var labels = client.Labels.ForProject(1).ToArray();
 
-            Assert.AreEqual(0, labels.Length, "Labels count is invalid");
+            Assert.That(labels, Is.Empty, "Labels count is invalid");
         }
 
         [Test]
@@ -88,9 +88,9 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient();
             var labels = client.Labels.ForGroup(2).ToArray();
 
-            Assert.AreEqual(2, labels.Length, "Labels count is invalid");
-            Assert.IsTrue(labels.Any(x => string.Equals(x.Name, "test1", StringComparison.Ordinal)), "Label test1 not found");
-            Assert.IsTrue(labels.Any(x => string.Equals(x.Name, "test2", StringComparison.Ordinal)), "Label test2 not found");
+            Assert.That(labels, Has.Length.EqualTo(2), "Labels count is invalid");
+            Assert.That(labels.Any(x => string.Equals(x.Name, "test1", StringComparison.Ordinal)), Is.True, "Label test1 not found");
+            Assert.That(labels.Any(x => string.Equals(x.Name, "test2", StringComparison.Ordinal)), Is.True, "Label test2 not found");
         }
 
         [Test]
@@ -105,8 +105,8 @@ namespace NGitLab.Mock.Tests
             client.Labels.CreateGroupLabel(new LabelCreate { Id = 2, Name = "test1" });
             var labels = client.Labels.ForGroup(2).ToArray();
 
-            Assert.AreEqual(1, labels.Length, "Labels count is invalid");
-            Assert.AreEqual("test1", labels[0].Name, "Label not found");
+            Assert.That(labels, Has.Length.EqualTo(1), "Labels count is invalid");
+            Assert.That(labels[0].Name, Is.EqualTo("test1"), "Label not found");
         }
 
         [Test]
@@ -122,8 +122,8 @@ namespace NGitLab.Mock.Tests
             client.Labels.EditGroupLabel(new LabelEdit { Id = 2, Name = "test1", NewName = "test2" });
             var labels = client.Labels.ForGroup(2).ToArray();
 
-            Assert.AreEqual(1, labels.Length, "Labels count is invalid");
-            Assert.AreEqual("test2", labels[0].Name, "Label not found");
+            Assert.That(labels, Has.Length.EqualTo(1), "Labels count is invalid");
+            Assert.That(labels[0].Name, Is.EqualTo("test2"), "Label not found");
         }
     }
 }

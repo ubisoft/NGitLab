@@ -19,8 +19,8 @@ namespace NGitLab.Tests
             var currentUser = context.Client.Users.Current;
 
             var contributor = contributorsClient.All;
-            Assert.IsNotNull(contributor);
-            Assert.IsTrue(contributor.Any(x => string.Equals(x.Email, currentUser.Email, StringComparison.Ordinal)));
+            Assert.That(contributor, Is.Not.Null);
+            Assert.That(contributor.Any(x => string.Equals(x.Email, currentUser.Email, StringComparison.Ordinal)), Is.True);
         }
 
         [Test]
@@ -63,8 +63,8 @@ namespace NGitLab.Tests
 
             var contributors = await GitLabTestContext.RetryUntilAsync(() => contributorsClient.All.ToList(), c => c.Count >= 2, TimeSpan.FromMinutes(2));
 
-            Assert.IsTrue(contributors.Any(x => string.Equals(x.Email, currentUser.Email, StringComparison.Ordinal)));
-            Assert.IsTrue(contributors.Any(x => string.Equals(x.Email, userUpsert.Email, StringComparison.Ordinal)));
+            Assert.That(contributors.Any(x => string.Equals(x.Email, currentUser.Email, StringComparison.Ordinal)), Is.True);
+            Assert.That(contributors.Any(x => string.Equals(x.Email, userUpsert.Email, StringComparison.Ordinal)), Is.True);
 
             context.AdminClient.Users.Delete(user.Id);
         }

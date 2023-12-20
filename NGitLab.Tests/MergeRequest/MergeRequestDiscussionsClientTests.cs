@@ -31,7 +31,7 @@ namespace NGitLab.Tests
             Assert.That(discussion.Notes[0].Resolved, Is.False);
 
             var discussions = mergeRequestDiscussions.All.ToArray();
-            CollectionAssert.IsNotEmpty(discussions);
+            Assert.That(discussions, Is.Not.Empty);
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace NGitLab.Tests
             var discussion = mergeRequestDiscussions.Add(newDiscussion);
 
             var gotDiscussion = await mergeRequestDiscussions.GetAsync(discussion.Id);
-            Assert.NotNull(gotDiscussion);
+            Assert.That(gotDiscussion, Is.Not.Null);
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace NGitLab.Tests
             var projectClient = context.Client.Projects;
             projectClient.Archive(project.Id);
             var ex = Assert.Throws<GitLabException>(() => mergeRequestDiscussions.Add(newDiscussion));
-            Assert.AreEqual(ex.StatusCode, HttpStatusCode.Forbidden);
+            Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
         }
 
         [Test]

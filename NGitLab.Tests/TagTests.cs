@@ -25,12 +25,12 @@ namespace NGitLab.Tests
                 Ref = project.DefaultBranch,
             });
 
-            Assert.IsNotNull(result);
-            Assert.IsNotNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "v0.5", StringComparison.Ordinal)));
-            Assert.IsNotNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Message, "Test message", StringComparison.Ordinal)));
+            Assert.That(result, Is.Not.Null);
+            Assert.That(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "v0.5", StringComparison.Ordinal)), Is.Not.Null);
+            Assert.That(tagsClient.All.FirstOrDefault(x => string.Equals(x.Message, "Test message", StringComparison.Ordinal)), Is.Not.Null);
 
             tagsClient.Delete("v0.5");
-            Assert.IsNull(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "v0.5", StringComparison.Ordinal)));
+            Assert.That(tagsClient.All.FirstOrDefault(x => string.Equals(x.Name, "v0.5", StringComparison.Ordinal)), Is.Null);
         }
 
         [NGitLabRetry]
@@ -49,18 +49,18 @@ namespace NGitLab.Tests
                 Message = "Test message",
                 Ref = project.DefaultBranch,
             });
-            Assert.IsNotNull(tagCreated);
+            Assert.That(tagCreated, Is.Not.Null);
 
             // Act/Assert
             if (expectExistence)
             {
                 var tagFetched = await tagClient.GetByNameAsync(tagNameSought);
-                Assert.IsNotNull(tagFetched);
+                Assert.That(tagFetched, Is.Not.Null);
             }
             else
             {
                 var ex = Assert.ThrowsAsync<GitLabException>(() => tagClient.GetByNameAsync(tagNameSought));
-                Assert.AreEqual(HttpStatusCode.NotFound, ex.StatusCode);
+                Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
             }
         }
     }

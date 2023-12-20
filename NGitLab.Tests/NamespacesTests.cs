@@ -18,8 +18,8 @@ namespace NGitLab.Tests
             var namespacesClient = context.Client.Namespaces;
 
             var groupSearch = namespacesClient.Accessible.FirstOrDefault(g => g.Path.Equals(group.Path, StringComparison.Ordinal));
-            Assert.IsNotNull(group);
-            Assert.AreEqual(Namespace.Type.Group, groupSearch.GetKind());
+            Assert.That(group, Is.Not.Null);
+            Assert.That(groupSearch.GetKind(), Is.EqualTo(Namespace.Type.Group));
         }
 
         [Test]
@@ -31,8 +31,8 @@ namespace NGitLab.Tests
             var namespacesClient = context.Client.Namespaces;
 
             var user = namespacesClient.Accessible.FirstOrDefault(g => g.Path.Equals(context.Client.Users.Current.Username, StringComparison.Ordinal));
-            Assert.IsNotNull(user);
-            Assert.AreEqual(Namespace.Type.User, user.GetKind());
+            Assert.That(user, Is.Not.Null);
+            Assert.That(user.GetKind(), Is.EqualTo(Namespace.Type.User));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace NGitLab.Tests
             var namespacesClient = context.Client.Namespaces;
 
             var ns = namespacesClient.Search(context.Client.Users.Current.Username).First();
-            Assert.AreEqual(Namespace.Type.User, ns.GetKind());
+            Assert.That(ns.GetKind(), Is.EqualTo(Namespace.Type.User));
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace NGitLab.Tests
             var namespacesClient = context.Client.Namespaces;
 
             var user = namespacesClient.Search(group.Name);
-            Assert.IsNotNull(user);
+            Assert.That(user, Is.Not.Null);
         }
     }
 }

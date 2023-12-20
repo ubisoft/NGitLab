@@ -21,7 +21,7 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient("user1");
             var group = await client.Groups.GetByIdAsync(1);
 
-            Assert.AreEqual("G1", group.Name, "Subgroups found are invalid");
+            Assert.That(group.Name, Is.EqualTo("G1"), "Subgroups found are invalid");
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient("user1");
             var group = await client.Groups.GetByFullPathAsync("name3");
 
-            Assert.AreEqual("name3", group.FullPath, "Subgroups found are invalid");
+            Assert.That(group.FullPath, Is.EqualTo("name3"), "Subgroups found are invalid");
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient("user1");
             var group = client.Groups.GetSubgroupsByIdAsync(12, new Models.SubgroupQuery { });
 
-            Assert.AreEqual(2, group.Count(), "Subgroups found are invalid");
+            Assert.That(group.Count(), Is.EqualTo(2), "Subgroups found are invalid");
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient("user1");
             var group = client.Groups.GetSubgroupsByFullPathAsync("parentgroup1", new Models.SubgroupQuery { });
 
-            Assert.AreEqual(2, group.Count(), "Subgroups found are invalid");
+            Assert.That(group.Count(), Is.EqualTo(2), "Subgroups found are invalid");
         }
     }
 }

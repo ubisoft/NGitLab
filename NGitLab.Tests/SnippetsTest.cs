@@ -39,11 +39,11 @@ namespace NGitLab.Tests
 
             var returnedUserSnippet = snippetClient.All.First(s => string.Equals(s.Title, snippetName, StringComparison.Ordinal));
 
-            Assert.IsNotNull(returnedUserSnippet.Files);
-            Assert.AreEqual(2, returnedUserSnippet.Files.Length);
+            Assert.That(returnedUserSnippet.Files, Is.Not.Null);
+            Assert.That(returnedUserSnippet.Files, Has.Length.EqualTo(2));
 
-            Assert.IsNotNull(returnedUserSnippet.Files[0]);
-            Assert.IsTrue(string.Equals(returnedUserSnippet.Files[0].Path, "Path1.txt", StringComparison.Ordinal));
+            Assert.That(returnedUserSnippet.Files[0], Is.Not.Null);
+            Assert.That(string.Equals(returnedUserSnippet.Files[0].Path, "Path1.txt", StringComparison.Ordinal), Is.True);
 
             var updatedSnippet = new SnippetUpdate
             {
@@ -61,8 +61,8 @@ namespace NGitLab.Tests
 
             var returnedProjectSnippetAfterUpdate = snippetClient.User.First(s => string.Equals(s.Title, snippetName, StringComparison.Ordinal));
 
-            Assert.AreEqual(1, returnedProjectSnippetAfterUpdate.Files.Length);
-            Assert.AreEqual("rename.md", returnedProjectSnippetAfterUpdate.Files[0].Path);
+            Assert.That(returnedProjectSnippetAfterUpdate.Files, Has.Length.EqualTo(1));
+            Assert.That(returnedProjectSnippetAfterUpdate.Files[0].Path, Is.EqualTo("rename.md"));
 
             snippetClient.Delete(returnedUserSnippet.Id);
         }
@@ -103,11 +103,11 @@ namespace NGitLab.Tests
 
             Assert.That(snippetClient.Get(newSnippet.ProjectId, returnedProjectSnippet.Id), Is.Not.Null);
 
-            Assert.IsNotNull(returnedProjectSnippet.Files);
-            Assert.AreEqual(2, returnedProjectSnippet.Files.Length);
+            Assert.That(returnedProjectSnippet.Files, Is.Not.Null);
+            Assert.That(returnedProjectSnippet.Files, Has.Length.EqualTo(2));
 
-            Assert.IsNotNull(returnedProjectSnippet.Files[0]);
-            Assert.IsTrue(string.Equals(returnedProjectSnippet.Files[0].Path, "Path1.txt", StringComparison.Ordinal));
+            Assert.That(returnedProjectSnippet.Files[0], Is.Not.Null);
+            Assert.That(string.Equals(returnedProjectSnippet.Files[0].Path, "Path1.txt", StringComparison.Ordinal), Is.True);
 
             var updatedSnippet = new SnippetProjectUpdate
             {
@@ -126,8 +126,8 @@ namespace NGitLab.Tests
 
             var returnedProjectSnippetAfterUpdate = snippetClient.User.First(s => string.Equals(s.Title, projectSnippetName, StringComparison.Ordinal));
 
-            Assert.AreEqual(1, returnedProjectSnippetAfterUpdate.Files.Length);
-            Assert.AreEqual("rename.md", returnedProjectSnippetAfterUpdate.Files[0].Path);
+            Assert.That(returnedProjectSnippetAfterUpdate.Files, Has.Length.EqualTo(1));
+            Assert.That(returnedProjectSnippetAfterUpdate.Files[0].Path, Is.EqualTo("rename.md"));
 
             snippetClient.Delete(newSnippet.ProjectId, returnedProjectSnippet.Id);
         }

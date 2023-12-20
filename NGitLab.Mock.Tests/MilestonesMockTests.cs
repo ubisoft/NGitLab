@@ -21,9 +21,9 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient();
             var milestones = client.GetMilestone(1).All.ToArray();
 
-            Assert.AreEqual(2, milestones.Length, "Milestones count is invalid");
-            Assert.IsTrue(milestones.Any(x => string.Equals(x.Title, "Milestone 1", StringComparison.Ordinal)), "Milestone 'Milestone 1' not found");
-            Assert.IsTrue(milestones.Any(x => string.Equals(x.Title, "Milestone 2", StringComparison.Ordinal)), "Milestone 'Milestone 2' not found");
+            Assert.That(milestones, Has.Length.EqualTo(2), "Milestones count is invalid");
+            Assert.That(milestones.Any(x => string.Equals(x.Title, "Milestone 1", StringComparison.Ordinal)), Is.True, "Milestone 'Milestone 1' not found");
+            Assert.That(milestones.Any(x => string.Equals(x.Title, "Milestone 2", StringComparison.Ordinal)), Is.True, "Milestone 'Milestone 2' not found");
         }
 
         [Test]
@@ -38,8 +38,8 @@ namespace NGitLab.Mock.Tests
             client.GetMilestone(1).Create(new MilestoneCreate { Title = "Milestone 1" });
             var milestones = client.GetMilestone(1).All.ToArray();
 
-            Assert.AreEqual(1, milestones.Length, "Milestones count is invalid");
-            Assert.AreEqual("Milestone 1", milestones[0].Title, "Milestone 'Milestone 1' not found");
+            Assert.That(milestones, Has.Length.EqualTo(1), "Milestones count is invalid");
+            Assert.That(milestones[0].Title, Is.EqualTo("Milestone 1"), "Milestone 'Milestone 1' not found");
         }
 
         [Test]
@@ -55,8 +55,8 @@ namespace NGitLab.Mock.Tests
             client.GetMilestone(1).Update(1, new MilestoneUpdate { Title = "Milestone 2" });
             var milestones = client.GetMilestone(1).All.ToArray();
 
-            Assert.AreEqual(1, milestones.Length, "Milestones count is invalid");
-            Assert.AreEqual("Milestone 2", milestones[0].Title, "Milestone 'Milestone 2' not found");
+            Assert.That(milestones, Has.Length.EqualTo(1), "Milestones count is invalid");
+            Assert.That(milestones[0].Title, Is.EqualTo("Milestone 2"), "Milestone 'Milestone 2' not found");
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace NGitLab.Mock.Tests
             client.GetMilestone(1).Delete(1);
             var milestones = client.GetMilestone(1).All.ToArray();
 
-            Assert.AreEqual(0, milestones.Length, "Milestones count is invalid");
+            Assert.That(milestones, Is.Empty, "Milestones count is invalid");
         }
 
         [Test]
@@ -89,15 +89,15 @@ namespace NGitLab.Mock.Tests
             var activeMilestones = client.GetMilestone(1).AllInState(Models.MilestoneState.active).ToArray();
             var closedMilestones = client.GetMilestone(1).AllInState(Models.MilestoneState.closed).ToArray();
 
-            Assert.AreEqual(0, activeMilestones.Length, "Active milestones count is invalid");
-            Assert.AreEqual(1, closedMilestones.Length, "Closed milestones count is invalid");
+            Assert.That(activeMilestones, Is.Empty, "Active milestones count is invalid");
+            Assert.That(closedMilestones, Has.Length.EqualTo(1), "Closed milestones count is invalid");
 
             client.GetMilestone(1).Activate(1);
             activeMilestones = client.GetMilestone(1).AllInState(Models.MilestoneState.active).ToArray();
             closedMilestones = client.GetMilestone(1).AllInState(Models.MilestoneState.closed).ToArray();
 
-            Assert.AreEqual(1, activeMilestones.Length, "Active milestones count is invalid");
-            Assert.AreEqual(0, closedMilestones.Length, "Closed milestones count is invalid");
+            Assert.That(activeMilestones, Has.Length.EqualTo(1), "Active milestones count is invalid");
+            Assert.That(closedMilestones, Is.Empty, "Closed milestones count is invalid");
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace NGitLab.Mock.Tests
 
             var client = server.CreateClient();
             var mergeRequests = client.GetMilestone(ProjectId).GetMergeRequests(MilestoneId).ToArray();
-            Assert.AreEqual(2, mergeRequests.Length, "Merge requests count is invalid");
+            Assert.That(mergeRequests, Has.Length.EqualTo(2), "Merge requests count is invalid");
         }
 
         [Test]
@@ -139,7 +139,7 @@ namespace NGitLab.Mock.Tests
 
             var client = server.CreateClient();
             var mergeRequests = client.GetGroupMilestone(projectId).GetMergeRequests(milestoneId).ToArray();
-            Assert.AreEqual(2, mergeRequests.Length, "Merge requests count is invalid");
+            Assert.That(mergeRequests, Has.Length.EqualTo(2), "Merge requests count is invalid");
         }
     }
 }

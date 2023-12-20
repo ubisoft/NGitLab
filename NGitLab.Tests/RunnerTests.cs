@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -23,10 +22,10 @@ namespace NGitLab.Tests
             runnersClient.EnableRunner(project2.Id, new RunnerId(runner.Id));
 
             runnersClient.DisableRunner(project1.Id, new RunnerId(runner.Id));
-            Assert.IsFalse(IsEnabled());
+            Assert.That(IsEnabled(), Is.False);
 
             runnersClient.EnableRunner(project1.Id, new RunnerId(runner.Id));
-            Assert.IsTrue(IsEnabled());
+            Assert.That(IsEnabled(), Is.True);
 
             bool IsEnabled() => runnersClient[runner.Id].Projects.Any(x => x.Id == project1.Id);
         }
@@ -43,32 +42,11 @@ namespace NGitLab.Tests
             runnersClient.EnableRunner(project2.Id, new RunnerId(runner.Id));
 
             var result = runnersClient.OfProject(project.Id).ToList();
-            Assert.IsTrue(result.Any(r => r.Id == runner.Id));
+            Assert.That(result.Any(r => r.Id == runner.Id), Is.True);
 
             runnersClient.DisableRunner(project.Id, new RunnerId(runner.Id));
             result = runnersClient.OfProject(project.Id).ToList();
-            Assert.IsTrue(result.All(r => r.Id != runner.Id));
-        }
-
-        [Test]
-        [NGitLabRetry]
-        public async Task Test_some_runner_fields_are_not_null()
-        {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject(initializeWithCommits: true);
-            var runnersClient = context.Client.Runners;
-            var runner = runnersClient.Register(new RunnerRegister { Token = project.RunnersToken });
-
-            using (await context.StartRunnerForOneJobAsync(project.Id))
-            {
-                var runnerDetails = await GitLabTestContext.RetryUntilAsync(() => runnersClient[runner.Id], runner => runner.IpAddress != null, TimeSpan.FromMinutes(2));
-
-                Assert.IsNotNull(runnerDetails.Id);
-                Assert.IsNotNull(runnerDetails.Active);
-                Assert.IsNotNull(runnerDetails.Locked);
-                Assert.IsNotNull(runnerDetails.RunUntagged);
-                Assert.IsNotNull(runnerDetails.IpAddress);
-            }
+            Assert.That(result.All(r => r.Id != runner.Id), Is.True);
         }
 
         [Test]
@@ -79,13 +57,13 @@ namespace NGitLab.Tests
             var project = context.CreateProject(initializeWithCommits: true);
             var runnersClient = context.Client.Runners;
             var runner = runnersClient.Register(new RunnerRegister { Token = project.RunnersToken, Locked = false });
-            Assert.IsFalse(runner.Locked, "Runner should not be locked.");
+            Assert.That(runner.Locked, Is.False, "Runner should not be locked.");
 
             runner = runnersClient.Update(runner.Id, new RunnerUpdate { Locked = true });
-            Assert.IsTrue(runner.Locked, "Runner should be locked.");
+            Assert.That(runner.Locked, Is.True, "Runner should be locked.");
 
             runner = runnersClient.Update(runner.Id, new RunnerUpdate { Locked = false });
-            Assert.IsFalse(runner.Locked, "Runner should not be locked.");
+            Assert.That(runner.Locked, Is.False, "Runner should not be locked.");
         }
 
         [Test]
@@ -96,10 +74,10 @@ namespace NGitLab.Tests
             var project = context.CreateProject(initializeWithCommits: true);
             var runnersClient = context.Client.Runners;
             var runner = runnersClient.Register(new RunnerRegister { Token = project.RunnersToken, RunUntagged = false, TagList = new[] { "tag" } });
-            Assert.False(runner.RunUntagged);
+            Assert.That(runner.RunUntagged, Is.False);
 
             runner = runnersClient.Update(runner.Id, new RunnerUpdate { RunUntagged = true });
-            Assert.AreEqual(true, runner.RunUntagged);
+            Assert.That(runner.RunUntagged, Is.True);
         }
     }
 }

@@ -7,10 +7,10 @@ namespace NGitLab.Tests.Impl
         [Test]
         public void Test_comparison()
         {
-            Assert.AreEqual(new DynamicEnum<MockEnum>(MockEnum.A), MockEnum.A);
-            Assert.AreNotEqual(new DynamicEnum<MockEnum>(MockEnum.A), MockEnum.B);
-            Assert.AreEqual(new DynamicEnum<MockEnum>("unknown").StringValue, "unknown");
-            Assert.AreNotEqual(new DynamicEnum<MockEnum>("unknown").StringValue, "other");
+            Assert.That(new DynamicEnum<MockEnum>(MockEnum.A), Is.EqualTo(MockEnum.A));
+            Assert.That(new DynamicEnum<MockEnum>(MockEnum.A), Is.Not.EqualTo(MockEnum.B));
+            Assert.That(new DynamicEnum<MockEnum>("unknown").StringValue, Is.EqualTo("unknown"));
+            Assert.That(new DynamicEnum<MockEnum>("unknown").StringValue, Is.Not.EqualTo("other"));
         }
 
         public enum MockEnum

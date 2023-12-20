@@ -15,8 +15,8 @@ namespace NGitLab.Tests
             var project = context.CreateProject(initializeWithCommits: true);
             var compareResults = context.Client.GetRepository(project.Id).Compare(new CompareQuery(project.DefaultBranch, project.DefaultBranch));
 
-            Assert.IsNotNull(compareResults);
-            Assert.AreEqual(0, compareResults.Commits.Length);
+            Assert.That(compareResults, Is.Not.Null);
+            Assert.That(compareResults.Commits, Is.Empty);
         }
 
         [Test]
@@ -50,8 +50,8 @@ namespace NGitLab.Tests
 
             var compareResults = context.Client.GetRepository(project.Id).Compare(new CompareQuery(project.DefaultBranch, "devtest"));
 
-            Assert.IsNotNull(compareResults);
-            Assert.AreEqual(2, compareResults.Commits.Length);
+            Assert.That(compareResults, Is.Not.Null);
+            Assert.That(compareResults.Commits, Has.Length.EqualTo(2));
         }
 
         [Test]

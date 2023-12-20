@@ -30,8 +30,8 @@ namespace NGitLab.Tests
             });
 
             var projectUser = context.Client.Members.OfProject(projectId).Single(u => u.Id == user.Id);
-            Assert.AreEqual(AccessLevel.Developer, (AccessLevel)projectUser.AccessLevel);
-            Assert.AreEqual(expiresAt, projectUser.ExpiresAt?.ToString("yyyy-MM-dd"));
+            Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
+            Assert.That(projectUser.ExpiresAt?.ToString("yyyy-MM-dd"), Is.EqualTo(expiresAt));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace NGitLab.Tests
                 UserId = user.Id.ToString(CultureInfo.InvariantCulture),
             });
             var projectUser = context.Client.Members.OfProject(projectId).Single(u => u.Id == user.Id);
-            Assert.AreEqual(AccessLevel.Developer, (AccessLevel)projectUser.AccessLevel);
+            Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
 
             // Update
             context.Client.Members.UpdateMemberOfProject(projectId, new ProjectMemberUpdate
@@ -59,7 +59,7 @@ namespace NGitLab.Tests
                 UserId = user.Id.ToString(CultureInfo.InvariantCulture),
             });
             projectUser = context.Client.Members.OfProject(projectId).Single(u => u.Id == user.Id);
-            Assert.AreEqual(AccessLevel.Maintainer, (AccessLevel)projectUser.AccessLevel);
+            Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Maintainer));
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace NGitLab.Tests
 
             // Get
             var projectUser = context.Client.Members.GetMemberOfProject(projectId, user.Id.ToString(CultureInfo.InvariantCulture));
-            Assert.AreEqual(AccessLevel.Developer, (AccessLevel)projectUser.AccessLevel);
+            Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
         }
 
         [Test]
@@ -100,8 +100,8 @@ namespace NGitLab.Tests
             });
 
             var groupUser = context.Client.Members.OfGroup(groupId).Single(u => u.Id == user.Id);
-            Assert.AreEqual(AccessLevel.Developer, (AccessLevel)groupUser.AccessLevel);
-            Assert.AreEqual(expiresAt, groupUser.ExpiresAt?.ToString("yyyy-MM-dd"));
+            Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
+            Assert.That(groupUser.ExpiresAt?.ToString("yyyy-MM-dd"), Is.EqualTo(expiresAt));
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace NGitLab.Tests
                 UserId = user.Id.ToString(CultureInfo.InvariantCulture),
             });
             var groupUser = context.Client.Members.OfGroup(groupId).Single(u => u.Id == user.Id);
-            Assert.AreEqual(AccessLevel.Developer, (AccessLevel)groupUser.AccessLevel);
+            Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
 
             // Update
             context.Client.Members.UpdateMemberOfGroup(groupId, new GroupMemberUpdate
@@ -129,7 +129,7 @@ namespace NGitLab.Tests
                 UserId = user.Id.ToString(CultureInfo.InvariantCulture),
             });
             groupUser = context.Client.Members.OfGroup(groupId).Single(u => u.Id == user.Id);
-            Assert.AreEqual(AccessLevel.Maintainer, (AccessLevel)groupUser.AccessLevel);
+            Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Maintainer));
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace NGitLab.Tests
 
             // Get
             var groupUser = context.Client.Members.GetMemberOfGroup(groupId, user.Id.ToString(CultureInfo.InvariantCulture));
-            Assert.AreEqual(AccessLevel.Developer, (AccessLevel)groupUser.AccessLevel);
+            Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
         }
     }
 }

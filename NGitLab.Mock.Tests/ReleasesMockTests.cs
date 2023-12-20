@@ -22,9 +22,9 @@ namespace NGitLab.Mock.Tests
             var releaseClient = client.GetReleases(project.Id);
             var singleRelease = releaseClient.All.SingleOrDefault();
 
-            Assert.IsNotNull(singleRelease);
-            Assert.AreEqual("1.2.3", singleRelease.TagName);
-            Assert.AreEqual($"{project.WebUrl}/-/releases/1.2.3", singleRelease.Links.Self);
+            Assert.That(singleRelease, Is.Not.Null);
+            Assert.That(singleRelease.TagName, Is.EqualTo("1.2.3"));
+            Assert.That(singleRelease.Links.Self, Is.EqualTo($"{project.WebUrl}/-/releases/1.2.3"));
         }
 
         [Test]
@@ -47,8 +47,8 @@ namespace NGitLab.Mock.Tests
                 Page = 2,
             }).SingleOrDefault();
 
-            Assert.IsNotNull(firstRelease);
-            Assert.AreEqual("1.2.3", firstRelease.TagName);
+            Assert.That(firstRelease, Is.Not.Null);
+            Assert.That(firstRelease.TagName, Is.EqualTo("1.2.3"));
         }
 
         [Test]
@@ -70,8 +70,8 @@ namespace NGitLab.Mock.Tests
                 Sort = "asc",
             }).First();
 
-            Assert.IsNotNull(firstRelease);
-            Assert.AreEqual("1.2.3", firstRelease.TagName);
+            Assert.That(firstRelease, Is.Not.Null);
+            Assert.That(firstRelease.TagName, Is.EqualTo("1.2.3"));
         }
 
         [Test]
@@ -93,8 +93,8 @@ namespace NGitLab.Mock.Tests
                 OrderBy = "created_at",
             }).First();
 
-            Assert.IsNotNull(firstRelease);
-            Assert.AreEqual("1.2.3", firstRelease.TagName);
+            Assert.That(firstRelease, Is.Not.Null);
+            Assert.That(firstRelease.TagName, Is.EqualTo("1.2.3"));
         }
     }
 }

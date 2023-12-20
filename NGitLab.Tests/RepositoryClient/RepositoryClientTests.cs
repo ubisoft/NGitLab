@@ -79,8 +79,8 @@ namespace NGitLab.Tests.RepositoryClient
 
             var commits = context.RepositoryClient.Commits.ToArray();
 
-            Assert.AreEqual(commitCount, commits.Length);
-            CollectionAssert.AreEqual(context.Commits.Select(c => c.Message).Reverse(), commits.Select(c => c.Message));
+            Assert.That(commits, Has.Length.EqualTo(commitCount));
+            Assert.That(commits.Select(c => c.Message), Is.EqualTo(context.Commits.Select(c => c.Message).Reverse()).AsCollection);
         }
 
         [Test]
@@ -90,12 +90,12 @@ namespace NGitLab.Tests.RepositoryClient
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
             var defaultBranch = context.Project.DefaultBranch;
 
-            CollectionAssert.IsNotEmpty(context.RepositoryClient.GetCommits(defaultBranch));
-            CollectionAssert.IsNotEmpty(context.RepositoryClient.GetCommits(defaultBranch, -1));
+            Assert.That(context.RepositoryClient.GetCommits(defaultBranch), Is.Not.Empty);
+            Assert.That(context.RepositoryClient.GetCommits(defaultBranch, -1), Is.Not.Empty);
 
             var commits = context.RepositoryClient.GetCommits(defaultBranch, 1).ToArray();
-            Assert.AreEqual(1, commits.Length);
-            Assert.AreEqual(context.Commits[1].Message, commits[0].Message);
+            Assert.That(commits, Has.Length.EqualTo(1));
+            Assert.That(commits[0].Message, Is.EqualTo(context.Commits[1].Message));
         }
 
         [Test]
@@ -106,10 +106,10 @@ namespace NGitLab.Tests.RepositoryClient
 
             var sha1 = context.Commits[0].Id;
             var commit = context.RepositoryClient.GetCommit(sha1);
-            Assert.AreEqual(sha1, commit.Id);
-            Assert.AreEqual(context.Commits[0].Message, commit.Message);
-            Assert.AreEqual(context.Commits[0].WebUrl, commit.WebUrl);
-            Assert.NotNull(commit.WebUrl);
+            Assert.That(commit.Id, Is.EqualTo(sha1));
+            Assert.That(commit.Message, Is.EqualTo(context.Commits[0].Message));
+            Assert.That(commit.WebUrl, Is.EqualTo(context.Commits[0].WebUrl));
+            Assert.That(commit.WebUrl, Is.Not.Null);
         }
 
         [Test]
@@ -126,8 +126,8 @@ namespace NGitLab.Tests.RepositoryClient
             };
 
             var commits = context.RepositoryClient.GetCommits(commitRequest).Reverse().ToArray();
-            Assert.AreEqual(allCommits[2].Id, commits[0].Id);
-            Assert.AreEqual(allCommits[3].Id, commits[1].Id);
+            Assert.That(commits[0].Id, Is.EqualTo(allCommits[2].Id));
+            Assert.That(commits[1].Id, Is.EqualTo(allCommits[3].Id));
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace NGitLab.Tests.RepositoryClient
             // Assert
             var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
 
-            Assert.True(lastRequestQueryString.Contains($"since={expectedSinceValue}"));
+            Assert.That(lastRequestQueryString, Does.Contain($"since={expectedSinceValue}"));
         }
 
         [Test]
@@ -175,7 +175,7 @@ namespace NGitLab.Tests.RepositoryClient
             // Assert
             var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
 
-            Assert.False(lastRequestQueryString.Contains("since="));
+            Assert.That(lastRequestQueryString, Does.Not.Contain("since="));
         }
 
         [Test]
@@ -200,7 +200,7 @@ namespace NGitLab.Tests.RepositoryClient
             // Assert
             var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
 
-            Assert.True(lastRequestQueryString.Contains($"until={expectedUntilValue}"));
+            Assert.That(lastRequestQueryString, Does.Contain($"until={expectedUntilValue}"));
         }
 
         [Test]
@@ -223,7 +223,7 @@ namespace NGitLab.Tests.RepositoryClient
             // Assert
             var lastRequestQueryString = context.Context.LastRequest.RequestUri.Query;
 
-            Assert.False(lastRequestQueryString.Contains("until="));
+            Assert.That(lastRequestQueryString, Does.Not.Contain("until="));
         }
 
         [Test]
@@ -232,7 +232,7 @@ namespace NGitLab.Tests.RepositoryClient
         {
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
 
-            CollectionAssert.IsNotEmpty(context.RepositoryClient.GetCommitDiff(context.RepositoryClient.Commits.First().Id).ToArray());
+            Assert.That(context.RepositoryClient.GetCommitDiff(context.RepositoryClient.Commits.First().Id).ToArray(), Is.Not.Empty);
         }
 
         [TestCase(4)]
@@ -247,9 +247,9 @@ namespace NGitLab.Tests.RepositoryClient
             var expectedFileCount = (int)Math.Ceiling(commitCount / 2.0);
             var expectedDirCount = 1;
 
-            Assert.AreEqual(expectedFileCount, treeObjects.Count(t => t.Type == ObjectType.blob));
-            Assert.AreEqual(expectedDirCount, treeObjects.Count(t => t.Type == ObjectType.tree));
-            Assert.IsTrue(treeObjects.All(t => string.Equals(t.Path, t.Name, StringComparison.Ordinal)));
+            Assert.That(treeObjects.Count(t => t.Type == ObjectType.blob), Is.EqualTo(expectedFileCount));
+            Assert.That(treeObjects.Count(t => t.Type == ObjectType.tree), Is.EqualTo(expectedDirCount));
+            Assert.That(treeObjects.All(t => string.Equals(t.Path, t.Name, StringComparison.Ordinal)), Is.True);
         }
 
         [TestCase(4)]
@@ -264,8 +264,8 @@ namespace NGitLab.Tests.RepositoryClient
             var expectedFileCount = commitCount;
             var expectedDirCount = 1;
 
-            Assert.AreEqual(expectedFileCount, treeObjects.Count(t => t.Type == ObjectType.blob));
-            Assert.AreEqual(expectedDirCount, treeObjects.Count(t => t.Type == ObjectType.tree));
+            Assert.That(treeObjects.Count(t => t.Type == ObjectType.blob), Is.EqualTo(expectedFileCount));
+            Assert.That(treeObjects.Count(t => t.Type == ObjectType.tree), Is.EqualTo(expectedDirCount));
         }
 
         [TestCase(4)]
@@ -284,8 +284,8 @@ namespace NGitLab.Tests.RepositoryClient
             var expectedFileCount = commitCount;
             var expectedDirCount = 1;
 
-            Assert.AreEqual(expectedFileCount, treeObjects.Count(t => t.Type == ObjectType.blob));
-            Assert.AreEqual(expectedDirCount, treeObjects.Count(t => t.Type == ObjectType.tree));
+            Assert.That(treeObjects.Count(t => t.Type == ObjectType.blob), Is.EqualTo(expectedFileCount));
+            Assert.That(treeObjects.Count(t => t.Type == ObjectType.tree), Is.EqualTo(expectedDirCount));
         }
 
         [TestCase(4)]
@@ -301,7 +301,7 @@ namespace NGitLab.Tests.RepositoryClient
                 treeObjects.Add(item);
             }
 
-            Assert.True(treeObjects.All(t => t.Path.StartsWith(RepositoryClientTestsContext.SubfolderName, StringComparison.OrdinalIgnoreCase)));
+            Assert.That(treeObjects.All(t => t.Path.StartsWith(RepositoryClientTestsContext.SubfolderName, StringComparison.OrdinalIgnoreCase)), Is.True);
         }
 
         [Test]
@@ -311,7 +311,7 @@ namespace NGitLab.Tests.RepositoryClient
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
 
             var treeObjects = context.RepositoryClient.GetTree(string.Empty, context.Project.DefaultBranch, recursive: false);
-            Assert.IsNotEmpty(treeObjects);
+            Assert.That(treeObjects, Is.Not.Empty);
         }
 
         [Test]
@@ -321,7 +321,7 @@ namespace NGitLab.Tests.RepositoryClient
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
 
             var treeObjects = context.RepositoryClient.GetTree(new RepositoryGetTreeOptions { Path = string.Empty, PerPage = 100 });
-            Assert.IsNotEmpty(treeObjects);
+            Assert.That(treeObjects, Is.Not.Empty);
         }
 
         [Test]
@@ -331,7 +331,7 @@ namespace NGitLab.Tests.RepositoryClient
             using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
 
             var treeObjects = context.RepositoryClient.GetTree("Fakepath");
-            Assert.IsEmpty(treeObjects);
+            Assert.That(treeObjects, Is.Empty);
         }
 
         [TestCase(CommitRefType.All)]
@@ -346,11 +346,11 @@ namespace NGitLab.Tests.RepositoryClient
 
             if (type == CommitRefType.Tag)
             {
-                CollectionAssert.IsEmpty(commitRefs);
+                Assert.That(commitRefs, Is.Empty);
             }
             else
             {
-                CollectionAssert.IsNotEmpty(commitRefs);
+                Assert.That(commitRefs, Is.Not.Empty);
             }
         }
     }

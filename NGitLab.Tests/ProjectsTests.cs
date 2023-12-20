@@ -21,7 +21,7 @@ namespace NGitLab.Tests
             var projectClient = context.Client.Projects;
 
             var projectResult = await projectClient.GetByIdAsync(project.Id, new SingleProjectQuery(), CancellationToken.None);
-            Assert.AreEqual(project.Id, projectResult.Id);
+            Assert.That(projectResult.Id, Is.EqualTo(project.Id));
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace NGitLab.Tests
             var projectClient = context.Client.Projects;
 
             var projectResult = await projectClient.GetByNamespacedPathAsync(project.PathWithNamespace, new SingleProjectQuery(), CancellationToken.None);
-            Assert.AreEqual(project.Id, projectResult.Id);
+            Assert.That(projectResult.Id, Is.EqualTo(project.Id));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace NGitLab.Tests
                 projects.Add(item);
             }
 
-            CollectionAssert.IsNotEmpty(projects);
+            Assert.That(projects, Is.Not.Empty);
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace NGitLab.Tests
             var projectClient = context.Client.Projects;
 
             var projects = projectClient.Owned.Take(30).ToArray();
-            CollectionAssert.IsNotEmpty(projects);
+            Assert.That(projects, Is.Not.Empty);
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace NGitLab.Tests
 
             var projects = projectClient.Visible.Take(30).ToArray();
 
-            CollectionAssert.IsNotEmpty(projects);
+            Assert.That(projects, Is.Not.Empty);
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace NGitLab.Tests
 
             var projects = projectClient.Accessible.Take(30).ToArray();
 
-            CollectionAssert.IsNotEmpty(projects);
+            Assert.That(projects, Is.Not.Empty);
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace NGitLab.Tests
             };
 
             var projects = projectClient.Get(query).Take(10).ToArray();
-            Assert.AreEqual(1, projects.Length);
+            Assert.That(projects, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace NGitLab.Tests
                 Assert.Fail("No projects found.");
             }
 
-            projects.ForEach(p => Assert.IsNotNull(p.Statistics));
+            projects.ForEach(p => Assert.That(p.Statistics, Is.Not.Null));
         }
 
         [Test]
@@ -141,8 +141,8 @@ namespace NGitLab.Tests
                 Assert.Fail("No projects found.");
             }
 
-            projects.ForEach(p => Assert.IsNotNull(p.Links));
-            projects.ForEach(p => Assert.IsNotNull(p.MergeMethod));
+            projects.ForEach(p => Assert.That(p.Links, Is.Not.Null));
+            projects.ForEach(p => Assert.That(p.MergeMethod, Is.Not.Null));
         }
 
         [Test]
@@ -161,7 +161,7 @@ namespace NGitLab.Tests
 
             var projects = projectClient.Get(query).ToList();
 
-            CollectionAssert.IsNotEmpty(projects);
+            Assert.That(projects, Is.Not.Empty);
         }
 
         [Test]
@@ -179,8 +179,8 @@ namespace NGitLab.Tests
 
             project = projectClient.GetById(project.Id, query);
 
-            Assert.IsNotNull(project);
-            Assert.IsNotNull(project.Statistics);
+            Assert.That(project, Is.Not.Null);
+            Assert.That(project.Statistics, Is.Not.Null);
         }
 
         [Test]
@@ -201,8 +201,8 @@ namespace NGitLab.Tests
 
             context.Client.GetRepository(project.Id).Files.Create(file);
             var languages = projectClient.GetLanguages(project.Id.ToString(CultureInfo.InvariantCulture));
-            Assert.That(languages.Count, Is.EqualTo(1));
-            StringAssert.AreEqualIgnoringCase("javascript", languages.First().Key);
+            Assert.That(languages, Has.Count.EqualTo(1));
+            Assert.That(languages.First().Key, Is.EqualTo("javascript").IgnoreCase);
             Assert.That(languages.First().Value, Is.EqualTo(100));
         }
 
@@ -223,7 +223,7 @@ namespace NGitLab.Tests
 
             var projects = projectClient.Get(query).Take(10).ToList();
 
-            CollectionAssert.IsNotEmpty(projects);
+            Assert.That(projects, Is.Not.Empty);
             Assert.That(context.LastRequest.RequestUri.ToString(), Contains.Substring("per_page=5"));
         }
 
@@ -255,32 +255,32 @@ namespace NGitLab.Tests
 
             var createdProject = projectClient.Create(project);
 
-            Assert.AreEqual(project.Description, createdProject.Description);
-            Assert.AreEqual(project.IssuesEnabled, createdProject.IssuesEnabled);
-            Assert.AreEqual(project.MergeRequestsEnabled, createdProject.MergeRequestsEnabled);
-            Assert.AreEqual(project.Name, createdProject.Name);
-            Assert.AreEqual(project.VisibilityLevel, createdProject.VisibilityLevel);
-            CollectionAssert.AreEquivalent(expectedTopics, createdProject.Topics);
-            CollectionAssert.AreEquivalent(expectedTopics, createdProject.TagList);
-            Assert.AreEqual(RepositoryAccessLevel.Enabled, createdProject.RepositoryAccessLevel);
+            Assert.That(createdProject.Description, Is.EqualTo(project.Description));
+            Assert.That(createdProject.IssuesEnabled, Is.EqualTo(project.IssuesEnabled));
+            Assert.That(createdProject.MergeRequestsEnabled, Is.EqualTo(project.MergeRequestsEnabled));
+            Assert.That(createdProject.Name, Is.EqualTo(project.Name));
+            Assert.That(createdProject.VisibilityLevel, Is.EqualTo(project.VisibilityLevel));
+            Assert.That(createdProject.Topics, Is.EquivalentTo(expectedTopics));
+            Assert.That(createdProject.TagList, Is.EquivalentTo(expectedTopics));
+            Assert.That(createdProject.RepositoryAccessLevel, Is.EqualTo(RepositoryAccessLevel.Enabled));
 
             // Update
             expectedTopics = new List<string> { "Tag-3" };
             var updateOptions = new ProjectUpdate { Visibility = VisibilityLevel.Private, Topics = expectedTopics };
             var updatedProject = projectClient.Update(createdProject.Id.ToString(CultureInfo.InvariantCulture), updateOptions);
-            Assert.AreEqual(VisibilityLevel.Private, updatedProject.VisibilityLevel);
-            CollectionAssert.AreEquivalent(expectedTopics, updatedProject.Topics);
-            CollectionAssert.AreEquivalent(expectedTopics, updatedProject.TagList);
+            Assert.That(updatedProject.VisibilityLevel, Is.EqualTo(VisibilityLevel.Private));
+            Assert.That(updatedProject.Topics, Is.EquivalentTo(expectedTopics));
+            Assert.That(updatedProject.TagList, Is.EquivalentTo(expectedTopics));
 
             updateOptions.Visibility = VisibilityLevel.Public;
             updateOptions.Topics = null;    // If Topics are null, the project's existing topics will remain
             updatedProject = projectClient.Update(createdProject.Id.ToString(CultureInfo.InvariantCulture), updateOptions);
-            Assert.AreEqual(VisibilityLevel.Public, updatedProject.VisibilityLevel);
-            CollectionAssert.AreEquivalent(expectedTopics, updatedProject.Topics);
-            CollectionAssert.AreEquivalent(expectedTopics, updatedProject.TagList);
+            Assert.That(updatedProject.VisibilityLevel, Is.EqualTo(VisibilityLevel.Public));
+            Assert.That(updatedProject.Topics, Is.EquivalentTo(expectedTopics));
+            Assert.That(updatedProject.TagList, Is.EquivalentTo(expectedTopics));
 
             var updatedProject2 = projectClient.Update(createdProject.PathWithNamespace, new ProjectUpdate { Visibility = VisibilityLevel.Internal });
-            Assert.AreEqual(VisibilityLevel.Internal, updatedProject2.VisibilityLevel);
+            Assert.That(updatedProject2.VisibilityLevel, Is.EqualTo(VisibilityLevel.Internal));
 
             projectClient.Delete(createdProject.Id);
         }
@@ -307,7 +307,7 @@ namespace NGitLab.Tests
             var result = projectClient.Get(query).Take(10).ToArray();
 
             // Assert
-            Assert.IsTrue(result.Any());
+            Assert.That(result.Any(), Is.True);
         }
 
         [Test]
@@ -385,7 +385,7 @@ namespace NGitLab.Tests
             };
 
             var projects = projectClient.Get(query).Take(10).ToList();
-            CollectionAssert.IsNotEmpty(projects);
+            Assert.That(projects, Is.Not.Empty);
             Assert.That(projects.Select(p => p.LastActivityAt), Is.All.GreaterThan(date.UtcDateTime));
         }
 
@@ -401,7 +401,7 @@ namespace NGitLab.Tests
                 prj.Name = "Project_Test_" + context.GetRandomNumber().ToString(CultureInfo.InvariantCulture);
                 prj.VisibilityLevel = VisibilityLevel.Internal;
             });
-            Assert.IsTrue(createdProject.EmptyRepo);
+            Assert.That(createdProject.EmptyRepo, Is.True);
 
             context.Client.GetRepository(createdProject.Id).Files.Create(new FileUpsert
             {
@@ -412,7 +412,7 @@ namespace NGitLab.Tests
             });
 
             createdProject = projectClient[createdProject.Id];
-            Assert.IsFalse(createdProject.EmptyRepo);
+            Assert.That(createdProject.EmptyRepo, Is.False);
         }
 
         [Test]
@@ -444,7 +444,7 @@ namespace NGitLab.Tests
             var projects = projectClient.Get(query); // Get projects that have both required topics
 
             // Assert
-            Assert.AreEqual(2, projects.Count());
+            Assert.That(projects.Count(), Is.EqualTo(2));
 
             static string CreateTopic() => Guid.NewGuid().ToString("N");
         }
@@ -471,7 +471,7 @@ namespace NGitLab.Tests
             var createdProject = projectClient.Create(project);
 
             var expectedSquashOption = inputSquashOption ?? SquashOption.DefaultOff;
-            Assert.AreEqual(expectedSquashOption, createdProject.SquashOption);
+            Assert.That(createdProject.SquashOption, Is.EqualTo(expectedSquashOption));
 
             projectClient.Delete(createdProject.Id);
         }

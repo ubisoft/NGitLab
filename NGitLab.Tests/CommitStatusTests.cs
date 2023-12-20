@@ -56,13 +56,13 @@ namespace NGitLab.Tests
 
                 var createdCommitStatus = CommitStatusClient.AddOrUpdate(commitStatus);
 
-                Assert.AreEqual(commitStatus.Ref, createdCommitStatus.Ref);
-                Assert.AreEqual(commitStatus.Coverage, createdCommitStatus.Coverage);
-                Assert.AreEqual(commitStatus.Description, createdCommitStatus.Description);
-                Assert.AreEqual(commitStatus.State, createdCommitStatus.Status);
-                Assert.AreEqual(commitStatus.Name, createdCommitStatus.Name);
-                Assert.AreEqual(commitStatus.TargetUrl, createdCommitStatus.TargetUrl);
-                Assert.IsTrue(string.Equals(commitStatus.CommitSha, createdCommitStatus.CommitSha, StringComparison.OrdinalIgnoreCase));
+                Assert.That(createdCommitStatus.Ref, Is.EqualTo(commitStatus.Ref));
+                Assert.That(createdCommitStatus.Coverage, Is.EqualTo(commitStatus.Coverage));
+                Assert.That(createdCommitStatus.Description, Is.EqualTo(commitStatus.Description));
+                Assert.That(createdCommitStatus.Status, Is.EqualTo(commitStatus.State));
+                Assert.That(createdCommitStatus.Name, Is.EqualTo(commitStatus.Name));
+                Assert.That(createdCommitStatus.TargetUrl, Is.EqualTo(commitStatus.TargetUrl));
+                Assert.That(string.Equals(commitStatus.CommitSha, createdCommitStatus.CommitSha, StringComparison.OrdinalIgnoreCase), Is.True);
 
                 return createdCommitStatus;
             }
@@ -90,7 +90,7 @@ namespace NGitLab.Tests
             var createdCommitStatus = context.AddOrUpdateCommitStatus();
 
             var commitStatus = context.CommitStatusClient.AllBySha(context.Commit.Id.ToString().ToLowerInvariant()).ToList();
-            Assert.IsNotNull(commitStatus.FirstOrDefault()?.Status);
+            Assert.That(commitStatus.FirstOrDefault()?.Status, Is.Not.Null);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace NGitLab.Tests
             using var context = await CommitStatusTestContext.Create();
             var commitStatus = context.AddOrUpdateCommitStatus(coverage: null);
 
-            Assert.AreEqual(commitStatus.Coverage, null);
+            Assert.That(commitStatus.Coverage, Is.Null);
         }
 
         [Test]
@@ -109,13 +109,13 @@ namespace NGitLab.Tests
         {
             using var context = await CommitStatusTestContext.Create();
             var commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
-            Assert.AreEqual("pending", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("pending"));
 
             commitStatus = context.AddOrUpdateCommitStatus(state: "running");
-            Assert.AreEqual("running", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("running"));
 
             commitStatus = context.AddOrUpdateCommitStatus(state: "success");
-            Assert.AreEqual("success", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("success"));
         }
 
         [Test]
@@ -124,10 +124,10 @@ namespace NGitLab.Tests
         {
             using var context = await CommitStatusTestContext.Create();
             var commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
-            Assert.AreEqual("pending", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("pending"));
 
             commitStatus = context.AddOrUpdateCommitStatus(state: "failed");
-            Assert.AreEqual("failed", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("failed"));
         }
 
         [Test]
@@ -136,10 +136,10 @@ namespace NGitLab.Tests
         {
             using var context = await CommitStatusTestContext.Create();
             var commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
-            Assert.AreEqual("pending", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("pending"));
 
             commitStatus = context.AddOrUpdateCommitStatus(state: "canceled");
-            Assert.AreEqual("canceled", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("canceled"));
         }
 
         [Test]
@@ -148,10 +148,10 @@ namespace NGitLab.Tests
         {
             using var context = await CommitStatusTestContext.Create();
             var commitStatus = context.AddOrUpdateCommitStatus(state: "success");
-            Assert.AreEqual("success", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("success"));
 
             commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
-            Assert.AreEqual("pending", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("pending"));
         }
 
         [Test]
@@ -160,10 +160,10 @@ namespace NGitLab.Tests
         {
             using var context = await CommitStatusTestContext.Create();
             var commitStatus = context.AddOrUpdateCommitStatus(state: "success");
-            Assert.AreEqual("success", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("success"));
 
             commitStatus = context.AddOrUpdateCommitStatus(state: "failed");
-            Assert.AreEqual("failed", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("failed"));
         }
 
         [Test]
@@ -172,10 +172,10 @@ namespace NGitLab.Tests
         {
             using var context = await CommitStatusTestContext.Create();
             var commitStatus = context.AddOrUpdateCommitStatus(state: "success");
-            Assert.AreEqual("success", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("success"));
 
             commitStatus = context.AddOrUpdateCommitStatus(state: "canceled");
-            Assert.AreEqual("canceled", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("canceled"));
         }
 
         [Test]
@@ -184,10 +184,10 @@ namespace NGitLab.Tests
         {
             using var context = await CommitStatusTestContext.Create();
             var commitStatus = context.AddOrUpdateCommitStatus(state: "canceled");
-            Assert.AreEqual("canceled", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("canceled"));
 
             commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
-            Assert.AreEqual("pending", commitStatus.Status);
+            Assert.That(commitStatus.Status, Is.EqualTo("pending"));
         }
     }
 }

@@ -20,9 +20,9 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient();
             var project = client.Projects["testgroup/Test"];
 
-            Assert.IsNotNull(project);
-            Assert.AreEqual("Test", project.Name);
-            Assert.AreEqual("testgroup", project.Namespace.FullPath);
+            Assert.That(project, Is.Not.Null);
+            Assert.That(project.Name, Is.EqualTo("Test"));
+            Assert.That(project.Namespace.FullPath, Is.EqualTo("testgroup"));
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace NGitLab.Mock.Tests
                 .WithProject("Test", clonePath: tempDir.FullPath)
                 .BuildServer();
 
-            Assert.IsTrue(Directory.Exists(tempDir.GetFullPath(".git")));
+            Assert.That(Directory.Exists(tempDir.GetFullPath(".git")), Is.True);
         }
 
         [Test]
@@ -51,11 +51,11 @@ namespace NGitLab.Mock.Tests
                             .WithSubModule("ModuleB")))
                 .BuildServer();
 
-            Assert.IsTrue(Directory.Exists(tempDir.GetFullPath(".git")));
-            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleA/.git")));
-            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleA/A.txt")));
-            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/.git")));
-            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/B.txt")));
+            Assert.That(Directory.Exists(tempDir.GetFullPath(".git")), Is.True);
+            Assert.That(System.IO.File.Exists(tempDir.GetFullPath("ModuleA/.git")), Is.True);
+            Assert.That(System.IO.File.Exists(tempDir.GetFullPath("ModuleA/A.txt")), Is.True);
+            Assert.That(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/.git")), Is.True);
+            Assert.That(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/B.txt")), Is.True);
         }
 
         [Test]
@@ -73,11 +73,11 @@ namespace NGitLab.Mock.Tests
                         => c.WithSubModule("ModuleB")))
                 .BuildServer();
 
-            Assert.IsTrue(Directory.Exists(tempDir.GetFullPath(".git")));
-            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/.git")));
-            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/B.txt")));
-            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/ModuleA/.git")));
-            Assert.IsTrue(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/ModuleA/A.txt")));
+            Assert.That(Directory.Exists(tempDir.GetFullPath(".git")), Is.True);
+            Assert.That(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/.git")), Is.True);
+            Assert.That(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/B.txt")), Is.True);
+            Assert.That(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/ModuleA/.git")), Is.True);
+            Assert.That(System.IO.File.Exists(tempDir.GetFullPath("ModuleB/ModuleA/A.txt")), Is.True);
         }
 
         [Test]
@@ -91,10 +91,10 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient();
             var project = client.Projects["testgroup/Test"];
 
-            Assert.IsNotNull(project);
-            StringAssert.EndsWith($"testgroup{Path.DirectorySeparatorChar}test", project.SshUrl);
-            StringAssert.EndsWith($"testgroup{Path.DirectorySeparatorChar}test", project.HttpUrl);
-            StringAssert.EndsWith("testgroup/test", project.WebUrl);
+            Assert.That(project, Is.Not.Null);
+            Assert.That(project.SshUrl, Does.EndWith($"testgroup{Path.DirectorySeparatorChar}test"));
+            Assert.That(project.HttpUrl, Does.EndWith($"testgroup{Path.DirectorySeparatorChar}test"));
+            Assert.That(project.WebUrl, Does.EndWith("testgroup/test"));
         }
 
         [Test]
@@ -105,13 +105,13 @@ namespace NGitLab.Mock.Tests
             var project = user.Namespace.Projects.AddNew();
 
             var client = server.CreateClient(user);
-            Assert.IsEmpty(client.Projects.GetLanguages(project.Id.ToString(CultureInfo.InvariantCulture)));
+            Assert.That(client.Projects.GetLanguages(project.Id.ToString(CultureInfo.InvariantCulture)), Is.Empty);
 
             project.Repository.Commit(user, "dummy", new[] { File.CreateFromText("test.cs", "dummy"), File.CreateFromText("test.js", "dummy") });
             var languages = client.Projects.GetLanguages(project.Id.ToString(CultureInfo.InvariantCulture));
-            Assert.AreEqual(2, languages.Count);
-            Assert.AreEqual(0.5d, languages["C#"]);
-            Assert.AreEqual(0.5d, languages["JavaScript"]);
+            Assert.That(languages, Has.Count.EqualTo(2));
+            Assert.That(languages["C#"], Is.EqualTo(0.5d));
+            Assert.That(languages["JavaScript"], Is.EqualTo(0.5d));
         }
 
         [Test]
@@ -121,10 +121,10 @@ namespace NGitLab.Mock.Tests
             var user = server.Users.AddNew();
             var project = user.Namespace.Projects.AddNew();
 
-            Assert.IsTrue(project.ToClientProject(user).EmptyRepo);
+            Assert.That(project.ToClientProject(user).EmptyRepo, Is.True);
 
             project.Repository.Commit(user, "dummy");
-            Assert.IsFalse(project.ToClientProject(user).EmptyRepo);
+            Assert.That(project.ToClientProject(user).EmptyRepo, Is.False);
         }
 
         [Test]

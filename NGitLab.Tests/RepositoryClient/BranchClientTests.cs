@@ -19,7 +19,7 @@ namespace NGitLab.Tests.RepositoryClient
             var project = context.CreateProject(initializeWithCommits: true);
             var branches = context.Client.GetRepository(project.Id).Branches;
 
-            CollectionAssert.IsNotEmpty(branches.All.ToArray());
+            Assert.That(branches.All.ToArray(), Is.Not.Empty);
         }
 
         [Test]
@@ -32,9 +32,9 @@ namespace NGitLab.Tests.RepositoryClient
 
             var branch = branches[project.DefaultBranch];
 
-            Assert.IsNotNull(branch);
-            Assert.IsNotNull(branch.Name);
-            Assert.IsTrue(branch.Default);
+            Assert.That(branch, Is.Not.Null);
+            Assert.That(branch.Name, Is.Not.Null);
+            Assert.That(branch.Default, Is.True);
         }
 
         [Test]
@@ -54,8 +54,8 @@ namespace NGitLab.Tests.RepositoryClient
             });
 
             var branch = branches[branchName];
-            Assert.IsNotNull(branch);
-            Assert.IsFalse(branch.Default);
+            Assert.That(branch, Is.Not.Null);
+            Assert.That(branch.Default, Is.False);
 
             branches.Protect(branchName);
 
@@ -82,7 +82,7 @@ namespace NGitLab.Tests.RepositoryClient
                 Ref = project.DefaultBranch,
             });
 
-            Assert.IsNotNull(branches[branchName]);
+            Assert.That(branches[branchName], Is.Not.Null);
 
             branches.Protect(branchName);
 
@@ -102,7 +102,7 @@ namespace NGitLab.Tests.RepositoryClient
             }
             catch (GitLabException ex)
             {
-                Assert.AreEqual(HttpStatusCode.NotFound, ex.StatusCode);
+                Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
             }
         }
     }

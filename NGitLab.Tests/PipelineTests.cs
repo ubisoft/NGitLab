@@ -23,10 +23,10 @@ namespace NGitLab.Tests
             JobTests.AddGitLabCiFile(context.Client, project);
 
             var pipelines = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.All, p => p.Any(), TimeSpan.FromSeconds(120));
-            Assert.IsNotEmpty(pipelines);
+            Assert.That(pipelines, Is.Not.Empty);
             foreach (var pipeline in pipelines)
             {
-                Assert.AreEqual(project.Id, pipeline.ProjectId);
+                Assert.That(pipeline.ProjectId, Is.EqualTo(project.Id));
             }
         }
 
@@ -58,7 +58,7 @@ namespace NGitLab.Tests
             });
 
             var pipelineFull = pipelineClient[pipeline.Id];
-            Assert.AreEqual(50, pipelineFull.Coverage);
+            Assert.That(pipelineFull.Coverage, Is.EqualTo(50));
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace NGitLab.Tests
             };
             var pipelinesFromQuery = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.Search(query).ToList(), p => p.Any(), TimeSpan.FromSeconds(120));
 
-            Assert.IsTrue(pipelinesFromQuery.Any());
+            Assert.That(pipelinesFromQuery.Any(), Is.True);
         }
 
         [Test]
@@ -154,13 +154,13 @@ namespace NGitLab.Tests
             var variables = pipelineClient.GetVariables(pipeline.Id);
 
             var var1 = variables.SingleOrDefault(v => v.Key.Equals("Var1", StringComparison.Ordinal));
-            Assert.NotNull(var1);
+            Assert.That(var1, Is.Not.Null);
 
             var var2 = variables.SingleOrDefault(v => v.Key.Equals("Var2", StringComparison.Ordinal));
-            Assert.NotNull(var2);
+            Assert.That(var2, Is.Not.Null);
 
-            Assert.AreEqual("Value1", var1.Value);
-            Assert.AreEqual("+4+", var2.Value);
+            Assert.That(var1.Value, Is.EqualTo("Value1"));
+            Assert.That(var2.Value, Is.EqualTo("+4+"));
         }
 
         [Test]
@@ -182,29 +182,29 @@ namespace NGitLab.Tests
             var testReports = pipelineClient.GetTestReports(pipeline.Id);
             var summary = pipelineClient.GetTestReportsSummary(pipeline.Id);
 
-            Assert.NotNull(testReports);
-            Assert.NotNull(summary);
+            Assert.That(testReports, Is.Not.Null);
+            Assert.That(summary, Is.Not.Null);
 
-            Assert.AreEqual(0, testReports.TotalTime);
-            Assert.AreEqual(0, summary.Total.Time);
+            Assert.That(testReports.TotalTime, Is.EqualTo(0));
+            Assert.That(summary.Total.Time, Is.EqualTo(0));
 
-            Assert.AreEqual(0, testReports.TotalCount);
-            Assert.AreEqual(0, summary.Total.Count);
+            Assert.That(testReports.TotalCount, Is.EqualTo(0));
+            Assert.That(summary.Total.Count, Is.EqualTo(0));
 
-            Assert.AreEqual(0, testReports.SuccessCount);
-            Assert.AreEqual(0, summary.Total.Success);
+            Assert.That(testReports.SuccessCount, Is.EqualTo(0));
+            Assert.That(summary.Total.Success, Is.EqualTo(0));
 
-            Assert.AreEqual(0, testReports.FailedCount);
-            Assert.AreEqual(0, summary.Total.Failed);
+            Assert.That(testReports.FailedCount, Is.EqualTo(0));
+            Assert.That(summary.Total.Failed, Is.EqualTo(0));
 
-            Assert.AreEqual(0, testReports.SkippedCount);
-            Assert.AreEqual(0, summary.Total.Skipped);
+            Assert.That(testReports.SkippedCount, Is.EqualTo(0));
+            Assert.That(summary.Total.Skipped, Is.EqualTo(0));
 
-            Assert.AreEqual(0, testReports.ErrorCount);
-            Assert.AreEqual(0, summary.Total.Error);
+            Assert.That(testReports.ErrorCount, Is.EqualTo(0));
+            Assert.That(summary.Total.Error, Is.EqualTo(0));
 
-            Assert.IsEmpty(testReports.TestSuites);
-            Assert.IsEmpty(summary.TestSuites);
+            Assert.That(testReports.TestSuites, Is.Empty);
+            Assert.That(summary.TestSuites, Is.Empty);
         }
 
         [Test]
@@ -224,9 +224,9 @@ namespace NGitLab.Tests
 
             var variables = pipelineClient.GetVariables(pipeline.Id);
 
-            Assert.IsTrue(variables.Any(v =>
+            Assert.That(variables.Any(v =>
                 v.Key.Equals("Test", StringComparison.Ordinal) &&
-                v.Value.Equals("HelloWorld", StringComparison.Ordinal)));
+                v.Value.Equals("HelloWorld", StringComparison.Ordinal)), Is.True);
         }
 
         [Test]
@@ -252,7 +252,7 @@ namespace NGitLab.Tests
                 }, TimeSpan.FromMinutes(2));
 
                 var retriedPipeline = await pipelineClient.RetryAsync(pipeline.Id);
-                Assert.AreNotEqual(JobStatus.Failed, retriedPipeline.Status); // Should be created or running
+                Assert.That(retriedPipeline.Status, Is.Not.EqualTo(JobStatus.Failed)); // Should be created or running
             }
         }
     }

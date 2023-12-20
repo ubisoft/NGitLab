@@ -24,9 +24,9 @@ namespace NGitLab.Tests
                 Protected = true,
             });
 
-            Assert.AreEqual("My_Key", variable.Key);
-            Assert.AreEqual("My value", variable.Value);
-            Assert.AreEqual(true, variable.Protected);
+            Assert.That(variable.Key, Is.EqualTo("My_Key"));
+            Assert.That(variable.Value, Is.EqualTo("My value"));
+            Assert.That(variable.Protected, Is.EqualTo(true));
 
             // Update
             variable = projectVariableClient.Update(variable.Key, new VariableUpdate
@@ -35,22 +35,22 @@ namespace NGitLab.Tests
                 Protected = false,
             });
 
-            Assert.AreEqual("My_Key", variable.Key);
-            Assert.AreEqual("My value edited", variable.Value);
-            Assert.AreEqual(false, variable.Protected);
+            Assert.That(variable.Key, Is.EqualTo("My_Key"));
+            Assert.That(variable.Value, Is.EqualTo("My value edited"));
+            Assert.That(variable.Protected, Is.EqualTo(false));
 
             // Delete
             projectVariableClient.Delete(variable.Key);
 
             var variables = projectVariableClient.All.ToList();
-            Assert.IsEmpty(variables);
+            Assert.That(variables, Is.Empty);
 
             // All
             projectVariableClient.Create(new VariableCreate { Key = "Variable1", Value = "test" });
             projectVariableClient.Create(new VariableCreate { Key = "Variable2", Value = "test" });
             projectVariableClient.Create(new VariableCreate { Key = "Variable3", Value = "test" });
             variables = projectVariableClient.All.ToList();
-            Assert.AreEqual(3, variables.Count);
+            Assert.That(variables, Has.Count.EqualTo(3));
         }
     }
 }

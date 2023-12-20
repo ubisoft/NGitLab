@@ -36,7 +36,7 @@ public class LintCITests
         });
 
         // Assert
-        Assert.IsFalse(result.Valid);
-        Assert.AreEqual(expectedError, result.Errors.Single());
+        Assert.That(result.Valid, Is.False);
+        Assert.That(result.Errors.Single(), Is.EqualTo(expectedError));
     }
 }

@@ -23,8 +23,8 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient("user1");
             var mergeRequests = client.MergeRequests.Get(new MergeRequestQuery { Scope = "created_by_me" }).ToArray();
 
-            Assert.AreEqual(1, mergeRequests.Length, "Merge requests count is invalid");
-            Assert.AreEqual("Merge request 1", mergeRequests[0].Title, "Merge request found is invalid");
+            Assert.That(mergeRequests, Has.Length.EqualTo(1), "Merge requests count is invalid");
+            Assert.That(mergeRequests[0].Title, Is.EqualTo("Merge request 1"), "Merge request found is invalid");
         }
 
         [Test]
@@ -41,8 +41,8 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient("user1");
             var mergeRequests = client.MergeRequests.Get(new MergeRequestQuery { Scope = "assigned_to_me" }).ToArray();
 
-            Assert.AreEqual(1, mergeRequests.Length, "Merge requests count is invalid");
-            Assert.AreEqual("Merge request 2", mergeRequests[0].Title, "Merge request found is invalid");
+            Assert.That(mergeRequests, Has.Length.EqualTo(1), "Merge requests count is invalid");
+            Assert.That(mergeRequests[0].Title, Is.EqualTo("Merge request 2"), "Merge request found is invalid");
         }
 
         [Test]
@@ -59,8 +59,8 @@ namespace NGitLab.Mock.Tests
             var client = server.CreateClient("user1");
             var mergeRequests = client.MergeRequests.Get(new MergeRequestQuery { ApproverIds = new[] { 1 } }).ToArray();
 
-            Assert.AreEqual(1, mergeRequests.Length, "Merge requests count is invalid");
-            Assert.AreEqual("Merge request 2", mergeRequests[0].Title, "Merge request found is invalid");
+            Assert.That(mergeRequests, Has.Length.EqualTo(1), "Merge requests count is invalid");
+            Assert.That(mergeRequests[0].Title, Is.EqualTo("Merge request 2"), "Merge request found is invalid");
         }
 
         [Test]
@@ -83,8 +83,8 @@ namespace NGitLab.Mock.Tests
             var client = gitLabServer.CreateClient(user1);
             var mergeRequests = client.MergeRequests.Get(new MergeRequestQuery { Scope = "assigned_to_me" }).ToArray();
 
-            Assert.AreEqual(1, mergeRequests.Length, "Merge requests count is invalid");
-            Assert.AreEqual("Merge request 2", mergeRequests[0].Title, "Merge request found is invalid");
+            Assert.That(mergeRequests, Has.Length.EqualTo(1), "Merge requests count is invalid");
+            Assert.That(mergeRequests[0].Title, Is.EqualTo("Merge request 2"), "Merge request found is invalid");
         }
 
         [Test]
@@ -103,8 +103,8 @@ namespace NGitLab.Mock.Tests
                 Assignees = new[] { new UserRef(user1), new UserRef(user2) },
             };
 
-            Assert.AreEqual(1, mergeRequestSingle.Assignees.Count, "Merge request assignees count invalid");
-            Assert.AreEqual("user1", mergeRequestTwo.Assignee.UserName, "Merge request assignee is invalid");
+            Assert.That(mergeRequestSingle.Assignees, Has.Count.EqualTo(1), "Merge request assignees count invalid");
+            Assert.That(mergeRequestTwo.Assignee.UserName, Is.EqualTo("user1"), "Merge request assignee is invalid");
         }
 
         [TestCase(false)]
@@ -148,16 +148,16 @@ namespace NGitLab.Mock.Tests
             });
 
             // Assert
-            Assert.IsFalse(modelMr.HasConflicts);
-            Assert.AreEqual(0, modelMr.DivergedCommitsCount);
-            Assert.IsNotNull(modelMr.DiffRefs?.BaseSha);
-            Assert.AreEqual(modelMr.DiffRefs.BaseSha, modelMr.DiffRefs.StartSha);
-            Assert.AreEqual("merged", modelMr.State);
+            Assert.That(modelMr.HasConflicts, Is.False);
+            Assert.That(modelMr.DivergedCommitsCount, Is.EqualTo(0));
+            Assert.That(modelMr.DiffRefs?.BaseSha, Is.Not.Null);
+            Assert.That(modelMr.DiffRefs.StartSha, Is.EqualTo(modelMr.DiffRefs.BaseSha));
+            Assert.That(modelMr.State, Is.EqualTo("merged"));
 
-            Assert.IsFalse(targetProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
+            Assert.That(targetProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)), Is.False,
                 "Since the merge succeeded and 'ShouldRemoveSourceBranch' was set, 'to-be-merged' branch should be gone");
 
-            Assert.IsFalse(sourceProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
+            Assert.That(sourceProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)), Is.False,
                 "Since the merge succeeded and 'ShouldRemoveSourceBranch' was set, 'to-be-merged' branch should be gone");
         }
 
@@ -202,17 +202,17 @@ namespace NGitLab.Mock.Tests
                 MergeWhenPipelineSucceeds = mr.HeadPipeline != null,
                 ShouldRemoveSourceBranch = true,
             }));
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, exception.StatusCode);
-            Assert.IsTrue(exception.Message.Equals("The MR cannot be merged with method 'ff': the source branch must first be rebased", StringComparison.Ordinal));
+            Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.MethodNotAllowed));
+            Assert.That(exception.Message.Equals("The MR cannot be merged with method 'ff': the source branch must first be rebased", StringComparison.Ordinal), Is.True);
 
-            Assert.IsFalse(mr.HasConflicts);
-            Assert.AreEqual(1, mr.DivergedCommitsCount);
-            Assert.AreNotEqual(mr.BaseSha, mr.StartSha);
+            Assert.That(mr.HasConflicts, Is.False);
+            Assert.That(mr.DivergedCommitsCount, Is.EqualTo(1));
+            Assert.That(mr.StartSha, Is.Not.EqualTo(mr.BaseSha));
 
-            Assert.IsTrue(targetProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
+            Assert.That(targetProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)), Is.True,
                 "Since the merge failed, 'to-be-merged' branch should still be there");
 
-            Assert.IsTrue(sourceProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
+            Assert.That(sourceProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)), Is.True,
                 "Since the merge failed, 'to-be-merged' branch should still be there");
         }
 
@@ -258,17 +258,17 @@ namespace NGitLab.Mock.Tests
                 MergeWhenPipelineSucceeds = mr.HeadPipeline != null,
                 ShouldRemoveSourceBranch = true,
             }));
-            Assert.AreEqual(HttpStatusCode.NotAcceptable, exception.StatusCode);
-            Assert.IsTrue(exception.Message.Equals("The merge request has some conflicts and cannot be merged", StringComparison.Ordinal));
+            Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.NotAcceptable));
+            Assert.That(exception.Message.Equals("The merge request has some conflicts and cannot be merged", StringComparison.Ordinal), Is.True);
 
-            Assert.IsTrue(mr.HasConflicts);
-            Assert.AreEqual(1, mr.DivergedCommitsCount);
-            Assert.AreNotEqual(mr.BaseSha, mr.StartSha);
+            Assert.That(mr.HasConflicts, Is.True);
+            Assert.That(mr.DivergedCommitsCount, Is.EqualTo(1));
+            Assert.That(mr.StartSha, Is.Not.EqualTo(mr.BaseSha));
 
-            Assert.IsTrue(targetProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
+            Assert.That(targetProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)), Is.True,
                 "Since the merge failed, 'to-be-merged' branch should still be there");
 
-            Assert.IsTrue(sourceProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)),
+            Assert.That(sourceProject.Repository.GetAllBranches().Any(b => b.FriendlyName.EndsWith("to-be-merged", StringComparison.Ordinal)), Is.True,
                 "Since the merge failed, 'to-be-merged' branch should still be there");
         }
 
@@ -285,10 +285,10 @@ namespace NGitLab.Mock.Tests
             commit = project.Repository.Commit(user, "another test");
 
             var mr = project.CreateMergeRequest(user, "A great title", "A great description", project.DefaultBranch, branch);
-            Assert.IsNull(mr.HeadPipeline, "No pipeline created yet on the source branch");
+            Assert.That(mr.HeadPipeline, Is.Null, "No pipeline created yet on the source branch");
 
             var pipeline = project.Pipelines.Add(branch, JobStatus.Success, user);
-            Assert.AreEqual(pipeline, mr.HeadPipeline, "A pipeline was just created on the source branch");
+            Assert.That(mr.HeadPipeline, Is.EqualTo(pipeline), "A pipeline was just created on the source branch");
         }
 
         [Test]
@@ -310,13 +310,13 @@ namespace NGitLab.Mock.Tests
             mrClient.Reopen(mergeRequest.Iid);
 
             var resourceStateEvents = mrClient.ResourceStateEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToArray();
-            Assert.AreEqual(2, resourceStateEvents.Length);
+            Assert.That(resourceStateEvents, Has.Length.EqualTo(2));
 
             var closeStateEvents = resourceStateEvents.Where(e => string.Equals(e.State, "closed", StringComparison.Ordinal)).ToArray();
-            Assert.AreEqual(1, closeStateEvents.Length);
+            Assert.That(closeStateEvents, Has.Length.EqualTo(1));
 
             var reopenMilestoneEvents = resourceStateEvents.Where(e => string.Equals(e.State, "reopened", StringComparison.Ordinal)).ToArray();
-            Assert.AreEqual(1, reopenMilestoneEvents.Length);
+            Assert.That(reopenMilestoneEvents, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -358,13 +358,13 @@ namespace NGitLab.Mock.Tests
              * 3. Remove third
              */
             var resourceLabelEvents = mrClient.ResourceLabelEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToArray();
-            Assert.AreEqual(6, resourceLabelEvents.Length);
+            Assert.That(resourceLabelEvents, Has.Length.EqualTo(6));
 
             var addLabelEvents = resourceLabelEvents.Where(e => e.Action == ResourceLabelEventAction.Add).ToArray();
-            Assert.AreEqual(4, addLabelEvents.Length);
+            Assert.That(addLabelEvents, Has.Length.EqualTo(4));
 
             var removeLabelEvents = resourceLabelEvents.Where(e => e.Action == ResourceLabelEventAction.Remove).ToArray();
-            Assert.AreEqual(2, removeLabelEvents.Length);
+            Assert.That(removeLabelEvents, Has.Length.EqualTo(2));
         }
 
         [Test]
@@ -401,16 +401,16 @@ namespace NGitLab.Mock.Tests
              * 2. Add milestone 2
              */
             var resourceMilestoneEvents = mrClient.ResourceMilestoneEventsAsync(projectId: projectId, mergeRequestIid: mergeRequest.Iid).ToArray();
-            Assert.AreEqual(3, resourceMilestoneEvents.Length);
+            Assert.That(resourceMilestoneEvents, Has.Length.EqualTo(3));
 
             var removeMilestoneEvents = resourceMilestoneEvents.Where(e => e.Action == ResourceMilestoneEventAction.Remove).ToArray();
-            Assert.AreEqual(1, removeMilestoneEvents.Length);
-            Assert.AreEqual(milestones[0].Id, removeMilestoneEvents[0].Milestone.Id);
+            Assert.That(removeMilestoneEvents, Has.Length.EqualTo(1));
+            Assert.That(removeMilestoneEvents[0].Milestone.Id, Is.EqualTo(milestones[0].Id));
 
             var addMilestoneEvents = resourceMilestoneEvents.Where(e => e.Action == ResourceMilestoneEventAction.Add).ToArray();
-            Assert.AreEqual(2, addMilestoneEvents.Length);
-            Assert.AreEqual(milestones[0].Id, addMilestoneEvents[0].Milestone.Id);
-            Assert.AreEqual(milestones[1].Id, addMilestoneEvents[1].Milestone.Id);
+            Assert.That(addMilestoneEvents, Has.Length.EqualTo(2));
+            Assert.That(addMilestoneEvents[0].Milestone.Id, Is.EqualTo(milestones[0].Id));
+            Assert.That(addMilestoneEvents[1].Milestone.Id, Is.EqualTo(milestones[1].Id));
         }
     }
 }

@@ -24,7 +24,7 @@ namespace NGitLab.Tests
         public void DeserializeEnumWithEnumMemberAttribute_Ok(string value, TestEnum expectedValue)
         {
             var parsedValue = Serializer.Deserialize<TestEnum>('"' + value + '"');
-            Assert.AreEqual(expectedValue, parsedValue);
+            Assert.That(parsedValue, Is.EqualTo(expectedValue));
         }
 
         [TestCase("dfsf")]
@@ -41,7 +41,7 @@ namespace NGitLab.Tests
 
             TestContractV1 oldContractObject = null;
             Assert.DoesNotThrow(() => oldContractObject = Serializer.Deserialize<TestContractV1>(newContractJson));
-            Assert.NotNull(oldContractObject);
+            Assert.That(oldContractObject, Is.Not.Null);
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace NGitLab.Tests
 
             TestContractV2 newContractObject = null;
             Assert.DoesNotThrow(() => newContractObject = Serializer.Deserialize<TestContractV2>(oldContractJson));
-            Assert.NotNull(newContractObject);
+            Assert.That(newContractObject, Is.Not.Null);
         }
 
         public class TestContractV1

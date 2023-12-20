@@ -260,6 +260,9 @@ dotnet_diagnostic.SA1101.severity = none
 # SA1116: Split parameters should start on line after declaration
 dotnet_diagnostic.SA1116.severity = silent
 
+# SA1118: Parameter should not span multiple lines
+dotnet_diagnostic.SA1118.severity = suggestion
+
 # SA1122: Use string.Empty for empty strings
 dotnet_diagnostic.SA1122.severity = none
 
