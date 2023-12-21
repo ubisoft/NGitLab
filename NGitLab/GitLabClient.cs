@@ -9,6 +9,8 @@ namespace NGitLab
     {
         private readonly API _api;
 
+        public IPackageClient Packages { get; }
+
         public IUserClient Users { get; }
 
         public IProjectClient Projects { get; }
@@ -74,6 +76,7 @@ namespace NGitLab
         private GitLabClient(GitLabCredentials credentials, RequestOptions options)
         {
             _api = new API(credentials, options);
+            Packages = new PackageClient(_api);
             Users = new UserClient(_api);
             Projects = new ProjectClient(_api);
             MergeRequests = new MergeRequestClient(_api);

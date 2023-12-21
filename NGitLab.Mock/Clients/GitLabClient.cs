@@ -14,6 +14,8 @@ namespace NGitLab.Mock.Clients
 
         public IGroupsClient Groups => new GroupClient(Context);
 
+        public IPackageClient Packages => new PackageClient(Context);
+
         public IUserClient Users => new UserClient(Context);
 
         public IProjectClient Projects => new ProjectClient(Context);
