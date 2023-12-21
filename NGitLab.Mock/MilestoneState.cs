@@ -1,8 +1,7 @@
-﻿namespace NGitLab.Mock
+﻿namespace NGitLab.Mock;
+
+public enum MilestoneState
 {
-    public enum MilestoneState
-    {
-        active,
-        closed,
-    }
+    active,
+    closed,
 }

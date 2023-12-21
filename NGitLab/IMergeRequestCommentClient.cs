@@ -2,23 +2,22 @@
 using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IMergeRequestCommentClient
 {
-    public interface IMergeRequestCommentClient
-    {
-        IEnumerable<MergeRequestComment> All { get; }
+    IEnumerable<MergeRequestComment> All { get; }
 
-        IEnumerable<MergeRequestDiscussion> Discussions { get; }
+    IEnumerable<MergeRequestDiscussion> Discussions { get; }
 
-        [Obsolete("Use Add(MergeRequestCommentCreate comment)")]
-        MergeRequestComment Add(MergeRequestComment comment);
+    [Obsolete("Use Add(MergeRequestCommentCreate comment)")]
+    MergeRequestComment Add(MergeRequestComment comment);
 
-        MergeRequestComment Add(MergeRequestCommentCreate comment);
+    MergeRequestComment Add(MergeRequestCommentCreate comment);
 
-        MergeRequestComment Edit(long id, MergeRequestCommentEdit comment);
+    MergeRequestComment Edit(long id, MergeRequestCommentEdit comment);
 
-        void Delete(long id);
+    void Delete(long id);
 
-        IEnumerable<MergeRequestComment> Get(MergeRequestCommentQuery query);
-    }
+    IEnumerable<MergeRequestComment> Get(MergeRequestCommentQuery query);
 }

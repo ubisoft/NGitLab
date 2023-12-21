@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class Trigger
 {
-    public class Trigger
-    {
-        [JsonPropertyName("id")]
-        public int Id;
+    [JsonPropertyName("id")]
+    public int Id;
 
-        [JsonPropertyName("description")]
-        public string Description;
+    [JsonPropertyName("description")]
+    public string Description;
 
-        [JsonPropertyName("created_at")]
-        public DateTime CreatedAt;
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt;
 
-        [JsonPropertyName("last_used")]
-        public DateTime LastUsed;
+    [JsonPropertyName("last_used")]
+    public DateTime LastUsed;
 
-        [JsonPropertyName("token")]
-        public string Token;
+    [JsonPropertyName("token")]
+    public string Token;
 
-        [JsonPropertyName("updated_at")]
-        public DateTime UpdatedAt;
-    }
+    [JsonPropertyName("updated_at")]
+    public DateTime UpdatedAt;
 }

@@ -1,9 +1,8 @@
 ﻿using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IVersionClient
 {
-    public interface IVersionClient
-    {
-        GitLabVersion Get();
-    }
+    GitLabVersion Get();
 }

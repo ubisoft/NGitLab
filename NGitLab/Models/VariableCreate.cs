@@ -1,16 +1,15 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class VariableCreate
 {
-    public class VariableCreate
-    {
-        [JsonPropertyName("key")]
-        public string Key;
+    [JsonPropertyName("key")]
+    public string Key;
 
-        [JsonPropertyName("value")]
-        public string Value;
+    [JsonPropertyName("value")]
+    public string Value;
 
-        [JsonPropertyName("protected")]
-        public bool Protected;
-    }
+    [JsonPropertyName("protected")]
+    public bool Protected;
 }

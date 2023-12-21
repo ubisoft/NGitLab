@@ -1,35 +1,34 @@
 ﻿using System;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface ICommitClient
 {
-    public interface ICommitClient
-    {
-        /// <summary>
-        /// Returns the status of a branch.
-        /// </summary>
-        [Obsolete("This endpoint does not always return data consistent with the pipeline list. " +
-                  "Consider using PipelineClient.Search() instead.")]
-        JobStatus GetJobStatus(string branchName);
+    /// <summary>
+    /// Returns the status of a branch.
+    /// </summary>
+    [Obsolete("This endpoint does not always return data consistent with the pipeline list. " +
+              "Consider using PipelineClient.Search() instead.")]
+    JobStatus GetJobStatus(string branchName);
 
-        /// <summary>
-        /// Create a commit
-        /// </summary>
-        Commit Create(CommitCreate commit);
+    /// <summary>
+    /// Create a commit
+    /// </summary>
+    Commit Create(CommitCreate commit);
 
-        /// <summary>
-        /// Get a specific commit identified by the commit hash or name of a branch or tag.
-        /// </summary>
-        Commit GetCommit(string @ref);
+    /// <summary>
+    /// Get a specific commit identified by the commit hash or name of a branch or tag.
+    /// </summary>
+    Commit GetCommit(string @ref);
 
-        /// <summary>
-        /// Cherry-picks a commit to a given branch.
-        /// </summary>
-        Commit CherryPick(CommitCherryPick cherryPick);
+    /// <summary>
+    /// Cherry-picks a commit to a given branch.
+    /// </summary>
+    Commit CherryPick(CommitCherryPick cherryPick);
 
-        /// <summary>
-        /// Get merge requests related to a commit
-        /// </summary>
-        GitLabCollectionResponse<MergeRequest> GetRelatedMergeRequestsAsync(RelatedMergeRequestsQuery query);
-    }
+    /// <summary>
+    /// Get merge requests related to a commit
+    /// </summary>
+    GitLabCollectionResponse<MergeRequest> GetRelatedMergeRequestsAsync(RelatedMergeRequestsQuery query);
 }

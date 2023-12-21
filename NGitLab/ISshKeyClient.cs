@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface ISshKeyClient
 {
-    public interface ISshKeyClient
-    {
-        IEnumerable<SshKey> All { get; }
+    IEnumerable<SshKey> All { get; }
 
-        SshKey this[int keyId] { get; }
+    SshKey this[int keyId] { get; }
 
-        SshKey Add(SshKeyCreate key);
+    SshKey Add(SshKeyCreate key);
 
-        void Remove(int keyId);
-    }
+    void Remove(int keyId);
 }

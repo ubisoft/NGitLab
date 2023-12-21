@@ -1,13 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class MergeRequestRebase
 {
-    public class MergeRequestRebase
-    {
-        /// <summary>
-        /// Set to true to skip creating a CI pipeline.
-        /// </summary>
-        [JsonPropertyName("skip_ci")]
-        public bool? SkipCi { get; set; }
-    }
+    /// <summary>
+    /// Set to true to skip creating a CI pipeline.
+    /// </summary>
+    [JsonPropertyName("skip_ci")]
+    public bool? SkipCi { get; set; }
 }

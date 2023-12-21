@@ -1,8 +1,7 @@
-﻿namespace NGitLab.Mock
+﻿namespace NGitLab.Mock;
+
+public enum StateEvent
 {
-    public enum StateEvent
-    {
-        open,
-        close,
-    }
+    open,
+    close,
 }

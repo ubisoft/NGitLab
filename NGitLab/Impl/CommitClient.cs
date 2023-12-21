@@ -3,64 +3,63 @@ using System.ComponentModel;
 using System.Net;
 using NGitLab.Models;
 
-namespace NGitLab.Impl
+namespace NGitLab.Impl;
+
+public class CommitClient : ICommitClient
 {
-    public class CommitClient : ICommitClient
+    private readonly API _api;
+    private readonly string _repoPath;
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public CommitClient(API api, int projectId)
+        : this(api, (long)projectId)
     {
-        private readonly API _api;
-        private readonly string _repoPath;
+    }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public CommitClient(API api, int projectId)
-            : this(api, (long)projectId)
+    public CommitClient(API api, ProjectId projectId)
+    {
+        _api = api;
+        var projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
+        _repoPath = $"{projectPath}/repository";
+    }
+
+    public Commit GetCommit(string @ref)
+    {
+        return _api.Get().To<Commit>(_repoPath + $"/commits/{@ref}");
+    }
+
+    public Commit CherryPick(CommitCherryPick cherryPick)
+    {
+        return _api.Post().With(cherryPick).To<Commit>($"{_repoPath}/commits/{cherryPick.Sha}/cherry_pick");
+    }
+
+    public JobStatus GetJobStatus(string branchName)
+    {
+        var encodedBranch = WebUtility.UrlEncode(branchName);
+
+        var latestCommit = _api.Get().To<Commit>(_repoPath + $"/commits/{encodedBranch}?per_page=1");
+        if (latestCommit == null)
         {
+            return JobStatus.Unknown;
         }
 
-        public CommitClient(API api, ProjectId projectId)
+        if (string.IsNullOrEmpty(latestCommit.Status))
         {
-            _api = api;
-            var projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
-            _repoPath = $"{projectPath}/repository";
+            return JobStatus.NoBuild;
         }
 
-        public Commit GetCommit(string @ref)
+        if (!Enum.TryParse(latestCommit.Status, ignoreCase: true, result: out JobStatus result))
         {
-            return _api.Get().To<Commit>(_repoPath + $"/commits/{@ref}");
+            throw new NotSupportedException($"Status {latestCommit.Status} is unrecognised");
         }
 
-        public Commit CherryPick(CommitCherryPick cherryPick)
-        {
-            return _api.Post().With(cherryPick).To<Commit>($"{_repoPath}/commits/{cherryPick.Sha}/cherry_pick");
-        }
+        return result;
+    }
 
-        public JobStatus GetJobStatus(string branchName)
-        {
-            var encodedBranch = WebUtility.UrlEncode(branchName);
+    public Commit Create(CommitCreate commit) => _api.Post().With(commit).To<Commit>(_repoPath + "/commits");
 
-            var latestCommit = _api.Get().To<Commit>(_repoPath + $"/commits/{encodedBranch}?per_page=1");
-            if (latestCommit == null)
-            {
-                return JobStatus.Unknown;
-            }
-
-            if (string.IsNullOrEmpty(latestCommit.Status))
-            {
-                return JobStatus.NoBuild;
-            }
-
-            if (!Enum.TryParse(latestCommit.Status, ignoreCase: true, result: out JobStatus result))
-            {
-                throw new NotSupportedException($"Status {latestCommit.Status} is unrecognised");
-            }
-
-            return result;
-        }
-
-        public Commit Create(CommitCreate commit) => _api.Post().With(commit).To<Commit>(_repoPath + "/commits");
-
-        public GitLabCollectionResponse<MergeRequest> GetRelatedMergeRequestsAsync(RelatedMergeRequestsQuery query)
-        {
-            return _api.Get().GetAllAsync<MergeRequest>(_repoPath + $"/commits/{query.Sha}/merge_requests");
-        }
+    public GitLabCollectionResponse<MergeRequest> GetRelatedMergeRequestsAsync(RelatedMergeRequestsQuery query)
+    {
+        return _api.Get().GetAllAsync<MergeRequest>(_repoPath + $"/commits/{query.Sha}/merge_requests");
     }
 }

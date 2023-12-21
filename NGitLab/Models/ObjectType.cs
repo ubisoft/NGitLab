@@ -1,12 +1,11 @@
-﻿namespace NGitLab.Models
-{
-    public enum ObjectType
-    {
-        // ReSharper disable InconsistentNaming
-        blob,
-        tree,
-        commit,
+﻿namespace NGitLab.Models;
 
-        // ReSharper restore InconsistentNaming
-    }
+public enum ObjectType
+{
+    // ReSharper disable InconsistentNaming
+    blob,
+    tree,
+    commit,
+
+    // ReSharper restore InconsistentNaming
 }

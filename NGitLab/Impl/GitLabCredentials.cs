@@ -1,83 +1,82 @@
 ﻿using System;
 
-namespace NGitLab.Impl
+namespace NGitLab.Impl;
+
+/// <summary>
+/// To connect to GitLab, you need a token.
+/// You can either set one in your profile or ask for one on the fly.
+/// </summary>
+/// <remarks>
+/// The api token will be resolved only when required, to make sure no cost is
+/// incurred until credentials are really needed.
+/// </remarks>
+public class GitLabCredentials
 {
-    /// <summary>
-    /// To connect to GitLab, you need a token.
-    /// You can either set one in your profile or ask for one on the fly.
-    /// </summary>
-    /// <remarks>
-    /// The api token will be resolved only when required, to make sure no cost is
-    /// incurred until credentials are really needed.
-    /// </remarks>
-    public class GitLabCredentials
+    private string _apiToken;
+
+    public string HostUrl { get; }
+
+    public string UserName { get; set; }
+
+    public string Password { get; set; }
+
+    public GitLabCredentials(string hostUrl, string apiToken)
     {
-        private string _apiToken;
+        if (string.IsNullOrEmpty(hostUrl))
+            throw new ArgumentException("HostUrl is mandatory", nameof(hostUrl));
+        if (string.IsNullOrEmpty(apiToken))
+            throw new ArgumentException("Token is mandatory", nameof(apiToken));
 
-        public string HostUrl { get; }
+        ValidateHostUrl(hostUrl);
 
-        public string UserName { get; set; }
+        HostUrl = GetApiUrl(hostUrl);
+        _apiToken = apiToken;
+    }
 
-        public string Password { get; set; }
+    public GitLabCredentials(string hostUrl, string userName, string password)
+    {
+        if (string.IsNullOrEmpty(hostUrl))
+            throw new ArgumentException("HostUrl is mandatory", nameof(hostUrl));
+        if (string.IsNullOrEmpty(userName))
+            throw new ArgumentException("UserName is mandatory", nameof(userName));
+        if (string.IsNullOrEmpty(password))
+            throw new ArgumentException("Password is mandatory", nameof(password));
 
-        public GitLabCredentials(string hostUrl, string apiToken)
+        ValidateHostUrl(hostUrl);
+
+        HostUrl = GetApiUrl(hostUrl);
+        UserName = userName;
+        Password = password;
+    }
+
+    public string ApiToken
+    {
+        get => _apiToken;
+        set
         {
-            if (string.IsNullOrEmpty(hostUrl))
-                throw new ArgumentException("HostUrl is mandatory", nameof(hostUrl));
-            if (string.IsNullOrEmpty(apiToken))
-                throw new ArgumentException("Token is mandatory", nameof(apiToken));
+            _apiToken = value ?? throw new ArgumentNullException(nameof(value));
 
-            ValidateHostUrl(hostUrl);
-
-            HostUrl = GetApiUrl(hostUrl);
-            _apiToken = apiToken;
+            // Passwords and user names and not useful anymore.
+            UserName = null;
+            Password = null;
         }
+    }
 
-        public GitLabCredentials(string hostUrl, string userName, string password)
+    private static void ValidateHostUrl(string url)
+    {
+        if (url.EndsWith("/api/v3", StringComparison.OrdinalIgnoreCase) ||
+            url.EndsWith("/api/v3/", StringComparison.OrdinalIgnoreCase))
         {
-            if (string.IsNullOrEmpty(hostUrl))
-                throw new ArgumentException("HostUrl is mandatory", nameof(hostUrl));
-            if (string.IsNullOrEmpty(userName))
-                throw new ArgumentException("UserName is mandatory", nameof(userName));
-            if (string.IsNullOrEmpty(password))
-                throw new ArgumentException("Password is mandatory", nameof(password));
-
-            ValidateHostUrl(hostUrl);
-
-            HostUrl = GetApiUrl(hostUrl);
-            UserName = userName;
-            Password = password;
+            throw new ArgumentException("API v3 endpoint is not supported.");
         }
+    }
 
-        public string ApiToken
-        {
-            get => _apiToken;
-            set
-            {
-                _apiToken = value ?? throw new ArgumentNullException(nameof(value));
+    private static string GetApiUrl(string url)
+    {
+        url = url.TrimEnd('/');
+        if (url.EndsWith("/api/v4", StringComparison.OrdinalIgnoreCase))
+            return url.Substring(0, url.Length - "/api/v4".Length);
 
-                // Passwords and user names and not useful anymore.
-                UserName = null;
-                Password = null;
-            }
-        }
-
-        private static void ValidateHostUrl(string url)
-        {
-            if (url.EndsWith("/api/v3", StringComparison.OrdinalIgnoreCase) ||
-                url.EndsWith("/api/v3/", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new ArgumentException("API v3 endpoint is not supported.");
-            }
-        }
-
-        private static string GetApiUrl(string url)
-        {
-            url = url.TrimEnd('/');
-            if (url.EndsWith("/api/v4", StringComparison.OrdinalIgnoreCase))
-                return url.Substring(0, url.Length - "/api/v4".Length);
-
-            return url;
-        }
+        return url;
     }
 }

@@ -1,13 +1,12 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public class RepositoryGetTreeOptions
 {
-    public class RepositoryGetTreeOptions
-    {
-        public string Path { get; set; }
+    public string Path { get; set; }
 
-        public string Ref { get; set; }
+    public string Ref { get; set; }
 
-        public bool Recursive { get; set; }
+    public bool Recursive { get; set; }
 
-        public uint? PerPage { get; set; }
-    }
+    public uint? PerPage { get; set; }
 }

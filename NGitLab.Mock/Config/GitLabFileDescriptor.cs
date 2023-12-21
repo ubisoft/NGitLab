@@ -1,18 +1,17 @@
-﻿namespace NGitLab.Mock.Config
+﻿namespace NGitLab.Mock.Config;
+
+/// <summary>
+/// Describe a file in project repository
+/// </summary>
+public class GitLabFileDescriptor
 {
     /// <summary>
-    /// Describe a file in project repository
+    /// Relative path to file (required)
     /// </summary>
-    public class GitLabFileDescriptor
-    {
-        /// <summary>
-        /// Relative path to file (required)
-        /// </summary>
-        public string Path { get; set; }
+    public string Path { get; set; }
 
-        /// <summary>
-        /// File content
-        /// </summary>
-        public string Content { get; set; }
-    }
+    /// <summary>
+    /// File content
+    /// </summary>
+    public string Content { get; set; }
 }

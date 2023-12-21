@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface ISystemHookClient
 {
-    public interface ISystemHookClient
-    {
-        IEnumerable<SystemHook> All { get; }
+    IEnumerable<SystemHook> All { get; }
 
-        SystemHook this[int hookId] { get; }
+    SystemHook this[int hookId] { get; }
 
-        SystemHook Create(SystemHookUpsert hook);
+    SystemHook Create(SystemHookUpsert hook);
 
-        void Delete(int hookId);
-    }
+    void Delete(int hookId);
 }

@@ -1,9 +1,8 @@
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IMergeRequestChangeClient
 {
-    public interface IMergeRequestChangeClient
-    {
-        MergeRequestChange MergeRequestChange { get; }
-    }
+    MergeRequestChange MergeRequestChange { get; }
 }

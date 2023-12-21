@@ -1,46 +1,45 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class MergeRequestCreate
 {
-    public class MergeRequestCreate
-    {
-        [JsonPropertyName("source_branch")]
-        public string SourceBranch;
+    [JsonPropertyName("source_branch")]
+    public string SourceBranch;
 
-        [JsonPropertyName("target_branch")]
-        public string TargetBranch;
+    [JsonPropertyName("target_branch")]
+    public string TargetBranch;
 
-        [JsonPropertyName("assignee_id")]
-        public int? AssigneeId;
+    [JsonPropertyName("assignee_id")]
+    public int? AssigneeId;
 
-        [JsonPropertyName("assignee_ids")]
-        public int[] AssigneeIds;
+    [JsonPropertyName("assignee_ids")]
+    public int[] AssigneeIds;
 
-        [JsonPropertyName("reviewer_ids")]
-        public int[] ReviewerIds;
+    [JsonPropertyName("reviewer_ids")]
+    public int[] ReviewerIds;
 
-        [JsonPropertyName("title")]
-        public string Title;
+    [JsonPropertyName("title")]
+    public string Title;
 
-        [JsonPropertyName("description")]
-        public string Description;
+    [JsonPropertyName("description")]
+    public string Description;
 
-        [JsonPropertyName("target_project_id")]
-        public int? TargetProjectId;
+    [JsonPropertyName("target_project_id")]
+    public int? TargetProjectId;
 
-        [JsonPropertyName("remove_source_branch")]
-        public bool RemoveSourceBranch;
+    [JsonPropertyName("remove_source_branch")]
+    public bool RemoveSourceBranch;
 
-        [JsonPropertyName("milestone_id")]
-        public int? MilestoneId { get; set; }
+    [JsonPropertyName("milestone_id")]
+    public int? MilestoneId { get; set; }
 
-        [JsonPropertyName("labels")]
-        public string Labels;
+    [JsonPropertyName("labels")]
+    public string Labels;
 
-        [JsonPropertyName("squash")]
-        public bool Squash;
+    [JsonPropertyName("squash")]
+    public bool Squash;
 
-        [JsonPropertyName("allow_collaboration")]
-        public bool? AllowCollaboration;
-    }
+    [JsonPropertyName("allow_collaboration")]
+    public bool? AllowCollaboration;
 }

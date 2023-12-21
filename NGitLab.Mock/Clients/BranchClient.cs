@@ -4,121 +4,120 @@ using System.Linq;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
-namespace NGitLab.Mock.Clients
-{
-    internal sealed class BranchClient : ClientBase, IBranchClient
-    {
-        private readonly int _projectId;
+namespace NGitLab.Mock.Clients;
 
-        public BranchClient(ClientContext context, int projectId)
-            : base(context)
+internal sealed class BranchClient : ClientBase, IBranchClient
+{
+    private readonly int _projectId;
+
+    public BranchClient(ClientContext context, int projectId)
+        : base(context)
+    {
+        _projectId = projectId;
+    }
+
+    public IEnumerable<Branch> Search(string search)
+    {
+        Func<string, bool> filterBranch;
+        switch (search)
         {
-            _projectId = projectId;
+            case null:
+            case "":
+                filterBranch = _ => true;
+                break;
+
+            case not null when search[0] == '^' && search[search.Length - 1] == '$':
+                search = search.Substring(1, search.Length - 1 - 1);
+                filterBranch = branch => branch.Equals(search, StringComparison.OrdinalIgnoreCase);
+                break;
+
+            case not null when search[0] == '^':
+                search = search.Substring(1);
+                filterBranch = branch => branch.StartsWith(search, StringComparison.OrdinalIgnoreCase);
+                break;
+
+            case not null when search[search.Length - 1] == '$':
+                search = search.Substring(0, search.Length - 1);
+                filterBranch = branch => branch.EndsWith(search, StringComparison.OrdinalIgnoreCase);
+                break;
+
+            default:
+                filterBranch = branch => branch.Contains(search, StringComparison.OrdinalIgnoreCase);
+                break;
         }
 
-        public IEnumerable<Branch> Search(string search)
+        using (Context.BeginOperationScope())
         {
-            Func<string, bool> filterBranch;
-            switch (search)
-            {
-                case null:
-                case "":
-                    filterBranch = _ => true;
-                    break;
+            var project = GetProject(_projectId, ProjectPermission.View);
+            return project.Repository.GetAllBranches()
+                .Where(branch => filterBranch(branch.FriendlyName))
+                .Select(branch => branch.ToBranchClient(project));
+        }
+    }
 
-                case not null when search[0] == '^' && search[search.Length - 1] == '$':
-                    search = search.Substring(1, search.Length - 1 - 1);
-                    filterBranch = branch => branch.Equals(search, StringComparison.OrdinalIgnoreCase);
-                    break;
+    public GitLabCollectionResponse<Branch> SearchAsync(string search)
+    {
+        return GitLabCollectionResponse.Create(Search(search));
+    }
 
-                case not null when search[0] == '^':
-                    search = search.Substring(1);
-                    filterBranch = branch => branch.StartsWith(search, StringComparison.OrdinalIgnoreCase);
-                    break;
-
-                case not null when search[search.Length - 1] == '$':
-                    search = search.Substring(0, search.Length - 1);
-                    filterBranch = branch => branch.EndsWith(search, StringComparison.OrdinalIgnoreCase);
-                    break;
-
-                default:
-                    filterBranch = branch => branch.Contains(search, StringComparison.OrdinalIgnoreCase);
-                    break;
-            }
-
+    public Branch this[string name]
+    {
+        get
+        {
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetAllBranches()
-                    .Where(branch => filterBranch(branch.FriendlyName))
-                    .Select(branch => branch.ToBranchClient(project));
+                var branch = project.Repository.GetBranch(name);
+                if (branch == null)
+                    throw new GitLabNotFoundException();
+
+                return branch.ToBranchClient(project);
             }
         }
+    }
 
-        public GitLabCollectionResponse<Branch> SearchAsync(string search)
-        {
-            return GitLabCollectionResponse.Create(Search(search));
-        }
-
-        public Branch this[string name]
-        {
-            get
-            {
-                using (Context.BeginOperationScope())
-                {
-                    var project = GetProject(_projectId, ProjectPermission.View);
-                    var branch = project.Repository.GetBranch(name);
-                    if (branch == null)
-                        throw new GitLabNotFoundException();
-
-                    return branch.ToBranchClient(project);
-                }
-            }
-        }
-
-        public IEnumerable<Branch> All
-        {
-            get
-            {
-                using (Context.BeginOperationScope())
-                {
-                    var project = GetProject(_projectId, ProjectPermission.View);
-                    return project.Repository.GetAllBranches().Select(branch => branch.ToBranchClient(project)).ToList();
-                }
-            }
-        }
-
-        public Branch Create(BranchCreate branch)
+    public IEnumerable<Branch> All
+    {
+        get
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(_projectId, ProjectPermission.Contribute);
-                if (branch.Ref != null)
-                {
-                    return project.Repository.CreateBranch(branch.Name, branch.Ref).ToBranchClient(project);
-                }
-
-                return project.Repository.CreateBranch(branch.Name).ToBranchClient(project);
+                var project = GetProject(_projectId, ProjectPermission.View);
+                return project.Repository.GetAllBranches().Select(branch => branch.ToBranchClient(project)).ToList();
             }
         }
+    }
 
-        public void Delete(string name)
+    public Branch Create(BranchCreate branch)
+    {
+        using (Context.BeginOperationScope())
         {
-            using (Context.BeginOperationScope())
+            var project = GetProject(_projectId, ProjectPermission.Contribute);
+            if (branch.Ref != null)
             {
-                var project = GetProject(_projectId, ProjectPermission.Contribute);
-                project.Repository.RemoveBranch(name);
+                return project.Repository.CreateBranch(branch.Name, branch.Ref).ToBranchClient(project);
             }
-        }
 
-        public Branch Protect(string name)
-        {
-            throw new NotImplementedException();
+            return project.Repository.CreateBranch(branch.Name).ToBranchClient(project);
         }
+    }
 
-        public Branch Unprotect(string name)
+    public void Delete(string name)
+    {
+        using (Context.BeginOperationScope())
         {
-            throw new NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.Contribute);
+            project.Repository.RemoveBranch(name);
         }
+    }
+
+    public Branch Protect(string name)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Branch Unprotect(string name)
+    {
+        throw new NotImplementedException();
     }
 }

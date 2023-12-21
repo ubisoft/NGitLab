@@ -7,138 +7,137 @@ using System.Linq;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
-namespace NGitLab.Impl
+namespace NGitLab.Impl;
+
+public class RepositoryClient : IRepositoryClient
 {
-    public class RepositoryClient : IRepositoryClient
+    private readonly API _api;
+    private readonly string _repoPath;
+    private readonly string _projectPath;
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public RepositoryClient(API api, int projectId)
+        : this(api, (long)projectId)
     {
-        private readonly API _api;
-        private readonly string _repoPath;
-        private readonly string _projectPath;
+    }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public RepositoryClient(API api, int projectId)
-            : this(api, (long)projectId)
+    public RepositoryClient(API api, ProjectId projectId)
+    {
+        _api = api;
+        _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
+        _repoPath = $"{_projectPath}/repository";
+    }
+
+    public ITagClient Tags => new TagClient(_api, _repoPath);
+
+    public IContributorClient Contributors => new ContributorClient(_api, _repoPath);
+
+    public IEnumerable<Tree> Tree => _api.Get().GetAll<Tree>(_repoPath + "/tree");
+
+    public IEnumerable<Tree> GetTree(string path) => GetTree(new RepositoryGetTreeOptions { Path = path });
+
+    public IEnumerable<Tree> GetTree(string path, string @ref, bool recursive) => GetTree(new RepositoryGetTreeOptions { Path = path, Ref = @ref, Recursive = recursive });
+
+    public IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options)
+    {
+        var url = BuildGetTreeUrl(options);
+        return _api.Get().GetAll<Tree>(url);
+    }
+
+    public GitLabCollectionResponse<Tree> GetTreeAsync(RepositoryGetTreeOptions options)
+    {
+        var url = BuildGetTreeUrl(options);
+        return _api.Get().GetAllAsync<Tree>(url);
+    }
+
+    public void GetRawBlob(string sha, Action<Stream> parser)
+    {
+        _api.Get().Stream(_repoPath + "/raw_blobs/" + sha, parser);
+    }
+
+    public void GetArchive(Action<Stream> parser)
+    {
+        _api.Get().Stream(_repoPath + "/archive", parser);
+    }
+
+    public IEnumerable<Commit> Commits => _api.Get().GetAll<Commit>(_repoPath + $"/commits?per_page={GetCommitsRequest.DefaultPerPage}");
+
+    /// <summary>
+    /// Gets all the commits of the specified branch/tag.
+    /// </summary>
+    public IEnumerable<Commit> GetCommits(string refName, int maxResults = 0)
+    {
+        return GetCommits(new GetCommitsRequest { MaxResults = maxResults, RefName = refName });
+    }
+
+    /// <summary>
+    /// Gets all the commits of the specified branch/tag.
+    /// </summary>
+    public IEnumerable<Commit> GetCommits(GetCommitsRequest request)
+    {
+        var lst = new List<string>();
+        if (!string.IsNullOrWhiteSpace(request.RefName))
         {
+            lst.Add($"ref_name={Uri.EscapeDataString(request.RefName)}");
         }
 
-        public RepositoryClient(API api, ProjectId projectId)
+        if (!string.IsNullOrWhiteSpace(request.Path))
         {
-            _api = api;
-            _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
-            _repoPath = $"{_projectPath}/repository";
+            lst.Add($"path={Uri.EscapeDataString(request.Path)}");
         }
 
-        public ITagClient Tags => new TagClient(_api, _repoPath);
-
-        public IContributorClient Contributors => new ContributorClient(_api, _repoPath);
-
-        public IEnumerable<Tree> Tree => _api.Get().GetAll<Tree>(_repoPath + "/tree");
-
-        public IEnumerable<Tree> GetTree(string path) => GetTree(new RepositoryGetTreeOptions { Path = path });
-
-        public IEnumerable<Tree> GetTree(string path, string @ref, bool recursive) => GetTree(new RepositoryGetTreeOptions { Path = path, Ref = @ref, Recursive = recursive });
-
-        public IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options)
+        if (request.FirstParent != null)
         {
-            var url = BuildGetTreeUrl(options);
-            return _api.Get().GetAll<Tree>(url);
+            lst.Add($"first_parent={Uri.EscapeDataString(request.FirstParent.ToString())}");
         }
 
-        public GitLabCollectionResponse<Tree> GetTreeAsync(RepositoryGetTreeOptions options)
+        if (request.Since.HasValue)
         {
-            var url = BuildGetTreeUrl(options);
-            return _api.Get().GetAllAsync<Tree>(url);
+            lst.Add($"since={Uri.EscapeDataString(request.Since.Value.ToString("s", CultureInfo.InvariantCulture))}");
         }
 
-        public void GetRawBlob(string sha, Action<Stream> parser)
+        if (request.Until.HasValue)
         {
-            _api.Get().Stream(_repoPath + "/raw_blobs/" + sha, parser);
+            lst.Add($"until={Uri.EscapeDataString(request.Until.Value.ToString("s", CultureInfo.InvariantCulture))}");
         }
 
-        public void GetArchive(Action<Stream> parser)
-        {
-            _api.Get().Stream(_repoPath + "/archive", parser);
-        }
+        var perPage = request.MaxResults > 0 ? Math.Min(request.MaxResults, request.PerPage) : request.PerPage;
+        lst.Add($"per_page={perPage.ToStringInvariant()}");
 
-        public IEnumerable<Commit> Commits => _api.Get().GetAll<Commit>(_repoPath + $"/commits?per_page={GetCommitsRequest.DefaultPerPage}");
+        var path = _repoPath + "/commits" + (lst.Count == 0 ? string.Empty : "?" + string.Join("&", lst));
+        var allCommits = _api.Get().GetAll<Commit>(path);
+        if (request.MaxResults <= 0)
+            return allCommits;
 
-        /// <summary>
-        /// Gets all the commits of the specified branch/tag.
-        /// </summary>
-        public IEnumerable<Commit> GetCommits(string refName, int maxResults = 0)
-        {
-            return GetCommits(new GetCommitsRequest { MaxResults = maxResults, RefName = refName });
-        }
+        return allCommits.Take(request.MaxResults);
+    }
 
-        /// <summary>
-        /// Gets all the commits of the specified branch/tag.
-        /// </summary>
-        public IEnumerable<Commit> GetCommits(GetCommitsRequest request)
-        {
-            var lst = new List<string>();
-            if (!string.IsNullOrWhiteSpace(request.RefName))
-            {
-                lst.Add($"ref_name={Uri.EscapeDataString(request.RefName)}");
-            }
+    public CompareResults Compare(CompareQuery query)
+    {
+        return _api.Get().To<CompareResults>(_repoPath + $@"/compare?from={query.Source}&to={query.Target}");
+    }
 
-            if (!string.IsNullOrWhiteSpace(request.Path))
-            {
-                lst.Add($"path={Uri.EscapeDataString(request.Path)}");
-            }
+    public Commit GetCommit(Sha1 sha) => _api.Get().To<Commit>(_repoPath + "/commits/" + sha);
 
-            if (request.FirstParent != null)
-            {
-                lst.Add($"first_parent={Uri.EscapeDataString(request.FirstParent.ToString())}");
-            }
+    public IEnumerable<Diff> GetCommitDiff(Sha1 sha) => _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
 
-            if (request.Since.HasValue)
-            {
-                lst.Add($"since={Uri.EscapeDataString(request.Since.Value.ToString("s", CultureInfo.InvariantCulture))}");
-            }
+    public IEnumerable<Ref> GetCommitRefs(Sha1 sha, CommitRefType type = CommitRefType.All) =>
+        _api.Get().GetAll<Ref>($"{_repoPath}/commits/{sha}/refs?type={type.ToString().ToLowerInvariant()}");
 
-            if (request.Until.HasValue)
-            {
-                lst.Add($"until={Uri.EscapeDataString(request.Until.Value.ToString("s", CultureInfo.InvariantCulture))}");
-            }
+    public IFilesClient Files => new FilesClient(_api, _repoPath);
 
-            var perPage = request.MaxResults > 0 ? Math.Min(request.MaxResults, request.PerPage) : request.PerPage;
-            lst.Add($"per_page={perPage.ToStringInvariant()}");
+    public IBranchClient Branches => new BranchClient(_api, _repoPath);
 
-            var path = _repoPath + "/commits" + (lst.Count == 0 ? string.Empty : "?" + string.Join("&", lst));
-            var allCommits = _api.Get().GetAll<Commit>(path);
-            if (request.MaxResults <= 0)
-                return allCommits;
+    public IProjectHooksClient ProjectHooks => new ProjectHooksClient(_api, _projectPath);
 
-            return allCommits.Take(request.MaxResults);
-        }
+    private string BuildGetTreeUrl(RepositoryGetTreeOptions options)
+    {
+        var url = $"{_repoPath}/tree";
+        url = Utils.AddParameter(url, "path", options.Path);
+        url = Utils.AddParameter(url, "ref", options.Ref);
+        url = Utils.AddParameter(url, "recursive", options.Recursive);
+        url = Utils.AddParameter(url, "per_page", options.PerPage);
 
-        public CompareResults Compare(CompareQuery query)
-        {
-            return _api.Get().To<CompareResults>(_repoPath + $@"/compare?from={query.Source}&to={query.Target}");
-        }
-
-        public Commit GetCommit(Sha1 sha) => _api.Get().To<Commit>(_repoPath + "/commits/" + sha);
-
-        public IEnumerable<Diff> GetCommitDiff(Sha1 sha) => _api.Get().GetAll<Diff>(_repoPath + "/commits/" + sha + "/diff");
-
-        public IEnumerable<Ref> GetCommitRefs(Sha1 sha, CommitRefType type = CommitRefType.All) =>
-            _api.Get().GetAll<Ref>($"{_repoPath}/commits/{sha}/refs?type={type.ToString().ToLowerInvariant()}");
-
-        public IFilesClient Files => new FilesClient(_api, _repoPath);
-
-        public IBranchClient Branches => new BranchClient(_api, _repoPath);
-
-        public IProjectHooksClient ProjectHooks => new ProjectHooksClient(_api, _projectPath);
-
-        private string BuildGetTreeUrl(RepositoryGetTreeOptions options)
-        {
-            var url = $"{_repoPath}/tree";
-            url = Utils.AddParameter(url, "path", options.Path);
-            url = Utils.AddParameter(url, "ref", options.Ref);
-            url = Utils.AddParameter(url, "recursive", options.Recursive);
-            url = Utils.AddParameter(url, "per_page", options.PerPage);
-
-            return url;
-        }
+        return url;
     }
 }

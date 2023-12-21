@@ -7,143 +7,142 @@ using System.Threading.Tasks;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
-namespace NGitLab.Mock.Clients
+namespace NGitLab.Mock.Clients;
+
+internal sealed class JobClient : ClientBase, IJobClient
 {
-    internal sealed class JobClient : ClientBase, IJobClient
+    private readonly int _projectId;
+
+    public JobClient(ClientContext context, ProjectId projectId)
+        : base(context)
     {
-        private readonly int _projectId;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+    }
 
-        public JobClient(ClientContext context, ProjectId projectId)
-            : base(context)
+    public Models.Job Get(int jobId)
+    {
+        using (Context.BeginOperationScope())
         {
-            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var job = project.Jobs.GetById(jobId);
+
+            if (job == null)
+                throw new GitLabNotFoundException();
+
+            return job.ToJobClient();
         }
+    }
 
-        public Models.Job Get(int jobId)
+    [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+    public async Task<Models.Job> GetAsync(int jobId, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return Get(jobId);
+    }
+
+    public byte[] GetJobArtifacts(int jobId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public byte[] GetJobArtifact(int jobId, string path)
+    {
+        throw new NotImplementedException();
+    }
+
+    public byte[] GetJobArtifact(JobArtifactQuery query)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<Models.Job> GetJobs(JobScopeMask scope)
+    {
+        return GetJobs(new JobQuery { Scope = scope });
+    }
+
+    public IEnumerable<Models.Job> GetJobs(JobQuery query)
+    {
+        using (Context.BeginOperationScope())
         {
-            using (Context.BeginOperationScope())
+            var project = GetProject(_projectId, ProjectPermission.View);
+
+            if (query.Scope == JobScopeMask.All)
+                return project.Jobs.Select(j => j.ToJobClient());
+
+            var scopes = new List<string>();
+            foreach (Enum value in Enum.GetValues(query.Scope.GetType()))
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                var job = project.Jobs.GetById(jobId);
-
-                if (job == null)
-                    throw new GitLabNotFoundException();
-
-                return job.ToJobClient();
-            }
-        }
-
-        [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
-        public async Task<Models.Job> GetAsync(int jobId, CancellationToken cancellationToken = default)
-        {
-            await Task.Yield();
-            return Get(jobId);
-        }
-
-        public byte[] GetJobArtifacts(int jobId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public byte[] GetJobArtifact(int jobId, string path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public byte[] GetJobArtifact(JobArtifactQuery query)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Models.Job> GetJobs(JobScopeMask scope)
-        {
-            return GetJobs(new JobQuery { Scope = scope });
-        }
-
-        public IEnumerable<Models.Job> GetJobs(JobQuery query)
-        {
-            using (Context.BeginOperationScope())
-            {
-                var project = GetProject(_projectId, ProjectPermission.View);
-
-                if (query.Scope == JobScopeMask.All)
-                    return project.Jobs.Select(j => j.ToJobClient());
-
-                var scopes = new List<string>();
-                foreach (Enum value in Enum.GetValues(query.Scope.GetType()))
+                if (query.Scope.HasFlag(value))
                 {
-                    if (query.Scope.HasFlag(value))
-                    {
-                        scopes.Add(value.ToString());
-                    }
+                    scopes.Add(value.ToString());
                 }
-
-                var jobs = project.Jobs.Where(j => scopes.Any(scope => string.Equals(j.Status.ToString(), scope, StringComparison.OrdinalIgnoreCase)));
-                return jobs.Select(j => j.ToJobClient()).ToList();
             }
-        }
 
-        public GitLabCollectionResponse<Models.Job> GetJobsAsync(JobQuery query)
-        {
-            return GitLabCollectionResponse.Create(GetJobs(query));
+            var jobs = project.Jobs.Where(j => scopes.Any(scope => string.Equals(j.Status.ToString(), scope, StringComparison.OrdinalIgnoreCase)));
+            return jobs.Select(j => j.ToJobClient()).ToList();
         }
+    }
 
-        public string GetTrace(int jobId)
+    public GitLabCollectionResponse<Models.Job> GetJobsAsync(JobQuery query)
+    {
+        return GitLabCollectionResponse.Create(GetJobs(query));
+    }
+
+    public string GetTrace(int jobId)
+    {
+        using (Context.BeginOperationScope())
         {
-            using (Context.BeginOperationScope())
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var job = project.Jobs.GetById(jobId);
+
+            if (job == null)
+                throw new GitLabNotFoundException();
+
+            return job.Trace;
+        }
+    }
+
+    [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+    public async Task<string> GetTraceAsync(int jobId, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return GetTrace(jobId);
+    }
+
+    public Models.Job RunAction(int jobId, JobAction action)
+    {
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var job = project.Jobs.GetById(jobId);
+
+            switch (action)
             {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                var job = project.Jobs.GetById(jobId);
-
-                if (job == null)
-                    throw new GitLabNotFoundException();
-
-                return job.Trace;
+                case JobAction.Cancel:
+                    job.Status = JobStatus.Canceled;
+                    break;
+                case JobAction.Erase:
+                    job.Artifacts = null;
+                    job.Trace = null;
+                    break;
+                case JobAction.Play:
+                    job.Status = JobStatus.Running;
+                    break;
+                case JobAction.Retry:
+                    var retryJob = job.Clone();
+                    retryJob.Status = JobStatus.Running;
+                    project.Jobs.Add(retryJob, project.Pipelines.GetById(job.Pipeline.Id));
+                    return retryJob.ToJobClient();
             }
+
+            return job.ToJobClient();
         }
+    }
 
-        [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
-        public async Task<string> GetTraceAsync(int jobId, CancellationToken cancellationToken = default)
-        {
-            await Task.Yield();
-            return GetTrace(jobId);
-        }
-
-        public Models.Job RunAction(int jobId, JobAction action)
-        {
-            using (Context.BeginOperationScope())
-            {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                var job = project.Jobs.GetById(jobId);
-
-                switch (action)
-                {
-                    case JobAction.Cancel:
-                        job.Status = JobStatus.Canceled;
-                        break;
-                    case JobAction.Erase:
-                        job.Artifacts = null;
-                        job.Trace = null;
-                        break;
-                    case JobAction.Play:
-                        job.Status = JobStatus.Running;
-                        break;
-                    case JobAction.Retry:
-                        var retryJob = job.Clone();
-                        retryJob.Status = JobStatus.Running;
-                        project.Jobs.Add(retryJob, project.Pipelines.GetById(job.Pipeline.Id));
-                        return retryJob.ToJobClient();
-                }
-
-                return job.ToJobClient();
-            }
-        }
-
-        [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
-        public async Task<Models.Job> RunActionAsync(int jobId, JobAction action, CancellationToken cancellationToken = default)
-        {
-            await Task.Yield();
-            return RunAction(jobId, action);
-        }
+    [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+    public async Task<Models.Job> RunActionAsync(int jobId, JobAction action, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return RunAction(jobId, action);
     }
 }

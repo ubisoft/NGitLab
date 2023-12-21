@@ -1,8 +1,7 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum ResourceMilestoneEventAction
 {
-    public enum ResourceMilestoneEventAction
-    {
-        Add,
-        Remove,
-    }
+    Add,
+    Remove,
 }

@@ -1,12 +1,11 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public enum VariableType
 {
-    public enum VariableType
-    {
-        [EnumMember(Value = "env_var")]
-        Variable,
-        [EnumMember(Value = "file")]
-        File,
-    }
+    [EnumMember(Value = "env_var")]
+    Variable,
+    [EnumMember(Value = "file")]
+    File,
 }

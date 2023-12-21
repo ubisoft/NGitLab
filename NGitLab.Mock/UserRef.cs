@@ -1,69 +1,68 @@
 ﻿using System;
 using NGitLab.Models;
 
-namespace NGitLab.Mock
+namespace NGitLab.Mock;
+
+public sealed class UserRef
 {
-    public sealed class UserRef
+    private readonly User _user;
+
+    public UserRef(User user)
     {
-        private readonly User _user;
+        _user = user ?? throw new ArgumentNullException(nameof(user));
+    }
 
-        public UserRef(User user)
+    public int Id => _user.Id;
+
+    public string Name => _user.Name;
+
+    public string UserName => _user.UserName;
+
+    public string Email => _user.Email;
+
+    public Models.User ToUserClient()
+    {
+        return new Models.User
         {
-            _user = user ?? throw new ArgumentNullException(nameof(user));
-        }
+            Id = Id,
+            Name = Name,
+            Email = Email,
+            Username = UserName,
+        };
+    }
 
-        public int Id => _user.Id;
+    public static implicit operator UserRef(User user)
+    {
+        if (user == null)
+            return null;
 
-        public string Name => _user.Name;
+        return new UserRef(user);
+    }
 
-        public string UserName => _user.UserName;
-
-        public string Email => _user.Email;
-
-        public Models.User ToUserClient()
+    public Author ToClientAuthor()
+    {
+        return new Author
         {
-            return new Models.User
-            {
-                Id = Id,
-                Name = Name,
-                Email = Email,
-                Username = UserName,
-            };
-        }
+            Id = Id,
+            Username = UserName,
+            Email = Email,
+            Name = Name,
+            State = _user.State.ToString(),
+            AvatarUrl = _user.AvatarUrl,
+            WebUrl = _user.WebUrl,
+        };
+    }
 
-        public static implicit operator UserRef(User user)
+    public Assignee ToClientAssignee()
+    {
+        return new Assignee
         {
-            if (user == null)
-                return null;
-
-            return new UserRef(user);
-        }
-
-        public Author ToClientAuthor()
-        {
-            return new Author
-            {
-                Id = Id,
-                Username = UserName,
-                Email = Email,
-                Name = Name,
-                State = _user.State.ToString(),
-                AvatarUrl = _user.AvatarUrl,
-                WebUrl = _user.WebUrl,
-            };
-        }
-
-        public Assignee ToClientAssignee()
-        {
-            return new Assignee
-            {
-                Id = Id,
-                Username = UserName,
-                Email = Email,
-                Name = Name,
-                State = _user.State.ToString(),
-                AvatarURL = _user.AvatarUrl,
-            };
-        }
+            Id = Id,
+            Username = UserName,
+            Email = Email,
+            Name = Name,
+            State = _user.State.ToString(),
+            AvatarURL = _user.AvatarUrl,
+        };
     }
 }

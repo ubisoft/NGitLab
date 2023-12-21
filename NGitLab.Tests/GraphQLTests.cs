@@ -5,65 +5,64 @@ using NGitLab.Tests.Docker;
 using NUnit.Framework;
 using static NGitLab.Extensions.NumberExtensions;
 
-namespace NGitLab.Tests
-{
-    public class GraphQLTests
-    {
-        [Test]
-        [NGitLabRetry]
-        public async Task Test_invalid_request()
-        {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject();
+namespace NGitLab.Tests;
 
-            var exception = Assert.ThrowsAsync<GitLabException>(() => context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
-            {
-                Query = @"
+public class GraphQLTests
+{
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_invalid_request()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+
+        var exception = Assert.ThrowsAsync<GitLabException>(() => context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
+        {
+            Query = @"
 {
   project(fullPath: $path) {
     unknownProperty
   }
 }",
-            }));
+        }));
 
-            Assert.That(exception.Message, Does.Contain("Field 'unknownProperty' doesn't exist on type 'Project'"));
-        }
+        Assert.That(exception.Message, Does.Contain("Field 'unknownProperty' doesn't exist on type 'Project'"));
+    }
 
-        [Test]
-        [NGitLabRetry]
-        public async Task Test_get_project()
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_get_project()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+
+        var response = await context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
         {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject();
-
-            var response = await context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
-            {
-                Query = @"
+            Query = @"
 query($path: ID!)
 {
   project(fullPath: $path) {
     id
   }
 }",
-                Variables =
-                {
-                    ["path"] = project.PathWithNamespace,
-                },
-            });
+            Variables =
+            {
+                ["path"] = project.PathWithNamespace,
+            },
+        });
 
-            Assert.That(response.Project.Id, Is.EqualTo("gid://gitlab/Project/" + project.Id.ToStringInvariant()));
-        }
+        Assert.That(response.Project.Id, Is.EqualTo("gid://gitlab/Project/" + project.Id.ToStringInvariant()));
+    }
 
-        private sealed class ProjectResponse
-        {
-            [JsonPropertyName("project")]
-            public ProjecInfoResponse Project { get; set; }
-        }
+    private sealed class ProjectResponse
+    {
+        [JsonPropertyName("project")]
+        public ProjecInfoResponse Project { get; set; }
+    }
 
-        private sealed class ProjecInfoResponse
-        {
-            [JsonPropertyName("id")]
-            public string Id { get; set; }
-        }
+    private sealed class ProjecInfoResponse
+    {
+        [JsonPropertyName("id")]
+        public string Id { get; set; }
     }
 }

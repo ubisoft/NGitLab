@@ -3,28 +3,27 @@ using System.Net;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
-namespace NGitLab.Impl
+namespace NGitLab.Impl;
+
+public class NamespacesClient : INamespacesClient
 {
-    public class NamespacesClient : INamespacesClient
+    private readonly API _api;
+
+    public const string Url = "/namespaces";
+
+    public NamespacesClient(API api)
     {
-        private readonly API _api;
+        _api = api;
+    }
 
-        public const string Url = "/namespaces";
+    public IEnumerable<Namespace> Accessible => _api.Get().GetAll<Namespace>(Url);
 
-        public NamespacesClient(API api)
-        {
-            _api = api;
-        }
+    public Namespace this[int id] => _api.Get().To<Namespace>(Url + "/" + id.ToStringInvariant());
 
-        public IEnumerable<Namespace> Accessible => _api.Get().GetAll<Namespace>(Url);
+    public Namespace this[string fullPath] => _api.Get().To<Namespace>(Url + "/" + WebUtility.UrlEncode(fullPath));
 
-        public Namespace this[int id] => _api.Get().To<Namespace>(Url + "/" + id.ToStringInvariant());
-
-        public Namespace this[string fullPath] => _api.Get().To<Namespace>(Url + "/" + WebUtility.UrlEncode(fullPath));
-
-        public IEnumerable<Namespace> Search(string search)
-        {
-            return _api.Get().GetAll<Namespace>(Url + $"?search={search}");
-        }
+    public IEnumerable<Namespace> Search(string search)
+    {
+        return _api.Get().GetAll<Namespace>(Url + $"?search={search}");
     }
 }

@@ -8,148 +8,147 @@ using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
-namespace NGitLab.Tests
+namespace NGitLab.Tests;
+
+public class MembersClientTests
 {
-    public class MembersClientTests
+    [Test]
+    [NGitLabRetry]
+    public async Task AddMemberToProject()
     {
-        [Test]
-        [NGitLabRetry]
-        public async Task AddMemberToProject()
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        context.CreateNewUser(out var user);
+        var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
+
+        var expiresAt = DateTimeOffset.UtcNow.AddDays(30).ToString("yyyy-MM-dd");
+        context.Client.Members.AddMemberToProject(projectId, new ProjectMemberCreate
         {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject();
-            context.CreateNewUser(out var user);
-            var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
+            AccessLevel = AccessLevel.Developer,
+            UserId = user.Id.ToString(CultureInfo.InvariantCulture),
+            ExpiresAt = expiresAt,
+        });
 
-            var expiresAt = DateTimeOffset.UtcNow.AddDays(30).ToString("yyyy-MM-dd");
-            context.Client.Members.AddMemberToProject(projectId, new ProjectMemberCreate
-            {
-                AccessLevel = AccessLevel.Developer,
-                UserId = user.Id.ToString(CultureInfo.InvariantCulture),
-                ExpiresAt = expiresAt,
-            });
+        var projectUser = context.Client.Members.OfProject(projectId).Single(u => u.Id == user.Id);
+        Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
+        Assert.That(projectUser.ExpiresAt?.ToString("yyyy-MM-dd"), Is.EqualTo(expiresAt));
+    }
 
-            var projectUser = context.Client.Members.OfProject(projectId).Single(u => u.Id == user.Id);
-            Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
-            Assert.That(projectUser.ExpiresAt?.ToString("yyyy-MM-dd"), Is.EqualTo(expiresAt));
-        }
+    [Test]
+    [NGitLabRetry]
+    public async Task UpsertAccessLevelMemberOfProject()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        context.CreateNewUser(out var user);
+        var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
 
-        [Test]
-        [NGitLabRetry]
-        public async Task UpsertAccessLevelMemberOfProject()
+        // Add
+        context.Client.Members.AddMemberToProject(projectId, new ProjectMemberCreate
         {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject();
-            context.CreateNewUser(out var user);
-            var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
+            AccessLevel = AccessLevel.Developer,
+            UserId = user.Id.ToString(CultureInfo.InvariantCulture),
+        });
+        var projectUser = context.Client.Members.OfProject(projectId).Single(u => u.Id == user.Id);
+        Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
 
-            // Add
-            context.Client.Members.AddMemberToProject(projectId, new ProjectMemberCreate
-            {
-                AccessLevel = AccessLevel.Developer,
-                UserId = user.Id.ToString(CultureInfo.InvariantCulture),
-            });
-            var projectUser = context.Client.Members.OfProject(projectId).Single(u => u.Id == user.Id);
-            Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
-
-            // Update
-            context.Client.Members.UpdateMemberOfProject(projectId, new ProjectMemberUpdate
-            {
-                AccessLevel = AccessLevel.Maintainer,
-                UserId = user.Id.ToString(CultureInfo.InvariantCulture),
-            });
-            projectUser = context.Client.Members.OfProject(projectId).Single(u => u.Id == user.Id);
-            Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Maintainer));
-        }
-
-        [Test]
-        [NGitLabRetry]
-        public async Task GetAccessLevelMemberOfProject()
+        // Update
+        context.Client.Members.UpdateMemberOfProject(projectId, new ProjectMemberUpdate
         {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject();
-            context.CreateNewUser(out var user);
-            var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
+            AccessLevel = AccessLevel.Maintainer,
+            UserId = user.Id.ToString(CultureInfo.InvariantCulture),
+        });
+        projectUser = context.Client.Members.OfProject(projectId).Single(u => u.Id == user.Id);
+        Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Maintainer));
+    }
 
-            context.Client.Members.AddMemberToProject(projectId, new ProjectMemberCreate
-            {
-                AccessLevel = AccessLevel.Developer,
-                UserId = user.Id.ToString(CultureInfo.InvariantCulture),
-            });
+    [Test]
+    [NGitLabRetry]
+    public async Task GetAccessLevelMemberOfProject()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        context.CreateNewUser(out var user);
+        var projectId = project.Id.ToString(CultureInfo.InvariantCulture);
 
-            // Get
-            var projectUser = context.Client.Members.GetMemberOfProject(projectId, user.Id.ToString(CultureInfo.InvariantCulture));
-            Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
-        }
-
-        [Test]
-        [NGitLabRetry]
-        public async Task AddMemberToGroup()
+        context.Client.Members.AddMemberToProject(projectId, new ProjectMemberCreate
         {
-            using var context = await GitLabTestContext.CreateAsync();
-            var group = context.CreateGroup();
-            context.CreateNewUser(out var user);
-            var groupId = group.Id.ToString(CultureInfo.InvariantCulture);
+            AccessLevel = AccessLevel.Developer,
+            UserId = user.Id.ToString(CultureInfo.InvariantCulture),
+        });
 
-            var expiresAt = DateTimeOffset.UtcNow.AddDays(30).ToString("yyyy-MM-dd");
-            context.Client.Members.AddMemberToGroup(groupId, new GroupMemberCreate
-            {
-                AccessLevel = AccessLevel.Developer,
-                UserId = user.Id.ToString(CultureInfo.InvariantCulture),
-                ExpiresAt = expiresAt,
-            });
+        // Get
+        var projectUser = context.Client.Members.GetMemberOfProject(projectId, user.Id.ToString(CultureInfo.InvariantCulture));
+        Assert.That((AccessLevel)projectUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
+    }
 
-            var groupUser = context.Client.Members.OfGroup(groupId).Single(u => u.Id == user.Id);
-            Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
-            Assert.That(groupUser.ExpiresAt?.ToString("yyyy-MM-dd"), Is.EqualTo(expiresAt));
-        }
+    [Test]
+    [NGitLabRetry]
+    public async Task AddMemberToGroup()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var group = context.CreateGroup();
+        context.CreateNewUser(out var user);
+        var groupId = group.Id.ToString(CultureInfo.InvariantCulture);
 
-        [Test]
-        [NGitLabRetry]
-        public async Task UpsertAccessLevelMemberOfGroup()
+        var expiresAt = DateTimeOffset.UtcNow.AddDays(30).ToString("yyyy-MM-dd");
+        context.Client.Members.AddMemberToGroup(groupId, new GroupMemberCreate
         {
-            using var context = await GitLabTestContext.CreateAsync();
-            var group = context.CreateGroup();
-            context.CreateNewUser(out var user);
-            var groupId = group.Id.ToString(CultureInfo.InvariantCulture);
+            AccessLevel = AccessLevel.Developer,
+            UserId = user.Id.ToString(CultureInfo.InvariantCulture),
+            ExpiresAt = expiresAt,
+        });
 
-            // Add
-            context.Client.Members.AddMemberToGroup(groupId, new GroupMemberCreate
-            {
-                AccessLevel = AccessLevel.Developer,
-                UserId = user.Id.ToString(CultureInfo.InvariantCulture),
-            });
-            var groupUser = context.Client.Members.OfGroup(groupId).Single(u => u.Id == user.Id);
-            Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
+        var groupUser = context.Client.Members.OfGroup(groupId).Single(u => u.Id == user.Id);
+        Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
+        Assert.That(groupUser.ExpiresAt?.ToString("yyyy-MM-dd"), Is.EqualTo(expiresAt));
+    }
 
-            // Update
-            context.Client.Members.UpdateMemberOfGroup(groupId, new GroupMemberUpdate
-            {
-                AccessLevel = AccessLevel.Maintainer,
-                UserId = user.Id.ToString(CultureInfo.InvariantCulture),
-            });
-            groupUser = context.Client.Members.OfGroup(groupId).Single(u => u.Id == user.Id);
-            Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Maintainer));
-        }
+    [Test]
+    [NGitLabRetry]
+    public async Task UpsertAccessLevelMemberOfGroup()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var group = context.CreateGroup();
+        context.CreateNewUser(out var user);
+        var groupId = group.Id.ToString(CultureInfo.InvariantCulture);
 
-        [Test]
-        [NGitLabRetry]
-        public async Task GetAccessLevelMemberOfGroup()
+        // Add
+        context.Client.Members.AddMemberToGroup(groupId, new GroupMemberCreate
         {
-            using var context = await GitLabTestContext.CreateAsync();
-            var group = context.CreateGroup();
-            context.CreateNewUser(out var user);
-            var groupId = group.Id.ToString(CultureInfo.InvariantCulture);
+            AccessLevel = AccessLevel.Developer,
+            UserId = user.Id.ToString(CultureInfo.InvariantCulture),
+        });
+        var groupUser = context.Client.Members.OfGroup(groupId).Single(u => u.Id == user.Id);
+        Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
 
-            context.Client.Members.AddMemberToGroup(groupId, new GroupMemberCreate
-            {
-                AccessLevel = AccessLevel.Developer,
-                UserId = user.Id.ToString(CultureInfo.InvariantCulture),
-            });
+        // Update
+        context.Client.Members.UpdateMemberOfGroup(groupId, new GroupMemberUpdate
+        {
+            AccessLevel = AccessLevel.Maintainer,
+            UserId = user.Id.ToString(CultureInfo.InvariantCulture),
+        });
+        groupUser = context.Client.Members.OfGroup(groupId).Single(u => u.Id == user.Id);
+        Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Maintainer));
+    }
 
-            // Get
-            var groupUser = context.Client.Members.GetMemberOfGroup(groupId, user.Id.ToString(CultureInfo.InvariantCulture));
-            Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
-        }
+    [Test]
+    [NGitLabRetry]
+    public async Task GetAccessLevelMemberOfGroup()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var group = context.CreateGroup();
+        context.CreateNewUser(out var user);
+        var groupId = group.Id.ToString(CultureInfo.InvariantCulture);
+
+        context.Client.Members.AddMemberToGroup(groupId, new GroupMemberCreate
+        {
+            AccessLevel = AccessLevel.Developer,
+            UserId = user.Id.ToString(CultureInfo.InvariantCulture),
+        });
+
+        // Get
+        var groupUser = context.Client.Members.GetMemberOfGroup(groupId, user.Id.ToString(CultureInfo.InvariantCulture));
+        Assert.That((AccessLevel)groupUser.AccessLevel, Is.EqualTo(AccessLevel.Developer));
     }
 }

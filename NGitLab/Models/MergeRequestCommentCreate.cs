@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
-{
-    public class MergeRequestCommentCreate
-    {
-        [JsonPropertyName("body")]
-        public string Body;
+namespace NGitLab.Models;
 
-        [JsonPropertyName("created_at")]
-        public DateTime? CreatedAt;
-    }
+public class MergeRequestCommentCreate
+{
+    [JsonPropertyName("body")]
+    public string Body;
+
+    [JsonPropertyName("created_at")]
+    public DateTime? CreatedAt;
 }

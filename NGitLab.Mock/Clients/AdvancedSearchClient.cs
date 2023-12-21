@@ -1,20 +1,19 @@
 ﻿using System;
 using NGitLab.Models;
 
-namespace NGitLab.Mock.Clients
+namespace NGitLab.Mock.Clients;
+
+internal sealed class AdvancedSearchClient : ISearchClient
 {
-    internal sealed class AdvancedSearchClient : ISearchClient
+    private readonly ClientContext _context;
+
+    public AdvancedSearchClient(ClientContext context)
     {
-        private readonly ClientContext _context;
+        _context = context;
+    }
 
-        public AdvancedSearchClient(ClientContext context)
-        {
-            _context = context;
-        }
-
-        public GitLabCollectionResponse<SearchBlob> GetBlobsAsync(SearchQuery query)
-        {
-            throw new NotImplementedException();
-        }
+    public GitLabCollectionResponse<SearchBlob> GetBlobsAsync(SearchQuery query)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum PipelineSort
 {
-    public enum PipelineSort
-    {
-        asc,
-        desc,
-    }
+    asc,
+    desc,
 }

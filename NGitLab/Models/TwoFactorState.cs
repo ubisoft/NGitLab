@@ -1,12 +1,11 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public enum TwoFactorState
 {
-    public enum TwoFactorState
-    {
-        [EnumMember(Value = "enabled")]
-        Enabled,
-        [EnumMember(Value = "disabled")]
-        Disabled,
-    }
+    [EnumMember(Value = "enabled")]
+    Enabled,
+    [EnumMember(Value = "disabled")]
+    Disabled,
 }

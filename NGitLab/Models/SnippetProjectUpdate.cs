@@ -2,41 +2,40 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class SnippetProjectUpdate
 {
-    public class SnippetProjectUpdate
-    {
-        public int ProjectId;
+    public int ProjectId;
 
-        [Required]
-        [JsonPropertyName("id")]
-        public int SnippetId { get; set; }
+    [Required]
+    [JsonPropertyName("id")]
+    public int SnippetId { get; set; }
 
-        [Required]
-        [JsonPropertyName("title")]
-        public string Title;
+    [Required]
+    [JsonPropertyName("title")]
+    public string Title;
 
-        [Required]
-        [JsonPropertyName("file_name")]
-        [Obsolete("Consider using the Files array that support more than one file.")]
-        public string FileName;
+    [Required]
+    [JsonPropertyName("file_name")]
+    [Obsolete("Consider using the Files array that support more than one file.")]
+    public string FileName;
 
-        [JsonPropertyName("description")]
-        public string Description;
+    [JsonPropertyName("description")]
+    public string Description;
 
-        [Required]
-        [JsonPropertyName("content")]
-        [Obsolete("Consider using the Files array that support more than one file.")]
-        public string Code;
+    [Required]
+    [JsonPropertyName("content")]
+    [Obsolete("Consider using the Files array that support more than one file.")]
+    public string Code;
 
-        [Required]
-        [JsonPropertyName("visibility")]
-        public VisibilityLevel Visibility;
+    [Required]
+    [JsonPropertyName("visibility")]
+    public VisibilityLevel Visibility;
 
-        /// <summary>
-        /// An array of snippet files. Required when updating snippets with multiple files.
-        /// </summary>
-        [JsonPropertyName("files")]
-        public SnippetUpdateFile[] Files { get; set; }
-    }
+    /// <summary>
+    /// An array of snippet files. Required when updating snippets with multiple files.
+    /// </summary>
+    [JsonPropertyName("files")]
+    public SnippetUpdateFile[] Files { get; set; }
 }

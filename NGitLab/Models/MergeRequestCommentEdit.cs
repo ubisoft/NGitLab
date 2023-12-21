@@ -1,10 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class MergeRequestCommentEdit
 {
-    public class MergeRequestCommentEdit
-    {
-        [JsonPropertyName("body")]
-        public string Body;
-    }
+    [JsonPropertyName("body")]
+    public string Body;
 }

@@ -1,16 +1,15 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public enum VisibilityLevel
 {
-    public enum VisibilityLevel
-    {
-        [EnumMember(Value = "private")]
-        Private = 0,
+    [EnumMember(Value = "private")]
+    Private = 0,
 
-        [EnumMember(Value = "internal")]
-        Internal = 10,
+    [EnumMember(Value = "internal")]
+    Internal = 10,
 
-        [EnumMember(Value = "public")]
-        Public = 20,
-    }
+    [EnumMember(Value = "public")]
+    Public = 20,
 }

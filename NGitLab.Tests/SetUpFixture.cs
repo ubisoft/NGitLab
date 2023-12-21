@@ -1,15 +1,14 @@
 ﻿using NGitLab.Extensions;
 using NUnit.Framework;
 
-namespace NGitLab.Tests
+namespace NGitLab.Tests;
+
+[SetUpFixture]
+public sealed class SetUpFixture
 {
-    [SetUpFixture]
-    public sealed class SetUpFixture
+    [OneTimeSetUp]
+    public void RunBeforeAnyTests()
     {
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            FunctionRetryExtensions.Logger = msg => TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {msg}");
-        }
+        FunctionRetryExtensions.Logger = msg => TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {msg}");
     }
 }

@@ -1,53 +1,52 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class Membership
 {
-    public class Membership
-    {
-        /// <summary>
-        /// Example: 3
-        /// </summary>
-        [JsonPropertyName("id")]
-        public int Id;
+    /// <summary>
+    /// Example: 3
+    /// </summary>
+    [JsonPropertyName("id")]
+    public int Id;
 
-        /// <summary>
-        /// Example john_doe
-        /// </summary>
-        [JsonPropertyName("username")]
-        public string UserName;
+    /// <summary>
+    /// Example john_doe
+    /// </summary>
+    [JsonPropertyName("username")]
+    public string UserName;
 
-        /// <summary>
-        /// Example John Doe
-        /// </summary>
-        [JsonPropertyName("name")]
-        public string Name;
+    /// <summary>
+    /// Example John Doe
+    /// </summary>
+    [JsonPropertyName("name")]
+    public string Name;
 
-        [JsonPropertyName("avatar_url")]
-        public string AvatarURL;
+    [JsonPropertyName("avatar_url")]
+    public string AvatarURL;
 
-        /// <summary>
-        /// Example active
-        /// </summary>
-        [JsonPropertyName("state")]
-        public string State;
+    /// <summary>
+    /// Example active
+    /// </summary>
+    [JsonPropertyName("state")]
+    public string State;
 
-        /// <summary>
-        /// Membership creation date
-        /// </summary>
-        [JsonPropertyName("created_at")]
-        public DateTime CreatedAt;
+    /// <summary>
+    /// Membership creation date
+    /// </summary>
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt;
 
-        /// <summary>
-        /// Should be a value within <see cref="Models.AccessLevel"/>
-        /// </summary>
-        [JsonPropertyName("access_level")]
-        public int AccessLevel;
+    /// <summary>
+    /// Should be a value within <see cref="Models.AccessLevel"/>
+    /// </summary>
+    [JsonPropertyName("access_level")]
+    public int AccessLevel;
 
-        /// <summary>
-        /// Membership expiration date
-        /// </summary>
-        [JsonPropertyName("expires_at")]
-        public DateTime? ExpiresAt;
-    }
+    /// <summary>
+    /// Membership expiration date
+    /// </summary>
+    [JsonPropertyName("expires_at")]
+    public DateTime? ExpiresAt;
 }

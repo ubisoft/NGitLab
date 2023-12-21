@@ -1,9 +1,8 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum RepositoryAccessLevel
 {
-    public enum RepositoryAccessLevel
-    {
-        Disabled,
-        Private,
-        Enabled,
-    }
+    Disabled,
+    Private,
+    Enabled,
 }

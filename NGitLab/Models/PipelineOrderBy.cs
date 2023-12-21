@@ -1,11 +1,10 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum PipelineOrderBy
 {
-    public enum PipelineOrderBy
-    {
-        id,
-        status,
-        @ref,
-        user_id,
-        updated_at,
-    }
+    id,
+    status,
+    @ref,
+    user_id,
+    updated_at,
 }

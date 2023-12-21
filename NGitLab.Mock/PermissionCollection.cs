@@ -1,10 +1,9 @@
-﻿namespace NGitLab.Mock
+﻿namespace NGitLab.Mock;
+
+public sealed class PermissionCollection : Collection<Permission>
 {
-    public sealed class PermissionCollection : Collection<Permission>
+    public PermissionCollection(GitLabObject container)
+        : base(container)
     {
-        public PermissionCollection(GitLabObject container)
-            : base(container)
-        {
-        }
     }
 }

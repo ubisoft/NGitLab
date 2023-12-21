@@ -3,20 +3,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IMergeRequestDiscussionClient
 {
-    public interface IMergeRequestDiscussionClient
-    {
-        IEnumerable<MergeRequestDiscussion> All { get; }
+    IEnumerable<MergeRequestDiscussion> All { get; }
 
-        MergeRequestDiscussion Get(string id);
+    MergeRequestDiscussion Get(string id);
 
-        Task<MergeRequestDiscussion> GetAsync(string id, CancellationToken cancellationToken = default);
+    Task<MergeRequestDiscussion> GetAsync(string id, CancellationToken cancellationToken = default);
 
-        MergeRequestDiscussion Add(MergeRequestDiscussionCreate discussion);
+    MergeRequestDiscussion Add(MergeRequestDiscussionCreate discussion);
 
-        MergeRequestDiscussion Resolve(MergeRequestDiscussionResolve resolve);
+    MergeRequestDiscussion Resolve(MergeRequestDiscussionResolve resolve);
 
-        void Delete(string discussionId, long commentId);
-    }
+    void Delete(string discussionId, long commentId);
 }

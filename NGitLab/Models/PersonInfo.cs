@@ -1,13 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
-{
-    public class PersonInfo
-    {
-        [JsonPropertyName("name")]
-        public string Name;
+namespace NGitLab.Models;
 
-        [JsonPropertyName("email")]
-        public string Email;
-    }
+public class PersonInfo
+{
+    [JsonPropertyName("name")]
+    public string Name;
+
+    [JsonPropertyName("email")]
+    public string Email;
 }

@@ -1,19 +1,18 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class Blob
 {
-    public class Blob
-    {
-        [JsonPropertyName("size")]
-        public int Size;
+    [JsonPropertyName("size")]
+    public int Size;
 
-        [JsonPropertyName("encoding")]
-        public string Encoding;
+    [JsonPropertyName("encoding")]
+    public string Encoding;
 
-        [JsonPropertyName("content")]
-        public string Content;
+    [JsonPropertyName("content")]
+    public string Content;
 
-        [JsonPropertyName("sha")]
-        public Sha1 Sha;
-    }
+    [JsonPropertyName("sha")]
+    public Sha1 Sha;
 }

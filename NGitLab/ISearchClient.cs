@@ -1,9 +1,8 @@
 ﻿using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface ISearchClient
 {
-    public interface ISearchClient
-    {
-        GitLabCollectionResponse<SearchBlob> GetBlobsAsync(SearchQuery query);
-    }
+    GitLabCollectionResponse<SearchBlob> GetBlobsAsync(SearchQuery query);
 }

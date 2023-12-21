@@ -1,38 +1,37 @@
 ﻿using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public enum ReleaseLinkType
 {
-    public enum ReleaseLinkType
-    {
-        [EnumMember(Value = "other")]
-        Other,
-        [EnumMember(Value = "runbook")]
-        Runbook,
-        [EnumMember(Value = "image")]
-        Image,
-        [EnumMember(Value = "package")]
-        Package,
-    }
+    [EnumMember(Value = "other")]
+    Other,
+    [EnumMember(Value = "runbook")]
+    Runbook,
+    [EnumMember(Value = "image")]
+    Image,
+    [EnumMember(Value = "package")]
+    Package,
+}
 
-    public class ReleaseLink
-    {
-        [JsonPropertyName("id")]
-        public int? Id { get; set; }
+public class ReleaseLink
+{
+    [JsonPropertyName("id")]
+    public int? Id { get; set; }
 
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 
-        [JsonPropertyName("url")]
-        public string Url { get; set; }
+    [JsonPropertyName("url")]
+    public string Url { get; set; }
 
-        [JsonPropertyName("direct_asset_url")]
-        public string DirectAssetUrl { get; set; }
+    [JsonPropertyName("direct_asset_url")]
+    public string DirectAssetUrl { get; set; }
 
-        [JsonPropertyName("external")]
-        public bool External { get; set; }
+    [JsonPropertyName("external")]
+    public bool External { get; set; }
 
-        [JsonPropertyName("link_type")]
-        public ReleaseLinkType LinkType { get; set; }
-    }
+    [JsonPropertyName("link_type")]
+    public ReleaseLinkType LinkType { get; set; }
 }

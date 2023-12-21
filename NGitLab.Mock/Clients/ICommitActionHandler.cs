@@ -1,9 +1,8 @@
 ﻿using NGitLab.Models;
 
-namespace NGitLab.Mock
+namespace NGitLab.Mock;
+
+internal interface ICommitActionHandler
 {
-    internal interface ICommitActionHandler
-    {
-        void Handle(CreateCommitAction action, string repoPath, LibGit2Sharp.Repository repository);
-    }
+    void Handle(CreateCommitAction action, string repoPath, LibGit2Sharp.Repository repository);
 }

@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class UserTokenCreate
 {
-    public class UserTokenCreate
-    {
-        [JsonPropertyName("user_id")]
-        public int UserId { get; set; }
+    [JsonPropertyName("user_id")]
+    public int UserId { get; set; }
 
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 
-        [JsonPropertyName("expires_at")]
-        public DateTime? ExpiresAt { get; set; }
+    [JsonPropertyName("expires_at")]
+    public DateTime? ExpiresAt { get; set; }
 
-        [JsonPropertyName("scopes")]
-        public string[] Scopes { get; set; }
-    }
+    [JsonPropertyName("scopes")]
+    public string[] Scopes { get; set; }
 }

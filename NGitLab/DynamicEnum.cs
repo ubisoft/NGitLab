@@ -3,70 +3,69 @@
 using System;
 using System.Collections.Generic;
 
-namespace NGitLab
+namespace NGitLab;
+
+/// <summary>
+/// Allows to expose enums without knowing all the possible values
+/// that can be serialized from the client.
+/// </summary>
+public struct DynamicEnum<TEnum> : IEquatable<DynamicEnum<TEnum>>, IEquatable<TEnum>
+    where TEnum : struct, Enum
 {
     /// <summary>
-    /// Allows to expose enums without knowing all the possible values
-    /// that can be serialized from the client.
+    /// This value is filled when the value is recognized.
     /// </summary>
-    public struct DynamicEnum<TEnum> : IEquatable<DynamicEnum<TEnum>>, IEquatable<TEnum>
-        where TEnum : struct, Enum
+    public TEnum? EnumValue { get; }
+
+    /// <summary>
+    /// Contains the serialized string when the value is not a known
+    /// flag of the underlying enum.
+    /// </summary>
+    public string StringValue { get; }
+
+    public DynamicEnum(TEnum enumValue)
     {
-        /// <summary>
-        /// This value is filled when the value is recognized.
-        /// </summary>
-        public TEnum? EnumValue { get; }
+        EnumValue = enumValue;
+        StringValue = null;
+    }
 
-        /// <summary>
-        /// Contains the serialized string when the value is not a known
-        /// flag of the underlying enum.
-        /// </summary>
-        public string StringValue { get; }
+    public DynamicEnum(string stringValue)
+    {
+        EnumValue = default;
+        StringValue = stringValue;
+    }
 
-        public DynamicEnum(TEnum enumValue)
-        {
-            EnumValue = enumValue;
-            StringValue = null;
-        }
+    public readonly bool Equals(TEnum other)
+    {
+        return Equals(EnumValue, other);
+    }
 
-        public DynamicEnum(string stringValue)
-        {
-            EnumValue = default;
-            StringValue = stringValue;
-        }
+    public readonly bool Equals(DynamicEnum<TEnum> other)
+    {
+        return EqualityComparer<TEnum?>.Default.Equals(EnumValue, other.EnumValue) &&
+               StringComparer.OrdinalIgnoreCase.Equals(StringValue, other.StringValue);
+    }
 
-        public readonly bool Equals(TEnum other)
-        {
-            return Equals(EnumValue, other);
-        }
+    public override readonly bool Equals(object obj)
+    {
+        return obj is DynamicEnum<TEnum> other && Equals(other);
+    }
 
-        public readonly bool Equals(DynamicEnum<TEnum> other)
-        {
-            return EqualityComparer<TEnum?>.Default.Equals(EnumValue, other.EnumValue) &&
-                   StringComparer.OrdinalIgnoreCase.Equals(StringValue, other.StringValue);
-        }
+    public override readonly int GetHashCode()
+    {
+        return EqualityComparer<TEnum?>.Default.GetHashCode(EnumValue);
+    }
 
-        public override readonly bool Equals(object obj)
-        {
-            return obj is DynamicEnum<TEnum> other && Equals(other);
-        }
+    public static bool operator ==(DynamicEnum<TEnum> obj1, DynamicEnum<TEnum> obj2) => obj1.Equals(obj2);
 
-        public override readonly int GetHashCode()
-        {
-            return EqualityComparer<TEnum?>.Default.GetHashCode(EnumValue);
-        }
+    public static bool operator !=(DynamicEnum<TEnum> obj1, DynamicEnum<TEnum> obj2) => !obj1.Equals(obj2);
 
-        public static bool operator ==(DynamicEnum<TEnum> obj1, DynamicEnum<TEnum> obj2) => obj1.Equals(obj2);
+    public static bool operator ==(DynamicEnum<TEnum> obj1, TEnum obj2) => obj1.Equals(obj2);
 
-        public static bool operator !=(DynamicEnum<TEnum> obj1, DynamicEnum<TEnum> obj2) => !obj1.Equals(obj2);
+    public static bool operator !=(DynamicEnum<TEnum> obj1, TEnum obj2) => !obj1.Equals(obj2);
 
-        public static bool operator ==(DynamicEnum<TEnum> obj1, TEnum obj2) => obj1.Equals(obj2);
-
-        public static bool operator !=(DynamicEnum<TEnum> obj1, TEnum obj2) => !obj1.Equals(obj2);
-
-        public override readonly string ToString()
-        {
-            return StringValue ?? EnumValue?.ToString() ?? string.Empty;
-        }
+    public override readonly string ToString()
+    {
+        return StringValue ?? EnumValue?.ToString() ?? string.Empty;
     }
 }

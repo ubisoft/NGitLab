@@ -1,18 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class ProjectIssueNoteCreate
 {
-    public class ProjectIssueNoteCreate
-    {
-        [JsonIgnore]
-        public int IssueId;
+    [JsonIgnore]
+    public int IssueId;
 
-        [Required]
-        [JsonPropertyName("body")]
-        public string Body;
+    [Required]
+    [JsonPropertyName("body")]
+    public string Body;
 
-        [JsonPropertyName("confidential")]
-        public bool Confidential;
-    }
+    [JsonPropertyName("confidential")]
+    public bool Confidential;
 }

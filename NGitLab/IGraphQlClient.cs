@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IGraphQLClient
 {
-    public interface IGraphQLClient
-    {
-        Task<T> ExecuteAsync<T>(GraphQLQuery query, CancellationToken cancellationToken = default);
-    }
+    Task<T> ExecuteAsync<T>(GraphQLQuery query, CancellationToken cancellationToken = default);
 }

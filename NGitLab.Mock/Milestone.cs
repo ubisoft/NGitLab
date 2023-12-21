@@ -1,74 +1,73 @@
 ﻿using System;
 using System.Globalization;
 
-namespace NGitLab.Mock
+namespace NGitLab.Mock;
+
+public sealed class Milestone : GitLabObject
 {
-    public sealed class Milestone : GitLabObject
+    public Project Project => Parent as Project;
+
+    public Group Group => Parent as Group;
+
+    public int Id { get; set; }
+
+    public int Iid { get; set; }
+
+    public string Title { get; set; }
+
+    public string Description { get; set; }
+
+    public DateTimeOffset DueDate { get; set; }
+
+    public DateTimeOffset StartDate { get; set; }
+
+    public DateTimeOffset CreatedAt { get; }
+
+    public DateTimeOffset UpdatedAt { get; set; }
+
+    public DateTimeOffset? ClosedAt { get; set; }
+
+    public MilestoneState State
     {
-        public Project Project => Parent as Project;
-
-        public Group Group => Parent as Group;
-
-        public int Id { get; set; }
-
-        public int Iid { get; set; }
-
-        public string Title { get; set; }
-
-        public string Description { get; set; }
-
-        public DateTimeOffset DueDate { get; set; }
-
-        public DateTimeOffset StartDate { get; set; }
-
-        public DateTimeOffset CreatedAt { get; }
-
-        public DateTimeOffset UpdatedAt { get; set; }
-
-        public DateTimeOffset? ClosedAt { get; set; }
-
-        public MilestoneState State
+        get
         {
-            get
-            {
-                if (ClosedAt.HasValue)
-                    return MilestoneState.closed;
+            if (ClosedAt.HasValue)
+                return MilestoneState.closed;
 
-                return MilestoneState.active;
+            return MilestoneState.active;
+        }
+
+        set
+        {
+            if (value == MilestoneState.closed)
+            {
+                ClosedAt = DateTimeOffset.UtcNow;
             }
-
-            set
+            else if (value == MilestoneState.active)
             {
-                if (value == MilestoneState.closed)
-                {
-                    ClosedAt = DateTimeOffset.UtcNow;
-                }
-                else if (value == MilestoneState.active)
-                {
-                    ClosedAt = null;
-                }
+                ClosedAt = null;
             }
         }
+    }
 
-        public Milestone()
-        {
-            CreatedAt = DateTimeOffset.UtcNow;
-            UpdatedAt = DateTimeOffset.UtcNow;
-        }
+    public Milestone()
+    {
+        CreatedAt = DateTimeOffset.UtcNow;
+        UpdatedAt = DateTimeOffset.UtcNow;
+    }
 
-        public Models.Milestone ToClientMilestone()
+    public Models.Milestone ToClientMilestone()
+    {
+        return new Models.Milestone
         {
-            return new Models.Milestone
-            {
-                Id = Id,
-                Title = Title,
-                Description = Description,
-                DueDate = DueDate.UtcDateTime.ToString(CultureInfo.InvariantCulture),
-                StartDate = StartDate.UtcDateTime.ToString(CultureInfo.InvariantCulture),
-                State = State.ToString(),
-                CreatedAt = CreatedAt.UtcDateTime,
-                UpdatedAt = UpdatedAt.UtcDateTime,
-            };
-        }
+            Id = Id,
+            Title = Title,
+            Description = Description,
+            DueDate = DueDate.UtcDateTime.ToString(CultureInfo.InvariantCulture),
+            StartDate = StartDate.UtcDateTime.ToString(CultureInfo.InvariantCulture),
+            State = State.ToString(),
+            CreatedAt = CreatedAt.UtcDateTime,
+            UpdatedAt = UpdatedAt.UtcDateTime,
+        };
     }
 }

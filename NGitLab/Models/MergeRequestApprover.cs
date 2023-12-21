@@ -1,10 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class MergeRequestApprover
 {
-    public class MergeRequestApprover
-    {
-        [JsonPropertyName("user")]
-        public User User;
-    }
+    [JsonPropertyName("user")]
+    public User User;
 }

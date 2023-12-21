@@ -1,25 +1,24 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class EnvironmentInfo
 {
-    public class EnvironmentInfo
-    {
-        [JsonPropertyName("id")]
-        public int Id;
+    [JsonPropertyName("id")]
+    public int Id;
 
-        [JsonPropertyName("name")]
-        public string Name;
+    [JsonPropertyName("name")]
+    public string Name;
 
-        [JsonPropertyName("slug")]
-        public string Slug;
+    [JsonPropertyName("slug")]
+    public string Slug;
 
-        [JsonPropertyName("external_url")]
-        public string ExternalUrl;
+    [JsonPropertyName("external_url")]
+    public string ExternalUrl;
 
-        [JsonPropertyName("state")]
-        public string State;
+    [JsonPropertyName("state")]
+    public string State;
 
-        [JsonPropertyName("last_deployment")]
-        public EnvironmentLastDeployment LastDeployment;
-    }
+    [JsonPropertyName("last_deployment")]
+    public EnvironmentLastDeployment LastDeployment;
 }

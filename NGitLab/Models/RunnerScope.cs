@@ -1,11 +1,10 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum RunnerScope
 {
-    public enum RunnerScope
-    {
-        Specific,
-        Shared,
-        Active,
-        Paused,
-        Online,
-    }
+    Specific,
+    Shared,
+    Active,
+    Paused,
+    Online,
 }

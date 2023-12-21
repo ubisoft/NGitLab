@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IWikiClient
 {
-    public interface IWikiClient
-    {
-        WikiPage this[string slug] { get; }
+    WikiPage this[string slug] { get; }
 
-        IEnumerable<WikiPage> All { get; }
+    IEnumerable<WikiPage> All { get; }
 
-        WikiPage Create(WikiPageCreate wikiPage);
+    WikiPage Create(WikiPageCreate wikiPage);
 
-        void Delete(string slug);
+    void Delete(string slug);
 
-        WikiPage Update(string slug, WikiPageUpdate wikiPage);
-    }
+    WikiPage Update(string slug, WikiPageUpdate wikiPage);
 }

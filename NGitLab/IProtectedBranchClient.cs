@@ -1,15 +1,14 @@
 ﻿using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IProtectedBranchClient
 {
-    public interface IProtectedBranchClient
-    {
-        ProtectedBranch ProtectBranch(BranchProtect branchProtect);
+    ProtectedBranch ProtectBranch(BranchProtect branchProtect);
 
-        void UnprotectBranch(string branchName);
+    void UnprotectBranch(string branchName);
 
-        ProtectedBranch GetProtectedBranch(string branchName);
+    ProtectedBranch GetProtectedBranch(string branchName);
 
-        ProtectedBranch[] GetProtectedBranches(string search = null);
-    }
+    ProtectedBranch[] GetProtectedBranches(string search = null);
 }
