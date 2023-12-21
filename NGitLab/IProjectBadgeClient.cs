@@ -1,50 +1,49 @@
 ﻿using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IProjectBadgeClient
 {
-    public interface IProjectBadgeClient
-    {
-        IEnumerable<Badge> All { get; }
+    IEnumerable<Badge> All { get; }
 
-        /// <summary>
-        /// Gets the project's badges only (not group badges)
-        /// </summary>
-        /// <remarks>Project Badge API returns both Group and Project badges</remarks>
-        IEnumerable<Badge> ProjectsOnly { get; }
+    /// <summary>
+    /// Gets the project's badges only (not group badges)
+    /// </summary>
+    /// <remarks>Project Badge API returns both Group and Project badges</remarks>
+    IEnumerable<Badge> ProjectsOnly { get; }
 
-        Badge this[int id] { get; }
+    Badge this[int id] { get; }
 
-        Badge Create(BadgeCreate badge);
+    Badge Create(BadgeCreate badge);
 
-        Badge Update(int id, BadgeUpdate badge);
+    Badge Update(int id, BadgeUpdate badge);
 
-        void Delete(int id);
-    }
+    void Delete(int id);
+}
 
-    public interface IProjectVariableClient
-    {
-        IEnumerable<Variable> All { get; }
+public interface IProjectVariableClient
+{
+    IEnumerable<Variable> All { get; }
 
-        Variable this[string key] { get; }
+    Variable this[string key] { get; }
 
-        Variable Create(VariableCreate model);
+    Variable Create(VariableCreate model);
 
-        Variable Update(string key, VariableUpdate model);
+    Variable Update(string key, VariableUpdate model);
 
-        void Delete(string key);
-    }
+    void Delete(string key);
+}
 
-    public interface IGroupVariableClient
-    {
-        IEnumerable<Variable> All { get; }
+public interface IGroupVariableClient
+{
+    IEnumerable<Variable> All { get; }
 
-        Variable this[string key] { get; }
+    Variable this[string key] { get; }
 
-        Variable Create(VariableCreate model);
+    Variable Create(VariableCreate model);
 
-        Variable Update(string key, VariableUpdate model);
+    Variable Update(string key, VariableUpdate model);
 
-        void Delete(string key);
-    }
+    void Delete(string key);
 }

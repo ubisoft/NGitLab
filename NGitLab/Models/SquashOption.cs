@@ -1,19 +1,18 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public enum SquashOption
 {
-    public enum SquashOption
-    {
-        [EnumMember(Value = "never")]
-        Never,
+    [EnumMember(Value = "never")]
+    Never,
 
-        [EnumMember(Value = "always")]
-        Always,
+    [EnumMember(Value = "always")]
+    Always,
 
-        [EnumMember(Value = "default_off")]
-        DefaultOff,
+    [EnumMember(Value = "default_off")]
+    DefaultOff,
 
-        [EnumMember(Value = "default_on")]
-        DefaultOn,
-    }
+    [EnumMember(Value = "default_on")]
+    DefaultOn,
 }

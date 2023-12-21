@@ -3,24 +3,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IProtectedTagClient
 {
-    public interface IProtectedTagClient
-    {
-        ProtectedTag ProtectTag(TagProtect protect);
+    ProtectedTag ProtectTag(TagProtect protect);
 
-        Task<ProtectedTag> ProtectTagAsync(TagProtect protect, CancellationToken cancellationToken = default);
+    Task<ProtectedTag> ProtectTagAsync(TagProtect protect, CancellationToken cancellationToken = default);
 
-        void UnprotectTag(string name);
+    void UnprotectTag(string name);
 
-        Task UnprotectTagAsync(string name, CancellationToken cancellationToken = default);
+    Task UnprotectTagAsync(string name, CancellationToken cancellationToken = default);
 
-        ProtectedTag GetProtectedTag(string name);
+    ProtectedTag GetProtectedTag(string name);
 
-        Task<ProtectedTag> GetProtectedTagAsync(string name, CancellationToken cancellationToken = default);
+    Task<ProtectedTag> GetProtectedTagAsync(string name, CancellationToken cancellationToken = default);
 
-        IEnumerable<ProtectedTag> GetProtectedTags();
+    IEnumerable<ProtectedTag> GetProtectedTags();
 
-        GitLabCollectionResponse<ProtectedTag> GetProtectedTagsAsync();
-    }
+    GitLabCollectionResponse<ProtectedTag> GetProtectedTagsAsync();
 }

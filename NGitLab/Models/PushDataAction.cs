@@ -1,9 +1,8 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum PushDataAction
 {
-    public enum PushDataAction
-    {
-        Created,
-        Pushed,
-        Removed,
-    }
+    Created,
+    Pushed,
+    Removed,
 }

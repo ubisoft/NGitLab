@@ -1,16 +1,15 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class Label
 {
-    public class Label
-    {
-        [JsonPropertyName("name")]
-        public string Name;
+    [JsonPropertyName("name")]
+    public string Name;
 
-        [JsonPropertyName("color")]
-        public string Color;
+    [JsonPropertyName("color")]
+    public string Color;
 
-        [JsonPropertyName("description")]
-        public string Description;
-    }
+    [JsonPropertyName("description")]
+    public string Description;
 }

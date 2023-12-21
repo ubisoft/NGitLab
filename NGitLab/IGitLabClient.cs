@@ -1,177 +1,176 @@
 ﻿using System.ComponentModel;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IGitLabClient
 {
-    public interface IGitLabClient
-    {
-        IUserClient Users { get; }
+    IUserClient Users { get; }
 
-        IProjectClient Projects { get; }
+    IProjectClient Projects { get; }
 
-        IIssueClient Issues { get; }
+    IIssueClient Issues { get; }
 
-        IGroupsClient Groups { get; }
+    IGroupsClient Groups { get; }
 
-        IGlobalJobClient Jobs { get; }
+    IGlobalJobClient Jobs { get; }
 
-        ILabelClient Labels { get; }
+    ILabelClient Labels { get; }
 
-        IRunnerClient Runners { get; }
+    IRunnerClient Runners { get; }
 
-        IMergeRequestClient MergeRequests { get; }
+    IMergeRequestClient MergeRequests { get; }
 
-        ILintClient Lint { get; }
+    ILintClient Lint { get; }
 
-        /// <summary>
-        /// All the user events of GitLab (can be scoped for the current user).
-        /// </summary>
-        IEventClient GetEvents();
+    /// <summary>
+    /// All the user events of GitLab (can be scoped for the current user).
+    /// </summary>
+    IEventClient GetEvents();
 
-        /// <summary>
-        /// Returns the events done by the specified user.
-        /// </summary>
-        IEventClient GetUserEvents(int userId);
+    /// <summary>
+    /// Returns the events done by the specified user.
+    /// </summary>
+    IEventClient GetUserEvents(int userId);
 
-        /// <summary>
-        /// Returns the events that occurred in the specified project.
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IEventClient GetProjectEvents(int projectId);
+    /// <summary>
+    /// Returns the events that occurred in the specified project.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IEventClient GetProjectEvents(int projectId);
 
-        /// <summary>
-        /// Returns the events that occurred in the specified project.
-        /// </summary>
-        IEventClient GetProjectEvents(ProjectId projectId);
+    /// <summary>
+    /// Returns the events that occurred in the specified project.
+    /// </summary>
+    IEventClient GetProjectEvents(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IRepositoryClient GetRepository(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IRepositoryClient GetRepository(int projectId);
 
-        IRepositoryClient GetRepository(ProjectId projectId);
+    IRepositoryClient GetRepository(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        ICommitClient GetCommits(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    ICommitClient GetCommits(int projectId);
 
-        ICommitClient GetCommits(ProjectId projectId);
+    ICommitClient GetCommits(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        ICommitStatusClient GetCommitStatus(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    ICommitStatusClient GetCommitStatus(int projectId);
 
-        ICommitStatusClient GetCommitStatus(ProjectId projectId);
+    ICommitStatusClient GetCommitStatus(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IPipelineClient GetPipelines(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IPipelineClient GetPipelines(int projectId);
 
-        IPipelineClient GetPipelines(ProjectId projectId);
+    IPipelineClient GetPipelines(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        ITriggerClient GetTriggers(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    ITriggerClient GetTriggers(int projectId);
 
-        ITriggerClient GetTriggers(ProjectId projectId);
+    ITriggerClient GetTriggers(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IJobClient GetJobs(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IJobClient GetJobs(int projectId);
 
-        IJobClient GetJobs(ProjectId projectId);
+    IJobClient GetJobs(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IMergeRequestClient GetMergeRequest(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IMergeRequestClient GetMergeRequest(int projectId);
 
-        IMergeRequestClient GetMergeRequest(ProjectId projectId);
+    IMergeRequestClient GetMergeRequest(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IMilestoneClient GetMilestone(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IMilestoneClient GetMilestone(int projectId);
 
-        IMilestoneClient GetMilestone(ProjectId projectId);
+    IMilestoneClient GetMilestone(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IMilestoneClient GetGroupMilestone(int groupId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IMilestoneClient GetGroupMilestone(int groupId);
 
-        IMilestoneClient GetGroupMilestone(GroupId groupId);
+    IMilestoneClient GetGroupMilestone(GroupId groupId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IReleaseClient GetReleases(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IReleaseClient GetReleases(int projectId);
 
-        IReleaseClient GetReleases(ProjectId projectId);
+    IReleaseClient GetReleases(ProjectId projectId);
 
-        IMembersClient Members { get; }
+    IMembersClient Members { get; }
 
-        IVersionClient Version { get; }
+    IVersionClient Version { get; }
 
-        INamespacesClient Namespaces { get; }
+    INamespacesClient Namespaces { get; }
 
-        ISnippetClient Snippets { get; }
+    ISnippetClient Snippets { get; }
 
-        ISystemHookClient SystemHooks { get; }
+    ISystemHookClient SystemHooks { get; }
 
-        IDeploymentClient Deployments { get; }
+    IDeploymentClient Deployments { get; }
 
-        IEpicClient Epics { get; }
+    IEpicClient Epics { get; }
 
-        IGraphQLClient GraphQL { get; }
+    IGraphQLClient GraphQL { get; }
 
-        ISearchClient AdvancedSearch { get; }
+    ISearchClient AdvancedSearch { get; }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IProjectIssueNoteClient GetProjectIssueNoteClient(int projectId);
 
-        IProjectIssueNoteClient GetProjectIssueNoteClient(ProjectId projectId);
+    IProjectIssueNoteClient GetProjectIssueNoteClient(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IEnvironmentClient GetEnvironmentClient(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IEnvironmentClient GetEnvironmentClient(int projectId);
 
-        IEnvironmentClient GetEnvironmentClient(ProjectId projectId);
+    IEnvironmentClient GetEnvironmentClient(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IClusterClient GetClusterClient(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IClusterClient GetClusterClient(int projectId);
 
-        IClusterClient GetClusterClient(ProjectId projectId);
+    IClusterClient GetClusterClient(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IWikiClient GetWikiClient(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IWikiClient GetWikiClient(int projectId);
 
-        IWikiClient GetWikiClient(ProjectId projectId);
+    IWikiClient GetWikiClient(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IProjectBadgeClient GetProjectBadgeClient(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IProjectBadgeClient GetProjectBadgeClient(int projectId);
 
-        IProjectBadgeClient GetProjectBadgeClient(ProjectId projectId);
+    IProjectBadgeClient GetProjectBadgeClient(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IGroupBadgeClient GetGroupBadgeClient(int groupId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IGroupBadgeClient GetGroupBadgeClient(int groupId);
 
-        IGroupBadgeClient GetGroupBadgeClient(GroupId groupId);
+    IGroupBadgeClient GetGroupBadgeClient(GroupId groupId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IProjectVariableClient GetProjectVariableClient(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IProjectVariableClient GetProjectVariableClient(int projectId);
 
-        IProjectVariableClient GetProjectVariableClient(ProjectId projectId);
+    IProjectVariableClient GetProjectVariableClient(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IGroupVariableClient GetGroupVariableClient(int groupId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IGroupVariableClient GetGroupVariableClient(int groupId);
 
-        IGroupVariableClient GetGroupVariableClient(GroupId groupId);
+    IGroupVariableClient GetGroupVariableClient(GroupId groupId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(int projectId);
 
-        IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(ProjectId projectId);
+    IProjectLevelApprovalRulesClient GetProjectLevelApprovalRulesClient(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        IProtectedBranchClient GetProtectedBranchClient(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    IProtectedBranchClient GetProtectedBranchClient(int projectId);
 
-        IProtectedBranchClient GetProtectedBranchClient(ProjectId projectId);
+    IProtectedBranchClient GetProtectedBranchClient(ProjectId projectId);
 
-        IProtectedTagClient GetProtectedTagClient(ProjectId projectId);
+    IProtectedTagClient GetProtectedTagClient(ProjectId projectId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public ISearchClient GetGroupSearchClient(int groupId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public ISearchClient GetGroupSearchClient(int groupId);
 
-        public ISearchClient GetGroupSearchClient(GroupId groupId);
+    public ISearchClient GetGroupSearchClient(GroupId groupId);
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public ISearchClient GetProjectSearchClient(int projectId);
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public ISearchClient GetProjectSearchClient(int projectId);
 
-        public ISearchClient GetProjectSearchClient(ProjectId projectId);
-    }
+    public ISearchClient GetProjectSearchClient(ProjectId projectId);
 }

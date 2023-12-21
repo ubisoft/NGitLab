@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IMergeRequestCommitClient
 {
-    public interface IMergeRequestCommitClient
-    {
-        IEnumerable<Commit> All { get; }
-    }
+    IEnumerable<Commit> All { get; }
 }

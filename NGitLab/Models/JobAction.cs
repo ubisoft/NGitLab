@@ -1,10 +1,9 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum JobAction
 {
-    public enum JobAction
-    {
-        Cancel,
-        Retry,
-        Erase,
-        Play,
-    }
+    Cancel,
+    Retry,
+    Erase,
+    Play,
 }

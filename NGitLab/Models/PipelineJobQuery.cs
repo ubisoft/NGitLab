@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class PipelineJobQuery
 {
-    public class PipelineJobQuery
-    {
-        [Required]
-        [JsonPropertyName("id")]
-        public int PipelineId { get; set; }
+    [Required]
+    [JsonPropertyName("id")]
+    public int PipelineId { get; set; }
 
-        public string[] Scope { get; set; }
+    public string[] Scope { get; set; }
 
-        public bool? IncludeRetried { get; set; }
-    }
+    public bool? IncludeRetried { get; set; }
 }

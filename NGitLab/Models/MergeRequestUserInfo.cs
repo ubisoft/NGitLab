@@ -1,10 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class MergeRequestUserInfo
 {
-    public class MergeRequestUserInfo
-    {
-        [JsonPropertyName("can_merge")]
-        public bool CanMerge { get; set; }
-    }
+    [JsonPropertyName("can_merge")]
+    public bool CanMerge { get; set; }
 }

@@ -1,19 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class NamespaceCreate
 {
-    public class NamespaceCreate
-    {
-        [Required]
-        [JsonPropertyName("name")]
-        public string Name;
+    [Required]
+    [JsonPropertyName("name")]
+    public string Name;
 
-        [Required]
-        [JsonPropertyName("path")]
-        public string Path;
+    [Required]
+    [JsonPropertyName("path")]
+    public string Path;
 
-        [JsonPropertyName("description")]
-        public string Description;
-    }
+    [JsonPropertyName("description")]
+    public string Description;
 }

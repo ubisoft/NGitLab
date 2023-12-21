@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IContributorClient
 {
-    public interface IContributorClient
-    {
-        IEnumerable<Contributor> All { get; }
-    }
+    IEnumerable<Contributor> All { get; }
 }

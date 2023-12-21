@@ -2,56 +2,55 @@ using System;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+[DebuggerDisplay("{Description}")]
+public class Runner
 {
-    [DebuggerDisplay("{Description}")]
-    public class Runner
-    {
-        public const string Url = "/runners";
+    public const string Url = "/runners";
 
-        [JsonPropertyName("id")]
-        public int Id;
+    [JsonPropertyName("id")]
+    public int Id;
 
-        [JsonPropertyName("name")]
-        public string Name;
+    [JsonPropertyName("name")]
+    public string Name;
 
-        [JsonPropertyName("active")]
-        public bool Active;
+    [JsonPropertyName("active")]
+    public bool Active;
 
-        [JsonPropertyName("online")]
-        public bool Online;
+    [JsonPropertyName("online")]
+    public bool Online;
 
-        [JsonPropertyName("status")]
-        public string Status;
+    [JsonPropertyName("status")]
+    public string Status;
 
-        [JsonPropertyName("description")]
-        public string Description;
+    [JsonPropertyName("description")]
+    public string Description;
 
-        [JsonPropertyName("is_shared")]
-        public bool IsShared;
+    [JsonPropertyName("is_shared")]
+    public bool IsShared;
 
-        [JsonPropertyName("contacted_at")]
-        public DateTime ContactedAt;
+    [JsonPropertyName("contacted_at")]
+    public DateTime ContactedAt;
 
-        [JsonPropertyName("projects")]
-        public Project[] Projects;
+    [JsonPropertyName("projects")]
+    public Project[] Projects;
 
-        [JsonPropertyName("token")]
-        public string Token;
+    [JsonPropertyName("token")]
+    public string Token;
 
-        [JsonPropertyName("tag_list")]
-        public string[] TagList;
+    [JsonPropertyName("tag_list")]
+    public string[] TagList;
 
-        [JsonPropertyName("string")]
-        public string Version;
+    [JsonPropertyName("string")]
+    public string Version;
 
-        [JsonPropertyName("ip_address")]
-        public string IpAddress;
+    [JsonPropertyName("ip_address")]
+    public string IpAddress;
 
-        [JsonPropertyName("locked")]
-        public bool Locked;
+    [JsonPropertyName("locked")]
+    public bool Locked;
 
-        [JsonPropertyName("run_untagged")]
-        public bool RunUntagged;
-    }
+    [JsonPropertyName("run_untagged")]
+    public bool RunUntagged;
 }

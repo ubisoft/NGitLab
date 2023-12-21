@@ -1,9 +1,8 @@
-﻿namespace NGitLab.Mock
+﻿namespace NGitLab.Mock;
+
+public enum UserState
 {
-    public enum UserState
-    {
-        active,
-        blocked,
-        deactivated,
-    }
+    active,
+    blocked,
+    deactivated,
 }

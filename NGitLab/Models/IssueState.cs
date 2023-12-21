@@ -1,8 +1,7 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum IssueState
 {
-    public enum IssueState
-    {
-        opened,
-        closed,
-    }
+    opened,
+    closed,
 }

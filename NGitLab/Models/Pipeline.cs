@@ -1,70 +1,69 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class Pipeline
 {
-    public class Pipeline
-    {
-        public const string Url = "/pipelines";
+    public const string Url = "/pipelines";
 
-        [JsonPropertyName("id")]
-        public int Id;
+    [JsonPropertyName("id")]
+    public int Id;
 
-        [JsonPropertyName("status")]
-        public JobStatus Status;
+    [JsonPropertyName("status")]
+    public JobStatus Status;
 
-        [JsonPropertyName("ref")]
-        public string Ref;
+    [JsonPropertyName("ref")]
+    public string Ref;
 
-        [JsonPropertyName("tag")]
-        public bool Tag;
+    [JsonPropertyName("tag")]
+    public bool Tag;
 
-        [JsonPropertyName("sha")]
-        public Sha1 Sha;
+    [JsonPropertyName("sha")]
+    public Sha1 Sha;
 
-        [JsonPropertyName("before_sha")]
-        public Sha1 BeforeSha;
+    [JsonPropertyName("before_sha")]
+    public Sha1 BeforeSha;
 
-        [JsonPropertyName("yaml_errors")]
-        public string YamlError;
+    [JsonPropertyName("yaml_errors")]
+    public string YamlError;
 
-        [JsonPropertyName("user")]
-        public User User;
+    [JsonPropertyName("user")]
+    public User User;
 
-        [JsonPropertyName("created_at")]
-        public DateTime CreatedAt;
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt;
 
-        [JsonPropertyName("updated_at")]
-        public DateTime UpdatedAt;
+    [JsonPropertyName("updated_at")]
+    public DateTime UpdatedAt;
 
-        [JsonPropertyName("started_at")]
-        public DateTime StartedAt;
+    [JsonPropertyName("started_at")]
+    public DateTime StartedAt;
 
-        [JsonPropertyName("finished_at")]
-        public DateTime FinishedAt;
+    [JsonPropertyName("finished_at")]
+    public DateTime FinishedAt;
 
-        [JsonPropertyName("committed_at")]
-        public DateTime CommittedAt;
+    [JsonPropertyName("committed_at")]
+    public DateTime CommittedAt;
 
-        /// <summary>
-        /// Duration in seconds.
-        /// </summary>
-        [JsonPropertyName("duration")]
-        public long? Duration;
+    /// <summary>
+    /// Duration in seconds.
+    /// </summary>
+    [JsonPropertyName("duration")]
+    public long? Duration;
 
-        [JsonPropertyName("coverage")]
-        public double Coverage;
+    [JsonPropertyName("coverage")]
+    public double Coverage;
 
-        [JsonPropertyName("web_url")]
-        public string WebUrl;
+    [JsonPropertyName("web_url")]
+    public string WebUrl;
 
-        [JsonPropertyName("detailed_status")]
-        public PipelineDetailedStatus DetailedStatus { get; set; }
+    [JsonPropertyName("detailed_status")]
+    public PipelineDetailedStatus DetailedStatus { get; set; }
 
-        [JsonPropertyName("source")]
-        public string Source;
+    [JsonPropertyName("source")]
+    public string Source;
 
-        [JsonPropertyName("project_id")]
-        public int ProjectId { get; set; }
-    }
+    [JsonPropertyName("project_id")]
+    public int ProjectId { get; set; }
 }

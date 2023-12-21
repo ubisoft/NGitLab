@@ -1,8 +1,7 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum EpicState
 {
-    public enum EpicState
-    {
-        opened,
-        closed,
-    }
+    opened,
+    closed,
 }

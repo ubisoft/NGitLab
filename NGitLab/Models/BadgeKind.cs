@@ -1,8 +1,7 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum BadgeKind
 {
-    public enum BadgeKind
-    {
-        Group,
-        Project,
-    }
+    Group,
+    Project,
 }

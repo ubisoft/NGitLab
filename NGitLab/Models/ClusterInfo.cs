@@ -1,19 +1,18 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class ClusterInfo
 {
-    public class ClusterInfo
-    {
-        [JsonPropertyName("id")]
-        public int Id;
+    [JsonPropertyName("id")]
+    public int Id;
 
-        [JsonPropertyName("name")]
-        public string Name;
+    [JsonPropertyName("name")]
+    public string Name;
 
-        [JsonPropertyName("platform_type")]
-        public string PlatformType;
+    [JsonPropertyName("platform_type")]
+    public string PlatformType;
 
-        [JsonPropertyName("environment_scope")]
-        public string EnvionmentScope;
-    }
+    [JsonPropertyName("environment_scope")]
+    public string EnvionmentScope;
 }

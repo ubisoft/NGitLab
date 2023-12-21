@@ -1,27 +1,26 @@
-﻿namespace NGitLab.Mock
+﻿namespace NGitLab.Mock;
+
+public sealed class Label : GitLabObject
 {
-    public sealed class Label : GitLabObject
+    public Project Project => Parent as Project;
+
+    public Group Group => Parent as Group;
+
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string Color { get; set; }
+
+    public string Description { get; set; }
+
+    public Models.Label ToClientLabel()
     {
-        public Project Project => Parent as Project;
-
-        public Group Group => Parent as Group;
-
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string Color { get; set; }
-
-        public string Description { get; set; }
-
-        public Models.Label ToClientLabel()
+        return new Models.Label
         {
-            return new Models.Label
-            {
-                Name = Name,
-                Color = Color,
-                Description = Description,
-            };
-        }
+            Name = Name,
+            Color = Color,
+            Description = Description,
+        };
     }
 }

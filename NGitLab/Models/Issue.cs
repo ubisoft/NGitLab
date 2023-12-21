@@ -1,77 +1,76 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class Issue
 {
-    public class Issue
-    {
-        [JsonPropertyName("id")]
-        public int Id;
+    [JsonPropertyName("id")]
+    public int Id;
 
-        [JsonPropertyName("iid")]
-        public int IssueId;
+    [JsonPropertyName("iid")]
+    public int IssueId;
 
-        [JsonPropertyName("project_id")]
-        public int ProjectId;
+    [JsonPropertyName("project_id")]
+    public int ProjectId;
 
-        [JsonPropertyName("title")]
-        public string Title;
+    [JsonPropertyName("title")]
+    public string Title;
 
-        [JsonPropertyName("description")]
-        public string Description;
+    [JsonPropertyName("description")]
+    public string Description;
 
-        [JsonPropertyName("labels")]
-        public string[] Labels;
+    [JsonPropertyName("labels")]
+    public string[] Labels;
 
-        [JsonPropertyName("milestone")]
-        public Milestone Milestone;
+    [JsonPropertyName("milestone")]
+    public Milestone Milestone;
 
-        [JsonPropertyName("assignee")]
-        public Assignee Assignee;
+    [JsonPropertyName("assignee")]
+    public Assignee Assignee;
 
-        [JsonPropertyName("assignees")]
-        public Assignee[] Assignees;
+    [JsonPropertyName("assignees")]
+    public Assignee[] Assignees;
 
-        [JsonPropertyName("author")]
-        public Author Author;
+    [JsonPropertyName("author")]
+    public Author Author;
 
-        [JsonPropertyName("state")]
-        public string State;
+    [JsonPropertyName("state")]
+    public string State;
 
-        [JsonPropertyName("created_at")]
-        public DateTime CreatedAt;
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt;
 
-        [JsonPropertyName("updated_at")]
-        public DateTime UpdatedAt;
+    [JsonPropertyName("updated_at")]
+    public DateTime UpdatedAt;
 
-        [JsonPropertyName("closed_at")]
-        public DateTime ClosedAt { get; set; }
+    [JsonPropertyName("closed_at")]
+    public DateTime ClosedAt { get; set; }
 
-        [JsonPropertyName("closed_by")]
-        public User ClosedBy { get; set; }
+    [JsonPropertyName("closed_by")]
+    public User ClosedBy { get; set; }
 
-        [JsonPropertyName("due_date")]
-        public DateTime? DueDate;
+    [JsonPropertyName("due_date")]
+    public DateTime? DueDate;
 
-        [JsonPropertyName("web_url")]
-        public string WebUrl;
+    [JsonPropertyName("web_url")]
+    public string WebUrl;
 
-        [JsonPropertyName("merge_requests_count")]
-        public int MergeRequestsCount { get; set; }
+    [JsonPropertyName("merge_requests_count")]
+    public int MergeRequestsCount { get; set; }
 
-        [JsonPropertyName("epic")]
-        public IssueEpic Epic;
+    [JsonPropertyName("epic")]
+    public IssueEpic Epic;
 
-        [JsonPropertyName("confidential")]
-        public bool Confidential;
+    [JsonPropertyName("confidential")]
+    public bool Confidential;
 
-        [JsonPropertyName("weight")]
-        public int? Weight { get; set; }
+    [JsonPropertyName("weight")]
+    public int? Weight { get; set; }
 
-        [JsonPropertyName("issue_type")]
-        public string IssueType;
+    [JsonPropertyName("issue_type")]
+    public string IssueType;
 
-        [JsonPropertyName("moved_to_id")]
-        public int? MovedToId;
-    }
+    [JsonPropertyName("moved_to_id")]
+    public int? MovedToId;
 }

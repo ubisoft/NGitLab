@@ -1,44 +1,43 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class Note
 {
-    public class Note
-    {
-        [JsonPropertyName("id")]
-        public long Id;
+    [JsonPropertyName("id")]
+    public long Id;
 
-        [JsonPropertyName("body")]
-        public string Body;
+    [JsonPropertyName("body")]
+    public string Body;
 
-        [JsonPropertyName("created_at")]
-        public DateTime CreatedAt;
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt;
 
-        [JsonPropertyName("updated_at")]
-        public DateTime UpdatedAt;
+    [JsonPropertyName("updated_at")]
+    public DateTime UpdatedAt;
 
-        [JsonPropertyName("author")]
-        public User Author { get; set; }
+    [JsonPropertyName("author")]
+    public User Author { get; set; }
 
-        [JsonPropertyName("resolved")]
-        public bool Resolved;
+    [JsonPropertyName("resolved")]
+    public bool Resolved;
 
-        [JsonPropertyName("resolvable")]
-        public bool Resolvable;
+    [JsonPropertyName("resolvable")]
+    public bool Resolvable;
 
-        [JsonPropertyName("type")]
-        public string Type;
+    [JsonPropertyName("type")]
+    public string Type;
 
-        [JsonPropertyName("system")]
-        public bool System;
+    [JsonPropertyName("system")]
+    public bool System;
 
-        [JsonPropertyName("confidential")]
-        public bool Confidential;
+    [JsonPropertyName("confidential")]
+    public bool Confidential;
 
-        [JsonPropertyName("noteable_iid")]
-        public long NoteableIid { get; set; }
+    [JsonPropertyName("noteable_iid")]
+    public long NoteableIid { get; set; }
 
-        [JsonPropertyName("noteable_type")]
-        public DynamicEnum<NoteableType> NoteableType { get; set; }
-    }
+    [JsonPropertyName("noteable_type")]
+    public DynamicEnum<NoteableType> NoteableType { get; set; }
 }

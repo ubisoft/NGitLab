@@ -1,9 +1,8 @@
 using NGitLab.Models;
 
-namespace NGitLab.Impl
+namespace NGitLab.Impl;
+
+public interface IGitDiffChangeCounter
 {
-    public interface IGitDiffChangeCounter
-    {
-        public DiffStats Compute(MergeRequestChange mergeRequestChange);
-    }
+    public DiffStats Compute(MergeRequestChange mergeRequestChange);
 }

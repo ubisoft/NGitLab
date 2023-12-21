@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class ResourceMilestoneEvent
 {
-    public class ResourceMilestoneEvent
-    {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
 
-        [JsonPropertyName("user")]
-        public Author User { get; set; }
+    [JsonPropertyName("user")]
+    public Author User { get; set; }
 
-        [JsonPropertyName("created_at")]
-        public DateTime CreatedAt { get; set; }
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt { get; set; }
 
-        [JsonPropertyName("resource_id")]
-        public int ResourceId { get; set; }
+    [JsonPropertyName("resource_id")]
+    public int ResourceId { get; set; }
 
-        [JsonPropertyName("resource_type")]
-        public string ResourceType { get; set; }
+    [JsonPropertyName("resource_type")]
+    public string ResourceType { get; set; }
 
-        [JsonPropertyName("milestone")]
-        public Milestone Milestone { get; set; }
+    [JsonPropertyName("milestone")]
+    public Milestone Milestone { get; set; }
 
-        [JsonPropertyName("action")]
-        public ResourceMilestoneEventAction Action { get; set; }
-    }
+    [JsonPropertyName("action")]
+    public ResourceMilestoneEventAction Action { get; set; }
 }

@@ -1,9 +1,8 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum IssueType
 {
-    public enum IssueType
-    {
-        issue,
-        incident,
-        test_case,
-    }
+    issue,
+    incident,
+    test_case,
 }

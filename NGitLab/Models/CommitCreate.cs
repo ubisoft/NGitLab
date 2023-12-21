@@ -3,53 +3,52 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class CommitCreate
 {
-    public class CommitCreate
-    {
-        // Unnecessary in the POSTed JSON; the 'Project Id' is actually specified through the endpoint URL.
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [JsonIgnore]
-        public int ProjectId;
+    // Unnecessary in the POSTed JSON; the 'Project Id' is actually specified through the endpoint URL.
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [JsonIgnore]
+    public int ProjectId;
 
-        [Required]
-        [JsonPropertyName("branch")]
-        public string Branch;
+    [Required]
+    [JsonPropertyName("branch")]
+    public string Branch;
 
-        [JsonPropertyName("commit_message")]
-        public string CommitMessage;
+    [JsonPropertyName("commit_message")]
+    public string CommitMessage;
 
-        [JsonPropertyName("start_branch")]
-        public string StartBranch;
+    [JsonPropertyName("start_branch")]
+    public string StartBranch;
 
-        [JsonPropertyName("author_email")]
-        public string AuthorEmail;
+    [JsonPropertyName("author_email")]
+    public string AuthorEmail;
 
-        [JsonPropertyName("author_name")]
-        public string AuthorName;
+    [JsonPropertyName("author_name")]
+    public string AuthorName;
 
-        [JsonPropertyName("actions")]
-        public IList<CreateCommitAction> Actions = new List<CreateCommitAction>();
+    [JsonPropertyName("actions")]
+    public IList<CreateCommitAction> Actions = new List<CreateCommitAction>();
 
-        [JsonPropertyName("force")]
-        public bool? Force;
-    }
+    [JsonPropertyName("force")]
+    public bool? Force;
+}
 
-    public class CreateCommitAction
-    {
-        [JsonPropertyName("action")]
-        public string Action { get; set; }
+public class CreateCommitAction
+{
+    [JsonPropertyName("action")]
+    public string Action { get; set; }
 
-        [JsonPropertyName("file_path")]
-        public string FilePath { get; set; }
+    [JsonPropertyName("file_path")]
+    public string FilePath { get; set; }
 
-        [JsonPropertyName("previous_path")]
-        public string PreviousPath { get; set; }
+    [JsonPropertyName("previous_path")]
+    public string PreviousPath { get; set; }
 
-        [JsonPropertyName("content")]
-        public string Content { get; set; }
+    [JsonPropertyName("content")]
+    public string Content { get; set; }
 
-        [JsonPropertyName("encoding")]
-        public string Encoding { get; set; }
-    }
+    [JsonPropertyName("encoding")]
+    public string Encoding { get; set; }
 }

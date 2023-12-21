@@ -1,63 +1,62 @@
 ﻿using System;
 using System.Linq;
 
-namespace NGitLab.Mock
+namespace NGitLab.Mock;
+
+public sealed class PipelineCollection : Collection<Pipeline>
 {
-    public sealed class PipelineCollection : Collection<Pipeline>
+    private readonly Project _project;
+
+    public PipelineCollection(GitLabObject parent)
+        : base(parent)
     {
-        private readonly Project _project;
+        _project = parent as Project ??
+                   throw new ArgumentException("Parent must be a Project", nameof(parent));
+    }
 
-        public PipelineCollection(GitLabObject parent)
-            : base(parent)
+    public Pipeline GetById(int id)
+    {
+        return this.FirstOrDefault(pipeline => pipeline.Id == id);
+    }
+
+    public override void Add(Pipeline pipeline)
+    {
+        if (pipeline is null)
+            throw new ArgumentNullException(nameof(pipeline));
+
+        if (pipeline.Id == default)
         {
-            _project = parent as Project ??
-                       throw new ArgumentException("Parent must be a Project", nameof(parent));
+            pipeline.Id = Server.GetNewPipelineId();
         }
 
-        public Pipeline GetById(int id)
+        // Check if pipeline.Ref represents a branch or a tag
+        var branch = _project.Repository.GetAllBranches()
+            .FirstOrDefault(b => string.Equals(pipeline.Ref, b.FriendlyName, StringComparison.Ordinal));
+        if (branch is not null)
         {
-            return this.FirstOrDefault(pipeline => pipeline.Id == id);
+            pipeline.Sha = new Sha1(branch.Tip.Sha);
+        }
+        else
+        {
+            var commit = _project.Repository.GetCommit(pipeline.Ref);
+            if (commit is not null)
+                pipeline.Sha = new Sha1(commit.Sha);
         }
 
-        public override void Add(Pipeline pipeline)
+        base.Add(pipeline);
+    }
+
+    public Pipeline Add(string @ref, JobStatus status, User user)
+    {
+        var pipeline = new Pipeline(@ref)
         {
-            if (pipeline is null)
-                throw new ArgumentNullException(nameof(pipeline));
+            Status = status,
+            User = user,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+        };
 
-            if (pipeline.Id == default)
-            {
-                pipeline.Id = Server.GetNewPipelineId();
-            }
-
-            // Check if pipeline.Ref represents a branch or a tag
-            var branch = _project.Repository.GetAllBranches()
-                .FirstOrDefault(b => string.Equals(pipeline.Ref, b.FriendlyName, StringComparison.Ordinal));
-            if (branch is not null)
-            {
-                pipeline.Sha = new Sha1(branch.Tip.Sha);
-            }
-            else
-            {
-                var commit = _project.Repository.GetCommit(pipeline.Ref);
-                if (commit is not null)
-                    pipeline.Sha = new Sha1(commit.Sha);
-            }
-
-            base.Add(pipeline);
-        }
-
-        public Pipeline Add(string @ref, JobStatus status, User user)
-        {
-            var pipeline = new Pipeline(@ref)
-            {
-                Status = status,
-                User = user,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-            };
-
-            Add(pipeline);
-            return pipeline;
-        }
+        Add(pipeline);
+        return pipeline;
     }
 }

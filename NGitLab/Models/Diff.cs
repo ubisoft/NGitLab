@@ -1,31 +1,30 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class Diff
 {
-    public class Diff
-    {
-        [JsonPropertyName("diff")]
-        public string Difference;
+    [JsonPropertyName("diff")]
+    public string Difference;
 
-        [JsonPropertyName("new_path")]
-        public string NewPath;
+    [JsonPropertyName("new_path")]
+    public string NewPath;
 
-        [JsonPropertyName("old_path")]
-        public string OldPath;
+    [JsonPropertyName("old_path")]
+    public string OldPath;
 
-        [JsonPropertyName("a_mode")]
-        public string AMode;
+    [JsonPropertyName("a_mode")]
+    public string AMode;
 
-        [JsonPropertyName("b_mode")]
-        public string BMode;
+    [JsonPropertyName("b_mode")]
+    public string BMode;
 
-        [JsonPropertyName("new_file")]
-        public bool IsNewFile;
+    [JsonPropertyName("new_file")]
+    public bool IsNewFile;
 
-        [JsonPropertyName("renamed_file")]
-        public bool IsRenamedFile;
+    [JsonPropertyName("renamed_file")]
+    public bool IsRenamedFile;
 
-        [JsonPropertyName("deleted_file")]
-        public bool IsDeletedFile;
-    }
+    [JsonPropertyName("deleted_file")]
+    public bool IsDeletedFile;
 }

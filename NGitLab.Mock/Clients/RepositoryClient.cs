@@ -5,127 +5,126 @@ using System.Linq;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
-namespace NGitLab.Mock.Clients
+namespace NGitLab.Mock.Clients;
+
+internal sealed class RepositoryClient : ClientBase, IRepositoryClient
 {
-    internal sealed class RepositoryClient : ClientBase, IRepositoryClient
+    private readonly int _projectId;
+
+    public RepositoryClient(ClientContext context, ProjectId projectId)
+        : base(context)
     {
-        private readonly int _projectId;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+    }
 
-        public RepositoryClient(ClientContext context, ProjectId projectId)
-            : base(context)
-        {
-            _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
-        }
+    public ITagClient Tags => new TagClient(Context, _projectId);
 
-        public ITagClient Tags => new TagClient(Context, _projectId);
+    public IFilesClient Files => new FileClient(Context, _projectId);
 
-        public IFilesClient Files => new FileClient(Context, _projectId);
+    public IBranchClient Branches => new BranchClient(Context, _projectId);
 
-        public IBranchClient Branches => new BranchClient(Context, _projectId);
+    public IProjectHooksClient ProjectHooks => new ProjectHooksClient(Context, _projectId);
 
-        public IProjectHooksClient ProjectHooks => new ProjectHooksClient(Context, _projectId);
+    public IContributorClient Contributors => new ContributorClient(Context, _projectId);
 
-        public IContributorClient Contributors => new ContributorClient(Context, _projectId);
-
-        public IEnumerable<Tree> Tree
-        {
-            get
-            {
-                using (Context.BeginOperationScope())
-                {
-                    var project = GetProject(_projectId, ProjectPermission.View);
-                    return project.Repository.GetTree().ToList();
-                }
-            }
-        }
-
-        public IEnumerable<Commit> Commits
-        {
-            get
-            {
-                using (Context.BeginOperationScope())
-                {
-                    var project = GetProject(_projectId, ProjectPermission.View);
-                    return project.Repository.GetCommits().Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
-                }
-            }
-        }
-
-        public IEnumerable<Tree> GetTree(string path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Tree> GetTree(string path, string @ref, bool recursive)
-        {
-            throw new NotImplementedException();
-        }
-
-        public GitLabCollectionResponse<Tree> GetTreeAsync(RepositoryGetTreeOptions options)
-        {
-            return GitLabCollectionResponse.Create(GetTree(options));
-        }
-
-        public IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options)
+    public IEnumerable<Tree> Tree
+    {
+        get
         {
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetTree(options).ToList();
+                return project.Repository.GetTree().ToList();
             }
         }
+    }
 
-        public void GetRawBlob(string sha, Action<Stream> parser)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void GetArchive(Action<Stream> parser)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Commit> GetCommits(string refName, int maxResults = 0)
+    public IEnumerable<Commit> Commits
+    {
+        get
         {
             using (Context.BeginOperationScope())
             {
                 var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetCommits(refName).Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
+                return project.Repository.GetCommits().Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
             }
         }
+    }
 
-        public IEnumerable<Commit> GetCommits(GetCommitsRequest request)
-        {
-            using (Context.BeginOperationScope())
-            {
-                var project = GetProject(_projectId, ProjectPermission.View);
-                return project.Repository.GetCommits(request).Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
-            }
-        }
+    public IEnumerable<Tree> GetTree(string path)
+    {
+        throw new NotImplementedException();
+    }
 
-        public Commit GetCommit(Sha1 sha)
-        {
-            throw new NotImplementedException();
-        }
+    public IEnumerable<Tree> GetTree(string path, string @ref, bool recursive)
+    {
+        throw new NotImplementedException();
+    }
 
-        public IEnumerable<Diff> GetCommitDiff(Sha1 sha)
-        {
-            throw new NotImplementedException();
-        }
+    public GitLabCollectionResponse<Tree> GetTreeAsync(RepositoryGetTreeOptions options)
+    {
+        return GitLabCollectionResponse.Create(GetTree(options));
+    }
 
-        public IEnumerable<Ref> GetCommitRefs(Sha1 sha, CommitRefType type = CommitRefType.All)
+    public IEnumerable<Tree> GetTree(RepositoryGetTreeOptions options)
+    {
+        using (Context.BeginOperationScope())
         {
-            throw new NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+            return project.Repository.GetTree(options).ToList();
         }
+    }
 
-        private static Commit ConvertToNGitLabCommit(LibGit2Sharp.Commit commit, Project project)
-        {
-            return commit.ToCommitClient(project);
-        }
+    public void GetRawBlob(string sha, Action<Stream> parser)
+    {
+        throw new NotImplementedException();
+    }
 
-        public CompareResults Compare(CompareQuery query)
+    public void GetArchive(Action<Stream> parser)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<Commit> GetCommits(string refName, int maxResults = 0)
+    {
+        using (Context.BeginOperationScope())
         {
-            throw new NotImplementedException();
+            var project = GetProject(_projectId, ProjectPermission.View);
+            return project.Repository.GetCommits(refName).Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
         }
+    }
+
+    public IEnumerable<Commit> GetCommits(GetCommitsRequest request)
+    {
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(_projectId, ProjectPermission.View);
+            return project.Repository.GetCommits(request).Select(commit => ConvertToNGitLabCommit(commit, project)).ToList();
+        }
+    }
+
+    public Commit GetCommit(Sha1 sha)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<Diff> GetCommitDiff(Sha1 sha)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<Ref> GetCommitRefs(Sha1 sha, CommitRefType type = CommitRefType.All)
+    {
+        throw new NotImplementedException();
+    }
+
+    private static Commit ConvertToNGitLabCommit(LibGit2Sharp.Commit commit, Project project)
+    {
+        return commit.ToCommitClient(project);
+    }
+
+    public CompareResults Compare(CompareQuery query)
+    {
+        throw new NotImplementedException();
     }
 }

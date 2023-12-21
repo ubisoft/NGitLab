@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace NGitLab.Mock
+namespace NGitLab.Mock;
+
+public static class StringExtensions
 {
-    public static class StringExtensions
+    public static bool Contains(this string source, string toCheck, StringComparison comparison)
     {
-        public static bool Contains(this string source, string toCheck, StringComparison comparison)
-        {
-            return source?.IndexOf(toCheck, comparison) >= 0;
-        }
+        return source?.IndexOf(toCheck, comparison) >= 0;
     }
 }

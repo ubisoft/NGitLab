@@ -2,29 +2,28 @@
 using System.Linq;
 using NGitLab.Models;
 
-namespace NGitLab.Mock.Clients
+namespace NGitLab.Mock.Clients;
+
+internal sealed class MergeRequestCommitClient : ClientBase, IMergeRequestCommitClient
 {
-    internal sealed class MergeRequestCommitClient : ClientBase, IMergeRequestCommitClient
+    private readonly int _projectId;
+    private readonly int _mergeRequestIid;
+
+    public MergeRequestCommitClient(ClientContext context, int projectId, int mergeRequestIid)
+        : base(context)
     {
-        private readonly int _projectId;
-        private readonly int _mergeRequestIid;
+        _projectId = projectId;
+        _mergeRequestIid = mergeRequestIid;
+    }
 
-        public MergeRequestCommitClient(ClientContext context, int projectId, int mergeRequestIid)
-            : base(context)
+    public IEnumerable<Commit> All
+    {
+        get
         {
-            _projectId = projectId;
-            _mergeRequestIid = mergeRequestIid;
-        }
-
-        public IEnumerable<Commit> All
-        {
-            get
+            using (Context.BeginOperationScope())
             {
-                using (Context.BeginOperationScope())
-                {
-                    var mergeRequest = GetMergeRequest(_projectId, _mergeRequestIid);
-                    return mergeRequest.Commits.Select(commit => commit.ToCommitClient(mergeRequest.SourceProject)).ToList();
-                }
+                var mergeRequest = GetMergeRequest(_projectId, _mergeRequestIid);
+                return mergeRequest.Commits.Select(commit => commit.ToCommitClient(mergeRequest.SourceProject)).ToList();
             }
         }
     }

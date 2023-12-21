@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IGlobalJobClient
 {
-    public interface IGlobalJobClient
-    {
-        Task<Job> GetJobFromJobTokenAsync(string token, CancellationToken cancellationToken = default);
-    }
+    Task<Job> GetJobFromJobTokenAsync(string token, CancellationToken cancellationToken = default);
 }

@@ -1,10 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class Bridge : JobBasic
 {
-    public class Bridge : JobBasic
-    {
-        [JsonPropertyName("downstream_pipeline")]
-        public JobPipeline DownstreamPipeline { get; set; }
-    }
+    [JsonPropertyName("downstream_pipeline")]
+    public JobPipeline DownstreamPipeline { get; set; }
 }

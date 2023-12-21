@@ -1,16 +1,15 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class PipelineVariable
 {
-    public class PipelineVariable
-    {
-        [JsonPropertyName("key")]
-        public string Key;
+    [JsonPropertyName("key")]
+    public string Key;
 
-        [JsonPropertyName("value")]
-        public string Value;
+    [JsonPropertyName("value")]
+    public string Value;
 
-        [JsonPropertyName("variable_type")]
-        public string VariableType;
-    }
+    [JsonPropertyName("variable_type")]
+    public string VariableType;
 }

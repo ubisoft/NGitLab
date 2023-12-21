@@ -1,60 +1,59 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class UserUpsert
 {
-    public class UserUpsert
-    {
-        [Required]
-        [JsonPropertyName("email")]
-        public string Email;
+    [Required]
+    [JsonPropertyName("email")]
+    public string Email;
 
-        [Required]
-        [JsonPropertyName("password")]
-        public string Password;
+    [Required]
+    [JsonPropertyName("password")]
+    public string Password;
 
-        [Required]
-        [JsonPropertyName("username")]
-        public string Username;
+    [Required]
+    [JsonPropertyName("username")]
+    public string Username;
 
-        [Required]
-        [JsonPropertyName("name")]
-        public string Name;
+    [Required]
+    [JsonPropertyName("name")]
+    public string Name;
 
-        [JsonPropertyName("skype")]
-        public string Skype;
+    [JsonPropertyName("skype")]
+    public string Skype;
 
-        [JsonPropertyName("linkedin")]
-        public string Linkedin;
+    [JsonPropertyName("linkedin")]
+    public string Linkedin;
 
-        [JsonPropertyName("twitter")]
-        public string Twitter;
+    [JsonPropertyName("twitter")]
+    public string Twitter;
 
-        [JsonPropertyName("website_url")]
-        public string WebsiteURL;
+    [JsonPropertyName("website_url")]
+    public string WebsiteURL;
 
-        [JsonPropertyName("projects_limit")]
-        public int? ProjectsLimit;
+    [JsonPropertyName("projects_limit")]
+    public int? ProjectsLimit;
 
-        [JsonPropertyName("provider")]
-        public string Provider;
+    [JsonPropertyName("provider")]
+    public string Provider;
 
-        [JsonPropertyName("extern_uid")]
-        public string ExternalUid;
+    [JsonPropertyName("extern_uid")]
+    public string ExternalUid;
 
-        [JsonPropertyName("bio")]
-        public string Bio;
+    [JsonPropertyName("bio")]
+    public string Bio;
 
-        [JsonPropertyName("admin")]
-        public bool? IsAdmin;
+    [JsonPropertyName("admin")]
+    public bool? IsAdmin;
 
-        [JsonPropertyName("can_create_group")]
-        public bool? CanCreateGroup;
+    [JsonPropertyName("can_create_group")]
+    public bool? CanCreateGroup;
 
-        [JsonPropertyName("reset_password")]
-        public bool? ResetPassword;
+    [JsonPropertyName("reset_password")]
+    public bool? ResetPassword;
 
-        [JsonPropertyName("skip_confirmation")]
-        public bool? SkipConfirmation;
-    }
+    [JsonPropertyName("skip_confirmation")]
+    public bool? SkipConfirmation;
 }

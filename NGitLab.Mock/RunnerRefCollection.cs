@@ -1,10 +1,9 @@
-﻿namespace NGitLab.Mock
+﻿namespace NGitLab.Mock;
+
+public class RunnerRefCollection : Collection<RunnerRef>
 {
-    public class RunnerRefCollection : Collection<RunnerRef>
+    public RunnerRefCollection(GitLabObject parent)
+        : base(parent)
     {
-        public RunnerRefCollection(GitLabObject parent)
-            : base(parent)
-        {
-        }
     }
 }

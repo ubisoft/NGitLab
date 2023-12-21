@@ -1,13 +1,12 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+/// <summary>
+/// Allows to use more advanced GitLab queries for getting projects.
+/// </summary>
+public class SingleProjectQuery
 {
     /// <summary>
-    /// Allows to use more advanced GitLab queries for getting projects.
+    /// Include project statistics
     /// </summary>
-    public class SingleProjectQuery
-    {
-        /// <summary>
-        /// Include project statistics
-        /// </summary>
-        public bool? Statistics;
-    }
+    public bool? Statistics;
 }

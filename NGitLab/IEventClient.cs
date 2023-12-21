@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
+namespace NGitLab;
+
+public interface IEventClient
 {
-    public interface IEventClient
-    {
-        IEnumerable<Event> Get(EventQuery query);
-    }
+    IEnumerable<Event> Get(EventQuery query);
 }

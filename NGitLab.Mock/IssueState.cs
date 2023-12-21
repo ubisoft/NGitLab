@@ -1,8 +1,7 @@
-﻿namespace NGitLab.Mock
+﻿namespace NGitLab.Mock;
+
+public enum IssueState
 {
-    public enum IssueState
-    {
-        opened,
-        closed,
-    }
+    opened,
+    closed,
 }

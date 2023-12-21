@@ -5,11 +5,11 @@ using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
-namespace NGitLab.Tests
+namespace NGitLab.Tests;
+
+public class LintClientTests
 {
-    public class LintClientTests
-    {
-        private const string ValidCIYaml = @"
+    private const string ValidCIYaml = @"
 variables:
   CI_DEBUG_TRACE: ""true""
 build:
@@ -17,7 +17,7 @@ build:
     - echo test
 ";
 
-        private const string InvalidCIYaml = @"
+    private const string InvalidCIYaml = @"
 variables:
   CI_DEBUG_TRACE: ""true""
 build:
@@ -27,80 +27,79 @@ build:
     - this should fail the linting
 ";
 
-        [Test]
-        [NGitLabRetry]
-        public async Task LintValidCIYaml()
+    [Test]
+    [NGitLabRetry]
+    public async Task LintValidCIYaml()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var lintClient = context.Client.Lint;
+
+        var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), ValidCIYaml, new(), CancellationToken.None);
+
+        Assert.That(result.Valid, Is.True);
+        Assert.That(result.Errors.Any(), Is.False);
+        Assert.That(result.Warnings.Any(), Is.False);
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task LintInvalidCIYaml()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var lintClient = context.Client.Lint;
+
+        var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), InvalidCIYaml, new(), CancellationToken.None);
+
+        Assert.That(result.Valid, Is.False);
+        Assert.That(result.Errors.Any(), Is.True);
+        Assert.That(result.Warnings.Any(), Is.False);
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task LintValidCIProjectYaml()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var lintClient = context.Client.Lint;
+
+        context.Client.GetRepository(project.Id).Files.Create(new FileUpsert
         {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject();
-            var lintClient = context.Client.Lint;
+            Branch = project.DefaultBranch,
+            CommitMessage = "test",
+            Path = ".gitlab-ci.yml",
+            Content = ValidCIYaml,
+        });
 
-            var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), ValidCIYaml, new(), CancellationToken.None);
+        var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
 
-            Assert.That(result.Valid, Is.True);
-            Assert.That(result.Errors.Any(), Is.False);
-            Assert.That(result.Warnings.Any(), Is.False);
-        }
+        Assert.That(result.Valid, Is.True);
+        Assert.That(result.Errors.Any(), Is.False);
+        Assert.That(result.Warnings.Any(), Is.False);
+    }
 
-        [Test]
-        [NGitLabRetry]
-        public async Task LintInvalidCIYaml()
+    [Test]
+    [NGitLabRetry]
+    public async Task LintInvalidProjectCIYaml()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var lintClient = context.Client.Lint;
+
+        context.Client.GetRepository(project.Id).Files.Create(new FileUpsert
         {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject();
-            var lintClient = context.Client.Lint;
+            Branch = project.DefaultBranch,
+            CommitMessage = "test",
+            Path = ".gitlab-ci.yml",
+            Content = InvalidCIYaml,
+        });
 
-            var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), InvalidCIYaml, new(), CancellationToken.None);
+        var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
 
-            Assert.That(result.Valid, Is.False);
-            Assert.That(result.Errors.Any(), Is.True);
-            Assert.That(result.Warnings.Any(), Is.False);
-        }
-
-        [Test]
-        [NGitLabRetry]
-        public async Task LintValidCIProjectYaml()
-        {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject();
-            var lintClient = context.Client.Lint;
-
-            context.Client.GetRepository(project.Id).Files.Create(new FileUpsert
-            {
-                Branch = project.DefaultBranch,
-                CommitMessage = "test",
-                Path = ".gitlab-ci.yml",
-                Content = ValidCIYaml,
-            });
-
-            var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
-
-            Assert.That(result.Valid, Is.True);
-            Assert.That(result.Errors.Any(), Is.False);
-            Assert.That(result.Warnings.Any(), Is.False);
-        }
-
-        [Test]
-        [NGitLabRetry]
-        public async Task LintInvalidProjectCIYaml()
-        {
-            using var context = await GitLabTestContext.CreateAsync();
-            var project = context.CreateProject();
-            var lintClient = context.Client.Lint;
-
-            context.Client.GetRepository(project.Id).Files.Create(new FileUpsert
-            {
-                Branch = project.DefaultBranch,
-                CommitMessage = "test",
-                Path = ".gitlab-ci.yml",
-                Content = InvalidCIYaml,
-            });
-
-            var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
-
-            Assert.That(result.Valid, Is.False);
-            Assert.That(result.Errors.Any(), Is.True);
-            Assert.That(result.Warnings.Any(), Is.False);
-        }
+        Assert.That(result.Valid, Is.False);
+        Assert.That(result.Errors.Any(), Is.True);
+        Assert.That(result.Warnings.Any(), Is.False);
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace NGitLab.Impl
+﻿namespace NGitLab.Impl;
+
+public enum MilestoneScope
 {
-    public enum MilestoneScope
-    {
-        Projects,
-        Groups,
-    }
+    Projects,
+    Groups,
 }

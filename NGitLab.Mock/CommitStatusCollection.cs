@@ -1,10 +1,9 @@
-﻿namespace NGitLab.Mock
+﻿namespace NGitLab.Mock;
+
+public sealed class CommitStatusCollection : Collection<CommitStatus>
 {
-    public sealed class CommitStatusCollection : Collection<CommitStatus>
+    public CommitStatusCollection(GitLabObject parent)
+        : base(parent)
     {
-        public CommitStatusCollection(GitLabObject parent)
-            : base(parent)
-        {
-        }
     }
 }

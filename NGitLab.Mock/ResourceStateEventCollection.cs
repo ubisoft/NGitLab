@@ -3,66 +3,65 @@ using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
-namespace NGitLab.Mock
+namespace NGitLab.Mock;
+
+public sealed class ResourceStateEventCollection : Collection<ResourceStateEvent>
 {
-    public sealed class ResourceStateEventCollection : Collection<ResourceStateEvent>
+    public ResourceStateEventCollection(GitLabObject container)
+        : base(container)
     {
-        public ResourceStateEventCollection(GitLabObject container)
-            : base(container)
+    }
+
+    public override void Add(ResourceStateEvent item)
+    {
+        if (item is null)
+            throw new ArgumentNullException(nameof(item));
+
+        if (item.Id == default)
         {
+            item.Id = GetNewId();
         }
 
-        public override void Add(ResourceStateEvent item)
-        {
-            if (item is null)
-                throw new ArgumentNullException(nameof(item));
+        base.Add(item);
+    }
 
-            if (item.Id == default)
+    internal IEnumerable<ResourceStateEvent> Get(int? resourceId)
+    {
+        var resourceStateEvents = this.AsQueryable();
+
+        if (resourceId.HasValue)
+        {
+            resourceStateEvents = resourceStateEvents.Where(rle => rle.ResourceId == resourceId);
+        }
+
+        return resourceStateEvents;
+    }
+
+    private int GetNewId()
+    {
+        return this.Select(rle => rle.Id).DefaultIfEmpty().Max() + 1;
+    }
+
+    internal void CreateResourceStateEvent(User currentUser, string state, int id, string resourceType)
+    {
+        Add(new ResourceStateEvent()
+        {
+            ResourceId = id,
+            CreatedAt = DateTime.UtcNow,
+            Id = Server.GetNewResourceLabelEventId(),
+            State = state,
+            User = new Author()
             {
-                item.Id = GetNewId();
-            }
-
-            base.Add(item);
-        }
-
-        internal IEnumerable<ResourceStateEvent> Get(int? resourceId)
-        {
-            var resourceStateEvents = this.AsQueryable();
-
-            if (resourceId.HasValue)
-            {
-                resourceStateEvents = resourceStateEvents.Where(rle => rle.ResourceId == resourceId);
-            }
-
-            return resourceStateEvents;
-        }
-
-        private int GetNewId()
-        {
-            return this.Select(rle => rle.Id).DefaultIfEmpty().Max() + 1;
-        }
-
-        internal void CreateResourceStateEvent(User currentUser, string state, int id, string resourceType)
-        {
-            Add(new ResourceStateEvent()
-            {
-                ResourceId = id,
-                CreatedAt = DateTime.UtcNow,
-                Id = Server.GetNewResourceLabelEventId(),
-                State = state,
-                User = new Author()
-                {
-                    Id = currentUser.Id,
-                    Email = currentUser.Email,
-                    AvatarUrl = currentUser.AvatarUrl,
-                    Name = currentUser.Name,
-                    State = currentUser.State.ToString(),
-                    Username = currentUser.UserName,
-                    CreatedAt = currentUser.CreatedAt,
-                    WebUrl = currentUser.WebUrl,
-                },
-                ResourceType = resourceType,
-            });
-        }
+                Id = currentUser.Id,
+                Email = currentUser.Email,
+                AvatarUrl = currentUser.AvatarUrl,
+                Name = currentUser.Name,
+                State = currentUser.State.ToString(),
+                Username = currentUser.UserName,
+                CreatedAt = currentUser.CreatedAt,
+                WebUrl = currentUser.WebUrl,
+            },
+            ResourceType = resourceType,
+        });
     }
 }

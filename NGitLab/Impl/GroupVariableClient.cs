@@ -1,12 +1,11 @@
 ﻿using NGitLab.Models;
 
-namespace NGitLab.Impl
+namespace NGitLab.Impl;
+
+internal sealed class GroupVariableClient : VariableClient, IGroupVariableClient
 {
-    internal sealed class GroupVariableClient : VariableClient, IGroupVariableClient
+    public GroupVariableClient(API api, GroupId groupId)
+        : base(api, $"{Group.Url}/{groupId.ValueAsUriParameter()}")
     {
-        public GroupVariableClient(API api, GroupId groupId)
-            : base(api, $"{Group.Url}/{groupId.ValueAsUriParameter()}")
-        {
-        }
     }
 }

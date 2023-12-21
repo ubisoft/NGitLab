@@ -1,16 +1,15 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace NGitLab.Models
+namespace NGitLab.Models;
+
+public class MergeRequestDiscussion
 {
-    public class MergeRequestDiscussion
-    {
-        [JsonPropertyName("id")]
-        public string Id { get; set; }
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
 
-        [JsonPropertyName("individual_note")]
-        public bool IndividualNote { get; set; }
+    [JsonPropertyName("individual_note")]
+    public bool IndividualNote { get; set; }
 
-        [JsonPropertyName("notes")]
-        public MergeRequestComment[] Notes { get; set; }
-    }
+    [JsonPropertyName("notes")]
+    public MergeRequestComment[] Notes { get; set; }
 }

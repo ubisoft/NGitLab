@@ -1,24 +1,23 @@
 ﻿using System.Collections.Generic;
 using NGitLab.Models;
 
-namespace NGitLab
-{
-    public interface IDeploymentClient
-    {
-        /// <summary>
-        /// Return all project's deployments
-        /// </summary>
-        /// <param name="projectId">Project ID</param>
-        /// <param name="query">Filtering and ordering query</param>
-        /// <returns></returns>
-        IEnumerable<Deployment> Get(int projectId, DeploymentQuery query);
+namespace NGitLab;
 
-        /// <summary>
-        /// Return a deployment's associated Merge Requests
-        /// </summary>
-        /// <param name="projectId">Project ID</param>
-        /// <param name="deploymentId">Deployment ID</param>
-        /// <returns></returns>
-        IEnumerable<MergeRequest> GetMergeRequests(int projectId, int deploymentId);
-    }
+public interface IDeploymentClient
+{
+    /// <summary>
+    /// Return all project's deployments
+    /// </summary>
+    /// <param name="projectId">Project ID</param>
+    /// <param name="query">Filtering and ordering query</param>
+    /// <returns></returns>
+    IEnumerable<Deployment> Get(int projectId, DeploymentQuery query);
+
+    /// <summary>
+    /// Return a deployment's associated Merge Requests
+    /// </summary>
+    /// <param name="projectId">Project ID</param>
+    /// <param name="deploymentId">Deployment ID</param>
+    /// <returns></returns>
+    IEnumerable<MergeRequest> GetMergeRequests(int projectId, int deploymentId);
 }

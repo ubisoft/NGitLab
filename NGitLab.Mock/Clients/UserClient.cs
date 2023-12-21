@@ -5,178 +5,177 @@ using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 
-namespace NGitLab.Mock.Clients
+namespace NGitLab.Mock.Clients;
+
+internal sealed class UserClient : ClientBase, IUserClient
 {
-    internal sealed class UserClient : ClientBase, IUserClient
+    public UserClient(ClientContext context)
+        : base(context)
     {
-        public UserClient(ClientContext context)
-            : base(context)
-        {
-        }
+    }
 
-        public Models.User this[int id]
-        {
-            get
-            {
-                using (Context.BeginOperationScope())
-                {
-                    return Server.Users.GetById(id)?.ToClientUser() ?? throw new GitLabNotFoundException();
-                }
-            }
-        }
-
-        public IEnumerable<Models.User> All
-        {
-            get
-            {
-                using (Context.BeginOperationScope())
-                {
-                    return Server.Users.Select(user => user.ToClientUser()).ToList();
-                }
-            }
-        }
-
-        public Session Current
-        {
-            get
-            {
-                using (Context.BeginOperationScope())
-                {
-                    return Context.User?.ToClientSession();
-                }
-            }
-        }
-
-        public ISshKeyClient CurrentUserSShKeys => throw new NotSupportedException();
-
-        public Models.User Create(UserUpsert user)
+    public Models.User this[int id]
+    {
+        get
         {
             using (Context.BeginOperationScope())
             {
-                var u = new User(user.Username)
-                {
-                    Name = user.Name,
-                    Email = user.Email,
-                };
-
-                Server.Users.Add(u);
-                return u.ToClientUser();
+                return Server.Users.GetById(id)?.ToClientUser() ?? throw new GitLabNotFoundException();
             }
         }
+    }
 
-        public UserToken CreateToken(UserTokenCreate tokenRequest)
-        {
-            throw new NotSupportedException();
-        }
-
-        public void Delete(int id)
+    public IEnumerable<Models.User> All
+    {
+        get
         {
             using (Context.BeginOperationScope())
             {
-                var user = Server.Users.GetById(id);
-
-                if (user == null)
-                {
-                    throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deleted");
-                }
-
-                Server.Users.Remove(user);
+                return Server.Users.Select(user => user.ToClientUser()).ToList();
             }
         }
+    }
 
-        public void Activate(int id)
+    public Session Current
+    {
+        get
         {
             using (Context.BeginOperationScope())
             {
-                var user = Server.Users.GetById(id);
-
-                if (user == null)
-                {
-                    throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be activated");
-                }
-
-                user.State = UserState.active;
+                return Context.User?.ToClientSession();
             }
         }
+    }
 
-        public void Deactivate(int id)
+    public ISshKeyClient CurrentUserSShKeys => throw new NotSupportedException();
+
+    public Models.User Create(UserUpsert user)
+    {
+        using (Context.BeginOperationScope())
         {
-            using (Context.BeginOperationScope())
+            var u = new User(user.Username)
             {
-                var user = Server.Users.GetById(id);
+                Name = user.Name,
+                Email = user.Email,
+            };
 
-                if (user == null)
-                {
-                    throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deactivated");
-                }
-
-                user.State = UserState.deactivated;
-            }
+            Server.Users.Add(u);
+            return u.ToClientUser();
         }
+    }
 
-        public IEnumerable<Models.User> Get(string username)
+    public UserToken CreateToken(UserTokenCreate tokenRequest)
+    {
+        throw new NotSupportedException();
+    }
+
+    public void Delete(int id)
+    {
+        using (Context.BeginOperationScope())
         {
-            using (Context.BeginOperationScope())
+            var user = Server.Users.GetById(id);
+
+            if (user == null)
             {
-                return Server.Users.SearchByUsername(username).Select(user => user.ToClientUser()).ToList();
+                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deleted");
             }
-        }
 
-        public IEnumerable<Models.User> Get(UserQuery query)
+            Server.Users.Remove(user);
+        }
+    }
+
+    public void Activate(int id)
+    {
+        using (Context.BeginOperationScope())
         {
-            using (Context.BeginOperationScope())
+            var user = Server.Users.GetById(id);
+
+            if (user == null)
             {
-                return Server.Users.Get(query).Select(user => user.ToClientUser());
+                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be activated");
             }
-        }
 
-        public IEnumerable<Models.User> Search(string query)
+            user.State = UserState.active;
+        }
+    }
+
+    public void Deactivate(int id)
+    {
+        using (Context.BeginOperationScope())
         {
-            using (Context.BeginOperationScope())
+            var user = Server.Users.GetById(id);
+
+            if (user == null)
             {
-                return Server.Users
-                    .Where(user => string.Equals(user.Email, query, StringComparison.OrdinalIgnoreCase) || string.Equals(user.UserName, query, StringComparison.OrdinalIgnoreCase))
-                    .Select(user => user.ToClientUser()).ToList();
+                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deactivated");
             }
-        }
 
-        public ISshKeyClient SShKeys(int userId)
-        {
-            throw new NotImplementedException();
+            user.State = UserState.deactivated;
         }
+    }
 
-        public Models.User Update(int id, UserUpsert userUpsert)
+    public IEnumerable<Models.User> Get(string username)
+    {
+        using (Context.BeginOperationScope())
         {
-            using (Context.BeginOperationScope())
+            return Server.Users.SearchByUsername(username).Select(user => user.ToClientUser()).ToList();
+        }
+    }
+
+    public IEnumerable<Models.User> Get(UserQuery query)
+    {
+        using (Context.BeginOperationScope())
+        {
+            return Server.Users.Get(query).Select(user => user.ToClientUser());
+        }
+    }
+
+    public IEnumerable<Models.User> Search(string query)
+    {
+        using (Context.BeginOperationScope())
+        {
+            return Server.Users
+                .Where(user => string.Equals(user.Email, query, StringComparison.OrdinalIgnoreCase) || string.Equals(user.UserName, query, StringComparison.OrdinalIgnoreCase))
+                .Select(user => user.ToClientUser()).ToList();
+        }
+    }
+
+    public ISshKeyClient SShKeys(int userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Models.User Update(int id, UserUpsert userUpsert)
+    {
+        using (Context.BeginOperationScope())
+        {
+            var user = Server.Users.GetById(id);
+            if (user != null)
             {
-                var user = Server.Users.GetById(id);
-                if (user != null)
-                {
-                    user.Name = userUpsert.Name;
-                    user.Email = userUpsert.Email;
+                user.Name = userUpsert.Name;
+                user.Email = userUpsert.Email;
 
-                    return user.ToClientUser();
-                }
-
-                throw new GitLabNotFoundException();
+                return user.ToClientUser();
             }
-        }
 
-        public async Task<Models.User> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-        {
-            await Task.Yield();
-            return this[id];
+            throw new GitLabNotFoundException();
         }
+    }
 
-        public async Task<Session> GetCurrentUserAsync(CancellationToken cancellationToken = default)
-        {
-            await Task.Yield();
-            return Current;
-        }
+    public async Task<Models.User> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return this[id];
+    }
 
-        public GitLabCollectionResponse<LastActivityDate> GetLastActivityDatesAsync(DateTimeOffset? from = null)
-        {
-            throw new NotImplementedException();
-        }
+    public async Task<Session> GetCurrentUserAsync(CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return Current;
+    }
+
+    public GitLabCollectionResponse<LastActivityDate> GetLastActivityDatesAsync(DateTimeOffset? from = null)
+    {
+        throw new NotImplementedException();
     }
 }

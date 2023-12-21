@@ -1,11 +1,10 @@
-﻿namespace NGitLab.Models
+﻿namespace NGitLab.Models;
+
+public enum PipelineScope
 {
-    public enum PipelineScope
-    {
-        running,
-        pending,
-        finished,
-        branches,
-        tags,
-    }
+    running,
+    pending,
+    finished,
+    branches,
+    tags,
 }

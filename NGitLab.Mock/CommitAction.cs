@@ -1,11 +1,10 @@
-﻿namespace NGitLab.Mock
+﻿namespace NGitLab.Mock;
+
+public enum CommitAction
 {
-    public enum CommitAction
-    {
-        Create,
-        Delete,
-        Move,
-        Update,
-        chmod,
-    }
+    Create,
+    Delete,
+    Move,
+    Update,
+    chmod,
 }
