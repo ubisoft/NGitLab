@@ -37,6 +37,9 @@ updates:
     rebase-strategy: auto
     open-pull-requests-limit: 20
     groups:
+      code-analyzers:
+        patterns:
+          - "*Analyzer*"
       ms-dependencies:
         patterns:
           - "Microsoft.*"
