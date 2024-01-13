@@ -376,6 +376,7 @@ NGitLab.IMergeRequestApprovalClient
 NGitLab.IMergeRequestApprovalClient.Approvals.get -> NGitLab.Models.MergeRequestApprovals
 NGitLab.IMergeRequestApprovalClient.ApproveMergeRequest(NGitLab.Models.MergeRequestApproveRequest request = null) -> NGitLab.Models.MergeRequestApprovals
 NGitLab.IMergeRequestApprovalClient.ChangeApprovers(NGitLab.Models.MergeRequestApproversChange approversChange) -> void
+NGitLab.IMergeRequestApprovalClient.ResetApprovals() -> void
 NGitLab.IMergeRequestChangeClient
 NGitLab.IMergeRequestChangeClient.MergeRequestChange.get -> NGitLab.Models.MergeRequestChange
 NGitLab.IMergeRequestClient
@@ -647,6 +648,7 @@ NGitLab.Impl.MergeRequestApprovalClient.Approvals.get -> NGitLab.Models.MergeReq
 NGitLab.Impl.MergeRequestApprovalClient.ApproveMergeRequest(NGitLab.Models.MergeRequestApproveRequest request = null) -> NGitLab.Models.MergeRequestApprovals
 NGitLab.Impl.MergeRequestApprovalClient.ChangeApprovers(NGitLab.Models.MergeRequestApproversChange approversChange) -> void
 NGitLab.Impl.MergeRequestApprovalClient.MergeRequestApprovalClient(NGitLab.Impl.API api, string projectPath, int mergeRequestIid) -> void
+NGitLab.Impl.MergeRequestApprovalClient.ResetApprovals() -> void
 NGitLab.Impl.MergeRequestClient
 NGitLab.Impl.MergeRequestClient.Accept(int mergeRequestIid, NGitLab.Models.MergeRequestAccept message) -> NGitLab.Models.MergeRequest
 NGitLab.Impl.MergeRequestClient.Accept(int mergeRequestIid, NGitLab.Models.MergeRequestMerge message) -> NGitLab.Models.MergeRequest
