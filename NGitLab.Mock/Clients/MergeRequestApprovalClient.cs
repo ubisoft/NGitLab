@@ -22,6 +22,11 @@ internal sealed class MergeRequestApprovalClient : ClientBase, IMergeRequestAppr
         throw new NotImplementedException();
     }
 
+    public void ResetApprovals()
+    {
+        throw new NotImplementedException();
+    }
+
     public void ChangeApprovers(MergeRequestApproversChange approversChange)
     {
         throw new NotImplementedException();
