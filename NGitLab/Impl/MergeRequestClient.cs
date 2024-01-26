@@ -19,7 +19,7 @@ public class MergeRequestClient : IMergeRequestClient
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public MergeRequestClient(API api, int projectId)
-        : this(api, (long)projectId)
+        : this(api, projectId: (long)projectId)
     {
     }
 
@@ -29,13 +29,7 @@ public class MergeRequestClient : IMergeRequestClient
         _path = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public MergeRequestClient(int groupId, API api)
-        : this(groupId: (long)groupId, api)
-    {
-    }
-
-    public MergeRequestClient(GroupId groupId, API api)
+    public MergeRequestClient(API api, GroupId groupId)
     {
         _api = api;
         _path = $"{Group.Url}/{groupId.ValueAsUriParameter()}";

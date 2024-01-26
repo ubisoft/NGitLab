@@ -79,8 +79,6 @@ public interface IGitLabClient
 
     IMergeRequestClient GetMergeRequest(ProjectId projectId);
 
-    IMergeRequestClient GetGroupMergeRequest(int groupId);
-
     IMergeRequestClient GetGroupMergeRequest(GroupId groupId);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
