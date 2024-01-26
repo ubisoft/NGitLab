@@ -412,28 +412,4 @@ public class MergeRequestsMockTests
         Assert.That(addMilestoneEvents[0].Milestone.Id, Is.EqualTo(milestones[0].Id));
         Assert.That(addMilestoneEvents[1].Milestone.Id, Is.EqualTo(milestones[1].Id));
     }
-
-    [Test]
-    public void Test_merge_requests_from_group()
-    {
-        var groupId = 12;
-        using var server = new GitLabConfig()
-            .WithUser("user1", isDefault: true)
-            .WithUser("user2")
-            .WithGroup("parentGroup", configure: group => group.Id = groupId)
-            .WithProject("project1", @namespace: "parentGroup", configure: project => project
-                .WithMergeRequest("branch-01", title: "Merge request 1", author: "user1", assignee: "user2")
-                .WithMergeRequest("branch-02", title: "Merge request 2", author: "user2", assignee: "user1"))
-            .WithProject("project2", @namespace: "parentGroup", configure: project => project
-                .WithMergeRequest("branch-03", title: "Merge request 3", author: "user1", assignee: "user2")
-                .WithMergeRequest("branch-04", title: "Merge request 4", author: "user2", assignee: "user1"))
-            .BuildServer();
-
-        var client = server.CreateClient("user1");
-        var mrClient = client.GetGroupMergeRequest(groupId);
-        var mergeRequests = mrClient.Get(new MergeRequestQuery()).ToArray();
-
-        Assert.That(mergeRequests, Has.Length.EqualTo(4), "Merge requests count is invalid");
-        Assert.That(mergeRequests[0].Title, Is.EqualTo("Merge request 1"), "Merge request found is invalid");
-    }
 }

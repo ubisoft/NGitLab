@@ -13,7 +13,6 @@ namespace NGitLab.Mock.Clients;
 internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
 {
     private readonly int? _projectId;
-    private readonly int? _groupId;
 
     public MergeRequestClient(ClientContext context)
         : base(context)
@@ -29,7 +28,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
     public MergeRequestClient(ClientContext context, GroupId groupId)
         : base(context)
     {
-        _groupId = Server.AllGroups.FindGroup(groupId.ValueAsUriParameter()).Id;
+        throw new NotImplementedException();
     }
 
     private void AssertProjectId()
