@@ -2185,6 +2185,12 @@ NGitLab.Models.LastActivityDate.LastActivityOn.get -> System.DateTimeOffset
 NGitLab.Models.LastActivityDate.LastActivityOn.set -> void
 NGitLab.Models.LastActivityDate.Username.get -> string
 NGitLab.Models.LastActivityDate.Username.set -> void
+NGitLab.Models.LineRange
+NGitLab.Models.LineRange.End.get -> NGitLab.Models.Range
+NGitLab.Models.LineRange.End.set -> void
+NGitLab.Models.LineRange.LineRange() -> void
+NGitLab.Models.LineRange.Start.get -> NGitLab.Models.Range
+NGitLab.Models.LineRange.Start.set -> void
 NGitLab.Models.LintCI
 NGitLab.Models.LintCI.Errors.get -> string[]
 NGitLab.Models.LintCI.Errors.set -> void
@@ -2321,6 +2327,8 @@ NGitLab.Models.MergeRequestComment.Body -> string
 NGitLab.Models.MergeRequestComment.CreatedAt -> System.DateTime
 NGitLab.Models.MergeRequestComment.Id -> long
 NGitLab.Models.MergeRequestComment.MergeRequestComment() -> void
+NGitLab.Models.MergeRequestComment.Position.get -> NGitLab.Models.Position
+NGitLab.Models.MergeRequestComment.Position.set -> void
 NGitLab.Models.MergeRequestComment.Resolvable -> bool
 NGitLab.Models.MergeRequestComment.Resolved -> bool
 NGitLab.Models.MergeRequestComment.System -> bool
@@ -2692,6 +2700,23 @@ NGitLab.Models.PipelineVariable.Key -> string
 NGitLab.Models.PipelineVariable.PipelineVariable() -> void
 NGitLab.Models.PipelineVariable.Value -> string
 NGitLab.Models.PipelineVariable.VariableType -> string
+NGitLab.Models.Position
+NGitLab.Models.Position.LineRange.get -> NGitLab.Models.LineRange
+NGitLab.Models.Position.LineRange.set -> void
+NGitLab.Models.Position.NewLine.get -> int?
+NGitLab.Models.Position.NewLine.set -> void
+NGitLab.Models.Position.NewPath.get -> string
+NGitLab.Models.Position.NewPath.set -> void
+NGitLab.Models.Position.OldLine.get -> int?
+NGitLab.Models.Position.OldLine.set -> void
+NGitLab.Models.Position.OldPath.get -> string
+NGitLab.Models.Position.OldPath.set -> void
+NGitLab.Models.Position.Position() -> void
+NGitLab.Models.Position.PositionType.get -> NGitLab.DynamicEnum<NGitLab.Models.PositionType>
+NGitLab.Models.Position.PositionType.set -> void
+NGitLab.Models.PositionType
+NGitLab.Models.PositionType.Image = 1 -> NGitLab.Models.PositionType
+NGitLab.Models.PositionType.Text = 0 -> NGitLab.Models.PositionType
 NGitLab.Models.Project
 NGitLab.Models.Project.ApprovalsBeforeMerge -> int
 NGitLab.Models.Project.Archived -> bool
@@ -3024,6 +3049,15 @@ NGitLab.Models.PushDataAction.Created = 0 -> NGitLab.Models.PushDataAction
 NGitLab.Models.PushDataAction.Pushed = 1 -> NGitLab.Models.PushDataAction
 NGitLab.Models.PushDataAction.Removed = 2 -> NGitLab.Models.PushDataAction
 NGitLab.Models.QueryAssigneeId
+NGitLab.Models.Range
+NGitLab.Models.Range.LineCode.get -> string
+NGitLab.Models.Range.LineCode.set -> void
+NGitLab.Models.Range.Range() -> void
+NGitLab.Models.Range.Type.get -> NGitLab.DynamicEnum<NGitLab.Models.RangeType>
+NGitLab.Models.Range.Type.set -> void
+NGitLab.Models.RangeType
+NGitLab.Models.RangeType.New = 0 -> NGitLab.Models.RangeType
+NGitLab.Models.RangeType.Old = 1 -> NGitLab.Models.RangeType
 NGitLab.Models.RebaseResult
 NGitLab.Models.RebaseResult.RebaseInProgress -> bool
 NGitLab.Models.RebaseResult.RebaseResult() -> void

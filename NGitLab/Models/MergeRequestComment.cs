@@ -31,4 +31,7 @@ public class MergeRequestComment
 
     [JsonPropertyName("system")]
     public bool System;
+
+    [JsonPropertyName("position")]
+    public Position Position { get; set; }
 }
