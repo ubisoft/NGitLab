@@ -92,8 +92,6 @@ internal sealed class GitLabClient : ClientBase, IGitLabClient
 
     public IMergeRequestClient GetMergeRequest(ProjectId projectId) => new MergeRequestClient(Context, projectId);
 
-    public IMergeRequestClient GetGroupMergeRequest(int groupId) => GetGroupMergeRequest((long)groupId);
-
     public IMergeRequestClient GetGroupMergeRequest(GroupId groupId) => new MergeRequestClient(Context, groupId);
 
     public IMilestoneClient GetMilestone(int projectId) => GetMilestone((long)projectId);
