@@ -25,6 +25,12 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
     }
 
+    public MergeRequestClient(ClientContext context, GroupId groupId)
+        : base(context)
+    {
+        throw new NotImplementedException();
+    }
+
     private void AssertProjectId()
     {
         if (_projectId == null)

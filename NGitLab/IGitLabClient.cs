@@ -79,6 +79,8 @@ public interface IGitLabClient
 
     IMergeRequestClient GetMergeRequest(ProjectId projectId);
 
+    IMergeRequestClient GetGroupMergeRequest(GroupId groupId);
+
     [EditorBrowsable(EditorBrowsableState.Never)]
     IMilestoneClient GetMilestone(int projectId);
 

@@ -156,6 +156,9 @@ public class GitLabClient : IGitLabClient
     public IMergeRequestClient GetMergeRequest(ProjectId projectId)
         => new MergeRequestClient(_api, projectId);
 
+    public IMergeRequestClient GetGroupMergeRequest(GroupId groupId)
+        => new MergeRequestClient(_api, groupId);
+
     public IMilestoneClient GetMilestone(int projectId)
         => GetMilestone((long)projectId);
 
