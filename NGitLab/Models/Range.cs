@@ -8,5 +8,5 @@ public class Range
     public string LineCode { get; set; }
 
     [JsonPropertyName("type")]
-    public string Type { get; set; }
+    public DynamicEnum<RangeType> Type { get; set; }
 }
