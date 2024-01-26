@@ -196,7 +196,6 @@ NGitLab.IGitLabClient.GetEnvironmentClient(NGitLab.Models.ProjectId projectId) -
 NGitLab.IGitLabClient.GetEvents() -> NGitLab.IEventClient
 NGitLab.IGitLabClient.GetGroupBadgeClient(int groupId) -> NGitLab.IGroupBadgeClient
 NGitLab.IGitLabClient.GetGroupBadgeClient(NGitLab.Models.GroupId groupId) -> NGitLab.IGroupBadgeClient
-NGitLab.IGitLabClient.GetGroupMergeRequest(int groupId) -> NGitLab.IMergeRequestClient
 NGitLab.IGitLabClient.GetGroupMergeRequest(NGitLab.Models.GroupId groupId) -> NGitLab.IMergeRequestClient
 NGitLab.IGitLabClient.GetGroupMilestone(int groupId) -> NGitLab.IMilestoneClient
 NGitLab.IGitLabClient.GetGroupMilestone(NGitLab.Models.GroupId groupId) -> NGitLab.IMilestoneClient
