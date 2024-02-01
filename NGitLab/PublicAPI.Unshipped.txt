@@ -3050,7 +3050,7 @@ NGitLab.Models.Range
 NGitLab.Models.Range.LineCode.get -> string
 NGitLab.Models.Range.LineCode.set -> void
 NGitLab.Models.Range.Range() -> void
-NGitLab.Models.Range.Type.get -> NGitLab.DynamicEnum<NGitLab.Models.RangeType>
+NGitLab.Models.Range.Type.get -> NGitLab.DynamicEnum<NGitLab.Models.RangeType>?
 NGitLab.Models.Range.Type.set -> void
 NGitLab.Models.RangeType
 NGitLab.Models.RangeType.New = 0 -> NGitLab.Models.RangeType
