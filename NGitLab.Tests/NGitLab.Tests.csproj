@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Microsoft.Playwright" Version="1.41.2" />
     <PackageReference Include="NuGet.Versioning" Version="6.9.1" />
-    <PackageReference Include="NUnit" Version="4.0.1" />
+    <PackageReference Include="NUnit" Version="4.1.0" />
     <PackageReference Include="NUnit.Analyzers" Version="4.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
