@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,14 +14,14 @@ public class GroupsClient : IGroupsClient
 {
     private readonly API _api;
 
-    public const string Url = "/groups";
+    public const string Url = Group.Url;
 
     public GroupsClient(API api)
     {
         _api = api;
     }
 
-    public IEnumerable<Group> Accessible => _api.Get().GetAll<Group>(Utils.AddOrderBy(Url));
+    public IEnumerable<Group> Accessible => Get(query: null);
 
     public IEnumerable<Group> Get(GroupQuery query)
     {
@@ -36,61 +35,17 @@ public class GroupsClient : IGroupsClient
         return _api.Get().GetAllAsync<Group>(url);
     }
 
-    private static string CreateGetUrl(GroupQuery query)
+    public Task<(IReadOnlyCollection<Group> Page, int? Total)> PageAsync(PageQuery<GroupQuery> query, CancellationToken cancellationToken = default)
     {
-        var url = Group.Url;
-
-        if (query.SkipGroups != null && query.SkipGroups.Any())
-        {
-            foreach (var skipGroup in query.SkipGroups)
-            {
-                url = Utils.AddParameter(url, "skip_groups[]", skipGroup);
-            }
-        }
-
-        if (query.AllAvailable != null)
-        {
-            url = Utils.AddParameter(url, "all_available", query.AllAvailable);
-        }
-
-        if (!string.IsNullOrEmpty(query.Search))
-        {
-            url = Utils.AddParameter(url, "search", query.Search);
-        }
-
-        url = Utils.AddOrderBy(url, query.OrderBy);
-
-        if (query.Sort != null)
-        {
-            url = Utils.AddParameter(url, "sort", query.Sort);
-        }
-
-        if (query.Statistics != null)
-        {
-            url = Utils.AddParameter(url, "statistics", query.Statistics);
-        }
-
-        if (query.WithCustomAttributes != null)
-        {
-            url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
-        }
-
-        if (query.Owned != null)
-        {
-            url = Utils.AddParameter(url, "owned", query.Owned);
-        }
-
-        if (query.MinAccessLevel != null)
-        {
-            url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
-        }
-
-        return url;
+        var url = CreateGetUrl(query?.Query, query?.Page, query?.PerPage);
+        return _api.Get().PageAsync<Group>(url, cancellationToken);
     }
 
-    private static string CreateSubgroupGetUrl(SubgroupQuery query, string id)
+    private static string CreateGetUrl(GroupQuery query, int? page = null, int? perPage = null)
     {
-        var url = Group.Url + "/" + id + "/subgroups";
+        var url = Url;
+
+        url = Utils.AddPageParams(url, page, perPage);
 
         if (query is not null)
         {
@@ -112,7 +67,7 @@ public class GroupsClient : IGroupsClient
                 url = Utils.AddParameter(url, "search", query.Search);
             }
 
-            url = Utils.AddOrderBy(url, query.OrderBy);
+            url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: page is null);
 
             if (query.Sort != null)
             {
@@ -143,104 +98,181 @@ public class GroupsClient : IGroupsClient
         return url;
     }
 
-    public IEnumerable<Group> Search(string search)
+    private static string CreateSubgroupGetUrl(GroupId id, SubgroupQuery query, int? page = null, int? perPage = null)
     {
-        return _api.Get().GetAll<Group>(Utils.AddOrderBy(Url + $"?search={Uri.EscapeDataString(search)}"));
+        var url = $"{Url}/{id.ValueAsUriParameter()}/{(query?.IncludeDescendants == true ? "descendant_groups" : "subgroups")}";
+
+        url = Utils.AddPageParams(url, page, perPage);
+
+        if (query is not null)
+        {
+            if (query.SkipGroups != null && query.SkipGroups.Any())
+            {
+                foreach (var skipGroup in query.SkipGroups)
+                {
+                    url = Utils.AddParameter(url, "skip_groups[]", skipGroup);
+                }
+            }
+
+            if (query.AllAvailable != null)
+            {
+                url = Utils.AddParameter(url, "all_available", query.AllAvailable);
+            }
+
+            if (!string.IsNullOrEmpty(query.Search))
+            {
+                url = Utils.AddParameter(url, "search", query.Search);
+            }
+
+            url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: page is null);
+
+            if (query.Sort != null)
+            {
+                url = Utils.AddParameter(url, "sort", query.Sort);
+            }
+
+            if (query.Statistics != null)
+            {
+                url = Utils.AddParameter(url, "statistics", query.Statistics);
+            }
+
+            if (query.WithCustomAttributes != null)
+            {
+                url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
+            }
+
+            if (query.Owned != null)
+            {
+                url = Utils.AddParameter(url, "owned", query.Owned);
+            }
+
+            if (query.MinAccessLevel != null)
+            {
+                url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
+            }
+        }
+
+        return url;
     }
 
-    public GitLabCollectionResponse<Group> SearchAsync(string search)
+    public IEnumerable<Group> Search(string search) =>
+        _api.Get().GetAll<Group>(Utils.AddOrderBy($"{Url}?search={Uri.EscapeDataString(search)}"));
+
+    public GitLabCollectionResponse<Group> SearchAsync(string search) =>
+        _api.Get().GetAllAsync<Group>(Utils.AddOrderBy($"{Url}?search={Uri.EscapeDataString(search)}"));
+
+    public Group this[int id] => GetGroup(id);
+
+    public Group this[string fullPath] => GetGroup(fullPath);
+
+    public Task<Group> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
+        GetGroupAsync(id, cancellationToken);
+
+    public Task<Group> GetByFullPathAsync(string fullPath, CancellationToken cancellationToken = default) =>
+        GetGroupAsync(fullPath, cancellationToken);
+
+    public Group GetGroup(GroupId id) =>
+        _api.Get().To<Group>($"{Url}/{id.ValueAsUriParameter()}");
+
+    public Task<Group> GetGroupAsync(GroupId id, CancellationToken cancellationToken = default) =>
+        _api.Get().ToAsync<Group>($"{Url}/{id.ValueAsUriParameter()}", cancellationToken);
+
+    public GitLabCollectionResponse<Group> GetSubgroupsByIdAsync(int id, SubgroupQuery query = null) =>
+        GetSubgroupsAsync(id, query);
+
+    public GitLabCollectionResponse<Group> GetSubgroupsByFullPathAsync(string fullPath, SubgroupQuery query = null) =>
+        GetSubgroupsAsync(fullPath, query);
+
+    public GitLabCollectionResponse<Group> GetSubgroupsAsync(GroupId groupId, SubgroupQuery query = null)
     {
-        return _api.Get().GetAllAsync<Group>(Utils.AddOrderBy(Url + $"?search={Uri.EscapeDataString(search)}"));
-    }
-
-    public Group this[int id] => _api.Get().To<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
-
-    public Task<Group> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-    {
-        return _api.Get().ToAsync<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)), cancellationToken);
-    }
-
-    public Group this[string fullPath] => _api.Get().To<Group>(Url + "/" + Uri.EscapeDataString(fullPath));
-
-    public Task<Group> GetByFullPathAsync(string fullPath, CancellationToken cancellationToken = default)
-    {
-        return _api.Get().ToAsync<Group>(Url + "/" + Uri.EscapeDataString(fullPath), cancellationToken);
-    }
-
-    public GitLabCollectionResponse<Group> GetSubgroupsByIdAsync(int id, SubgroupQuery query = null)
-    {
-        var url = CreateSubgroupGetUrl(query, Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
+        var url = CreateSubgroupGetUrl(groupId, query);
         return _api.Get().GetAllAsync<Group>(url);
     }
 
-    public GitLabCollectionResponse<Group> GetSubgroupsByFullPathAsync(string fullPath, SubgroupQuery query = null)
+    public Task<(IReadOnlyCollection<Group> Page, int? Total)> PageSubgroupsAsync(GroupId groupId, PageQuery<SubgroupQuery> query, CancellationToken cancellationToken = default)
     {
-        var url = CreateSubgroupGetUrl(query, Uri.EscapeDataString(fullPath));
-        return _api.Get().GetAllAsync<Group>(url);
+        var url = CreateSubgroupGetUrl(groupId, query?.Query, query?.Page, query?.PerPage);
+        return _api.Get().PageAsync<Group>(url, cancellationToken);
     }
 
-    public IEnumerable<Project> SearchProjects(int groupId, string search)
-    {
-        return GetProjectsAsync(groupId, new GroupProjectsQuery
+    public IEnumerable<Project> SearchProjects(int groupId, string search) =>
+        SearchProjectsAsync(groupId, new GroupProjectsQuery
         {
             Search = search,
         });
-    }
 
-    public GitLabCollectionResponse<Project> GetProjectsAsync(int groupId, GroupProjectsQuery query)
+    public GitLabCollectionResponse<Project> GetProjectsAsync(int groupId, GroupProjectsQuery query) =>
+        SearchProjectsAsync(groupId, query);
+
+    public GitLabCollectionResponse<Project> SearchProjectsAsync(GroupId groupId, GroupProjectsQuery query)
     {
-        var url = Url + "/" + Uri.EscapeDataString(groupId.ToString(CultureInfo.InvariantCulture)) + "/projects";
-
-        if (query.Visibility.HasValue)
-        {
-            url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLowerInvariant());
-        }
-
-        if (query.MinAccessLevel is not null)
-        {
-            url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
-        }
-
-        url = Utils.AddParameter(url, "archived", value: query.Archived);
-        url = Utils.AddParameter(url, "sort", query.Sort);
-        url = Utils.AddParameter(url, "search", query.Search);
-        url = Utils.AddParameter(url, "simple", query.Simple);
-        url = Utils.AddParameter(url, "owned", query.Owned);
-        url = Utils.AddParameter(url, "starred", query.Starred);
-        url = Utils.AddParameter(url, "with_issues_enabled", query.WithIssuesEnabled);
-        url = Utils.AddParameter(url, "with_merge_requests_enabled", query.WithMergeRequestsEnabled);
-        url = Utils.AddParameter(url, "with_shared", query.WithShared);
-        url = Utils.AddParameter(url, "include_subgroups", query.IncludeSubGroups);
-        url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
-        url = Utils.AddParameter(url, "with_security_reports ", query.WithSecurityReports);
-        url = Utils.AddOrderBy(url, query.OrderBy);
-
+        var url = CreateGetProjectsUrl(groupId, query);
         return _api.Get().GetAllAsync<Project>(url);
     }
 
-    public Group Create(GroupCreate group) => _api.Post().With(group).To<Group>(Url);
-
-    public Task<Group> CreateAsync(GroupCreate group, CancellationToken cancellationToken = default)
+    public Task<(IReadOnlyCollection<Project> Page, int? Total)> PageProjectsAsync(GroupId groupId, PageQuery<GroupProjectsQuery> query, CancellationToken cancellationToken = default)
     {
-        return _api.Post().With(group).ToAsync<Group>(Url, cancellationToken);
+        var url = CreateGetProjectsUrl(groupId, query?.Query, query?.Page, query?.PerPage);
+        return _api.Get().PageAsync<Project>(url, cancellationToken);
     }
 
-    public void Delete(int id)
+    private static string CreateGetProjectsUrl(GroupId groupId, GroupProjectsQuery query, int? page = null, int? perPage = null)
     {
-        _api.Delete().Execute(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
+        var url = $"{Url}/{groupId.ValueAsUriParameter()}/projects";
+
+        url = Utils.AddPageParams(url, page, perPage);
+
+        if (query is not null)
+        {
+            if (query.Visibility.HasValue)
+            {
+                url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLowerInvariant());
+            }
+
+            if (query.MinAccessLevel is not null)
+            {
+                url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
+            }
+
+            url = Utils.AddParameter(url, "archived", value: query.Archived);
+            url = Utils.AddParameter(url, "sort", query.Sort);
+            url = Utils.AddParameter(url, "search", query.Search);
+            url = Utils.AddParameter(url, "simple", query.Simple);
+            url = Utils.AddParameter(url, "owned", query.Owned);
+            url = Utils.AddParameter(url, "starred", query.Starred);
+            url = Utils.AddParameter(url, "with_issues_enabled", query.WithIssuesEnabled);
+            url = Utils.AddParameter(url, "with_merge_requests_enabled", query.WithMergeRequestsEnabled);
+            url = Utils.AddParameter(url, "with_shared", query.WithShared);
+            url = Utils.AddParameter(url, "include_subgroups", query.IncludeSubGroups);
+            url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
+            url = Utils.AddParameter(url, "with_security_reports ", query.WithSecurityReports);
+            url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: page is null);
+        }
+
+        return url;
     }
 
-    public Task DeleteAsync(int id, CancellationToken cancellationToken = default)
-    {
-        return _api.Delete().ExecuteAsync(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)), cancellationToken);
-    }
+    public Group Create(GroupCreate group) =>
+        _api.Post().With(group).To<Group>(Url);
 
-    public Group Update(int id, GroupUpdate groupUpdate) => _api.Put().With(groupUpdate).To<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)));
+    public Task<Group> CreateAsync(GroupCreate group, CancellationToken cancellationToken = default) =>
+        _api.Post().With(group).ToAsync<Group>(Url, cancellationToken);
 
-    public Task<Group> UpdateAsync(int id, GroupUpdate groupUpdate, CancellationToken cancellationToken = default)
-    {
-        return _api.Put().With(groupUpdate).ToAsync<Group>(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)), cancellationToken);
-    }
+    public void Delete(int id) =>
+        _api.Delete().Execute($"{Url}/{new GroupId(id).ValueAsUriParameter()}");
 
-    public void Restore(int id) => _api.Post().Execute(Url + "/" + Uri.EscapeDataString(id.ToString(CultureInfo.InvariantCulture)) + "/restore");
+    public Task DeleteAsync(int id, CancellationToken cancellationToken = default) =>
+        _api.Delete().ExecuteAsync($"{Url}/{new GroupId(id).ValueAsUriParameter()}", cancellationToken);
+
+    public Group Update(int id, GroupUpdate groupUpdate) =>
+        _api.Put().With(groupUpdate).To<Group>($"{Url}/{new GroupId(id).ValueAsUriParameter()}");
+
+    public Task<Group> UpdateAsync(int id, GroupUpdate groupUpdate, CancellationToken cancellationToken = default) =>
+        _api.Put().With(groupUpdate).ToAsync<Group>($"{Url}/{new GroupId(id).ValueAsUriParameter()}", cancellationToken);
+
+    public void Restore(int id) =>
+        _api.Post().Execute($"{Url}/{new GroupId(id).ValueAsUriParameter()}/restore");
+
+    public Task RestoreAsync(int id, CancellationToken cancellationToken = default) =>
+        _api.Post().ExecuteAsync($"{Url}/{new GroupId(id).ValueAsUriParameter()}/restore", cancellationToken);
 }

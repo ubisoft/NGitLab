@@ -16,47 +16,6 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
     {
     }
 
-    public Models.Group this[int id]
-    {
-        get
-        {
-            using (Context.BeginOperationScope())
-            {
-                var group = Server.AllGroups.FirstOrDefault(g => g.Id == id);
-                if (group == null || !group.CanUserViewGroup(Context.User))
-                    throw new GitLabNotFoundException();
-
-                return group.ToClientGroup(Context.User);
-            }
-        }
-    }
-
-    public Models.Group this[string fullPath]
-    {
-        get
-        {
-            using (Context.BeginOperationScope())
-            {
-                var group = Server.AllGroups.FindGroup(fullPath);
-                if (group == null || !group.CanUserViewGroup(Context.User))
-                    throw new GitLabNotFoundException();
-
-                return group.ToClientGroup(Context.User);
-            }
-        }
-    }
-
-    public IEnumerable<Models.Group> Accessible
-    {
-        get
-        {
-            using (Context.BeginOperationScope())
-            {
-                return Server.AllGroups.Where(group => group.CanUserViewGroup(Context.User)).Select(group => group.ToClientGroup(Context.User)).ToList();
-            }
-        }
-    }
-
     public Models.Group Create(GroupCreate group)
     {
         using (Context.BeginOperationScope())
@@ -125,12 +84,15 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         Delete(id);
     }
 
+    public IEnumerable<Models.Group> Accessible => Get(query: null);
+
     public IEnumerable<Models.Group> Get(GroupQuery query)
     {
         using (Context.BeginOperationScope())
         {
-            var groups = Server.AllGroups;
-            if (query != null)
+            var groups = Server.AllGroups.Where(group => group.CanUserViewGroup(Context.User));
+
+            if (query is not null)
             {
                 if (query.SkipGroups != null && query.SkipGroups.Length > 0)
                 {
@@ -155,26 +117,64 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         }
     }
 
-    public GitLabCollectionResponse<Models.Group> GetAsync(GroupQuery query)
-    {
-        return GitLabCollectionResponse.Create(Get(query));
-    }
+    public GitLabCollectionResponse<Models.Group> GetAsync(GroupQuery query) => GitLabCollectionResponse.Create(Get(query));
 
-    public async Task<Models.Group> GetByFullPathAsync(string fullPath, CancellationToken cancellationToken = default)
+    public async Task<(IReadOnlyCollection<Models.Group> Page, int? Total)> PageAsync(PageQuery<GroupQuery> query, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
-        return this[fullPath];
+        var pageNum = Math.Max(1, query?.Page ?? PageQuery.FirstPage);
+        var perPage = query?.PerPage ?? PageQuery.DefaultPerPage;
+        if (perPage < PageQuery.MinPerPage)
+        {
+            // Max isn't enforced the same way
+            throw new GitLabBadRequestException("per_page has a value not allowed");
+        }
+
+        var all = Get(query?.Query).ToList();
+        var page = all
+            .Skip((pageNum - 1) * perPage)
+            .Take(perPage)
+            .ToList();
+        return (page, all.Count > 10000 ? null : all.Count);
     }
 
-    public async Task<Models.Group> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public Models.Group this[int id] => GetGroup(id);
+
+    public Models.Group this[string fullPath] => GetGroup(fullPath);
+
+    public Models.Group GetGroup(GroupId id)
+    {
+        using (Context.BeginOperationScope())
+        {
+            var group = Server.AllGroups.FirstOrDefault(g => id.Equals(g.Name, g.Id));
+
+            if (group == null || !group.CanUserViewGroup(Context.User))
+                throw new GitLabNotFoundException();
+
+            return group.ToClientGroup(Context.User);
+        }
+    }
+
+    public Task<Models.Group> GetByFullPathAsync(string fullPath, CancellationToken cancellationToken = default) => GetGroupAsync(fullPath, cancellationToken);
+
+    public Task<Models.Group> GetByIdAsync(int id, CancellationToken cancellationToken = default) => GetGroupAsync(id, cancellationToken);
+
+    [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
+    public async Task<Models.Group> GetGroupAsync(GroupId groupId, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
-        return this[id];
+        return GetGroup(groupId);
     }
 
     public void Restore(int id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task RestoreAsync(int id, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        Restore(id);
     }
 
     public IEnumerable<Models.Group> Search(string search)
@@ -187,16 +187,20 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         return GitLabCollectionResponse.Create(Search(search));
     }
 
-    public IEnumerable<Models.Project> SearchProjects(int groupId, string search)
-    {
-        throw new NotImplementedException();
-    }
+    public IEnumerable<Models.Project> SearchProjects(int groupId, string search) =>
+        SearchProjectsAsync(groupId, new GroupProjectsQuery
+        {
+            Search = search,
+        });
 
-    public GitLabCollectionResponse<Models.Project> GetProjectsAsync(int groupId, GroupProjectsQuery query)
+    public GitLabCollectionResponse<Models.Project> GetProjectsAsync(int groupId, GroupProjectsQuery query) => SearchProjectsAsync(groupId, query);
+
+    public GitLabCollectionResponse<Models.Project> SearchProjectsAsync(GroupId groupId, GroupProjectsQuery query)
     {
         using (Context.BeginOperationScope())
         {
-            var group = Server.AllGroups.FirstOrDefault(g => g.Id == groupId);
+            var group = Server.AllGroups.FirstOrDefault(g => groupId.Equals(g.Name, g.Id));
+
             if (group == null || !group.CanUserViewGroup(Context.User))
                 throw new GitLabNotFoundException();
 
@@ -229,6 +233,24 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             projects = projects.Where(project => project.CanUserViewProject(Context.User));
             return GitLabCollectionResponse.Create(projects.Select(project => project.ToClientProject(Context.User)).ToArray());
         }
+    }
+
+    public async Task<(IReadOnlyCollection<Models.Project> Page, int? Total)> PageProjectsAsync(GroupId groupId, PageQuery<GroupProjectsQuery> query, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        var pageNum = Math.Max(1, query?.Page ?? PageQuery.FirstPage);
+        var perPage = query?.PerPage ?? PageQuery.DefaultPerPage;
+        if (perPage < 1)
+        {
+            throw new GitLabBadRequestException("per_page has a value not allowed");
+        }
+
+        var all = SearchProjectsAsync(groupId, query?.Query).ToList();
+        var page = all
+            .Skip((pageNum - 1) * perPage)
+            .Take(perPage)
+            .ToList();
+        return (page, all.Count > 10000 ? null : all.Count);
     }
 
     public Models.Group Update(int id, GroupUpdate groupUpdate)
@@ -293,13 +315,18 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         return Update(id, groupUpdate);
     }
 
-    public GitLabCollectionResponse<Models.Group> GetSubgroupsByIdAsync(int id, SubgroupQuery query = null)
+    public GitLabCollectionResponse<Models.Group> GetSubgroupsByIdAsync(int id, SubgroupQuery query = null) => GetSubgroupsAsync(id, query);
+
+    public GitLabCollectionResponse<Models.Group> GetSubgroupsByFullPathAsync(string fullPath, SubgroupQuery query = null) => GetSubgroupsAsync(fullPath, query);
+
+    public GitLabCollectionResponse<Models.Group> GetSubgroupsAsync(GroupId groupId, SubgroupQuery query = null)
     {
         using (Context.BeginOperationScope())
         {
-            var parentGroup = this[id];
-            var groups = Server.AllGroups;
-            if (query != null)
+            var parentGroup = GetGroup(groupId);
+            var groups = Server.AllGroups.Where(group => group.CanUserViewGroup(Context.User));
+
+            if (query is not null)
             {
                 if (query.SkipGroups != null && query.SkipGroups.Length > 0)
                 {
@@ -320,42 +347,49 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
                     throw new NotImplementedException();
             }
 
-            var clientGroups = groups.Select(g => g.ToClientGroup(Context.User));
+            groups = groups.Where(g =>
+            {
+                if (g.Parent is null)
+                    return false;
 
-            return GitLabCollectionResponse.Create(clientGroups.Where(g => g.ParentId == parentGroup.Id));
+                // is it a child of parentGroup...
+                if (g.Parent.Id == parentGroup.Id)
+                    return true;
+
+                if (query?.IncludeDescendants is true)
+                {
+                    // is it a descendant of parentGroup...
+                    var ancestor = g.Parent.Parent;
+                    while (ancestor is not null)
+                    {
+                        if (ancestor.Id == parentGroup.Id)
+                            return true;
+                        ancestor = ancestor.Parent;
+                    }
+                }
+
+                return false;
+            });
+
+            return GitLabCollectionResponse.Create(groups.Select(g => g.ToClientGroup(Context.User)));
         }
     }
 
-    public GitLabCollectionResponse<Models.Group> GetSubgroupsByFullPathAsync(string fullPath, SubgroupQuery query = null)
+    public async Task<(IReadOnlyCollection<Models.Group> Page, int? Total)> PageSubgroupsAsync(GroupId groupId, PageQuery<SubgroupQuery> query, CancellationToken cancellationToken = default)
     {
-        using (Context.BeginOperationScope())
+        await Task.Yield();
+        var pageNum = Math.Max(1, query?.Page ?? PageQuery.FirstPage);
+        var perPage = query?.PerPage ?? PageQuery.DefaultPerPage;
+        if (perPage < 1)
         {
-            var parentGroup = this[fullPath];
-            var groups = Server.AllGroups;
-            if (query != null)
-            {
-                if (query.SkipGroups != null && query.SkipGroups.Length > 0)
-                {
-                    groups = groups.Where(g => !query.SkipGroups.Contains(g.Id));
-                }
-
-                if (query.Owned is true)
-                {
-                    groups = groups.Where(g => g.IsUserOwner(Context.User));
-                }
-
-                if (query.MinAccessLevel != null)
-                {
-                    groups = groups.Where(g => g.GetEffectivePermissions().GetAccessLevel(Context.User) >= query.MinAccessLevel);
-                }
-
-                if (!string.IsNullOrEmpty(query.Search))
-                    throw new NotImplementedException();
-            }
-
-            var clientGroups = groups.Select(g => g.ToClientGroup(Context.User));
-
-            return GitLabCollectionResponse.Create(clientGroups.Where(g => g.ParentId == parentGroup.Id));
+            throw new GitLabBadRequestException("per_page has a value not allowed");
         }
+
+        var all = GetSubgroupsAsync(groupId, query?.Query).ToList();
+        var page = all
+            .Skip((pageNum - 1) * perPage)
+            .Take(perPage)
+            .ToList();
+        return (page, all.Count > 10000 ? null : all.Count);
     }
 }

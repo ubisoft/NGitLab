@@ -63,8 +63,7 @@ public partial class HttpRequestor : IHttpRequestor
         var result = default(T);
         Stream(tailAPIUrl, s =>
         {
-            var json = new StreamReader(s).ReadToEnd();
-            result = Serializer.Deserialize<T>(json);
+            result = Deserialize<T>(s);
         });
         return result;
     }
@@ -74,10 +73,39 @@ public partial class HttpRequestor : IHttpRequestor
         var result = default(T);
         await StreamAsync(tailAPIUrl, async s =>
         {
-            var json = await new StreamReader(s).ReadToEndAsync().ConfigureAwait(false);
-            result = Serializer.Deserialize<T>(json);
+            result = await DeserializeAsync<T>(s).ConfigureAwait(false);
         }, cancellationToken).ConfigureAwait(false);
         return result;
+    }
+
+    public virtual (IReadOnlyCollection<T> Page, int? Total) Page<T>(string tailAPIUrl)
+    {
+        IReadOnlyCollection<T> result = default;
+        int? total = default;
+        StreamAndHeaders(tailAPIUrl, (s, headers) =>
+        {
+            result = Deserialize<IReadOnlyCollection<T>>(s);
+            if (int.TryParse(headers.Get("x-total"), out var n))
+            {
+                total = n;
+            }
+        });
+        return (result, total);
+    }
+
+    public virtual async Task<(IReadOnlyCollection<T> Page, int? Total)> PageAsync<T>(string tailAPIUrl, CancellationToken cancellationToken)
+    {
+        IReadOnlyCollection<T> result = default;
+        int? total = default;
+        await StreamAndHeadersAsync(tailAPIUrl, async (s, headers) =>
+        {
+            result = await DeserializeAsync<IReadOnlyCollection<T>>(s).ConfigureAwait(false);
+            if (int.TryParse(headers.Get("x-total"), out var n))
+            {
+                total = n;
+            }
+        }, cancellationToken).ConfigureAwait(false);
+        return (result, total);
     }
 
     public Uri GetAPIUrl(string tailAPIUrl)
@@ -105,7 +133,10 @@ public partial class HttpRequestor : IHttpRequestor
         return new Uri(_hostUrl + tailAPIUrl);
     }
 
-    public virtual void Stream(string tailAPIUrl, Action<Stream> parser)
+    public virtual void Stream(string tailAPIUrl, Action<Stream> parser) =>
+        StreamAndHeaders(tailAPIUrl, (stream, _) => parser(stream));
+
+    public virtual void StreamAndHeaders(string tailAPIUrl, Action<Stream, WebHeaderCollection> parser)
     {
         var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options);
 
@@ -113,11 +144,14 @@ public partial class HttpRequestor : IHttpRequestor
         if (parser != null)
         {
             using var stream = response.GetResponseStream();
-            parser(stream);
+            parser(stream, response.Headers);
         }
     }
 
-    public virtual async Task StreamAsync(string tailAPIUrl, Func<Stream, Task> parser, CancellationToken cancellationToken)
+    public virtual Task StreamAsync(string tailAPIUrl, Func<Stream, Task> parser, CancellationToken cancellationToken) =>
+        StreamAndHeadersAsync(tailAPIUrl, (stream, _) => parser(stream), cancellationToken);
+
+    public virtual async Task StreamAndHeadersAsync(string tailAPIUrl, Func<Stream, WebHeaderCollection, Task> parser, CancellationToken cancellationToken)
     {
         var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options);
 
@@ -125,7 +159,7 @@ public partial class HttpRequestor : IHttpRequestor
         if (parser != null)
         {
             using var stream = response.GetResponseStream();
-            await parser(stream).ConfigureAwait(false);
+            await parser(stream, response.Headers).ConfigureAwait(false);
         }
     }
 
@@ -138,6 +172,14 @@ public partial class HttpRequestor : IHttpRequestor
     {
         return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options);
     }
+
+    private static string ReadText(Stream s) => new StreamReader(s).ReadToEnd();
+
+    private static Task<string> ReadTextAsync(Stream s) => new StreamReader(s).ReadToEndAsync();
+
+    private static T Deserialize<T>(Stream s) => Serializer.Deserialize<T>(ReadText(s));
+
+    private static async Task<T> DeserializeAsync<T>(Stream s) => Serializer.Deserialize<T>(await ReadTextAsync(s).ConfigureAwait(false));
 
     internal sealed class Enumerable<T> : GitLabCollectionResponse<T>
     {
@@ -163,9 +205,8 @@ public partial class HttpRequestor : IHttpRequestor
                 {
                     nextUrlToLoad = GetNextPageUrl(response);
 
-                    var stream = response.GetResponseStream();
-                    using var streamReader = new StreamReader(stream);
-                    responseText = await streamReader.ReadToEndAsync().ConfigureAwait(false);
+                    using var stream = response.GetResponseStream();
+                    responseText = await ReadTextAsync(stream).ConfigureAwait(false);
                 }
 
                 var deserialized = Serializer.Deserialize<T[]>(responseText);
@@ -186,8 +227,7 @@ public partial class HttpRequestor : IHttpRequestor
                     nextUrlToLoad = GetNextPageUrl(response);
 
                     using var stream = response.GetResponseStream();
-                    using var streamReader = new StreamReader(stream);
-                    responseText = streamReader.ReadToEnd();
+                    responseText = ReadText(stream);
                 }
 
                 var deserialized = Serializer.Deserialize<T[]>(responseText);

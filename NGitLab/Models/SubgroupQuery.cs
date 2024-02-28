@@ -7,6 +7,12 @@
 public class SubgroupQuery
 {
     /// <summary>
+    /// Include all visible descendant groups or just the visible child subgroups (default).
+    /// (optional)
+    /// </summary>
+    public bool IncludeDescendants { get; set; }
+
+    /// <summary>
     /// Skip the group IDs passed
     /// (optional)
     /// </summary>

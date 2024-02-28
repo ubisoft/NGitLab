@@ -60,6 +60,21 @@ internal static class Utils
         }
     }
 
+    public static string AddPageParams(string url, int? page, int? perPage)
+    {
+        if (page is not null)
+        {
+            url = AddParameter(url, "page", page.Value);
+        }
+
+        if (perPage is not null)
+        {
+            url = AddParameter(url, "per_page", page.Value);
+        }
+
+        return url;
+    }
+
     private static string AddParameterInternal(string url, string parameterName, string stringValue)
     {
         var @operator = !url.Contains("?") ? "?" : "&";
