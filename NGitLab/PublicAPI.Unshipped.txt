@@ -922,6 +922,7 @@ NGitLab.Impl.UserClient
 NGitLab.Impl.UserClient.Activate(int userId) -> void
 NGitLab.Impl.UserClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.Impl.UserClient.Create(NGitLab.Models.UserUpsert user) -> NGitLab.Models.User
+NGitLab.Impl.UserClient.CreateAsync(NGitLab.Models.UserUpsert user, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.User>
 NGitLab.Impl.UserClient.CreateToken(NGitLab.Models.UserTokenCreate tokenRequest) -> NGitLab.Models.UserToken
 NGitLab.Impl.UserClient.Current.get -> NGitLab.Models.Session
 NGitLab.Impl.UserClient.CurrentUserSShKeys.get -> NGitLab.ISshKeyClient
@@ -1131,6 +1132,7 @@ NGitLab.IUserClient
 NGitLab.IUserClient.Activate(int id) -> void
 NGitLab.IUserClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.IUserClient.Create(NGitLab.Models.UserUpsert user) -> NGitLab.Models.User
+NGitLab.IUserClient.CreateAsync(NGitLab.Models.UserUpsert user, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.User>
 NGitLab.IUserClient.CreateToken(NGitLab.Models.UserTokenCreate tokenRequest) -> NGitLab.Models.UserToken
 NGitLab.IUserClient.Current.get -> NGitLab.Models.Session
 NGitLab.IUserClient.CurrentUserSShKeys.get -> NGitLab.ISshKeyClient
