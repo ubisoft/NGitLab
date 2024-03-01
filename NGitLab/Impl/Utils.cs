@@ -69,7 +69,7 @@ internal static class Utils
 
         if (perPage is not null)
         {
-            url = AddParameter(url, "per_page", page.Value);
+            url = AddParameter(url, "per_page", perPage.Value);
         }
 
         return url;

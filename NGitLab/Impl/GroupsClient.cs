@@ -93,6 +93,11 @@ public class GroupsClient : IGroupsClient
             {
                 url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
             }
+
+            if (query.TopLevelOnly != null)
+            {
+                url = Utils.AddParameter(url, "top_level_only", query.TopLevelOnly);
+            }
         }
 
         return url;

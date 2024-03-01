@@ -109,6 +109,11 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
                     groups = groups.Where(g => g.GetEffectivePermissions().GetAccessLevel(Context.User) >= query.MinAccessLevel);
                 }
 
+                if (query.TopLevelOnly is true)
+                {
+                    groups = groups.Where(g => g.Parent is null);
+                }
+
                 if (!string.IsNullOrEmpty(query.Search))
                     throw new NotImplementedException();
             }
@@ -146,7 +151,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
     {
         using (Context.BeginOperationScope())
         {
-            var group = Server.AllGroups.FirstOrDefault(g => id.Equals(g.Name, g.Id));
+            var group = Server.AllGroups.FirstOrDefault(g => id.Equals(g.PathWithNameSpace, g.Id));
 
             if (group == null || !group.CanUserViewGroup(Context.User))
                 throw new GitLabNotFoundException();
@@ -199,7 +204,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
     {
         using (Context.BeginOperationScope())
         {
-            var group = Server.AllGroups.FirstOrDefault(g => groupId.Equals(g.Name, g.Id));
+            var group = Server.AllGroups.FirstOrDefault(g => groupId.Equals(g.PathWithNameSpace, g.Id));
 
             if (group == null || !group.CanUserViewGroup(Context.User))
                 throw new GitLabNotFoundException();

@@ -78,7 +78,7 @@ public readonly struct ProjectId : IIdOrPathAddressable, IEquatable<Project>, IE
     /// <param name="other">The other identifier.</param>
     /// <returns>True if the ProjectId match the Project, otherwise false.</returns>
     public bool Equals(Project other) =>
-        other != null && Equals(other.Path, other.Id);
+        other != null && Equals(other.PathWithNamespace, other.Id);
 
     /// <summary>
     /// Check if this <see cref="ProjectId"/> matches the given Path or Id.
@@ -86,7 +86,7 @@ public readonly struct ProjectId : IIdOrPathAddressable, IEquatable<Project>, IE
     /// <remarks>
     /// Path comparison is case-insensitive.
     /// </remarks>
-    /// <param name="otherPath">The other path.</param>
+    /// <param name="otherPath">The other full path.</param>
     /// <param name="otherId">The other id.</param>
     /// <returns>True if the ProjectId match the Project, otherwise false.</returns>
     public bool Equals(string otherPath, long otherId) =>

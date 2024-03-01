@@ -78,7 +78,7 @@ public readonly struct GroupId : IIdOrPathAddressable, IEquatable<Group>, IEquat
     /// <param name="other">The other identifier.</param>
     /// <returns>True if the GroupId match the Group, otherwise false.</returns>
     public bool Equals(Group other) =>
-        other != null && Equals(other.Path, other.Id);
+        other != null && Equals(other.FullPath, other.Id);
 
     /// <summary>
     /// Check if this <see cref="GroupId"/> matches the given Path or Id.
@@ -86,7 +86,7 @@ public readonly struct GroupId : IIdOrPathAddressable, IEquatable<Group>, IEquat
     /// <remarks>
     /// Path comparison is case-insensitive.
     /// </remarks>
-    /// <param name="otherPath">The other path.</param>
+    /// <param name="otherPath">The other full path.</param>
     /// <param name="otherId">The other id.</param>
     /// <returns>True if the GroupId match the Group, otherwise false.</returns>
     public bool Equals(string otherPath, long otherId) =>

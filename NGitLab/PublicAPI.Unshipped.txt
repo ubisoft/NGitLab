@@ -1913,6 +1913,7 @@ NGitLab.Models.GroupQuery.Search -> string
 NGitLab.Models.GroupQuery.SkipGroups -> int[]
 NGitLab.Models.GroupQuery.Sort -> string
 NGitLab.Models.GroupQuery.Statistics -> bool?
+NGitLab.Models.GroupQuery.TopLevelOnly -> bool?
 NGitLab.Models.GroupQuery.WithCustomAttributes -> bool?
 NGitLab.Models.GroupUpdate
 NGitLab.Models.GroupUpdate.Description.get -> string
