@@ -448,20 +448,15 @@ public class GroupsTests
         using var context = await GitLabTestContext.CreateAsync();
         var groupClient = context.Client.Groups;
         var group = context.CreateGroup();
-        var project = context.CreateProject(group.Id, "test");
-        context.CreateProject(group.Id, "this is another project");
+        var project = context.CreateProject(group.Id);
+        context.CreateProject(group.Id, "this-is-another-project");
 
         var projects = groupClient.GetProjectsAsync(group.Id, new GroupProjectsQuery
         {
-            Search = "test",
+            Search = project.Name,
         }).ToArray();
 
-        group = groupClient[group.Id];
-        Assert.That(group, Is.Not.Null);
-        Assert.That(projects, Is.Not.Empty);
-
-        var projectResult = projects.Single();
-        Assert.That(projectResult.Id, Is.EqualTo(project.Id));
+        Assert.That(projects.Select(p => p.Id), Is.EquivalentTo(new int[] { project.Id }));
     }
 
     [Test]
@@ -504,9 +499,9 @@ public class GroupsTests
         var parentGroupOne = context.CreateGroup();
         var parentGroupTwo = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroupTwo.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroupOne.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroupOne.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroupTwo.Id);
 
         var subgroups = groupClient.GetSubgroupsByIdAsync(parentGroupOne.Id);
         Assert.That(subgroups.Count(), Is.EqualTo(2));
@@ -521,9 +516,9 @@ public class GroupsTests
         var parentGroupOne = context.CreateGroup();
         var parentGroupTwo = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroupTwo.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroupOne.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroupOne.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroupTwo.Id);
 
         var subgroups = groupClient.GetSubgroupsByFullPathAsync(parentGroupOne.FullPath);
         Assert.That(subgroups.Count(), Is.EqualTo(2));
@@ -537,9 +532,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var skippedGroupIds = new[] { subGroupTwo.Id };
@@ -562,9 +557,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var skippedGroupIds = new[] { subGroupTwo.Id };
@@ -587,9 +582,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQuery = new SubgroupQuery
@@ -612,9 +607,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQuery = new SubgroupQuery
@@ -637,9 +632,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryAllAvailable = new SubgroupQuery
@@ -662,9 +657,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryAllAvailable = new SubgroupQuery
@@ -687,9 +682,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryOrderByName = new SubgroupQuery
@@ -724,9 +719,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryOrderByName = new SubgroupQuery
@@ -761,9 +756,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryAsc = new SubgroupQuery
@@ -792,9 +787,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryAsc = new SubgroupQuery
@@ -823,9 +818,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryWithStats = new SubgroupQuery
         {
@@ -847,9 +842,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryWithStats = new SubgroupQuery
         {
@@ -871,9 +866,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryWithCustomAttributes = new SubgroupQuery
         {
@@ -895,9 +890,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryWithCustomAttributes = new SubgroupQuery
         {
@@ -919,9 +914,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryOwned = new SubgroupQuery
         {
@@ -943,9 +938,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryOwned = new SubgroupQuery
         {
@@ -967,9 +962,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryGuest = new SubgroupQuery
         {
@@ -1015,9 +1010,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryGuest = new SubgroupQuery
         {
