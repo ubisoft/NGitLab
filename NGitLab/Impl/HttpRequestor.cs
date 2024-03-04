@@ -134,7 +134,7 @@ public partial class HttpRequestor : IHttpRequestor
     }
 
     public virtual void Stream(string tailAPIUrl, Action<Stream> parser) =>
-        StreamAndHeaders(tailAPIUrl, (stream, _) => parser(stream));
+        StreamAndHeaders(tailAPIUrl, parser != null ? (stream, _) => parser(stream) : null);
 
     public virtual void StreamAndHeaders(string tailAPIUrl, Action<Stream, WebHeaderCollection> parser)
     {
@@ -149,7 +149,7 @@ public partial class HttpRequestor : IHttpRequestor
     }
 
     public virtual Task StreamAsync(string tailAPIUrl, Func<Stream, Task> parser, CancellationToken cancellationToken) =>
-        StreamAndHeadersAsync(tailAPIUrl, (stream, _) => parser(stream), cancellationToken);
+        StreamAndHeadersAsync(tailAPIUrl, parser != null ? (stream, _) => parser(stream) : null, cancellationToken);
 
     public virtual async Task StreamAndHeadersAsync(string tailAPIUrl, Func<Stream, WebHeaderCollection, Task> parser, CancellationToken cancellationToken)
     {
