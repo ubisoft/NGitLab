@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -136,7 +137,7 @@ public partial class HttpRequestor : IHttpRequestor
     public virtual void Stream(string tailAPIUrl, Action<Stream> parser) =>
         StreamAndHeaders(tailAPIUrl, parser != null ? (stream, _) => parser(stream) : null);
 
-    public virtual void StreamAndHeaders(string tailAPIUrl, Action<Stream, WebHeaderCollection> parser)
+    public virtual void StreamAndHeaders(string tailAPIUrl, Action<Stream, NameValueCollection> parser)
     {
         var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options);
 
@@ -151,7 +152,7 @@ public partial class HttpRequestor : IHttpRequestor
     public virtual Task StreamAsync(string tailAPIUrl, Func<Stream, Task> parser, CancellationToken cancellationToken) =>
         StreamAndHeadersAsync(tailAPIUrl, parser != null ? (stream, _) => parser(stream) : null, cancellationToken);
 
-    public virtual async Task StreamAndHeadersAsync(string tailAPIUrl, Func<Stream, WebHeaderCollection, Task> parser, CancellationToken cancellationToken)
+    public virtual async Task StreamAndHeadersAsync(string tailAPIUrl, Func<Stream, NameValueCollection, Task> parser, CancellationToken cancellationToken)
     {
         var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options);
 
