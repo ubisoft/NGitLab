@@ -276,7 +276,7 @@ NGitLab.IGroupsClient.GetByFullPathAsync(string fullPath, System.Threading.Cance
 NGitLab.IGroupsClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetGroup(NGitLab.Models.GroupId id) -> NGitLab.Models.Group
 NGitLab.IGroupsClient.GetGroupAsync(NGitLab.Models.GroupId groupId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
-NGitLab.IGroupsClient.GetProjectsAsync(int id, NGitLab.Models.GroupProjectsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
+NGitLab.IGroupsClient.GetProjectsAsync(int groupId, NGitLab.Models.GroupProjectsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.IGroupsClient.GetSubgroupsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetSubgroupsByFullPathAsync(string fullPath, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetSubgroupsByIdAsync(int id, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
@@ -287,7 +287,7 @@ NGitLab.IGroupsClient.Restore(int id) -> void
 NGitLab.IGroupsClient.RestoreAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IGroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.IGroupsClient.SearchAsync(string search) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
-NGitLab.IGroupsClient.SearchProjects(int id, string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
+NGitLab.IGroupsClient.SearchProjects(int groupId, string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IGroupsClient.SearchProjectsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.GroupProjectsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.IGroupsClient.this[int id].get -> NGitLab.Models.Group
 NGitLab.IGroupsClient.this[string fullPath].get -> NGitLab.Models.Group
@@ -1838,6 +1838,7 @@ NGitLab.Models.GroupId.Equals(NGitLab.Models.GroupId other) -> bool
 NGitLab.Models.GroupId.Equals(string otherPath, long otherId) -> bool
 NGitLab.Models.GroupId.GroupId() -> void
 NGitLab.Models.GroupId.GroupId(long id) -> void
+NGitLab.Models.GroupId.GroupId(NGitLab.Models.Group group) -> void
 NGitLab.Models.GroupId.GroupId(string path) -> void
 NGitLab.Models.GroupIdControl
 NGitLab.Models.GroupIdControl.GroupId.get -> long
@@ -2881,6 +2882,7 @@ NGitLab.Models.ProjectId.Equals(NGitLab.Models.ProjectId other) -> bool
 NGitLab.Models.ProjectId.Equals(string otherPath, long otherId) -> bool
 NGitLab.Models.ProjectId.ProjectId() -> void
 NGitLab.Models.ProjectId.ProjectId(long id) -> void
+NGitLab.Models.ProjectId.ProjectId(NGitLab.Models.Project project) -> void
 NGitLab.Models.ProjectId.ProjectId(string path) -> void
 NGitLab.Models.ProjectIssueNote
 NGitLab.Models.ProjectIssueNote.Attachment -> string
@@ -3921,6 +3923,7 @@ static NGitLab.GitLabClient.Connect(string hostUrl, string username, string pass
 static NGitLab.Models.FileData.Base64Decode(string base64EncodedData) -> string
 static NGitLab.Models.FileUpsert.Base64Encode(string plainText) -> string
 static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(long id) -> NGitLab.Models.GroupId
+static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(NGitLab.Models.Group group) -> NGitLab.Models.GroupId
 static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(string path) -> NGitLab.Models.GroupId
 static NGitLab.Models.GroupId.operator !=(NGitLab.Models.Group a, NGitLab.Models.GroupId b) -> bool
 static NGitLab.Models.GroupId.operator !=(NGitLab.Models.GroupId a, NGitLab.Models.Group b) -> bool
@@ -3931,6 +3934,7 @@ static NGitLab.Models.GroupId.operator ==(NGitLab.Models.GroupId a, NGitLab.Mode
 static NGitLab.Models.IdOrPathExtensions.ValueAsString(this NGitLab.Models.IIdOrPathAddressable idOrPath) -> string
 static NGitLab.Models.IdOrPathExtensions.ValueAsUriParameter(this NGitLab.Models.IIdOrPathAddressable idOrPath) -> string
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(long id) -> NGitLab.Models.ProjectId
+static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(NGitLab.Models.Project project) -> NGitLab.Models.ProjectId
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(string path) -> NGitLab.Models.ProjectId
 static NGitLab.Models.ProjectId.operator !=(NGitLab.Models.Project a, NGitLab.Models.ProjectId b) -> bool
 static NGitLab.Models.ProjectId.operator !=(NGitLab.Models.ProjectId a, NGitLab.Models.Project b) -> bool

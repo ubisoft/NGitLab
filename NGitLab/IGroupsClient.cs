@@ -126,11 +126,11 @@ public interface IGroupsClient
     /// <param name="id">The group's id</param>
     /// <param name="search">The search criteria.</param>
     [Obsolete("Use SearchProjectsAsync instead")]
-    IEnumerable<Project> SearchProjects(int id, string search);
+    IEnumerable<Project> SearchProjects(int groupId, string search);
 
     /// <inheritdoc cref="SearchProjectsAsync"/>
     /// <param name="id">The group's id</param>
-    GitLabCollectionResponse<Project> GetProjectsAsync(int id, GroupProjectsQuery query);
+    GitLabCollectionResponse<Project> GetProjectsAsync(int groupId, GroupProjectsQuery query);
 
     /// <summary>
     /// Get a list of projects in this group. When accessed without authentication, only public projects are returned.
