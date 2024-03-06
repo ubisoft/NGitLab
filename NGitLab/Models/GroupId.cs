@@ -51,7 +51,7 @@ public readonly struct GroupId : IIdOrPathAddressable, IEquatable<Group>, IEquat
         _path != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(_path) : _id.GetHashCode();
 
     /// <summary>
-    /// Check if this <see cref="GroupId"/> matches the given object.
+    /// Checks if this <see cref="GroupId"/> matches the given object.
     /// <summary>
     /// <param name="other">The other object.</param>
     /// <returns>True if <paramref name="other"/> is a matching <see cref="GroupId"/> or <see cref="Group"/>, otherwise false.</returns>
@@ -61,7 +61,7 @@ public readonly struct GroupId : IIdOrPathAddressable, IEquatable<Group>, IEquat
         ((other is Group group) && Equals(group));
 
     /// <summary>
-    /// Check if two <see cref="GroupId"/>s are equivalent by comparing Path-to-Path or Id-to-Id,
+    /// Checks if two <see cref="GroupId"/>s are equivalent by comparing Path-to-Path or Id-to-Id,
     /// depending on the kind of identifier value stored in each GroupId.
     /// </para>
     /// It is important to understand that a GroupId contains an Id -or- a Path, not both.
@@ -79,7 +79,7 @@ public readonly struct GroupId : IIdOrPathAddressable, IEquatable<Group>, IEquat
         : other._path == null && _id == other._id;
 
     /// <summary>
-    /// Check if this <see cref="GroupId"/> matches the given <see cref="Group"/>'s Path or Id.
+    /// Checks if this <see cref="GroupId"/> matches the given <see cref="Group"/>'s Path or Id.
     /// <summary>
     /// <remarks>
     /// Path comparison is case-insensitive.
@@ -90,7 +90,7 @@ public readonly struct GroupId : IIdOrPathAddressable, IEquatable<Group>, IEquat
         other != null && Equals(other.FullPath, other.Id);
 
     /// <summary>
-    /// Check if this <see cref="GroupId"/> matches the given Path or Id.
+    /// Checks if this <see cref="GroupId"/> matches the given Path or Id.
     /// <summary>
     /// <remarks>
     /// Path comparison is case-insensitive.

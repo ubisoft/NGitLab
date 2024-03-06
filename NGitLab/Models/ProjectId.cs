@@ -51,7 +51,7 @@ public readonly struct ProjectId : IIdOrPathAddressable, IEquatable<Project>, IE
         _path != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(_path) : _id.GetHashCode();
 
     /// <summary>
-    /// Check if this <see cref="ProjectId"/> matches the given object.
+    /// Checks if this <see cref="ProjectId"/> matches the given object.
     /// <summary>
     /// <param name="other">The other object.</param>
     /// <returns>True if <paramref name="other"/> is a matching <see cref="ProjectId"/> or <see cref="Project"/>, otherwise false.</returns>
@@ -61,7 +61,7 @@ public readonly struct ProjectId : IIdOrPathAddressable, IEquatable<Project>, IE
         ((other is Project project) && Equals(project));
 
     /// <summary>
-    /// Check if two <see cref="ProjectId"/>s are equivalent by comparing Path-to-Path or Id-to-Id,
+    /// Checks if two <see cref="ProjectId"/>s are equivalent by comparing Path-to-Path or Id-to-Id,
     /// depending on the kind of identifier value stored in each ProjectId.
     /// </para>
     /// It is important to understand that a ProjectId contains an Id -or- a Path, not both.
@@ -79,7 +79,7 @@ public readonly struct ProjectId : IIdOrPathAddressable, IEquatable<Project>, IE
         : other._path == null && _id == other._id;
 
     /// <summary>
-    /// Check if this <see cref="ProjectId"/> matches the given <see cref="Project"/>'s Path or Id.
+    /// Checks if this <see cref="ProjectId"/> matches the given <see cref="Project"/>'s Path or Id.
     /// <summary>
     /// <remarks>
     /// Path comparison is case-insensitive.
@@ -90,7 +90,7 @@ public readonly struct ProjectId : IIdOrPathAddressable, IEquatable<Project>, IE
         other != null && Equals(other.PathWithNamespace, other.Id);
 
     /// <summary>
-    /// Check if this <see cref="ProjectId"/> matches the given Path or Id.
+    /// Checks if this <see cref="ProjectId"/> matches the given Path or Id.
     /// <summary>
     /// <remarks>
     /// Path comparison is case-insensitive.
