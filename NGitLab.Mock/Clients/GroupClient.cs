@@ -135,12 +135,12 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             throw new GitLabBadRequestException("per_page has a value not allowed");
         }
 
-        var all = Get(query?.Query).ToList();
+        var all = Get(query?.Query).ToArray();
         var page = all
             .Skip((pageNum - 1) * perPage)
             .Take(perPage)
-            .ToList();
-        return (page, all.Count > 10000 ? null : all.Count);
+            .ToArray();
+        return (page, all.Length > 10000 ? null : all.Length);
     }
 
     public Models.Group this[int id] => GetGroup(id);
@@ -250,12 +250,12 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             throw new GitLabBadRequestException("per_page has a value not allowed");
         }
 
-        var all = SearchProjectsAsync(groupId, query?.Query).ToList();
+        var all = SearchProjectsAsync(groupId, query?.Query).ToArray();
         var page = all
             .Skip((pageNum - 1) * perPage)
             .Take(perPage)
-            .ToList();
-        return (page, all.Count > 10000 ? null : all.Count);
+            .ToArray();
+        return (page, all.Length > 10000 ? null : all.Length);
     }
 
     public Models.Group Update(int id, GroupUpdate groupUpdate)
@@ -390,11 +390,11 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             throw new GitLabBadRequestException("per_page has a value not allowed");
         }
 
-        var all = GetSubgroupsAsync(groupId, query?.Query).ToList();
+        var all = GetSubgroupsAsync(groupId, query?.Query).ToArray();
         var page = all
             .Skip((pageNum - 1) * perPage)
             .Take(perPage)
-            .ToList();
-        return (page, all.Count > 10000 ? null : all.Count);
+            .ToArray();
+        return (page, all.Length > 10000 ? null : all.Length);
     }
 }
