@@ -174,9 +174,17 @@ public partial class HttpRequestor : IHttpRequestor
         return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options);
     }
 
-    private static string ReadText(Stream s) => new StreamReader(s).ReadToEnd();
+    private static string ReadText(Stream s)
+    {
+        using var streamReader = new StreamReader(s);
+        return streamReader.ReadToEnd();
+    }
 
-    private static Task<string> ReadTextAsync(Stream s) => new StreamReader(s).ReadToEndAsync();
+    private static async Task<string> ReadTextAsync(Stream s)
+    {
+        using var streamReader = new StreamReader(s);
+        return await streamReader.ReadToEndAsync().ConfigureAwait(false);
+    }
 
     private static T Deserialize<T>(Stream s) => Serializer.Deserialize<T>(ReadText(s));
 
