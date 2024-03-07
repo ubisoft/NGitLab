@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,11 +19,11 @@ public interface IHttpRequestor
 
     void Stream(string tailAPIUrl, Action<Stream> parser);
 
-    void StreamAndHeaders(string tailAPIUrl, Action<Stream, NameValueCollection> parser);
+    void StreamAndHeaders(string tailAPIUrl, Action<Stream, IReadOnlyDictionary<string, IEnumerable<string>>> parser);
 
     Task StreamAsync(string tailAPIUrl, Func<Stream, Task> parser, CancellationToken cancellationToken);
 
-    Task StreamAndHeadersAsync(string tailAPIUrl, Func<Stream, NameValueCollection, Task> parser, CancellationToken cancellationToken);
+    Task StreamAndHeadersAsync(string tailAPIUrl, Func<Stream, IReadOnlyDictionary<string, IEnumerable<string>>, Task> parser, CancellationToken cancellationToken);
 
     T To<T>(string tailAPIUrl);
 

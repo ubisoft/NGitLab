@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -87,7 +86,7 @@ public partial class HttpRequestor : IHttpRequestor
         StreamAndHeaders(tailAPIUrl, (s, headers) =>
         {
             result = Deserialize<IReadOnlyCollection<T>>(s);
-            if (int.TryParse(headers.Get("x-total"), out var n))
+            if (headers.TryGetValue("x-total", out var v) && int.TryParse(v.FirstOrDefault(), out var n))
             {
                 total = n;
             }
@@ -102,7 +101,7 @@ public partial class HttpRequestor : IHttpRequestor
         await StreamAndHeadersAsync(tailAPIUrl, async (s, headers) =>
         {
             result = await DeserializeAsync<IReadOnlyCollection<T>>(s).ConfigureAwait(false);
-            if (int.TryParse(headers.Get("x-total"), out var n))
+            if (headers.TryGetValue("x-total", out var v) && int.TryParse(v.FirstOrDefault(), out var n))
             {
                 total = n;
             }
@@ -138,7 +137,7 @@ public partial class HttpRequestor : IHttpRequestor
     public virtual void Stream(string tailAPIUrl, Action<Stream> parser) =>
         StreamAndHeaders(tailAPIUrl, parser != null ? (stream, _) => parser(stream) : null);
 
-    public virtual void StreamAndHeaders(string tailAPIUrl, Action<Stream, NameValueCollection> parser)
+    public virtual void StreamAndHeaders(string tailAPIUrl, Action<Stream, IReadOnlyDictionary<string, IEnumerable<string>>> parser)
     {
         var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options);
 
@@ -146,14 +145,14 @@ public partial class HttpRequestor : IHttpRequestor
         if (parser != null)
         {
             using var stream = response.GetResponseStream();
-            parser(stream, response.Headers);
+            parser(stream, new WebHeadersDictionaryAdaptor(response.Headers));
         }
     }
 
     public virtual Task StreamAsync(string tailAPIUrl, Func<Stream, Task> parser, CancellationToken cancellationToken) =>
         StreamAndHeadersAsync(tailAPIUrl, parser != null ? (stream, _) => parser(stream) : null, cancellationToken);
 
-    public virtual async Task StreamAndHeadersAsync(string tailAPIUrl, Func<Stream, NameValueCollection, Task> parser, CancellationToken cancellationToken)
+    public virtual async Task StreamAndHeadersAsync(string tailAPIUrl, Func<Stream, IReadOnlyDictionary<string, IEnumerable<string>>, Task> parser, CancellationToken cancellationToken)
     {
         var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options);
 
@@ -161,7 +160,7 @@ public partial class HttpRequestor : IHttpRequestor
         if (parser != null)
         {
             using var stream = response.GetResponseStream();
-            await parser(stream, response.Headers).ConfigureAwait(false);
+            await parser(stream, new WebHeadersDictionaryAdaptor(response.Headers)).ConfigureAwait(false);
         }
     }
 

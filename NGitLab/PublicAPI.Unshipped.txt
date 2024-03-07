@@ -307,8 +307,8 @@ NGitLab.IHttpRequestor.GetAllAsync<T>(string tailUrl) -> NGitLab.GitLabCollectio
 NGitLab.IHttpRequestor.Page<T>(string tailAPIUrl) -> NGitLab.Models.PagedResponse<T>
 NGitLab.IHttpRequestor.PageAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<NGitLab.Models.PagedResponse<T>>
 NGitLab.IHttpRequestor.Stream(string tailAPIUrl, System.Action<System.IO.Stream> parser) -> void
-NGitLab.IHttpRequestor.StreamAndHeaders(string tailAPIUrl, System.Action<System.IO.Stream, System.Collections.Specialized.NameValueCollection> parser) -> void
-NGitLab.IHttpRequestor.StreamAndHeadersAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Collections.Specialized.NameValueCollection, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
+NGitLab.IHttpRequestor.StreamAndHeaders(string tailAPIUrl, System.Action<System.IO.Stream, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>> parser) -> void
+NGitLab.IHttpRequestor.StreamAndHeadersAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 NGitLab.IHttpRequestor.StreamAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 NGitLab.IHttpRequestor.To<T>(string tailAPIUrl) -> T
 NGitLab.IHttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<T>
@@ -3963,8 +3963,8 @@ virtual NGitLab.Impl.HttpRequestor.GetAllAsync<T>(string tailUrl) -> NGitLab.Git
 virtual NGitLab.Impl.HttpRequestor.Page<T>(string tailAPIUrl) -> NGitLab.Models.PagedResponse<T>
 virtual NGitLab.Impl.HttpRequestor.PageAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<NGitLab.Models.PagedResponse<T>>
 virtual NGitLab.Impl.HttpRequestor.Stream(string tailAPIUrl, System.Action<System.IO.Stream> parser) -> void
-virtual NGitLab.Impl.HttpRequestor.StreamAndHeaders(string tailAPIUrl, System.Action<System.IO.Stream, System.Collections.Specialized.NameValueCollection> parser) -> void
-virtual NGitLab.Impl.HttpRequestor.StreamAndHeadersAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Collections.Specialized.NameValueCollection, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
+virtual NGitLab.Impl.HttpRequestor.StreamAndHeaders(string tailAPIUrl, System.Action<System.IO.Stream, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>> parser) -> void
+virtual NGitLab.Impl.HttpRequestor.StreamAndHeadersAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>>, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 virtual NGitLab.Impl.HttpRequestor.StreamAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 virtual NGitLab.Impl.HttpRequestor.To<T>(string tailAPIUrl) -> T
 virtual NGitLab.Impl.HttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<T>
