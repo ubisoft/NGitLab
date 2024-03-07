@@ -17,6 +17,17 @@ public class GroupsMockTests
                     .WithGroup("sg2_1", 5, @namespace: "tlg/sg2")
             .BuildServer();
 
+    private static GitLabServer CreateProjectHierarchy() =>
+        new GitLabConfig()
+            .WithUser("user1", isDefault: true)
+            .WithGroup("tlg", 1)
+                .WithProject("p1", 2, @namespace: "tlg")
+                .WithGroup("sg1", 3, @namespace: "tlg")
+                    .WithProject("p2", 4, @namespace: "tlg/sg1")
+                    .WithProject("p3", 5, @namespace: "tlg/sg1")
+                .WithGroup("sg2", 6, @namespace: "tlg")
+            .BuildServer();
+
     [Test]
     public async Task Test_group_get_by_id()
     {
@@ -265,17 +276,6 @@ public class GroupsMockTests
         var client = server.CreateClient("user1");
         Assert.ThrowsAsync<Clients.GitLabBadRequestException>(() => client.Groups.PageSubgroupsAsync(1, new(page: 1, perPage: 0)));
     }
-
-    private static GitLabServer CreateProjectHierarchy() =>
-        new GitLabConfig()
-            .WithUser("user1", isDefault: true)
-            .WithGroup("tlg", 1)
-                .WithProject("p1", 2, @namespace: "tlg")
-                .WithGroup("sg1", 3, @namespace: "tlg")
-                    .WithProject("p2", 4, @namespace: "tlg/sg1")
-                    .WithProject("p3", 5, @namespace: "tlg/sg1")
-                .WithGroup("sg2", 6, @namespace: "tlg")
-            .BuildServer();
 
     [Test]
     public async Task Test_page_projects_first_page()
