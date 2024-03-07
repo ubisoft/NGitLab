@@ -45,7 +45,7 @@ public interface IGroupsClient
     /// The page will be empty after the last page is read.<para/>
     /// The total maybe null if there are more than 10,000 items. See https://docs.gitlab.com/ee/user/gitlab_com/index.html#pagination-response-headers.
     /// </remarks>
-    Task<(IReadOnlyCollection<Group> Page, int? Total)> PageAsync(PageQuery<GroupQuery> query, CancellationToken cancellationToken = default);
+    Task<PagedResponse<Group>> PageAsync(PageQuery<GroupQuery> query, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="GetByIdAsync"/>
     Group this[int id] { get; }
@@ -105,7 +105,7 @@ public interface IGroupsClient
     /// The page will be empty after the last page is read.<para/>
     /// The total maybe null if there are more than 10,000 items. See https://docs.gitlab.com/ee/user/gitlab_com/index.html#pagination-response-headers.
     /// </remarks>
-    Task<(IReadOnlyCollection<Group> Page, int? Total)> PageSubgroupsAsync(GroupId groupId, PageQuery<SubgroupQuery> query, CancellationToken cancellationToken = default);
+    Task<PagedResponse<Group>> PageSubgroupsAsync(GroupId groupId, PageQuery<SubgroupQuery> query, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="CreateAsync"/>
     Group Create(GroupCreate group);
@@ -153,7 +153,7 @@ public interface IGroupsClient
     /// The page will be empty after the last page is read.<para/>
     /// The total maybe null if there are more than 10,000 items. See https://docs.gitlab.com/ee/user/gitlab_com/index.html#pagination-response-headers.
     /// </remarks>
-    Task<(IReadOnlyCollection<Project> Page, int? Total)> PageProjectsAsync(GroupId groupId, PageQuery<GroupProjectsQuery> query, CancellationToken cancellationToken = default);
+    Task<PagedResponse<Project>> PageProjectsAsync(GroupId groupId, PageQuery<GroupProjectsQuery> query, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="DeleteAsync"/>
     void Delete(int id);

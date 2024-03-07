@@ -35,7 +35,7 @@ public class GroupsClient : IGroupsClient
         return _api.Get().GetAllAsync<Group>(url);
     }
 
-    public Task<(IReadOnlyCollection<Group> Page, int? Total)> PageAsync(PageQuery<GroupQuery> query, CancellationToken cancellationToken = default)
+    public Task<PagedResponse<Group>> PageAsync(PageQuery<GroupQuery> query, CancellationToken cancellationToken = default)
     {
         var url = CreateGetUrl(query?.Query, query?.Page, query?.PerPage);
         return _api.Get().PageAsync<Group>(url, cancellationToken);
@@ -198,7 +198,7 @@ public class GroupsClient : IGroupsClient
         return _api.Get().GetAllAsync<Group>(url);
     }
 
-    public Task<(IReadOnlyCollection<Group> Page, int? Total)> PageSubgroupsAsync(GroupId groupId, PageQuery<SubgroupQuery> query, CancellationToken cancellationToken = default)
+    public Task<PagedResponse<Group>> PageSubgroupsAsync(GroupId groupId, PageQuery<SubgroupQuery> query, CancellationToken cancellationToken = default)
     {
         var url = CreateSubgroupGetUrl(groupId, query?.Query, query?.Page, query?.PerPage);
         return _api.Get().PageAsync<Group>(url, cancellationToken);
@@ -219,7 +219,7 @@ public class GroupsClient : IGroupsClient
         return _api.Get().GetAllAsync<Project>(url);
     }
 
-    public Task<(IReadOnlyCollection<Project> Page, int? Total)> PageProjectsAsync(GroupId groupId, PageQuery<GroupProjectsQuery> query, CancellationToken cancellationToken = default)
+    public Task<PagedResponse<Project>> PageProjectsAsync(GroupId groupId, PageQuery<GroupProjectsQuery> query, CancellationToken cancellationToken = default)
     {
         var url = CreateGetProjectsUrl(groupId, query?.Query, query?.Page, query?.PerPage);
         return _api.Get().PageAsync<Project>(url, cancellationToken);

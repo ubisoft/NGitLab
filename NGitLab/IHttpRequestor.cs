@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Models;
 
 namespace NGitLab;
 
@@ -13,9 +14,9 @@ public interface IHttpRequestor
 
     GitLabCollectionResponse<T> GetAllAsync<T>(string tailUrl);
 
-    (IReadOnlyCollection<T> Page, int? Total) Page<T>(string tailAPIUrl);
+    PagedResponse<T> Page<T>(string tailAPIUrl);
 
-    Task<(IReadOnlyCollection<T> Page, int? Total)> PageAsync<T>(string tailAPIUrl, CancellationToken cancellationToken);
+    Task<PagedResponse<T>> PageAsync<T>(string tailAPIUrl, CancellationToken cancellationToken);
 
     void Stream(string tailAPIUrl, Action<Stream> parser);
 

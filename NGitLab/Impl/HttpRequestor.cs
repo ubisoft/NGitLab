@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Impl.Json;
+using NGitLab.Models;
 
 namespace NGitLab.Impl;
 
@@ -79,7 +80,7 @@ public partial class HttpRequestor : IHttpRequestor
         return result;
     }
 
-    public virtual (IReadOnlyCollection<T> Page, int? Total) Page<T>(string tailAPIUrl)
+    public virtual PagedResponse<T> Page<T>(string tailAPIUrl)
     {
         IReadOnlyCollection<T> result = default;
         int? total = default;
@@ -91,10 +92,10 @@ public partial class HttpRequestor : IHttpRequestor
                 total = n;
             }
         });
-        return (result, total);
+        return new(result, total);
     }
 
-    public virtual async Task<(IReadOnlyCollection<T> Page, int? Total)> PageAsync<T>(string tailAPIUrl, CancellationToken cancellationToken)
+    public virtual async Task<PagedResponse<T>> PageAsync<T>(string tailAPIUrl, CancellationToken cancellationToken)
     {
         IReadOnlyCollection<T> result = default;
         int? total = default;
@@ -106,7 +107,7 @@ public partial class HttpRequestor : IHttpRequestor
                 total = n;
             }
         }, cancellationToken).ConfigureAwait(false);
-        return (result, total);
+        return new(result, total);
     }
 
     public Uri GetAPIUrl(string tailAPIUrl)

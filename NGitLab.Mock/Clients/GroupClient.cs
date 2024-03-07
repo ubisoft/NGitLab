@@ -124,7 +124,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
 
     public GitLabCollectionResponse<Models.Group> GetAsync(GroupQuery query) => GitLabCollectionResponse.Create(Get(query));
 
-    public async Task<(IReadOnlyCollection<Models.Group> Page, int? Total)> PageAsync(PageQuery<GroupQuery> query, CancellationToken cancellationToken = default)
+    public async Task<PagedResponse<Models.Group>> PageAsync(PageQuery<GroupQuery> query, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         var pageNum = Math.Max(1, query?.Page ?? PageQuery.FirstPage);
@@ -140,7 +140,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             .Skip((pageNum - 1) * perPage)
             .Take(perPage)
             .ToArray();
-        return (page, all.Length > 10000 ? null : all.Length);
+        return new(page, all.Length > PagedResponse.MaxQueryCountLimit ? null : all.Length);
     }
 
     public Models.Group this[int id] => GetGroup(id);
@@ -240,7 +240,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         }
     }
 
-    public async Task<(IReadOnlyCollection<Models.Project> Page, int? Total)> PageProjectsAsync(GroupId groupId, PageQuery<GroupProjectsQuery> query, CancellationToken cancellationToken = default)
+    public async Task<PagedResponse<Models.Project>> PageProjectsAsync(GroupId groupId, PageQuery<GroupProjectsQuery> query, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         var pageNum = Math.Max(1, query?.Page ?? PageQuery.FirstPage);
@@ -255,7 +255,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             .Skip((pageNum - 1) * perPage)
             .Take(perPage)
             .ToArray();
-        return (page, all.Length > 10000 ? null : all.Length);
+        return new(page, all.Length > PagedResponse.MaxQueryCountLimit ? null : all.Length);
     }
 
     public Models.Group Update(int id, GroupUpdate groupUpdate)
@@ -380,7 +380,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         }
     }
 
-    public async Task<(IReadOnlyCollection<Models.Group> Page, int? Total)> PageSubgroupsAsync(GroupId groupId, PageQuery<SubgroupQuery> query, CancellationToken cancellationToken = default)
+    public async Task<PagedResponse<Models.Group>> PageSubgroupsAsync(GroupId groupId, PageQuery<SubgroupQuery> query, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         var pageNum = Math.Max(1, query?.Page ?? PageQuery.FirstPage);
@@ -395,6 +395,6 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             .Skip((pageNum - 1) * perPage)
             .Take(perPage)
             .ToArray();
-        return (page, all.Length > 10000 ? null : all.Length);
+        return new(page, all.Length > PagedResponse.MaxQueryCountLimit ? null : all.Length);
     }
 }

@@ -280,9 +280,9 @@ NGitLab.IGroupsClient.GetProjectsAsync(int groupId, NGitLab.Models.GroupProjects
 NGitLab.IGroupsClient.GetSubgroupsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetSubgroupsByFullPathAsync(string fullPath, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetSubgroupsByIdAsync(int id, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
-NGitLab.IGroupsClient.PageAsync(NGitLab.Models.PageQuery<NGitLab.Models.GroupQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<(System.Collections.Generic.IReadOnlyCollection<NGitLab.Models.Group> Page, int? Total)>
-NGitLab.IGroupsClient.PageProjectsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.PageQuery<NGitLab.Models.GroupProjectsQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<(System.Collections.Generic.IReadOnlyCollection<NGitLab.Models.Project> Page, int? Total)>
-NGitLab.IGroupsClient.PageSubgroupsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.PageQuery<NGitLab.Models.SubgroupQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<(System.Collections.Generic.IReadOnlyCollection<NGitLab.Models.Group> Page, int? Total)>
+NGitLab.IGroupsClient.PageAsync(NGitLab.Models.PageQuery<NGitLab.Models.GroupQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.PagedResponse<NGitLab.Models.Group>>
+NGitLab.IGroupsClient.PageProjectsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.PageQuery<NGitLab.Models.GroupProjectsQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.PagedResponse<NGitLab.Models.Project>>
+NGitLab.IGroupsClient.PageSubgroupsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.PageQuery<NGitLab.Models.SubgroupQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.PagedResponse<NGitLab.Models.Group>>
 NGitLab.IGroupsClient.Restore(int id) -> void
 NGitLab.IGroupsClient.RestoreAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IGroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
@@ -304,8 +304,8 @@ NGitLab.IHttpRequestor.Execute(string tailAPIUrl) -> void
 NGitLab.IHttpRequestor.ExecuteAsync(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 NGitLab.IHttpRequestor.GetAll<T>(string tailUrl) -> System.Collections.Generic.IEnumerable<T>
 NGitLab.IHttpRequestor.GetAllAsync<T>(string tailUrl) -> NGitLab.GitLabCollectionResponse<T>
-NGitLab.IHttpRequestor.Page<T>(string tailAPIUrl) -> (System.Collections.Generic.IReadOnlyCollection<T> Page, int? Total)
-NGitLab.IHttpRequestor.PageAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<(System.Collections.Generic.IReadOnlyCollection<T> Page, int? Total)>
+NGitLab.IHttpRequestor.Page<T>(string tailAPIUrl) -> NGitLab.Models.PagedResponse<T>
+NGitLab.IHttpRequestor.PageAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<NGitLab.Models.PagedResponse<T>>
 NGitLab.IHttpRequestor.Stream(string tailAPIUrl, System.Action<System.IO.Stream> parser) -> void
 NGitLab.IHttpRequestor.StreamAndHeaders(string tailAPIUrl, System.Action<System.IO.Stream, System.Collections.Specialized.NameValueCollection> parser) -> void
 NGitLab.IHttpRequestor.StreamAndHeadersAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Collections.Specialized.NameValueCollection, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
@@ -565,9 +565,9 @@ NGitLab.Impl.GroupsClient.GetSubgroupsAsync(NGitLab.Models.GroupId groupId, NGit
 NGitLab.Impl.GroupsClient.GetSubgroupsByFullPathAsync(string fullPath, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.GetSubgroupsByIdAsync(int id, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.GroupsClient(NGitLab.Impl.API api) -> void
-NGitLab.Impl.GroupsClient.PageAsync(NGitLab.Models.PageQuery<NGitLab.Models.GroupQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<(System.Collections.Generic.IReadOnlyCollection<NGitLab.Models.Group> Page, int? Total)>
-NGitLab.Impl.GroupsClient.PageProjectsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.PageQuery<NGitLab.Models.GroupProjectsQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<(System.Collections.Generic.IReadOnlyCollection<NGitLab.Models.Project> Page, int? Total)>
-NGitLab.Impl.GroupsClient.PageSubgroupsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.PageQuery<NGitLab.Models.SubgroupQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<(System.Collections.Generic.IReadOnlyCollection<NGitLab.Models.Group> Page, int? Total)>
+NGitLab.Impl.GroupsClient.PageAsync(NGitLab.Models.PageQuery<NGitLab.Models.GroupQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.PagedResponse<NGitLab.Models.Group>>
+NGitLab.Impl.GroupsClient.PageProjectsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.PageQuery<NGitLab.Models.GroupProjectsQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.PagedResponse<NGitLab.Models.Project>>
+NGitLab.Impl.GroupsClient.PageSubgroupsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.PageQuery<NGitLab.Models.SubgroupQuery> query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.PagedResponse<NGitLab.Models.Group>>
 NGitLab.Impl.GroupsClient.Restore(int id) -> void
 NGitLab.Impl.GroupsClient.RestoreAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.GroupsClient.Search(string search) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
@@ -2602,6 +2602,13 @@ NGitLab.Models.ObjectType
 NGitLab.Models.ObjectType.blob = 0 -> NGitLab.Models.ObjectType
 NGitLab.Models.ObjectType.commit = 2 -> NGitLab.Models.ObjectType
 NGitLab.Models.ObjectType.tree = 1 -> NGitLab.Models.ObjectType
+NGitLab.Models.PagedResponse
+NGitLab.Models.PagedResponse<T>
+NGitLab.Models.PagedResponse<T>.Page.get -> System.Collections.Generic.IReadOnlyCollection<T>
+NGitLab.Models.PagedResponse<T>.Page.init -> void
+NGitLab.Models.PagedResponse<T>.PagedResponse(System.Collections.Generic.IReadOnlyCollection<T> Page, int? Total) -> void
+NGitLab.Models.PagedResponse<T>.Total.get -> int?
+NGitLab.Models.PagedResponse<T>.Total.init -> void
 NGitLab.Models.PageQuery
 NGitLab.Models.PageQuery.Page.get -> int
 NGitLab.Models.PageQuery.Page.set -> void
@@ -3953,8 +3960,8 @@ virtual NGitLab.Impl.HttpRequestor.Execute(string tailAPIUrl) -> void
 virtual NGitLab.Impl.HttpRequestor.ExecuteAsync(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 virtual NGitLab.Impl.HttpRequestor.GetAll<T>(string tailUrl) -> System.Collections.Generic.IEnumerable<T>
 virtual NGitLab.Impl.HttpRequestor.GetAllAsync<T>(string tailUrl) -> NGitLab.GitLabCollectionResponse<T>
-virtual NGitLab.Impl.HttpRequestor.Page<T>(string tailAPIUrl) -> (System.Collections.Generic.IReadOnlyCollection<T> Page, int? Total)
-virtual NGitLab.Impl.HttpRequestor.PageAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<(System.Collections.Generic.IReadOnlyCollection<T> Page, int? Total)>
+virtual NGitLab.Impl.HttpRequestor.Page<T>(string tailAPIUrl) -> NGitLab.Models.PagedResponse<T>
+virtual NGitLab.Impl.HttpRequestor.PageAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<NGitLab.Models.PagedResponse<T>>
 virtual NGitLab.Impl.HttpRequestor.Stream(string tailAPIUrl, System.Action<System.IO.Stream> parser) -> void
 virtual NGitLab.Impl.HttpRequestor.StreamAndHeaders(string tailAPIUrl, System.Action<System.IO.Stream, System.Collections.Specialized.NameValueCollection> parser) -> void
 virtual NGitLab.Impl.HttpRequestor.StreamAndHeadersAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Collections.Specialized.NameValueCollection, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
