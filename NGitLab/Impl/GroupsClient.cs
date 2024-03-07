@@ -47,57 +47,59 @@ public class GroupsClient : IGroupsClient
 
         url = Utils.AddPageParams(url, page, perPage);
 
-        if (query is not null)
+        if (query is null)
         {
-            if (query.SkipGroups != null && query.SkipGroups.Any())
-            {
-                foreach (var skipGroup in query.SkipGroups)
-                {
-                    url = Utils.AddParameter(url, "skip_groups[]", skipGroup);
-                }
-            }
+            return url;
+        }
 
-            if (query.AllAvailable != null)
+        if (query.SkipGroups != null && query.SkipGroups.Any())
+        {
+            foreach (var skipGroup in query.SkipGroups)
             {
-                url = Utils.AddParameter(url, "all_available", query.AllAvailable);
+                url = Utils.AddParameter(url, "skip_groups[]", skipGroup);
             }
+        }
 
-            if (!string.IsNullOrEmpty(query.Search))
-            {
-                url = Utils.AddParameter(url, "search", query.Search);
-            }
+        if (query.AllAvailable != null)
+        {
+            url = Utils.AddParameter(url, "all_available", query.AllAvailable);
+        }
 
-            url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: page is null);
+        if (!string.IsNullOrEmpty(query.Search))
+        {
+            url = Utils.AddParameter(url, "search", query.Search);
+        }
 
-            if (query.Sort != null)
-            {
-                url = Utils.AddParameter(url, "sort", query.Sort);
-            }
+        url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: page is null);
 
-            if (query.Statistics != null)
-            {
-                url = Utils.AddParameter(url, "statistics", query.Statistics);
-            }
+        if (query.Sort != null)
+        {
+            url = Utils.AddParameter(url, "sort", query.Sort);
+        }
 
-            if (query.WithCustomAttributes != null)
-            {
-                url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
-            }
+        if (query.Statistics != null)
+        {
+            url = Utils.AddParameter(url, "statistics", query.Statistics);
+        }
 
-            if (query.Owned != null)
-            {
-                url = Utils.AddParameter(url, "owned", query.Owned);
-            }
+        if (query.WithCustomAttributes != null)
+        {
+            url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
+        }
 
-            if (query.MinAccessLevel != null)
-            {
-                url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
-            }
+        if (query.Owned != null)
+        {
+            url = Utils.AddParameter(url, "owned", query.Owned);
+        }
 
-            if (query.TopLevelOnly != null)
-            {
-                url = Utils.AddParameter(url, "top_level_only", query.TopLevelOnly);
-            }
+        if (query.MinAccessLevel != null)
+        {
+            url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
+        }
+
+        if (query.TopLevelOnly != null)
+        {
+            url = Utils.AddParameter(url, "top_level_only", query.TopLevelOnly);
         }
 
         return url;
@@ -109,52 +111,54 @@ public class GroupsClient : IGroupsClient
 
         url = Utils.AddPageParams(url, page, perPage);
 
-        if (query is not null)
+        if (query is null)
         {
-            if (query.SkipGroups != null && query.SkipGroups.Any())
-            {
-                foreach (var skipGroup in query.SkipGroups)
-                {
-                    url = Utils.AddParameter(url, "skip_groups[]", skipGroup);
-                }
-            }
+            return url;
+        }
 
-            if (query.AllAvailable != null)
+        if (query.SkipGroups != null && query.SkipGroups.Any())
+        {
+            foreach (var skipGroup in query.SkipGroups)
             {
-                url = Utils.AddParameter(url, "all_available", query.AllAvailable);
+                url = Utils.AddParameter(url, "skip_groups[]", skipGroup);
             }
+        }
 
-            if (!string.IsNullOrEmpty(query.Search))
-            {
-                url = Utils.AddParameter(url, "search", query.Search);
-            }
+        if (query.AllAvailable != null)
+        {
+            url = Utils.AddParameter(url, "all_available", query.AllAvailable);
+        }
 
-            url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: page is null);
+        if (!string.IsNullOrEmpty(query.Search))
+        {
+            url = Utils.AddParameter(url, "search", query.Search);
+        }
 
-            if (query.Sort != null)
-            {
-                url = Utils.AddParameter(url, "sort", query.Sort);
-            }
+        url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: page is null);
 
-            if (query.Statistics != null)
-            {
-                url = Utils.AddParameter(url, "statistics", query.Statistics);
-            }
+        if (query.Sort != null)
+        {
+            url = Utils.AddParameter(url, "sort", query.Sort);
+        }
 
-            if (query.WithCustomAttributes != null)
-            {
-                url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
-            }
+        if (query.Statistics != null)
+        {
+            url = Utils.AddParameter(url, "statistics", query.Statistics);
+        }
 
-            if (query.Owned != null)
-            {
-                url = Utils.AddParameter(url, "owned", query.Owned);
-            }
+        if (query.WithCustomAttributes != null)
+        {
+            url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
+        }
 
-            if (query.MinAccessLevel != null)
-            {
-                url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
-            }
+        if (query.Owned != null)
+        {
+            url = Utils.AddParameter(url, "owned", query.Owned);
+        }
+
+        if (query.MinAccessLevel != null)
+        {
+            url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
         }
 
         return url;
@@ -227,32 +231,34 @@ public class GroupsClient : IGroupsClient
 
         url = Utils.AddPageParams(url, page, perPage);
 
-        if (query is not null)
+        if (query is null)
         {
-            if (query.Visibility.HasValue)
-            {
-                url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLowerInvariant());
-            }
-
-            if (query.MinAccessLevel is not null)
-            {
-                url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
-            }
-
-            url = Utils.AddParameter(url, "archived", value: query.Archived);
-            url = Utils.AddParameter(url, "sort", query.Sort);
-            url = Utils.AddParameter(url, "search", query.Search);
-            url = Utils.AddParameter(url, "simple", query.Simple);
-            url = Utils.AddParameter(url, "owned", query.Owned);
-            url = Utils.AddParameter(url, "starred", query.Starred);
-            url = Utils.AddParameter(url, "with_issues_enabled", query.WithIssuesEnabled);
-            url = Utils.AddParameter(url, "with_merge_requests_enabled", query.WithMergeRequestsEnabled);
-            url = Utils.AddParameter(url, "with_shared", query.WithShared);
-            url = Utils.AddParameter(url, "include_subgroups", query.IncludeSubGroups);
-            url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
-            url = Utils.AddParameter(url, "with_security_reports ", query.WithSecurityReports);
-            url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: page is null);
+            return url;
         }
+
+        if (query.Visibility.HasValue)
+        {
+            url = Utils.AddParameter(url, "visibility", query.Visibility.ToString().ToLowerInvariant());
+        }
+
+        if (query.MinAccessLevel is not null)
+        {
+            url = Utils.AddParameter(url, "min_access_level", (int)query.MinAccessLevel);
+        }
+
+        url = Utils.AddParameter(url, "archived", value: query.Archived);
+        url = Utils.AddParameter(url, "sort", query.Sort);
+        url = Utils.AddParameter(url, "search", query.Search);
+        url = Utils.AddParameter(url, "simple", query.Simple);
+        url = Utils.AddParameter(url, "owned", query.Owned);
+        url = Utils.AddParameter(url, "starred", query.Starred);
+        url = Utils.AddParameter(url, "with_issues_enabled", query.WithIssuesEnabled);
+        url = Utils.AddParameter(url, "with_merge_requests_enabled", query.WithMergeRequestsEnabled);
+        url = Utils.AddParameter(url, "with_shared", query.WithShared);
+        url = Utils.AddParameter(url, "include_subgroups", query.IncludeSubGroups);
+        url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
+        url = Utils.AddParameter(url, "with_security_reports ", query.WithSecurityReports);
+        url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: page is null);
 
         return url;
     }
