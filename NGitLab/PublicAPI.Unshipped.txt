@@ -2377,6 +2377,8 @@ NGitLab.Models.MergeRequestDiscussionCreate
 NGitLab.Models.MergeRequestDiscussionCreate.Body -> string
 NGitLab.Models.MergeRequestDiscussionCreate.CreatedAt -> System.DateTime?
 NGitLab.Models.MergeRequestDiscussionCreate.MergeRequestDiscussionCreate() -> void
+NGitLab.Models.MergeRequestDiscussionCreate.Position.get -> NGitLab.Models.Position
+NGitLab.Models.MergeRequestDiscussionCreate.Position.set -> void
 NGitLab.Models.MergeRequestDiscussionResolve
 NGitLab.Models.MergeRequestDiscussionResolve.Id -> string
 NGitLab.Models.MergeRequestDiscussionResolve.MergeRequestDiscussionResolve() -> void
