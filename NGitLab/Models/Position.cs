@@ -21,4 +21,13 @@ public class Position
 
     [JsonPropertyName("line_range")]
     public LineRange LineRange { get; set; }
+
+    [JsonPropertyName("base_sha")]
+    public Sha1 BaseSha { get; set; }
+
+    [JsonPropertyName("head_sha")]
+    public Sha1 HeadSha { get; set; }
+
+    [JsonPropertyName("start_sha")]
+    public Sha1 StartSha { get; set; }
 }

@@ -15,6 +15,8 @@ public interface IMergeRequestCommentClient
 
     MergeRequestComment Add(MergeRequestCommentCreate comment);
 
+    MergeRequestComment Add(string discussionId, MergeRequestCommentCreate comment);
+
     MergeRequestComment Edit(long id, MergeRequestCommentEdit comment);
 
     void Delete(long id);
