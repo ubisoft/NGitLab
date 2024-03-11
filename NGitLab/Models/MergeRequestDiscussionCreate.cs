@@ -10,4 +10,7 @@ public class MergeRequestDiscussionCreate
 
     [JsonPropertyName("created_at")]
     public DateTime? CreatedAt;
+
+    [JsonPropertyName("position")]
+    public Position Position { get; set; }
 }

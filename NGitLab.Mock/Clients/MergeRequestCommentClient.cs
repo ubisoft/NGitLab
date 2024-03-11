@@ -71,6 +71,27 @@ internal sealed class MergeRequestCommentClient : ClientBase, IMergeRequestComme
         }
     }
 
+    public Models.MergeRequestComment Add(string discussionId, MergeRequestCommentCreate commentCreate)
+    {
+        EnsureUserIsAuthenticated();
+
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(_projectId, ProjectPermission.View);
+            if (project.Archived)
+                throw new GitLabForbiddenException();
+
+            var comment = new MergeRequestComment
+            {
+                Author = Context.User,
+                Body = commentCreate.Body,
+            };
+
+            GetMergeRequest().Comments.Add(comment);
+            return comment.ToMergeRequestCommentClient();
+        }
+    }
+
     public Models.MergeRequestComment Edit(long id, MergeRequestCommentEdit edit)
     {
         using (Context.BeginOperationScope())
