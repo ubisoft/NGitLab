@@ -414,6 +414,7 @@ NGitLab.IMergeRequestClient.Update(int mergeRequestIid, NGitLab.Models.MergeRequ
 NGitLab.IMergeRequestCommentClient
 NGitLab.IMergeRequestCommentClient.Add(NGitLab.Models.MergeRequestComment comment) -> NGitLab.Models.MergeRequestComment
 NGitLab.IMergeRequestCommentClient.Add(NGitLab.Models.MergeRequestCommentCreate comment) -> NGitLab.Models.MergeRequestComment
+NGitLab.IMergeRequestCommentClient.Add(string discussionId, NGitLab.Models.MergeRequestCommentCreate comment) -> NGitLab.Models.MergeRequestComment
 NGitLab.IMergeRequestCommentClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestComment>
 NGitLab.IMergeRequestCommentClient.Delete(long id) -> void
 NGitLab.IMergeRequestCommentClient.Discussions.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestDiscussion>

@@ -14,4 +14,3 @@ public class MergeRequestDiscussionCreate
     [JsonPropertyName("position")]
     public Position Position { get; set; }
 }
-
