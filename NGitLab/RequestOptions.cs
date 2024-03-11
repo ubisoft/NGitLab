@@ -81,15 +81,12 @@ public class RequestOptions
 
     public virtual async Task<WebResponse> GetResponseAsync(HttpWebRequest request, CancellationToken cancellationToken)
     {
-        CancellationTokenRegistration cancellationTokenRegistration = default;
-        if (cancellationToken.CanBeCanceled)
-        {
-            cancellationTokenRegistration = cancellationToken.Register(() => request.Abort());
-        }
+        using var cancellationTokenRegistration =
+            cancellationToken.CanBeCanceled
+            ? cancellationToken.Register(request.Abort)
+            : default;
 
-        var result = await request.GetResponseAsync().ConfigureAwait(false);
-        cancellationTokenRegistration.Dispose();
-        return result;
+        return await request.GetResponseAsync().ConfigureAwait(false);
     }
 
     internal virtual Stream GetRequestStream(HttpWebRequest request)

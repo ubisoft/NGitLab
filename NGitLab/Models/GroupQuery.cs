@@ -59,4 +59,10 @@ public class GroupQuery
     /// (optional)
     /// </summary>
     public AccessLevel? MinAccessLevel;
+
+    /// <summary>
+    /// Limit to top level groups, excluding all subgroups. Default is false.
+    /// (optional)
+    /// </summary>
+    public bool? TopLevelOnly;
 }

@@ -183,6 +183,21 @@ public sealed class GitLabTestContext : IDisposable
         }
     }
 
+    public Project CreateProject(int parentGroupId, Action<ProjectCreate> configure = null, bool initializeWithCommits = false) =>
+        CreateProject(initializeWithCommits: initializeWithCommits, configure: p =>
+        {
+            p.NamespaceId = new GroupId(parentGroupId).ValueAsString();
+            configure?.Invoke(p);
+        });
+
+    public Project CreateProject(int parentGroupId, string slug, string name = null, Action<ProjectCreate> configure = null, bool initializeWithCommits = false) =>
+        CreateProject(parentGroupId, initializeWithCommits: initializeWithCommits, configure: p =>
+        {
+            p.Path = slug;
+            p.Name = name ?? slug;
+            configure?.Invoke(p);
+        });
+
     public Group CreateGroup(Action<GroupCreate> configure = null)
     {
         var client = Client;
@@ -198,6 +213,29 @@ public sealed class GitLabTestContext : IDisposable
         configure?.Invoke(groupCreate);
         return client.Groups.Create(groupCreate);
     }
+
+    public Group CreateGroup(string slug, string name = null, Action<GroupCreate> configure = null) =>
+        CreateGroup(g =>
+        {
+            g.Path = slug;
+            g.Name = name ?? slug;
+            configure?.Invoke(g);
+        });
+
+    public Group CreateSubgroup(int parentGroupId, Action<GroupCreate> configure = null) =>
+        CreateGroup(g =>
+        {
+            g.ParentId = parentGroupId;
+            configure?.Invoke(g);
+        });
+
+    public Group CreateSubgroup(int parentGroupId, string slug, string name = null, Action<GroupCreate> configure = null) =>
+        CreateSubgroup(parentGroupId, g =>
+        {
+            g.Path = slug;
+            g.Name = name ?? slug;
+            configure?.Invoke(g);
+        });
 
     public (Project Project, MergeRequest MergeRequest) CreateMergeRequest(Action<MergeRequestCreate> configure = null, Action<ProjectCreate> configureProject = null)
     {

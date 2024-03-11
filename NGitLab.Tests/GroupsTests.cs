@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -326,14 +327,104 @@ public class GroupsTests
 
     [Test]
     [NGitLabRetry]
+    public async Task Test_page_group_returns_expected_pages()
+    {
+        // Arrange
+        // Create at least 1 group.
+        // Note: This test runs with many existing groups, so all we can reliably
+        // test is that the correct number of pages are returned.
+        using var context = await GitLabTestContext.CreateAsync();
+        var groupClient = context.Client.Groups;
+        var group = context.CreateGroup();
+
+        var perPage = 3;
+
+        // Act - Read first page
+        (var firstPage, var total1) = await groupClient.PageAsync(new(page: 1, perPage: perPage));
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(firstPage, Has.Count.AtLeast(1));
+            Assert.That(firstPage, Has.Count.AtMost(perPage));
+            Assert.That(total1, Is.AtLeast(firstPage.Count));
+        });
+
+        // Act - Read last page
+        var totalPages = ((total1.Value - 1) / perPage) + 1;
+        var expectedLastPageCount =
+            total1.Value % perPage > 0
+            ? total1.Value % perPage
+            : perPage;
+
+        (var lastPage, var total2) = await groupClient.PageAsync(new(page: totalPages, perPage: perPage));
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(lastPage, Has.Count.EqualTo(expectedLastPageCount));
+            Assert.That(total2, Is.EqualTo(total1));
+        });
+
+        // Act - Read past last page
+        (var pastLastPage, var total3) = await groupClient.PageAsync(new(page: totalPages + 1, perPage: perPage));
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(pastLastPage, Is.Empty);
+            Assert.That(total3, Is.EqualTo(total1));
+        });
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_page_group_query_TopLevelOnly_does_not_return_children()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var groupClient = context.Client.Groups;
+        var parent = context.CreateGroup();
+        var child1 = context.CreateSubgroup(parent.Id, "child1");
+
+        // Act
+        var topLevelOnly = await PageAll(groupClient, new(perPage: 100, query: new() { TopLevelOnly = true }));
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(child1.ParentId, Is.Not.Null);
+            Assert.That(topLevelOnly.Where(g => g.ParentId != null), Is.Empty);
+        });
+
+        static async Task<List<Group>> PageAll(IGroupsClient groupClient, PageQuery<GroupQuery> query)
+        {
+            query.Page = PageQuery.FirstPage;
+            var all = new List<Group>();
+            while (true)
+            {
+                (var groups, _) = await groupClient.PageAsync(query).ConfigureAwait(false);
+                if (groups.Count == 0)
+                    break;
+
+                all.AddRange(groups);
+                ++query.Page;
+            }
+
+            return all;
+        }
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task Test_group_projects_query_returns_archived()
     {
         using var context = await GitLabTestContext.CreateAsync();
         var groupClient = context.Client.Groups;
         var group = context.CreateGroup();
+        var project = context.CreateProject(group.Id, "test");
 
         var projectClient = context.Client.Projects;
-        var project = projectClient.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture) });
         projectClient.Archive(project.Id);
 
         var projects = groupClient.GetProjectsAsync(group.Id, new GroupProjectsQuery
@@ -357,22 +448,46 @@ public class GroupsTests
         using var context = await GitLabTestContext.CreateAsync();
         var groupClient = context.Client.Groups;
         var group = context.CreateGroup();
-
-        var projectClient = context.Client.Projects;
-        var project = projectClient.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture) });
-        projectClient.Create(new ProjectCreate { Name = "this is another project", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture) });
+        var project = context.CreateProject(group.Id);
+        context.CreateProject(group.Id, "this-is-another-project");
 
         var projects = groupClient.GetProjectsAsync(group.Id, new GroupProjectsQuery
         {
-            Search = "test",
+            Search = project.Name,
         }).ToArray();
 
-        group = groupClient[group.Id];
-        Assert.That(group, Is.Not.Null);
-        Assert.That(projects, Is.Not.Empty);
+        Assert.That(projects.Select(p => p.Id), Is.EquivalentTo(new int[] { project.Id }));
+    }
 
-        var projectResult = projects.Single();
-        Assert.That(projectResult.Id, Is.EqualTo(project.Id));
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_page_group_projects_returns_expected_pages()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var groupClient = context.Client.Groups;
+        var group = context.CreateGroup();
+        var allProjects = new[]
+            {
+                context.CreateProject(group.Id, "test1"),
+                context.CreateProject(group.Id, "test2"),
+                context.CreateProject(group.Id, "test3"),
+            }
+            .Select(p => p.Name)
+            .ToArray();
+
+        (var page1, var total1) = await groupClient.PageProjectsAsync(group.Id, new(page: 1, perPage: 2, new() { OrderBy = "name", Sort = "asc" }));
+        (var page2, var total2) = await groupClient.PageProjectsAsync(group.Id, new(page: 2, perPage: 2, new() { OrderBy = "name", Sort = "asc" }));
+        (var page3, var total3) = await groupClient.PageProjectsAsync(group.Id, new(page: 3, perPage: 2, new() { OrderBy = "name", Sort = "asc" }));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(page1.Select(p => p.Name), Is.EquivalentTo(allProjects.Take(2)));
+            Assert.That(total1, Is.EqualTo(3));
+            Assert.That(page2.Select(p => p.Name), Is.EquivalentTo(allProjects.Skip(2)));
+            Assert.That(total3, Is.EqualTo(3));
+            Assert.That(page3.Select(p => p.Name), Is.Empty);
+            Assert.That(total3, Is.EqualTo(3));
+        });
     }
 
     [Test]
@@ -384,9 +499,9 @@ public class GroupsTests
         var parentGroupOne = context.CreateGroup();
         var parentGroupTwo = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroupTwo.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroupOne.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroupOne.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroupTwo.Id);
 
         var subgroups = groupClient.GetSubgroupsByIdAsync(parentGroupOne.Id);
         Assert.That(subgroups.Count(), Is.EqualTo(2));
@@ -401,9 +516,9 @@ public class GroupsTests
         var parentGroupOne = context.CreateGroup();
         var parentGroupTwo = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroupOne.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroupTwo.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroupOne.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroupOne.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroupTwo.Id);
 
         var subgroups = groupClient.GetSubgroupsByFullPathAsync(parentGroupOne.FullPath);
         Assert.That(subgroups.Count(), Is.EqualTo(2));
@@ -417,9 +532,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var skippedGroupIds = new[] { subGroupTwo.Id };
@@ -442,9 +557,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var skippedGroupIds = new[] { subGroupTwo.Id };
@@ -467,9 +582,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQuery = new SubgroupQuery
@@ -492,9 +607,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQuery = new SubgroupQuery
@@ -517,9 +632,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryAllAvailable = new SubgroupQuery
@@ -542,9 +657,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryAllAvailable = new SubgroupQuery
@@ -567,9 +682,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryOrderByName = new SubgroupQuery
@@ -604,9 +719,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryOrderByName = new SubgroupQuery
@@ -641,9 +756,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryAsc = new SubgroupQuery
@@ -672,9 +787,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         // Arrange
         var groupQueryAsc = new SubgroupQuery
@@ -703,9 +818,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryWithStats = new SubgroupQuery
         {
@@ -727,9 +842,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryWithStats = new SubgroupQuery
         {
@@ -751,9 +866,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryWithCustomAttributes = new SubgroupQuery
         {
@@ -775,9 +890,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryWithCustomAttributes = new SubgroupQuery
         {
@@ -799,9 +914,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryOwned = new SubgroupQuery
         {
@@ -823,9 +938,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryOwned = new SubgroupQuery
         {
@@ -847,9 +962,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryGuest = new SubgroupQuery
         {
@@ -895,9 +1010,9 @@ public class GroupsTests
         var groupClient = context.Client.Groups;
         var parentGroup = context.CreateGroup();
 
-        var subGroupOne = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupTwo = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
-        var subGroupThree = context.CreateGroup(configure: group => group.ParentId = parentGroup.Id);
+        var subGroupOne = context.CreateSubgroup(parentGroup.Id);
+        var subGroupTwo = context.CreateSubgroup(parentGroup.Id);
+        var subGroupThree = context.CreateSubgroup(parentGroup.Id);
 
         var groupQueryGuest = new SubgroupQuery
         {
@@ -933,5 +1048,131 @@ public class GroupsTests
         Assert.That(resultDeveloper.Any(), Is.True);
         Assert.That(resultMantainer.Any(), Is.True);
         Assert.That(resultOwner.Any(), Is.True);
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_page_subgroup_returns_expected_pages()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var groupClient = context.Client.Groups;
+        var parent = context.CreateGroup();
+        var child1 = context.CreateSubgroup(parent.Id, "child1");
+        var child2 = context.CreateSubgroup(parent.Id, "child2");
+        var child3 = context.CreateSubgroup(parent.Id, "child3");
+        var grandchild = context.CreateSubgroup(child1.Id, "grandchild");
+
+        var allChildren = new[] { child1, child2, child3, }
+            .Select(g => g.Name)
+            .ToArray();
+
+        var firstPageQuery = new PageQuery<SubgroupQuery>(page: 1, perPage: 2, new() { OrderBy = "name", Sort = "asc" });
+        var lastPageQuery = new PageQuery<SubgroupQuery>(page: 2, perPage: 2, new() { OrderBy = "name", Sort = "asc" });
+        var allInOnePageQuery = new PageQuery<SubgroupQuery>(page: 1, perPage: 100, new() { OrderBy = "name", Sort = "asc" });
+        var pageZeroQuery = new PageQuery<SubgroupQuery>(page: 0, query: new() { OrderBy = "name", Sort = "asc" });
+        var defaultQuery = new PageQuery<SubgroupQuery>(query: new() { OrderBy = "name", Sort = "asc" });
+
+        // Act
+        (var firstPage, var total1) = await groupClient.PageSubgroupsAsync(parent.Id, firstPageQuery);
+        (var lastPage, var total2) = await groupClient.PageSubgroupsAsync(parent.FullPath, lastPageQuery);
+        (var allInOnePage, var total3) = await groupClient.PageSubgroupsAsync(parent.Id, allInOnePageQuery);
+        (var pageZero, var total4) = await groupClient.PageSubgroupsAsync(parent.FullPath, pageZeroQuery);
+        (var defaultPage, var total5) = await groupClient.PageSubgroupsAsync(parent.Id, defaultQuery);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(firstPage.Select(g => g.Name), Is.EquivalentTo(allChildren.Skip(0).Take(2)));
+            Assert.That(total1, Is.EqualTo(allChildren.Length));
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(lastPage.Select(g => g.Name), Is.EquivalentTo(allChildren.Skip(2).Take(2)));
+            Assert.That(total2, Is.EqualTo(allChildren.Length));
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(allInOnePage.Select(g => g.Name), Is.EquivalentTo(allChildren));
+            Assert.That(total3, Is.EqualTo(allChildren.Length));
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(pageZero.Select(g => g.Name), Is.EquivalentTo(allChildren));
+            Assert.That(total4, Is.EqualTo(allChildren.Length));
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(defaultPage.Select(g => g.Name), Is.EquivalentTo(allChildren));
+            Assert.That(total5, Is.EqualTo(allChildren.Length));
+        });
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_page_subgroup_including_descendants_returns_expected_pages()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var groupClient = context.Client.Groups;
+        var parent = context.CreateGroup();
+        var child1 = context.CreateSubgroup(parent.Id, "child1");
+        var child2 = context.CreateSubgroup(parent.Id, "child2");
+        var child3 = context.CreateSubgroup(parent.Id, "child3");
+        var grandchild1 = context.CreateSubgroup(child1.Id, "grandchild1");
+        var grandchild2 = context.CreateSubgroup(child2.Id, "grandchild2");
+
+        var allDescendants = new[] { child1, child2, child3, grandchild1, grandchild2 }
+            .Select(g => g.Name)
+            .Order(StringComparer.Ordinal)
+            .ToArray();
+
+        var firstPageQuery = new PageQuery<SubgroupQuery>(page: 1, perPage: 3, new() { IncludeDescendants = true, OrderBy = "name" });
+        var lastPageQuery = new PageQuery<SubgroupQuery>(page: 2, perPage: 3, new() { IncludeDescendants = true, OrderBy = "name" });
+        var allInOnePageQuery = new PageQuery<SubgroupQuery>(page: 1, perPage: 100, new() { IncludeDescendants = true, OrderBy = "name" });
+        var pageZeroQuery = new PageQuery<SubgroupQuery>(page: 0, query: new() { IncludeDescendants = true, OrderBy = "name" });
+        var defaultQuery = new PageQuery<SubgroupQuery>(query: new() { IncludeDescendants = true, OrderBy = "name" });
+
+        // Act
+        (var firstPage, var total1) = await groupClient.PageSubgroupsAsync(parent.Id, firstPageQuery);
+        (var lastPage, var total2) = await groupClient.PageSubgroupsAsync(parent.FullPath, lastPageQuery);
+        (var allInOnePage, var total3) = await groupClient.PageSubgroupsAsync(parent.Id, allInOnePageQuery);
+        (var pageZero, var total4) = await groupClient.PageSubgroupsAsync(parent.FullPath, pageZeroQuery);
+        (var defaultPage, var total5) = await groupClient.PageSubgroupsAsync(parent.Id, defaultQuery);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(firstPage.Select(g => g.Name), Is.EquivalentTo(allDescendants.Skip(0).Take(3)));
+            Assert.That(total1, Is.EqualTo(allDescendants.Length));
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(lastPage.Select(g => g.Name), Is.EquivalentTo(allDescendants.Skip(3).Take(3)));
+            Assert.That(total2, Is.EqualTo(allDescendants.Length));
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(allInOnePage.Select(g => g.Name), Is.EquivalentTo(allDescendants));
+            Assert.That(total3, Is.EqualTo(allDescendants.Length));
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(pageZero.Select(g => g.Name), Is.EquivalentTo(allDescendants));
+            Assert.That(total4, Is.EqualTo(allDescendants.Length));
+        });
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(defaultPage.Select(g => g.Name), Is.EquivalentTo(allDescendants));
+            Assert.That(total5, Is.EqualTo(allDescendants.Length));
+        });
     }
 }
