@@ -25,6 +25,8 @@ public class MergeRequestCommentClient : IMergeRequestCommentClient
 
     public MergeRequestComment Add(MergeRequestCommentCreate comment) => _api.Post().With(comment).To<MergeRequestComment>(_notesPath);
 
+    public MergeRequestComment Add(string discussionId, MergeRequestCommentCreate comment) => _api.Post().With(comment).To<MergeRequestComment>(_discussionsPath + "/" + discussionId + "/notes");
+
     public MergeRequestComment Edit(long id, MergeRequestCommentEdit comment) => _api.Put().With(comment).To<MergeRequestComment>(_notesPath + "/" + id.ToString(CultureInfo.InvariantCulture));
 
     public void Delete(long id) => _api.Delete().Execute(_notesPath + "/" + id.ToString(CultureInfo.InvariantCulture));

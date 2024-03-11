@@ -688,6 +688,7 @@ NGitLab.Impl.MergeRequestClient.Update(int mergeRequestIid, NGitLab.Models.Merge
 NGitLab.Impl.MergeRequestCommentClient
 NGitLab.Impl.MergeRequestCommentClient.Add(NGitLab.Models.MergeRequestComment comment) -> NGitLab.Models.MergeRequestComment
 NGitLab.Impl.MergeRequestCommentClient.Add(NGitLab.Models.MergeRequestCommentCreate comment) -> NGitLab.Models.MergeRequestComment
+NGitLab.Impl.MergeRequestCommentClient.Add(string discussionId, NGitLab.Models.MergeRequestCommentCreate comment) -> NGitLab.Models.MergeRequestComment
 NGitLab.Impl.MergeRequestCommentClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestComment>
 NGitLab.Impl.MergeRequestCommentClient.Delete(long id) -> void
 NGitLab.Impl.MergeRequestCommentClient.Discussions.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestDiscussion>
@@ -2698,6 +2699,10 @@ NGitLab.Models.PipelineVariable.PipelineVariable() -> void
 NGitLab.Models.PipelineVariable.Value -> string
 NGitLab.Models.PipelineVariable.VariableType -> string
 NGitLab.Models.Position
+NGitLab.Models.Position.BaseSha.get -> NGitLab.Sha1
+NGitLab.Models.Position.BaseSha.set -> void
+NGitLab.Models.Position.HeadSha.get -> NGitLab.Sha1
+NGitLab.Models.Position.HeadSha.set -> void
 NGitLab.Models.Position.LineRange.get -> NGitLab.Models.LineRange
 NGitLab.Models.Position.LineRange.set -> void
 NGitLab.Models.Position.NewLine.get -> int?
@@ -2711,6 +2716,8 @@ NGitLab.Models.Position.OldPath.set -> void
 NGitLab.Models.Position.Position() -> void
 NGitLab.Models.Position.PositionType.get -> NGitLab.DynamicEnum<NGitLab.Models.PositionType>
 NGitLab.Models.Position.PositionType.set -> void
+NGitLab.Models.Position.StartSha.get -> NGitLab.Sha1
+NGitLab.Models.Position.StartSha.set -> void
 NGitLab.Models.PositionType
 NGitLab.Models.PositionType.Image = 1 -> NGitLab.Models.PositionType
 NGitLab.Models.PositionType.Text = 0 -> NGitLab.Models.PositionType
