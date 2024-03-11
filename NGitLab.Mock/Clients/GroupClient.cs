@@ -132,7 +132,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         if (perPage < PageQuery.MinPerPage)
         {
             // Max isn't enforced the same way
-            throw new GitLabBadRequestException("per_page has a value not allowed");
+            throw new GitLabBadRequestException($"per_page value ({perPage}) is invalid: cannot be lower than MinPerPage ({PageQuery.MinPerPage})");
         }
 
         var all = Get(query?.Query).ToArray();
@@ -247,7 +247,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         var perPage = query?.PerPage ?? PageQuery.DefaultPerPage;
         if (perPage < 1)
         {
-            throw new GitLabBadRequestException("per_page has a value not allowed");
+            throw new GitLabBadRequestException($"per_page value ({perPage}) is invalid: cannot be lower than MinPerPage ({PageQuery.MinPerPage})");
         }
 
         var all = SearchProjectsAsync(groupId, query?.Query).ToArray();
@@ -387,7 +387,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         var perPage = query?.PerPage ?? PageQuery.DefaultPerPage;
         if (perPage < 1)
         {
-            throw new GitLabBadRequestException("per_page has a value not allowed");
+            throw new GitLabBadRequestException($"per_page value ({perPage}) is invalid: cannot be lower than MinPerPage ({PageQuery.MinPerPage})");
         }
 
         var all = GetSubgroupsAsync(groupId, query?.Query).ToArray();
