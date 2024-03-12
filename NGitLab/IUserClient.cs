@@ -18,6 +18,8 @@ public interface IUserClient
 
     User Create(UserUpsert user);
 
+    Task<User> CreateAsync(UserUpsert user, CancellationToken cancellationToken = default);
+
     User Update(int id, UserUpsert user);
 
     /// <summary>
