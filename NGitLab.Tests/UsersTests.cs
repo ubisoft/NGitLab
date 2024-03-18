@@ -54,6 +54,19 @@ public class UsersTests
 
     [Test]
     [NGitLabRetry]
+    public async Task CreateAsync()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var users = context.AdminClient.Users;
+
+        var addedUser = await CreateNewUserAsync(context);
+        Assert.That(addedUser.Bio, Is.EqualTo("bio"));
+
+        await GitLabTestContext.RetryUntilAsync(() => users.Get(addedUser.Username).ToList(), users => users.Any(), TimeSpan.FromMinutes(2));
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task GetUserByEmailDoesNotWorkOnNonAdminClient()
     {
         using var context = await GitLabTestContext.CreateAsync();
@@ -182,10 +195,10 @@ public class UsersTests
         Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
     }
 
-    private static User CreateNewUser(GitLabTestContext context)
+    private static UserUpsert CreateNewUserUpsert(GitLabTestContext context)
     {
         var randomNumber = context.GetRandomNumber().ToString(CultureInfo.InvariantCulture);
-        return context.AdminClient.Users.Create(new UserUpsert
+        return new UserUpsert
         {
             Email = $"test{randomNumber}@test.pl",
             Bio = "bio",
@@ -201,7 +214,17 @@ public class UsersTests
             Twitter = "twitter",
             Username = $"ngitlabtestuser{randomNumber}",
             WebsiteURL = "https://www.example.com",
-        });
+        };
+    }
+
+    private static User CreateNewUser(GitLabTestContext context)
+    {
+        return context.AdminClient.Users.Create(CreateNewUserUpsert(context));
+    }
+
+    private static Task<User> CreateNewUserAsync(GitLabTestContext context)
+    {
+        return context.AdminClient.Users.CreateAsync(CreateNewUserUpsert(context));
     }
 
     // Comes from https://github.com/meziantou/Meziantou.GitLabClient/blob/main/test/Meziantou.GitLabClient.Tests/Internals/RsaSshKey.cs

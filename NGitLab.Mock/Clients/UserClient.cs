@@ -64,6 +64,12 @@ internal sealed class UserClient : ClientBase, IUserClient
         }
     }
 
+    public async Task<Models.User> CreateAsync(UserUpsert user, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return Create(user);
+    }
+
     public UserToken CreateToken(UserTokenCreate tokenRequest)
     {
         throw new NotSupportedException();
