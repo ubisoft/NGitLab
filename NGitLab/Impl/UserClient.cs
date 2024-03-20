@@ -27,6 +27,21 @@ public class UserClient : IUserClient
         return _api.Get().ToAsync<User>(User.Url + "/" + id.ToStringInvariant(), cancellationToken);
     }
 
+    public async Task<User> GetByUserNameAsync(string username, CancellationToken cancellationToken = default)
+    {
+        // This query returns 0 or 1 user.
+        await foreach (var u in _api.Get().GetAllAsync<User>(User.Url + "?username=" + username).WithCancellation(cancellationToken).ConfigureAwait(false))
+        {
+            return u;
+        }
+
+        throw new GitLabException("User not found.")
+        {
+            StatusCode = System.Net.HttpStatusCode.NotFound,
+            ErrorMessage = "User not found.",
+        };
+    }
+
     public IEnumerable<User> Get(string username) => _api.Get().GetAll<User>(User.Url + "?username=" + username);
 
     public IEnumerable<User> Get(UserQuery query)
