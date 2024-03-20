@@ -20,6 +20,11 @@ public class GitLabGroup : GitLabObject<GitLabConfig>
     public string Name { get; set; }
 
     /// <summary>
+    /// Path/slug. Defaults to <see cref="Slug.Create(Name)"/>.
+    /// </summary>
+    public string Path { get; set; }
+
+    /// <summary>
     /// Parent namespace
     /// </summary>
     public string Namespace { get; set; }

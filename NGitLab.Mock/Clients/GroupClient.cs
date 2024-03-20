@@ -34,8 +34,13 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             var newGroup = new Group
             {
                 Name = group.Name,
+                Path = group.Path,
                 Description = group.Description,
                 Visibility = group.Visibility,
+                LfsEnabled = group.LfsEnabled,
+                RequestAccessEnabled = group.RequestAccessEnabled,
+                SharedRunnersLimit = TimeSpan.FromMinutes(group.SharedRunnersMinutesLimit ?? 0),
+
                 Permissions =
                 {
                     new Permission(Context.User, AccessLevel.Owner),

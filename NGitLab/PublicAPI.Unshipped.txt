@@ -379,17 +379,28 @@ NGitLab.ILintClient.ValidateCIYamlContentAsync(string projectId, string yamlCont
 NGitLab.ILintClient.ValidateProjectCIConfigurationAsync(string projectId, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
 NGitLab.IMembersClient
 NGitLab.IMembersClient.AddMemberToGroup(string groupId, NGitLab.Models.GroupMemberCreate user) -> NGitLab.Models.Membership
+NGitLab.IMembersClient.AddMemberToGroupAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.GroupMemberCreate user, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.IMembersClient.AddMemberToProject(string projectId, NGitLab.Models.ProjectMemberCreate user) -> NGitLab.Models.Membership
+NGitLab.IMembersClient.AddMemberToProjectAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectMemberCreate user, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.IMembersClient.GetMemberOfGroup(string groupId, string userId) -> NGitLab.Models.Membership
+NGitLab.IMembersClient.GetMemberOfGroup(string groupId, string userId, bool includeInheritedMembers) -> NGitLab.Models.Membership
+NGitLab.IMembersClient.GetMemberOfGroupAsync(NGitLab.Models.GroupId groupId, long userId, bool includeInheritedMembers = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.IMembersClient.GetMemberOfProject(string projectId, string userId) -> NGitLab.Models.Membership
 NGitLab.IMembersClient.GetMemberOfProject(string projectId, string userId, bool includeInheritedMembers) -> NGitLab.Models.Membership
+NGitLab.IMembersClient.GetMemberOfProjectAsync(NGitLab.Models.ProjectId projectId, long userId, bool includeInheritedMembers = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfGroup(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfGroup(string groupId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
+NGitLab.IMembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers = false) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfNamespace(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
+NGitLab.IMembersClient.OfProjectAsync(NGitLab.Models.ProjectId projectId, bool includeInheritedMembers = false) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
+NGitLab.IMembersClient.RemoveMemberFromGroupAsync(NGitLab.Models.GroupId groupId, long userId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.IMembersClient.RemoveMemberFromProjectAsync(NGitLab.Models.ProjectId projectId, long userId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IMembersClient.UpdateMemberOfGroup(string groupId, NGitLab.Models.GroupMemberUpdate user) -> NGitLab.Models.Membership
+NGitLab.IMembersClient.UpdateMemberOfGroupAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.GroupMemberUpdate user, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.IMembersClient.UpdateMemberOfProject(string projectId, NGitLab.Models.ProjectMemberUpdate user) -> NGitLab.Models.Membership
+NGitLab.IMembersClient.UpdateMemberOfProjectAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectMemberUpdate user, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.IMergeRequestApprovalClient
 NGitLab.IMergeRequestApprovalClient.Approvals.get -> NGitLab.Models.MergeRequestApprovals
 NGitLab.IMergeRequestApprovalClient.ApproveMergeRequest(NGitLab.Models.MergeRequestApproveRequest request = null) -> NGitLab.Models.MergeRequestApprovals
@@ -658,18 +669,29 @@ NGitLab.Impl.LintClient.ValidateCIYamlContentAsync(string projectId, string yaml
 NGitLab.Impl.LintClient.ValidateProjectCIConfigurationAsync(string projectId, NGitLab.Models.LintCIOptions options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.LintCI>
 NGitLab.Impl.MembersClient
 NGitLab.Impl.MembersClient.AddMemberToGroup(string groupId, NGitLab.Models.GroupMemberCreate user) -> NGitLab.Models.Membership
+NGitLab.Impl.MembersClient.AddMemberToGroupAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.GroupMemberCreate user, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.AddMemberToProject(string projectId, NGitLab.Models.ProjectMemberCreate user) -> NGitLab.Models.Membership
+NGitLab.Impl.MembersClient.AddMemberToProjectAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectMemberCreate user, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.GetMemberOfGroup(string groupId, string userId) -> NGitLab.Models.Membership
+NGitLab.Impl.MembersClient.GetMemberOfGroup(string groupId, string userId, bool includeInheritedMembers) -> NGitLab.Models.Membership
+NGitLab.Impl.MembersClient.GetMemberOfGroupAsync(NGitLab.Models.GroupId groupId, long userId, bool includeInheritedMembers = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.GetMemberOfProject(string projectId, string userId) -> NGitLab.Models.Membership
 NGitLab.Impl.MembersClient.GetMemberOfProject(string projectId, string userId, bool includeInheritedMembers) -> NGitLab.Models.Membership
+NGitLab.Impl.MembersClient.GetMemberOfProjectAsync(NGitLab.Models.ProjectId projectId, long userId, bool includeInheritedMembers = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.MembersClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.MembersClient.OfGroup(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfGroup(string groupId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
+NGitLab.Impl.MembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers = false) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfNamespace(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
+NGitLab.Impl.MembersClient.OfProjectAsync(NGitLab.Models.ProjectId projectId, bool includeInheritedMembers = false) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
+NGitLab.Impl.MembersClient.RemoveMemberFromGroupAsync(NGitLab.Models.GroupId groupId, long userId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.Impl.MembersClient.RemoveMemberFromProjectAsync(NGitLab.Models.ProjectId projectId, long userId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.MembersClient.UpdateMemberOfGroup(string groupId, NGitLab.Models.GroupMemberUpdate user) -> NGitLab.Models.Membership
+NGitLab.Impl.MembersClient.UpdateMemberOfGroupAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.GroupMemberUpdate user, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.UpdateMemberOfProject(string projectId, NGitLab.Models.ProjectMemberUpdate user) -> NGitLab.Models.Membership
+NGitLab.Impl.MembersClient.UpdateMemberOfProjectAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectMemberUpdate user, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.Impl.MergeRequestApprovalClient
 NGitLab.Impl.MergeRequestApprovalClient.Approvals.get -> NGitLab.Models.MergeRequestApprovals
 NGitLab.Impl.MergeRequestApprovalClient.ApproveMergeRequest(NGitLab.Models.MergeRequestApproveRequest request = null) -> NGitLab.Models.MergeRequestApprovals
@@ -931,6 +953,7 @@ NGitLab.Impl.UserClient.Delete(int userId) -> void
 NGitLab.Impl.UserClient.Get(NGitLab.UserQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.Impl.UserClient.Get(string username) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.Impl.UserClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.User>
+NGitLab.Impl.UserClient.GetByUserNameAsync(string username, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.User>
 NGitLab.Impl.UserClient.GetCurrentUserAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Session>
 NGitLab.Impl.UserClient.GetLastActivityDatesAsync(System.DateTimeOffset? from = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.LastActivityDate>
 NGitLab.Impl.UserClient.Search(string query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
@@ -1141,6 +1164,7 @@ NGitLab.IUserClient.Delete(int id) -> void
 NGitLab.IUserClient.Get(NGitLab.UserQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.IUserClient.Get(string username) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
 NGitLab.IUserClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.User>
+NGitLab.IUserClient.GetByUserNameAsync(string username, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.User>
 NGitLab.IUserClient.GetCurrentUserAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Session>
 NGitLab.IUserClient.GetLastActivityDatesAsync(System.DateTimeOffset? from = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.LastActivityDate>
 NGitLab.IUserClient.Search(string query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.User>
