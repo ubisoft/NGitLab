@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using System.IO;
+using System.Net;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NGitLab.Mock.Config;
 using NGitLab.Models;
@@ -174,5 +176,75 @@ public class ProjectsMockTests
         project.Should().NotBeNull();
         project.Permissions.ProjectAccess.Should().BeNull();
         project.Permissions.GroupAccess.AccessLevel.Should().Be(AccessLevel.Maintainer);
+    }
+
+    [Test]
+    public void CreateAsync_WhenProjectPathAlreadyExists_ItThrows()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath("Test/duplicate")
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+
+        // Act
+        var ex = Assert.ThrowsAsync<GitLabException>(() =>
+            projectClient.CreateAsync(new()
+            {
+                Path = "DUPLICATE", // GitLab path is case-INsensitive
+                Name = "project2",
+            }));
+
+        // Assert
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(ex.ErrorMessage, Contains.Substring("has already been taken"));
+    }
+
+    [Test]
+    public void CreateAsync_WhenProjectNameAlreadyExists_ItThrows()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath("Test/duplicate")
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+
+        // Act
+        var ex = Assert.ThrowsAsync<GitLabException>(() =>
+            projectClient.CreateAsync(new()
+            {
+                Path = "project2",
+                Name = "duplicate", // GitLab name is case-Sensitive
+            }));
+
+        // Assert
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(ex.ErrorMessage, Contains.Substring("has already been taken"));
+    }
+
+    [Test]
+    public async Task CreateAsync_WhenProjectNameOfDifferentCaseAlreadyExists_ItWorks()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath("Test/not_duplicate")
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+
+        // Act
+        var newProject = await projectClient.CreateAsync(new()
+        {
+            Path = "project2",
+            Name = "NOT_DUPLICATE", // GitLab name is case-Sensitive
+        });
+
+        // Assert
+        Assert.That(newProject.Name, Is.EqualTo("NOT_DUPLICATE"));
     }
 }

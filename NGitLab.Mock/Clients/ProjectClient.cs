@@ -23,11 +23,7 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(id, ProjectPermission.View);
-                if (project == null || !project.CanUserViewProject(Context.User))
-                    throw new GitLabNotFoundException();
-
-                return project.ToClientProject(Context.User);
+                return GetProject(id, ProjectPermission.View).ToClientProject(Context.User);
             }
         }
     }
@@ -38,8 +34,7 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         {
             using (Context.BeginOperationScope())
             {
-                var project = GetProject(fullName, ProjectPermission.View);
-                return project.ToClientProject(Context.User);
+                return GetProject(fullName, ProjectPermission.View).ToClientProject(Context.User);
             }
         }
     }
@@ -81,21 +76,37 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
     {
         using (Context.BeginOperationScope())
         {
+            project.Name ??= project.Path;
+
             var parentGroup = GetParentGroup(project.NamespaceId);
 
-            var newProject = new Project(project.Name)
+            var newProject = new Project(name: project.Name, path: project.Path)
             {
                 Description = project.Description,
                 Visibility = project.VisibilityLevel,
                 Permissions =
                 {
-                    new Permission(Context.User, AccessLevel.Owner),
+                    new(Context.User, AccessLevel.Owner),
                 },
             };
+
+            newProject.Topics = project.Topics?.ToArray() ?? newProject.Topics;
+            newProject.Tags = project.Tags?.ToArray() ?? newProject.Tags;
+
+            if (project.DefaultBranch != null)
+            {
+                newProject.DefaultBranch = project.DefaultBranch;
+            }
 
             parentGroup.Projects.Add(newProject);
             return newProject.ToClientProject(Context.User);
         }
+    }
+
+    public async Task<Models.Project> CreateAsync(ProjectCreate project, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return Create(project);
     }
 
     private Group GetParentGroup(string namespaceId)
@@ -123,6 +134,16 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         using (Context.BeginOperationScope())
         {
             var project = GetProject(id, ProjectPermission.Delete);
+            project.Remove();
+        }
+    }
+
+    public async Task DeleteAsync(ProjectId projectId, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(projectId, ProjectPermission.Delete);
             project.Remove();
         }
     }
@@ -224,25 +245,21 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         }
     }
 
-    public Models.Project GetById(int id, SingleProjectQuery query)
+    public Models.Project GetById(int id, SingleProjectQuery query) => this[id];
+
+    public Task<Models.Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default) =>
+        GetAsync(new ProjectId(id), query, cancellationToken);
+
+    public Task<Models.Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default) =>
+        GetAsync(new ProjectId(path), query, cancellationToken);
+
+    public async Task<Models.Project> GetAsync(ProjectId projectId, SingleProjectQuery query = null, CancellationToken cancellationToken = default)
     {
+        await Task.Yield();
         using (Context.BeginOperationScope())
         {
-            return GetProject(id, ProjectPermission.View).ToClientProject(Context.User);
+            return GetProject(projectId, ProjectPermission.View).ToClientProject(Context.User);
         }
-    }
-
-    [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
-    public async Task<Models.Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default)
-    {
-        await Task.Yield();
-        return GetById(id, query);
-    }
-
-    public async Task<Models.Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default)
-    {
-        await Task.Yield();
-        return this[path];
     }
 
     public IEnumerable<Models.Project> GetForks(string id, ForkedProjectQuery query)
@@ -354,6 +371,12 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
 
             return project.ToClientProject(Context.User);
         }
+    }
+
+    public async Task<Models.Project> UpdateAsync(ProjectId projectId, ProjectUpdate projectUpdate, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return Update(projectId.ValueAsString(), projectUpdate);
     }
 
     public UploadedProjectFile UploadFile(string id, FormDataContent data)

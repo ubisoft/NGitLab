@@ -813,10 +813,13 @@ NGitLab.Impl.ProjectClient
 NGitLab.Impl.ProjectClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.Archive(int id) -> void
 NGitLab.Impl.ProjectClient.Create(NGitLab.Models.ProjectCreate project) -> NGitLab.Models.Project
+NGitLab.Impl.ProjectClient.CreateAsync(NGitLab.Models.ProjectCreate project, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.Delete(int id) -> void
+NGitLab.Impl.ProjectClient.DeleteAsync(NGitLab.Models.ProjectId projectId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.ProjectClient.Fork(string id, NGitLab.Models.ForkProject forkProject) -> NGitLab.Models.Project
 NGitLab.Impl.ProjectClient.ForkAsync(string id, NGitLab.Models.ForkProject forkProject, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.Get(NGitLab.Models.ProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
+NGitLab.Impl.ProjectClient.GetAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.SingleProjectQuery query = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetAsync(NGitLab.Models.ProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetById(int id, NGitLab.Models.SingleProjectQuery query) -> NGitLab.Models.Project
 NGitLab.Impl.ProjectClient.GetByIdAsync(int id, NGitLab.Models.SingleProjectQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
@@ -830,6 +833,7 @@ NGitLab.Impl.ProjectClient.this[int id].get -> NGitLab.Models.Project
 NGitLab.Impl.ProjectClient.this[string fullName].get -> NGitLab.Models.Project
 NGitLab.Impl.ProjectClient.Unarchive(int id) -> void
 NGitLab.Impl.ProjectClient.Update(string id, NGitLab.Models.ProjectUpdate projectUpdate) -> NGitLab.Models.Project
+NGitLab.Impl.ProjectClient.UpdateAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectUpdate projectUpdate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.UploadFile(string id, NGitLab.Models.FormDataContent data) -> NGitLab.Models.UploadedProjectFile
 NGitLab.Impl.ProjectClient.Visible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.ProjectHooksClient
@@ -1011,10 +1015,13 @@ NGitLab.IProjectClient
 NGitLab.IProjectClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IProjectClient.Archive(int id) -> void
 NGitLab.IProjectClient.Create(NGitLab.Models.ProjectCreate project) -> NGitLab.Models.Project
+NGitLab.IProjectClient.CreateAsync(NGitLab.Models.ProjectCreate project, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.IProjectClient.Delete(int id) -> void
+NGitLab.IProjectClient.DeleteAsync(NGitLab.Models.ProjectId projectId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IProjectClient.Fork(string id, NGitLab.Models.ForkProject forkProject) -> NGitLab.Models.Project
 NGitLab.IProjectClient.ForkAsync(string id, NGitLab.Models.ForkProject forkProject, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.IProjectClient.Get(NGitLab.Models.ProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
+NGitLab.IProjectClient.GetAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.SingleProjectQuery query = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetAsync(NGitLab.Models.ProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetById(int id, NGitLab.Models.SingleProjectQuery query) -> NGitLab.Models.Project
 NGitLab.IProjectClient.GetByIdAsync(int id, NGitLab.Models.SingleProjectQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
@@ -1027,6 +1034,7 @@ NGitLab.IProjectClient.this[int id].get -> NGitLab.Models.Project
 NGitLab.IProjectClient.this[string fullName].get -> NGitLab.Models.Project
 NGitLab.IProjectClient.Unarchive(int id) -> void
 NGitLab.IProjectClient.Update(string id, NGitLab.Models.ProjectUpdate projectUpdate) -> NGitLab.Models.Project
+NGitLab.IProjectClient.UpdateAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectUpdate projectUpdate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.IProjectClient.UploadFile(string id, NGitLab.Models.FormDataContent data) -> NGitLab.Models.UploadedProjectFile
 NGitLab.IProjectClient.Visible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IProjectHooksClient

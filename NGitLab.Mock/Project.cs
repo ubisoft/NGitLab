@@ -8,13 +8,19 @@ namespace NGitLab.Mock;
 public sealed class Project : GitLabObject
 {
     public Project()
-        : this(Guid.NewGuid().ToString("N"))
+        : this(Guid.NewGuid().ToString("N"), path: null)
     {
     }
 
     public Project(string name)
+        : this(name, path: null)
+    {
+    }
+
+    public Project(string name, string path)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
+        Path = path ?? Slug.Create(Name);
 
         Permissions = new PermissionCollection(this);
         LintCIs = new LintCICollection(this);
@@ -124,7 +130,7 @@ public sealed class Project : GitLabObject
 
     public Group Group => (Group)Parent;
 
-    public string Path => Slug.Create(Name);
+    public string Path { get; internal set; }
 
     public string PathWithNamespace => Group == null ? Path : (Group.PathWithNameSpace + "/" + Path);
 
