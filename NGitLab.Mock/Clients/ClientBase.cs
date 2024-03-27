@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients;
 
@@ -31,6 +32,8 @@ internal abstract class ClientBase
         {
             int idInt => Server.AllGroups.FindById(idInt),
             string idStr => Server.AllGroups.FindGroup(idStr),
+            IIdOrPathAddressable gid when gid.Path != null => Server.AllGroups.FindByNamespacedPath(gid.Path),
+            IIdOrPathAddressable gid => Server.AllGroups.FindById(gid.Id),
             _ => throw new ArgumentException($"Id of type '{id.GetType()}' is not supported"),
         };
 
@@ -77,6 +80,8 @@ internal abstract class ClientBase
         {
             int idInt => Server.AllProjects.FindById(idInt),
             string idStr => Server.AllProjects.FindProject(idStr),
+            IIdOrPathAddressable pid when pid.Path != null => Server.AllProjects.FindByNamespacedPath(pid.Path),
+            IIdOrPathAddressable pid => Server.AllProjects.FindById(pid.Id),
             _ => throw new ArgumentException($"Id of type '{id.GetType()}' is not supported"),
         };
 

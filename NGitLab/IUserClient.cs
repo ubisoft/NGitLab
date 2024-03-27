@@ -16,6 +16,8 @@ public interface IUserClient
 
     Task<User> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 
+    Task<User> GetByUserNameAsync(string username, CancellationToken cancellationToken = default);
+
     User Create(UserUpsert user);
 
     Task<User> CreateAsync(UserUpsert user, CancellationToken cancellationToken = default);

@@ -17,7 +17,7 @@ public sealed class UserCollection : Collection<User>
         if (int.TryParse(id, NumberStyles.None, CultureInfo.InvariantCulture, out var value))
             return GetById(value);
 
-        return null;
+        return this.FirstOrDefault(u => StringComparer.OrdinalIgnoreCase.Equals(u.UserName, id));
     }
 
     public User GetById(int id) => this.FirstOrDefault(user => user.Id == id);
@@ -46,7 +46,30 @@ public sealed class UserCollection : Collection<User>
         }
         else if (GetById(user.Id) != null)
         {
-            throw new GitLabException("User already exists");
+            // Cannot do this in GitLab
+            throw new NotSupportedException("Duplicate user id");
+        }
+
+        // Check for conflicts.
+        // Mimics GitLab behavior by checking email first, then username...
+        if (this.Any(u => StringComparer.OrdinalIgnoreCase.Equals(u.Email, user.Email)))
+        {
+            throw new GitLabException("Duplicate user email")
+            {
+                // actual GitLab error
+                StatusCode = System.Net.HttpStatusCode.Conflict,
+                ErrorMessage = "Email has already been taken",
+            };
+        }
+
+        if (this.Any(u => StringComparer.OrdinalIgnoreCase.Equals(u.UserName, user.UserName)))
+        {
+            throw new GitLabException("Duplicate user name")
+            {
+                // actual GitLab error
+                StatusCode = System.Net.HttpStatusCode.Conflict,
+                ErrorMessage = "Username has already been taken",
+            };
         }
 
         Server.Groups.Add(new Group(user));

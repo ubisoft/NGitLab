@@ -57,6 +57,8 @@ internal sealed class UserClient : ClientBase, IUserClient
             {
                 Name = user.Name,
                 Email = user.Email,
+                State = UserState.active,
+                IsAdmin = user.IsAdmin ?? false,
             };
 
             Server.Users.Add(u);
@@ -158,8 +160,10 @@ internal sealed class UserClient : ClientBase, IUserClient
             var user = Server.Users.GetById(id);
             if (user != null)
             {
-                user.Name = userUpsert.Name;
-                user.Email = userUpsert.Email;
+                // user.UserName = userUpsert.Username ?? user.UserName; // TODO
+                user.Name = userUpsert.Name ?? user.Name;
+                user.Email = userUpsert.Email ?? user.Email;
+                user.IsAdmin = userUpsert.IsAdmin ?? user.IsAdmin;
 
                 return user.ToClientUser();
             }
@@ -172,6 +176,17 @@ internal sealed class UserClient : ClientBase, IUserClient
     {
         await Task.Yield();
         return this[id];
+    }
+
+    public async Task<Models.User> GetByUserNameAsync(string username, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return Get(username).SingleOrDefault()
+            ?? throw new GitLabException("User not found.")
+            {
+                StatusCode = System.Net.HttpStatusCode.NotFound,
+                ErrorMessage = "User not found.",
+            };
     }
 
     public async Task<Session> GetCurrentUserAsync(CancellationToken cancellationToken = default)

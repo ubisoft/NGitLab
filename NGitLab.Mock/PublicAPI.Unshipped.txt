@@ -135,6 +135,8 @@ NGitLab.Mock.Config.GitLabConfig.Serialize() -> string
 NGitLab.Mock.Config.GitLabConfig.Url.get -> string
 NGitLab.Mock.Config.GitLabConfig.Url.set -> void
 NGitLab.Mock.Config.GitLabGroup.Milestones.get -> NGitLab.Mock.Config.GitLabMilestonesCollection
+NGitLab.Mock.Config.GitLabGroup.Path.get -> string
+NGitLab.Mock.Config.GitLabGroup.Path.set -> void
 NGitLab.Mock.Config.GitLabGroup.Visibility.get -> NGitLab.Models.VisibilityLevel?
 NGitLab.Mock.Config.GitLabIssue.Comments.get -> NGitLab.Mock.Config.GitLabCommentsCollection
 NGitLab.Mock.Config.GitLabIssue.CreatedAt.get -> System.DateTime?
@@ -1234,6 +1236,7 @@ static NGitLab.Mock.Config.GitLabHelpers.WithComment(this NGitLab.Mock.Config.Gi
 static NGitLab.Mock.Config.GitLabHelpers.WithCommit(this NGitLab.Mock.Config.GitLabProject project, string message = null, string user = null, string sourceBranch = null, string targetBranch = null, string fromBranch = null, System.Collections.Generic.IEnumerable<string> tags = null, string alias = null, System.Action<NGitLab.Mock.Config.GitLabCommit> configure = null) -> NGitLab.Mock.Config.GitLabProject
 static NGitLab.Mock.Config.GitLabHelpers.WithCommit(this NGitLab.Mock.Config.GitLabProject project, string message, string user, System.Action<NGitLab.Mock.Config.GitLabCommit> configure) -> NGitLab.Mock.Config.GitLabProject
 static NGitLab.Mock.Config.GitLabHelpers.WithGroup(this NGitLab.Mock.Config.GitLabConfig config, string name = null, int id = 0, string namespace = null, string description = null, NGitLab.Models.VisibilityLevel? visibility = null, bool addDefaultUserAsMaintainer = false, System.Action<NGitLab.Mock.Config.GitLabGroup> configure = null) -> NGitLab.Mock.Config.GitLabConfig
+static NGitLab.Mock.Config.GitLabHelpers.WithGroupOfFullPath(this NGitLab.Mock.Config.GitLabConfig config, string fullPath, string name = null, int id = 0, string description = null, NGitLab.Models.VisibilityLevel? visibility = null, bool addDefaultUserAsMaintainer = false, System.Action<NGitLab.Mock.Config.GitLabGroup> configure = null) -> NGitLab.Mock.Config.GitLabConfig
 static NGitLab.Mock.Config.GitLabHelpers.WithGroupPermission(this NGitLab.Mock.Config.GitLabGroup grp, string groupName, NGitLab.Models.AccessLevel level) -> NGitLab.Mock.Config.GitLabGroup
 static NGitLab.Mock.Config.GitLabHelpers.WithGroupPermission(this NGitLab.Mock.Config.GitLabProject project, string groupName, NGitLab.Models.AccessLevel level) -> NGitLab.Mock.Config.GitLabProject
 static NGitLab.Mock.Config.GitLabHelpers.WithIssue(this NGitLab.Mock.Config.GitLabProject project, string title = null, int id = 0, string description = null, string author = null, string assignee = null, string milestone = null, System.DateTime? createdAt = null, System.DateTime? updatedAt = null, System.DateTime? closedAt = null, System.Collections.Generic.IEnumerable<string> labels = null, System.Action<NGitLab.Mock.Config.GitLabIssue> configure = null) -> NGitLab.Mock.Config.GitLabProject
