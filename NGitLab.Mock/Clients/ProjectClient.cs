@@ -74,6 +74,9 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
 
     public Models.Project Create(ProjectCreate project)
     {
+        if (project.Topics != null && project.Tags != null)
+            throw new InvalidOperationException("Cannot specify Topics and Tags. Use Topics only.");
+
         using (Context.BeginOperationScope())
         {
             project.Name ??= project.Path;
@@ -90,13 +93,14 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
                 },
             };
 
-            newProject.Topics = project.Topics?.ToArray() ?? newProject.Topics;
-            newProject.Tags = project.Tags?.ToArray() ?? newProject.Tags;
+            newProject.Topics = (project.Topics ?? project.Tags)?.ToArray() ?? newProject.Topics;
 
-            if (project.DefaultBranch != null)
-            {
+            // Note: GitLab ignores the DefaultBranch unless InitializeWithReadme = true.
+            if (!string.IsNullOrEmpty(project.DefaultBranch) && project.InitializeWithReadme)
                 newProject.DefaultBranch = project.DefaultBranch;
-            }
+
+            if (project.BuildTimeout != null)
+                newProject.BuildTimeout = TimeSpan.FromSeconds(project.BuildTimeout.Value);
 
             parentGroup.Projects.Add(newProject);
             return newProject.ToClientProject(Context.User);

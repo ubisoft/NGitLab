@@ -2879,6 +2879,7 @@ NGitLab.Models.ProjectCreate.BuildTimeout -> int?
 NGitLab.Models.ProjectCreate.DefaultBranch -> string
 NGitLab.Models.ProjectCreate.Description -> string
 NGitLab.Models.ProjectCreate.ImportUrl -> string
+NGitLab.Models.ProjectCreate.InitializeWithReadme -> bool
 NGitLab.Models.ProjectCreate.IssuesAccessLevel -> string
 NGitLab.Models.ProjectCreate.IssuesEnabled -> bool
 NGitLab.Models.ProjectCreate.MergePipelinesEnabled -> bool

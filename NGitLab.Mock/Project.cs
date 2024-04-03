@@ -56,7 +56,7 @@ public sealed class Project : GitLabObject
         {
             if (string.IsNullOrEmpty(_defaultBranch))
             {
-                _defaultBranch = Parent?.Server?.DefaultBranchName ?? throw new InvalidOperationException("Project is not added to a Server");
+                return Parent?.Server?.DefaultBranchName ?? throw new InvalidOperationException("Project is not added to a Server");
             }
 
             return _defaultBranch;
@@ -134,7 +134,7 @@ public sealed class Project : GitLabObject
 
     public string PathWithNamespace => Group == null ? Path : (Group.PathWithNameSpace + "/" + Path);
 
-    public string FullName => Group == null ? Name : (Group.FullName + "/" + Name);
+    public string FullName => Group == null ? Name : (Group.FullName + " / " + Name);
 
     public ProjectHookCollection Hooks { get; }
 
@@ -457,6 +457,7 @@ public sealed class Project : GitLabObject
             EmptyRepo = Repository.IsEmpty,
             Path = Path,
             PathWithNamespace = PathWithNamespace,
+            NameWithNamespace = FullName,
             ForkedFromProject = ForkedFrom?.ToClientProject(currentUser),
             ForkingAccessLevel = ForkingAccessLevel,
             ImportStatus = ImportStatus,
@@ -466,7 +467,7 @@ public sealed class Project : GitLabObject
             VisibilityLevel = Visibility,
             Namespace = new Namespace { FullPath = Group.PathWithNameSpace, Id = Group.Id, Kind = kind, Name = Group.Name, Path = Group.Path },
             WebUrl = WebUrl,
-            BuildTimeout = (int)BuildTimeout.TotalMinutes,
+            BuildTimeout = (int)BuildTimeout.TotalSeconds,
             RepositoryAccessLevel = RepositoryAccessLevel,
             RunnersToken = RunnersToken,
             LfsEnabled = LfsEnabled,

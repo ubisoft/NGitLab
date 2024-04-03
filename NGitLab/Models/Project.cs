@@ -183,6 +183,9 @@ public class Project
     [JsonPropertyName("visibility")]
     public VisibilityLevel VisibilityLevel;
 
+    /// <summary>
+    /// The maximum amount of time, in seconds, that a job can run.
+    /// </summary>
     [JsonPropertyName("build_timeout")]
     public int? BuildTimeout;
 

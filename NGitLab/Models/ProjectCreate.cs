@@ -14,8 +14,14 @@ public class ProjectCreate
     [JsonPropertyName("namespace_id")]
     public string NamespaceId;
 
+    /// <summary>
+    /// The default branch name. Requires <see cref="InitializeWithReadme"/> to be true.
+    /// </summary>
     [JsonPropertyName("default_branch")]
     public string DefaultBranch;
+
+    [JsonPropertyName("initialize_with_readme")]
+    public bool InitializeWithReadme;
 
     [JsonPropertyName("description")]
     public string Description;
@@ -74,6 +80,9 @@ public class ProjectCreate
     [JsonPropertyName("topics")]
     public List<string> Topics { get; set; }
 
+    /// <summary>
+    /// The maximum amount of time, in seconds, that a job can run.
+    /// </summary>
     [JsonPropertyName("build_timeout")]
     public int? BuildTimeout;
 

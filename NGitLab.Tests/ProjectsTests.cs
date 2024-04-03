@@ -343,32 +343,64 @@ public class ProjectsTests
         // Arrange
         using var context = await GitLabTestContext.CreateAsync();
         var projectClient = context.Client.Projects;
+        var user = context.Client.Users.Current;
+        var projectName = "CreateAsync_" + context.GetRandomNumber().ToStringInvariant();
 
-        var project = new ProjectCreate
+        var expected = new ProjectCreate()
         {
+            Name = projectName,
+            Path = projectName.ToLowerInvariant(),
             Description = "desc",
+            DefaultBranch = "foo",
+            InitializeWithReadme = true,
             IssuesEnabled = true,
             MergeRequestsEnabled = true,
-            Name = "CreateAsync_" + context.GetRandomNumber().ToStringInvariant(),
-            NamespaceId = null,
-            VisibilityLevel = VisibilityLevel.Internal,
-            Topics = new() { "Tag-1", "Tag-2" },
+            VisibilityLevel = VisibilityLevel.Private,
+            Topics = new() { "t1", "t2" },
+            BuildTimeout = (int)TimeSpan.FromMinutes(15).TotalSeconds,
         };
 
         // Act
-        var createdProject = await projectClient.CreateAsync(project);
+        var actual = await projectClient.CreateAsync(expected);
 
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(createdProject.Description, Is.EqualTo(project.Description));
-            Assert.That(createdProject.IssuesEnabled, Is.EqualTo(project.IssuesEnabled));
-            Assert.That(createdProject.MergeRequestsEnabled, Is.EqualTo(project.MergeRequestsEnabled));
-            Assert.That(createdProject.Name, Is.EqualTo(project.Name));
-            Assert.That(createdProject.VisibilityLevel, Is.EqualTo(project.VisibilityLevel));
-            Assert.That(createdProject.Topics, Is.EquivalentTo(project.Topics));
-            Assert.That(createdProject.RepositoryAccessLevel, Is.EqualTo(RepositoryAccessLevel.Enabled));
+            Assert.That(actual.Name, Is.EqualTo(expected.Name));
+            Assert.That(actual.Path, Is.EqualTo(expected.Path));
+            Assert.That(actual.NameWithNamespace, Is.EqualTo($"{user.Name} / {expected.Name}"));
+            Assert.That(actual.PathWithNamespace, Is.EqualTo($"{user.Username}/{expected.Path}"));
+            Assert.That(actual.Description, Is.EqualTo(expected.Description));
+            Assert.That(actual.DefaultBranch, Is.EqualTo(expected.DefaultBranch));
+            Assert.That(actual.IssuesEnabled, Is.EqualTo(expected.IssuesEnabled));
+            Assert.That(actual.MergeRequestsEnabled, Is.EqualTo(expected.MergeRequestsEnabled));
+            Assert.That(actual.VisibilityLevel, Is.EqualTo(expected.VisibilityLevel));
+            Assert.That(actual.Topics, Is.EquivalentTo(expected.Topics));
+            Assert.That(actual.RepositoryAccessLevel, Is.EqualTo(RepositoryAccessLevel.Enabled));
+            Assert.That(actual.BuildTimeout, Is.EqualTo(expected.BuildTimeout));
         });
+    }
+
+    [Test]
+    public async Task CreateAsync_WhenInitializeWithReadmeIsFalse_ItIgnoresDefaultBranch()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var projectClient = context.Client.Projects;
+
+        var expected = new ProjectCreate()
+        {
+            Name = "CreateAsync_" + context.GetRandomNumber().ToStringInvariant(),
+            DefaultBranch = "foo",
+            InitializeWithReadme = false,
+        };
+
+        // Act
+        var actual = await projectClient.CreateAsync(expected);
+
+        // Assert
+        Assert.That(actual.Name, Is.EqualTo(expected.Name));
+        Assert.That(actual.DefaultBranch, Is.Not.EqualTo(expected.DefaultBranch));
     }
 
     [Test]
