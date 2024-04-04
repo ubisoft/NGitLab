@@ -2773,7 +2773,7 @@ NGitLab.Models.PipelineVariable.PipelineVariable() -> void
 NGitLab.Models.PipelineVariable.Value -> string
 NGitLab.Models.PipelineVariable.VariableType -> string
 NGitLab.Models.Position
-NGitLab.Models.Position.BaseSha.get -> NGitLab.Sha1
+NGitLab.Models.Position.BaseSha.get -> NGitLab.Sha1?
 NGitLab.Models.Position.BaseSha.set -> void
 NGitLab.Models.Position.HeadSha.get -> NGitLab.Sha1
 NGitLab.Models.Position.HeadSha.set -> void
