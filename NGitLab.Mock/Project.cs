@@ -56,7 +56,7 @@ public sealed class Project : GitLabObject
         {
             if (string.IsNullOrEmpty(_defaultBranch))
             {
-                return Parent?.Server?.DefaultBranchName ?? throw new InvalidOperationException("Project is not added to a Server");
+                _defaultBranch = Parent?.Server?.DefaultBranchName ?? throw new InvalidOperationException("Project is not added to a Server");
             }
 
             return _defaultBranch;
