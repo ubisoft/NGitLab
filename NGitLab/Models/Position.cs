@@ -23,7 +23,7 @@ public class Position
     public LineRange LineRange { get; set; }
 
     [JsonPropertyName("base_sha")]
-    public Sha1 BaseSha { get; set; }
+    public Sha1? BaseSha { get; set; }
 
     [JsonPropertyName("head_sha")]
     public Sha1 HeadSha { get; set; }
