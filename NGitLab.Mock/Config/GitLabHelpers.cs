@@ -1250,10 +1250,10 @@ public static class GitLabHelpers
 
     private static void CreateProject(GitLabServer server, GitLabProject project)
     {
-        var prj = new Project(project.Name ?? project.Path ?? Guid.NewGuid().ToString("D"))
+        var projectName = project.Name ?? project.Path ?? Guid.NewGuid().ToString("D");
+        var prj = new Project(projectName, project.Path)
         {
             Id = project.Id,
-            Path = project.Path,
             Description = project.Description,
             DefaultBranch = project.DefaultBranch ?? server.DefaultBranchName,
             Visibility = project.Visibility ?? project.Parent.DefaultVisibility,

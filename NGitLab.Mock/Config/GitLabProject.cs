@@ -25,7 +25,7 @@ public class GitLabProject : GitLabObject<GitLabConfig>
     public string Name { get; set; }
 
     /// <summary>
-    /// Path/slug. Defaults to <see cref="Slug.Create(Name)"/>.
+    /// Path/slug.
     /// </summary>
     public string Path { get; set; }
 

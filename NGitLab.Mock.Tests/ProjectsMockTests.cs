@@ -13,6 +13,25 @@ namespace NGitLab.Mock.Tests;
 public class ProjectsMockTests
 {
     [Test]
+    public void WithProjectHelper_WhenPathNotSpecified_ItAutogeneratesPathFromName()
+    {
+        // Arrange
+        var config = new GitLabConfig()
+            .WithUser("Foo", isDefault: true);
+
+        // Act
+        using var server = config
+            .WithProject("TEST", configure: p => p.@Namespace = "Foo")
+            .BuildServer();
+
+        // Assert
+        var client = server.CreateClient();
+        var project = client.Projects["Foo/Test"];
+
+        Assert.That(project.Path, Is.EqualTo("test"));
+    }
+
+    [Test]
     public void Test_projects_created_can_be_found()
     {
         using var server = new GitLabConfig()
