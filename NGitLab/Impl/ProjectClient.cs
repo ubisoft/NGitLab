@@ -19,9 +19,9 @@ public class ProjectClient : IProjectClient
         _api = api;
     }
 
-    public IEnumerable<Project> Accessible => _api.Get().GetAll<Project>(Utils.AddOrderBy(Project.Url + "?membership=true"));
+    public IEnumerable<Project> Accessible => _api.Get().GetAll<Project>(Utils.AddOrderBy($"{Project.Url}?membership=true"));
 
-    public IEnumerable<Project> Owned => _api.Get().GetAll<Project>(Utils.AddOrderBy(Project.Url + "?owned=true"));
+    public IEnumerable<Project> Owned => _api.Get().GetAll<Project>(Utils.AddOrderBy($"{Project.Url}?owned=true"));
 
     public IEnumerable<Project> Visible => _api.Get().GetAll<Project>(Utils.AddOrderBy(Project.Url));
 
@@ -29,20 +29,27 @@ public class ProjectClient : IProjectClient
 
     public Project Create(ProjectCreate project) => _api.Post().With(project).To<Project>(Project.Url);
 
-    public Project this[string fullName] => _api.Get().To<Project>(Project.Url + "/" + WebUtility.UrlEncode(fullName));
+    public Task<Project> CreateAsync(ProjectCreate project, CancellationToken cancellationToken = default) =>
+        _api.Post().With(project).ToAsync<Project>(Project.Url, cancellationToken);
 
-    public void Delete(int id) => _api.Delete().Execute(Project.Url + "/" + id.ToString(CultureInfo.InvariantCulture));
+    public Project this[string fullName] => _api.Get().To<Project>($"{Project.Url}/{WebUtility.UrlEncode(fullName)}");
 
-    public void Archive(int id) => _api.Post().Execute(Project.Url + "/" + id.ToString(CultureInfo.InvariantCulture) + "/archive");
+    public void Delete(int id) =>
+        _api.Delete().Execute($"{Project.Url}/{id.ToString(CultureInfo.InvariantCulture)}");
 
-    public void Unarchive(int id) => _api.Post().Execute(Project.Url + "/" + id.ToString(CultureInfo.InvariantCulture) + "/unarchive");
+    public Task DeleteAsync(ProjectId projectId, CancellationToken cancellationToken = default) =>
+        _api.Delete().ExecuteAsync($"{Project.Url}/{projectId.ValueAsUriParameter()}", cancellationToken);
+
+    public void Archive(int id) => _api.Post().Execute($"{Project.Url}/{id.ToString(CultureInfo.InvariantCulture)}/archive");
+
+    public void Unarchive(int id) => _api.Post().Execute($"{Project.Url}/{id.ToString(CultureInfo.InvariantCulture)}/unarchive");
 
     private static bool SupportKeysetPagination(ProjectQuery query)
     {
         return string.IsNullOrEmpty(query.Search);
     }
 
-    private static string CreateGetUrl(ProjectQuery query)
+    private static string CreateSearchUrl(ProjectQuery query)
     {
         var url = Project.Url;
 
@@ -106,29 +113,37 @@ public class ProjectClient : IProjectClient
 
     public IEnumerable<Project> Get(ProjectQuery query)
     {
-        var url = CreateGetUrl(query);
+        var url = CreateSearchUrl(query);
         return _api.Get().GetAll<Project>(url);
     }
 
     public GitLabCollectionResponse<Project> GetAsync(ProjectQuery query)
     {
-        var url = CreateGetUrl(query);
+        var url = CreateSearchUrl(query);
         return _api.Get().GetAllAsync<Project>(url);
     }
 
     public Project GetById(int id, SingleProjectQuery query)
     {
-        var url = Project.Url + "/" + id.ToStringInvariant();
-        url = Utils.AddParameter(url, "statistics", query.Statistics);
+        var url = $"{Project.Url}/{id.ToStringInvariant()}";
+        if (query?.Statistics != null)
+        {
+            url = Utils.AddParameter(url, "statistics", query.Statistics);
+        }
 
         return _api.Get().To<Project>(url);
     }
 
-    public async Task<Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default)
-    {
-        var url = Project.Url + "/" + id.ToStringInvariant();
+    public Task<Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default) =>
+        GetAsync(new ProjectId(id), query, cancellationToken);
 
-        if (query != null)
+    public Task<Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default) =>
+        GetAsync(new ProjectId(path), query, cancellationToken);
+
+    public async Task<Project> GetAsync(ProjectId projectId, SingleProjectQuery query = null, CancellationToken cancellationToken = default)
+    {
+        var url = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
+        if (query?.Statistics != null)
         {
             url = Utils.AddParameter(url, "statistics", query.Statistics);
         }
@@ -136,22 +151,14 @@ public class ProjectClient : IProjectClient
         return await _api.Get().ToAsync<Project>(url, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default)
-    {
-        var url = Project.Url + "/" + WebUtility.UrlEncode(path);
-        url = Utils.AddParameter(url, "statistics", query?.Statistics);
-
-        return await _api.Get().ToAsync<Project>(url, cancellationToken).ConfigureAwait(false);
-    }
-
     public Project Fork(string id, ForkProject forkProject)
     {
-        return _api.Post().With(forkProject).To<Project>(Project.Url + "/" + id + "/fork");
+        return _api.Post().With(forkProject).To<Project>($"{Project.Url}/{id}/fork");
     }
 
     public Task<Project> ForkAsync(string id, ForkProject forkProject, CancellationToken cancellationToken = default)
     {
-        return _api.Post().With(forkProject).ToAsync<Project>(Project.Url + "/" + id + "/fork", cancellationToken);
+        return _api.Post().With(forkProject).ToAsync<Project>($"{Project.Url}/{id}/fork", cancellationToken);
     }
 
     public IEnumerable<Project> GetForks(string id, ForkedProjectQuery query)
@@ -168,7 +175,7 @@ public class ProjectClient : IProjectClient
 
     private static string CreateGetForksUrl(string id, ForkedProjectQuery query)
     {
-        var url = Project.Url + "/" + id + "/forks";
+        var url = $"{Project.Url}/{id}/forks";
 
         if (query != null)
         {
@@ -214,13 +221,14 @@ public class ProjectClient : IProjectClient
 
     private Dictionary<string, double> DoGetLanguages(string id)
     {
-        return _api.Get().To<Dictionary<string, double>>(Project.Url + "/" + id + "/languages");
+        return _api.Get().To<Dictionary<string, double>>($"{Project.Url}/{id}/languages");
     }
 
-    public Project Update(string id, ProjectUpdate projectUpdate)
-    {
-        return _api.Put().With(projectUpdate).To<Project>(Project.Url + "/" + Uri.EscapeDataString(id));
-    }
+    public Project Update(string id, ProjectUpdate projectUpdate) =>
+        _api.Put().With(projectUpdate).To<Project>($"{Project.Url}/{Uri.EscapeDataString(id)}");
+
+    public Task<Project> UpdateAsync(ProjectId projectId, ProjectUpdate projectUpdate, CancellationToken cancellationToken = default) =>
+        _api.Put().With(projectUpdate).ToAsync<Project>($"{Project.Url}/{projectId.ValueAsUriParameter()}", cancellationToken);
 
     public UploadedProjectFile UploadFile(string id, FormDataContent data)
         => _api.Post().With(data).To<UploadedProjectFile>($"{Project.Url}/{Uri.EscapeDataString(id)}/uploads");

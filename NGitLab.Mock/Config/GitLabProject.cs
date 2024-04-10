@@ -24,6 +24,11 @@ public class GitLabProject : GitLabObject<GitLabConfig>
     /// </summary>
     public string Name { get; set; }
 
+    /// <summary>
+    /// Path/slug.
+    /// </summary>
+    public string Path { get; set; }
+
     public string Namespace { get; set; }
 
     public string DefaultBranch { get; set; }

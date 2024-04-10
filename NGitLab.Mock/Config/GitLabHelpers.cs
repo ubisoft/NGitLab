@@ -320,6 +320,53 @@ public static class GitLabHelpers
     }
 
     /// <summary>
+    /// Add a project with the given full path, i.e., "{namespace}/{path}".
+    /// If the namespace is not specified, the project will be created in a new top-level group.
+    /// Leading or trailing slashes are ignored.
+    /// </summary>
+    /// <param name="config">Config.</param>
+    /// <param name="fullPath">The fully qualified path of the project.</param>
+    /// <param name="name">Optional name. Defaults to the path.</param>
+    /// <param name="id">Optional explicit ID (config increment)</param>
+    /// <param name="description">Optional description.</param>
+    /// <param name="defaultBranch">Optional repository default branch.</param>
+    /// <param name="visibility">Optional visibility.</param>
+    /// <param name="initialCommit">Indicates if an initial commit is added.</param>
+    /// <param name="addDefaultUserAsMaintainer">Define default user as maintainer.</param>
+    /// <param name="clonePath">Path where to clone repository after server resolving</param>
+    /// <param name="cloneParameters">Parameters passed to clone command</param>
+    /// <param name="configure">Configuration method</param>
+    public static GitLabConfig WithProjectOfFullPath(this GitLabConfig config, string? fullPath, string? name = null, int id = default, string? description = null,
+                                                     string? defaultBranch = null, VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false,
+                                                     bool addDefaultUserAsMaintainer = false, string? clonePath = null, string? cloneParameters = null, Action<GitLabProject>? configure = null)
+    {
+        if (string.IsNullOrWhiteSpace(fullPath))
+            throw new ArgumentNullException(nameof(fullPath));
+
+        var span = fullPath.AsSpan().Trim('/');
+        var slash = span.LastIndexOf('/');
+        var path = slash == -1 ? span.ToString() : span.Slice(slash + 1).ToString();
+        var @namespace = slash == -1 ? null : span.Slice(0, slash).ToString();
+
+        return config.WithProject(
+            name: name ?? path,
+            id: id,
+            @namespace: @namespace,
+            description: description,
+            defaultBranch: defaultBranch,
+            visibility: visibility,
+            initialCommit: initialCommit,
+            addDefaultUserAsMaintainer: addDefaultUserAsMaintainer,
+            clonePath: clonePath,
+            cloneParameters: cloneParameters,
+            configure: project =>
+        {
+            project.Path = path;
+            configure?.Invoke(project);
+        });
+    }
+
+    /// <summary>
     /// Add a group description in group
     /// </summary>
     /// <param name="group">Group.</param>
@@ -1203,7 +1250,8 @@ public static class GitLabHelpers
 
     private static void CreateProject(GitLabServer server, GitLabProject project)
     {
-        var prj = new Project(project.Name ?? Guid.NewGuid().ToString("D"))
+        var projectName = project.Name ?? project.Path ?? Guid.NewGuid().ToString("D");
+        var prj = new Project(projectName, project.Path)
         {
             Id = project.Id,
             Description = project.Description,

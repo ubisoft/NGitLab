@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using NGitLab.Extensions;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -34,6 +36,55 @@ public class ProjectsTests
 
         var projectResult = await projectClient.GetByNamespacedPathAsync(project.PathWithNamespace, new SingleProjectQuery(), CancellationToken.None);
         Assert.That(projectResult.Id, Is.EqualTo(project.Id));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetProjectAsync_WorksWithId_ReturnsProject()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var projectClient = context.Client.Projects;
+
+        // Act
+        var projectResult = await projectClient.GetAsync(project.Id, new() { Statistics = true });
+
+        // Assert
+        Assert.That(projectResult.Id, Is.EqualTo(project.Id));
+        Assert.That(projectResult.Statistics, Is.Not.Null);
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetProjectAsync_WithPathAndWithoutQuery_ReturnsProject()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var projectClient = context.Client.Projects;
+
+        // Act
+        var projectResult = await projectClient.GetAsync(project.PathWithNamespace, query: null);
+
+        // Assert
+        Assert.That(projectResult.Id, Is.EqualTo(project.Id));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetProjectAsync_WhenProjectDoesNotExist_ShouldThrowNotFound()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var projectClient = context.Client.Projects;
+
+        // Act
+        // Assert
+        var ex = Assert.ThrowsAsync<GitLabException>(() => projectClient.GetAsync("baz1234"));
+
+        // Assert
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
     [Test]
@@ -200,7 +251,7 @@ public class ProjectsTests
         };
 
         context.Client.GetRepository(project.Id).Files.Create(file);
-        var languages = projectClient.GetLanguages(project.Id.ToString(CultureInfo.InvariantCulture));
+        var languages = projectClient.GetLanguages(project.Id.ToStringInvariant());
         Assert.That(languages, Has.Count.EqualTo(1));
         Assert.That(languages.First().Key, Is.EqualTo("javascript").IgnoreCase);
         Assert.That(languages.First().Value, Is.EqualTo(100));
@@ -240,7 +291,7 @@ public class ProjectsTests
             Description = "desc",
             IssuesEnabled = true,
             MergeRequestsEnabled = true,
-            Name = "CreateDelete_Test_" + context.GetRandomNumber().ToString(CultureInfo.InvariantCulture),
+            Name = "CreateDelete_Test_" + context.GetRandomNumber().ToStringInvariant(),
             NamespaceId = null,
             SnippetsEnabled = true,
             VisibilityLevel = VisibilityLevel.Internal,
@@ -267,14 +318,14 @@ public class ProjectsTests
         // Update
         expectedTopics = new List<string> { "Tag-3" };
         var updateOptions = new ProjectUpdate { Visibility = VisibilityLevel.Private, Topics = expectedTopics };
-        var updatedProject = projectClient.Update(createdProject.Id.ToString(CultureInfo.InvariantCulture), updateOptions);
+        var updatedProject = projectClient.Update(createdProject.Id.ToStringInvariant(), updateOptions);
         Assert.That(updatedProject.VisibilityLevel, Is.EqualTo(VisibilityLevel.Private));
         Assert.That(updatedProject.Topics, Is.EquivalentTo(expectedTopics));
         Assert.That(updatedProject.TagList, Is.EquivalentTo(expectedTopics));
 
         updateOptions.Visibility = VisibilityLevel.Public;
         updateOptions.Topics = null;    // If Topics are null, the project's existing topics will remain
-        updatedProject = projectClient.Update(createdProject.Id.ToString(CultureInfo.InvariantCulture), updateOptions);
+        updatedProject = projectClient.Update(createdProject.Id.ToStringInvariant(), updateOptions);
         Assert.That(updatedProject.VisibilityLevel, Is.EqualTo(VisibilityLevel.Public));
         Assert.That(updatedProject.Topics, Is.EquivalentTo(expectedTopics));
         Assert.That(updatedProject.TagList, Is.EquivalentTo(expectedTopics));
@@ -283,6 +334,215 @@ public class ProjectsTests
         Assert.That(updatedProject2.VisibilityLevel, Is.EqualTo(VisibilityLevel.Internal));
 
         projectClient.Delete(createdProject.Id);
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task CreateAsync_CreatesNewProject()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var projectClient = context.Client.Projects;
+        var user = context.Client.Users.Current;
+        var projectName = "CreateAsync_" + context.GetRandomNumber().ToStringInvariant();
+
+        var expected = new ProjectCreate()
+        {
+            Name = projectName,
+            Path = projectName.ToLowerInvariant(),
+            Description = "desc",
+            DefaultBranch = "foo",
+            InitializeWithReadme = true,
+            IssuesEnabled = true,
+            MergeRequestsEnabled = true,
+            VisibilityLevel = VisibilityLevel.Private,
+            Topics = new() { "t1", "t2" },
+            BuildTimeout = (int)TimeSpan.FromMinutes(15).TotalSeconds,
+        };
+
+        // Act
+        var actual = await projectClient.CreateAsync(expected);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Name, Is.EqualTo(expected.Name));
+            Assert.That(actual.Path, Is.EqualTo(expected.Path));
+            Assert.That(actual.NameWithNamespace, Is.EqualTo($"{user.Name} / {expected.Name}"));
+            Assert.That(actual.PathWithNamespace, Is.EqualTo($"{user.Username}/{expected.Path}"));
+            Assert.That(actual.Description, Is.EqualTo(expected.Description));
+            Assert.That(actual.DefaultBranch, Is.EqualTo(expected.DefaultBranch));
+            Assert.That(actual.IssuesEnabled, Is.EqualTo(expected.IssuesEnabled));
+            Assert.That(actual.MergeRequestsEnabled, Is.EqualTo(expected.MergeRequestsEnabled));
+            Assert.That(actual.VisibilityLevel, Is.EqualTo(expected.VisibilityLevel));
+            Assert.That(actual.Topics, Is.EquivalentTo(expected.Topics));
+            Assert.That(actual.RepositoryAccessLevel, Is.EqualTo(RepositoryAccessLevel.Enabled));
+            Assert.That(actual.BuildTimeout, Is.EqualTo(expected.BuildTimeout));
+        });
+    }
+
+    [Test]
+    public async Task CreateAsync_WhenInitializeWithReadmeIsFalse_ItIgnoresDefaultBranch()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var projectClient = context.Client.Projects;
+
+        var expected = new ProjectCreate()
+        {
+            Name = "CreateAsync_" + context.GetRandomNumber().ToStringInvariant(),
+            DefaultBranch = "foo",
+            InitializeWithReadme = false,
+        };
+
+        // Act
+        var actual = await projectClient.CreateAsync(expected);
+
+        // Assert
+        Assert.That(actual.Name, Is.EqualTo(expected.Name));
+        Assert.That(actual.DefaultBranch, Is.Not.EqualTo(expected.DefaultBranch));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task CreateAsync_WhenProjectAlreadyExists_ItThrows()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var existingProject = context.CreateProject();
+        var projectClient = context.Client.Projects;
+
+        // Act
+        var ex = Assert.ThrowsAsync<GitLabException>(() =>
+            projectClient.CreateAsync(new()
+            {
+                Path = existingProject.Path,
+            }));
+
+        // Assert
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(ex.ErrorMessage, Contains.Substring("[\"has already been taken\"]"));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task SearchAsync_WhenSearchForExistingProject_ItFindsIt()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var projectClient = context.Client.Projects;
+
+        // Act
+        var actualProjects = projectClient.GetAsync(new()
+        {
+            Search = project.Name,
+            Scope = ProjectQueryScope.All,
+        });
+
+        // Assert
+        Assert.That(actualProjects.Count(), Is.EqualTo(1));
+        Assert.That(actualProjects.Single().Id, Is.EqualTo(project.Id));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task SearchAsync_WhenNotFound_ReturnsEmptySet()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var projectClient = context.Client.Projects;
+
+        // Act
+        var actualProjects = projectClient.GetAsync(new()
+        {
+            Search = Guid.NewGuid().ToString(),
+            Scope = ProjectQueryScope.All,
+        });
+
+        // Assert
+        Assert.That(actualProjects, Is.Empty);
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task UpdateAsync_WhenUpdateVisibilityAndTopics_ItWorks()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject(p =>
+        {
+            p.VisibilityLevel = VisibilityLevel.Public;
+            p.Topics = new() { "Tag-1", "Tag-2" };
+        });
+
+        var projectClient = context.Client.Projects;
+
+        // Act
+        var expectedTopics = new List<string>() { "Tag-3" };
+        var updatedProject = await projectClient.UpdateAsync(project.PathWithNamespace, new()
+        {
+            Visibility = VisibilityLevel.Private,
+            Topics = expectedTopics,
+        });
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(updatedProject.VisibilityLevel, Is.EqualTo(VisibilityLevel.Private));
+            Assert.That(updatedProject.Topics, Is.EquivalentTo(expectedTopics));
+        });
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task UpdateAsync_WhenProjectNotFound_ItThrows()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var projectClient = context.Client.Projects;
+
+        // Act
+        var ex = Assert.ThrowsAsync<GitLabException>(() =>
+            projectClient.UpdateAsync(int.MaxValue, new()
+            {
+                Visibility = VisibilityLevel.Private,
+            }));
+
+        // Assert
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task DeleteAsync_WhenProjectExists_ItIsDeleted()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var group = context.CreateGroup();
+        var project = context.CreateProject(group.Id);
+        var projectClient = context.Client.Projects;
+
+        // Act
+        await projectClient.DeleteAsync(project.Id);
+
+        // Assert
+        Assert.ThrowsAsync<GitLabException>(() => projectClient.GetAsync(project.Id));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task DeleteAsync_WhenProjectNotFound_ItThrows()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var group = context.CreateGroup();
+        var project = context.CreateProject(group.Id);
+        var projectClient = context.Client.Projects;
+
+        // Act
+        var ex = Assert.ThrowsAsync<GitLabException>(() => projectClient.DeleteAsync(int.MaxValue));
+
+        // Assert
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
     // No owner level (50) for project! See https://docs.gitlab.com/ee/api/members.html
@@ -322,7 +582,7 @@ public class ProjectsTests
             p.Description = "desc";
             p.IssuesEnabled = true;
             p.MergeRequestsEnabled = true;
-            p.Name = "ForkProject_Test_" + context.GetRandomNumber().ToString(CultureInfo.InvariantCulture);
+            p.Name = "ForkProject_Test_" + context.GetRandomNumber().ToStringInvariant();
             p.NamespaceId = null;
             p.SnippetsEnabled = true;
             p.VisibilityLevel = VisibilityLevel.Internal;
@@ -338,7 +598,7 @@ public class ProjectsTests
             RawContent = "this project should only live during the unit tests, you can delete if you find some",
         });
 
-        var forkedProject = projectClient.Fork(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkProject
+        var forkedProject = projectClient.Fork(createdProject.Id.ToStringInvariant(), new ForkProject
         {
             Path = createdProject.Path + "-fork",
             Name = createdProject.Name + "Fork",
@@ -347,7 +607,7 @@ public class ProjectsTests
         // Wait for the fork to be ready
         await GitLabTestContext.RetryUntilAsync(() => projectClient[forkedProject.Id], p => string.Equals(p.ImportStatus, "finished", StringComparison.Ordinal), TimeSpan.FromMinutes(2));
 
-        var forks = projectClient.GetForks(createdProject.Id.ToString(CultureInfo.InvariantCulture), new ForkedProjectQuery());
+        var forks = projectClient.GetForks(createdProject.Id.ToStringInvariant(), new ForkedProjectQuery());
         Assert.That(forks.Single().Id, Is.EqualTo(forkedProject.Id));
 
         // Create a merge request with AllowCollaboration (only testable on a fork, also the source branch must not be protected)
@@ -398,7 +658,7 @@ public class ProjectsTests
 
         var createdProject = context.CreateProject(prj =>
         {
-            prj.Name = "Project_Test_" + context.GetRandomNumber().ToString(CultureInfo.InvariantCulture);
+            prj.Name = "Project_Test_" + context.GetRandomNumber().ToStringInvariant();
             prj.VisibilityLevel = VisibilityLevel.Internal;
         });
         Assert.That(createdProject.EmptyRepo, Is.True);
@@ -463,7 +723,7 @@ public class ProjectsTests
         var project = new ProjectCreate
         {
             Description = "desc",
-            Name = "CreateProjectWithSquashOption_Test_" + context.GetRandomNumber().ToString(CultureInfo.InvariantCulture),
+            Name = "CreateProjectWithSquashOption_Test_" + context.GetRandomNumber().ToStringInvariant(),
             VisibilityLevel = VisibilityLevel.Internal,
             SquashOption = inputSquashOption,
         };

@@ -8,13 +8,19 @@ namespace NGitLab.Mock;
 public sealed class Project : GitLabObject
 {
     public Project()
-        : this(Guid.NewGuid().ToString("N"))
+        : this(Guid.NewGuid().ToString("N"), path: null)
     {
     }
 
     public Project(string name)
+        : this(name, path: null)
+    {
+    }
+
+    public Project(string name, string path)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
+        Path = path ?? Slug.Create(Name);
 
         Permissions = new PermissionCollection(this);
         LintCIs = new LintCICollection(this);
@@ -124,11 +130,11 @@ public sealed class Project : GitLabObject
 
     public Group Group => (Group)Parent;
 
-    public string Path => Slug.Create(Name);
+    public string Path { get; internal set; }
 
     public string PathWithNamespace => Group == null ? Path : (Group.PathWithNameSpace + "/" + Path);
 
-    public string FullName => Group == null ? Name : (Group.FullName + "/" + Name);
+    public string FullName => Group == null ? Name : (Group.FullName + " / " + Name);
 
     public ProjectHookCollection Hooks { get; }
 
@@ -451,6 +457,7 @@ public sealed class Project : GitLabObject
             EmptyRepo = Repository.IsEmpty,
             Path = Path,
             PathWithNamespace = PathWithNamespace,
+            NameWithNamespace = FullName,
             ForkedFromProject = ForkedFrom?.ToClientProject(currentUser),
             ForkingAccessLevel = ForkingAccessLevel,
             ImportStatus = ImportStatus,
@@ -460,7 +467,7 @@ public sealed class Project : GitLabObject
             VisibilityLevel = Visibility,
             Namespace = new Namespace { FullPath = Group.PathWithNameSpace, Id = Group.Id, Kind = kind, Name = Group.Name, Path = Group.Path },
             WebUrl = WebUrl,
-            BuildTimeout = (int)BuildTimeout.TotalMinutes,
+            BuildTimeout = (int)BuildTimeout.TotalSeconds,
             RepositoryAccessLevel = RepositoryAccessLevel,
             RunnersToken = RunnersToken,
             LfsEnabled = LfsEnabled,

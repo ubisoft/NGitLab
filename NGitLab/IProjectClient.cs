@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -8,25 +9,26 @@ namespace NGitLab;
 public interface IProjectClient
 {
     /// <summary>
-    /// Get a list of projects for which the authenticated user is a member.
+    /// Gets a list of projects for which the authenticated user is a member.
     /// </summary>
     IEnumerable<Project> Accessible { get; }
 
     /// <summary>
-    /// Get a list of projects owned by the authenticated user.
+    /// Gets a list of projects owned by the authenticated user.
     /// </summary>
     IEnumerable<Project> Owned { get; }
 
     /// <summary>
-    /// Get a list of projects which the authenticated user can see.
+    /// Gets a list of projects which the authenticated user can see.
     /// </summary>
     IEnumerable<Project> Visible { get; }
 
     /// <summary>
-    /// Get a list of all GitLab projects (admin only).
+    /// Gets a list of all GitLab projects (admin only).
     /// </summary>
     IEnumerable<Project> Get(ProjectQuery query);
 
+    /// <inheritdoc cref="Get(ProjectQuery)"/>
     GitLabCollectionResponse<Project> GetAsync(ProjectQuery query);
 
     Project this[int id] { get; }
@@ -39,9 +41,15 @@ public interface IProjectClient
 
     Project Create(ProjectCreate project);
 
+    Task<Project> CreateAsync(ProjectCreate project, CancellationToken cancellationToken = default);
+
     Project Update(string id, ProjectUpdate projectUpdate);
 
+    Task<Project> UpdateAsync(ProjectId projectId, ProjectUpdate projectUpdate, CancellationToken cancellationToken = default);
+
     void Delete(int id);
+
+    Task DeleteAsync(ProjectId projectId, CancellationToken cancellationToken = default);
 
     void Archive(int id);
 
@@ -57,6 +65,8 @@ public interface IProjectClient
     Task<Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default);
 
     Task<Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default);
+
+    Task<Project> GetAsync(ProjectId projectId, SingleProjectQuery query = null, CancellationToken cancellationToken = default);
 
     Project Fork(string id, ForkProject forkProject);
 

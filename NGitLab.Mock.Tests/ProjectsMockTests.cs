@@ -1,5 +1,8 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.IO;
+using System.Net;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NGitLab.Mock.Config;
 using NGitLab.Models;
@@ -9,6 +12,25 @@ namespace NGitLab.Mock.Tests;
 
 public class ProjectsMockTests
 {
+    [Test]
+    public void WithProjectHelper_WhenPathNotSpecified_ItAutogeneratesPathFromName()
+    {
+        // Arrange
+        var config = new GitLabConfig()
+            .WithUser("Foo", isDefault: true);
+
+        // Act
+        using var server = config
+            .WithProject("TEST", configure: p => p.@Namespace = "Foo")
+            .BuildServer();
+
+        // Assert
+        var client = server.CreateClient();
+        var project = client.Projects["Foo/Test"];
+
+        Assert.That(project.Path, Is.EqualTo("test"));
+    }
+
     [Test]
     public void Test_projects_created_can_be_found()
     {
@@ -174,5 +196,193 @@ public class ProjectsMockTests
         project.Should().NotBeNull();
         project.Permissions.ProjectAccess.Should().BeNull();
         project.Permissions.GroupAccess.AccessLevel.Should().Be(AccessLevel.Maintainer);
+    }
+
+    [Test]
+    public async Task CreateAsync_WhenMockCreatedWithSupportedOptions_TheyAreAvailableInModel()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithGroupOfFullPath("my-group", name: "MyGroup", addDefaultUserAsMaintainer: true)
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+
+        var expected = new ProjectCreate()
+        {
+            Name = "MyProject",
+            Path = "my-project",
+            NamespaceId = "my-group",
+            Description = "Description",
+            DefaultBranch = "foo",
+            InitializeWithReadme = true,
+            Topics = new() { "t1", "t2" },
+            BuildTimeout = (int)TimeSpan.FromMinutes(15).TotalSeconds,
+        };
+
+        // Act
+        var actual = await projectClient.CreateAsync(expected);
+
+        // Assert
+        actual.Name.Should().Be(expected.Name);
+        actual.Path.Should().Be(expected.Path);
+        actual.Description.Should().Be(expected.Description);
+        actual.Namespace.FullPath.Should().Be(expected.NamespaceId);
+        actual.NameWithNamespace.Should().Be($"MyGroup / {expected.Name}");
+        actual.PathWithNamespace.Should().Be($"my-group/{expected.Path}");
+        actual.DefaultBranch.Should().Be(expected.DefaultBranch);
+        actual.Topics.Should().BeEquivalentTo(expected.Topics);
+        actual.BuildTimeout.Should().Be(expected.BuildTimeout);
+    }
+
+    [Test]
+    public async Task CreateAsync_WhenInitializeWithReadmeIsFalse_ItIgnoresDefaultBranch()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+
+        var expected = new ProjectCreate()
+        {
+            Name = "MyProject",
+            DefaultBranch = "foo",
+            InitializeWithReadme = false,
+        };
+
+        // Act
+        var actual = await projectClient.CreateAsync(expected);
+
+        // Assert
+        actual.Name.Should().Be(expected.Name);
+        actual.DefaultBranch.Should().NotBe(expected.DefaultBranch);
+    }
+
+    [Test]
+    public void CreateAsync_WhenProjectPathAlreadyExists_ItThrows()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath("Test/duplicate")
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+
+        // Act
+        var ex = Assert.CatchAsync<GitLabException>(() =>
+            projectClient.CreateAsync(new()
+            {
+                Path = "DUPLICATE", // GitLab path is case-INsensitive
+                Name = "project2",
+            }));
+
+        // Assert
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(ex.ErrorMessage, Contains.Substring("has already been taken"));
+    }
+
+    [Test]
+    public void CreateAsync_WhenProjectNameAlreadyExists_ItThrows()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath("Test/duplicate")
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+
+        // Act
+        var ex = Assert.ThrowsAsync<GitLabException>(() =>
+            projectClient.CreateAsync(new()
+            {
+                Path = "project2",
+                Name = "duplicate", // GitLab name is case-Sensitive
+            }));
+
+        // Assert
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(ex.ErrorMessage, Contains.Substring("has already been taken"));
+    }
+
+    [Test]
+    public async Task CreateAsync_WhenProjectNameOfDifferentCaseAlreadyExists_ItWorks()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath("Test/not_duplicate")
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+
+        // Act
+        var newProject = await projectClient.CreateAsync(new()
+        {
+            Path = "project2",
+            Name = "NOT_DUPLICATE", // GitLab name is case-Sensitive
+        });
+
+        // Assert
+        Assert.That(newProject.Name, Is.EqualTo("NOT_DUPLICATE"));
+    }
+
+    [Test]
+    public void UpdateAsync_WhenProjectNotFound_ItThrows()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+
+        // Act
+        var ex = Assert.CatchAsync<GitLabException>(() =>
+            projectClient.UpdateAsync(int.MaxValue, new()
+            {
+                Visibility = VisibilityLevel.Private,
+            }));
+
+        // Assert
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task DeleteAsync_WhenProjectExists_ItIsDeleted()
+    {
+        var projectFullPath = $"Test/{nameof(DeleteAsync_WhenProjectExists_ItIsDeleted)}";
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath(projectFullPath)
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+
+        // Act
+        await projectClient.DeleteAsync(projectFullPath);
+
+        // Assert
+        Assert.CatchAsync<GitLabException>(() => projectClient.GetAsync(projectFullPath));
+    }
+
+    [Test]
+    public void DeleteAsync_WhenProjectNotFound_ItThrows()
+    {
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+
+        // Act
+        var ex = Assert.CatchAsync<GitLabException>(() => projectClient.DeleteAsync(int.MaxValue));
+
+        // Assert
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 }
