@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -80,7 +80,7 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
         throw new NotImplementedException();
     }
 
-    public void GetArchive(Action<Stream> parser)
+    public void GetArchive(Action<Stream> parser, string sha = null, string format = null)
     {
         throw new NotImplementedException();
     }

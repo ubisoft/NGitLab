@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -55,9 +55,17 @@ public class RepositoryClient : IRepositoryClient
         _api.Get().Stream(_repoPath + "/raw_blobs/" + sha, parser);
     }
 
-    public void GetArchive(Action<Stream> parser)
+    public void GetArchive(Action<Stream> parser, string sha = null, string format = null)
     {
-        _api.Get().Stream(_repoPath + "/archive", parser);
+        if (!string.IsNullOrEmpty(format) && !format.StartsWith(".", StringComparison.Ordinal))
+            throw new ArgumentException($"Format must include the '.' as part of extension", nameof(format));
+
+        var relativePath = $"/archive{format}";
+
+        if (!string.IsNullOrEmpty(sha))
+            relativePath += $"?sha={sha}";
+
+        _api.Get().Stream(_repoPath + relativePath, parser);
     }
 
     public IEnumerable<Commit> Commits => _api.Get().GetAll<Commit>(_repoPath + $"/commits?per_page={GetCommitsRequest.DefaultPerPage}");
