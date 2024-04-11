@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -23,7 +23,7 @@ public interface IRepositoryClient
 
     void GetRawBlob(string sha, Action<Stream> parser);
 
-    void GetArchive(Action<Stream> parser);
+    void GetArchive(Action<Stream> parser, string sha = null, string format = null);
 
     IEnumerable<Commit> Commits { get; }
 
