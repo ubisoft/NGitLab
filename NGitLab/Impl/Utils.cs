@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Impl;
 
@@ -8,7 +10,26 @@ internal static class Utils
 {
     public static string AddParameter<T>(string url, string parameterName, T value)
     {
-        return Equals(value, null) ? url : AddParameterInternal(url, parameterName, value.ToString());
+        if (value is null)
+            return url;
+
+        var valueString = value.ToString();
+        var type = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+        if (type.IsEnum)
+        {
+            var enumField = type.GetFields().FirstOrDefault(f => string.Equals(f.Name, valueString, StringComparison.Ordinal));
+            if (enumField is not null)
+            {
+                var enumMemberValue = enumField.GetCustomAttributes(typeof(EnumMemberAttribute), inherit: true)
+                    .Cast<EnumMemberAttribute>()
+                    .FirstOrDefault()?
+                    .Value;
+                if (enumMemberValue is not null)
+                    return AddParameterInternal(url, parameterName, enumMemberValue);
+            }
+        }
+
+        return AddParameterInternal(url, parameterName, valueString);
     }
 
     public static string AddParameter(string url, string parameterName, int? value)
