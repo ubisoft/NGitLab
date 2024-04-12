@@ -90,7 +90,12 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
         }
     }
 
-    public void GetArchive(Action<Stream> parser, string sha = null, string format = null)
+    public void GetArchive(Action<Stream> parser)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void GetArchive(Action<Stream> parser, FileArchiveQuery fileArchiveQuery)
     {
         throw new NotImplementedException();
     }

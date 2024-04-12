@@ -354,7 +354,7 @@ public class RepositoryClientTests
     public async Task GetArchiveWithoutOptionalParameters()
     {
         // Arrange
-        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2).ConfigureAwait(false);
 
         // Act
         context.RepositoryClient.GetArchive((stream) => { });
@@ -371,14 +371,71 @@ public class RepositoryClientTests
 
     [Test]
     [NGitLabRetry]
-    public async Task GetArchiveAcceptsShaParameter()
+    public async Task GetArchiveWithNullQueryPassesNoParameters()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2).ConfigureAwait(false);
+        var firstCommitId = context.Commits[0].Id.ToString();
+
+        // Act
+        context.RepositoryClient.GetArchive((stream) => { }, fileArchiveQuery: null);
+
+        // Assert
+        var requestPathAndQuery = context.Context.LastRequest.RequestUri.PathAndQuery;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(requestPathAndQuery, Is.Not.Null);
+            Assert.That(requestPathAndQuery.EndsWith("/archive", StringComparison.OrdinalIgnoreCase), Is.True);
+        });
+    }
+
+    [TestCase(null, "")]
+    [TestCase(FileArchiveFormat.Bz2, ".bz2")]
+    [TestCase(FileArchiveFormat.Gz, ".gz")]
+    [TestCase(FileArchiveFormat.Tar, ".tar")]
+    [TestCase(FileArchiveFormat.TarBz2, ".tar.bz2")]
+    [TestCase(FileArchiveFormat.TarGz, ".tar.gz")]
+    [TestCase(FileArchiveFormat.Tb2, ".tb2")]
+    [TestCase(FileArchiveFormat.Tbz2, ".tbz2")]
+    [TestCase(FileArchiveFormat.Zip, ".zip")]
+    [NGitLabRetry]
+    public async Task GetArchiveFormatValuePassedCorrectly(FileArchiveFormat? archiveFormat, string expectedExtension)
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+        var fileArchiveQuery = new FileArchiveQuery
+        {
+            Format = archiveFormat,
+        };
+
+        // Act
+        context.RepositoryClient.GetArchive((stream) => { }, fileArchiveQuery);
+
+        // Assert
+        var requestPathAndQuery = context.Context.LastRequest.RequestUri.PathAndQuery;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(requestPathAndQuery, Is.Not.Null);
+            Assert.That(requestPathAndQuery.EndsWith($"/archive{expectedExtension}", StringComparison.OrdinalIgnoreCase), Is.True);
+        });
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetArchiveShaValuePassedCorrectly()
     {
         // Arrange
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
         var firstCommitId = context.Commits[0].Id.ToString();
+        var fileArchiveQuery = new FileArchiveQuery
+        {
+            Ref = firstCommitId,
+        };
 
         // Act
-        context.RepositoryClient.GetArchive((stream) => { }, sha: firstCommitId);
+        context.RepositoryClient.GetArchive((stream) => { }, fileArchiveQuery);
 
         // Assert
         var requestPathAndQuery = context.Context.LastRequest.RequestUri.PathAndQuery;
@@ -386,20 +443,24 @@ public class RepositoryClientTests
         Assert.Multiple(() =>
         {
             Assert.That(requestPathAndQuery, Is.Not.Null);
-            Assert.That(requestPathAndQuery.Contains($"?sha={firstCommitId}", StringComparison.OrdinalIgnoreCase), Is.True);
+            Assert.That(requestPathAndQuery.Contains($"sha={firstCommitId}", StringComparison.OrdinalIgnoreCase), Is.True);
         });
     }
 
     [Test]
     [NGitLabRetry]
-    public async Task GetArchiveAcceptsFormatParameter()
+    public async Task GetArchivePathValuePassedCorrectly()
     {
         // Arrange
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
-        var format = ".zip";
+        var path = RepositoryClientTestsContext.SubfolderName;
+        var fileArchiveQuery = new FileArchiveQuery
+        {
+            Path = path,
+        };
 
         // Act
-        context.RepositoryClient.GetArchive((stream) => { }, format: format);
+        context.RepositoryClient.GetArchive((stream) => { }, fileArchiveQuery);
 
         // Assert
         var requestPathAndQuery = context.Context.LastRequest.RequestUri.PathAndQuery;
@@ -407,21 +468,27 @@ public class RepositoryClientTests
         Assert.Multiple(() =>
         {
             Assert.That(requestPathAndQuery, Is.Not.Null);
-            Assert.That(requestPathAndQuery.Contains($"/archive{format}", StringComparison.OrdinalIgnoreCase), Is.True);
+            Assert.That(requestPathAndQuery.Contains($"path={path}", StringComparison.OrdinalIgnoreCase), Is.True);
         });
     }
 
     [Test]
     [NGitLabRetry]
-    public async Task GetArchiveAcceptsShaAndFormatParametersTogether()
+    public async Task GetArchiveCombinationOfValuesPassedCorrectly()
     {
         // Arrange
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
-        var format = ".zip";
         var firstCommitId = context.Commits[0].Id.ToString();
+        var path = RepositoryClientTestsContext.SubfolderName;
+        var fileArchiveQuery = new FileArchiveQuery
+        {
+            Format = FileArchiveFormat.Zip,
+            Path = path,
+            Ref = firstCommitId,
+        };
 
         // Act
-        context.RepositoryClient.GetArchive((stream) => { }, sha: firstCommitId, format: format);
+        context.RepositoryClient.GetArchive((stream) => { }, fileArchiveQuery);
 
         // Assert
         var requestPathAndQuery = context.Context.LastRequest.RequestUri.PathAndQuery;
@@ -429,21 +496,10 @@ public class RepositoryClientTests
         Assert.Multiple(() =>
         {
             Assert.That(requestPathAndQuery, Is.Not.Null);
-            Assert.That(requestPathAndQuery.Contains($"/archive{format}", StringComparison.OrdinalIgnoreCase), Is.True);
-            Assert.That(requestPathAndQuery.Contains($"?sha={firstCommitId}", StringComparison.OrdinalIgnoreCase), Is.True);
+            Assert.That(requestPathAndQuery.Contains($"/archive.zip", StringComparison.OrdinalIgnoreCase), Is.True);
+            Assert.That(requestPathAndQuery.Contains($"path={path}", StringComparison.OrdinalIgnoreCase), Is.True);
+            Assert.That(requestPathAndQuery.Contains($"sha={firstCommitId}", StringComparison.OrdinalIgnoreCase), Is.True);
         });
-    }
-
-    [Test]
-    [NGitLabRetry]
-    public async Task GetArchiveThrowsExceptionWhenFormatDoesNotStartWithDot()
-    {
-        // Arrange
-        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
-        var format = "zip";
-
-        // Act and Assert
-        Assert.Throws<ArgumentException>(() => context.RepositoryClient.GetArchive((stream) => { }, format: format));
     }
 
     [Test]
