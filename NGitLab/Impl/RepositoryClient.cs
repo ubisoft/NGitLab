@@ -55,17 +55,27 @@ public class RepositoryClient : IRepositoryClient
         _api.Get().Stream(_repoPath + "/raw_blobs/" + sha, parser);
     }
 
-    public void GetArchive(Action<Stream> parser, string sha = null, string format = null)
+    public void GetArchive(Action<Stream> parser) => GetArchive(parser, fileArchiveQuery: null);
+
+    public void GetArchive(Action<Stream> parser, FileArchiveQuery fileArchiveQuery)
     {
-        if (!string.IsNullOrEmpty(format) && !format.StartsWith(".", StringComparison.Ordinal))
-            throw new ArgumentException($"Format must include the '.' as part of extension", nameof(format));
+        var url = $"{_repoPath}/archive";
 
-        var relativePath = $"/archive{format}";
+        if (fileArchiveQuery != null)
+        {
+            // If a particular archive file format is requested, it is appended to the path directly as follows:
+            // /project/123/repository/archive.zip
+            // /project/123/repository/archive.tar
+            if (fileArchiveQuery.Format.HasValue)
+            {
+                url += fileArchiveQuery.Format.Value.GetEnumMemberAttributeValue();
+            }
 
-        if (!string.IsNullOrEmpty(sha))
-            relativePath += $"?sha={sha}";
+            url = Utils.AddParameter(url, "path", fileArchiveQuery.Path);
+            url = Utils.AddParameter(url, "sha", fileArchiveQuery.Ref);
+        }
 
-        _api.Get().Stream(_repoPath + relativePath, parser);
+        _api.Get().Stream(url, parser);
     }
 
     public IEnumerable<Commit> Commits => _api.Get().GetAll<Commit>(_repoPath + $"/commits?per_page={GetCommitsRequest.DefaultPerPage}");
