@@ -160,6 +160,47 @@ public class UsersTests
 
     [Test]
     [NGitLabRetry]
+    public async Task CreateTokenAsyncAsAdmin_ReturnsUserToken()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var users = context.AdminClient.Users;
+
+        var tokenRequest = new UserTokenCreate
+        {
+            UserId = users.Current.Id,
+            Name = FormattableString.Invariant($"Test_Create_{DateTime.UtcNow:yyyyMMddHHmmss}"),
+            ExpiresAt = DateTime.UtcNow.AddDays(1),
+            Scopes = new[] { "api", "read_user" },
+        };
+
+        var tokenResult = await users.CreateTokenAsync(tokenRequest);
+
+        Assert.That(tokenResult.Token, Is.Not.Empty);
+        Assert.That(tokenResult.Name, Is.EqualTo(tokenRequest.Name));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task CreateTokenAsyncAsAdmin_WhenUserNotFound_ItThrowsBadRequest()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var users = context.AdminClient.Users;
+
+        var tokenRequest = new UserTokenCreate
+        {
+            UserId = int.MaxValue,
+            Name = "foo",
+            ExpiresAt = DateTime.UtcNow.Date.AddDays(7),
+            Scopes = new[] { "write_repository" },
+        };
+
+        var ex = Assert.ThrowsAsync<GitLabException>(() => users.CreateTokenAsync(tokenRequest));
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        Assert.That(ex.ErrorMessage, Is.EqualTo("404 User Not Found"));
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task GetLastActivityDates()
     {
         using var context = await GitLabTestContext.CreateAsync();

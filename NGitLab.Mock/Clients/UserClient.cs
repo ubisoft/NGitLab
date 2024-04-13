@@ -77,6 +77,12 @@ internal sealed class UserClient : ClientBase, IUserClient
         throw new NotSupportedException();
     }
 
+    public async Task<UserToken> CreateTokenAsync(UserTokenCreate tokenRequest, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return CreateToken(tokenRequest);
+    }
+
     public void Delete(int id)
     {
         using (Context.BeginOperationScope())

@@ -26,10 +26,16 @@ public interface IUserClient
 
     /// <summary>
     /// Request a token for user impersonation.
-    /// Admin account/token is required for impersonation
+    /// Requires an Admin account/token.
+    /// <para/>
+    /// See https://docs.gitlab.com/ee/api/users.html#create-an-impersonation-token
     /// </summary>
     /// <param name="tokenRequest">info required to create the token</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">Optional cancellation token.</param>
+    /// <returns>The new impersonation token.</returns>
+    public Task<UserToken> CreateTokenAsync(UserTokenCreate tokenRequest, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="CreateTokenAsync(UserTokenCreate, CancellationToken)"/>>
     UserToken CreateToken(UserTokenCreate tokenRequest);
 
     void Delete(int id);
