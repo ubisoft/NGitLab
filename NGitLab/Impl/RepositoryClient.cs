@@ -59,18 +59,14 @@ public class RepositoryClient : IRepositoryClient
 
     public void GetArchive(Action<Stream> parser, FileArchiveQuery fileArchiveQuery)
     {
-        var url = $"{_repoPath}/archive";
+        var url = Utils.AppendSegmentToUrl(_repoPath, "/archive");
 
         if (fileArchiveQuery != null)
         {
             // If a particular archive file format is requested, it is appended to the path directly as follows:
             // /project/123/repository/archive.zip
             // /project/123/repository/archive.tar
-            if (fileArchiveQuery.Format.HasValue)
-            {
-                url += fileArchiveQuery.Format.Value.GetEnumMemberAttributeValue();
-            }
-
+            url = Utils.AppendSegmentToUrl(url, fileArchiveQuery.Format, includeSegmentSeparator: false);
             url = Utils.AddParameter(url, "path", fileArchiveQuery.Path);
             url = Utils.AddParameter(url, "sha", fileArchiveQuery.Ref);
         }
