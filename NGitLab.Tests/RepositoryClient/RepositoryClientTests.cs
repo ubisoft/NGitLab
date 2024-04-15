@@ -320,7 +320,7 @@ public class RepositoryClientTests
 
     [Test]
     [NGitLabRetry]
-    public async Task GetArchive()
+    public async Task GetArchive_NoQuerySpecified_PathConstructedWithNoParameters()
     {
         // Arrange
         const int commitCount = 4;
@@ -371,7 +371,7 @@ public class RepositoryClientTests
 
     [Test]
     [NGitLabRetry]
-    public async Task GetArchiveWithNullQueryPassesNoParameters()
+    public async Task GetArchive_QueryInstanceIsNull_PathConstructedWithNoParameters()
     {
         // Arrange
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2).ConfigureAwait(false);
@@ -400,7 +400,8 @@ public class RepositoryClientTests
     [TestCase(FileArchiveFormat.Tbz2, ".tbz2")]
     [TestCase(FileArchiveFormat.Zip, ".zip")]
     [NGitLabRetry]
-    public async Task GetArchiveFormatValuePassedCorrectly(FileArchiveFormat? archiveFormat, string expectedExtension)
+    public async Task GetArchive_QuerySpecifiesFormatValue_ArchiveExtensionPassedCorrectly(
+        FileArchiveFormat? archiveFormat, string expectedExtension)
     {
         // Arrange
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -418,13 +419,14 @@ public class RepositoryClientTests
         Assert.Multiple(() =>
         {
             Assert.That(requestPathAndQuery, Is.Not.Null);
-            Assert.That(requestPathAndQuery.EndsWith($"/archive{expectedExtension}", StringComparison.OrdinalIgnoreCase), Is.True);
+            Assert.That(requestPathAndQuery.EndsWith($"/archive{expectedExtension}",
+                StringComparison.OrdinalIgnoreCase), Is.True);
         });
     }
 
     [Test]
     [NGitLabRetry]
-    public async Task GetArchiveShaValuePassedCorrectly()
+    public async Task GetArchive_QuerySpecifiesRevision_ShaValuePassedCorrectly()
     {
         // Arrange
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -443,13 +445,14 @@ public class RepositoryClientTests
         Assert.Multiple(() =>
         {
             Assert.That(requestPathAndQuery, Is.Not.Null);
-            Assert.That(requestPathAndQuery.Contains($"sha={firstCommitId}", StringComparison.OrdinalIgnoreCase), Is.True);
+            Assert.That(requestPathAndQuery.Contains($"sha={firstCommitId}",
+                StringComparison.OrdinalIgnoreCase), Is.True);
         });
     }
 
     [Test]
     [NGitLabRetry]
-    public async Task GetArchivePathValuePassedCorrectly()
+    public async Task GetArchive_QuerySpecifiesPath_PathValuePassedCorrectly()
     {
         // Arrange
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
@@ -474,7 +477,7 @@ public class RepositoryClientTests
 
     [Test]
     [NGitLabRetry]
-    public async Task GetArchiveCombinationOfValuesPassedCorrectly()
+    public async Task GetArchive_QuerySpecifiesAllParameters_AllParametersPassedCorrectly()
     {
         // Arrange
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
