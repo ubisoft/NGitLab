@@ -1857,6 +1857,7 @@ NGitLab.Models.GraphQLQuery.Query.set -> void
 NGitLab.Models.GraphQLQuery.Variables.get -> System.Collections.Generic.IDictionary<string, object>
 NGitLab.Models.Group
 NGitLab.Models.Group.AvatarUrl -> string
+NGitLab.Models.Group.CreatedAt -> System.DateTime
 NGitLab.Models.Group.Description -> string
 NGitLab.Models.Group.ExtraSharedRunnersMinutesLimit -> int?
 NGitLab.Models.Group.FullName -> string

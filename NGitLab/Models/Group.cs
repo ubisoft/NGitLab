@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
@@ -50,4 +51,7 @@ public class Group
 
     [JsonPropertyName("marked_for_deletion_on")]
     public string MarkedForDeletionOn;
+
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt;
 }

@@ -52,6 +52,23 @@ public class GroupsTests
 
     [Test]
     [NGitLabRetry]
+    public async Task Test_group_created_on_date_is_now()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+
+        var t1 = DateTime.UtcNow;
+        var group = context.CreateGroup();
+        var t2 = DateTime.UtcNow;
+
+        Assert.That(group.CreatedAt, Is.GreaterThanOrEqualTo(t1));
+        Assert.That(group.CreatedAt, Is.LessThanOrEqualTo(t2));
+
+        var group2 = await context.Client.Groups.GetByIdAsync(group.Id);
+        Assert.That(group2.CreatedAt, Is.EqualTo(group.CreatedAt));
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task Test_create_delete_group()
     {
         using var context = await GitLabTestContext.CreateAsync();

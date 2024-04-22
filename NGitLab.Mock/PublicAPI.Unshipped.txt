@@ -437,6 +437,8 @@ NGitLab.Mock.Group.CanUserDeleteGroup(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Group.CanUserEditGroup(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Group.CanUserViewGroup(NGitLab.Mock.User user) -> bool
 NGitLab.Mock.Group.CreateBotUser(NGitLab.Models.AccessLevel accessLevel) -> NGitLab.Mock.User
+NGitLab.Mock.Group.CreatedAt.get -> System.DateTime
+NGitLab.Mock.Group.CreatedAt.set -> void
 NGitLab.Mock.Group.DescendantGroups.get -> System.Collections.Generic.IEnumerable<NGitLab.Mock.Group>
 NGitLab.Mock.Group.Description.get -> string
 NGitLab.Mock.Group.Description.set -> void
