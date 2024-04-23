@@ -264,6 +264,12 @@ NGitLab.IGroupBadgeClient.Create(NGitLab.Models.BadgeCreate badge) -> NGitLab.Mo
 NGitLab.IGroupBadgeClient.Delete(int id) -> void
 NGitLab.IGroupBadgeClient.this[int id].get -> NGitLab.Models.Badge
 NGitLab.IGroupBadgeClient.Update(int id, NGitLab.Models.BadgeUpdate badge) -> NGitLab.Models.Badge
+NGitLab.IGroupHooksClient
+NGitLab.IGroupHooksClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.GroupHook>
+NGitLab.IGroupHooksClient.Create(NGitLab.Models.GroupHookUpsert hook) -> NGitLab.Models.GroupHook
+NGitLab.IGroupHooksClient.Delete(int hookId) -> void
+NGitLab.IGroupHooksClient.this[int hookId].get -> NGitLab.Models.GroupHook
+NGitLab.IGroupHooksClient.Update(int hookId, NGitLab.Models.GroupHookUpsert hook) -> NGitLab.Models.GroupHook
 NGitLab.IGroupsClient
 NGitLab.IGroupsClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.IGroupsClient.Create(NGitLab.Models.GroupCreate group) -> NGitLab.Models.Group
@@ -276,6 +282,7 @@ NGitLab.IGroupsClient.GetByFullPathAsync(string fullPath, System.Threading.Cance
 NGitLab.IGroupsClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetGroup(NGitLab.Models.GroupId id) -> NGitLab.Models.Group
 NGitLab.IGroupsClient.GetGroupAsync(NGitLab.Models.GroupId groupId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
+NGitLab.IGroupsClient.GetGroupHooks(NGitLab.Models.GroupId groupId) -> NGitLab.IGroupHooksClient
 NGitLab.IGroupsClient.GetProjectsAsync(int groupId, NGitLab.Models.GroupProjectsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.IGroupsClient.GetSubgroupsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.IGroupsClient.GetSubgroupsByFullPathAsync(string fullPath, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
@@ -560,6 +567,13 @@ NGitLab.Impl.GitLabCredentials.Password.get -> string
 NGitLab.Impl.GitLabCredentials.Password.set -> void
 NGitLab.Impl.GitLabCredentials.UserName.get -> string
 NGitLab.Impl.GitLabCredentials.UserName.set -> void
+NGitLab.Impl.GroupHooksClient
+NGitLab.Impl.GroupHooksClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.GroupHook>
+NGitLab.Impl.GroupHooksClient.Create(NGitLab.Models.GroupHookUpsert hook) -> NGitLab.Models.GroupHook
+NGitLab.Impl.GroupHooksClient.Delete(int hookId) -> void
+NGitLab.Impl.GroupHooksClient.GroupHooksClient(NGitLab.Impl.API api, NGitLab.Models.GroupId groupId) -> void
+NGitLab.Impl.GroupHooksClient.this[int hookId].get -> NGitLab.Models.GroupHook
+NGitLab.Impl.GroupHooksClient.Update(int hookId, NGitLab.Models.GroupHookUpsert hook) -> NGitLab.Models.GroupHook
 NGitLab.Impl.GroupsClient
 NGitLab.Impl.GroupsClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.Create(NGitLab.Models.GroupCreate group) -> NGitLab.Models.Group
@@ -572,6 +586,7 @@ NGitLab.Impl.GroupsClient.GetByFullPathAsync(string fullPath, System.Threading.C
 NGitLab.Impl.GroupsClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.GetGroup(NGitLab.Models.GroupId id) -> NGitLab.Models.Group
 NGitLab.Impl.GroupsClient.GetGroupAsync(NGitLab.Models.GroupId id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Group>
+NGitLab.Impl.GroupsClient.GetGroupHooks(NGitLab.Models.GroupId groupId) -> NGitLab.IGroupHooksClient
 NGitLab.Impl.GroupsClient.GetProjectsAsync(int groupId, NGitLab.Models.GroupProjectsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.Impl.GroupsClient.GetSubgroupsAsync(NGitLab.Models.GroupId groupId, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.GetSubgroupsByFullPathAsync(string fullPath, NGitLab.Models.SubgroupQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
@@ -1868,6 +1883,33 @@ NGitLab.Models.GroupCreate.RequestAccessEnabled -> bool
 NGitLab.Models.GroupCreate.SharedRunnersMinutesLimit.get -> int?
 NGitLab.Models.GroupCreate.SharedRunnersMinutesLimit.set -> void
 NGitLab.Models.GroupCreate.Visibility -> NGitLab.Models.VisibilityLevel
+NGitLab.Models.GroupHook
+NGitLab.Models.GroupHook.CreatedAt -> System.DateTime
+NGitLab.Models.GroupHook.EnableSslVerification -> bool
+NGitLab.Models.GroupHook.GroupHook() -> void
+NGitLab.Models.GroupHook.Id -> int
+NGitLab.Models.GroupHook.IssuesEvents -> bool
+NGitLab.Models.GroupHook.JobEvents -> bool
+NGitLab.Models.GroupHook.MergeRequestsEvents -> bool
+NGitLab.Models.GroupHook.NoteEvents -> bool
+NGitLab.Models.GroupHook.PipelineEvents -> bool
+NGitLab.Models.GroupHook.ProjectId -> int
+NGitLab.Models.GroupHook.PushEvents -> bool
+NGitLab.Models.GroupHook.TagPushEvents -> bool
+NGitLab.Models.GroupHook.Url -> System.Uri
+NGitLab.Models.GroupHook.WikiPagesEvents -> bool
+NGitLab.Models.GroupHookUpsert
+NGitLab.Models.GroupHookUpsert.EnableSslVerification -> bool
+NGitLab.Models.GroupHookUpsert.GroupHookUpsert() -> void
+NGitLab.Models.GroupHookUpsert.IssuesEvents -> bool
+NGitLab.Models.GroupHookUpsert.JobEvents -> bool
+NGitLab.Models.GroupHookUpsert.MergeRequestsEvents -> bool
+NGitLab.Models.GroupHookUpsert.NoteEvents -> bool
+NGitLab.Models.GroupHookUpsert.PipelineEvents -> bool
+NGitLab.Models.GroupHookUpsert.PushEvents -> bool
+NGitLab.Models.GroupHookUpsert.TagPushEvents -> bool
+NGitLab.Models.GroupHookUpsert.Token -> string
+NGitLab.Models.GroupHookUpsert.Url -> System.Uri
 NGitLab.Models.GroupId
 NGitLab.Models.GroupId.Equals(NGitLab.Models.Group other) -> bool
 NGitLab.Models.GroupId.Equals(NGitLab.Models.GroupId other) -> bool

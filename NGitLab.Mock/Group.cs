@@ -23,6 +23,7 @@ public sealed class Group : GitLabObject
         Badges = new BadgeCollection(this);
         Labels = new LabelsCollection(this);
         Milestones = new MilestoneCollection(this);
+        Hooks = new GroupHookCollection(this);
         Name = name;
     }
 
@@ -75,6 +76,8 @@ public sealed class Group : GitLabObject
     public LabelsCollection Labels { get; }
 
     public MilestoneCollection Milestones { get; }
+
+    public GroupHookCollection Hooks { get; }
 
     public IEnumerable<MergeRequest> MergeRequests => AllProjects.SelectMany(project => project.MergeRequests);
 

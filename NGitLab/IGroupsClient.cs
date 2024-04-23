@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using NGitLab.Impl;
 using NGitLab.Models;
 
 namespace NGitLab;

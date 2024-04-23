@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Mock.Config;
+using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Mock.Tests;
@@ -338,5 +340,43 @@ public class GroupsMockTests
             Assert.That(page.Select(p => p.Name), Is.EquivalentTo(expected));
             Assert.That(total, Is.EqualTo(3));
         });
+    }
+
+    [Test]
+    public void Test_create_update_delete_group_hooks()
+    {
+        // Arrange
+        var groupId = 1;
+
+        using var server = new GitLabConfig()
+            .WithUser("user1",  isAdmin: true)
+            .WithGroup("group1", groupId)
+            .BuildServer();
+
+        var client = server.CreateClient("user1");
+        var groupHooksClient = client.Groups.GetGroupHooks(groupId);
+        var groupHookUrl = new Uri("https://test-create-group-hook.com");
+
+        // Act
+        var createdGroupHook = groupHooksClient.Create(new GroupHookUpsert { Url = groupHookUrl });
+
+        // Assert
+        Assert.That(groupHooksClient.All.ToArray(), Has.Length.EqualTo(1));
+        Assert.That(groupHooksClient[createdGroupHook.Id].Url, Is.EqualTo(groupHookUrl));
+        Assert.That(createdGroupHook.Url, Is.EqualTo(groupHookUrl));
+
+        // Act
+        groupHookUrl = new Uri("https://test-update-group-hook.com");
+        var updatedGroupHook = groupHooksClient.Update(createdGroupHook.Id, new GroupHookUpsert { Url = groupHookUrl });
+
+        // Assert
+        Assert.That(groupHooksClient.All.ToArray(), Has.Length.EqualTo(1));
+        Assert.That(updatedGroupHook.Url, Is.EqualTo(groupHookUrl));
+
+        // Act
+        groupHooksClient.Delete(updatedGroupHook.Id);
+
+        // Assert
+        Assert.That(groupHooksClient.All.ToArray(), Is.Empty);
     }
 }

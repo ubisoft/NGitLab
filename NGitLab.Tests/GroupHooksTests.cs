@@ -26,6 +26,7 @@ public class GroupHooksTests
 
         // Assert
         Assert.That(groupHooksClient.All.ToArray(), Has.Length.EqualTo(1));
+        Assert.That(groupHooksClient[createdGroupHook.Id].Url, Is.EqualTo(groupHookUrl));
         Assert.That(createdGroupHook.Url, Is.EqualTo(groupHookUrl));
 
         // Act
