@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Impl;
 using NGitLab.Models;
 
 namespace NGitLab;
@@ -188,4 +189,6 @@ public interface IGroupsClient
     /// <param name="id">The group's id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     Task RestoreAsync(int id, CancellationToken cancellationToken = default);
+
+    IGroupHooksClient GetGroupHooks(GroupId groupId);
 }
