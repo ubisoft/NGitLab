@@ -30,13 +30,15 @@ public sealed class GroupHook : GitLabObject
 
     public bool EnableSslVerification { get; set; }
 
+    public string Token { get; set; }
+
     public Models.GroupHook ToClientGroupHook()
     {
         return new Models.GroupHook
         {
             Id = Id,
             Url = Url,
-            ProjectId = Parent.Id,
+            GroupId = Parent.Id,
             CreatedAt = CreatedAt,
             PushEvents = PushEvents,
             MergeRequestsEvents = MergeRequestsEvents,
@@ -47,6 +49,7 @@ public sealed class GroupHook : GitLabObject
             PipelineEvents = PipelineEvents,
             WikiPagesEvents = WikiPagesEvents,
             EnableSslVerification = EnableSslVerification,
+            Token = Token,
         };
     }
 }

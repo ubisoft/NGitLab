@@ -11,8 +11,8 @@ public class GroupHook
     [JsonPropertyName("url")]
     public Uri Url { get; set; }
 
-    [JsonPropertyName("project_id")]
-    public int ProjectId { get; set; }
+    [JsonPropertyName("group_id")]
+    public int GroupId { get; set; }
 
     [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; set; }
@@ -43,4 +43,7 @@ public class GroupHook
 
     [JsonPropertyName("enable_ssl_verification")]
     public bool EnableSslVerification { get; set; }
+
+    [JsonPropertyName("token")]
+    public string Token { get; set; }
 }

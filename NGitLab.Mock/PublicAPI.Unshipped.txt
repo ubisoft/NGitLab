@@ -500,6 +500,8 @@ NGitLab.Mock.GroupHook.PushEvents.set -> void
 NGitLab.Mock.GroupHook.TagPushEvents.get -> bool
 NGitLab.Mock.GroupHook.TagPushEvents.set -> void
 NGitLab.Mock.GroupHook.ToClientGroupHook() -> NGitLab.Models.GroupHook
+NGitLab.Mock.GroupHook.Token.get -> string
+NGitLab.Mock.GroupHook.Token.set -> void
 NGitLab.Mock.GroupHook.Url.get -> System.Uri
 NGitLab.Mock.GroupHook.Url.set -> void
 NGitLab.Mock.GroupHook.WikiPagesEvents.get -> bool

@@ -355,23 +355,50 @@ public class GroupsMockTests
 
         var client = server.CreateClient("user1");
         var groupHooksClient = client.GetGroupHooksClient(groupId);
-        var groupHookUrl = new Uri("https://test-create-group-hook.com");
+
+        var toCreateGroupHook = new GroupHookUpsert
+        {
+            Url = new Uri("https://test-create-group-hook.com"),
+            EnableSslVerification = true,
+            PushEvents = true,
+        };
 
         // Act
-        var createdGroupHook = groupHooksClient.Create(new GroupHookUpsert { Url = groupHookUrl });
+        var createdGroupHook = groupHooksClient.Create(toCreateGroupHook);
 
         // Assert
         Assert.That(groupHooksClient.All.ToArray(), Has.Length.EqualTo(1));
-        Assert.That(groupHooksClient[createdGroupHook.Id].Url, Is.EqualTo(groupHookUrl));
-        Assert.That(createdGroupHook.Url, Is.EqualTo(groupHookUrl));
+
+        Assert.That(createdGroupHook.Url, Is.EqualTo(toCreateGroupHook.Url));
+        Assert.That(createdGroupHook.EnableSslVerification, Is.EqualTo(toCreateGroupHook.EnableSslVerification));
+        Assert.That(createdGroupHook.PushEvents, Is.EqualTo(toCreateGroupHook.PushEvents));
+
+        var groupHookById = groupHooksClient[createdGroupHook.Id];
+        Assert.That(groupHookById.Url, Is.EqualTo(toCreateGroupHook.Url));
+        Assert.That(groupHookById.EnableSslVerification, Is.EqualTo(toCreateGroupHook.EnableSslVerification));
+        Assert.That(groupHookById.PushEvents, Is.EqualTo(toCreateGroupHook.PushEvents));
+
+        // Arrange
+        var toUpdateGroupHook = new GroupHookUpsert
+        {
+            Url = new Uri("https://test-update-group-hook.com"),
+            PushEvents = false,
+        };
 
         // Act
-        groupHookUrl = new Uri("https://test-update-group-hook.com");
-        var updatedGroupHook = groupHooksClient.Update(createdGroupHook.Id, new GroupHookUpsert { Url = groupHookUrl });
+        var updatedGroupHook = groupHooksClient.Update(createdGroupHook.Id, toUpdateGroupHook);
 
         // Assert
         Assert.That(groupHooksClient.All.ToArray(), Has.Length.EqualTo(1));
-        Assert.That(updatedGroupHook.Url, Is.EqualTo(groupHookUrl));
+
+        Assert.That(updatedGroupHook.Url, Is.EqualTo(toUpdateGroupHook.Url));
+        Assert.That(updatedGroupHook.PushEvents, Is.EqualTo(toUpdateGroupHook.PushEvents));
+        Assert.That(updatedGroupHook.EnableSslVerification, Is.False);
+
+        groupHookById = groupHooksClient[updatedGroupHook.Id];
+        Assert.That(groupHookById.Url, Is.EqualTo(toUpdateGroupHook.Url));
+        Assert.That(groupHookById.PushEvents, Is.EqualTo(toUpdateGroupHook.PushEvents));
+        Assert.That(groupHookById.EnableSslVerification, Is.False);
 
         // Act
         groupHooksClient.Delete(updatedGroupHook.Id);

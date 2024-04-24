@@ -56,14 +56,16 @@ internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
             var currentHook = GetGroup(_groupId, GroupPermission.Edit).Hooks.FirstOrDefault(h => h.Id == hookId) ?? throw new GitLabNotFoundException();
 
             currentHook.Url = hook.Url;
-            currentHook.PushEvents = hook.PushEvents;
-            currentHook.MergeRequestsEvents = hook.MergeRequestsEvents;
-            currentHook.IssuesEvents = hook.IssuesEvents;
-            currentHook.TagPushEvents = hook.TagPushEvents;
-            currentHook.NoteEvents = hook.NoteEvents;
-            currentHook.JobEvents = hook.JobEvents;
-            currentHook.PipelineEvents = hook.PipelineEvents;
-            currentHook.EnableSslVerification = hook.EnableSslVerification;
+            currentHook.PushEvents = hook.PushEvents ?? false;
+            currentHook.MergeRequestsEvents = hook.MergeRequestsEvents ?? false;
+            currentHook.IssuesEvents = hook.IssuesEvents ?? false;
+            currentHook.TagPushEvents = hook.TagPushEvents ?? false;
+            currentHook.NoteEvents = hook.NoteEvents ?? false;
+            currentHook.JobEvents = hook.JobEvents ?? false;
+            currentHook.PipelineEvents = hook.PipelineEvents ?? false;
+            currentHook.WikiPagesEvents = hook.WikiPagesEvents ?? false;
+            currentHook.EnableSslVerification = hook.EnableSslVerification ?? false;
+            currentHook.Token = currentHook.Token;
 
             return currentHook.ToClientGroupHook();
         }
@@ -90,14 +92,16 @@ internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
         var hookFromUpsert = new GroupHook
         {
             Url = hook.Url,
-            PushEvents = hook.PushEvents,
-            MergeRequestsEvents = hook.MergeRequestsEvents,
-            IssuesEvents = hook.IssuesEvents,
-            TagPushEvents = hook.TagPushEvents,
-            NoteEvents = hook.NoteEvents,
-            JobEvents = hook.JobEvents,
-            PipelineEvents = hook.PipelineEvents,
-            EnableSslVerification = hook.EnableSslVerification,
+            PushEvents = hook.PushEvents ?? false,
+            MergeRequestsEvents = hook.MergeRequestsEvents ?? false,
+            IssuesEvents = hook.IssuesEvents ?? false,
+            TagPushEvents = hook.TagPushEvents ?? false,
+            NoteEvents = hook.NoteEvents ?? false,
+            JobEvents = hook.JobEvents ?? false,
+            PipelineEvents = hook.PipelineEvents ?? false,
+            WikiPagesEvents = hook.WikiPagesEvents ?? false,
+            EnableSslVerification = hook.EnableSslVerification ?? false,
+            Token = hook.Token,
         };
 
         return hookFromUpsert;
