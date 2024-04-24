@@ -58,6 +58,7 @@ NGitLab.GitLabClient.GetEnvironmentClient(NGitLab.Models.ProjectId projectId) ->
 NGitLab.GitLabClient.GetEvents() -> NGitLab.IEventClient
 NGitLab.GitLabClient.GetGroupBadgeClient(int groupId) -> NGitLab.IGroupBadgeClient
 NGitLab.GitLabClient.GetGroupBadgeClient(NGitLab.Models.GroupId groupId) -> NGitLab.IGroupBadgeClient
+NGitLab.GitLabClient.GetGroupHooksClient(NGitLab.Models.GroupId groupId) -> NGitLab.IGroupHooksClient
 NGitLab.GitLabClient.GetGroupMergeRequest(NGitLab.Models.GroupId groupId) -> NGitLab.IMergeRequestClient
 NGitLab.GitLabClient.GetGroupMilestone(int groupId) -> NGitLab.IMilestoneClient
 NGitLab.GitLabClient.GetGroupMilestone(NGitLab.Models.GroupId groupId) -> NGitLab.IMilestoneClient
@@ -200,6 +201,7 @@ NGitLab.IGitLabClient.GetEnvironmentClient(NGitLab.Models.ProjectId projectId) -
 NGitLab.IGitLabClient.GetEvents() -> NGitLab.IEventClient
 NGitLab.IGitLabClient.GetGroupBadgeClient(int groupId) -> NGitLab.IGroupBadgeClient
 NGitLab.IGitLabClient.GetGroupBadgeClient(NGitLab.Models.GroupId groupId) -> NGitLab.IGroupBadgeClient
+NGitLab.IGitLabClient.GetGroupHooksClient(NGitLab.Models.GroupId groupId) -> NGitLab.IGroupHooksClient
 NGitLab.IGitLabClient.GetGroupMergeRequest(NGitLab.Models.GroupId groupId) -> NGitLab.IMergeRequestClient
 NGitLab.IGitLabClient.GetGroupMilestone(int groupId) -> NGitLab.IMilestoneClient
 NGitLab.IGitLabClient.GetGroupMilestone(NGitLab.Models.GroupId groupId) -> NGitLab.IMilestoneClient
@@ -264,6 +266,12 @@ NGitLab.IGroupBadgeClient.Create(NGitLab.Models.BadgeCreate badge) -> NGitLab.Mo
 NGitLab.IGroupBadgeClient.Delete(int id) -> void
 NGitLab.IGroupBadgeClient.this[int id].get -> NGitLab.Models.Badge
 NGitLab.IGroupBadgeClient.Update(int id, NGitLab.Models.BadgeUpdate badge) -> NGitLab.Models.Badge
+NGitLab.IGroupHooksClient
+NGitLab.IGroupHooksClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.GroupHook>
+NGitLab.IGroupHooksClient.Create(NGitLab.Models.GroupHookUpsert hook) -> NGitLab.Models.GroupHook
+NGitLab.IGroupHooksClient.Delete(int hookId) -> void
+NGitLab.IGroupHooksClient.this[int hookId].get -> NGitLab.Models.GroupHook
+NGitLab.IGroupHooksClient.Update(int hookId, NGitLab.Models.GroupHookUpsert hook) -> NGitLab.Models.GroupHook
 NGitLab.IGroupsClient
 NGitLab.IGroupsClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.IGroupsClient.Create(NGitLab.Models.GroupCreate group) -> NGitLab.Models.Group
@@ -560,6 +568,13 @@ NGitLab.Impl.GitLabCredentials.Password.get -> string
 NGitLab.Impl.GitLabCredentials.Password.set -> void
 NGitLab.Impl.GitLabCredentials.UserName.get -> string
 NGitLab.Impl.GitLabCredentials.UserName.set -> void
+NGitLab.Impl.GroupHooksClient
+NGitLab.Impl.GroupHooksClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.GroupHook>
+NGitLab.Impl.GroupHooksClient.Create(NGitLab.Models.GroupHookUpsert hook) -> NGitLab.Models.GroupHook
+NGitLab.Impl.GroupHooksClient.Delete(int hookId) -> void
+NGitLab.Impl.GroupHooksClient.GroupHooksClient(NGitLab.Impl.API api, NGitLab.Models.GroupId groupId) -> void
+NGitLab.Impl.GroupHooksClient.this[int hookId].get -> NGitLab.Models.GroupHook
+NGitLab.Impl.GroupHooksClient.Update(int hookId, NGitLab.Models.GroupHookUpsert hook) -> NGitLab.Models.GroupHook
 NGitLab.Impl.GroupsClient
 NGitLab.Impl.GroupsClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Group>
 NGitLab.Impl.GroupsClient.Create(NGitLab.Models.GroupCreate group) -> NGitLab.Models.Group
@@ -1868,6 +1883,60 @@ NGitLab.Models.GroupCreate.RequestAccessEnabled -> bool
 NGitLab.Models.GroupCreate.SharedRunnersMinutesLimit.get -> int?
 NGitLab.Models.GroupCreate.SharedRunnersMinutesLimit.set -> void
 NGitLab.Models.GroupCreate.Visibility -> NGitLab.Models.VisibilityLevel
+NGitLab.Models.GroupHook
+NGitLab.Models.GroupHook.CreatedAt.get -> System.DateTime
+NGitLab.Models.GroupHook.CreatedAt.set -> void
+NGitLab.Models.GroupHook.EnableSslVerification.get -> bool
+NGitLab.Models.GroupHook.EnableSslVerification.set -> void
+NGitLab.Models.GroupHook.GroupHook() -> void
+NGitLab.Models.GroupHook.GroupId.get -> int
+NGitLab.Models.GroupHook.GroupId.set -> void
+NGitLab.Models.GroupHook.Id.get -> int
+NGitLab.Models.GroupHook.Id.set -> void
+NGitLab.Models.GroupHook.IssuesEvents.get -> bool
+NGitLab.Models.GroupHook.IssuesEvents.set -> void
+NGitLab.Models.GroupHook.JobEvents.get -> bool
+NGitLab.Models.GroupHook.JobEvents.set -> void
+NGitLab.Models.GroupHook.MergeRequestsEvents.get -> bool
+NGitLab.Models.GroupHook.MergeRequestsEvents.set -> void
+NGitLab.Models.GroupHook.NoteEvents.get -> bool
+NGitLab.Models.GroupHook.NoteEvents.set -> void
+NGitLab.Models.GroupHook.PipelineEvents.get -> bool
+NGitLab.Models.GroupHook.PipelineEvents.set -> void
+NGitLab.Models.GroupHook.PushEvents.get -> bool
+NGitLab.Models.GroupHook.PushEvents.set -> void
+NGitLab.Models.GroupHook.TagPushEvents.get -> bool
+NGitLab.Models.GroupHook.TagPushEvents.set -> void
+NGitLab.Models.GroupHook.Token.get -> string
+NGitLab.Models.GroupHook.Token.set -> void
+NGitLab.Models.GroupHook.Url.get -> System.Uri
+NGitLab.Models.GroupHook.Url.set -> void
+NGitLab.Models.GroupHook.WikiPagesEvents.get -> bool
+NGitLab.Models.GroupHook.WikiPagesEvents.set -> void
+NGitLab.Models.GroupHookUpsert
+NGitLab.Models.GroupHookUpsert.EnableSslVerification.get -> bool?
+NGitLab.Models.GroupHookUpsert.EnableSslVerification.set -> void
+NGitLab.Models.GroupHookUpsert.GroupHookUpsert() -> void
+NGitLab.Models.GroupHookUpsert.IssuesEvents.get -> bool?
+NGitLab.Models.GroupHookUpsert.IssuesEvents.set -> void
+NGitLab.Models.GroupHookUpsert.JobEvents.get -> bool?
+NGitLab.Models.GroupHookUpsert.JobEvents.set -> void
+NGitLab.Models.GroupHookUpsert.MergeRequestsEvents.get -> bool?
+NGitLab.Models.GroupHookUpsert.MergeRequestsEvents.set -> void
+NGitLab.Models.GroupHookUpsert.NoteEvents.get -> bool?
+NGitLab.Models.GroupHookUpsert.NoteEvents.set -> void
+NGitLab.Models.GroupHookUpsert.PipelineEvents.get -> bool?
+NGitLab.Models.GroupHookUpsert.PipelineEvents.set -> void
+NGitLab.Models.GroupHookUpsert.PushEvents.get -> bool?
+NGitLab.Models.GroupHookUpsert.PushEvents.set -> void
+NGitLab.Models.GroupHookUpsert.TagPushEvents.get -> bool?
+NGitLab.Models.GroupHookUpsert.TagPushEvents.set -> void
+NGitLab.Models.GroupHookUpsert.Token.get -> string
+NGitLab.Models.GroupHookUpsert.Token.set -> void
+NGitLab.Models.GroupHookUpsert.Url.get -> System.Uri
+NGitLab.Models.GroupHookUpsert.Url.set -> void
+NGitLab.Models.GroupHookUpsert.WikiPagesEvents.get -> bool?
+NGitLab.Models.GroupHookUpsert.WikiPagesEvents.set -> void
 NGitLab.Models.GroupId
 NGitLab.Models.GroupId.Equals(NGitLab.Models.Group other) -> bool
 NGitLab.Models.GroupId.Equals(NGitLab.Models.GroupId other) -> bool

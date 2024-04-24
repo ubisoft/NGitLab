@@ -449,6 +449,7 @@ NGitLab.Mock.Group.Group() -> void
 NGitLab.Mock.Group.Group(NGitLab.Mock.User user) -> void
 NGitLab.Mock.Group.Group(string name) -> void
 NGitLab.Mock.Group.Groups.get -> NGitLab.Mock.GroupCollection
+NGitLab.Mock.Group.Hooks.get -> NGitLab.Mock.GroupHookCollection
 NGitLab.Mock.Group.Id.get -> int
 NGitLab.Mock.Group.Id.set -> void
 NGitLab.Mock.Group.IsUserNamespace.get -> bool
@@ -476,6 +477,37 @@ NGitLab.Mock.Group.Visibility.set -> void
 NGitLab.Mock.GroupCollection
 NGitLab.Mock.GroupCollection.GroupCollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.GroupExtensions
+NGitLab.Mock.GroupHook
+NGitLab.Mock.GroupHook.CreatedAt.get -> System.DateTime
+NGitLab.Mock.GroupHook.CreatedAt.set -> void
+NGitLab.Mock.GroupHook.EnableSslVerification.get -> bool
+NGitLab.Mock.GroupHook.EnableSslVerification.set -> void
+NGitLab.Mock.GroupHook.GroupHook() -> void
+NGitLab.Mock.GroupHook.Id.get -> int
+NGitLab.Mock.GroupHook.IssuesEvents.get -> bool
+NGitLab.Mock.GroupHook.IssuesEvents.set -> void
+NGitLab.Mock.GroupHook.JobEvents.get -> bool
+NGitLab.Mock.GroupHook.JobEvents.set -> void
+NGitLab.Mock.GroupHook.MergeRequestsEvents.get -> bool
+NGitLab.Mock.GroupHook.MergeRequestsEvents.set -> void
+NGitLab.Mock.GroupHook.NoteEvents.get -> bool
+NGitLab.Mock.GroupHook.NoteEvents.set -> void
+NGitLab.Mock.GroupHook.Parent.get -> NGitLab.Mock.Group
+NGitLab.Mock.GroupHook.PipelineEvents.get -> bool
+NGitLab.Mock.GroupHook.PipelineEvents.set -> void
+NGitLab.Mock.GroupHook.PushEvents.get -> bool
+NGitLab.Mock.GroupHook.PushEvents.set -> void
+NGitLab.Mock.GroupHook.TagPushEvents.get -> bool
+NGitLab.Mock.GroupHook.TagPushEvents.set -> void
+NGitLab.Mock.GroupHook.ToClientGroupHook() -> NGitLab.Models.GroupHook
+NGitLab.Mock.GroupHook.Token.get -> string
+NGitLab.Mock.GroupHook.Token.set -> void
+NGitLab.Mock.GroupHook.Url.get -> System.Uri
+NGitLab.Mock.GroupHook.Url.set -> void
+NGitLab.Mock.GroupHook.WikiPagesEvents.get -> bool
+NGitLab.Mock.GroupHook.WikiPagesEvents.set -> void
+NGitLab.Mock.GroupHookCollection
+NGitLab.Mock.GroupHookCollection.GroupHookCollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.Issue
 NGitLab.Mock.Issue.Assignee.get -> NGitLab.Mock.UserRef
 NGitLab.Mock.Issue.Assignee.set -> void
@@ -1193,6 +1225,7 @@ override NGitLab.Mock.EventCollection.Add(NGitLab.Mock.Event item) -> void
 override NGitLab.Mock.Config.GitLabCollection<TItem>.InsertItem(int index, TItem item) -> void
 override NGitLab.Mock.Config.GitLabCollection<TItem>.SetItem(int index, TItem item) -> void
 override NGitLab.Mock.GroupCollection.Add(NGitLab.Mock.Group group) -> void
+override NGitLab.Mock.GroupHookCollection.Add(NGitLab.Mock.GroupHook item) -> void
 override NGitLab.Mock.IssueCollection.Add(NGitLab.Mock.Issue item) -> void
 override NGitLab.Mock.JobCollection.Add(NGitLab.Mock.Job job) -> void
 override NGitLab.Mock.LabelsCollection.Add(NGitLab.Mock.Label label) -> void

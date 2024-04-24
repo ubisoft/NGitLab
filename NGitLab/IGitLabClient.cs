@@ -175,4 +175,6 @@ public interface IGitLabClient
     public ISearchClient GetProjectSearchClient(int projectId);
 
     public ISearchClient GetProjectSearchClient(ProjectId projectId);
+
+    public IGroupHooksClient GetGroupHooksClient(GroupId groupId);
 }
