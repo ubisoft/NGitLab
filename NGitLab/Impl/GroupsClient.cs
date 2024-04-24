@@ -286,6 +286,4 @@ public class GroupsClient : IGroupsClient
 
     public Task RestoreAsync(int id, CancellationToken cancellationToken = default) =>
         _api.Post().ExecuteAsync($"{Url}/{new GroupId(id).ValueAsUriParameter()}/restore", cancellationToken);
-
-    public IGroupHooksClient GetGroupHooks(GroupId groupId) => new GroupHooksClient(_api, groupId);
 }

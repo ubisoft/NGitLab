@@ -402,6 +402,4 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             .ToArray();
         return new(page, all.Length > PagedResponse.MaxQueryCountLimit ? null : all.Length);
     }
-
-    public IGroupHooksClient GetGroupHooks(GroupId groupId) => new GroupHooksClient(Context, groupId);
 }

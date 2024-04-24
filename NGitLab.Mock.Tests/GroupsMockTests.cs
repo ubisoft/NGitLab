@@ -354,7 +354,7 @@ public class GroupsMockTests
             .BuildServer();
 
         var client = server.CreateClient("user1");
-        var groupHooksClient = client.Groups.GetGroupHooks(groupId);
+        var groupHooksClient = client.GetGroupHooksClient(groupId);
         var groupHookUrl = new Uri("https://test-create-group-hook.com");
 
         // Act

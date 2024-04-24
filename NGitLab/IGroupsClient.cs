@@ -188,6 +188,4 @@ public interface IGroupsClient
     /// <param name="id">The group's id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     Task RestoreAsync(int id, CancellationToken cancellationToken = default);
-
-    IGroupHooksClient GetGroupHooks(GroupId groupId);
 }

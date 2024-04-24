@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace NGitLab.Tests;
 
-public class GroupHooksTests
+public class GroupHooksClientTests
 {
     [Test]
     [NGitLabRetry]
@@ -15,9 +15,8 @@ public class GroupHooksTests
     {
         // Arrange
         using var context = await GitLabTestContext.CreateAsync();
-        var groupClient = context.Client.Groups;
         var group = context.CreateGroup();
-        var groupHooksClient = groupClient.GetGroupHooks(group.Id);
+        var groupHooksClient = context.Client.GetGroupHooksClient(group.Id);
 
         var groupHookUrl = new Uri("https://test-create-group-hook.com");
 

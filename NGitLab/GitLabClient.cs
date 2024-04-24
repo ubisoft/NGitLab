@@ -251,4 +251,7 @@ public class GitLabClient : IGitLabClient
 
     public ISearchClient GetProjectSearchClient(ProjectId projectId)
         => new SearchClient(_api, $"/projects/{projectId.ValueAsUriParameter()}/search");
+
+    public IGroupHooksClient GetGroupHooksClient(GroupId groupId)
+        => new GroupHooksClient(_api, groupId);
 }
