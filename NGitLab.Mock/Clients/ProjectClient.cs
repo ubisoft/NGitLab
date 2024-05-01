@@ -353,7 +353,7 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
 
             if (projectUpdate.BuildTimeout.HasValue)
             {
-                project.BuildTimeout = TimeSpan.FromMinutes(projectUpdate.BuildTimeout.Value);
+                project.BuildTimeout = TimeSpan.FromSeconds(projectUpdate.BuildTimeout.Value);
             }
 
             if (projectUpdate.LfsEnabled.HasValue)
