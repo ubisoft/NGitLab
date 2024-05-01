@@ -118,6 +118,8 @@ public sealed class Group : GitLabObject
         }
     }
 
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
     public IEnumerable<Project> AllProjects => Projects.Concat(DescendantGroups.SelectMany(group => group.Projects));
 
     public EffectivePermissions GetEffectivePermissions() => GetEffectivePermissions(includeInheritedPermissions: true);
@@ -259,6 +261,7 @@ public sealed class Group : GitLabObject
             LfsEnabled = LfsEnabled,
             ExtraSharedRunnersMinutesLimit = (int)ExtraSharedRunnersLimit.TotalMinutes,
             SharedRunnersMinutesLimit = (int)SharedRunnersLimit.TotalMinutes,
+            CreatedAt = CreatedAt,
         };
     }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Mock.Config;
@@ -405,5 +405,26 @@ public class GroupsMockTests
 
         // Assert
         Assert.That(groupHooksClient.All.ToArray(), Is.Empty);
+    }
+
+    [Test]
+    public async Task Test_group_created_at_date()
+    {
+        using var server = new GitLabConfig()
+            .WithUser("user1", isDefault: true)
+            .BuildServer();
+
+        var client = server.CreateClient("user1");
+
+        var t1 = DateTime.UtcNow;
+        var group = await client.Groups.CreateAsync(new Models.GroupCreate
+        {
+            Name = "Foo",
+            Path = "foo",
+        });
+        var t2 = DateTime.UtcNow;
+
+        Assert.That(group.CreatedAt, Is.GreaterThanOrEqualTo(t1));
+        Assert.That(group.CreatedAt, Is.LessThanOrEqualTo(t2));
     }
 }

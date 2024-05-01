@@ -73,7 +73,11 @@ public class UserClient : IUserClient
 
     public Task<User> CreateAsync(UserUpsert user, CancellationToken cancellationToken = default) => _api.Post().With(user).ToAsync<User>(User.Url, cancellationToken);
 
-    public UserToken CreateToken(UserTokenCreate tokenRequest) => _api.Post().With(tokenRequest).To<UserToken>(User.Url + "/" + tokenRequest.UserId.ToStringInvariant() + "/impersonation_tokens");
+    public UserToken CreateToken(UserTokenCreate tokenRequest) =>
+        _api.Post().With(tokenRequest).To<UserToken>($"{User.Url}/{tokenRequest.UserId.ToStringInvariant()}/impersonation_tokens");
+
+    public Task<UserToken> CreateTokenAsync(UserTokenCreate tokenRequest, CancellationToken cancellationToken = default) =>
+        _api.Post().With(tokenRequest).ToAsync<UserToken>($"{User.Url}/{tokenRequest.UserId.ToStringInvariant()}/impersonation_tokens", cancellationToken);
 
     public User Update(int id, UserUpsert user) => _api.Put().With(user).To<User>(User.Url + "/" + id.ToStringInvariant());
 
