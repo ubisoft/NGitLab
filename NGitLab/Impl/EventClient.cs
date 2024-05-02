@@ -25,6 +25,7 @@ public class EventClient : IEventClient
         url = Utils.AddParameter(url, "scope", query.Scope);
         url = Utils.AddParameter(url, "sort", query.Sort);
         url = Utils.AddParameter(url, "per_page", query.PerPage);
+        url = Utils.AddParameter(url, "page", query.Page);
 
         return _api.Get().GetAll<Event>(url);
     }

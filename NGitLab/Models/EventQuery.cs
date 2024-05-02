@@ -41,4 +41,9 @@ public class EventQuery
     /// Specifies how many records per page (GitLab supports a maximum of 100 items per page and defaults to 20).
     /// </summary>
     public int? PerPage { get; set; }
+
+    /// <summary>
+    /// Specifies which page will be retrevied.
+    /// </summary>
+    public int? Page { get; set; }
 }
