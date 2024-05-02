@@ -1775,6 +1775,8 @@ NGitLab.Models.EventQuery.Before.set -> void
 NGitLab.Models.EventQuery.EventQuery() -> void
 NGitLab.Models.EventQuery.PerPage.get -> int?
 NGitLab.Models.EventQuery.PerPage.set -> void
+NGitLab.Models.EventQuery.Page.get -> int?
+NGitLab.Models.EventQuery.Page.set -> void
 NGitLab.Models.EventQuery.Scope.get -> string
 NGitLab.Models.EventQuery.Scope.set -> void
 NGitLab.Models.EventQuery.Sort.get -> string
