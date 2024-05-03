@@ -1782,6 +1782,7 @@ NGitLab.Models.EventQuery.Sort.set -> void
 NGitLab.Models.EventQuery.Type.get -> NGitLab.Models.EventTargetType?
 NGitLab.Models.EventQuery.Type.set -> void
 NGitLab.Models.EventTargetType
+NGitLab.Models.EventTargetType.WorkItem = 11 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.DesignManagement = 10 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.DiffNote = 8 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.DiscussionNote = 9 -> NGitLab.Models.EventTargetType
