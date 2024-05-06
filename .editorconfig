@@ -232,9 +232,8 @@ dotnet_naming_symbols.all_members.applicable_kinds = *
 
 dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
-MA0051.maximum_lines_per_method = 100
-MA0051.maximum_statements_per_method = 100
-MA0053.public_class_should_be_sealed = false
+# CS0618: Type or member is obsolete
+dotnet_diagnostic.CS0618.severity = suggestion
 
 # IDE0005: Using directive is unnecessary
 dotnet_diagnostic.IDE0005.severity = warning
@@ -247,73 +246,6 @@ dotnet_diagnostic.IDE0079.severity = silent
 
 # MA0005: Use Array.Empty<T>() -> Defer to CA1825
 dotnet_diagnostic.MA0005.severity = none
-
-# SA1000: The keyword new should be followed by a space
-dotnet_diagnostic.SA1000.severity = none
-
-# SA1025: Code should not contain multiple whitespace in a row
-dotnet_diagnostic.SA1025.severity = none
-
-# SA1101: Prefix local calls with this
-dotnet_diagnostic.SA1101.severity = none
-
-# SA1116: Split parameters should start on line after declaration
-dotnet_diagnostic.SA1116.severity = silent
-
-# SA1118: Parameter should not span multiple lines
-dotnet_diagnostic.SA1118.severity = suggestion
-
-# SA1122: Use string.Empty for empty strings
-dotnet_diagnostic.SA1122.severity = none
-
-# SA1200: Using directives should be placed correctly
-dotnet_diagnostic.SA1200.severity = none
-
-# SA1202: Elements should be ordered by access
-dotnet_diagnostic.SA1202.severity = silent
-
-# SA1306: Field names should begin with lower-case letter
-dotnet_diagnostic.SA1306.severity = none
-
-# SA1308: Variable names should not be prefixed
-dotnet_diagnostic.SA1308.severity = silent
-
-# SA1309: Field names should not begin with underscore
-dotnet_diagnostic.SA1309.severity = none
-
-# SA1310: Field names should not contain underscore
-dotnet_diagnostic.SA1310.severity = none
-
-# The default VS refactoring works better and MA0048 detects the same pattern
-# SA1402: File may only contain a single type
-dotnet_diagnostic.SA1402.severity = none
-
-# SA1503: Braces should not be omitted
-dotnet_diagnostic.SA1503.severity = silent
-
-# SA1600: Elements should be documented
-dotnet_diagnostic.SA1600.severity = silent
-
-# SA1601: Partial elements should be documented
-dotnet_diagnostic.SA1601.severity = none
-
-# SA1602: Enumeration items should be documented
-dotnet_diagnostic.SA1602.severity = silent
-
-# SA1623: Property summary documentation should match accessors
-dotnet_diagnostic.SA1623.severity = silent
-
-# SA1629: Documentation text should end with a period
-dotnet_diagnostic.SA1629.severity = silent
-
-# SA1633: File should have header
-dotnet_diagnostic.SA1633.severity = none
-
-###################### TO DO: FIX (OR MOVE TO SECTION ABOVE) THE FOLLOWING ######################
-
-# CS0618: Type or member is obsolete
-dotnet_diagnostic.CS0618.severity = suggestion
-
 
 # MA0008: Add StructLayoutAttribute
 dotnet_diagnostic.MA0008.severity = none
@@ -335,57 +267,7 @@ dotnet_diagnostic.MA0048.severity = none
 
 # MA0051: Method is too long
 dotnet_diagnostic.MA0051.severity = none
+MA0051.maximum_lines_per_method = 100
+MA0051.maximum_statements_per_method = 100
 
-# SA0001: XML comment analysis is disabled due to project configuration
-dotnet_diagnostic.SA0001.severity = none
-
-# SA1117: Parameters should be on same line or separate lines
-dotnet_diagnostic.SA1117.severity = none
-
-# SA1201: Elements should appear in the correct order
-dotnet_diagnostic.SA1201.severity = none
-
-# SA1204: Static elements should appear before instance elements
-dotnet_diagnostic.SA1204.severity = silent
-
-# SA1214: Readonly fields should appear before non-readonly fields
-dotnet_diagnostic.SA1214.severity = none
-
-# SA1300: Element should begin with upper-case letter
-dotnet_diagnostic.SA1300.severity = none
-
-# SA1311: Static readonly fields should begin with upper-case letter
-dotnet_diagnostic.SA1311.severity = silent
-
-# SA1313: Parameter names should begin with lower-case letter
-dotnet_diagnostic.SA1313.severity = none
-
-# SA1401: Fields should be private
-dotnet_diagnostic.SA1401.severity = none
-
-# SA1604: Element documentation should have summary
-dotnet_diagnostic.SA1604.severity = none
-
-# SA1611: Element parameters should be documented
-dotnet_diagnostic.SA1611.severity = none
-
-# SA1614: Element parameter documentation should have text
-dotnet_diagnostic.SA1614.severity = none
-
-# SA1615: Element return value should be documented
-dotnet_diagnostic.SA1615.severity = none
-
-# SA1616: Element return value documentation should have text
-dotnet_diagnostic.SA1616.severity = none
-
-# SA1618: Generic type parameters should be documented
-dotnet_diagnostic.SA1618.severity = none
-
-# SA1636: File header copyright text should match
-dotnet_diagnostic.SA1636.severity = none
-
-# SA1649: File name should match first type name
-dotnet_diagnostic.SA1649.severity = none
-dotnet_style_operator_placement_when_wrapping = beginning_of_line
-tab_width = 4
-end_of_line = crlf
+MA0053.public_class_should_be_sealed = false

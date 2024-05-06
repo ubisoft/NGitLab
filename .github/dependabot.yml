@@ -40,8 +40,6 @@ updates:
       code-analyzers:
         patterns:
           - '*Analyzer*'
-        exclude-patterns:
-          - 'StyleCop.Analyzers'
       ms-dependencies:
         patterns:
           - 'Microsoft.*'
