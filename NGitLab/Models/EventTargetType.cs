@@ -17,4 +17,5 @@ public enum EventTargetType
     DiscussionNote,
     [EnumMember(Value = "DesignManagement::Design")]
     DesignManagement,
+    WorkItem,
 }
