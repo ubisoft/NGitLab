@@ -18,7 +18,13 @@ internal sealed class ProjectVariableClient : ClientBase, IProjectVariableClient
 
     public IEnumerable<Variable> All => throw new NotImplementedException();
 
+    [Obsolete($"Use '{nameof(Create)}({nameof(Variable)} model)' instead")]
     public Variable Create(VariableCreate model)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Variable Create(Variable model)
     {
         throw new NotImplementedException();
     }

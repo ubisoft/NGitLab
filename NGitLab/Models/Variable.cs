@@ -10,6 +10,9 @@ public class Variable
     [JsonPropertyName("value")]
     public string Value { get; set; }
 
+    [JsonPropertyName("description")]
+    public string Description { get; set; }
+
     [JsonPropertyName("protected")]
     public bool Protected { get; set; }
 
@@ -18,6 +21,9 @@ public class Variable
 
     [JsonPropertyName("masked")]
     public bool Masked { get; set; }
+
+    [JsonPropertyName("raw")]
+    public bool Raw { get; set; }
 
     [JsonPropertyName("environment_scope")]
     public string Scope { get; set; }

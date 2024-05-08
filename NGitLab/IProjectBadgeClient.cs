@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab;
@@ -28,7 +29,10 @@ public interface IProjectVariableClient
 
     Variable this[string key] { get; }
 
+    [Obsolete($"Use '{nameof(Create)}({nameof(Variable)} model)' instead")]
     Variable Create(VariableCreate model);
+
+    Variable Create(Variable model);
 
     Variable Update(string key, VariableUpdate model);
 
@@ -42,6 +46,8 @@ public interface IGroupVariableClient
     Variable this[string key] { get; }
 
     Variable Create(VariableCreate model);
+
+    Variable Create(Variable model);
 
     Variable Update(string key, VariableUpdate model);
 
