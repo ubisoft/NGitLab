@@ -26,7 +26,7 @@ public class GitLabDockerContainer
     public const string ImageName = "gitlab/gitlab-ee";
 
     // https://hub.docker.com/r/gitlab/gitlab-ee/tags/
-    public const string GitLabDockerVersion = "15.11.9-ee.0"; // Keep in sync with .github/workflows/ci.yml
+    public const string GitLabDockerVersion = "16.11.1-ee.0"; // Keep in sync with .github/workflows/ci.yml
 
     private static string s_creationErrorMessage;
     private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
@@ -299,15 +299,15 @@ public class GitLabDockerContainer
             // Login
             if (url == "/users/sign_in")
             {
-                await page.Locator("form#new_user input[name='user[login]']").FillAsync(AdminUserName);
-                await page.Locator("form#new_user input[name='user[password]']").FillAsync(AdminPassword);
+                await page.Locator("form[data-testid='sign-in-form'] input[name='user[login]']").FillAsync(AdminUserName);
+                await page.Locator("form[data-testid='sign-in-form'] input[name='user[password]']").FillAsync(AdminPassword);
 
-                var checkbox = page.Locator("form#new_user input[type=checkbox][name='user[remember_me]']");
+                var checkbox = page.Locator("form[data-testid='sign-in-form'] input[type=checkbox][name='user[remember_me]']");
                 await checkbox.CheckAsync(new LocatorCheckOptions { Force = true });
 
                 await page.RunAndWaitForResponseAsync(async () =>
                 {
-                    await page.EvalOnSelectorAsync("form#new_user", "form => form.submit()");
+                    await page.EvalOnSelectorAsync("form[data-testid='sign-in-form']", "form => form.submit()");
                 }, response => response.Status == 200);
 
                 url = await GetCurrentUrl(page);
@@ -320,10 +320,11 @@ public class GitLabDockerContainer
 
                 await page.GotoAsync(GitLabUrl + "/-/profile/personal_access_tokens");
 
-                var formLocator = page.Locator("main#content-body form");
+                await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync();
+                var formLocator = page.Locator("main[id='content-body'] form[id='js-new-access-token-form']");
 
                 var tokenName = "GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
-                await formLocator.GetByLabel("Token name").FillAsync(tokenName);
+                await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
 
                 foreach (var checkbox in await formLocator.GetByRole(AriaRole.Checkbox).AllAsync())
                 {
@@ -332,7 +333,7 @@ public class GitLabDockerContainer
 
                 await formLocator.GetByRole(AriaRole.Button, new() { Name = "Create personal access token" }).ClickAsync();
 
-                var token = await page.GetByTitle("Copy personal access token").GetAttributeAsync("data-clipboard-text");
+                var token = await page.Locator("button[title='Copy personal access token']").GetAttributeAsync("data-clipboard-text");
                 credentials.AdminUserToken = token;
             }
 
@@ -396,6 +397,7 @@ public class GitLabDockerContainer
                 UserId = user.Id,
                 Name = "common_user",
                 Scopes = new[] { "api" },
+                ExpiresAt = DateTime.UtcNow.AddDays(7),
             }));
 
             credentials.UserToken = token.Token;
