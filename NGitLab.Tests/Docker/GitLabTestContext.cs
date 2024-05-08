@@ -108,6 +108,7 @@ public sealed class GitLabTestContext : IDisposable
             UserId = user.Id,
             Name = "UnitTest",
             Scopes = new[] { "api", "read_user" },
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
         });
         return CreateClient(token.Token);
     }
