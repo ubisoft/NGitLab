@@ -36,7 +36,7 @@ public class GitLabClientMockTest
             foreach (var method in GetMethods<GroupId>())
             {
                 // GetGroupMergeRequest() is not implemented in the mock MergeRequestClient and will throw a NotImplementedException
-                // To avoid a test failure, exclude this mehtod from the test cases (this is the only such case)
+                // To avoid a test failure, exclude this method from the test cases (this is the only such case)
                 // This can be removed if a mock for group merge requests is implemented
                 if (string.Equals(method.Name, nameof(IGitLabClient.GetGroupMergeRequest), StringComparison.Ordinal))
                 {
