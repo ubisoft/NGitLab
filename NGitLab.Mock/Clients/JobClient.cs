@@ -16,7 +16,7 @@ internal sealed class JobClient : ClientBase, IJobClient
     public JobClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public Models.Job Get(int jobId)

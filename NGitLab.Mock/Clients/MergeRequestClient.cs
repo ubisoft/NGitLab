@@ -22,7 +22,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
     public MergeRequestClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public MergeRequestClient(ClientContext context, GroupId groupId)
