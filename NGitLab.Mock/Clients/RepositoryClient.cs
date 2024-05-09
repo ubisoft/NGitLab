@@ -14,7 +14,7 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
     public RepositoryClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public ITagClient Tags => new TagClient(Context, _projectId);

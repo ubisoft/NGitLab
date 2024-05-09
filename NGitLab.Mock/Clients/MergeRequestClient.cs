@@ -22,12 +22,15 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
     public MergeRequestClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public MergeRequestClient(ClientContext context, GroupId groupId)
         : base(context)
     {
+        // Support for group-level Merge Requests is not implemented in the mocks yet.
+        // For this reason, the GetGroupMergeRequest() method is excluded from the test cases in GitLabClientMockTest (see GroupClientTestCases).
+        // The exclusion in the test should be removed when support for support for merge requests in groups is implemented.
         throw new NotImplementedException();
     }
 

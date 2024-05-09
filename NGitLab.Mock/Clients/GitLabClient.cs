@@ -142,10 +142,7 @@ internal sealed class GitLabClient : ClientBase, IGitLabClient
 
     public IProtectedBranchClient GetProtectedBranchClient(ProjectId projectId) => new ProtectedBranchClient(Context, projectId);
 
-    public IProtectedTagClient GetProtectedTagClient(ProjectId projectId)
-    {
-        throw new System.NotImplementedException();
-    }
+    public IProtectedTagClient GetProtectedTagClient(ProjectId projectId) => new ProtectedTagClient(Context, projectId);
 
     public ISearchClient GetGroupSearchClient(int groupId) => GetGroupSearchClient((long)groupId);
 

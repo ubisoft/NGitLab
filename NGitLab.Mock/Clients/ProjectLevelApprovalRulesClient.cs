@@ -11,7 +11,7 @@ internal sealed class ProjectLevelApprovalRulesClient : ClientBase, IProjectLeve
     public ProjectLevelApprovalRulesClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public List<ApprovalRule> GetProjectLevelApprovalRules()

@@ -12,7 +12,7 @@ internal sealed class CommitStatusClient : ClientBase, ICommitStatusClient
     public CommitStatusClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public CommitStatusCreate AddOrUpdate(CommitStatusCreate status)

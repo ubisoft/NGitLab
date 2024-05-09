@@ -18,7 +18,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         : base(context)
     {
         _jobClient = jobClient;
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public Models.Pipeline this[int id]

@@ -11,7 +11,7 @@ internal sealed class WikiClient : ClientBase, IWikiClient
     public WikiClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public WikiPage this[string slug] => throw new NotImplementedException();
