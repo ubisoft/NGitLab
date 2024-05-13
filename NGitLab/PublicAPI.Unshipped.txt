@@ -889,6 +889,7 @@ NGitLab.Impl.RepositoryClient.Compare(NGitLab.Models.CompareQuery query) -> NGit
 NGitLab.Impl.RepositoryClient.Contributors.get -> NGitLab.IContributorClient
 NGitLab.Impl.RepositoryClient.Files.get -> NGitLab.IFilesClient
 NGitLab.Impl.RepositoryClient.GetArchive(System.Action<System.IO.Stream> parser) -> void
+NGitLab.Impl.RepositoryClient.GetArchive(System.Action<System.IO.Stream> parser, NGitLab.Models.FileArchiveQuery fileArchiveQuery) -> void
 NGitLab.Impl.RepositoryClient.GetCommit(NGitLab.Sha1 sha) -> NGitLab.Models.Commit
 NGitLab.Impl.RepositoryClient.GetCommitDiff(NGitLab.Sha1 sha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Diff>
 NGitLab.Impl.RepositoryClient.GetCommitRefs(NGitLab.Sha1 sha, NGitLab.Models.CommitRefType type = NGitLab.Models.CommitRefType.All) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Ref>
@@ -1111,6 +1112,7 @@ NGitLab.IRepositoryClient.Compare(NGitLab.Models.CompareQuery query) -> NGitLab.
 NGitLab.IRepositoryClient.Contributors.get -> NGitLab.IContributorClient
 NGitLab.IRepositoryClient.Files.get -> NGitLab.IFilesClient
 NGitLab.IRepositoryClient.GetArchive(System.Action<System.IO.Stream> parser) -> void
+NGitLab.IRepositoryClient.GetArchive(System.Action<System.IO.Stream> parser, NGitLab.Models.FileArchiveQuery fileArchiveQuery) -> void
 NGitLab.IRepositoryClient.GetCommit(NGitLab.Sha1 sha) -> NGitLab.Models.Commit
 NGitLab.IRepositoryClient.GetCommitDiff(NGitLab.Sha1 sha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Diff>
 NGitLab.IRepositoryClient.GetCommitRefs(NGitLab.Sha1 sha, NGitLab.Models.CommitRefType type = NGitLab.Models.CommitRefType.All) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Ref>
@@ -1796,6 +1798,24 @@ NGitLab.Models.EventTargetType.Note = 4 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.Project = 5 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.Snippet = 6 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.User = 7 -> NGitLab.Models.EventTargetType
+NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Bz2 = 0 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Gz = 1 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Tar = 2 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.TarBz2 = 3 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.TarGz = 4 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Tb2 = 5 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Tbz = 6 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Tbz2 = 7 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Zip = 8 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveQuery
+NGitLab.Models.FileArchiveQuery.FileArchiveQuery() -> void
+NGitLab.Models.FileArchiveQuery.Format.get -> NGitLab.Models.FileArchiveFormat?
+NGitLab.Models.FileArchiveQuery.Format.set -> void
+NGitLab.Models.FileArchiveQuery.Path.get -> string
+NGitLab.Models.FileArchiveQuery.Path.set -> void
+NGitLab.Models.FileArchiveQuery.Ref.get -> string
+NGitLab.Models.FileArchiveQuery.Ref.set -> void
 NGitLab.Models.FileData
 NGitLab.Models.FileData.BlobId -> string
 NGitLab.Models.FileData.CommitId -> string

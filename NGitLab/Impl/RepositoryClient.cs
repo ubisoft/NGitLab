@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -55,9 +55,23 @@ public class RepositoryClient : IRepositoryClient
         _api.Get().Stream(_repoPath + "/raw_blobs/" + sha, parser);
     }
 
-    public void GetArchive(Action<Stream> parser)
+    public void GetArchive(Action<Stream> parser) => GetArchive(parser, fileArchiveQuery: null);
+
+    public void GetArchive(Action<Stream> parser, FileArchiveQuery fileArchiveQuery)
     {
-        _api.Get().Stream(_repoPath + "/archive", parser);
+        var url = Utils.AppendSegmentToUrl(_repoPath, "/archive");
+
+        if (fileArchiveQuery != null)
+        {
+            // If a particular archive file format is requested, it is appended to the path directly as follows:
+            // /project/123/repository/archive.zip
+            // /project/123/repository/archive.tar
+            url = Utils.AppendSegmentToUrl(url, fileArchiveQuery.Format, includeSegmentSeparator: false);
+            url = Utils.AddParameter(url, "path", fileArchiveQuery.Path);
+            url = Utils.AddParameter(url, "sha", fileArchiveQuery.Ref);
+        }
+
+        _api.Get().Stream(url, parser);
     }
 
     public IEnumerable<Commit> Commits => _api.Get().GetAll<Commit>(_repoPath + $"/commits?per_page={GetCommitsRequest.DefaultPerPage}");
