@@ -110,7 +110,7 @@ public class UserClient : IUserClient
     public GitLabCollectionResponse<LastActivityDate> GetLastActivityDatesAsync(DateTimeOffset? from = null)
     {
         var url = "/user/activities";
-        if (from is not null)
+        if (from != null)
             url = Utils.AddParameter(url, "from", from.Value.ToString("yyyy-MM-dd"));
         return _api.Get().GetAllAsync<LastActivityDate>(url);
     }
