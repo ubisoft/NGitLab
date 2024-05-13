@@ -18,7 +18,7 @@ internal sealed class EventClient : ClientBase, IEventClient
         : base(context)
     {
         _userId = userId;
-        _projectId = projectId.HasValue ? Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id : null;
+        _projectId = projectId.HasValue ? Server.AllProjects.FindProject(projectId.ValueAsString()).Id : null;
     }
 
     IEnumerable<Models.Event> IEventClient.Get(EventQuery query)

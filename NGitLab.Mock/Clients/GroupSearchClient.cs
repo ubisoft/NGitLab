@@ -12,7 +12,7 @@ internal sealed class GroupSearchClient : ClientBase, ISearchClient
         : base(context)
     {
         _context = context;
-        _groupId = Server.AllGroups.FindGroup(groupId.ValueAsUriParameter()).Id;
+        _groupId = Server.AllGroups.FindGroup(groupId.ValueAsString()).Id;
     }
 
     public GitLabCollectionResponse<SearchBlob> GetBlobsAsync(SearchQuery query)

@@ -11,7 +11,7 @@ internal sealed class ClusterClient : ClientBase, IClusterClient
     public ClusterClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public IEnumerable<ClusterInfo> All => throw new NotImplementedException();

@@ -16,7 +16,7 @@ internal sealed class ReleaseClient : ClientBase, IReleaseClient
     public ReleaseClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public IEnumerable<Models.ReleaseInfo> All
