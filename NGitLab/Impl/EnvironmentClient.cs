@@ -42,14 +42,9 @@ public class EnvironmentClient : IEnvironmentClient
         return _api.Post().To<EnvironmentInfo>(url);
     }
 
-    public EnvironmentInfo Edit(int environmentId, string name, string externalUrl)
+    public EnvironmentInfo Edit(int environmentId, string externalUrl)
     {
         var url = $"{_environmentsPath}/{environmentId.ToStringInvariant()}";
-
-        if (!string.IsNullOrEmpty(name))
-        {
-            url = Utils.AddParameter(url, "name", name);
-        }
 
         if (!string.IsNullOrEmpty(externalUrl))
         {

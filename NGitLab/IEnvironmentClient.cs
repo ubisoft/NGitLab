@@ -22,12 +22,13 @@ public interface IEnvironmentClient
 
     /// <summary>
     /// Updates an existing environment's name and/or external_url.
+    /// Renaming an environment by using the API was deprecated in GitLab 15.9.
+    /// Renaming an environment with the API removed in GitLab 16.0.
     /// </summary>
     /// <param name="environmentId">The ID of the environment</param>
-    /// <param name="name">The new name of the environment</param>
     /// <param name="externalUrl">The new external url</param>
     /// <returns>The updated environment</returns>
-    EnvironmentInfo Edit(int environmentId, string name, string externalUrl);
+    EnvironmentInfo Edit(int environmentId, string externalUrl);
 
     /// <summary>
     /// Delete an environment.
