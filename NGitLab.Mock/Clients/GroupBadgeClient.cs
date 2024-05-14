@@ -11,7 +11,7 @@ internal sealed class GroupBadgeClient : ClientBase, IGroupBadgeClient
     public GroupBadgeClient(ClientContext context, GroupId groupId)
         : base(context)
     {
-        _groupId = Server.AllGroups.FindGroup(groupId.ValueAsUriParameter()).Id;
+        _groupId = Server.AllGroups.FindGroup(groupId.ValueAsString()).Id;
     }
 
     public Models.Badge this[int id]

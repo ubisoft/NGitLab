@@ -11,7 +11,7 @@ internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
     public GroupVariableClient(ClientContext context, GroupId groupId)
         : base(context)
     {
-        _groupId = Server.AllGroups.FindGroup(groupId.ValueAsUriParameter()).Id;
+        _groupId = Server.AllGroups.FindGroup(groupId.ValueAsString()).Id;
     }
 
     public Variable this[string key] => throw new NotImplementedException();

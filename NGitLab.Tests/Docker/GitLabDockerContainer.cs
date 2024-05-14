@@ -382,6 +382,7 @@ public class GitLabDockerContainer
                         SkipConfirmation = true,
                         ResetPassword = false,
                         Password = AdminPassword,
+                        IsPrivateProfile = true, // Set profile to private for LastActivity test cases
                     }));
                 }
                 catch (GitLabException)

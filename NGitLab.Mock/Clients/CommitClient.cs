@@ -12,7 +12,7 @@ internal sealed class CommitClient : ClientBase, ICommitClient
     public CommitClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public Commit Create(CommitCreate commit)

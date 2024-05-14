@@ -11,7 +11,7 @@ internal sealed class ProjectVariableClient : ClientBase, IProjectVariableClient
     public ProjectVariableClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public Variable this[string key] => throw new NotImplementedException();

@@ -50,10 +50,7 @@ public class MergeRequestClientTests
         var commits = mergeRequestClient.Commits(mergeRequest.Iid).All;
         Assert.That(commits.Any(), Is.True, "Can return the commits");
 
-        if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.6,)"), out _))
-            Assert.That(mergeRequest.DetailedMergeStatus.EnumValue, Is.Not.Null);
-        else
-            Assert.That(mergeRequest.DetailedMergeStatus.EnumValue, Is.Null);
+        Assert.That(mergeRequest.DetailedMergeStatus.EnumValue, Is.Null);
     }
 
     [Test]

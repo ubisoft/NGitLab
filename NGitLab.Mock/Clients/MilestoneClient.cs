@@ -17,8 +17,8 @@ internal sealed class MilestoneClient : ClientBase, IMilestoneClient
     {
         _resourceId = scope switch
         {
-            MilestoneScope.Groups => Server.AllGroups.FindGroup(id.ValueAsUriParameter()).Id,
-            MilestoneScope.Projects => Server.AllProjects.FindProject(id.ValueAsUriParameter()).Id,
+            MilestoneScope.Groups => Server.AllGroups.FindGroup(id.ValueAsString()).Id,
+            MilestoneScope.Projects => Server.AllProjects.FindProject(id.ValueAsString()).Id,
             _ => throw new NotSupportedException($"{scope} milestone is not supported yet."),
         };
         Scope = scope;

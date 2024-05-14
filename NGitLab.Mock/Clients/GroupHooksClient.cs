@@ -11,7 +11,7 @@ internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
     public GroupHooksClient(ClientContext context, GroupId groupId)
         : base(context)
     {
-        _groupId = Server.AllGroups.FindGroup(groupId.ValueAsUriParameter()).Id;
+        _groupId = Server.AllGroups.FindGroup(groupId.ValueAsString()).Id;
     }
 
     public IEnumerable<Models.GroupHook> All

@@ -29,9 +29,6 @@ public class ReleaseLink
     [JsonPropertyName("direct_asset_url")]
     public string DirectAssetUrl { get; set; }
 
-    [JsonPropertyName("external")]
-    public bool External { get; set; }
-
     [JsonPropertyName("link_type")]
     public ReleaseLinkType LinkType { get; set; }
 }

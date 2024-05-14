@@ -11,7 +11,7 @@ internal sealed class ProtectedBranchClient : ClientBase, IProtectedBranchClient
     public ProtectedBranchClient(ClientContext context, ProjectId projectId)
         : base(context)
     {
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public Models.ProtectedBranch GetProtectedBranch(string branchName)
