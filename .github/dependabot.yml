@@ -5,15 +5,15 @@
 
 version: 2
 updates:
-  - package-ecosystem: "docker"
-    directory: "/"
+  - package-ecosystem: 'docker'
+    directory: '/'
     schedule:
       interval: weekly
     rebase-strategy: auto
     open-pull-requests-limit: 20
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
       interval: weekly
     rebase-strategy: auto
@@ -21,17 +21,17 @@ updates:
     groups:
       github-actions:
         patterns:
-          - "*"
+          - '*'
 
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
       interval: weekly
     rebase-strategy: auto
     open-pull-requests-limit: 20
 
-  - package-ecosystem: "nuget"
-    directory: "/"
+  - package-ecosystem: 'nuget'
+    directory: '/'
     schedule:
       interval: weekly
     rebase-strategy: auto
@@ -39,10 +39,10 @@ updates:
     groups:
       code-analyzers:
         patterns:
-          - "*Analyzer*"
+          - '*Analyzer*'
       ms-dependencies:
         patterns:
-          - "Microsoft.*"
-          - "System.*"
+          - 'Microsoft.*'
+          - 'System.*'
         exclude-patterns:
-          - "Microsoft.Playwright"
+          - 'Microsoft.Playwright'

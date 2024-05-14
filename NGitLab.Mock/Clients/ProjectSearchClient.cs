@@ -12,7 +12,7 @@ internal sealed class ProjectSearchClient : ClientBase, ISearchClient
         : base(context)
     {
         _context = context;
-        _projectId = Server.AllProjects.FindProject(projectId.ValueAsUriParameter()).Id;
+        _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
     public GitLabCollectionResponse<SearchBlob> GetBlobsAsync(SearchQuery query)
