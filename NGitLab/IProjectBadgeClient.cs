@@ -55,13 +55,9 @@ public interface IGroupVariableClient
     [Obsolete($"Use {nameof(Update)} with parameter {nameof(Variable)} instead!")]
     Variable Update(string key, VariableUpdate model);
 
-#if (NET || NET48_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
-    Variable Update(string key, Variable model, string environmentScope = null);
-#else
     Variable Update(string key, Variable model);
 
     Variable Update(string key, Variable model, string environmentScope);
-#endif
 
     void Delete(string key, string environmentScope = null);
 }

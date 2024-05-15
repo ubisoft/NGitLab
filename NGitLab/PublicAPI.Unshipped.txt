@@ -308,7 +308,8 @@ NGitLab.IGroupVariableClient.Create(NGitLab.Models.Variable model) -> NGitLab.Mo
 NGitLab.IGroupVariableClient.Delete(string key, string environmentScope = null) -> void
 NGitLab.IGroupVariableClient.this[string key].get -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
-NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.Variable model, string environmentScope = null) -> NGitLab.Models.Variable
+NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.Variable model) -> NGitLab.Models.Variable
+NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.Variable model, string environmentScope) -> NGitLab.Models.Variable
 NGitLab.IHttpRequestor
 NGitLab.IHttpRequestor.Execute(string tailAPIUrl) -> void
 NGitLab.IHttpRequestor.ExecuteAsync(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
@@ -1078,7 +1079,8 @@ NGitLab.IProjectVariableClient.Create(NGitLab.Models.Variable model) -> NGitLab.
 NGitLab.IProjectVariableClient.Delete(string key, string environmentScope = null) -> void
 NGitLab.IProjectVariableClient.this[string key].get -> NGitLab.Models.Variable
 NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
-NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.Variable model, string environmentScope = null) -> NGitLab.Models.Variable
+NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.Variable model) -> NGitLab.Models.Variable
+NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.Variable model, string environmentScope) -> NGitLab.Models.Variable
 NGitLab.IProtectedBranchClient
 NGitLab.IProtectedBranchClient.GetProtectedBranch(string branchName) -> NGitLab.Models.ProtectedBranch
 NGitLab.IProtectedBranchClient.GetProtectedBranches(string search = null) -> NGitLab.Models.ProtectedBranch[]

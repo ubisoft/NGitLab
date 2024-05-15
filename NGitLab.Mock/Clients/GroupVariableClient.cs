@@ -34,18 +34,6 @@ internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
         throw new NotImplementedException();
     }
 
-#if (NET || NET48_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
-    [Obsolete($"Use '{nameof(Update)}({nameof(Variable)} model)' instead")]
-    public Variable Update(string key, VariableUpdate model, string environmentScope = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Variable Update(string key, Variable model, string environmentScope)
-    {
-        throw new NotImplementedException();
-    }
-#else
     [Obsolete($"Use '{nameof(Update)}({nameof(Variable)} model)' instead")]
     public Variable Update(string key, VariableUpdate model) => Update(key, model, null);
 
@@ -61,6 +49,4 @@ internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
     {
         throw new NotImplementedException();
     }
-#endif
-
 }

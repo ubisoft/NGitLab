@@ -34,19 +34,6 @@ internal sealed class ProjectVariableClient : ClientBase, IProjectVariableClient
         throw new NotImplementedException();
     }
 
-#if (NET || NET48_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
-
-    [Obsolete($"Use {nameof(Update)} with parameter {nameof(Variable)} instead")]
-    public Variable Update(string key, VariableUpdate model, string environmentScope = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Variable Update(string key, Variable model, string environmentScope = null)
-    {
-        throw new NotImplementedException();
-    }
-#else
     [Obsolete($"Use {nameof(Update)} with parameter {nameof(Variable)} instead")]
     public Variable Update(string key, VariableUpdate model) => Update(key, model, null);
 
@@ -62,5 +49,4 @@ internal sealed class ProjectVariableClient : ClientBase, IProjectVariableClient
     {
         throw new NotImplementedException();
     }
-#endif
 }
