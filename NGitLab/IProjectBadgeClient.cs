@@ -37,6 +37,8 @@ public interface IProjectVariableClient
     [Obsolete($"Use {nameof(Update)} with parameter {nameof(Variable)} instead!")]
     Variable Update(string key, VariableUpdate model);
 
+    Variable Update(string key, Variable model);
+
     Variable Update(string key, Variable model, string environmentScope);
 
     void Delete(string key, string environmentScope = null);
