@@ -28,7 +28,7 @@ public class ProjectVariableClientTests
 
         // Update
         variable = projectVariableClient.Update(variable.Key,
-            new VariableUpdate { Value = "My value edited", Protected = false, });
+            new VariableUpdate { Value = "My value edited", Protected = false });
 
         Assert.That(variable.Key, Is.EqualTo("My_Key"));
         Assert.That(variable.Value, Is.EqualTo("My value edited"));
@@ -79,8 +79,10 @@ public class ProjectVariableClientTests
         Assert.That(variable.Scope, Is.EqualTo("test/*"));
 
         // Update
+        var newScope = "integration/*";
         variable = projectVariableClient.Update(variable.Key,
-            new VariableUpdate { Value = "My value edited", Protected = false, });
+            new Variable { Value = "My value edited", Protected = false, Scope = newScope},
+            variable.Scope);
 
         Assert.That(variable.Key, Is.EqualTo("My_Key"));
         Assert.That(variable.Value, Is.EqualTo("My value edited"));
@@ -93,7 +95,7 @@ public class ProjectVariableClientTests
         Assert.That(variables, Is.Empty);
 
         // All
-        projectVariableClient.Create(new VariableCreate { Key = "Variable1", Value = "test" });
+        projectVariableClient.Create(new Variable { Key = "Variable1", Value = "test" });
         projectVariableClient.Create(new VariableCreate { Key = "Variable2", Value = "test" });
         projectVariableClient.Create(new VariableCreate { Key = "Variable3", Value = "test" });
         variables = projectVariableClient.All.ToList();

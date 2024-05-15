@@ -34,9 +34,12 @@ public interface IProjectVariableClient
 
     Variable Create(Variable model);
 
+    [Obsolete($"Use {nameof(Update)} with parameter {nameof(Variable)} instead!")]
     Variable Update(string key, VariableUpdate model);
 
-    void Delete(string key);
+    Variable Update(string key, Variable model, string environmentScope);
+
+    void Delete(string key, string environmentScope = null);
 }
 
 public interface IGroupVariableClient
@@ -49,7 +52,16 @@ public interface IGroupVariableClient
 
     Variable Create(Variable model);
 
+    [Obsolete($"Use {nameof(Update)} with parameter {nameof(Variable)} instead!")]
     Variable Update(string key, VariableUpdate model);
 
-    void Delete(string key);
+#if (NET || NET48_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
+    Variable Update(string key, Variable model, string environmentScope = null);
+#else
+    Variable Update(string key, Variable model);
+
+    Variable Update(string key, Variable model, string environmentScope);
+#endif
+
+    void Delete(string key, string environmentScope = null);
 }

@@ -304,9 +304,11 @@ NGitLab.IGroupsClient.UpdateAsync(int id, NGitLab.Models.GroupUpdate groupUpdate
 NGitLab.IGroupVariableClient
 NGitLab.IGroupVariableClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Variable>
 NGitLab.IGroupVariableClient.Create(NGitLab.Models.VariableCreate model) -> NGitLab.Models.Variable
-NGitLab.IGroupVariableClient.Delete(string key) -> void
+NGitLab.IGroupVariableClient.Create(NGitLab.Models.Variable model) -> NGitLab.Models.Variable
+NGitLab.IGroupVariableClient.Delete(string key, string environmentScope = null) -> void
 NGitLab.IGroupVariableClient.this[string key].get -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
+NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.Variable model, string environmentScope = null) -> NGitLab.Models.Variable
 NGitLab.IHttpRequestor
 NGitLab.IHttpRequestor.Execute(string tailAPIUrl) -> void
 NGitLab.IHttpRequestor.ExecuteAsync(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
@@ -1072,9 +1074,11 @@ NGitLab.IProjectLevelApprovalRulesClient.UpdateProjectLevelApprovalRule(int appr
 NGitLab.IProjectVariableClient
 NGitLab.IProjectVariableClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Variable>
 NGitLab.IProjectVariableClient.Create(NGitLab.Models.VariableCreate model) -> NGitLab.Models.Variable
-NGitLab.IProjectVariableClient.Delete(string key) -> void
+NGitLab.IProjectVariableClient.Create(NGitLab.Models.Variable model) -> NGitLab.Models.Variable
+NGitLab.IProjectVariableClient.Delete(string key, string environmentScope = null) -> void
 NGitLab.IProjectVariableClient.this[string key].get -> NGitLab.Models.Variable
 NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
+NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.Variable model, string environmentScope = null) -> NGitLab.Models.Variable
 NGitLab.IProtectedBranchClient
 NGitLab.IProtectedBranchClient.GetProtectedBranch(string branchName) -> NGitLab.Models.ProtectedBranch
 NGitLab.IProtectedBranchClient.GetProtectedBranches(string search = null) -> NGitLab.Models.ProtectedBranch[]
@@ -3906,12 +3910,16 @@ NGitLab.Models.UserUpsert.Username -> string
 NGitLab.Models.UserUpsert.UserUpsert() -> void
 NGitLab.Models.UserUpsert.WebsiteURL -> string
 NGitLab.Models.Variable
+NGitLab.Models.Variable.Description.get -> string
+NGitLab.Models.Variable.Description.set -> void
 NGitLab.Models.Variable.Key.get -> string
 NGitLab.Models.Variable.Key.set -> void
 NGitLab.Models.Variable.Masked.get -> bool
 NGitLab.Models.Variable.Masked.set -> void
 NGitLab.Models.Variable.Protected.get -> bool
 NGitLab.Models.Variable.Protected.set -> void
+NGitLab.Models.Variable.Raw.get -> bool
+NGitLab.Models.Variable.Raw.set -> void
 NGitLab.Models.Variable.Scope.get -> string
 NGitLab.Models.Variable.Scope.set -> void
 NGitLab.Models.Variable.Type.get -> NGitLab.Models.VariableType
