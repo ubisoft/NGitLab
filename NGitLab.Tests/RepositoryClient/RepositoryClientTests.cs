@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Formats.Tar;
 using System.Globalization;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -11,65 +14,6 @@ namespace NGitLab.Tests.RepositoryClient;
 
 public class RepositoryClientTests
 {
-    private sealed class RepositoryClientTestsContext : IDisposable
-    {
-        public const string SubfolderName = "subfolder";
-
-        public RepositoryClientTestsContext(GitLabTestContext context, Project project, Commit[] commits, IRepositoryClient repositoryClient)
-        {
-            Context = context;
-            Project = project;
-            Commits = commits;
-            RepositoryClient = repositoryClient;
-        }
-
-        public GitLabTestContext Context { get; }
-
-        public Project Project { get; }
-
-        public Commit[] Commits { get; }
-
-        public IRepositoryClient RepositoryClient { get; }
-
-        public void Dispose()
-        {
-            Context.Dispose();
-        }
-
-        public static async Task<RepositoryClientTestsContext> CreateAsync(int commitCount)
-        {
-            var context = await GitLabTestContext.CreateAsync().ConfigureAwait(false);
-            var project = context.CreateProject();
-            var repositoryClient = context.Client.GetRepository(project.Id);
-
-            var commits = new Commit[commitCount];
-            for (var i = 0; i < commits.Length; i++)
-            {
-                commits[i] = context.Client.GetCommits(project.Id).Create(new CommitCreate
-                {
-                    Branch = project.DefaultBranch,
-                    CommitMessage = context.GetUniqueRandomString(),
-                    AuthorEmail = "a@example.com",
-                    AuthorName = "a",
-                    Actions =
-                    {
-                        new CreateCommitAction
-                        {
-                            Action = "create",
-                            Content = "test",
-                            FilePath =  // Spread files among the root directory and its 'subfolder'
-                                i % 2 == 0 ?
-                                $"test{i.ToString(CultureInfo.InvariantCulture)}.md" :
-                                $"{SubfolderName}/test{i.ToString(CultureInfo.InvariantCulture)}.md",
-                        },
-                    },
-                });
-            }
-
-            return new RepositoryClientTestsContext(context, project, commits, repositoryClient);
-        }
-    }
-
     [Test]
     [NGitLabRetry]
     public async Task GetAllCommits()
@@ -351,6 +295,96 @@ public class RepositoryClientTests
         else
         {
             Assert.That(commitRefs, Is.Not.Empty);
+        }
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetArchive()
+    {
+        // Arrange
+        const int commitCount = 4;
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount);
+
+        var archiveItems = new List<KeyValuePair<string, TarEntryType>>();
+
+        // Act
+        context.RepositoryClient.GetArchive(tgzStream =>
+        {
+            using var gzipDecompressor = new GZipStream(tgzStream, CompressionMode.Decompress);
+            using var unzippedStream = new MemoryStream();
+
+            gzipDecompressor.CopyTo(unzippedStream);
+            unzippedStream.Seek(0, SeekOrigin.Begin);
+
+            using var reader = new TarReader(unzippedStream);
+
+            while (reader.GetNextEntry() is TarEntry entry)
+            {
+                archiveItems.Add(new KeyValuePair<string, TarEntryType>(entry.Name, entry.EntryType));
+            }
+        });
+
+        // Assert
+        Assert.That(archiveItems.Where(item => item.Value is TarEntryType.RegularFile).ToList(), Has.Count.EqualTo(commitCount));
+    }
+
+    private sealed class RepositoryClientTestsContext : IDisposable
+    {
+        public const string SubfolderName = "subfolder";
+
+        public RepositoryClientTestsContext(GitLabTestContext context, Project project, Commit[] commits, IRepositoryClient repositoryClient)
+        {
+            Context = context;
+            Project = project;
+            Commits = commits;
+            RepositoryClient = repositoryClient;
+        }
+
+        public GitLabTestContext Context { get; }
+
+        public Project Project { get; }
+
+        public Commit[] Commits { get; }
+
+        public IRepositoryClient RepositoryClient { get; }
+
+        public void Dispose()
+        {
+            Context.Dispose();
+        }
+
+        public static async Task<RepositoryClientTestsContext> CreateAsync(int commitCount)
+        {
+            var context = await GitLabTestContext.CreateAsync().ConfigureAwait(false);
+            var project = context.CreateProject();
+            var repositoryClient = context.Client.GetRepository(project.Id);
+
+            var commits = new Commit[commitCount];
+            for (var i = 0; i < commits.Length; i++)
+            {
+                commits[i] = context.Client.GetCommits(project.Id).Create(new CommitCreate
+                {
+                    Branch = project.DefaultBranch,
+                    CommitMessage = context.GetUniqueRandomString(),
+                    AuthorEmail = "a@example.com",
+                    AuthorName = "a",
+                    Actions =
+                    {
+                        new CreateCommitAction
+                        {
+                            Action = "create",
+                            Content = "test",
+                            FilePath =  // Spread files among the root directory and its 'subfolder'
+                                i % 2 == 0 ?
+                                $"test{i.ToString(CultureInfo.InvariantCulture)}.md" :
+                                $"{SubfolderName}/test{i.ToString(CultureInfo.InvariantCulture)}.md",
+                        },
+                    },
+                });
+            }
+
+            return new RepositoryClientTestsContext(context, project, commits, repositoryClient);
         }
     }
 }
