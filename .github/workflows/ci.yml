@@ -52,7 +52,7 @@ jobs:
         # Available tags: https://hub.docker.com/r/gitlab/gitlab-ee/tags
         gitlab: [
           'gitlab/gitlab-ee:16.6.2-ee.0',
-          'gitlab/gitlab-ee:16.11.1-ee.0',
+          'gitlab/gitlab-ee:16.11.2-ee.0',
         ]
         configuration: [ Release ]
       fail-fast: false
