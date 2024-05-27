@@ -316,15 +316,27 @@ public class GitLabDockerContainer
             // Create a token
             if (url == "/")
             {
+                ILocator formLocator;
+
                 TestContext.Progress.WriteLine("Creating root token");
+
+                var tokenName = "GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
 
                 await page.GotoAsync(GitLabUrl + "/-/profile/personal_access_tokens");
 
-                await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync();
-                var formLocator = page.Locator("main[id='content-body'] form[id='js-new-access-token-form']");
-
-                var tokenName = "GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
-                await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
+                try
+                {
+                    await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync(new LocatorClickOptions { Timeout = 5_000 });
+                    formLocator = page.Locator("main[id='content-body'] form[id='js-new-access-token-form']");
+                    await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
+                }
+                catch
+                {
+                    // Try the "old" 15.x.y way
+                    await page.GotoAsync(GitLabUrl + "/-/profile/personal_access_tokens");
+                    formLocator = page.Locator("main#content-body form");
+                    await formLocator.GetByLabel("Token name").FillAsync(tokenName);
+                }
 
                 foreach (var checkbox in await formLocator.GetByRole(AriaRole.Checkbox).AllAsync())
                 {
