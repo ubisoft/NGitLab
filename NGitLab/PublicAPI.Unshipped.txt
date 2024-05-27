@@ -1075,7 +1075,7 @@ NGitLab.IProjectVariableClient.Create(NGitLab.Models.VariableCreate model) -> NG
 NGitLab.IProjectVariableClient.Delete(string key) -> void
 NGitLab.IProjectVariableClient.this[string key].get -> NGitLab.Models.Variable
 NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
-NGitLab.IProtectedBranchClient
+NGitLab.IProtectedBranchClientDetailedMergeStatus
 NGitLab.IProtectedBranchClient.GetProtectedBranch(string branchName) -> NGitLab.Models.ProtectedBranch
 NGitLab.IProtectedBranchClient.GetProtectedBranches(string search = null) -> NGitLab.Models.ProtectedBranch[]
 NGitLab.IProtectedBranchClient.ProtectBranch(NGitLab.Models.BranchProtect branchProtect) -> NGitLab.Models.ProtectedBranch
@@ -1594,6 +1594,7 @@ NGitLab.Models.DetailedMergeStatus.NotApproved = 10 -> NGitLab.Models.DetailedMe
 NGitLab.Models.DetailedMergeStatus.NotOpen = 11 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.PoliciesDenied = 12 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.Unchecked = 3 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.Preparing = 13 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.Diff
 NGitLab.Models.Diff.AMode -> string
 NGitLab.Models.Diff.BMode -> string
