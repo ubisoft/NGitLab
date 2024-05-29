@@ -15,6 +15,7 @@ using Docker.DotNet;
 using Docker.DotNet.Models;
 using Microsoft.Playwright;
 using NGitLab.Models;
+using NuGet.Versioning;
 using NUnit.Framework;
 using Polly;
 
@@ -27,6 +28,8 @@ public class GitLabDockerContainer
 
     // https://hub.docker.com/r/gitlab/gitlab-ee/tags/
     public const string GitLabDockerVersion = "16.11.3-ee.0"; // Keep in sync with .github/workflows/ci.yml
+    // public const string GitLabDockerVersion = "16.10.6-ee.0"; // Keep in sync with .github/workflows/ci.yml
+    // public const string GitLabDockerVersion = "15.11.13-ee.0"; // Keep in sync with .github/workflows/ci.yml
 
     private static string s_creationErrorMessage;
     private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
@@ -322,21 +325,23 @@ public class GitLabDockerContainer
 
                 var tokenName = "GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
 
+                var gitLabVersionAsNuGetVersion = NuGetVersion.Parse(GitLabDockerVersion);
+
                 await page.GotoAsync(GitLabUrl + "/-/profile/personal_access_tokens");
 
-                try
+                if (VersionRange.Parse("[16.0,17.0)").Satisfies(gitLabVersionAsNuGetVersion))
                 {
                     await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync(new LocatorClickOptions { Timeout = 5_000 });
                     formLocator = page.Locator("main[id='content-body'] form[id='js-new-access-token-form']");
                     await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
                 }
-                catch
+                else if (VersionRange.Parse("[15.0,16.0)").Satisfies(gitLabVersionAsNuGetVersion))
                 {
                     // Try the "old" 15.x.y way
-                    await page.GotoAsync(GitLabUrl + "/-/profile/personal_access_tokens");
                     formLocator = page.Locator("main#content-body form");
                     await formLocator.GetByLabel("Token name").FillAsync(tokenName);
                 }
+                else { throw new NotImplementedException($"Library not suitable for the GitLab version '{GitLabDockerVersion}'."); }
 
                 foreach (var checkbox in await formLocator.GetByRole(AriaRole.Checkbox).AllAsync())
                 {
