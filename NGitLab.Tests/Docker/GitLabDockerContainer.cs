@@ -298,12 +298,22 @@ public class GitLabDockerContainer
             TestContext.Progress.WriteLine("Generating Credentials");
 
             var url = await GetCurrentUrl(page);
+            var gitLabVersionAsNuGetVersion = NuGetVersion.Parse(GitLabDockerVersion);
 
             // Login
             if (url == "/users/sign_in")
             {
-                await page.Locator("form[data-testid='sign-in-form'] input[name='user[login]']").FillAsync(AdminUserName);
-                await page.Locator("form[data-testid='sign-in-form'] input[name='user[password]']").FillAsync(AdminPassword);
+                if (VersionRange.Parse("[16.0,17.0)").Satisfies(gitLabVersionAsNuGetVersion))
+                {
+                    await page.Locator("form[data-testid='sign-in-form'] input[name='user[login]']").FillAsync(AdminUserName);
+                    await page.Locator("form[data-testid='sign-in-form'] input[name='user[password]']").FillAsync(AdminPassword);
+                }
+                else if (VersionRange.Parse("[15.0,16.0)").Satisfies(gitLabVersionAsNuGetVersion))
+                {
+                    await page.Locator("form#new_user input[name='user[login]']").FillAsync(AdminUserName);
+                    await page.Locator("form#new_user input[name='user[password]']").FillAsync(AdminPassword);
+                }
+                else { throw new NotImplementedException($"Library not suitable for the GitLab version '{GitLabDockerVersion}'."); }
 
                 var checkbox = page.Locator("form[data-testid='sign-in-form'] input[type=checkbox][name='user[remember_me]']");
                 await checkbox.CheckAsync(new LocatorCheckOptions { Force = true });
@@ -324,8 +334,6 @@ public class GitLabDockerContainer
                 TestContext.Progress.WriteLine("Creating root token");
 
                 var tokenName = "GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
-
-                var gitLabVersionAsNuGetVersion = NuGetVersion.Parse(GitLabDockerVersion);
 
                 await page.GotoAsync(GitLabUrl + "/-/profile/personal_access_tokens");
 
