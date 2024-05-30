@@ -1075,7 +1075,7 @@ NGitLab.IProjectVariableClient.Create(NGitLab.Models.VariableCreate model) -> NG
 NGitLab.IProjectVariableClient.Delete(string key) -> void
 NGitLab.IProjectVariableClient.this[string key].get -> NGitLab.Models.Variable
 NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
-NGitLab.IProtectedBranchClientDetailedMergeStatus
+NGitLab.IProtectedBranchClient
 NGitLab.IProtectedBranchClient.GetProtectedBranch(string branchName) -> NGitLab.Models.ProtectedBranch
 NGitLab.IProtectedBranchClient.GetProtectedBranches(string search = null) -> NGitLab.Models.ProtectedBranch[]
 NGitLab.IProtectedBranchClient.ProtectBranch(NGitLab.Models.BranchProtect branchProtect) -> NGitLab.Models.ProtectedBranch
