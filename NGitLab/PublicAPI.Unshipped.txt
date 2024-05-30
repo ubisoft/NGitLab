@@ -529,7 +529,7 @@ NGitLab.Impl.EnvironmentClient
 NGitLab.Impl.EnvironmentClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.EnvironmentInfo>
 NGitLab.Impl.EnvironmentClient.Create(string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.Delete(int environmentId) -> void
-NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string externalUrl) -> NGitLab.Models.EnvironmentInfo
+NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.EnvironmentClient.GetById(int environmentId) -> NGitLab.Models.EnvironmentInfo
