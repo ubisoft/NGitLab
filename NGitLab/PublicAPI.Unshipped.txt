@@ -165,6 +165,7 @@ NGitLab.IEnvironmentClient
 NGitLab.IEnvironmentClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.EnvironmentInfo>
 NGitLab.IEnvironmentClient.Create(string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.Delete(int environmentId) -> void
+NGitLab.IEnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.Edit(int environmentId, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.GetById(int environmentId) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.GetByIdAsync(int environmentId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.EnvironmentInfo>
@@ -530,6 +531,7 @@ NGitLab.Impl.EnvironmentClient.All.get -> System.Collections.Generic.IEnumerable
 NGitLab.Impl.EnvironmentClient.Create(string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.Delete(int environmentId) -> void
 NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
+NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.EnvironmentClient.GetById(int environmentId) -> NGitLab.Models.EnvironmentInfo

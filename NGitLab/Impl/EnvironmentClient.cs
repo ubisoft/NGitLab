@@ -42,6 +42,8 @@ public class EnvironmentClient : IEnvironmentClient
         return _api.Post().To<EnvironmentInfo>(url);
     }
 
+    public EnvironmentInfo Edit(int environmentId, string externalUrl) => Edit(environmentId, null, externalUrl);
+
     public EnvironmentInfo Edit(int environmentId, string name, string externalUrl)
     {
         var url = $"{_environmentsPath}/{environmentId.ToStringInvariant()}";

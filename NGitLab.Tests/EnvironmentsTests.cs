@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
+using NuGet.Versioning;
 using NUnit.Framework;
 
 namespace NGitLab.Tests;
@@ -84,15 +85,19 @@ public class EnvironmentsTests
         // Validate newEnvNameToEdit is present
         Assert.That(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToEdit, StringComparison.Ordinal)), Is.Not.Null);
 
+        // Handling for old version 15.x
+        var isVersion15 = context.IsGitLabVersionInRange(VersionRange.Parse("[15.0,16.0)"), out _);
+
         // Edit and check return value
         env = envClient.Edit(initialEnvId, newEnvNameUpdated, newEnvNameExternalUrlUpdated);
-        Assert.That(env.Name, Is.EqualTo(newEnvNameUpdated).IgnoreCase);
+        if (isVersion15) { Assert.That(env.Name, Is.EqualTo(newEnvNameUpdated).IgnoreCase); }
         Assert.That(env.Slug, Does.StartWith(newEnvSlugNameUpdatedStart));
         Assert.That(env.Id, Is.EqualTo(initialEnvId), "Environment Id should not change");
         Assert.That(env.ExternalUrl, Is.EqualTo(newEnvNameExternalUrlUpdated).IgnoreCase);
 
         // Validate update is effective
-        env = envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameUpdated, StringComparison.Ordinal));
+        // Renaming an environment with the API removed in GitLab 16.0.
+        env = envClient.All.FirstOrDefault(e => string.Equals(e.Name, isVersion15 ? newEnvNameUpdated : newEnvNameToEdit, StringComparison.Ordinal));
         Assert.That(env, Is.Not.Null);
         Assert.That(env.Slug, Does.StartWith(newEnvSlugNameUpdatedStart));
         Assert.That(env.Id, Is.EqualTo(initialEnvId), "Environment Id should not change");
