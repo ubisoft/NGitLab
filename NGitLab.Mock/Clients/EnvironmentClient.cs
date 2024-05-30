@@ -29,7 +29,7 @@ internal sealed class EnvironmentClient : ClientBase, IEnvironmentClient
         throw new NotImplementedException();
     }
 
-    public EnvironmentInfo Edit(int environmentId, string externalUrl)
+    public EnvironmentInfo Edit(int environmentId, string name, string externalUrl)
     {
         throw new NotImplementedException();
     }
