@@ -3310,6 +3310,8 @@ NGitLab.Models.ReleaseInfoLinks.Self.set -> void
 NGitLab.Models.ReleaseLink
 NGitLab.Models.ReleaseLink.DirectAssetUrl.get -> string
 NGitLab.Models.ReleaseLink.DirectAssetUrl.set -> void
+NGitLab.Models.ReleaseLink.External.get -> bool
+NGitLab.Models.ReleaseLink.External.set -> void
 NGitLab.Models.ReleaseLink.Id.get -> int?
 NGitLab.Models.ReleaseLink.Id.set -> void
 NGitLab.Models.ReleaseLink.LinkType.get -> NGitLab.Models.ReleaseLinkType
