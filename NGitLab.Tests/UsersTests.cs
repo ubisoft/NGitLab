@@ -7,7 +7,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
-using NuGet.Versioning;
 using NUnit.Framework;
 
 namespace NGitLab.Tests;
@@ -236,7 +235,7 @@ public class UsersTests
         var privateProfileUsers = context.AdminClient.Users.All.Where(u => u.PrivateProfile).Select(ppu => ppu.Username).ToList();
         Assert.That(privateProfileUsers, Is.Not.Empty);
 
-        if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.0,16.0)"), out _))
+        if (context.IsGitLabMajorVersion(15))
         {
             var exception = Assert.Throws<GitLabException>(() => context.Client.Users.GetLastActivityDatesAsync().ToArray());
             Assert.That(exception?.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));

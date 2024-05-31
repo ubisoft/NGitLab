@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
-using NuGet.Versioning;
 using NUnit.Framework;
 
 namespace NGitLab.Tests.Release;
@@ -94,7 +93,7 @@ public class ReleaseClientTests
         Assert.That(link.Name, Is.EqualTo("test link"));
         Assert.That(link.Url, Is.EqualTo("https://www.example.com"));
 
-        if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.0,16.0)"), out _))
+        if (context.IsGitLabMajorVersion(15))
         {
             Assert.That(link.External, Is.True);
         }
@@ -103,7 +102,7 @@ public class ReleaseClientTests
         Assert.That(link.Name, Is.EqualTo("test link"));
         Assert.That(link.Url, Is.EqualTo("https://www.example.com"));
 
-        if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.0,16.0)"), out _))
+        if (context.IsGitLabMajorVersion(15))
         {
             Assert.That(link.External, Is.True);
         }
