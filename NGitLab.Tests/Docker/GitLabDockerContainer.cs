@@ -298,15 +298,19 @@ public class GitLabDockerContainer
             var url = await GetCurrentUrl(page);
             var gitLabVersionAsNuGetVersion = NuGetVersion.Parse(GitLabDockerVersion);
 
+            // Declare supported ranges
+            var isMajorVersion15 = VersionRange.Parse("[15.0,16.0)").Satisfies(gitLabVersionAsNuGetVersion);
+            var isMajorVersion16 = VersionRange.Parse("[16.0,17.0)").Satisfies(gitLabVersionAsNuGetVersion);
+
             // Login
             if (url == "/users/sign_in")
             {
-                if (VersionRange.Parse("[16.0,17.0)").Satisfies(gitLabVersionAsNuGetVersion))
+                if (isMajorVersion16)
                 {
                     await page.Locator("form[data-testid='sign-in-form'] input[name='user[login]']").FillAsync(AdminUserName);
                     await page.Locator("form[data-testid='sign-in-form'] input[name='user[password]']").FillAsync(AdminPassword);
                 }
-                else if (VersionRange.Parse("[15.0,16.0)").Satisfies(gitLabVersionAsNuGetVersion))
+                else if (isMajorVersion15)
                 {
                     await page.Locator("form#new_user input[name='user[login]']").FillAsync(AdminUserName);
                     await page.Locator("form#new_user input[name='user[password]']").FillAsync(AdminPassword);
@@ -335,13 +339,13 @@ public class GitLabDockerContainer
 
                 await page.GotoAsync(GitLabUrl + "/-/profile/personal_access_tokens");
 
-                if (VersionRange.Parse("[16.0,17.0)").Satisfies(gitLabVersionAsNuGetVersion))
+                if (isMajorVersion16)
                 {
                     await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync(new LocatorClickOptions { Timeout = 5_000 });
                     formLocator = page.Locator("main[id='content-body'] form[id='js-new-access-token-form']");
                     await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
                 }
-                else if (VersionRange.Parse("[15.0,16.0)").Satisfies(gitLabVersionAsNuGetVersion))
+                else if (isMajorVersion15)
                 {
                     // Try the "old" 15.x.y way
                     formLocator = page.Locator("main#content-body form");
