@@ -296,9 +296,9 @@ public class GitLabDockerContainer
             TestContext.Progress.WriteLine("Generating Credentials");
 
             var url = await GetCurrentUrl(page);
-            var gitLabVersionAsNuGetVersion = NuGetVersion.Parse(GitLabDockerVersion);
 
             // Declare supported ranges
+            var gitLabVersionAsNuGetVersion = NuGetVersion.Parse(GitLabDockerVersion);
             var isMajorVersion15 = VersionRange.Parse("[15.0,16.0)").Satisfies(gitLabVersionAsNuGetVersion);
             var isMajorVersion16 = VersionRange.Parse("[16.0,17.0)").Satisfies(gitLabVersionAsNuGetVersion);
 
