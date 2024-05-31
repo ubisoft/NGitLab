@@ -44,6 +44,7 @@ public class EnvironmentClient : IEnvironmentClient
 
     public EnvironmentInfo Edit(int environmentId, string externalUrl) => Edit(environmentId, null, externalUrl);
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public EnvironmentInfo Edit(int environmentId, string name, string externalUrl)
     {
         var url = $"{_environmentsPath}/{environmentId.ToStringInvariant()}";
