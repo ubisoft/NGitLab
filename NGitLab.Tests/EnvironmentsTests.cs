@@ -90,7 +90,12 @@ public class EnvironmentsTests
 
         // Edit and check return value
         env = envClient.Edit(initialEnvId, newEnvNameUpdated, newEnvNameExternalUrlUpdated);
-        if (isVersion15) { Assert.That(env.Name, Is.EqualTo(newEnvNameUpdated).IgnoreCase); }
+
+        if (isVersion15)
+        {
+            Assert.That(env.Name, Is.EqualTo(newEnvNameUpdated).IgnoreCase);
+        }
+
         Assert.That(env.Slug, Does.StartWith(newEnvSlugNameUpdatedStart));
         Assert.That(env.Id, Is.EqualTo(initialEnvId), "Environment Id should not change");
         Assert.That(env.ExternalUrl, Is.EqualTo(newEnvNameExternalUrlUpdated).IgnoreCase);

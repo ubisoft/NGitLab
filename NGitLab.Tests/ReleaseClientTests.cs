@@ -93,13 +93,20 @@ public class ReleaseClientTests
         });
         Assert.That(link.Name, Is.EqualTo("test link"));
         Assert.That(link.Url, Is.EqualTo("https://www.example.com"));
-        if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.0,16.0)"), out _)) { Assert.That(link.External, Is.True); }
 
+        if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.0,16.0)"), out _))
+        {
+            Assert.That(link.External, Is.True);
+        }
 
         link = linksClient[link.Id.Value];
         Assert.That(link.Name, Is.EqualTo("test link"));
         Assert.That(link.Url, Is.EqualTo("https://www.example.com"));
-        if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.0,16.0)"), out _)) { Assert.That(link.External, Is.True); }
+
+        if (context.IsGitLabVersionInRange(VersionRange.Parse("[15.0,16.0)"), out _))
+        {
+            Assert.That(link.External, Is.True);
+        }
 
         linksClient.Delete(link.Id.Value);
         Assert.That(linksClient.All.FirstOrDefault(x => string.Equals(x.Name, "test link", StringComparison.Ordinal)), Is.Null);
