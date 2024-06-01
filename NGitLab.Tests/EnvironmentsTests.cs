@@ -87,7 +87,8 @@ public class EnvironmentsTests
         // Edit and check return value
         env = envClient.Edit(initialEnvId, newEnvNameUpdated, newEnvNameExternalUrlUpdated);
 
-        if (context.IsGitLabMajorVersion(15))        {
+        if (context.IsGitLabMajorVersion(15))
+        {
             Assert.That(env.Name, Is.EqualTo(newEnvNameUpdated).IgnoreCase);
         }
 
