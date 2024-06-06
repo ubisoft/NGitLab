@@ -27,7 +27,7 @@ public class GitLabDockerContainer
     public const string ImageName = "gitlab/gitlab-ee";
 
     // https://hub.docker.com/r/gitlab/gitlab-ee/tags/
-    public const string GitLabDockerVersion = "16.11.3-ee.0"; // Keep in sync with .github/workflows/ci.yml
+    public const string GitLabDockerVersion = "15.11.9-ee.0"; // Keep in sync with .github/workflows/ci.yml
 
     private static string s_creationErrorMessage;
     private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
