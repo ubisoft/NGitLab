@@ -106,7 +106,7 @@ public class GitLabDockerContainer
     {
         if (GitLabTestContext.IsContinuousIntegration())
         {
-            await VerifyCiGitLabInstance().ConfigureAwait(false);
+            await WaitForCiGitLabInstance().ConfigureAwait(false);
         }
         else
         {
@@ -283,7 +283,7 @@ public class GitLabDockerContainer
         TestContext.Progress.WriteLine("GitLab Docker container is ready");
     }
 
-    private async Task GenerateCredentialsAsync(IBrowserContext context)
+    private async Task GenerateCredentialsAsync(IBrowserContext browserContext)
     {
         Console.WriteLine("Requesting credentials from GitLab instance");
 
@@ -306,7 +306,7 @@ public class GitLabDockerContainer
 
             TestContext.Progress.WriteLine("Creating root token");
 
-            var page = await context.NewPageAsync();
+            var page = await browserContext.NewPageAsync();
             await page.GotoAsync(GitLabUrl + "/-/profile/personal_access_tokens");
 
             var formLocator = page.Locator("main#content-body form");
@@ -344,7 +344,7 @@ public class GitLabDockerContainer
             // Get admin login cookie
             // result.Cookie: experimentation_subject_id=XXX; _gitlab_session=XXXX; known_sign_in=XXXX
             TestContext.Progress.WriteLine("Extracting GitLab session cookie");
-            var cookies = await context.CookiesAsync(new[] { GitLabUrl.AbsoluteUri });
+            var cookies = await browserContext.CookiesAsync(new[] { GitLabUrl.AbsoluteUri });
             foreach (var cookie in cookies)
             {
                 if (cookie.Name == "_gitlab_session")
@@ -444,7 +444,7 @@ public class GitLabDockerContainer
         return Path.Combine(Path.GetTempPath(), "ngitlab", "credentials.json");
     }
 
-    private async Task VerifyCiGitLabInstance()
+    private async Task WaitForCiGitLabInstance()
     {
         Console.WriteLine($"Executing tests on CI. Checking GitLab instance...");
 
@@ -470,10 +470,10 @@ public class GitLabDockerContainer
         Assert.Fail(s_creationErrorMessage);
     }
 
-    private async Task ResolveGitLabVersionAsync(IBrowserContext context)
+    private async Task ResolveGitLabVersionAsync(IBrowserContext browserContext)
     {
         Console.WriteLine("Resolving GitLab version from help page...");
-        var page = await context.NewPageAsync();
+        var page = await browserContext.NewPageAsync();
         await page.GotoAsync(new Uri(GitLabUrl, "help").AbsoluteUri);
         var titleLink = await page.QuerySelectorAsync("h1 a");
 
@@ -495,9 +495,9 @@ public class GitLabDockerContainer
         Console.WriteLine($"GitLab resolved version is '{ResolvedGitLabVersion}'");
     }
 
-    private async Task LoginAsync(IBrowserContext context)
+    private async Task LoginAsync(IBrowserContext browserContext)
     {
-        var page = await context.NewPageAsync();
+        var page = await browserContext.NewPageAsync();
         await page.GotoAsync(GitLabUrl.AbsoluteUri);
         var url = await GetCurrentUrl(page);
 
