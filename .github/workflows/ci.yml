@@ -13,7 +13,7 @@ on:
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
-  NuGetDirectory: ${{ github.workspace}}/nuget
+  NuGetDirectory: ${{github.workspace}}/nuget
 
 defaults:
   run:
@@ -23,100 +23,99 @@ jobs:
   create_nuget:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0 # Get all the history so MinGit can compute the version
-    - name: Setup .NET Core (latest)
-      uses: actions/setup-dotnet@v4
-    - run: dotnet pack NGitLab.sln --configuration Release --output ${{ env.NuGetDirectory }} /bl
-    - uses: actions/upload-artifact@v4
-      with:
-        name: nuget
-        if-no-files-found: error
-        retention-days: 7
-        path: ${{ env.NuGetDirectory }}/**/*
-    - uses: actions/upload-artifact@v4
-      with:
-        name: binlogs
-        if-no-files-found: error
-        retention-days: 7
-        path: '**/*.binlog'
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Get all the history so MinGit can compute the version
+      - name: Setup .NET Core (latest)
+        uses: actions/setup-dotnet@v4
+      - run: dotnet pack NGitLab.sln --configuration Release --output ${{env.NuGetDirectory}} /bl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nuget
+          if-no-files-found: error
+          retention-days: 7
+          path: ${{env.NuGetDirectory}}/**/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: binlogs
+          if-no-files-found: error
+          retention-days: 7
+          path: '**/*.binlog'
 
   build_and_test:
     runs-on: 'ubuntu-20.04'
     env:
-      TestResultsDirectory: ${{ github.workspace}}/TestResults
+      TestResultsDirectory: ${{github.workspace}}/TestResults
     strategy:
       matrix:
         # Keep in sync with the version in GitLabDockerContainer.cs
         # Available tags: https://hub.docker.com/r/gitlab/gitlab-ee/tags
-        gitlab: [
-          'gitlab/gitlab-ee:15.11.9-ee.0',
-          'gitlab/gitlab-ee:15.11.13-ee.0',
-          'gitlab/gitlab-ee:16.10.6-ee.0',
-          'gitlab/gitlab-ee:16.11.3-ee.0',
-        ]
-        configuration: [ Release ]
+        gitlab:
+          - 'gitlab/gitlab-ee:15.11.9-ee.0'
+          - 'gitlab/gitlab-ee:15.11.13-ee.0'
+          - 'gitlab/gitlab-ee:16.10.6-ee.0'
+          - 'gitlab/gitlab-ee:16.11.3-ee.0'
+        configuration: [Release]
       fail-fast: false
     services:
       gitlab:
-        image: ${{ matrix.gitlab }}
+        image: ${{matrix.gitlab}}
         ports:
-        - 48624:48624
+          - 48624:48624
         env:
           GITLAB_OMNIBUS_CONFIG: "external_url 'http://localhost:48624/'"
           GITLAB_ROOT_PASSWORD: "Pa$$w0rd"
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET Core (latest)
-      uses: actions/setup-dotnet@v4
-    - run: |
-        $value = "${{ matrix.gitlab }}-${{ matrix.configuration }}".Replace(':', '-').Replace('/', '-')
-        "artifact_name=test-results-$value" >> $env:GITHUB_OUTPUT
-      name: Set artifact name
-      id: set-artifact-name
-    - run: dotnet test --configuration ${{ matrix.configuration }} --logger trx --results-directory "${{ env.TestResultsDirectory }}" --collect:"XPlat Code Coverage" /p:RunAnalyzers=false
-      name: Run tests
-    - uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: ${{ steps.set-artifact-name.outputs.artifact_name }}
-        if-no-files-found: error
-        retention-days: 3
-        path: |
-          ${{ env.TestResultsDirectory }}/**/*
-    - name: Test Report
-      uses: dorny/test-reporter@v1
-      if: github.actor != 'dependabot[bot]' && !github.event.pull_request.head.repo.fork && (success() || failure())
-      with:
-        name: test-results-${{ steps.set-artifact-name.outputs.artifact_name }}
-        path: ${{ env.TestResultsDirectory }}/**/*.trx
-        path-replace-backslashes: 'true'
-        reporter: dotnet-trx
+      - uses: actions/checkout@v4
+      - name: Setup .NET Core (latest)
+        uses: actions/setup-dotnet@v4
+      - run: |
+          $value = "${{matrix.gitlab}}-${{matrix.configuration}}".Replace(':', '-').Replace('/', '-')
+          "artifact_name=test-results-$value" >> $env:GITHUB_OUTPUT
+        name: Set artifact name
+        id: set-artifact-name
+      - run: dotnet test --configuration ${{matrix.configuration}} --logger trx --results-directory "${{env.TestResultsDirectory}}" --collect:"XPlat Code Coverage" /p:RunAnalyzers=false
+        name: Run tests
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{steps.set-artifact-name.outputs.artifact_name}}
+          if-no-files-found: error
+          retention-days: 3
+          path: |
+            ${{env.TestResultsDirectory}}/**/*
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: github.actor != 'dependabot[bot]' && !github.event.pull_request.head.repo.fork && (success() || failure())
+        with:
+          name: test-results-${{steps.set-artifact-name.outputs.artifact_name}}
+          path: ${{env.TestResultsDirectory}}/**/*.trx
+          path-replace-backslashes: 'true'
+          reporter: dotnet-trx
 
   deploy:
     runs-on: 'ubuntu-20.04'
-    needs: [ create_nuget, build_and_test ]
+    needs: [create_nuget, build_and_test]
     steps:
-    - uses: actions/download-artifact@v4
-      with:
-        name: nuget
-        path: ${{ env.NuGetDirectory }}
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v4
-    - run: |
-        Write-Host "Current ref: $env:GITHUB_REF"
-        Write-Host "Searching nupkg in folder: ${{ env.NuGetDirectory }}"
-        $files = Get-ChildItem "${{ env.NuGetDirectory }}/*" -Include *.nupkg
-        foreach($file in $files) {
-            if ($env:GITHUB_REF -clike 'refs/tags/*')
-            {
-              Write-Host "Pushing NuGet package: $($file.FullName)"
-              & dotnet nuget push "$($file.FullName)" --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --force-english-output --skip-duplicate
-            }
-            else
-            {
-              Write-Host "Not on a tag => Do not push: $($file.FullName)"
-            }
-        }
-      name: Publish NuGet packages
+      - uses: actions/download-artifact@v4
+        with:
+          name: nuget
+          path: ${{env.NuGetDirectory}}
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+      - run: |
+          Write-Host "Current ref: $env:GITHUB_REF"
+          Write-Host "Searching nupkg in folder: ${{env.NuGetDirectory}}"
+          $files = Get-ChildItem "${{env.NuGetDirectory}}/*" -Include *.nupkg
+          foreach($file in $files) {
+              if ($env:GITHUB_REF -clike 'refs/tags/*')
+              {
+                Write-Host "Pushing NuGet package: $($file.FullName)"
+                & dotnet nuget push "$($file.FullName)" --api-key "${{secrets.NUGET_APIKEY}}" --source https://api.nuget.org/v3/index.json --force-english-output --skip-duplicate
+              }
+              else
+              {
+                Write-Host "Not on a tag => Do not push: $($file.FullName)"
+              }
+          }
+        name: Publish NuGet packages
