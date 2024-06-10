@@ -108,6 +108,7 @@ public sealed class GitLabTestContext : IDisposable
             UserId = user.Id,
             Name = "UnitTest",
             Scopes = new[] { "api", "read_user" },
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
         });
         return CreateClient(token.Token);
     }
@@ -304,6 +305,14 @@ public sealed class GitLabTestContext : IDisposable
         // Although a GitLab version is not a NuGet version, let's consider it as one to determine range inclusion
         return NuGetVersion.TryParse(gitLabVersion, out var nuGetVersion) &&
                versionRange.Satisfies(nuGetVersion);
+    }
+
+    public bool IsGitLabMajorVersion(int major)
+    {
+        var currentVersion = Client.Version.Get();
+        var gitLabVersion = currentVersion.Version;
+
+        return NuGetVersion.TryParse(gitLabVersion, out var nuGetVersion) && nuGetVersion.Major == major;
     }
 
     public void ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange versionRange)

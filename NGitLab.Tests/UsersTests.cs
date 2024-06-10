@@ -229,11 +229,25 @@ public class UsersTests
     }
 
     [Test]
-    public async Task GetLastActivityDates_UsingNonAdminCredentials_ThrowsForbidden()
+    public async Task GetLastActivityDates_UsingNonAdminCredentials()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var exception = Assert.Throws<GitLabException>(() => context.Client.Users.GetLastActivityDatesAsync().ToArray());
-        Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+        var privateProfileUsers = context.AdminClient.Users.All.Where(u => u.PrivateProfile).Select(ppu => ppu.Username).ToList();
+        Assert.That(privateProfileUsers, Is.Not.Empty);
+
+        if (context.IsGitLabMajorVersion(15))
+        {
+            var exception = Assert.Throws<GitLabException>(() => context.Client.Users.GetLastActivityDatesAsync().ToArray());
+            Assert.That(exception?.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+        }
+        else
+        {
+            var lastActivityDates = context.Client.Users.GetLastActivityDatesAsync().ToList();
+            Assert.That(lastActivityDates, Is.Not.Empty);
+
+            var lastActivityDatesOfPrivateProfileUsers = lastActivityDates.Where(lad => privateProfileUsers.Contains(lad.Username, StringComparer.Ordinal)).ToList();
+            Assert.That(lastActivityDatesOfPrivateProfileUsers, Is.Empty);
+        }
     }
 
     private static UserUpsert CreateNewUserUpsert(GitLabTestContext context)

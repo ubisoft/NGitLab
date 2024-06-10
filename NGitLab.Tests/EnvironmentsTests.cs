@@ -86,13 +86,19 @@ public class EnvironmentsTests
 
         // Edit and check return value
         env = envClient.Edit(initialEnvId, newEnvNameUpdated, newEnvNameExternalUrlUpdated);
-        Assert.That(env.Name, Is.EqualTo(newEnvNameUpdated).IgnoreCase);
+
+        if (context.IsGitLabMajorVersion(15))
+        {
+            Assert.That(env.Name, Is.EqualTo(newEnvNameUpdated).IgnoreCase);
+        }
+
         Assert.That(env.Slug, Does.StartWith(newEnvSlugNameUpdatedStart));
         Assert.That(env.Id, Is.EqualTo(initialEnvId), "Environment Id should not change");
         Assert.That(env.ExternalUrl, Is.EqualTo(newEnvNameExternalUrlUpdated).IgnoreCase);
 
         // Validate update is effective
-        env = envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameUpdated, StringComparison.Ordinal));
+        // Renaming an environment with the API removed in GitLab 16.0.
+        env = envClient.All.FirstOrDefault(e => string.Equals(e.Name, context.IsGitLabMajorVersion(15) ? newEnvNameUpdated : newEnvNameToEdit, StringComparison.Ordinal));
         Assert.That(env, Is.Not.Null);
         Assert.That(env.Slug, Does.StartWith(newEnvSlugNameUpdatedStart));
         Assert.That(env.Id, Is.EqualTo(initialEnvId), "Environment Id should not change");

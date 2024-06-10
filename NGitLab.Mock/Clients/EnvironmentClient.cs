@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Mock.Internals;
@@ -29,6 +30,9 @@ internal sealed class EnvironmentClient : ClientBase, IEnvironmentClient
         throw new NotImplementedException();
     }
 
+    public EnvironmentInfo Edit(int environmentId, string externalUrl) => Edit(environmentId, null, externalUrl);
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public EnvironmentInfo Edit(int environmentId, string name, string externalUrl)
     {
         throw new NotImplementedException();

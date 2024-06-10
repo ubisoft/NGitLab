@@ -1,4 +1,4 @@
-﻿#pragma warning disable MA0004
+#pragma warning disable MA0004
 #pragma warning disable MA0006
 using System;
 using System.Collections.Generic;
@@ -373,6 +373,7 @@ public class GitLabDockerContainer
                         SkipConfirmation = true,
                         ResetPassword = false,
                         Password = AdminPassword,
+                        IsPrivateProfile = true, // Set profile to private for LastActivity test cases
                     }));
                 }
                 catch (GitLabException)
@@ -388,6 +389,7 @@ public class GitLabDockerContainer
                 UserId = user.Id,
                 Name = "common_user",
                 Scopes = new[] { "api" },
+                ExpiresAt = DateTime.UtcNow.AddDays(7),
             }));
 
             credentials.UserToken = token.Token;

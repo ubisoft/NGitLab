@@ -56,4 +56,7 @@ public class UserUpsert
 
     [JsonPropertyName("skip_confirmation")]
     public bool? SkipConfirmation;
+
+    [JsonPropertyName("private_profile")]
+    public bool? IsPrivateProfile;
 }
