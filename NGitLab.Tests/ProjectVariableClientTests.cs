@@ -35,7 +35,7 @@ public class ProjectVariableClientTests
         variable = projectVariableClient.Update(variable.Key, new VariableUpdate
         {
             Value = "My value edited",
-            Protected = false
+            Protected = false,
         });
 
         Assert.That(variable.Key, Is.EqualTo("My_Key"));
