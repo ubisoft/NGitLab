@@ -19,7 +19,7 @@ internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
 
     public IEnumerable<Variable> All => throw new NotImplementedException();
 
-    [Obsolete($"Use '{nameof(Create)}({nameof(Variable)} model)' instead")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Variable Create(VariableCreate model)
     {
         throw new NotImplementedException();
