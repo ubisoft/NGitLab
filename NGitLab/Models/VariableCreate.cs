@@ -1,9 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
-[Obsolete($"Use {nameof(Variable)} instead!")]
+[EditorBrowsable(EditorBrowsableState.Never)]
 public class VariableCreate
 {
     [JsonPropertyName("key")]

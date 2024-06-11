@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients;
@@ -29,7 +30,7 @@ internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
         throw new NotImplementedException();
     }
 
-    [Obsolete($"Use {nameof(Delete)} with parameter {nameof(Variable.Scope)} instead!")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Delete(string key) => Delete(key, null);
 
     public void Delete(string key, string environmentScope)
@@ -37,10 +38,10 @@ internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
         throw new NotImplementedException();
     }
 
-    [Obsolete($"Use '{nameof(Update)}({nameof(Variable)} model)' instead")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Variable Update(string key, VariableUpdate model) => Update(key, model, null);
 
-    [Obsolete($"Use '{nameof(Update)}({nameof(Variable)} model)' instead")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Variable Update(string key, VariableUpdate model, string environmentScope)
     {
         throw new NotImplementedException();
