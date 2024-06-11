@@ -1,7 +1,9 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
+using NuGet.Versioning;
 using NUnit.Framework;
 
 namespace NGitLab.Tests;
@@ -71,7 +73,12 @@ public class ProjectVariableClientTests
 
         Assert.That(variable.Key, Is.EqualTo("My_Key"));
         Assert.That(variable.Value, Is.EqualTo("My value"));
-        Assert.That(variable.Description, Is.EqualTo("Some important variable"));
+
+        if (context.IsGitLabVersionInRange(VersionRange.Parse("[16.2,)"), out _))
+        {
+            Assert.That(variable.Description, Is.EqualTo("Some important variable"));
+        }
+
         Assert.That(variable.Protected, Is.EqualTo(true));
         Assert.That(variable.Type, Is.EqualTo(VariableType.Variable));
         Assert.That(variable.Masked, Is.EqualTo(false));
@@ -87,17 +94,21 @@ public class ProjectVariableClientTests
         Assert.That(variable.Key, Is.EqualTo("My_Key"));
         Assert.That(variable.Value, Is.EqualTo("My value edited"));
         Assert.That(variable.Protected, Is.EqualTo(false));
+        Assert.That(variable.Scope, Is.EqualTo(newScope));
 
         // Delete
-        projectVariableClient.Delete(variable.Key);
+        var ex = Assert.Throws<GitLabException>(() => projectVariableClient.Delete(variable.Key, "wrongScope"));
+        Assert.That(ex!.StatusCode == HttpStatusCode.NotFound);
+
+        projectVariableClient.Delete(variable.Key, newScope);
 
         var variables = projectVariableClient.All.ToList();
         Assert.That(variables, Is.Empty);
 
         // All
-        projectVariableClient.Create(new Variable { Key = "Variable1", Value = "test" });
-        projectVariableClient.Create(new VariableCreate { Key = "Variable2", Value = "test" });
-        projectVariableClient.Create(new VariableCreate { Key = "Variable3", Value = "test" });
+        projectVariableClient.Create(new Variable { Key = "Variable1", Value = "test", Scope = "test/*" });
+        projectVariableClient.Create(new Variable { Key = "Variable2", Value = "test", Scope = "integration" });
+        projectVariableClient.Create(new Variable { Key = "Variable3", Value = "test", Scope = "*" });
         variables = projectVariableClient.All.ToList();
         Assert.That(variables, Has.Count.EqualTo(3));
     }
