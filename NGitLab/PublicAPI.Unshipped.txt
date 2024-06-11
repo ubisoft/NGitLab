@@ -27,6 +27,7 @@ NGitLab.DynamicEnum<TEnum>.EnumValue.get -> TEnum?
 NGitLab.DynamicEnum<TEnum>.Equals(NGitLab.DynamicEnum<TEnum> other) -> bool
 NGitLab.DynamicEnum<TEnum>.Equals(TEnum other) -> bool
 NGitLab.DynamicEnum<TEnum>.StringValue.get -> string
+NGitLab.Extensions.VariableExtensions
 NGitLab.GetCommitsRequest
 NGitLab.GetCommitsRequest.FirstParent.get -> bool?
 NGitLab.GetCommitsRequest.FirstParent.set -> void
@@ -4061,6 +4062,7 @@ static NGitLab.DynamicEnum<TEnum>.operator !=(NGitLab.DynamicEnum<TEnum> obj1, N
 static NGitLab.DynamicEnum<TEnum>.operator !=(NGitLab.DynamicEnum<TEnum> obj1, TEnum obj2) -> bool
 static NGitLab.DynamicEnum<TEnum>.operator ==(NGitLab.DynamicEnum<TEnum> obj1, NGitLab.DynamicEnum<TEnum> obj2) -> bool
 static NGitLab.DynamicEnum<TEnum>.operator ==(NGitLab.DynamicEnum<TEnum> obj1, TEnum obj2) -> bool
+static NGitLab.Extensions.VariableExtensions.IsMatchForEnvironment(this NGitLab.Models.Variable variable, string environment) -> bool
 static NGitLab.GitLabClient.Connect(string hostUrl, string apiToken) -> NGitLab.GitLabClient
 static NGitLab.GitLabClient.Connect(string hostUrl, string username, string password) -> NGitLab.GitLabClient
 static NGitLab.Models.FileData.Base64Decode(string base64EncodedData) -> string
