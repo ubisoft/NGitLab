@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab;
@@ -29,19 +29,19 @@ public interface IProjectVariableClient
 
     Variable this[string key] { get; }
 
-    [Obsolete($"Use '{nameof(Create)}({nameof(Variable)} model)' instead")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     Variable Create(VariableCreate model);
 
     Variable Create(Variable model);
 
-    [Obsolete($"Use {nameof(Update)} with parameter {nameof(Variable)} instead!")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     Variable Update(string key, VariableUpdate model);
 
     Variable Update(string key, Variable model);
 
     Variable Update(string key, Variable model, string environmentScope);
 
-    [Obsolete($"Use {nameof(Delete)} with parameter {nameof(Variable.Scope)} instead!")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     void Delete(string key);
 
     void Delete(string key, string environmentScope);
@@ -57,14 +57,14 @@ public interface IGroupVariableClient
 
     Variable Create(Variable model);
 
-    [Obsolete($"Use {nameof(Update)} with parameter {nameof(Variable)} instead!")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     Variable Update(string key, VariableUpdate model);
 
     Variable Update(string key, Variable model);
 
     Variable Update(string key, Variable model, string environmentScope);
 
-    [Obsolete($"Use {nameof(Delete)} with parameter {nameof(Variable.Scope)} instead!")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     void Delete(string key);
 
     void Delete(string key, string environmentScope);
