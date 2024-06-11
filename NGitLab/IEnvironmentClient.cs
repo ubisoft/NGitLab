@@ -36,7 +36,7 @@ public interface IEnvironmentClient
     EnvironmentInfo Edit(int environmentId, string name, string externalUrl);
 
     /// <summary>
-    /// Updates an existing environment's name and/or external_url.
+    /// Updates an existing environment's external_url.
     /// </summary>
     /// <param name="environmentId">The ID of the environment</param>
     /// <param name="externalUrl">The new external url</param>
