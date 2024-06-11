@@ -307,6 +307,14 @@ public sealed class GitLabTestContext : IDisposable
                versionRange.Satisfies(nuGetVersion);
     }
 
+    public bool IsGitLabMajorVersion(int major)
+    {
+        var currentVersion = Client.Version.Get();
+        var gitLabVersion = currentVersion.Version;
+
+        return NuGetVersion.TryParse(gitLabVersion, out var nuGetVersion) && nuGetVersion.Major == major;
+    }
+
     public void ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange versionRange)
     {
         if (!IsGitLabVersionInRange(versionRange, out var gitLabVersion))

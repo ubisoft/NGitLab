@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
@@ -28,6 +29,10 @@ public class ReleaseLink
 
     [JsonPropertyName("direct_asset_url")]
     public string DirectAssetUrl { get; set; }
+
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [JsonPropertyName("external")]
+    public bool External { get; set; }
 
     [JsonPropertyName("link_type")]
     public ReleaseLinkType LinkType { get; set; }

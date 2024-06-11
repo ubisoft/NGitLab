@@ -33,4 +33,7 @@ public enum DetailedMergeStatus
     NotOpen,
     [EnumMember(Value = "policies_denied")]
     PoliciesDenied,
+    // Undocumented member
+    [EnumMember(Value = "preparing")]
+    Preparing,
 }

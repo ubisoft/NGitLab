@@ -70,10 +70,12 @@ public class EnvironmentsTests
         var envClient = context.Client.GetEnvironmentClient(project.Id);
 
         var newEnvNameToEdit = "env_test_name_to_edit_init";
+        var newEnvNameUpdated = "env_test_name_to_edit_updated";
+        var newEnvSlugNameUpdatedStart = GetSlugNameStart(newEnvNameUpdated);
         var newEnvNameExternalUrlUpdated = "https://www.example.com/updated";
 
         // Validate environments doesn't exist yet
-        Assert.That(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToEdit, StringComparison.Ordinal)), Is.Null);
+        Assert.That(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToEdit, StringComparison.Ordinal) || string.Equals(e.Name, newEnvNameUpdated, StringComparison.Ordinal)), Is.Null);
 
         // Create newEnvNameToEdit
         var env = envClient.Create(newEnvNameToEdit, externalUrl: null);
@@ -83,13 +85,22 @@ public class EnvironmentsTests
         Assert.That(envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToEdit, StringComparison.Ordinal)), Is.Not.Null);
 
         // Edit and check return value
-        env = envClient.Edit(initialEnvId, newEnvNameExternalUrlUpdated);
+        env = envClient.Edit(initialEnvId, newEnvNameUpdated, newEnvNameExternalUrlUpdated);
+
+        if (context.IsGitLabMajorVersion(15))
+        {
+            Assert.That(env.Name, Is.EqualTo(newEnvNameUpdated).IgnoreCase);
+        }
+
+        Assert.That(env.Slug, Does.StartWith(newEnvSlugNameUpdatedStart));
         Assert.That(env.Id, Is.EqualTo(initialEnvId), "Environment Id should not change");
         Assert.That(env.ExternalUrl, Is.EqualTo(newEnvNameExternalUrlUpdated).IgnoreCase);
 
         // Validate update is effective
-        env = envClient.All.FirstOrDefault(e => string.Equals(e.Name, newEnvNameToEdit, StringComparison.Ordinal));
+        // Renaming an environment with the API removed in GitLab 16.0.
+        env = envClient.All.FirstOrDefault(e => string.Equals(e.Name, context.IsGitLabMajorVersion(15) ? newEnvNameUpdated : newEnvNameToEdit, StringComparison.Ordinal));
         Assert.That(env, Is.Not.Null);
+        Assert.That(env.Slug, Does.StartWith(newEnvSlugNameUpdatedStart));
         Assert.That(env.Id, Is.EqualTo(initialEnvId), "Environment Id should not change");
         Assert.That(env.ExternalUrl, Is.EqualTo(newEnvNameExternalUrlUpdated).IgnoreCase);
     }

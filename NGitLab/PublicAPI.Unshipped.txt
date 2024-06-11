@@ -165,6 +165,7 @@ NGitLab.IEnvironmentClient
 NGitLab.IEnvironmentClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.EnvironmentInfo>
 NGitLab.IEnvironmentClient.Create(string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.Delete(int environmentId) -> void
+NGitLab.IEnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.Edit(int environmentId, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.GetById(int environmentId) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.GetByIdAsync(int environmentId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.EnvironmentInfo>
@@ -532,6 +533,7 @@ NGitLab.Impl.EnvironmentClient
 NGitLab.Impl.EnvironmentClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.EnvironmentInfo>
 NGitLab.Impl.EnvironmentClient.Create(string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.Delete(int environmentId) -> void
+NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
@@ -1600,6 +1602,7 @@ NGitLab.Models.DetailedMergeStatus.NotApproved = 10 -> NGitLab.Models.DetailedMe
 NGitLab.Models.DetailedMergeStatus.NotOpen = 11 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.PoliciesDenied = 12 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.Unchecked = 3 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.Preparing = 13 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.Diff
 NGitLab.Models.Diff.AMode -> string
 NGitLab.Models.Diff.BMode -> string
@@ -3315,6 +3318,8 @@ NGitLab.Models.ReleaseInfoLinks.Self.set -> void
 NGitLab.Models.ReleaseLink
 NGitLab.Models.ReleaseLink.DirectAssetUrl.get -> string
 NGitLab.Models.ReleaseLink.DirectAssetUrl.set -> void
+NGitLab.Models.ReleaseLink.External.get -> bool
+NGitLab.Models.ReleaseLink.External.set -> void
 NGitLab.Models.ReleaseLink.Id.get -> int?
 NGitLab.Models.ReleaseLink.Id.set -> void
 NGitLab.Models.ReleaseLink.LinkType.get -> NGitLab.Models.ReleaseLinkType

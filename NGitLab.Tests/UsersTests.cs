@@ -229,19 +229,25 @@ public class UsersTests
     }
 
     [Test]
-    public async Task GetLastActivityDates_UsingNonAdminCredentials_ShowsOnlyUsersWithPublicProfile()
+    public async Task GetLastActivityDates_UsingNonAdminCredentials()
     {
         using var context = await GitLabTestContext.CreateAsync();
         var privateProfileUsers = context.AdminClient.Users.All.Where(u => u.PrivateProfile).Select(ppu => ppu.Username).ToList();
         Assert.That(privateProfileUsers, Is.Not.Empty);
 
-        var lastActivityDates = context.Client.Users.GetLastActivityDatesAsync().ToList();
-        Assert.That(lastActivityDates, Is.Not.Empty);
+        if (context.IsGitLabMajorVersion(15))
+        {
+            var exception = Assert.Throws<GitLabException>(() => context.Client.Users.GetLastActivityDatesAsync().ToArray());
+            Assert.That(exception?.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+        }
+        else
+        {
+            var lastActivityDates = context.Client.Users.GetLastActivityDatesAsync().ToList();
+            Assert.That(lastActivityDates, Is.Not.Empty);
 
-#pragma warning disable MA0002
-        var lastActivityDatesOfPrivateProfileUsers = lastActivityDates.Where(lad => privateProfileUsers.Contains(lad.Username)).ToList();
-#pragma warning restore MA0002
-        Assert.That(lastActivityDatesOfPrivateProfileUsers, Is.Empty);
+            var lastActivityDatesOfPrivateProfileUsers = lastActivityDates.Where(lad => privateProfileUsers.Contains(lad.Username, StringComparer.Ordinal)).ToList();
+            Assert.That(lastActivityDatesOfPrivateProfileUsers, Is.Empty);
+        }
     }
 
     private static UserUpsert CreateNewUserUpsert(GitLabTestContext context)
