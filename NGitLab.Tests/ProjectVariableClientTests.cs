@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using NGitLab.Extensions;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NuGet.Versioning;
@@ -120,5 +121,33 @@ public class ProjectVariableClientTests
         projectVariableClient.Create(new Variable { Key = "Variable3", Value = "test", Scope = "*" });
         variables = projectVariableClient.All.ToList();
         Assert.That(variables, Has.Count.EqualTo(3));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public void Test_matching_scoped_variables()
+    {
+        var variable = new Variable
+        {
+            Key = "My_Key",
+            Value = "My value",
+            Description = "Some important variable",
+            Protected = true,
+            Type = VariableType.Variable,
+            Masked = false,
+            Raw = false,
+            Scope = "test/*",
+        };
+
+        Assert.That(variable.IsMatchForEnvironment("test/"), Is.True);
+        Assert.That(variable.IsMatchForEnvironment("test/123"), Is.True);
+        Assert.That(variable.IsMatchForEnvironment("integration"), Is.False);
+
+        // Change to simple scope
+        variable.Scope = "test";
+
+        Assert.That(variable.IsMatchForEnvironment("test"), Is.True);
+        Assert.That(variable.IsMatchForEnvironment("integration"), Is.False);
+        Assert.That(variable.IsMatchForEnvironment("integration/abc"), Is.False);
     }
 }
