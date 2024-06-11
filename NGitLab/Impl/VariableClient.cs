@@ -31,5 +31,8 @@ internal abstract class VariableClient
 
     public Variable Update(string key, Variable model, string environmentScope) => _api.Put().With(model).To<Variable>(string.IsNullOrWhiteSpace(environmentScope) ? $"{_urlPrefix}/variables/{key}" : $"{_urlPrefix}/variables/{key}?filter[environment_scope]={Uri.EscapeDataString(environmentScope!)}");
 
-    public void Delete(string key, string environmentScope = null) => _api.Delete().Execute(string.IsNullOrWhiteSpace(environmentScope) ? $"{_urlPrefix}/variables/{key}" : $"{_urlPrefix}/variables/{key}?filter[environment_scope]={Uri.EscapeDataString(environmentScope!)}");
+    [Obsolete($"Use {nameof(Delete)} with parameter {nameof(Variable.Scope)} instead!")]
+    public void Delete(string key) => Delete(key, null);
+
+    public void Delete(string key, string environmentScope) => _api.Delete().Execute(string.IsNullOrWhiteSpace(environmentScope) ? $"{_urlPrefix}/variables/{key}" : $"{_urlPrefix}/variables/{key}?filter[environment_scope]={Uri.EscapeDataString(environmentScope!)}");
 }

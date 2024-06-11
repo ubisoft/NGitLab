@@ -29,7 +29,10 @@ internal sealed class ProjectVariableClient : ClientBase, IProjectVariableClient
         throw new NotImplementedException();
     }
 
-    public void Delete(string key, string environmentScope = null)
+    [Obsolete($"Use {nameof(Delete)} with parameter {nameof(Variable.Scope)} instead!")]
+    public void Delete(string key) => Delete(key, null);
+
+    public void Delete(string key, string environmentScope)
     {
         throw new NotImplementedException();
     }

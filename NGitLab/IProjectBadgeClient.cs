@@ -41,7 +41,10 @@ public interface IProjectVariableClient
 
     Variable Update(string key, Variable model, string environmentScope);
 
-    void Delete(string key, string environmentScope = null);
+    [Obsolete($"Use {nameof(Delete)} with parameter {nameof(Variable.Scope)} instead!")]
+    void Delete(string key);
+
+    void Delete(string key, string environmentScope);
 }
 
 public interface IGroupVariableClient
@@ -61,5 +64,8 @@ public interface IGroupVariableClient
 
     Variable Update(string key, Variable model, string environmentScope);
 
-    void Delete(string key, string environmentScope = null);
+    [Obsolete($"Use {nameof(Delete)} with parameter {nameof(Variable.Scope)} instead!")]
+    void Delete(string key);
+
+    void Delete(string key, string environmentScope);
 }
