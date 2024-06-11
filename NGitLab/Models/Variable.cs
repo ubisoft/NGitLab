@@ -35,8 +35,8 @@ public class Variable
     /// </summary>
     /// <returns>The environment scope of a variable</returns>
     /// <remarks>
-    /// Update of project variable: All tiers: Free, Premium, Ultimate <br/>
-    /// Update of group variable: Premium and Ultimate only.
+    /// Create and Update of project variable: All tiers: Free, Premium, Ultimate <br/>
+    /// Create and Update of group variable: Premium and Ultimate only.
     /// </remarks>
     [JsonPropertyName("environment_scope")]
     public string Scope { get; set; }
