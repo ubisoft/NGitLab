@@ -10,6 +10,11 @@ public class Variable
     [JsonPropertyName("value")]
     public string Value { get; set; }
 
+    /// <summary>
+    /// The description of a variable
+    /// </summary>
+    /// <returns>The description of a variable</returns>
+    /// <remarks>Introduced in GitLab 16.2</remarks>
     [JsonPropertyName("description")]
     public string Description { get; set; }
 
@@ -25,6 +30,14 @@ public class Variable
     [JsonPropertyName("raw")]
     public bool Raw { get; set; }
 
+    /// <summary>
+    /// The environment scope of a variable
+    /// </summary>
+    /// <returns>The environment scope of a variable</returns>
+    /// <remarks>
+    /// Update of project variable: All tiers: Free, Premium, Ultimate <br/>
+    /// Update of group variable: Premium and Ultimate only.
+    /// </remarks>
     [JsonPropertyName("environment_scope")]
     public string Scope { get; set; }
 }
