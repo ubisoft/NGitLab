@@ -38,5 +38,5 @@ public class Variable
     /// Create and Update of group variable: Premium and Ultimate only.
     /// </remarks>
     [JsonPropertyName("environment_scope")]
-    public string Scope { get; set; }
+    public string EnvironmentScope { get; set; }
 }

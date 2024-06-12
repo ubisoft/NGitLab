@@ -3930,8 +3930,8 @@ NGitLab.Models.Variable.Protected.get -> bool
 NGitLab.Models.Variable.Protected.set -> void
 NGitLab.Models.Variable.Raw.get -> bool
 NGitLab.Models.Variable.Raw.set -> void
-NGitLab.Models.Variable.Scope.get -> string
-NGitLab.Models.Variable.Scope.set -> void
+NGitLab.Models.Variable.EnvironmentScope.get -> string
+NGitLab.Models.Variable.EnvironmentScope.set -> void
 NGitLab.Models.Variable.Type.get -> NGitLab.Models.VariableType
 NGitLab.Models.Variable.Type.set -> void
 NGitLab.Models.Variable.Value.get -> string

@@ -91,8 +91,8 @@ public class GroupVariableClientTests
         // Update
         var newScope = "integration/*";
         variable = groupVariableClient.Update(variable.Key,
-            new Variable { Value = "My value edited", Protected = false, Scope = newScope},
-            variable.Scope);
+            new Variable { Value = "My value edited", Protected = false, EnvironmentScope = newScope},
+            variable.EnvironmentScope);
 
         Assert.That(variable.Key, Is.EqualTo("My_Key"));
         Assert.That(variable.Value, Is.EqualTo("My value edited"));
@@ -108,9 +108,9 @@ public class GroupVariableClientTests
         Assert.That(variables, Is.Empty);
 
         // All
-        groupVariableClient.Create(new Variable { Key = "Variable1", Value = "test", Scope = "test/*" });
-        groupVariableClient.Create(new Variable { Key = "Variable2", Value = "test", Scope = "integration" });
-        groupVariableClient.Create(new Variable { Key = "Variable3", Value = "test", Scope = "*" });
+        groupVariableClient.Create(new Variable { Key = "Variable1", Value = "test", EnvironmentScope = "test/*" });
+        groupVariableClient.Create(new Variable { Key = "Variable2", Value = "test", EnvironmentScope = "integration" });
+        groupVariableClient.Create(new Variable { Key = "Variable3", Value = "test", EnvironmentScope = "*" });
         variables = groupVariableClient.All.ToList();
         Assert.That(variables, Has.Count.EqualTo(3));
     }

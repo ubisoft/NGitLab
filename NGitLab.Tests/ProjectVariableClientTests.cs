@@ -74,7 +74,7 @@ public class ProjectVariableClientTests
             Type = VariableType.Variable,
             Masked = false,
             Raw = false,
-            Scope = "test/*",
+            EnvironmentScope = "test/*",
         });
 
         Assert.That(variable.Key, Is.EqualTo("My_Key"));
@@ -89,7 +89,7 @@ public class ProjectVariableClientTests
         Assert.That(variable.Type, Is.EqualTo(VariableType.Variable));
         Assert.That(variable.Masked, Is.EqualTo(false));
         Assert.That(variable.Raw, Is.EqualTo(false));
-        Assert.That(variable.Scope, Is.EqualTo("test/*"));
+        Assert.That(variable.EnvironmentScope, Is.EqualTo("test/*"));
 
         // Update
         var newScope = "integration/*";
@@ -97,14 +97,14 @@ public class ProjectVariableClientTests
         {
             Value = "My value edited",
             Protected = false,
-            Scope = newScope,
+            EnvironmentScope = newScope,
         },
-        variable.Scope);
+        variable.EnvironmentScope);
 
         Assert.That(variable.Key, Is.EqualTo("My_Key"));
         Assert.That(variable.Value, Is.EqualTo("My value edited"));
         Assert.That(variable.Protected, Is.EqualTo(false));
-        Assert.That(variable.Scope, Is.EqualTo(newScope));
+        Assert.That(variable.EnvironmentScope, Is.EqualTo(newScope));
 
         // Delete
         var ex = Assert.Throws<GitLabException>(() => projectVariableClient.Delete(variable.Key, "wrongScope"));
@@ -116,9 +116,9 @@ public class ProjectVariableClientTests
         Assert.That(variables, Is.Empty);
 
         // All
-        projectVariableClient.Create(new Variable { Key = "Variable1", Value = "test", Scope = "test/*" });
-        projectVariableClient.Create(new Variable { Key = "Variable2", Value = "test", Scope = "integration" });
-        projectVariableClient.Create(new Variable { Key = "Variable3", Value = "test", Scope = "*" });
+        projectVariableClient.Create(new Variable { Key = "Variable1", Value = "test", EnvironmentScope = "test/*" });
+        projectVariableClient.Create(new Variable { Key = "Variable2", Value = "test", EnvironmentScope = "integration" });
+        projectVariableClient.Create(new Variable { Key = "Variable3", Value = "test", EnvironmentScope = "*" });
         variables = projectVariableClient.All.ToList();
         Assert.That(variables, Has.Count.EqualTo(3));
     }
@@ -136,7 +136,7 @@ public class ProjectVariableClientTests
             Type = VariableType.Variable,
             Masked = false,
             Raw = false,
-            Scope = "test/*",
+            EnvironmentScope = "test/*",
         };
 
         Assert.That(variable.IsMatchForEnvironment("test/"), Is.True);
@@ -144,7 +144,7 @@ public class ProjectVariableClientTests
         Assert.That(variable.IsMatchForEnvironment("integration"), Is.False);
 
         // Change to simple scope
-        variable.Scope = "test";
+        variable.EnvironmentScope = "test";
 
         Assert.That(variable.IsMatchForEnvironment("test"), Is.True);
         Assert.That(variable.IsMatchForEnvironment("integration"), Is.False);

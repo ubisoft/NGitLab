@@ -9,7 +9,7 @@ public static class VariableExtensions
 {
     public static bool IsMatchForEnvironment(this Variable variable, string environment)
     {
-        var sqlStyleLike = variable.Scope.Replace('*', '%').Replace('?', '_');
+        var sqlStyleLike = variable.EnvironmentScope.Replace('*', '%').Replace('?', '_');
 
         if (string.IsNullOrEmpty(environment))
             return false; // or throw exception if source == null
