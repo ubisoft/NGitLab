@@ -34,7 +34,7 @@ public class Variable
     /// The environment scope of a variable
     /// </summary>
     /// <remarks>
-    /// Create and Update of project variable: All tiers: Free, Premium, Ultimate <br/>
+    /// Create and Update of project variable: All tiers (Free, Premium, Ultimate).<br/>
     /// Create and Update of group variable: Premium and Ultimate only.
     /// </remarks>
     [JsonPropertyName("environment_scope")]
