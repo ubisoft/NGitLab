@@ -33,7 +33,6 @@ public class Variable
     /// <summary>
     /// The environment scope of a variable
     /// </summary>
-    /// <returns>The environment scope of a variable</returns>
     /// <remarks>
     /// Create and Update of project variable: All tiers: Free, Premium, Ultimate <br/>
     /// Create and Update of group variable: Premium and Ultimate only.
