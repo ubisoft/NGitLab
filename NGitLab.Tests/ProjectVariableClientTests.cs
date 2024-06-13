@@ -125,7 +125,47 @@ public class ProjectVariableClientTests
 
     [Test]
     [NGitLabRetry]
-    public void Test_matching_scoped_variables()
+    public async Task Test_matching_scoped_variables()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var projectVariableClient = context.Client.GetProjectVariableClient(project.Id);
+
+        // Create variable for test environment
+        projectVariableClient.Create(new Variable
+        {
+            Key = "My_Key",
+            Value = "My value",
+            Description = "Variable for test environments",
+            Protected = true,
+            Type = VariableType.Variable,
+            Masked = false,
+            Raw = false,
+            EnvironmentScope = "test/*",
+        });
+
+        // Create variable for test environment
+        var variableForIntegration = projectVariableClient.Create(new Variable
+        {
+            Key = "My_Key",
+            Value = "My value",
+            Description = "Variable for integration environments",
+            Protected = true,
+            Type = VariableType.Variable,
+            Masked = false,
+            Raw = false,
+            EnvironmentScope = "integration/*",
+        });
+
+        var specificEnvironment = "integration/datacenter-105-left";
+        var variablesForSpecificEnvironment = projectVariableClient.All.Where(v => v.IsMatchForEnvironment(specificEnvironment));
+
+        Assert.That(variablesForSpecificEnvironment.Count(), Is.EqualTo(1));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public void Test_standalone_matching_scoped_variables()
     {
         var variable = new Variable
         {
