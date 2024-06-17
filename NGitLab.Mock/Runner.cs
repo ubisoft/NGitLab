@@ -11,9 +11,11 @@ public sealed class Runner : GitLabObject
 
     public string Name { get; set; }
 
+    public bool Paused { get; set; }
+
     public bool Active { get; set; }
 
-    public bool Online { get; set; }
+    public bool? Online { get; set; }
 
     public string Status { get; set; }
 
@@ -37,12 +39,13 @@ public sealed class Runner : GitLabObject
 
     internal Models.Runner ToClientRunner(User currentUser)
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         return new Models.Runner
         {
             Id = Id,
             Name = Name,
             Active = Active,
-            Online = Online,
+            Online = Online ?? false,
             Status = Status,
             Description = Description,
             IsShared = IsShared,
@@ -54,6 +57,8 @@ public sealed class Runner : GitLabObject
             IpAddress = IpAddress,
             Locked = Locked,
             RunUntagged = RunUntagged,
+            Groups = Parent.Server.AllGroups.Where(g => g.RegisteredRunners.Any(r => r.Id == Id)).Select(g => g.ToClientGroup(currentUser)).ToArray(),
         };
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 }

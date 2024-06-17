@@ -83,6 +83,8 @@ public sealed class Project : GitLabObject
 
     public bool LfsEnabled { get; set; }
 
+    public bool GroupRunnersEnabled { get; set; }
+
     public bool Archived { get; set; }
 
     [Obsolete("Deprecated by GitLab. Use Topics instead")]
@@ -470,6 +472,7 @@ public sealed class Project : GitLabObject
             BuildTimeout = (int)BuildTimeout.TotalSeconds,
             RepositoryAccessLevel = RepositoryAccessLevel,
             RunnersToken = RunnersToken,
+            GroupRunnersEnabled = GroupRunnersEnabled,
             LfsEnabled = LfsEnabled,
             Archived = Archived,
             ApprovalsBeforeMerge = ApprovalsBeforeMerge,

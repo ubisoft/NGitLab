@@ -32,6 +32,24 @@ public class RunnerTests
 
     [Test]
     [NGitLabRetry]
+    public async Task Test_can_register_and_delete_a_runner_on_a_group()
+    {
+        // We need 2 projects associated to a runner to disable a runner
+        using var context = await GitLabTestContext.CreateAsync();
+        var group1 = context.CreateGroup();
+
+        var runnersClient = context.Client.Runners;
+        var runner = runnersClient.Register(new RunnerRegister { Token = group1.RunnersToken });
+        Assert.That(IsRegistered(), Is.True);
+
+        runnersClient.Delete(runner.Id);
+        Assert.That(IsRegistered(), Is.False);
+
+        bool IsRegistered() => runnersClient[runner.Id].Groups.Any(x => x.Id == group1.Id);
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task Test_can_find_a_runner_on_a_project()
     {
         using var context = await GitLabTestContext.CreateAsync();
@@ -46,6 +64,24 @@ public class RunnerTests
 
         runnersClient.DisableRunner(project.Id, new RunnerId(runner.Id));
         result = runnersClient.OfProject(project.Id).ToList();
+        Assert.That(result.All(r => r.Id != runner.Id), Is.True);
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_can_find_a_runner_on_a_group()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var group1 = context.CreateGroup();
+
+        var runnersClient = context.Client.Runners;
+        var runner = runnersClient.Register(new RunnerRegister { Token = group1.RunnersToken });
+
+        var result = runnersClient.OfGroup(group1.Id).ToList();
+        Assert.That(result.Any(r => r.Id == runner.Id), Is.True);
+
+        runnersClient.Delete(runner.Id);
+        result = runnersClient.OfProject(group1.Id).ToList();
         Assert.That(result.All(r => r.Id != runner.Id), Is.True);
     }
 

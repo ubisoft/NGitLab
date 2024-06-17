@@ -429,6 +429,7 @@ NGitLab.Mock.GitLabServer.Users.get -> NGitLab.Mock.UserCollection
 NGitLab.Mock.GitLabServer.Version.get -> NGitLab.Models.GitLabVersion
 NGitLab.Mock.GitLabServer.Version.set -> void
 NGitLab.Mock.Group
+NGitLab.Mock.Group.AddRunner(string description, int id = 0, string name = "gitlab-runner", bool paused = false, bool locked = true, bool isShared = false, bool runUntagged = false, string[] tagList = null, bool active = true) -> NGitLab.Mock.Runner
 NGitLab.Mock.Group.AllProjects.get -> System.Collections.Generic.IEnumerable<NGitLab.Mock.Project>
 NGitLab.Mock.Group.Badges.get -> NGitLab.Mock.BadgeCollection
 NGitLab.Mock.Group.CanUserAddGroup(NGitLab.Mock.User user) -> bool
@@ -469,8 +470,11 @@ NGitLab.Mock.Group.Path.set -> void
 NGitLab.Mock.Group.PathWithNameSpace.get -> string
 NGitLab.Mock.Group.Permissions.get -> NGitLab.Mock.PermissionCollection
 NGitLab.Mock.Group.Projects.get -> NGitLab.Mock.ProjectCollection
+NGitLab.Mock.Group.RegisteredRunners.get -> NGitLab.Mock.RunnerCollection
+NGitLab.Mock.Group.RemoveRunner(int runnerId) -> bool
 NGitLab.Mock.Group.RequestAccessEnabled.get -> bool
 NGitLab.Mock.Group.RequestAccessEnabled.set -> void
+NGitLab.Mock.Group.RunnersToken.get -> string
 NGitLab.Mock.Group.SharedRunnersLimit.get -> System.TimeSpan
 NGitLab.Mock.Group.SharedRunnersLimit.set -> void
 NGitLab.Mock.Group.ToClientGroup(NGitLab.Mock.User currentUser) -> NGitLab.Models.Group
@@ -867,6 +871,8 @@ NGitLab.Mock.Project.FullName.get -> string
 NGitLab.Mock.Project.GetEffectivePermissions() -> NGitLab.Mock.EffectivePermissions
 NGitLab.Mock.Project.GetEffectivePermissions(bool includeInheritedPermissions) -> NGitLab.Mock.EffectivePermissions
 NGitLab.Mock.Project.Group.get -> NGitLab.Mock.Group
+NGitLab.Mock.Project.GroupRunnersEnabled.get -> bool
+NGitLab.Mock.Project.GroupRunnersEnabled.set -> void
 NGitLab.Mock.Project.Hooks.get -> NGitLab.Mock.ProjectHookCollection
 NGitLab.Mock.Project.HttpUrl.get -> string
 NGitLab.Mock.Project.Id.get -> int
@@ -1122,9 +1128,11 @@ NGitLab.Mock.Runner.Locked.get -> bool
 NGitLab.Mock.Runner.Locked.set -> void
 NGitLab.Mock.Runner.Name.get -> string
 NGitLab.Mock.Runner.Name.set -> void
-NGitLab.Mock.Runner.Online.get -> bool
+NGitLab.Mock.Runner.Online.get -> bool?
 NGitLab.Mock.Runner.Online.set -> void
 NGitLab.Mock.Runner.Parent.get -> NGitLab.Mock.Project
+NGitLab.Mock.Runner.Paused.get -> bool
+NGitLab.Mock.Runner.Paused.set -> void
 NGitLab.Mock.Runner.Runner() -> void
 NGitLab.Mock.Runner.RunUntagged.get -> bool
 NGitLab.Mock.Runner.RunUntagged.set -> void
@@ -1138,7 +1146,7 @@ NGitLab.Mock.Runner.Version.get -> string
 NGitLab.Mock.Runner.Version.set -> void
 NGitLab.Mock.RunnerCollection
 NGitLab.Mock.RunnerCollection.Remove(int id) -> bool
-NGitLab.Mock.RunnerCollection.RunnerCollection(NGitLab.Mock.Project parent) -> void
+NGitLab.Mock.RunnerCollection.RunnerCollection(NGitLab.Mock.GitLabObject parent) -> void
 NGitLab.Mock.RunnerRef
 NGitLab.Mock.RunnerRef.Id.get -> int
 NGitLab.Mock.RunnerRef.RunnerRef(NGitLab.Mock.Runner runner) -> void

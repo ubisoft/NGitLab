@@ -920,6 +920,8 @@ NGitLab.Impl.RunnerClient.EnableRunnerAsync(int projectId, NGitLab.Models.Runner
 NGitLab.Impl.RunnerClient.GetAllRunnersWithScope(NGitLab.Models.RunnerScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.Impl.RunnerClient.GetJobs(int runnerId, NGitLab.JobStatus? status = null) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.RunnerClient.GetJobs(int runnerId, NGitLab.Models.JobScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
+NGitLab.Impl.RunnerClient.OfGroup(int groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
+NGitLab.Impl.RunnerClient.OfGroupAsync(int groupId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Runner>
 NGitLab.Impl.RunnerClient.OfProject(int projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.Impl.RunnerClient.OfProjectAsync(int projectId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Runner>
 NGitLab.Impl.RunnerClient.Register(NGitLab.Models.RunnerRegister request) -> NGitLab.Models.Runner
@@ -1144,6 +1146,8 @@ NGitLab.IRunnerClient.GetAllRunnersWithScope(NGitLab.Models.RunnerScope scope) -
 NGitLab.IRunnerClient.GetAvailableRunners(int projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.GetJobs(int runnerId, NGitLab.JobStatus? status = null) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IRunnerClient.GetJobs(int runnerId, NGitLab.Models.JobScope jobScope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
+NGitLab.IRunnerClient.OfGroup(int groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
+NGitLab.IRunnerClient.OfGroupAsync(int groupId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.OfProject(int projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.OfProjectAsync(int projectId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.Register(NGitLab.Models.RunnerRegister request) -> NGitLab.Models.Runner
@@ -1883,6 +1887,7 @@ NGitLab.Models.Group.ParentId -> int?
 NGitLab.Models.Group.Path -> string
 NGitLab.Models.Group.Projects -> NGitLab.Models.Project[]
 NGitLab.Models.Group.RequestAccessEnabled -> bool
+NGitLab.Models.Group.RunnersToken -> string
 NGitLab.Models.Group.SharedRunnersMinutesLimit -> int?
 NGitLab.Models.Group.Visibility -> NGitLab.Models.VisibilityLevel
 NGitLab.Models.GroupCreate
@@ -2902,6 +2907,7 @@ NGitLab.Models.Project.EmptyRepo -> bool
 NGitLab.Models.Project.ForkedFromProject -> NGitLab.Models.Project
 NGitLab.Models.Project.ForkingAccessLevel -> NGitLab.Models.RepositoryAccessLevel
 NGitLab.Models.Project.ForksCount -> int
+NGitLab.Models.Project.GroupRunnersEnabled -> bool
 NGitLab.Models.Project.HttpUrl -> string
 NGitLab.Models.Project.Id -> int
 NGitLab.Models.Project.ImportError -> string
@@ -3136,6 +3142,7 @@ NGitLab.Models.ProjectUpdate.DefaultBranch.get -> string
 NGitLab.Models.ProjectUpdate.DefaultBranch.set -> void
 NGitLab.Models.ProjectUpdate.Description.get -> string
 NGitLab.Models.ProjectUpdate.Description.set -> void
+NGitLab.Models.ProjectUpdate.GroupRunnersEnabled -> bool?
 NGitLab.Models.ProjectUpdate.IssuesAccessLeve.get -> string
 NGitLab.Models.ProjectUpdate.IssuesAccessLeve.set -> void
 NGitLab.Models.ProjectUpdate.IssuesEnabled.get -> bool?
@@ -3452,12 +3459,14 @@ NGitLab.Models.Runner
 NGitLab.Models.Runner.Active -> bool
 NGitLab.Models.Runner.ContactedAt -> System.DateTime
 NGitLab.Models.Runner.Description -> string
+NGitLab.Models.Runner.Groups -> NGitLab.Models.Group[]
 NGitLab.Models.Runner.Id -> int
 NGitLab.Models.Runner.IpAddress -> string
 NGitLab.Models.Runner.IsShared -> bool
 NGitLab.Models.Runner.Locked -> bool
 NGitLab.Models.Runner.Name -> string
 NGitLab.Models.Runner.Online -> bool
+NGitLab.Models.Runner.Paused -> bool
 NGitLab.Models.Runner.Projects -> NGitLab.Models.Project[]
 NGitLab.Models.Runner.Runner() -> void
 NGitLab.Models.Runner.RunUntagged -> bool
@@ -3476,6 +3485,8 @@ NGitLab.Models.RunnerRegister.Description.get -> string
 NGitLab.Models.RunnerRegister.Description.set -> void
 NGitLab.Models.RunnerRegister.Locked.get -> bool?
 NGitLab.Models.RunnerRegister.Locked.set -> void
+NGitLab.Models.RunnerRegister.Paused.get -> bool?
+NGitLab.Models.RunnerRegister.Paused.set -> void
 NGitLab.Models.RunnerRegister.RunnerRegister() -> void
 NGitLab.Models.RunnerRegister.RunUntagged.get -> bool?
 NGitLab.Models.RunnerRegister.RunUntagged.set -> void
@@ -3493,6 +3504,7 @@ NGitLab.Models.RunnerUpdate
 NGitLab.Models.RunnerUpdate.Active -> bool?
 NGitLab.Models.RunnerUpdate.Description -> string
 NGitLab.Models.RunnerUpdate.Locked -> bool?
+NGitLab.Models.RunnerUpdate.Paused -> bool?
 NGitLab.Models.RunnerUpdate.RunnerUpdate() -> void
 NGitLab.Models.RunnerUpdate.RunUntagged -> bool?
 NGitLab.Models.RunnerUpdate.TagList -> string[]

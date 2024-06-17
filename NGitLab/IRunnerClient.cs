@@ -13,12 +13,12 @@ namespace NGitLab;
 public interface IRunnerClient
 {
     /// <summary>
-    /// Get a list of projects accessible by the authenticated user.
+    /// Get a list of runners accessible by the authenticated user.
     /// </summary>
     IEnumerable<Runner> Accessible { get; }
 
     /// <summary>
-    /// Get a list of all GitLab projects (admin only).
+    /// Get a list of all GitLab runners (admin only).
     /// </summary>
     IEnumerable<Runner> All { get; }
 
@@ -42,6 +42,14 @@ public interface IRunnerClient
     /// </summary>
     /// <returns>The updated runner</returns>
     Runner Update(int runnerId, RunnerUpdate runnerUpdate);
+
+    /// <summary>
+    /// get the list of runners associated with the group
+    /// </summary>
+    /// <returns>the list of runners associated with the group</returns>
+    IEnumerable<Runner> OfGroup(int groupId);
+
+    GitLabCollectionResponse<Runner> OfGroupAsync(int groupId);
 
     /// <summary>
     /// get the list of runners associated with the project
