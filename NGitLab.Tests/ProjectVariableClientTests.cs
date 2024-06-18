@@ -65,7 +65,8 @@ public class ProjectVariableClientTests
         var projectVariableClient = context.Client.GetProjectVariableClient(project.Id);
 
         // Create
-        var variable = projectVariableClient.Create(new Variable
+        var firstScope = "test/*";
+        var changingScopeVariable = projectVariableClient.Create(new Variable
         {
             Key = "My_Key",
             Value = "My value",
@@ -74,45 +75,66 @@ public class ProjectVariableClientTests
             Type = VariableType.Variable,
             Masked = false,
             Raw = false,
-            EnvironmentScope = "test/*",
+            EnvironmentScope = firstScope,
         });
 
-        Assert.That(variable.Key, Is.EqualTo("My_Key"));
-        Assert.That(variable.Value, Is.EqualTo("My value"));
+        var integrationScope = "integration/*";
+        var integrationVariable = projectVariableClient.Create(new Variable
+        {
+            Key = "My_Key",
+            Value = "My value",
+            Description = "Some important variable",
+            Protected = true,
+            Type = VariableType.Variable,
+            Masked = false,
+            Raw = false,
+            EnvironmentScope = integrationScope,
+        });
+
+        Assert.That(changingScopeVariable.Key, Is.EqualTo("My_Key"));
+        Assert.That(changingScopeVariable.Value, Is.EqualTo("My value"));
 
         if (context.IsGitLabVersionInRange(VersionRange.Parse("[16.2,)"), out _))
         {
-            Assert.That(variable.Description, Is.EqualTo("Some important variable"));
+            Assert.That(changingScopeVariable.Description, Is.EqualTo("Some important variable"));
         }
 
-        Assert.That(variable.Protected, Is.EqualTo(true));
-        Assert.That(variable.Type, Is.EqualTo(VariableType.Variable));
-        Assert.That(variable.Masked, Is.EqualTo(false));
-        Assert.That(variable.Raw, Is.EqualTo(false));
-        Assert.That(variable.EnvironmentScope, Is.EqualTo("test/*"));
+        Assert.That(changingScopeVariable.Protected, Is.EqualTo(true));
+        Assert.That(changingScopeVariable.Type, Is.EqualTo(VariableType.Variable));
+        Assert.That(changingScopeVariable.Masked, Is.EqualTo(false));
+        Assert.That(changingScopeVariable.Raw, Is.EqualTo(false));
+        Assert.That(changingScopeVariable.EnvironmentScope, Is.EqualTo(firstScope));
 
-        Assert.That(projectVariableClient[variable.Key, variable.EnvironmentScope], Is.Not.Null);
+        // Check single access with scoped variables
+        Assert.That(projectVariableClient[changingScopeVariable.Key, changingScopeVariable.EnvironmentScope], Is.Not.Null);
+
+        var exMultipleVariables = Assert.Throws<GitLabException>(() =>
+        {
+            var dummy = projectVariableClient[changingScopeVariable.Key];
+        });
+        Assert.That(exMultipleVariables?.ErrorMessage, Is.EqualTo("There are multiple variables with provided parameters. Please use 'filter[environment_scope]'"));
 
         // Update
-        var newScope = "integration/*";
-        variable = projectVariableClient.Update(variable.Key, new Variable
+        var newScope = "production/*";
+        changingScopeVariable = projectVariableClient.Update(changingScopeVariable.Key, new Variable
         {
             Value = "My value edited",
             Protected = false,
             EnvironmentScope = newScope,
         },
-        variable.EnvironmentScope);
+        changingScopeVariable.EnvironmentScope);
 
-        Assert.That(variable.Key, Is.EqualTo("My_Key"));
-        Assert.That(variable.Value, Is.EqualTo("My value edited"));
-        Assert.That(variable.Protected, Is.EqualTo(false));
-        Assert.That(variable.EnvironmentScope, Is.EqualTo(newScope));
+        Assert.That(changingScopeVariable.Key, Is.EqualTo("My_Key"));
+        Assert.That(changingScopeVariable.Value, Is.EqualTo("My value edited"));
+        Assert.That(changingScopeVariable.Protected, Is.EqualTo(false));
+        Assert.That(changingScopeVariable.EnvironmentScope, Is.EqualTo(newScope));
 
         // Delete
-        var ex = Assert.Throws<GitLabException>(() => projectVariableClient.Delete(variable.Key, "wrongScope"));
+        var ex = Assert.Throws<GitLabException>(() => projectVariableClient.Delete(changingScopeVariable.Key, "wrongScope"));
         Assert.That(ex!.StatusCode == HttpStatusCode.NotFound);
 
-        projectVariableClient.Delete(variable.Key, newScope);
+        projectVariableClient.Delete(changingScopeVariable.Key, newScope);
+        projectVariableClient.Delete(integrationVariable.Key, integrationScope);
 
         var variables = projectVariableClient.All.ToList();
         Assert.That(variables, Is.Empty);
