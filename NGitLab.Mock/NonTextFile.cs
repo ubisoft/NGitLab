@@ -1,8 +1,8 @@
 ﻿namespace NGitLab.Mock;
 
-public sealed class OtherFile : File
+public sealed class NonTextFile : File
 {
-    public OtherFile(string path, byte[] content)
+    public NonTextFile(string path, byte[] content)
         : base(path)
     {
         Content = content;
