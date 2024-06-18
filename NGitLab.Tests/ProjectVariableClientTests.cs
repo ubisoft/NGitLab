@@ -66,7 +66,7 @@ public class ProjectVariableClientTests
 
         // Create
         var firstScope = "test/*";
-        var changingScopeVariable = projectVariableClient.Create(new Variable
+        var changingScopeVariable = projectVariableClient.Create(new VariableCreate
         {
             Key = "My_Key",
             Value = "My value",
@@ -79,7 +79,7 @@ public class ProjectVariableClientTests
         });
 
         var integrationScope = "integration/*";
-        var integrationVariable = projectVariableClient.Create(new Variable
+        var integrationVariable = projectVariableClient.Create(new VariableCreate
         {
             Key = "My_Key",
             Value = "My value",
@@ -116,13 +116,12 @@ public class ProjectVariableClientTests
 
         // Update
         var newScope = "production/*";
-        changingScopeVariable = projectVariableClient.Update(changingScopeVariable.Key, new Variable
+        changingScopeVariable = projectVariableClient.Update(changingScopeVariable.Key, changingScopeVariable.EnvironmentScope, new VariableUpdate
         {
             Value = "My value edited",
             Protected = false,
             EnvironmentScope = newScope,
-        },
-        changingScopeVariable.EnvironmentScope);
+        });
 
         Assert.That(changingScopeVariable.Key, Is.EqualTo("My_Key"));
         Assert.That(changingScopeVariable.Value, Is.EqualTo("My value edited"));
@@ -140,9 +139,9 @@ public class ProjectVariableClientTests
         Assert.That(variables, Is.Empty);
 
         // All
-        projectVariableClient.Create(new Variable { Key = "Variable1", Value = "test", EnvironmentScope = "test/*" });
-        projectVariableClient.Create(new Variable { Key = "Variable2", Value = "test", EnvironmentScope = "integration" });
-        projectVariableClient.Create(new Variable { Key = "Variable3", Value = "test", EnvironmentScope = "*" });
+        projectVariableClient.Create(new VariableCreate { Key = "Variable1", Value = "test", EnvironmentScope = "test/*" });
+        projectVariableClient.Create(new VariableCreate { Key = "Variable2", Value = "test", EnvironmentScope = "integration" });
+        projectVariableClient.Create(new VariableCreate { Key = "Variable3", Value = "test", EnvironmentScope = "*" });
         variables = projectVariableClient.All.ToList();
         Assert.That(variables, Has.Count.EqualTo(3));
     }

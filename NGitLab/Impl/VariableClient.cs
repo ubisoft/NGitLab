@@ -22,17 +22,11 @@ internal abstract class VariableClient
 
     public Variable this[string key, string environmentScope = null] => _api.Get().To<Variable>($"{_urlPrefix}/variables/{key}{EnvironmentScopeFilter(environmentScope)}");
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public Variable Create(VariableCreate model) => _api.Post().With(model).To<Variable>(_urlPrefix + "/variables");
 
-    public Variable Create(Variable model) => _api.Post().With(model).To<Variable>(_urlPrefix + "/variables");
+    public Variable Update(string key, VariableUpdate model) => Update(key, null, model);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Variable Update(string key, VariableUpdate model) => _api.Put().With(model).To<Variable>($"{_urlPrefix}/variables/{key}");
-
-    public Variable Update(string key, Variable model) => Update(key, model, null);
-
-    public Variable Update(string key, Variable model, string environmentScope) => _api.Put().With(model).To<Variable>($"{_urlPrefix}/variables/{key}{EnvironmentScopeFilter(environmentScope)}");
+    public Variable Update(string key, string environmentScope, VariableUpdate model) => _api.Put().With(model).To<Variable>($"{_urlPrefix}/variables/{key}{EnvironmentScopeFilter(environmentScope)}");
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public void Delete(string key) => Delete(key, null);

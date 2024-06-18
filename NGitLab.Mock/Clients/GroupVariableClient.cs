@@ -19,13 +19,7 @@ internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
 
     public IEnumerable<Variable> All => throw new NotImplementedException();
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public Variable Create(VariableCreate model)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Variable Create(Variable model)
     {
         throw new NotImplementedException();
     }
@@ -38,18 +32,9 @@ internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
         throw new NotImplementedException();
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Variable Update(string key, VariableUpdate model) => Update(key, model, null);
+    public Variable Update(string key, VariableUpdate model) => Update(key, null, model);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Variable Update(string key, VariableUpdate model, string environmentScope)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Variable Update(string key, Variable model) => Update(key, model, null);
-
-    public Variable Update(string key, Variable model, string environmentScope)
+    public Variable Update(string key, string environmentScope, VariableUpdate model)
     {
         throw new NotImplementedException();
     }

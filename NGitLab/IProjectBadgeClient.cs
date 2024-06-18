@@ -29,17 +29,11 @@ public interface IProjectVariableClient
 
     Variable this[string key, string environmentScope = null] { get; }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
     Variable Create(VariableCreate model);
 
-    Variable Create(Variable model);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
     Variable Update(string key, VariableUpdate model);
 
-    Variable Update(string key, Variable model);
-
-    Variable Update(string key, Variable model, string environmentScope);
+    Variable Update(string key, string environmentScope, VariableUpdate model);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     void Delete(string key);
@@ -55,14 +49,9 @@ public interface IGroupVariableClient
 
     Variable Create(VariableCreate model);
 
-    Variable Create(Variable model);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
     Variable Update(string key, VariableUpdate model);
 
-    Variable Update(string key, Variable model);
-
-    Variable Update(string key, Variable model, string environmentScope);
+    Variable Update(string key, string environmentScope, VariableUpdate model);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     void Delete(string key);

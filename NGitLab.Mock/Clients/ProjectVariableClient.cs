@@ -38,18 +38,9 @@ internal sealed class ProjectVariableClient : ClientBase, IProjectVariableClient
         throw new NotImplementedException();
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Variable Update(string key, VariableUpdate model) => Update(key, model, null);
+    public Variable Update(string key, VariableUpdate model) => Update(key, null, model);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Variable Update(string key, VariableUpdate model, string environmentScope)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Variable Update(string key, Variable model) => Update(key, model, null);
-
-    public Variable Update(string key, Variable model, string environmentScope)
+    public Variable Update(string key, string environmentScope, VariableUpdate model)
     {
         throw new NotImplementedException();
     }
