@@ -767,6 +767,8 @@ NGitLab.Mock.NoteCollection<T>.GetById(long id) -> T
 NGitLab.Mock.NoteCollection<T>.NoteCollection(NGitLab.Mock.GitLabObject parent) -> void
 NGitLab.Mock.ObjectNotAttachedException
 NGitLab.Mock.ObjectNotAttachedException.ObjectNotAttachedException() -> void
+NGitLab.Mock.OtherFile
+NGitLab.Mock.OtherFile.OtherFile(string path, byte[] content) -> void
 NGitLab.Mock.Permission
 NGitLab.Mock.Permission.AccessLevel.get -> NGitLab.Models.AccessLevel
 NGitLab.Mock.Permission.Group.get -> NGitLab.Mock.Group
@@ -1237,6 +1239,7 @@ override NGitLab.Mock.MergeRequestComment.NoticableId.get -> int
 override NGitLab.Mock.MergeRequestComment.NoticableIid.get -> int
 override NGitLab.Mock.MilestoneCollection.Add(NGitLab.Mock.Milestone item) -> void
 override NGitLab.Mock.NoteCollection<T>.Add(T item) -> void
+override NGitLab.Mock.OtherFile.Content.get -> byte[]
 override NGitLab.Mock.PipelineCollection.Add(NGitLab.Mock.Pipeline pipeline) -> void
 override NGitLab.Mock.ProjectCollection.Add(NGitLab.Mock.Project project) -> void
 override NGitLab.Mock.ProjectHookCollection.Add(NGitLab.Mock.ProjectHook item) -> void
@@ -1297,6 +1300,7 @@ static NGitLab.Mock.Config.GitLabHelpers.WithSystemComment(this NGitLab.Mock.Con
 static NGitLab.Mock.Config.GitLabHelpers.WithUser(this NGitLab.Mock.Config.GitLabConfig config, string username, string name = null, string email = null, string avatarUrl = null, bool isAdmin = false, bool isDefault = false, System.Action<NGitLab.Mock.Config.GitLabUser> configure = null) -> NGitLab.Mock.Config.GitLabConfig
 static NGitLab.Mock.Config.GitLabHelpers.WithUserPermission(this NGitLab.Mock.Config.GitLabGroup group, string user, NGitLab.Models.AccessLevel level) -> NGitLab.Mock.Config.GitLabGroup
 static NGitLab.Mock.Config.GitLabHelpers.WithUserPermission(this NGitLab.Mock.Config.GitLabProject project, string user, NGitLab.Models.AccessLevel level) -> NGitLab.Mock.Config.GitLabProject
+static NGitLab.Mock.File.CreateFromExistingFile(string path) -> NGitLab.Mock.File
 static NGitLab.Mock.File.CreateFromText(string path, string content) -> NGitLab.Mock.File
 static NGitLab.Mock.File.CreateFromText(string path, string content, System.Text.Encoding encoding) -> NGitLab.Mock.File
 static NGitLab.Mock.Config.GitLabHelpers.Configure(this NGitLab.Mock.Config.GitLabCommit commit, System.Action<NGitLab.Mock.Config.GitLabCommit> configure) -> NGitLab.Mock.Config.GitLabCommit
