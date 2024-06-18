@@ -739,6 +739,8 @@ NGitLab.Mock.MilestoneCollection.MilestoneCollection(NGitLab.Mock.GitLabObject c
 NGitLab.Mock.MilestoneState
 NGitLab.Mock.MilestoneState.active = 0 -> NGitLab.Mock.MilestoneState
 NGitLab.Mock.MilestoneState.closed = 1 -> NGitLab.Mock.MilestoneState
+NGitLab.Mock.NonTextFile
+NGitLab.Mock.NonTextFile.NonTextFile(string path, byte[] content) -> void
 NGitLab.Mock.Note
 NGitLab.Mock.Note.Author.get -> NGitLab.Mock.UserRef
 NGitLab.Mock.Note.Author.set -> void
@@ -1236,6 +1238,7 @@ override NGitLab.Mock.MergeRequestComment.NoteableType.get -> string
 override NGitLab.Mock.MergeRequestComment.NoticableId.get -> int
 override NGitLab.Mock.MergeRequestComment.NoticableIid.get -> int
 override NGitLab.Mock.MilestoneCollection.Add(NGitLab.Mock.Milestone item) -> void
+override NGitLab.Mock.NonTextFile.Content.get -> byte[]
 override NGitLab.Mock.NoteCollection<T>.Add(T item) -> void
 override NGitLab.Mock.PipelineCollection.Add(NGitLab.Mock.Pipeline pipeline) -> void
 override NGitLab.Mock.ProjectCollection.Add(NGitLab.Mock.Project project) -> void
