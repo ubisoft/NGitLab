@@ -34,7 +34,6 @@ public class RunnerTests
     [NGitLabRetry]
     public async Task Test_can_register_and_delete_a_runner_on_a_group()
     {
-        // We need 2 projects associated to a runner to disable a runner
         using var context = await GitLabTestContext.CreateAsync();
         var group1 = context.CreateGroup();
 
@@ -74,14 +73,18 @@ public class RunnerTests
         using var context = await GitLabTestContext.CreateAsync();
         var group1 = context.CreateGroup();
 
-        var runnersClient = context.Client.Runners;
-        var runner = runnersClient.Register(new RunnerRegister { Token = group1.RunnersToken });
+        // The runners token of a group is not contained in the API response
+        var groupClient = context.Client.Groups;
+        var createdGroup1 = groupClient.GetGroup(group1.Id);
 
-        var result = runnersClient.OfGroup(group1.Id).ToArray();
+        var runnersClient = context.Client.Runners;
+        var runner = runnersClient.Register(new RunnerRegister { Token = createdGroup1.RunnersToken });
+
+        var result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
         Assert.That(result.Any(r => r.Id == runner.Id), Is.True);
 
         runnersClient.Delete(runner.Id);
-        result = runnersClient.OfGroup(group1.Id).ToArray();
+        result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
         Assert.That(result.All(r => r.Id != runner.Id), Is.True);
     }
 
