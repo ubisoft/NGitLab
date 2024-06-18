@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients;
@@ -19,18 +18,11 @@ internal sealed class ProjectVariableClient : ClientBase, IProjectVariableClient
 
     public IEnumerable<Variable> All => throw new NotImplementedException();
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public Variable Create(VariableCreate model)
     {
         throw new NotImplementedException();
     }
 
-    public Variable Create(Variable model)
-    {
-        throw new NotImplementedException();
-    }
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Delete(string key) => Delete(key, null);
 
     public void Delete(string key, string environmentScope)

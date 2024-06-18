@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab;
@@ -35,7 +34,6 @@ public interface IProjectVariableClient
 
     Variable Update(string key, string environmentScope, VariableUpdate model);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void Delete(string key);
 
     void Delete(string key, string environmentScope);
@@ -53,7 +51,6 @@ public interface IGroupVariableClient
 
     Variable Update(string key, string environmentScope, VariableUpdate model);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
     void Delete(string key);
 
     void Delete(string key, string environmentScope);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients;
@@ -24,7 +23,6 @@ internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
         throw new NotImplementedException();
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Delete(string key) => Delete(key, null);
 
     public void Delete(string key, string environmentScope)

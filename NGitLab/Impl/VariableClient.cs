@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab.Impl;
@@ -28,7 +27,6 @@ internal abstract class VariableClient
 
     public Variable Update(string key, string environmentScope, VariableUpdate model) => _api.Put().With(model).To<Variable>($"{_urlPrefix}/variables/{key}{EnvironmentScopeFilter(environmentScope)}");
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Delete(string key) => Delete(key, null);
 
     public void Delete(string key, string environmentScope) => _api.Delete().Execute($"{_urlPrefix}/variables/{key}{EnvironmentScopeFilter(environmentScope)}");
