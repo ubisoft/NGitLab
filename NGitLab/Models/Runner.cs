@@ -18,7 +18,7 @@ public class Runner
     [JsonPropertyName("paused")]
     public bool Paused;
 
-    [Obsolete("Use Paused attribute instead. Will soon be removed.")]
+    [Obsolete("Use Paused field instead")]
     [JsonPropertyName("active")]
     public bool Active;
 

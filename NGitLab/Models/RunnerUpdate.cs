@@ -5,7 +5,7 @@ namespace NGitLab.Models;
 
 public class RunnerUpdate
 {
-    [Obsolete("Use Paused attribute instead. Will soon be removed.")]
+    [Obsolete("Use Paused field instead")]
     [JsonPropertyName("active")]
     public bool? Active;
 
