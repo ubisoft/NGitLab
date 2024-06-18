@@ -37,14 +37,18 @@ public class RunnerTests
         using var context = await GitLabTestContext.CreateAsync();
         var group1 = context.CreateGroup();
 
+        // The runners token of a group is not contained in the API response
+        var groupClient = context.Client.Groups;
+        var createdGroup1 = groupClient.GetGroup(group1.Id);
+
         var runnersClient = context.Client.Runners;
-        var runner = runnersClient.Register(new RunnerRegister { Token = group1.RunnersToken });
+        var runner = runnersClient.Register(new RunnerRegister { Token = createdGroup1.RunnersToken });
         Assert.That(IsRegistered(), Is.True);
 
         runnersClient.Delete(runner.Id);
         Assert.That(IsRegistered(), Is.False);
 
-        bool IsRegistered() => runnersClient[runner.Id].Groups.Any(x => x.Id == group1.Id);
+        bool IsRegistered() => runnersClient[runner.Id].Groups.Any(x => x.Id == createdGroup1.Id);
     }
 
     [Test]
