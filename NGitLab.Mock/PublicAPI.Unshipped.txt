@@ -1300,7 +1300,6 @@ static NGitLab.Mock.Config.GitLabHelpers.WithSystemComment(this NGitLab.Mock.Con
 static NGitLab.Mock.Config.GitLabHelpers.WithUser(this NGitLab.Mock.Config.GitLabConfig config, string username, string name = null, string email = null, string avatarUrl = null, bool isAdmin = false, bool isDefault = false, System.Action<NGitLab.Mock.Config.GitLabUser> configure = null) -> NGitLab.Mock.Config.GitLabConfig
 static NGitLab.Mock.Config.GitLabHelpers.WithUserPermission(this NGitLab.Mock.Config.GitLabGroup group, string user, NGitLab.Models.AccessLevel level) -> NGitLab.Mock.Config.GitLabGroup
 static NGitLab.Mock.Config.GitLabHelpers.WithUserPermission(this NGitLab.Mock.Config.GitLabProject project, string user, NGitLab.Models.AccessLevel level) -> NGitLab.Mock.Config.GitLabProject
-static NGitLab.Mock.File.CreateFromExistingFile(string path) -> NGitLab.Mock.File
 static NGitLab.Mock.File.CreateFromText(string path, string content) -> NGitLab.Mock.File
 static NGitLab.Mock.File.CreateFromText(string path, string content, System.Text.Encoding encoding) -> NGitLab.Mock.File
 static NGitLab.Mock.Config.GitLabHelpers.Configure(this NGitLab.Mock.Config.GitLabCommit commit, System.Action<NGitLab.Mock.Config.GitLabCommit> configure) -> NGitLab.Mock.Config.GitLabCommit
