@@ -3958,8 +3958,6 @@ NGitLab.Models.VariableUpdate.Description.get -> string
 NGitLab.Models.VariableUpdate.Description.set -> void
 NGitLab.Models.VariableUpdate.EnvironmentScope.get -> string
 NGitLab.Models.VariableUpdate.EnvironmentScope.set -> void
-NGitLab.Models.VariableUpdate.Key.get -> string
-NGitLab.Models.VariableUpdate.Key.set -> void
 NGitLab.Models.VariableUpdate.Masked.get -> bool
 NGitLab.Models.VariableUpdate.Masked.set -> void
 NGitLab.Models.VariableUpdate.Protected.get -> bool
