@@ -81,7 +81,7 @@ public class RunnerTests
         Assert.That(result.Any(r => r.Id == runner.Id), Is.True);
 
         runnersClient.Delete(runner.Id);
-        result = runnersClient.OfProject(group1.Id).ToList();
+        result = runnersClient.OfGroup(group1.Id).ToList();
         Assert.That(result.All(r => r.Id != runner.Id), Is.True);
     }
 
