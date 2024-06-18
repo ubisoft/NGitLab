@@ -27,7 +27,7 @@ public interface IProjectVariableClient
 {
     IEnumerable<Variable> All { get; }
 
-    Variable this[string key] { get; }
+    Variable this[string key, string environmentScope = null] { get; }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     Variable Create(VariableCreate model);
@@ -51,7 +51,7 @@ public interface IGroupVariableClient
 {
     IEnumerable<Variable> All { get; }
 
-    Variable this[string key] { get; }
+    Variable this[string key, string environmentScope = null] { get; }
 
     Variable Create(VariableCreate model);
 

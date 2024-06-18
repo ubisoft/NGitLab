@@ -20,7 +20,7 @@ internal abstract class VariableClient
 
     public IEnumerable<Variable> All => _api.Get().GetAll<Variable>(_urlPrefix + "/variables");
 
-    public Variable this[string key] => _api.Get().To<Variable>(_urlPrefix + "/variables/" + key);
+    public Variable this[string key, string environmentScope = null] => _api.Get().To<Variable>($"{_urlPrefix}/variables/{key}{EnvironmentScopeFilter(environmentScope)}");
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public Variable Create(VariableCreate model) => _api.Post().With(model).To<Variable>(_urlPrefix + "/variables");

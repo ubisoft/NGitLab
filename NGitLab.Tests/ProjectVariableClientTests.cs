@@ -91,6 +91,8 @@ public class ProjectVariableClientTests
         Assert.That(variable.Raw, Is.EqualTo(false));
         Assert.That(variable.EnvironmentScope, Is.EqualTo("test/*"));
 
+        Assert.That(projectVariableClient[variable.Key, variable.EnvironmentScope], Is.Not.Null);
+
         // Update
         var newScope = "integration/*";
         variable = projectVariableClient.Update(variable.Key, new Variable

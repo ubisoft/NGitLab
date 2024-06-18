@@ -308,7 +308,7 @@ NGitLab.IGroupVariableClient.Create(NGitLab.Models.VariableCreate model) -> NGit
 NGitLab.IGroupVariableClient.Create(NGitLab.Models.Variable model) -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Delete(string key) -> void
 NGitLab.IGroupVariableClient.Delete(string key, string environmentScope) -> void
-NGitLab.IGroupVariableClient.this[string key].get -> NGitLab.Models.Variable
+NGitLab.IGroupVariableClient.this[string key, string environmentScope = null].get -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.Variable model) -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.Variable model, string environmentScope) -> NGitLab.Models.Variable
@@ -1081,7 +1081,7 @@ NGitLab.IProjectVariableClient.Create(NGitLab.Models.VariableCreate model) -> NG
 NGitLab.IProjectVariableClient.Create(NGitLab.Models.Variable model) -> NGitLab.Models.Variable
 NGitLab.IProjectVariableClient.Delete(string key) -> void
 NGitLab.IProjectVariableClient.Delete(string key, string environmentScope) -> void
-NGitLab.IProjectVariableClient.this[string key].get -> NGitLab.Models.Variable
+NGitLab.IProjectVariableClient.this[string key, string environmentScope = null].get -> NGitLab.Models.Variable
 NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
 NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.Variable model) -> NGitLab.Models.Variable
 NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.Variable model, string environmentScope) -> NGitLab.Models.Variable
