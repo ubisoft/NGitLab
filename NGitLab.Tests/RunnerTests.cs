@@ -79,15 +79,15 @@ public class RunnerTests
         var group1 = context.CreateGroup();
 
         // The runners token of a group is not contained in the API response
-        var groupClient = context.Client.Groups;
+        var groupClient = context.AdminClient.Groups;
         var createdGroup1 = groupClient.GetGroup(group1.Id);
 
-        var runnersClient = context.Client.Runners;
+        var runnersClient = context.AdminClient.Runners;
         var runner = runnersClient.Register(new RunnerRegister { Token = createdGroup1.RunnersToken });
 
         var result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
         Assert.That(result.Any(r => r.Id == runner.Id), Is.True);
-        Thread.Sleep(20000);
+
         runnersClient.Delete(runner.Id);
         result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
         Assert.That(result.All(r => r.Id != runner.Id), Is.True);
