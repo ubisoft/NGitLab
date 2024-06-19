@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -46,7 +47,7 @@ public class RunnerTests
         Assert.That(IsRegistered(), Is.True);
 
         runnersClient.Delete(runner.Id);
-        Assert.That(IsRegistered(), Is.False);
+        Assert.That(runnersClient.Accessible.Any(x => x.Id == runner.Id), Is.False);
 
         bool IsRegistered() => runnersClient[runner.Id].Groups.Any(x => x.Id == createdGroup1.Id);
     }
@@ -86,7 +87,7 @@ public class RunnerTests
 
         var result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
         Assert.That(result.Any(r => r.Id == runner.Id), Is.True);
-
+        Thread.Sleep(20000);
         runnersClient.Delete(runner.Id);
         result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
         Assert.That(result.All(r => r.Id != runner.Id), Is.True);
