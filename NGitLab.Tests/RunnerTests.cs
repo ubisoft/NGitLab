@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
+using Polly;
 
 namespace NGitLab.Tests;
 
@@ -47,7 +50,8 @@ public class RunnerTests
         Assert.That(IsRegistered(), Is.True);
 
         runnersClient.Delete(runner.Id);
-        Assert.That(runnersClient.Accessible.Any(x => x.Id == runner.Id), Is.False);
+        var ex = Assert.Throws<GitLabException>(() => IsRegistered());
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
 
         bool IsRegistered() => runnersClient[runner.Id].Groups.Any(x => x.Id == createdGroup1.Id);
     }
@@ -79,16 +83,16 @@ public class RunnerTests
         var group1 = context.CreateGroup();
 
         // The runners token of a group is not contained in the API response
-        var groupClient = context.AdminClient.Groups;
+        var groupClient = context.Client.Groups;
         var createdGroup1 = groupClient.GetGroup(group1.Id);
 
-        var runnersClient = context.AdminClient.Runners;
+        var runnersClient = context.Client.Runners;
         var runner = runnersClient.Register(new RunnerRegister { Token = createdGroup1.RunnersToken });
 
         var result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
         Assert.That(result.Any(r => r.Id == runner.Id), Is.True);
 
-        runnersClient.Delete(runner.Id);
+        DeleteRunnerFromInstance(runnersClient, runner.Id);
         result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
         Assert.That(result.All(r => r.Id != runner.Id), Is.True);
     }
@@ -122,5 +126,16 @@ public class RunnerTests
 
         runner = runnersClient.Update(runner.Id, new RunnerUpdate { RunUntagged = true });
         Assert.That(runner.RunUntagged, Is.True);
+    }
+
+    private static void DeleteRunnerFromInstance(IRunnerClient runnersClient, int runnerId)
+    {
+        Policy
+            .Handle<GitLabException>(ex => ex.StatusCode is HttpStatusCode.Forbidden)
+            .WaitAndRetry(3, sleepDurationProvider: attempt => TimeSpan.FromSeconds(2 * attempt))
+            .Execute(() =>
+            {
+                runnersClient.Delete(runnerId);
+            });
     }
 }
