@@ -49,7 +49,7 @@ public class RunnerTests
         var runner = runnersClient.Register(new RunnerRegister { Token = createdGroup1.RunnersToken });
         Assert.That(IsRegistered(), Is.True);
 
-        runnersClient.Delete(runner.Id);
+        DeleteRunnerFromInstance(runnersClient, runner.Id);
         var ex = Assert.Throws<GitLabException>(() => IsRegistered());
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
 
