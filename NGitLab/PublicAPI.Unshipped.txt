@@ -307,7 +307,8 @@ NGitLab.IGroupVariableClient.All.get -> System.Collections.Generic.IEnumerable<N
 NGitLab.IGroupVariableClient.Create(NGitLab.Models.VariableCreate model) -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Delete(string key) -> void
 NGitLab.IGroupVariableClient.Delete(string key, string environmentScope) -> void
-NGitLab.IGroupVariableClient.this[string key, string environmentScope = null].get -> NGitLab.Models.Variable
+NGitLab.IGroupVariableClient.this[string key, string environmentScope].get -> NGitLab.Models.Variable
+NGitLab.IGroupVariableClient.this[string key].get -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Update(string key, string environmentScope, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
 NGitLab.IHttpRequestor
