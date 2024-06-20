@@ -3956,8 +3956,7 @@ NGitLab.Models.VariableUpdate.Masked -> bool
 NGitLab.Models.VariableUpdate.Protected -> bool
 NGitLab.Models.VariableUpdate.Raw -> bool
 NGitLab.Models.VariableUpdate.Type -> NGitLab.Models.VariableType
-NGitLab.Models.VariableUpdate.Value.get -> string
-NGitLab.Models.VariableUpdate.Value.set -> void
+NGitLab.Models.VariableUpdate.Value -> string
 NGitLab.Models.VariableUpdate.VariableUpdate() -> void
 NGitLab.Models.VisibilityLevel
 NGitLab.Models.VisibilityLevel.Internal = 10 -> NGitLab.Models.VisibilityLevel

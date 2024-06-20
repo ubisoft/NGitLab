@@ -5,7 +5,7 @@ namespace NGitLab.Models;
 public class VariableUpdate
 {
     [JsonPropertyName("value")]
-    public string Value { get; set; }
+    public string Value;
 
     /// <summary>
     /// The description of a variable
