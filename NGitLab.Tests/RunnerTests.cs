@@ -7,6 +7,7 @@ using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
 using Polly;
+using Polly.Retry;
 
 namespace NGitLab.Tests;
 
@@ -47,14 +48,13 @@ public class RunnerTests
 
         var runnersClient = context.Client.Runners;
         var runner = runnersClient.Register(new RunnerRegister { Token = createdGroup1.RunnersToken });
-        Thread.Sleep(10000);
         Assert.That(IsRegistered(), Is.True);
 
-        DeleteRunnerFromInstance(runnersClient, runner.Id);
+        GetRetryPolicy().Execute(() => { runnersClient.Delete(runner.Id); });
         var ex = Assert.Throws<GitLabException>(() => IsRegistered());
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
 
-        bool IsRegistered() => runnersClient[runner.Id].Groups.Any(x => x.Id == createdGroup1.Id);
+        bool IsRegistered() => GetRetryPolicy().Execute(() => runnersClient[runner.Id].Groups.Any(x => x.Id == createdGroup1.Id));
     }
 
     [Test]
@@ -93,7 +93,7 @@ public class RunnerTests
         var result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
         Assert.That(result.Any(r => r.Id == runner.Id), Is.True);
 
-        DeleteRunnerFromInstance(runnersClient, runner.Id);
+        GetRetryPolicy().Execute(() => { runnersClient.Delete(runner.Id); });
         result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
         Assert.That(result.All(r => r.Id != runner.Id), Is.True);
     }
@@ -129,14 +129,10 @@ public class RunnerTests
         Assert.That(runner.RunUntagged, Is.True);
     }
 
-    private static void DeleteRunnerFromInstance(IRunnerClient runnersClient, int runnerId)
+    private static RetryPolicy GetRetryPolicy()
     {
-        Policy
+        return Policy
             .Handle<GitLabException>(ex => ex.StatusCode is HttpStatusCode.Forbidden)
-            .WaitAndRetry(3, sleepDurationProvider: attempt => TimeSpan.FromSeconds(2 * attempt))
-            .Execute(() =>
-            {
-                runnersClient.Delete(runnerId);
-            });
+            .WaitAndRetry(3, sleepDurationProvider: attempt => TimeSpan.FromSeconds(2 * attempt));    
     }
 }
