@@ -36,6 +36,29 @@ public class RunnerTests
 
     [Test]
     [NGitLabRetry]
+    public async Task Test_can_register_and_delete_a_runner_on_a_group()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var group1 = context.CreateGroup();
+
+        // The runners token of a group is not contained in the API response
+        var groupClient = context.Client.Groups;
+        var createdGroup1 = groupClient.GetGroup(group1.Id);
+
+        var runnersClient = context.Client.Runners;
+        var runner = runnersClient.Register(new RunnerRegister { Token = createdGroup1.RunnersToken });
+        Thread.Sleep(10000);
+        Assert.That(IsRegistered(), Is.True);
+
+        DeleteRunnerFromInstance(runnersClient, runner.Id);
+        var ex = Assert.Throws<GitLabException>(() => IsRegistered());
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+        bool IsRegistered() => runnersClient[runner.Id].Groups.Any(x => x.Id == createdGroup1.Id);
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task Test_can_find_a_runner_on_a_project()
     {
         using var context = await GitLabTestContext.CreateAsync();
