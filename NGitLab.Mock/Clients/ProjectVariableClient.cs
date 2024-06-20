@@ -14,7 +14,9 @@ internal sealed class ProjectVariableClient : ClientBase, IProjectVariableClient
         _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
-    public Variable this[string key, string environmentScope = null] => throw new NotImplementedException();
+    public Variable this[string key] => this[key, null];
+
+    public Variable this[string key, string environmentScope] => throw new NotImplementedException();
 
     public IEnumerable<Variable> All => throw new NotImplementedException();
 

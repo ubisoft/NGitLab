@@ -19,7 +19,9 @@ internal abstract class VariableClient
 
     public IEnumerable<Variable> All => _api.Get().GetAll<Variable>(_urlPrefix + "/variables");
 
-    public Variable this[string key, string environmentScope = null] => _api.Get().To<Variable>($"{_urlPrefix}/variables/{key}{EnvironmentScopeFilter(environmentScope)}");
+    public Variable this[string key] => this[key, null];
+
+    public Variable this[string key, string environmentScope] => _api.Get().To<Variable>($"{_urlPrefix}/variables/{key}{EnvironmentScopeFilter(environmentScope)}");
 
     public Variable Create(VariableCreate model) => _api.Post().With(model).To<Variable>(_urlPrefix + "/variables");
 
