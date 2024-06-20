@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
@@ -14,19 +13,19 @@ public class VariableUpdate
     /// <returns>The description of a variable</returns>
     /// <remarks>Introduced in GitLab 16.2</remarks>
     [JsonPropertyName("description")]
-    public string Description { get; set; }
+    public string Description;
 
     [JsonPropertyName("protected")]
-    public bool Protected { get; set; }
+    public bool Protected;
 
     [JsonPropertyName("variable_type")]
-    public VariableType Type { get; set; }
+    public VariableType Type;
 
     [JsonPropertyName("masked")]
-    public bool Masked { get; set; }
+    public bool Masked;
 
     [JsonPropertyName("raw")]
-    public bool Raw { get; set; }
+    public bool Raw;
 
     /// <summary>
     /// The environment scope of a variable
@@ -36,5 +35,5 @@ public class VariableUpdate
     /// Create and Update of group variable: Premium and Ultimate only.
     /// </remarks>
     [JsonPropertyName("environment_scope")]
-    public string EnvironmentScope { get; set; }
+    public string EnvironmentScope;
 }
