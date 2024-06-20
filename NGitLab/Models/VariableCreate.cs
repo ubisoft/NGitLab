@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
-[EditorBrowsable(EditorBrowsableState.Never)]
 public class VariableCreate
 {
     [JsonPropertyName("key")]
