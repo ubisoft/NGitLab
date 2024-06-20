@@ -9,7 +9,7 @@ internal abstract class VariableClient
     private readonly string _urlPrefix;
     private readonly API _api;
 
-    private string EnvironmentScopeFilter(string environmentScope = null) => !string.IsNullOrWhiteSpace(environmentScope) ? $"?filter[environment_scope]={Uri.EscapeDataString(environmentScope!)}" : string.Empty;
+    private string EnvironmentScopeFilter(string environmentScope = null) => !string.IsNullOrWhiteSpace(environmentScope) ? $"?filter[environment_scope]={Uri.EscapeDataString(environmentScope)}" : string.Empty;
 
     protected VariableClient(API api, string urlPrefix)
     {
