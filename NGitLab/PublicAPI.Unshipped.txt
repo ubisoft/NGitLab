@@ -306,8 +306,11 @@ NGitLab.IGroupVariableClient
 NGitLab.IGroupVariableClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Variable>
 NGitLab.IGroupVariableClient.Create(NGitLab.Models.VariableCreate model) -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Delete(string key) -> void
+NGitLab.IGroupVariableClient.Delete(string key, string environmentScope) -> void
+NGitLab.IGroupVariableClient.this[string key, string environmentScope].get -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.this[string key].get -> NGitLab.Models.Variable
 NGitLab.IGroupVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
+NGitLab.IGroupVariableClient.Update(string key, string environmentScope, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
 NGitLab.IHttpRequestor
 NGitLab.IHttpRequestor.Execute(string tailAPIUrl) -> void
 NGitLab.IHttpRequestor.ExecuteAsync(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
@@ -1075,8 +1078,11 @@ NGitLab.IProjectVariableClient
 NGitLab.IProjectVariableClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Variable>
 NGitLab.IProjectVariableClient.Create(NGitLab.Models.VariableCreate model) -> NGitLab.Models.Variable
 NGitLab.IProjectVariableClient.Delete(string key) -> void
+NGitLab.IProjectVariableClient.Delete(string key, string environmentScope) -> void
+NGitLab.IProjectVariableClient.this[string key, string environmentScope].get -> NGitLab.Models.Variable
 NGitLab.IProjectVariableClient.this[string key].get -> NGitLab.Models.Variable
 NGitLab.IProjectVariableClient.Update(string key, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
+NGitLab.IProjectVariableClient.Update(string key, string environmentScope, NGitLab.Models.VariableUpdate model) -> NGitLab.Models.Variable
 NGitLab.IProtectedBranchClient
 NGitLab.IProtectedBranchClient.GetProtectedBranch(string branchName) -> NGitLab.Models.ProtectedBranch
 NGitLab.IProtectedBranchClient.GetProtectedBranches(string search = null) -> NGitLab.Models.ProtectedBranch[]
@@ -3911,12 +3917,18 @@ NGitLab.Models.UserUpsert.Username -> string
 NGitLab.Models.UserUpsert.UserUpsert() -> void
 NGitLab.Models.UserUpsert.WebsiteURL -> string
 NGitLab.Models.Variable
+NGitLab.Models.Variable.Description.get -> string
+NGitLab.Models.Variable.Description.set -> void
 NGitLab.Models.Variable.Key.get -> string
 NGitLab.Models.Variable.Key.set -> void
 NGitLab.Models.Variable.Masked.get -> bool
 NGitLab.Models.Variable.Masked.set -> void
 NGitLab.Models.Variable.Protected.get -> bool
 NGitLab.Models.Variable.Protected.set -> void
+NGitLab.Models.Variable.Raw.get -> bool
+NGitLab.Models.Variable.Raw.set -> void
+NGitLab.Models.Variable.EnvironmentScope.get -> string
+NGitLab.Models.Variable.EnvironmentScope.set -> void
 NGitLab.Models.Variable.Scope.get -> string
 NGitLab.Models.Variable.Scope.set -> void
 NGitLab.Models.Variable.Type.get -> NGitLab.Models.VariableType
@@ -3925,15 +3937,25 @@ NGitLab.Models.Variable.Value.get -> string
 NGitLab.Models.Variable.Value.set -> void
 NGitLab.Models.Variable.Variable() -> void
 NGitLab.Models.VariableCreate
+NGitLab.Models.VariableCreate.Description -> string
+NGitLab.Models.VariableCreate.EnvironmentScope -> string
 NGitLab.Models.VariableCreate.Key -> string
+NGitLab.Models.VariableCreate.Masked -> bool
 NGitLab.Models.VariableCreate.Protected -> bool
+NGitLab.Models.VariableCreate.Raw -> bool
+NGitLab.Models.VariableCreate.Type -> NGitLab.Models.VariableType
 NGitLab.Models.VariableCreate.Value -> string
 NGitLab.Models.VariableCreate.VariableCreate() -> void
 NGitLab.Models.VariableType
 NGitLab.Models.VariableType.File = 1 -> NGitLab.Models.VariableType
 NGitLab.Models.VariableType.Variable = 0 -> NGitLab.Models.VariableType
 NGitLab.Models.VariableUpdate
+NGitLab.Models.VariableUpdate.Description -> string
+NGitLab.Models.VariableUpdate.EnvironmentScope -> string
+NGitLab.Models.VariableUpdate.Masked -> bool
 NGitLab.Models.VariableUpdate.Protected -> bool
+NGitLab.Models.VariableUpdate.Raw -> bool
+NGitLab.Models.VariableUpdate.Type -> NGitLab.Models.VariableType
 NGitLab.Models.VariableUpdate.Value -> string
 NGitLab.Models.VariableUpdate.VariableUpdate() -> void
 NGitLab.Models.VisibilityLevel
