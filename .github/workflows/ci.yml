@@ -53,8 +53,9 @@ jobs:
         gitlab:
           - 'gitlab/gitlab-ee:15.11.9-ee.0'
           - 'gitlab/gitlab-ee:15.11.13-ee.0'
-          - 'gitlab/gitlab-ee:16.10.6-ee.0'
-          - 'gitlab/gitlab-ee:16.11.3-ee.0'
+          - 'gitlab/gitlab-ee:16.10.7-ee.0'
+          - 'gitlab/gitlab-ee:16.11.4-ee.0'
+          - 'gitlab/gitlab-ee:17.0.2-ee.0'
         configuration: [Release]
       fail-fast: false
     services:
