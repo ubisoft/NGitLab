@@ -92,7 +92,7 @@ public sealed class GitLabServer : GitLabObject, IDisposable
         }
     }
 
-    public IEnumerable<Runner> AllRunners => AllProjects.SelectMany(p => p.RegisteredRunners);
+    public IEnumerable<Runner> AllRunners => AllGroups.SelectMany(g => g.RegisteredRunners).Concat(AllProjects.SelectMany(p => p.RegisteredRunners));
 
     public IEnumerable<Project> AllProjects => AllGroups.SelectMany(group => group.Projects);
 

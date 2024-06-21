@@ -15,6 +15,10 @@ public class Runner
     [JsonPropertyName("name")]
     public string Name;
 
+    [JsonPropertyName("paused")]
+    public bool Paused;
+
+    [Obsolete("Use Paused field instead")]
     [JsonPropertyName("active")]
     public bool Active;
 
@@ -35,6 +39,9 @@ public class Runner
 
     [JsonPropertyName("projects")]
     public Project[] Projects;
+
+    [JsonPropertyName("groups")]
+    public Group[] Groups;
 
     [JsonPropertyName("token")]
     public string Token;

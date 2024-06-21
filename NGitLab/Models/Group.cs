@@ -40,6 +40,9 @@ public class Group
     [JsonPropertyName("parent_id")]
     public int? ParentId;
 
+    [JsonPropertyName("runners_token")]
+    public string RunnersToken;
+
     [JsonPropertyName("projects")]
     public Project[] Projects;
 

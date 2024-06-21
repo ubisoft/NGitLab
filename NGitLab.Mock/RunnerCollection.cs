@@ -5,7 +5,7 @@ namespace NGitLab.Mock;
 
 public sealed class RunnerCollection : Collection<Runner>
 {
-    public RunnerCollection(Project parent)
+    public RunnerCollection(GitLabObject parent)
         : base(parent)
     {
     }

@@ -361,6 +361,11 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
                 project.LfsEnabled = projectUpdate.LfsEnabled.Value;
             }
 
+            if (projectUpdate.GroupRunnersEnabled.HasValue)
+            {
+                project.GroupRunnersEnabled = projectUpdate.GroupRunnersEnabled.Value;
+            }
+
 #pragma warning disable CS0618 // Type or member is obsolete
             if (projectUpdate.TagList != null)
             {

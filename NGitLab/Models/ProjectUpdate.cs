@@ -68,6 +68,9 @@ public sealed class ProjectUpdate
     [JsonPropertyName("shared_runners_enabled")]
     public bool? SharedRunnersEnabled { get; set; }
 
+    [JsonPropertyName("group_runners_enabled")]
+    public bool? GroupRunnersEnabled;
+
     [JsonPropertyName("visibility")]
     public VisibilityLevel? Visibility { get; set; }
 

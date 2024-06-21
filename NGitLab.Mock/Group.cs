@@ -19,6 +19,7 @@ public sealed class Group : GitLabObject
     {
         Groups = new GroupCollection(this);
         Projects = new ProjectCollection(this);
+        RegisteredRunners = new RunnerCollection(this);
         Permissions = new PermissionCollection(this);
         Badges = new BadgeCollection(this);
         Labels = new LabelsCollection(this);
@@ -59,6 +60,8 @@ public sealed class Group : GitLabObject
 
     public TimeSpan SharedRunnersLimit { get; set; }
 
+    public string RunnersToken { get; internal set; }
+
     public bool LfsEnabled { get; set; }
 
     public bool RequestAccessEnabled { get; set; }
@@ -68,6 +71,8 @@ public sealed class Group : GitLabObject
     public GroupCollection Groups { get; }
 
     public ProjectCollection Projects { get; }
+
+    public RunnerCollection RegisteredRunners { get; }
 
     public PermissionCollection Permissions { get; }
 
@@ -244,6 +249,32 @@ public sealed class Group : GitLabObject
         return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Developer;
     }
 
+    public Runner AddRunner(string description, int id = default, string name = "gitlab-runner", bool paused = false, bool locked = true, bool isShared = false, bool runUntagged = false, string[] tagList = null, bool active = true)
+    {
+        var runner = new Runner
+        {
+            Name = name,
+            Description = description,
+            Paused = paused,
+            Active = active,
+            Locked = locked,
+            IsShared = isShared,
+            IpAddress = "0.0.0.0",
+            Online = null,
+            RunUntagged = runUntagged,
+            Id = id,
+            TagList = tagList,
+        };
+
+        RegisteredRunners.Add(runner);
+        return runner;
+    }
+
+    public bool RemoveRunner(int runnerId)
+    {
+        return RegisteredRunners.Remove(runnerId);
+    }
+
     public Models.Group ToClientGroup(User currentUser)
     {
         return new Models.Group
@@ -262,6 +293,7 @@ public sealed class Group : GitLabObject
             ExtraSharedRunnersMinutesLimit = (int)ExtraSharedRunnersLimit.TotalMinutes,
             SharedRunnersMinutesLimit = (int)SharedRunnersLimit.TotalMinutes,
             CreatedAt = CreatedAt,
+            RunnersToken = RunnersToken,
         };
     }
 

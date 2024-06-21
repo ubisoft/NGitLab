@@ -40,6 +40,16 @@ public class RunnerClient : IRunnerClient
         return _api.Get().GetAllAsync<Runner>(Project.Url + $"/{projectId.ToStringInvariant()}" + Runner.Url);
     }
 
+    public IEnumerable<Runner> OfGroup(int groupId)
+    {
+        return _api.Get().GetAll<Runner>(Group.Url + $"/{groupId.ToStringInvariant()}" + Runner.Url);
+    }
+
+    public GitLabCollectionResponse<Runner> OfGroupAsync(int groupId)
+    {
+        return _api.Get().GetAllAsync<Runner>(Group.Url + $"/{groupId.ToStringInvariant()}" + Runner.Url);
+    }
+
     public void Delete(Runner runner) => Delete(runner.Id);
 
     public void Delete(int runnerId)

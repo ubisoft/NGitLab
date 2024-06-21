@@ -11,9 +11,11 @@ public sealed class Runner : GitLabObject
 
     public string Name { get; set; }
 
+    public bool Paused { get; set; }
+
     public bool Active { get; set; }
 
-    public bool Online { get; set; }
+    public bool? Online { get; set; }
 
     public string Status { get; set; }
 
@@ -41,8 +43,10 @@ public sealed class Runner : GitLabObject
         {
             Id = Id,
             Name = Name,
+#pragma warning disable CS0618 // Type or member is obsolete
             Active = Active,
-            Online = Online,
+#pragma warning restore CS0618 // Type or member is obsolete
+            Online = Online ?? false,
             Status = Status,
             Description = Description,
             IsShared = IsShared,
@@ -54,6 +58,7 @@ public sealed class Runner : GitLabObject
             IpAddress = IpAddress,
             Locked = Locked,
             RunUntagged = RunUntagged,
+            Groups = Parent.Server.AllGroups.Where(g => g.RegisteredRunners.Any(r => r.Id == Id)).Select(g => g.ToClientGroup(currentUser)).ToArray(),
         };
     }
 }
