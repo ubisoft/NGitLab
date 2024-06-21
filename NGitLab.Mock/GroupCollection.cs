@@ -51,6 +51,8 @@ public sealed class GroupCollection : Collection<Group>
             };
         }
 
+        group.RunnersToken ??= Server.GetNewRegistrationToken();
+
         base.Add(group);
     }
 }

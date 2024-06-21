@@ -1,8 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
+using Polly;
+using Polly.Retry;
 
 namespace NGitLab.Tests;
 
@@ -32,6 +36,28 @@ public class RunnerTests
 
     [Test]
     [NGitLabRetry]
+    public async Task Test_can_register_and_delete_a_runner_on_a_group()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var group1 = context.CreateGroup();
+
+        // The runners token of a group is not contained in the API response
+        var groupClient = context.Client.Groups;
+        var createdGroup1 = groupClient.GetGroup(group1.Id);
+
+        var runnersClient = context.Client.Runners;
+        var runner = runnersClient.Register(new RunnerRegister { Token = createdGroup1.RunnersToken });
+        Assert.That(IsRegistered(), Is.True);
+
+        GetRetryPolicy().Execute(() => { runnersClient.Delete(runner.Id); });
+        var ex = Assert.Throws<GitLabException>(() => IsRegistered());
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+
+        bool IsRegistered() => GetRetryPolicy().Execute(() => runnersClient[runner.Id].Groups.Any(x => x.Id == createdGroup1.Id));
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task Test_can_find_a_runner_on_a_project()
     {
         using var context = await GitLabTestContext.CreateAsync();
@@ -46,6 +72,28 @@ public class RunnerTests
 
         runnersClient.DisableRunner(project.Id, new RunnerId(runner.Id));
         result = runnersClient.OfProject(project.Id).ToList();
+        Assert.That(result.All(r => r.Id != runner.Id), Is.True);
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_can_find_a_runner_on_a_group()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var group1 = context.CreateGroup();
+
+        // The runners token of a group is not contained in the API response
+        var groupClient = context.Client.Groups;
+        var createdGroup1 = groupClient.GetGroup(group1.Id);
+
+        var runnersClient = context.Client.Runners;
+        var runner = runnersClient.Register(new RunnerRegister { Token = createdGroup1.RunnersToken });
+
+        var result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
+        Assert.That(result.Any(r => r.Id == runner.Id), Is.True);
+
+        GetRetryPolicy().Execute(() => { runnersClient.Delete(runner.Id); });
+        result = runnersClient.OfGroup(createdGroup1.Id).ToArray();
         Assert.That(result.All(r => r.Id != runner.Id), Is.True);
     }
 
@@ -78,5 +126,12 @@ public class RunnerTests
 
         runner = runnersClient.Update(runner.Id, new RunnerUpdate { RunUntagged = true });
         Assert.That(runner.RunUntagged, Is.True);
+    }
+
+    private static RetryPolicy GetRetryPolicy()
+    {
+        return Policy
+            .Handle<GitLabException>(ex => ex.StatusCode is HttpStatusCode.Forbidden)
+            .WaitAndRetry(3, sleepDurationProvider: attempt => TimeSpan.FromSeconds(2 * attempt));    
     }
 }

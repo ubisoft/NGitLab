@@ -33,7 +33,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
 
             using (Context.BeginOperationScope())
             {
-                var runners = Server.AllProjects.SelectMany(p => p.RegisteredRunners);
+                var runners = Server.AllGroups.SelectMany(g => g.RegisteredRunners).Concat(Server.AllProjects.SelectMany(p => p.RegisteredRunners));
                 var clientRunners = runners.Select(r => r.ToClientRunner(Context.User)).ToList();
                 return clientRunners;
             }
@@ -64,18 +64,26 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         using (Context.BeginOperationScope())
         {
             var projects = Server.AllProjects.Where(p => p.EnabledRunners.Any(r => r.Id == runnerId));
-            if (!projects.Any())
+            if (projects.Any())
             {
-                throw new GitLabBadRequestException("Runner is not found in any project");
+                if (projects.Skip(1).Any())
+                {
+                    throw new GitLabBadRequestException("Runner is enabled in multiple projects");
+                }
+                var project = GetProject(projects.Single().Id, ProjectPermission.Edit);
+                project.RemoveRunner(runnerId);
+                return;
             }
 
-            if (projects.Skip(1).Any())
+            var groups = Server.AllGroups.Where(g => g.RegisteredRunners.Any(r => r.Id == runnerId));
+            if (groups.Any())
             {
-                throw new GitLabBadRequestException("Runner is enabled in multiple projects");
+                var group = GetGroup(groups.Single().Id, GroupPermission.Edit);
+                group.RemoveRunner(runnerId);
+                return;
             }
 
-            var project = GetProject(projects.Single().Id, ProjectPermission.Edit);
-            project.RemoveRunner(runnerId);
+            throw new GitLabNotFoundException("Runner is not found in any project or group");
         }
     }
 
@@ -87,6 +95,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
             var runnerOnServer = GetServerRunner(runnerId);
 
             runnerOnServer.Active = runnerUpdate.Active ?? runnerOnServer.Active;
+            runnerOnServer.Paused = runnerUpdate.Paused ?? runnerOnServer.Paused;
             runnerOnServer.TagList = runnerUpdate.TagList ?? runnerOnServer.TagList;
             runnerOnServer.Description = !string.IsNullOrEmpty(runnerUpdate.Description) ? runnerUpdate.Description : runnerOnServer.Description;
             runnerOnServer.Locked = runnerUpdate.Locked ?? runnerOnServer.Locked;
@@ -94,6 +103,20 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
 
             return runner;
         }
+    }
+
+    public IEnumerable<Models.Runner> OfGroup(int groupId)
+    {
+        using (Context.BeginOperationScope())
+        {
+            var runners = GetGroup(groupId, GroupPermission.Edit).RegisteredRunners;
+            return runners.Select(r => this[r.Id]).ToList();
+        }
+    }
+
+    public GitLabCollectionResponse<Models.Runner> OfGroupAsync(int groupId)
+    {
+        return GitLabCollectionResponse.Create(OfGroup(groupId));
     }
 
     public IEnumerable<Models.Runner> OfProject(int projectId)
@@ -120,7 +143,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         throw new NotImplementedException();
     }
 
-    // Seems like an old method... In the actual code, the method is the same as OfProject.
+    [Obsolete("Use OfProject() or OfGroup() instead")]
     IEnumerable<Models.Runner> IRunnerClient.GetAvailableRunners(int projectId)
     {
         return OfProject(projectId);
@@ -176,8 +199,9 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
 
     private IEnumerable<Runner> GetOwnedRunners()
     {
+        var groups = Server.AllGroups.Where(group => group.CanUserEditGroup(Context.User));
         var projects = Server.AllProjects.Where(project => project.CanUserEditProject(Context.User));
-        var runners = projects.SelectMany(p => p.RegisteredRunners);
+        var runners = groups.SelectMany(g => g.RegisteredRunners).Concat(projects.SelectMany(p => p.RegisteredRunners));
         return runners;
     }
 
@@ -191,8 +215,22 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         using (Context.BeginOperationScope())
         {
             var project = Server.AllProjects.SingleOrDefault(p => string.Equals(p.RunnersToken, request.Token, StringComparison.Ordinal));
-            var runner = project.AddRunner(null, request.Description, request.Active ?? false, request.Locked ?? true, false, request.RunUntagged ?? false);
-            return runner.ToClientRunner(Context.User);
+            if (project != null)
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                var runner = project.AddRunner(null, request.Description, request.Active ?? false, request.Locked ?? true, false, request.RunUntagged ?? false);
+#pragma warning restore CS0618 // Type or member is obsolete
+                return runner.ToClientRunner(Context.User);
+            }
+
+            var group = Server.AllGroups.SingleOrDefault(g => string.Equals(g.RunnersToken, request.Token, StringComparison.Ordinal));
+            if (group != null)
+            {
+                var runner = group.AddRunner(request.Description, active: !request.Paused ?? true, paused: request.Paused ?? false, tagList: request.TagList, runUntagged: request.RunUntagged ?? false, locked: request.Locked ?? true);
+                return runner.ToClientRunner(Context.User);
+            }
+
+            throw new GitLabNotFoundException("Invalid token: no matching project or group found.");
         }
     }
 }

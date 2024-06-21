@@ -131,6 +131,9 @@ public class Project
     [JsonPropertyName("shared_runners_enabled")]
     public bool SharedRunnersEnabled;
 
+    [JsonPropertyName("group_runners_enabled")]
+    public bool GroupRunnersEnabled;
+
     [JsonPropertyName("tag_list")]
     [Obsolete("Deprecated by GitLab. Use Topics instead")]
     public string[] TagList;

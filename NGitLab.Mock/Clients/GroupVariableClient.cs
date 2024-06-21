@@ -14,7 +14,9 @@ internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
         _groupId = Server.AllGroups.FindGroup(groupId.ValueAsString()).Id;
     }
 
-    public Variable this[string key] => throw new NotImplementedException();
+    public Variable this[string key] => this[key, null];
+
+    public Variable this[string key, string environmentScope] => throw new NotImplementedException();
 
     public IEnumerable<Variable> All => throw new NotImplementedException();
 
@@ -23,12 +25,16 @@ internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
         throw new NotImplementedException();
     }
 
-    public void Delete(string key)
+    public void Delete(string key) => Delete(key, null);
+
+    public void Delete(string key, string environmentScope)
     {
         throw new NotImplementedException();
     }
 
-    public Variable Update(string key, VariableUpdate model)
+    public Variable Update(string key, VariableUpdate model) => Update(key, null, model);
+
+    public Variable Update(string key, string environmentScope, VariableUpdate model)
     {
         throw new NotImplementedException();
     }

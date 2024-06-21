@@ -28,11 +28,17 @@ public interface IProjectVariableClient
 
     Variable this[string key] { get; }
 
+    Variable this[string key, string environmentScope] { get; }
+
     Variable Create(VariableCreate model);
 
     Variable Update(string key, VariableUpdate model);
 
+    Variable Update(string key, string environmentScope, VariableUpdate model);
+
     void Delete(string key);
+
+    void Delete(string key, string environmentScope);
 }
 
 public interface IGroupVariableClient
@@ -41,9 +47,15 @@ public interface IGroupVariableClient
 
     Variable this[string key] { get; }
 
+    Variable this[string key, string environmentScope] { get; }
+
     Variable Create(VariableCreate model);
 
     Variable Update(string key, VariableUpdate model);
 
+    Variable Update(string key, string environmentScope, VariableUpdate model);
+
     void Delete(string key);
+
+    void Delete(string key, string environmentScope);
 }
