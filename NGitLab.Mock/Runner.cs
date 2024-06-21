@@ -39,12 +39,13 @@ public sealed class Runner : GitLabObject
 
     internal Models.Runner ToClientRunner(User currentUser)
     {
-#pragma warning disable CS0618 // Type or member is obsolete
         return new Models.Runner
         {
             Id = Id,
             Name = Name,
+#pragma warning disable CS0618 // Type or member is obsolete
             Active = Active,
+#pragma warning restore CS0618 // Type or member is obsolete
             Online = Online ?? false,
             Status = Status,
             Description = Description,
@@ -59,6 +60,5 @@ public sealed class Runner : GitLabObject
             RunUntagged = RunUntagged,
             Groups = Parent.Server.AllGroups.Where(g => g.RegisteredRunners.Any(r => r.Id == Id)).Select(g => g.ToClientGroup(currentUser)).ToArray(),
         };
-#pragma warning restore CS0618 // Type or member is obsolete
     }
 }
