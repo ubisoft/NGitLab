@@ -302,7 +302,7 @@ public class GitLabDockerContainer
 
             var gitLabVersionAsNuGetVersion = NuGetVersion.Parse(ResolvedGitLabVersion);
             var isMajorVersion15 = VersionRange.Parse("[15.0,16.0)").Satisfies(gitLabVersionAsNuGetVersion);
-            var isMajorVersion16 = VersionRange.Parse("[16.0,17.0)").Satisfies(gitLabVersionAsNuGetVersion);
+            var isMajorVersionAtLeast16 = VersionRange.Parse("[16.0,)").Satisfies(gitLabVersionAsNuGetVersion);
 
             TestContext.Progress.WriteLine("Creating root token");
 
@@ -319,7 +319,7 @@ public class GitLabDockerContainer
                 formLocator = page.Locator("main#content-body form");
                 await formLocator.GetByLabel("Token name").FillAsync(tokenName);
             }
-            else if (isMajorVersion16)
+            else if (isMajorVersionAtLeast16)
             {
                 await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync(new LocatorClickOptions { Timeout = 5_000 });
                 formLocator = page.Locator("main[id='content-body'] form[id='js-new-access-token-form']");
