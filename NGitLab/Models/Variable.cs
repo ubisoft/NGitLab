@@ -31,6 +31,7 @@ public class Variable
     [JsonPropertyName("raw")]
     public bool Raw { get; set; }
 
+    [JsonIgnore]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public string Scope
     {
