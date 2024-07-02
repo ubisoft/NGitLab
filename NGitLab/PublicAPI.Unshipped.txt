@@ -2610,6 +2610,7 @@ NGitLab.Models.MergeRequestUpdate.AssigneeIds -> int[]
 NGitLab.Models.MergeRequestUpdate.Description -> string
 NGitLab.Models.MergeRequestUpdate.Labels -> string
 NGitLab.Models.MergeRequestUpdate.MergeRequestUpdate() -> void
+NGitLab.Models.MergeRequestUpdate.MergeWhenPipelineSucceeds -> bool?
 NGitLab.Models.MergeRequestUpdate.MilestoneId -> int?
 NGitLab.Models.MergeRequestUpdate.NewState -> string
 NGitLab.Models.MergeRequestUpdate.RemoveLabels -> string
