@@ -51,6 +51,9 @@ public class MergeRequestUpdate
 
     [JsonPropertyName("squash_on_merge")]
     public bool? SquashOnMerge;
+
+    [JsonPropertyName("merge_when_pipeline_succeeds")]
+    public bool? MergeWhenPipelineSucceeds
 }
 
 public class MergeRequestUpdateState
