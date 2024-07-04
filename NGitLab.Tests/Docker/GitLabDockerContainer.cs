@@ -321,6 +321,8 @@ public class GitLabDockerContainer
             }
             else if (isMajorVersionAtLeast16)
             {
+                await SkipVersionReminder(page);
+
                 await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync(new LocatorClickOptions { Timeout = 5_000 });
                 formLocator = page.Locator("main[id='content-body'] form[id='js-new-access-token-form']");
                 await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
@@ -393,6 +395,17 @@ public class GitLabDockerContainer
             }));
 
             credentials.UserToken = token.Token;
+        }
+    }
+
+    private static async Task SkipVersionReminder(IPage page)
+    {
+        try
+        {
+            await page.Locator("button[data-testid='alert-modal-remind-button']").ClickAsync(new LocatorClickOptions { Timeout = 3_000 });
+        }
+        catch (Exception)
+        {
         }
     }
 
