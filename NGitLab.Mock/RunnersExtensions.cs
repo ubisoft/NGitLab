@@ -1,6 +1,7 @@
 ﻿using NGitLab.Models;
 
 namespace NGitLab.Mock;
+
 internal static class RunnersExtensions
 {
     public static bool? IsActive(this RunnerRegister runner)
