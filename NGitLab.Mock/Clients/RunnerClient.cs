@@ -94,7 +94,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
             var runner = this[runnerId] ?? throw new GitLabNotFoundException();
             var runnerOnServer = GetServerRunner(runnerId);
 
-            runnerOnServer.Active = runnerUpdate.Active ?? runnerOnServer.Active;
+            runnerOnServer.Active = runnerUpdate.IsActive() ?? runnerOnServer.IsActive();
             runnerOnServer.Paused = runnerUpdate.Paused ?? runnerOnServer.Paused;
             runnerOnServer.TagList = runnerUpdate.TagList ?? runnerOnServer.TagList;
             runnerOnServer.Description = !string.IsNullOrEmpty(runnerUpdate.Description) ? runnerUpdate.Description : runnerOnServer.Description;
@@ -217,9 +217,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
             var project = Server.AllProjects.SingleOrDefault(p => string.Equals(p.RunnersToken, request.Token, StringComparison.Ordinal));
             if (project != null)
             {
-#pragma warning disable CS0618 // Type or member is obsolete
-                var runner = project.AddRunner(null, request.Description, request.Active ?? false, request.Locked ?? true, false, request.RunUntagged ?? false);
-#pragma warning restore CS0618 // Type or member is obsolete
+                var runner = project.AddRunner(null, request.Description, request.IsActive() ?? false, request.Locked ?? true, false, request.RunUntagged ?? false);
                 return runner.ToClientRunner(Context.User);
             }
 
