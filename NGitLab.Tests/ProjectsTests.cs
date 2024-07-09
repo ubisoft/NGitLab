@@ -746,7 +746,7 @@ public class ProjectsTests
         var project = context.CreateProject(group.Id);
         context.CreateGroup();
 
-        var groups = projectClient.GetGroupsAsync(group.Id, new ProjectGroupsQuery
+        var groups = projectClient.GetGroupsAsync(project.Id, new ProjectGroupsQuery
         {
             Search = group.Name,
         }).ToArray();
@@ -766,7 +766,7 @@ public class ProjectsTests
 
         var groups = projectClient.GetGroupsAsync(project.Id, new ProjectGroupsQuery()).ToArray();
 
-        Assert.That(groups, Contains.Item(group));
-        Assert.That(groups, Contains.Item(subgroup));
+        Assert.That(groups.Select(g => g.Id), Contains.Item(group.Id));
+        Assert.That(groups.Select(g => g.Id), Contains.Item(subgroup.Id));
     }
 }
