@@ -744,7 +744,7 @@ public class ProjectsTests
         var projectClient = context.Client.Projects;
         var group = context.CreateGroup();
         var project = context.CreateProject(group.Id);
-        context.CreateGroup("this-is-another-group");
+        context.CreateGroup();
 
         var groups = projectClient.GetGroupsAsync(group.Id, new ProjectGroupsQuery
         {
@@ -764,7 +764,7 @@ public class ProjectsTests
         var subgroup = context.CreateSubgroup(group.Id);
         var project = context.CreateProject(subgroup.Id);
 
-        var groups = projectClient.GetGroupsAsync(group.Id, new ProjectGroupsQuery()).ToArray();
+        var groups = projectClient.GetGroupsAsync(project.Id, new ProjectGroupsQuery()).ToArray();
 
         Assert.That(groups, Contains.Item(group));
         Assert.That(groups, Contains.Item(subgroup));
