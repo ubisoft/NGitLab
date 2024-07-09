@@ -14,6 +14,8 @@ public class ProjectClient : IProjectClient
 {
     private readonly API _api;
 
+    public const string Url = Project.Url;
+
     public ProjectClient(API api)
     {
         _api = api;
@@ -171,6 +173,38 @@ public class ProjectClient : IProjectClient
     {
         var url = CreateGetForksUrl(id, query);
         return _api.Get().GetAllAsync<Project>(url);
+    }
+
+    public GitLabCollectionResponse<Group> GetGroupsAsync(ProjectId id, ProjectGroupsQuery query)
+    {
+        var url = CreateGetGroupsUrl(id, query);
+        return _api.Get().GetAllAsync<Group>(url);
+    }
+
+    private static string CreateGetGroupsUrl(ProjectId projectId, ProjectGroupsQuery query)
+    {
+        var url = $"{Url}/{projectId.ValueAsUriParameter()}/groups";
+
+        if (query is null)
+        {
+            return url;
+        }
+
+        if (query.SharedMinAccessLevel is not null)
+        {
+            url = Utils.AddParameter(url, "shared_min_access_level", (int)query.SharedMinAccessLevel);
+        }
+
+        if (query.SkipGroups is not null)
+        {
+            url = Utils.AddParameter(url, "skip_groups", query.SkipGroups);
+        }
+
+        url = Utils.AddParameter(url, "shared_visible_only", value: query.SharedVisibleOnly);
+        url = Utils.AddParameter(url, "search", query.Search);
+        url = Utils.AddParameter(url, "with_shared", query.WithShared);
+
+        return url;
     }
 
     private static string CreateGetForksUrl(string id, ForkedProjectQuery query)

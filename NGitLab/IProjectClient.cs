@@ -76,5 +76,14 @@ public interface IProjectClient
 
     GitLabCollectionResponse<Project> GetForksAsync(string id, ForkedProjectQuery query);
 
+    /// <summary>
+    /// Gets a list of ancestor groups for this project.
+    /// See https://docs.gitlab.com/ee/api/projects.html#list-a-projects-groups
+    /// </summary>
+    /// <param name="projectId">The project's id or path.</param>
+    /// <param name="query">The query parameters</param>
+    /// <returns>All ancestor groups.</returns>
+    GitLabCollectionResponse<Group> GetGroupsAsync(ProjectId projectId, ProjectGroupsQuery query);
+
     Dictionary<string, double> GetLanguages(string id);
 }

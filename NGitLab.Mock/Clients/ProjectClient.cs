@@ -409,4 +409,9 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
     {
         return GitLabCollectionResponse.Create(GetForks(id, query));
     }
+
+    public GitLabCollectionResponse<Models.Group> GetGroupsAsync(ProjectId projectId, ProjectGroupsQuery query)
+    {
+        throw new NotImplementedException();
+    }
 }
