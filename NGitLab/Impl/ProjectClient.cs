@@ -200,7 +200,7 @@ public class ProjectClient : IProjectClient
             url = Utils.AddParameter(url, "skip_groups", query.SkipGroups);
         }
 
-        url = Utils.AddParameter(url, "shared_visible_only", value: query.SharedVisibleOnly);
+        url = Utils.AddParameter(url, "shared_visible_only", query.SharedVisibleOnly);
         url = Utils.AddParameter(url, "search", query.Search);
         url = Utils.AddParameter(url, "with_shared", query.WithShared);
 
