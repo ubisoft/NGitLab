@@ -3002,7 +3002,7 @@ NGitLab.Models.ProjectGroupsQuery.SharedMinAccessLevel.get -> NGitLab.Models.Acc
 NGitLab.Models.ProjectGroupsQuery.SharedMinAccessLevel.set -> void
 NGitLab.Models.ProjectGroupsQuery.SharedVisibleOnly.get -> bool?
 NGitLab.Models.ProjectGroupsQuery.SharedVisibleOnly.set -> void
-NGitLab.Models.ProjectGroupsQuery.SkipGroups.get -> int?[]
+NGitLab.Models.ProjectGroupsQuery.SkipGroups.get -> int[]
 NGitLab.Models.ProjectGroupsQuery.SkipGroups.set -> void
 NGitLab.Models.ProjectGroupsQuery.WithShared.get -> bool?
 NGitLab.Models.ProjectGroupsQuery.WithShared.set -> void
