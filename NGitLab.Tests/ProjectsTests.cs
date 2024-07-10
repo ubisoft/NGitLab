@@ -735,4 +735,37 @@ public class ProjectsTests
 
         projectClient.Delete(createdProject.Id);
     }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_project_groups_query_returns_searched_group()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var projectClient = context.Client.Projects;
+        var group = context.CreateGroup();
+        var project = context.CreateProject(group.Id);
+        context.CreateGroup();
+
+        var groups = projectClient.GetGroupsAsync(project.Id, new ProjectGroupsQuery
+        {
+            Search = group.Name,
+        }).ToArray();
+
+        Assert.That(groups.Select(g => g.Id), Is.EquivalentTo(new int[] { group.Id }));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_project_groups_query_returns_ancestor_groups()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var projectClient = context.Client.Projects;
+        var group = context.CreateGroup();
+        var subgroup = context.CreateSubgroup(group.Id);
+        var project = context.CreateProject(subgroup.Id);
+
+        var groups = projectClient.GetGroupsAsync(project.Id, new ProjectGroupsQuery()).ToArray();
+
+        Assert.That(groups.Select(g => g.Id), Is.EquivalentTo(new int[] { group.Id, subgroup.Id }));
+    }
 }

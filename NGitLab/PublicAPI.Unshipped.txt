@@ -4,6 +4,7 @@ const NGitLab.Impl.GroupsClient.Url = "/groups" -> string
 const NGitLab.Impl.LabelClient.GroupLabelUrl = "/groups/{0}/labels" -> string
 const NGitLab.Impl.LabelClient.ProjectLabelUrl = "/projects/{0}/labels" -> string
 const NGitLab.Impl.NamespacesClient.Url = "/namespaces" -> string
+const NGitLab.Impl.ProjectClient.Url = "/projects" -> string
 const NGitLab.Models.Commit.Url = "/commits" -> string
 const NGitLab.Models.Contributor.Url = "/contributors" -> string
 const NGitLab.Models.Group.Url = "/groups" -> string
@@ -846,6 +847,7 @@ NGitLab.Impl.ProjectClient.GetByIdAsync(int id, NGitLab.Models.SingleProjectQuer
 NGitLab.Impl.ProjectClient.GetByNamespacedPathAsync(string path, NGitLab.Models.SingleProjectQuery query = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetForks(string id, NGitLab.Models.ForkedProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetForksAsync(string id, NGitLab.Models.ForkedProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
+NGitLab.Impl.ProjectClient.GetGroupsAsync(NGitLab.Models.ProjectId id, NGitLab.Models.ProjectGroupsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.Impl.ProjectClient.GetLanguages(string id) -> System.Collections.Generic.Dictionary<string, double>
 NGitLab.Impl.ProjectClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.ProjectClient(NGitLab.Impl.API api) -> void
@@ -1051,6 +1053,7 @@ NGitLab.IProjectClient.GetByIdAsync(int id, NGitLab.Models.SingleProjectQuery qu
 NGitLab.IProjectClient.GetByNamespacedPathAsync(string path, NGitLab.Models.SingleProjectQuery query = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetForks(string id, NGitLab.Models.ForkedProjectQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetForksAsync(string id, NGitLab.Models.ForkedProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
+NGitLab.IProjectClient.GetGroupsAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectGroupsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.IProjectClient.GetLanguages(string id) -> System.Collections.Generic.Dictionary<string, double>
 NGitLab.IProjectClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IProjectClient.this[int id].get -> NGitLab.Models.Project
@@ -2991,6 +2994,18 @@ NGitLab.Models.ProjectCreate.VisibilityLevel -> NGitLab.Models.VisibilityLevel
 NGitLab.Models.ProjectCreate.WallEnabled -> bool
 NGitLab.Models.ProjectCreate.WikiAccessLevel -> string
 NGitLab.Models.ProjectCreate.WikiEnabled -> bool
+NGitLab.Models.ProjectGroupsQuery
+NGitLab.Models.ProjectGroupsQuery.ProjectGroupsQuery() -> void
+NGitLab.Models.ProjectGroupsQuery.Search.get -> string
+NGitLab.Models.ProjectGroupsQuery.Search.set -> void
+NGitLab.Models.ProjectGroupsQuery.SharedMinAccessLevel.get -> NGitLab.Models.AccessLevel?
+NGitLab.Models.ProjectGroupsQuery.SharedMinAccessLevel.set -> void
+NGitLab.Models.ProjectGroupsQuery.SharedVisibleOnly.get -> bool?
+NGitLab.Models.ProjectGroupsQuery.SharedVisibleOnly.set -> void
+NGitLab.Models.ProjectGroupsQuery.SkipGroups.get -> int[]
+NGitLab.Models.ProjectGroupsQuery.SkipGroups.set -> void
+NGitLab.Models.ProjectGroupsQuery.WithShared.get -> bool?
+NGitLab.Models.ProjectGroupsQuery.WithShared.set -> void
 NGitLab.Models.ProjectHook
 NGitLab.Models.ProjectHook.CreatedAt -> System.DateTime
 NGitLab.Models.ProjectHook.EnableSslVerification -> bool
