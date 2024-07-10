@@ -766,7 +766,6 @@ public class ProjectsTests
 
         var groups = projectClient.GetGroupsAsync(project.Id, new ProjectGroupsQuery()).ToArray();
 
-        Assert.That(groups.Select(g => g.Id), Contains.Item(group.Id));
-        Assert.That(groups.Select(g => g.Id), Contains.Item(subgroup.Id));
+        Assert.That(groups.Select(g => g.Id), Is.EquivalentTo(new int[] { group.Id, subgroup.Id }));
     }
 }
