@@ -54,7 +54,7 @@ internal sealed class DynamicEnumConverterFactory : JsonConverterFactory
                 // This will work if we have a known value.
                 var enumValue =
                     _enumConverter?.Read(ref reader, _enumType, options) ??
-                    JsonSerializer.Deserialize<TEnum>(ref reader, options);
+                    Serializer.Deserialize<TEnum>(ref reader);
                 return new DynamicEnum<TEnum>(enumValue);
             }
             catch
@@ -72,7 +72,7 @@ internal sealed class DynamicEnumConverterFactory : JsonConverterFactory
                 if (_enumConverter != null)
                     _enumConverter.Write(writer, enumValue, options);
                 else
-                    JsonSerializer.Serialize(writer, enumValue, options);
+                    Serializer.Serialize(writer, enumValue);
             }
             else
             {
