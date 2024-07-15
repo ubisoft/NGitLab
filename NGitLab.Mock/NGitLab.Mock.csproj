@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
-    <NoWarn>$(NoWarn);NU1701;NU5104</NoWarn>
+    <TargetFrameworks>net472;net6.0</TargetFrameworks>
     <Description>GitLab REST API .NET Client Mock Library</Description>
   </PropertyGroup>
   <ItemGroup>

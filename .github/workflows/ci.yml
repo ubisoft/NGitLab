@@ -21,13 +21,16 @@ defaults:
 
 jobs:
   create_nuget:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Get all the history so MinGit can compute the version
-      - name: Setup .NET Core (latest)
+      - name: Set up latest .NET 8.0
         uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
       - run: dotnet pack NGitLab.sln --configuration Release --output ${{env.NuGetDirectory}} /bl
       - uses: actions/upload-artifact@v4
         with:
@@ -43,7 +46,7 @@ jobs:
           path: '**/*.binlog'
 
   build_and_test:
-    runs-on: 'ubuntu-20.04'
+    runs-on: ubuntu-22.04
     env:
       TestResultsDirectory: ${{github.workspace}}/TestResults
     strategy:
@@ -52,8 +55,6 @@ jobs:
         # Available tags: https://hub.docker.com/r/gitlab/gitlab-ee/tags
         gitlab:
           - 'gitlab/gitlab-ee:15.11.9-ee.0'
-          - 'gitlab/gitlab-ee:15.11.13-ee.0'
-          - 'gitlab/gitlab-ee:16.10.7-ee.0'
           - 'gitlab/gitlab-ee:16.11.4-ee.0'
           - 'gitlab/gitlab-ee:17.0.2-ee.0'
         configuration: [Release]
@@ -67,24 +68,27 @@ jobs:
           GITLAB_OMNIBUS_CONFIG: "external_url 'http://localhost:48624/'"
           GITLAB_ROOT_PASSWORD: "Pa$$w0rd"
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET Core (latest)
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Set up latest .NET 8.0
         uses: actions/setup-dotnet@v4
-      - run: |
+        with:
+          dotnet-version: '8.0.x'
+      - name: Set artifact name
+        id: set-artifact-name
+        run: |
           $value = "${{matrix.gitlab}}-${{matrix.configuration}}".Replace(':', '-').Replace('/', '-')
           "artifact_name=test-results-$value" >> $env:GITHUB_OUTPUT
-        name: Set artifact name
-        id: set-artifact-name
-      - run: dotnet test --configuration ${{matrix.configuration}} --logger trx --results-directory "${{env.TestResultsDirectory}}" --collect:"XPlat Code Coverage" /p:RunAnalyzers=false
-        name: Run tests
-      - uses: actions/upload-artifact@v4
+      - name: Run tests
+        run: dotnet test --configuration ${{matrix.configuration}} --logger trx --results-directory "${{env.TestResultsDirectory}}" --collect:"XPlat Code Coverage" /p:RunAnalyzers=false
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{steps.set-artifact-name.outputs.artifact_name}}
           if-no-files-found: error
           retention-days: 3
-          path: |
-            ${{env.TestResultsDirectory}}/**/*
+          path: ${{env.TestResultsDirectory}}/**/*
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: github.actor != 'dependabot[bot]' && !github.event.pull_request.head.repo.fork && (success() || failure())
@@ -95,20 +99,23 @@ jobs:
           reporter: dotnet-trx
 
   deploy:
-    runs-on: 'ubuntu-20.04'
+    runs-on: ubuntu-22.04
     needs: [create_nuget, build_and_test]
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: nuget
           path: ${{env.NuGetDirectory}}
-      - name: Setup .NET Core
+      - name: Set up latest .NET 8.0
         uses: actions/setup-dotnet@v4
-      - run: |
+        with:
+          dotnet-version: '8.0.x'
+      - name: Publish NuGet packages
+        run: |
           Write-Host "Current ref: $env:GITHUB_REF"
           Write-Host "Searching nupkg in folder: ${{env.NuGetDirectory}}"
           $files = Get-ChildItem "${{env.NuGetDirectory}}/*" -Include *.nupkg
-          foreach($file in $files) {
+          foreach ($file in $files) {
               if ($env:GITHUB_REF -clike 'refs/tags/*')
               {
                 Write-Host "Pushing NuGet package: $($file.FullName)"
@@ -119,4 +126,3 @@ jobs:
                 Write-Host "Not on a tag => Do not push: $($file.FullName)"
               }
           }
-        name: Publish NuGet packages
