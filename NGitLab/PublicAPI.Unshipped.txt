@@ -1221,6 +1221,7 @@ NGitLab.IWikiClient.this[string slug].get -> NGitLab.Models.WikiPage
 NGitLab.IWikiClient.Update(string slug, NGitLab.Models.WikiPageUpdate wikiPage) -> NGitLab.Models.WikiPage
 NGitLab.JobStatus
 NGitLab.JobStatus.Canceled = 6 -> NGitLab.JobStatus
+NGitLab.JobStatus.Canceling = 13 -> NGitLab.JobStatus
 NGitLab.JobStatus.Created = 5 -> NGitLab.JobStatus
 NGitLab.JobStatus.Failed = 3 -> NGitLab.JobStatus
 NGitLab.JobStatus.Manual = 8 -> NGitLab.JobStatus
