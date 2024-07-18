@@ -28,4 +28,5 @@ public enum JobStatus
     [EnumMember(Value = "waiting_for_resource")]
     WaitingForResource,
     Scheduled,
+    Canceling,
 }
