@@ -311,4 +311,33 @@ public class IssueTests
         // for now, no API to link issues so not links exist but API should not throw
         Assert.That(issues, Has.Count.EqualTo(1), $"Expected 1. Got {issues.Count}");
     }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_getparticipants_issue()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var issuesClient = context.Client.Issues;
+        var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1", Confidential = true });
+
+        var participant = issuesClient.GetParticipants(project.Id, issue1.Id);
+
+        Assert.That(participant.Count, Is.EqualTo(1));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_unsubscribe_issue()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var issuesClient = context.Client.Issues;
+        var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1", Confidential = true });
+
+        issuesClient.Unsubscribe(project.Id, issue1.Id);
+        var participant = issuesClient.GetParticipants(project.Id, issue1.Id);
+
+        Assert.That(participant.Count, Is.EqualTo(0));
+    }
 }
