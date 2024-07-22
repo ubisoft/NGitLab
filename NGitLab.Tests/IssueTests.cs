@@ -321,7 +321,7 @@ public class IssueTests
         var issuesClient = context.Client.Issues;
         var issue1 = issuesClient.Create(new IssueCreate { ProjectId = project.Id, Title = "title1", Confidential = true });
 
-        var participant = issuesClient.GetParticipants(project.Id, issue1.Id);
+        var participant = issuesClient.GetParticipants(project.Id, issue1.IssueId);
 
         Assert.That(participant.Count, Is.EqualTo(1));
     }
