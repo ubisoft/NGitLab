@@ -194,14 +194,14 @@ public class IssueClient : IIssueClient
         return _api.Post().With(issueClone).ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, CloneIssueUrl, projectId, issueIid), cancellationToken);
     }
 
-    public IEnumerable<Participant> GetParticipants(int projectId, int issueIid)
+    public IEnumerable<Participant> GetParticipants(ProjectId projectId, int issueIid)
     {
-        return _api.Get().GetAll<Participant>(string.Format(CultureInfo.InvariantCulture, ParticipantsUrl, projectId, issueIid));
+        return _api.Get().GetAll<Participant>(string.Format(CultureInfo.InvariantCulture, ParticipantsUrl, projectId.ValueAsUriParameter(), issueIid));
     }
 
-    public Issue Unsubscribe(int projectId, int issueIid)
+    public Issue Unsubscribe(ProjectId projectId, int issueIid)
     {
-        return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, UnsubscribeUrl, projectId, issueIid));
+        return _api.Post().To<Issue>(string.Format(CultureInfo.InvariantCulture, UnsubscribeUrl, projectId.ValueAsUriParameter(), issueIid));
     }
 
     private GitLabCollectionResponse<Issue> Get(string url, IssueQuery query)

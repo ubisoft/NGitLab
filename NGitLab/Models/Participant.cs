@@ -5,20 +5,20 @@ namespace NGitLab.Models;
 public class Participant
 {
     [JsonPropertyName("id")]
-    public int Id;
+    public int Id { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [JsonPropertyName("username")]
-    public string Username;
+    public string Username { get; set; }
 
     [JsonPropertyName("state")]
-    public string State;
+    public string State { get; set; }
 
     [JsonPropertyName("avatar_url")]
-    public string AvatarURL;
+    public string AvatarURL { get; set; }
 
     [JsonPropertyName("web_url")]
-    public string WebUrl;
+    public string WebUrl { get; set; }
 }

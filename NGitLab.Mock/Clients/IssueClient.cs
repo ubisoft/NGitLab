@@ -452,12 +452,12 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         return issues;
     }
 
-    public IEnumerable<Participant> GetParticipants(int projectId, int issueIid)
+    public IEnumerable<Participant> GetParticipants(ProjectId projectId, int issueIid)
     {
         throw new NotImplementedException();
     }
 
-    public Models.Issue Unsubscribe(int projectId, int issueIid)
+    public Models.Issue Unsubscribe(ProjectId projectId, int issueIid)
     {
         throw new NotImplementedException();
     }

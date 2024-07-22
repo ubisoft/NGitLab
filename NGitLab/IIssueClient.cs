@@ -187,7 +187,7 @@ public interface IIssueClient
     /// <param name="projectId">The project id</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
     /// <returns>The participants of the issue.</returns>
-    IEnumerable<Participant> GetParticipants(int projectId, int issueIid);
+    IEnumerable<Participant> GetParticipants(ProjectId projectId, int issueIid);
 
     /// <summary>
     /// Unsubscribe to the issue
@@ -195,5 +195,5 @@ public interface IIssueClient
     /// <param name="projectId">The project id</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
     /// <returns>The issue that corresponds to the project id and issue id</returns>
-    Issue Unsubscribe(int projectId, int issueIid);
+    Issue Unsubscribe(ProjectId projectId, int issueIid);
 }
