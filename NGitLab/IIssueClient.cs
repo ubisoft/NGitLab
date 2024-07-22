@@ -180,4 +180,20 @@ public interface IIssueClient
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<Issue> CloneAsync(int projectId, int issueIid, IssueClone issueClone, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get Participants
+    /// </summary>
+    /// <param name="projectId">The project id</param>
+    /// <param name="issueIid">The id of the issue in the project's scope.</param>
+    /// <returns>The participants of the issue.</returns>
+    IEnumerable<Participant> GetParticipants(int projectId, int issueIid);
+
+    /// <summary>
+    /// Unsubscribe to the issue
+    /// </summary>
+    /// <param name="projectId">The project id</param>
+    /// <param name="issueIid">The id of the issue in the project's scope.</param>
+    /// <returns>The issue that corresponds to the project id and issue id</returns>
+    Issue Unsubscribe(int projectId, int issueIid);
 }

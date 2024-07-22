@@ -23,6 +23,8 @@ public class IssueClient : IIssueClient
     private const string ClosedByUrl = "/projects/{0}/issues/{1}/closed_by";
     private const string TimeStatsUrl = "/projects/{0}/issues/{1}/time_stats";
     private const string CloneIssueUrl = "/projects/{0}/issues/{1}/clone";
+    private const string ParticipantsUrl = "/projects/{0}/issues/{1}/participants";
+    private const string UnsubscribeUrl = "/projects/{0}/issues/{1}/unsubscribe";
 
     private readonly API _api;
 
@@ -190,6 +192,16 @@ public class IssueClient : IIssueClient
     public Task<Issue> CloneAsync(int projectId, int issueIid, IssueClone issueClone, CancellationToken cancellationToken = default)
     {
         return _api.Post().With(issueClone).ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, CloneIssueUrl, projectId, issueIid), cancellationToken);
+    }
+
+    public IEnumerable<Participant> GetParticipants(int projectId, int issueIid)
+    {
+        return _api.Get().GetAll<Participant>(string.Format(CultureInfo.InvariantCulture, ParticipantsUrl, projectId, issueIid));
+    }
+
+    public Issue Unsubscribe(int projectId, int issueIid)
+    {
+        return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, UnsubscribeUrl, projectId, issueIid));
     }
 
     private GitLabCollectionResponse<Issue> Get(string url, IssueQuery query)
