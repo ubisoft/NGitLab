@@ -347,6 +347,7 @@ NGitLab.IIssueClient.GetAsync(int projectId, NGitLab.Models.IssueQuery query) ->
 NGitLab.IIssueClient.GetAsync(NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.GetById(int issueId) -> NGitLab.Models.Issue
 NGitLab.IIssueClient.GetByIdAsync(int issueId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
+NGitLab.IIssueClient.GetParticipants(NGitLab.Models.ProjectId projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Participant>
 NGitLab.IIssueClient.LinkedToAsync(int projectId, int issueId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.IIssueClient.RelatedTo(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
@@ -358,6 +359,7 @@ NGitLab.IIssueClient.ResourceMilestoneEventsAsync(int projectId, int issueIid) -
 NGitLab.IIssueClient.ResourceStateEvents(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ResourceStateEvent>
 NGitLab.IIssueClient.ResourceStateEventsAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceStateEvent>
 NGitLab.IIssueClient.TimeStatsAsync(int projectId, int issueIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
+NGitLab.IIssueClient.Unsubscribe(NGitLab.Models.ProjectId projectId, int issueIid) -> NGitLab.Models.Issue
 NGitLab.IJobClient
 NGitLab.IJobClient.Get(int jobId) -> NGitLab.Models.Job
 NGitLab.IJobClient.GetAsync(int jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
@@ -640,6 +642,7 @@ NGitLab.Impl.IssueClient.GetAsync(int projectId, NGitLab.Models.IssueQuery query
 NGitLab.Impl.IssueClient.GetAsync(NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.GetById(int issueId) -> NGitLab.Models.Issue
 NGitLab.Impl.IssueClient.GetByIdAsync(int issueId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Issue>
+NGitLab.Impl.IssueClient.GetParticipants(NGitLab.Models.ProjectId projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Participant>
 NGitLab.Impl.IssueClient.IssueClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.IssueClient.LinkedToAsync(int projectId, int issueId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
@@ -652,6 +655,7 @@ NGitLab.Impl.IssueClient.ResourceMilestoneEventsAsync(int projectId, int issueIi
 NGitLab.Impl.IssueClient.ResourceStateEvents(int projectId, int issueIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ResourceStateEvent>
 NGitLab.Impl.IssueClient.ResourceStateEventsAsync(int projectId, int issueIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ResourceStateEvent>
 NGitLab.Impl.IssueClient.TimeStatsAsync(int projectId, int issueIid, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.TimeStats>
+NGitLab.Impl.IssueClient.Unsubscribe(NGitLab.Models.ProjectId projectId, int issueIid) -> NGitLab.Models.Issue
 NGitLab.Impl.JobClient
 NGitLab.Impl.JobClient.Get(int jobId) -> NGitLab.Models.Job
 NGitLab.Impl.JobClient.GetAsync(int jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
@@ -2750,6 +2754,20 @@ NGitLab.Models.PageQuery<TQueryType>
 NGitLab.Models.PageQuery<TQueryType>.PageQuery(int page = 1, int perPage = 20, TQueryType query = default(TQueryType)) -> void
 NGitLab.Models.PageQuery<TQueryType>.Query.get -> TQueryType
 NGitLab.Models.PageQuery<TQueryType>.Query.set -> void
+NGitLab.Models.Participant
+NGitLab.Models.Participant.Participant() -> void
+NGitLab.Models.Participant.Id.get -> int
+NGitLab.Models.Participant.Id.set -> void
+NGitLab.Models.Participant.AvatarURL.get -> string
+NGitLab.Models.Participant.AvatarURL.set -> void
+NGitLab.Models.Participant.Name.get -> string
+NGitLab.Models.Participant.Name.set -> void
+NGitLab.Models.Participant.State.get -> string
+NGitLab.Models.Participant.State.set -> void
+NGitLab.Models.Participant.Username.get -> string
+NGitLab.Models.Participant.Username.set -> void
+NGitLab.Models.Participant.WebUrl.get -> string
+NGitLab.Models.Participant.WebUrl.set -> void
 NGitLab.Models.PersonInfo
 NGitLab.Models.PersonInfo.Email -> string
 NGitLab.Models.PersonInfo.Name -> string
