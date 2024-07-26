@@ -53,9 +53,9 @@ public readonly struct Sha1 : IEquatable<Sha1>
 
     public override string ToString()
     {
-        return _p1.ToString("X16") +
-               _p2.ToString("X16") +
-               _p3.ToString("X8");
+        return _p1.ToString("x16") +
+               _p2.ToString("x16") +
+               _p3.ToString("x8");
     }
 
     private static ulong GetLong(string value, ref int i)
