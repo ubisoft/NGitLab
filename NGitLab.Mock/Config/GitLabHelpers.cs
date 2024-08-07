@@ -1420,7 +1420,7 @@ public static class GitLabHelpers
                     RedirectStandardError = true,
                     UseShellExecute = false,
                     WorkingDirectory = prj.Repository.FullPath,
-                });
+                }) ?? throw new GitLabException("Unable to start 'git add' process.");
 
             process.WaitForExit();
             if (process.ExitCode != 0)
