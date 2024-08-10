@@ -75,7 +75,7 @@ jobs:
           "artifact_name=test-results-$value" >> $env:GITHUB_OUTPUT
         name: Set artifact name
         id: set-artifact-name
-      - run: dotnet test --configuration ${{matrix.configuration}} --logger trx --results-directory "${{env.TestResultsDirectory}}" --collect:"Code Coverage;Format=cobertura" /p:RunAnalyzers=false
+      - run: dotnet test --configuration ${{matrix.configuration}} --logger trx --results-directory "${{env.TestResultsDirectory}}" --collect:"XPlat Code Coverage" /p:RunAnalyzers=false
         name: Run tests
       - uses: actions/upload-artifact@v4
         if: always()
