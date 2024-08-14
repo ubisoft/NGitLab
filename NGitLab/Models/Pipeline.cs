@@ -10,6 +10,9 @@ public class Pipeline
     [JsonPropertyName("id")]
     public int Id;
 
+    [JsonPropertyName("name")]
+    public string Name;
+
     [JsonPropertyName("status")]
     public JobStatus Status;
 

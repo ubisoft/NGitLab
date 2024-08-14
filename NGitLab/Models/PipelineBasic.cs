@@ -33,4 +33,7 @@ public class PipelineBasic
 
     [JsonPropertyName("web_url")]
     public string WebUrl;
+
+    [JsonPropertyName("name")]
+    public string Name;
 }
