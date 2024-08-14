@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
+using NuGet.Versioning;
 using NUnit.Framework;
 using Polly;
 
@@ -254,5 +255,31 @@ public class PipelineTests
             var retriedPipeline = await pipelineClient.RetryAsync(pipeline.Id);
             Assert.That(retriedPipeline.Status, Is.Not.EqualTo(JobStatus.Failed)); // Should be created or running
         }
+    }
+
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_update_pipeline_metadata()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+
+        // The "Update pipeline metadata" was added in GitLab 16, the earliest available docs that include the API is for version 16.11
+        context.ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange.Parse("[16.11,)"));
+
+        var project = context.CreateProject();
+        var pipelineClient = context.Client.GetPipelines(project.Id);
+        JobTests.AddGitLabCiFile(context.Client, project);
+
+
+        var pipeline = await pipelineClient.CreateAsync(new PipelineCreate
+        {
+            Ref = project.DefaultBranch
+        });
+
+
+        var updatedPipeline = await pipelineClient.UpdateMetadataAsync(pipeline.Id, new PipelineMetadataUpdate() { Name = "Updated Name" });
+
+        Assert.That(updatedPipeline.Name, Is.EqualTo("Updated Name"));
     }
 }
