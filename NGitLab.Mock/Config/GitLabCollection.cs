@@ -29,7 +29,7 @@ public abstract class GitLabCollection<TItem> : System.Collections.ObjectModel.C
         if (item == null)
             return;
 
-        item.Parent = _parent;
+        item.ParentObject = _parent;
 
         if (item.Id == default)
             item.Id = Items.Select(x => x.Id).DefaultIfEmpty().Max() + 1;

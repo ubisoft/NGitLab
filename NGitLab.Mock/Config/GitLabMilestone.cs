@@ -44,7 +44,7 @@ public class GitLabMilestonesCollection : GitLabCollection<GitLabMilestone>
         if (item == null)
             return;
 
-        item.Parent = _parent;
+        item.ParentObject = _parent;
 
         if (item.Id == default)
             item.Id = GetAllMilestones().Select(x => x.Id).DefaultIfEmpty().Max() + 1;

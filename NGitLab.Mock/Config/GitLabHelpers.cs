@@ -1628,7 +1628,7 @@ public static class GitLabHelpers
 
     private static void CreateComment(GitLabServer server, Issue issue, GitLabComment comment)
     {
-        var commentAuthor = comment.Author ?? ((GitLabIssue)comment.Parent).Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
+        var commentAuthor = comment.Author ?? ((GitLabIssue)comment.ParentObject).Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
         var cmt = new ProjectIssueNote
         {
             Id = comment.Id,
@@ -1649,7 +1649,7 @@ public static class GitLabHelpers
 
     private static void CreateComment(GitLabServer server, MergeRequest mergeRequest, GitLabComment comment, DateTimeOffset maxCreatedAt)
     {
-        var commentAuthor = comment.Author ?? ((GitLabMergeRequest)comment.Parent).Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
+        var commentAuthor = comment.Author ?? ((GitLabMergeRequest)comment.ParentObject).Parent.Parent.DefaultUser ?? throw new InvalidOperationException("Default user is required when author not set");
         var cmt = new MergeRequestComment
         {
             Id = comment.Id,
