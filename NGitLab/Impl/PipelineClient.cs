@@ -225,7 +225,7 @@ public class PipelineClient : IPipelineClient
 
     public Task<Pipeline> UpdateMetadataAsync(int pipelineId, PipelineMetadataUpdate update, CancellationToken cancellationToken = default)
     {
-        var updatedMetadataValues = new Dictionary<string, string>();
+        var updatedMetadataValues = new Dictionary<string, string>(StringComparer.Ordinal);
 
         if (update.Name is not null)
         {
