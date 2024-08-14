@@ -305,4 +305,9 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
             return Task.FromResult(this[pipelineId]);
         }
     }
+
+    public Task<Models.Pipeline> UpdateMetadataAsync(int pipelineId, PipelineMetadataUpdate update, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }

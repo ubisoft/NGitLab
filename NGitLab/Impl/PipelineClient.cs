@@ -222,4 +222,16 @@ public class PipelineClient : IPipelineClient
         var url = $"{_pipelinesPath}/{pipelineId.ToStringInvariant()}/retry";
         return _api.Post().ToAsync<Pipeline>(url, cancellationToken);
     }
+
+    public Task<Pipeline> UpdateMetadataAsync(int pipelineId, PipelineMetadataUpdate update, CancellationToken cancellationToken = default)
+    {
+        var updatedMetadataValues = new Dictionary<string, string>();
+
+        if (update.Name is not null)
+        {
+            updatedMetadataValues.Add("name", update.Name);
+        }
+
+        return _api.Put().With(new UrlEncodedContent(updatedMetadataValues)).ToAsync<Pipeline>($"{_pipelinesPath}/{pipelineId.ToStringInvariant()}/metadata", cancellationToken);
+    }
 }
