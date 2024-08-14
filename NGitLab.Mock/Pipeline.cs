@@ -56,6 +56,8 @@ public sealed class Pipeline : GitLabObject
 
     public TestReportSummary TestReportsSummary { get; set; }
 
+    public string Name { get; set; }
+
     [Obsolete("Use other overloads")]
     public Job AddNewJob(Project project)
     {
@@ -150,6 +152,7 @@ public sealed class Pipeline : GitLabObject
             Coverage = Coverage,
             ProjectId = ProjectId,
             WebUrl = Project?.WebUrl + "/-/pipelines/" + Id.ToString(CultureInfo.InvariantCulture),
+            Name = Name
         };
     }
 }

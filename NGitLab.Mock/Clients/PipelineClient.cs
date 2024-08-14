@@ -308,6 +308,25 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
 
     public Task<Models.Pipeline> UpdateMetadataAsync(int pipelineId, PipelineMetadataUpdate update, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(_projectId, ProjectPermission.Edit);
+            var pipeline = project.Pipelines.GetById(pipelineId);
+
+            // Currently, "name" is the only field that can be update dvia the "Update pipeline metadata" API
+            // See https://docs.gitlab.com/ee/api/pipelines.html#update-pipeline-metadata
+            // If no name is set, GitLab returns a "Bad Request" error
+            // This behavior is mimicked here
+            if (update.Name is not null)
+            {
+                pipeline.Name = update.Name;
+            }
+            else
+            {
+                throw new GitLabBadRequestException("name is missing");
+            }
+
+            return Task.FromResult(pipeline.ToPipelineClient());
+        }
     }
 }
