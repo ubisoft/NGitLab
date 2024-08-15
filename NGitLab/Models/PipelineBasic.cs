@@ -35,5 +35,5 @@ public class PipelineBasic
     public string WebUrl;
 
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 }

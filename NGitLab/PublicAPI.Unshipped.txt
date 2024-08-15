@@ -2784,7 +2784,8 @@ NGitLab.Models.Pipeline.DetailedStatus.set -> void
 NGitLab.Models.Pipeline.Duration -> long?
 NGitLab.Models.Pipeline.FinishedAt -> System.DateTime
 NGitLab.Models.Pipeline.Id -> int
-NGitLab.Models.Pipeline.Name -> string
+NGitLab.Models.Pipeline.Name.get -> string
+NGitLab.Models.Pipeline.Name.set -> void
 NGitLab.Models.Pipeline.Pipeline() -> void
 NGitLab.Models.Pipeline.ProjectId.get -> int
 NGitLab.Models.Pipeline.ProjectId.set -> void
@@ -2801,7 +2802,8 @@ NGitLab.Models.Pipeline.YamlError -> string
 NGitLab.Models.PipelineBasic
 NGitLab.Models.PipelineBasic.CreatedAt -> System.DateTime
 NGitLab.Models.PipelineBasic.Id -> int
-NGitLab.Models.PipelineBasic.Name -> string
+NGitLab.Models.PipelineBasic.Name.get -> string
+NGitLab.Models.PipelineBasic.Name.set -> void
 NGitLab.Models.PipelineBasic.PipelineBasic() -> void
 NGitLab.Models.PipelineBasic.ProjectId -> int
 NGitLab.Models.PipelineBasic.Ref -> string

@@ -11,7 +11,7 @@ public class Pipeline
     public int Id;
 
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [JsonPropertyName("status")]
     public JobStatus Status;
