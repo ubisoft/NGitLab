@@ -186,7 +186,7 @@ NGitLab.Mock.Config.GitLabMilestone.Title.set -> void
 NGitLab.Mock.Config.GitLabMilestone.UpdatedAt.get -> System.DateTime?
 NGitLab.Mock.Config.GitLabMilestone.UpdatedAt.set -> void
 NGitLab.Mock.Config.GitLabMilestonesCollection
-NGitLab.Mock.Config.GitLabObject.Parent.get -> object
+NGitLab.Mock.Config.GitLabObject.ParentObject.get -> object
 NGitLab.Mock.Config.GitLabPipeline
 NGitLab.Mock.Config.GitLabPipeline.Commit.get -> string
 NGitLab.Mock.Config.GitLabPipeline.Commit.set -> void

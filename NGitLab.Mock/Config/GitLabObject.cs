@@ -11,7 +11,7 @@ public abstract class GitLabObject
     public int Id { get; set; }
 
     [YamlIgnore]
-    public object Parent { get; internal set; }
+    public object ParentObject { get; internal set; }
 }
 
 public abstract class GitLabObject<TParent> : GitLabObject
@@ -21,9 +21,9 @@ public abstract class GitLabObject<TParent> : GitLabObject
     }
 
     [YamlIgnore]
-    public new TParent Parent
+    public TParent Parent
     {
-        get => (TParent)base.Parent;
-        internal set => base.Parent = value;
+        get => (TParent)ParentObject;
+        internal set => ParentObject = value;
     }
 }
