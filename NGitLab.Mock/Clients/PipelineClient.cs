@@ -313,7 +313,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
             var project = GetProject(_projectId, ProjectPermission.Edit);
             var pipeline = project.Pipelines.GetById(pipelineId);
 
-            // Currently, "name" is the only field that can be update dvia the "Update pipeline metadata" API
+            // Currently, "name" is the only field that can be updated via the "Update pipeline metadata" API
             // See https://docs.gitlab.com/ee/api/pipelines.html#update-pipeline-metadata
             // If no name is set, GitLab returns a "Bad Request" error
             // This behavior is mimicked here
