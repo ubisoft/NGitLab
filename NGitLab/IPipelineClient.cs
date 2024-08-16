@@ -117,4 +117,13 @@ public interface IPipelineClient
     GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineBridgeQuery query);
 
     Task<Pipeline> RetryAsync(int pipelineId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Updates the metadata for the specified pipeline
+    /// </summary>
+    /// <param name="pipelineId">ID of the pipeline</param>
+    /// <param name="update">The metadata to update</param>
+    /// <param name="cancellationToken">The cancellation otken for the operation</param>
+    /// <seealso href="https://docs.gitlab.com/ee/api/pipelines.html#update-pipeline-metadata" />
+    Task<Pipeline> UpdateMetadataAsync(int pipelineId, PipelineMetadataUpdate update, CancellationToken cancellationToken = default);
 }

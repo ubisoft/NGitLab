@@ -834,6 +834,7 @@ NGitLab.Impl.PipelineClient.RetryAsync(int pipelineId, System.Threading.Cancella
 NGitLab.Impl.PipelineClient.Search(NGitLab.Models.PipelineQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.Impl.PipelineClient.SearchAsync(NGitLab.Models.PipelineQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
 NGitLab.Impl.PipelineClient.this[int id].get -> NGitLab.Models.Pipeline
+NGitLab.Impl.PipelineClient.UpdateMetadataAsync(int pipelineId, NGitLab.Models.PipelineMetadataUpdate update, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.Impl.ProjectClient
 NGitLab.Impl.ProjectClient.Accessible.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.Archive(int id) -> void
@@ -1033,6 +1034,7 @@ NGitLab.IPipelineClient.RetryAsync(int pipelineId, System.Threading.Cancellation
 NGitLab.IPipelineClient.Search(NGitLab.Models.PipelineQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.IPipelineClient.SearchAsync(NGitLab.Models.PipelineQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
 NGitLab.IPipelineClient.this[int id].get -> NGitLab.Models.Pipeline
+NGitLab.IPipelineClient.UpdateMetadataAsync(int pipelineId, NGitLab.Models.PipelineMetadataUpdate update, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.IProjectBadgeClient
 NGitLab.IProjectBadgeClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Badge>
 NGitLab.IProjectBadgeClient.Create(NGitLab.Models.BadgeCreate badge) -> NGitLab.Models.Badge
@@ -2782,6 +2784,8 @@ NGitLab.Models.Pipeline.DetailedStatus.set -> void
 NGitLab.Models.Pipeline.Duration -> long?
 NGitLab.Models.Pipeline.FinishedAt -> System.DateTime
 NGitLab.Models.Pipeline.Id -> int
+NGitLab.Models.Pipeline.Name.get -> string
+NGitLab.Models.Pipeline.Name.set -> void
 NGitLab.Models.Pipeline.Pipeline() -> void
 NGitLab.Models.Pipeline.ProjectId.get -> int
 NGitLab.Models.Pipeline.ProjectId.set -> void
@@ -2798,6 +2802,8 @@ NGitLab.Models.Pipeline.YamlError -> string
 NGitLab.Models.PipelineBasic
 NGitLab.Models.PipelineBasic.CreatedAt -> System.DateTime
 NGitLab.Models.PipelineBasic.Id -> int
+NGitLab.Models.PipelineBasic.Name.get -> string
+NGitLab.Models.PipelineBasic.Name.set -> void
 NGitLab.Models.PipelineBasic.PipelineBasic() -> void
 NGitLab.Models.PipelineBasic.ProjectId -> int
 NGitLab.Models.PipelineBasic.Ref -> string
@@ -2845,6 +2851,10 @@ NGitLab.Models.PipelineJobQuery.PipelineId.set -> void
 NGitLab.Models.PipelineJobQuery.PipelineJobQuery() -> void
 NGitLab.Models.PipelineJobQuery.Scope.get -> string[]
 NGitLab.Models.PipelineJobQuery.Scope.set -> void
+NGitLab.Models.PipelineMetadataUpdate
+NGitLab.Models.PipelineMetadataUpdate.Name.get -> string
+NGitLab.Models.PipelineMetadataUpdate.Name.set -> void
+NGitLab.Models.PipelineMetadataUpdate.PipelineMetadataUpdate() -> void
 NGitLab.Models.PipelineOrderBy
 NGitLab.Models.PipelineOrderBy.id = 0 -> NGitLab.Models.PipelineOrderBy
 NGitLab.Models.PipelineOrderBy.ref = 2 -> NGitLab.Models.PipelineOrderBy
@@ -3861,6 +3871,9 @@ NGitLab.Models.UploadedProjectFile.Markdown.set -> void
 NGitLab.Models.UploadedProjectFile.UploadedProjectFile() -> void
 NGitLab.Models.UploadedProjectFile.Url.get -> string
 NGitLab.Models.UploadedProjectFile.Url.set -> void
+NGitLab.Models.UrlEncodedContent
+NGitLab.Models.UrlEncodedContent.UrlEncodedContent(System.Collections.Generic.IReadOnlyDictionary<string, string> values) -> void
+NGitLab.Models.UrlEncodedContent.Values.get -> System.Collections.Generic.IReadOnlyDictionary<string, string>
 NGitLab.Models.User
 NGitLab.Models.User.AvatarURL -> string
 NGitLab.Models.User.Bio -> string

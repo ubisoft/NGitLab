@@ -27,6 +27,8 @@ public partial class HttpRequestor
 
         public FormDataContent FormData { get; }
 
+        public UrlEncodedContent UrlEncodedData { get; }
+
         private MethodType Method { get; }
 
         public WebHeaderCollection Headers { get; } = new WebHeaderCollection();
@@ -63,6 +65,10 @@ public partial class HttpRequestor
             if (data is FormDataContent formData)
             {
                 FormData = formData;
+            }
+            else if (Data is UrlEncodedContent urlEncodedData)
+            {
+                UrlEncodedData = urlEncodedData;
             }
             else if (data != null)
             {
@@ -169,6 +175,10 @@ public partial class HttpRequestor
                 {
                     AddFileData(request, options);
                 }
+                else if (UrlEncodedData != null)
+                {
+                    AddUrlEncodedData(request, options);
+                }
                 else if (JsonData != null)
                 {
                     AddJsonData(request, options);
@@ -205,6 +215,14 @@ public partial class HttpRequestor
             };
 
             uploadContent.CopyToAsync(options.GetRequestStream(request)).Wait();
+        }
+
+        public void AddUrlEncodedData(HttpWebRequest request, RequestOptions options)
+        {
+            request.ContentType = "application/x-www-form-urlencoded";
+
+            using var content = new FormUrlEncodedContent(UrlEncodedData.Values);
+            content.CopyToAsync(options.GetRequestStream(request)).Wait();
         }
 
         /// <summary>
