@@ -22,6 +22,9 @@ public class CommitCreate
     [JsonPropertyName("start_branch")]
     public string StartBranch;
 
+    [JsonPropertyName("start_sha")]
+    public string StartSha;
+
     [JsonPropertyName("author_email")]
     public string AuthorEmail;
 

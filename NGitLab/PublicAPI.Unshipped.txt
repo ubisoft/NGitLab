@@ -1480,6 +1480,7 @@ NGitLab.Models.CommitCreate.CommitMessage -> string
 NGitLab.Models.CommitCreate.Force -> bool?
 NGitLab.Models.CommitCreate.ProjectId -> int
 NGitLab.Models.CommitCreate.StartBranch -> string
+NGitLab.Models.CommitCreate.StartSha -> string
 NGitLab.Models.CommitInfo
 NGitLab.Models.CommitInfo.AuthoredDate -> System.DateTime
 NGitLab.Models.CommitInfo.AuthorEmail -> string
