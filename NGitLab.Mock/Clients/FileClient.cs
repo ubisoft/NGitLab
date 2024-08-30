@@ -43,6 +43,12 @@ internal sealed class FileClient : ClientBase, IFilesClient
         }
     }
 
+    public async Task CreateAsync(FileUpsert file, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        Create(file);
+    }
+
     public void Delete(FileDelete file)
     {
         using (Context.BeginOperationScope())
@@ -68,6 +74,12 @@ internal sealed class FileClient : ClientBase, IFilesClient
         }
     }
 
+    public async Task DeleteAsync(FileDelete file, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        Delete(file);
+    }
+
     public FileData Get(string filePath, string @ref)
     {
         using (Context.BeginOperationScope())
@@ -83,8 +95,20 @@ internal sealed class FileClient : ClientBase, IFilesClient
     {
         using (Context.BeginOperationScope())
         {
-            return Get(filePath, @ref) != null;
+            try
+            {
+                return Get(filePath, @ref) != null;
+            }
+            catch (GitLabNotFoundException)
+            {
+                return false;
+            }
         }
+    }
+    public async Task<bool> FileExistsAsync(string filePath, string @ref, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        return FileExists(filePath, @ref);
     }
 
     public Blame[] Blame(string filePath, string @ref)
@@ -117,6 +141,12 @@ internal sealed class FileClient : ClientBase, IFilesClient
 
             project.Repository.Commit(commitCreate);
         }
+    }
+
+    public async Task UpdateAsync(FileUpsert file, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        Update(file);
     }
 
     public async Task<FileData> GetAsync(string filePath, string @ref, CancellationToken cancellationToken = default)

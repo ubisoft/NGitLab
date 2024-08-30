@@ -22,14 +22,29 @@ public class FilesClient : IFilesClient
         _api.Post().With(file).Execute($"{_repoPath}/files/{EncodeFilePath(file.Path)}");
     }
 
+    public Task CreateAsync(FileUpsert file, CancellationToken cancellationToken = default)
+    {
+        return _api.Post().With(file).ExecuteAsync($"{_repoPath}/files/{EncodeFilePath(file.Path)}", cancellationToken);
+    }
+
     public void Update(FileUpsert file)
     {
         _api.Put().With(file).Execute($"{_repoPath}/files/{EncodeFilePath(file.Path)}");
     }
 
+    public Task UpdateAsync(FileUpsert file, CancellationToken cancellationToken = default)
+    {
+        return _api.Put().With(file).ExecuteAsync($"{_repoPath}/files/{EncodeFilePath(file.Path)}", cancellationToken);
+    }
+
     public void Delete(FileDelete file)
     {
         _api.Delete().With(file).Execute($"{_repoPath}/files/{EncodeFilePath(file.Path)}");
+    }
+
+    public Task DeleteAsync(FileDelete file, CancellationToken cancellationToken = default)
+    {
+        return _api.Delete().With(file).ExecuteAsync($"{_repoPath}/files/{EncodeFilePath(file.Path)}", cancellationToken);
     }
 
     public FileData Get(string filePath, string @ref)
@@ -53,6 +68,32 @@ public class FilesClient : IFilesClient
         {
             return false;
         }
+    }
+
+    public Task<bool> FileExistsAsync(string filePath, string @ref, CancellationToken cancellationToken = default)
+    {
+        return _api.Head().ExecuteAsync(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={@ref}", cancellationToken)
+            .ContinueWith(t =>
+            {
+                if (t.Status == TaskStatus.RanToCompletion)
+                {
+                    return true;
+                }
+                if (t.Status == TaskStatus.Canceled)
+                {
+                    return false;
+                }
+                if (t.Status == TaskStatus.Faulted)
+                {
+                    if (t.Exception.InnerException is GitLabException gitLabException && gitLabException.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return false;
+                    }
+                        
+                    throw t.Exception.Flatten();
+                }
+                return false;
+            }, cancellationToken);
     }
 
     public Blame[] Blame(string filePath, string @ref)

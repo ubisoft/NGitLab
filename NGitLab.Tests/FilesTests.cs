@@ -10,7 +10,7 @@ public class FilesTests
 {
     [Test]
     [NGitLabRetry]
-    public async Task Test_add_update_delete_and_get_file()
+    public async Task Test_add_update_delete_get_and_exists_file()
     {
         using var context = await GitLabTestContext.CreateAsync();
         var project = context.CreateProject();
@@ -27,6 +27,9 @@ public class FilesTests
             Path = fileName,
         };
         filesClient.Create(fileUpsert);
+
+        var exists = filesClient.FileExists(fileName, project.DefaultBranch);
+        Assert.That(exists, Is.True);
 
         var file = filesClient.Get(fileName, project.DefaultBranch);
         Assert.That(file, Is.Not.Null);
@@ -48,7 +51,59 @@ public class FilesTests
         };
         filesClient.Delete(fileDelete);
 
+        exists = filesClient.FileExists(fileName, project.DefaultBranch);
+        Assert.That(exists, Is.False);
+
         Assert.Throws(Is.InstanceOf<GitLabException>(), () => filesClient.Get("testDelete.md", project.DefaultBranch));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_add_update_delete_get_and_exists_file_async()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var filesClient = context.Client.GetRepository(project.Id).Files;
+
+        // Don't use txt extensions: https://gitlab.com/gitlab-org/gitlab-ce/issues/31790
+        var fileName = "test.md";
+        var fileUpsert = new FileUpsert
+        {
+            Branch = project.DefaultBranch,
+            CommitMessage = "Add SonarQube badges to README.md",
+            RawContent = "test",
+            Encoding = "base64",
+            Path = fileName,
+        };
+        await filesClient.CreateAsync(fileUpsert);
+
+        var exists = await filesClient.FileExistsAsync(fileName, project.DefaultBranch);
+        Assert.That(exists, Is.True);
+
+        var file = await filesClient.GetAsync(fileName, project.DefaultBranch);
+        Assert.That(file, Is.Not.Null);
+        Assert.That(file.Name, Is.EqualTo(fileName));
+        Assert.That(file.DecodedContent, Is.EqualTo("test"));
+
+        fileUpsert.RawContent = "test2";
+        await filesClient.UpdateAsync(fileUpsert);
+
+        file = await filesClient.GetAsync(fileName, project.DefaultBranch);
+        Assert.That(file, Is.Not.Null);
+        Assert.That(file.DecodedContent, Is.EqualTo("test2"));
+
+        var fileDelete = new FileDelete
+        {
+            Path = fileName,
+            Branch = project.DefaultBranch,
+            CommitMessage = "Delete file",
+        };
+        await filesClient.DeleteAsync(fileDelete);
+
+        exists = await filesClient.FileExistsAsync(fileName, project.DefaultBranch);
+        Assert.That(exists, Is.False);
+
+        Assert.ThrowsAsync(Is.InstanceOf<GitLabException>(), () => filesClient.GetAsync("testDelete.md", project.DefaultBranch));
     }
 
     [Test]
