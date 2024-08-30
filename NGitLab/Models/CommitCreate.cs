@@ -54,4 +54,7 @@ public class CreateCommitAction
 
     [JsonPropertyName("encoding")]
     public string Encoding { get; set; }
+
+    [JsonPropertyName("execute_filemode")]
+    public bool IsExecutable { get; set; }
 }

@@ -1565,6 +1565,8 @@ NGitLab.Models.CreateCommitAction.Encoding.get -> string
 NGitLab.Models.CreateCommitAction.Encoding.set -> void
 NGitLab.Models.CreateCommitAction.FilePath.get -> string
 NGitLab.Models.CreateCommitAction.FilePath.set -> void
+NGitLab.Models.CreateCommitAction.IsExecutable.get -> bool
+NGitLab.Models.CreateCommitAction.IsExecutable.set -> void
 NGitLab.Models.CreateCommitAction.PreviousPath.get -> string
 NGitLab.Models.CreateCommitAction.PreviousPath.set -> void
 NGitLab.Models.Deployment
