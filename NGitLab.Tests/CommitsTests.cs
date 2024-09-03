@@ -117,4 +117,69 @@ public class CommitsTests
         var latestCommit = commitClient.GetCommit(project.DefaultBranch);
         Assert.That(latestCommit.Id, Is.EqualTo(cherryPickedCommit.Id));
     }
+
+    [Test]
+    public async Task Test_commit_can_be_created_from_sha()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject(initializeWithCommits: true);
+        var commitClient = context.Client.GetCommits(project.Id);
+
+        var commit = commitClient.GetCommit("main");
+        Assert.That(commit, Is.Not.Null);
+
+        var newCommit = commitClient.Create(new CommitCreate
+        {
+            Branch = "test-start-sha",
+            CommitMessage = "New commit",
+            StartSha = commit.Id.ToString().ToLowerInvariant(),
+            Actions = new List<CreateCommitAction>
+            {
+                new CreateCommitAction
+                {
+                    Action = "create",
+                    FilePath = "file.txt",
+                    Content = "content",
+                },
+            },
+        });
+        Assert.That(newCommit, Is.Not.Null);
+    }
+
+    [Test]
+    public async Task Test_commit_can_set_executable_flag()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject(initializeWithCommits: true);
+        var commitClient = context.Client.GetCommits(project.Id);
+
+        var commit = commitClient.GetCommit("main");
+        Assert.That(commit, Is.Not.Null);
+
+        var newCommit = commitClient.Create(new CommitCreate
+        {
+            Branch = "test-set-executable-flag",
+            CommitMessage = "New commit",
+            StartBranch = project.DefaultBranch,
+            Actions = new List<CreateCommitAction>
+            {
+                new CreateCommitAction
+                {
+                    Action = "create",
+                    FilePath = "script.sh",
+                    Content = "echo 'Hello, world!'",
+                },
+                new CreateCommitAction
+                {
+                    Action = "chmod",
+                    FilePath = "script.sh",
+                    IsExecutable = true,
+                },
+            },
+        });
+        Assert.That(newCommit, Is.Not.Null);
+
+        var diff = context.Client.GetRepository(project.Id).GetCommitDiff(newCommit.Id).Single();
+        Assert.That(diff.BMode, Is.EqualTo("100755"));
+    }
 }
