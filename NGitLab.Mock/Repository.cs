@@ -744,6 +744,7 @@ public sealed class Repository : GitLabObject, IDisposable
             CommitAction.Delete => new CommitActionDeleteHandler(),
             CommitAction.Update => new CommitActionUpdateHandler(),
             CommitAction.Move => new CommitActionMoveHandler(),
+            CommitAction.chmod => new CommitActionChmodHandler(),
             _ => throw new NotSupportedException(),
         };
     }
