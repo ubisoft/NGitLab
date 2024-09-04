@@ -16,6 +16,12 @@ internal sealed class CommitActionCreateHandler : ICommitActionHandler
         if (System.IO.File.Exists(filePath))
             throw new GitLabException("File already exists.");
 
+        var directory = Path.GetDirectoryName(filePath)!;
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
         if (string.Equals(action.Encoding, "base64", StringComparison.OrdinalIgnoreCase))
         {
             var content = Convert.FromBase64String(action.Content);

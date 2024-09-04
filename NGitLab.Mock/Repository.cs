@@ -201,15 +201,35 @@ public sealed class Repository : GitLabObject, IDisposable
     public Commit Commit(CommitCreate commitCreate)
     {
         var repo = GetGitRepository();
-        var mustCreateBranch = !repo.Commits.Any();
-        if (!mustCreateBranch)
+        var branchExists = repo.Branches.Any(b => string.Equals(b.FriendlyName, commitCreate.Branch, StringComparison.Ordinal));
+
+        if (branchExists)
         {
-            Commands.Checkout(repo, commitCreate.Branch);
+            throw new GitLabBadRequestException($"A branch called '{commitCreate.Branch}' already exists.");
+        }
+
+        var isBranchEmpty = !repo.Commits.Any();
+        if (!isBranchEmpty)
+        {
+            var hasStartBranch = !string.IsNullOrWhiteSpace(commitCreate.StartBranch);
+            var hasStartSha = !string.IsNullOrWhiteSpace(commitCreate.StartSha);
+
+            var @ref = (hasStartBranch, hasStartSha) switch
+            {
+                (true, true) => throw new GitLabBadRequestException(
+                    "GitLab server returned an error (BadRequest): start_branch, start_sha are mutually exclusive."),
+                (true, _) => commitCreate.StartBranch,
+                (_, true) => commitCreate.StartSha,
+                _ => throw new GitLabBadRequestException(
+                    "GitLab server returned an error (BadRequest): You can only create or edit files when you are on a branch.")
+            };
+
+            Commands.Checkout(repo, @ref);
         }
 
         var commit = CreateOnNonBareRepo(commitCreate);
         var branchStillMissing = !repo.Branches.Any(b => string.Equals(b.FriendlyName, commitCreate.Branch, StringComparison.Ordinal));
-        if (mustCreateBranch && branchStillMissing)
+        if (!isBranchEmpty || branchStillMissing)
         {
             repo.Branches.Add(commitCreate.Branch, commit.Sha);
         }
@@ -536,6 +556,12 @@ public sealed class Repository : GitLabObject, IDisposable
 
         var searchOption = repositoryGetTreeOptions.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
         var fullPath = string.IsNullOrEmpty(repositoryGetTreeOptions.Path) ? FullPath : Path.Combine(FullPath, repositoryGetTreeOptions.Path);
+
+        if (!Directory.Exists(fullPath))
+        {
+            throw new GitLabNotFoundException();
+        }
+
         foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(fullPath, "*", searchOption))
         {
             yield return GetTreeItem(FullPath, fileSystemEntry);
@@ -558,14 +584,27 @@ public sealed class Repository : GitLabObject, IDisposable
         return $"remotes/{forkRemote.Name}/{branch}";
     }
 
-    private static Tree GetTreeItem(string repositoryPath, string filePath)
+    private Tree GetTreeItem(string repositoryPath, string filePath)
     {
+        var repo = GetGitRepository();
+        var relativePath = GetTreeRelativePath(filePath);
+        var entry = repo.Index.FirstOrDefault(e => string.Equals(e.Path, relativePath, StringComparison.OrdinalIgnoreCase));
+        Sha1 sha = default;
+        string mode = null;
+        if (entry is not null)
+        {
+            sha = new Sha1(entry.Id.Sha);
+            mode = Convert.ToString((int)entry.Mode, 8).PadLeft(6, '0');
+        }
+
         var fileAttribute = System.IO.File.GetAttributes(filePath);
         return new Tree
         {
             Name = Path.GetFileName(filePath),
-            Path = GetTreeRelativePath(filePath),
+            Path = relativePath,
             Type = fileAttribute.HasFlag(FileAttributes.Directory) ? ObjectType.tree : ObjectType.blob,
+            Id = sha,
+            Mode = mode,
         };
 
         string GetTreeRelativePath(string fileFullPath)
@@ -716,7 +755,9 @@ public sealed class Repository : GitLabObject, IDisposable
         var repo = GetGitRepository();
         ApplyActions(commit);
 
-        var author = new Signature(commit.AuthorName, commit.AuthorEmail, DateTimeOffset.UtcNow);
+        var defaultUser = Parent.Server.Users.First(Project.IsUserMember);
+
+        var author = new Signature(commit.AuthorName ?? defaultUser.Name, commit.AuthorEmail ?? defaultUser.Email, DateTimeOffset.UtcNow);
         var committer = author;
 
         var newCommit = repo.Commit(commit.CommitMessage, author, committer);
@@ -761,5 +802,17 @@ public sealed class Repository : GitLabObject, IDisposable
             divergence += historyDivergence.BehindBy.Value;
 
         return divergence;
+    }
+
+    internal void GetRawBlob(string sha, Action<Stream> parser)
+    {
+        var repository = GetGitRepository();
+        var blob = repository.Lookup<Blob>(sha);
+
+        if (blob is not null)
+        {
+            using var source = blob.GetContentStream();
+            parser(source);
+        }
     }
 }
