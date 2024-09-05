@@ -52,7 +52,7 @@ public class RepositoryClient : IRepositoryClient
 
     public void GetRawBlob(string sha, Action<Stream> parser)
     {
-        _api.Get().Stream(_repoPath + "/raw_blobs/" + sha, parser);
+        _api.Get().Stream(_repoPath + "/blobs/" + sha + "/raw", parser);
     }
 
     public void GetArchive(Action<Stream> parser)

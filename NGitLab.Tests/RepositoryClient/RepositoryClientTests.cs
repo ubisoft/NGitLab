@@ -329,6 +329,28 @@ public class RepositoryClientTests
         Assert.That(archiveItems.Where(item => item.Value is TarEntryType.RegularFile).ToList(), Has.Count.EqualTo(commitCount));
     }
 
+    [Test]
+    [NGitLabRetry]
+    public async Task GetRawBlob()
+    {
+        // Arrange
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 4);
+
+        var blob = context.RepositoryClient.Tree.First(t => t.Type == ObjectType.blob);
+
+        string content = null;
+
+        // Act
+        context.RepositoryClient.GetRawBlob(blob.Id.ToString(), stream =>
+        {
+            using var reader = new StreamReader(stream);
+            content = reader.ReadToEnd();
+        });
+
+        // Assert
+        Assert.That(content, Is.Not.Null);
+    }
+
     private sealed class RepositoryClientTestsContext : IDisposable
     {
         public const string SubfolderName = "subfolder";
