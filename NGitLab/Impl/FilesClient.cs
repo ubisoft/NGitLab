@@ -77,15 +77,9 @@ public class FilesClient : IFilesClient
             await _api.Head().ExecuteAsync(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={@ref}", cancellationToken).ConfigureAwait(false);
             return true;
         }
-        catch (Exception ex) when (ex is OperationCanceledException ||
-                                  (ex is GitLabException gitLabException && gitLabException.StatusCode == HttpStatusCode.NotFound))
-
+        catch (GitLabException e) when (e.StatusCode == HttpStatusCode.NotFound)
         {
             return false;
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 
