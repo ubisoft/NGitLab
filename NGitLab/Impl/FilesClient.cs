@@ -22,14 +22,29 @@ public class FilesClient : IFilesClient
         _api.Post().With(file).Execute($"{_repoPath}/files/{EncodeFilePath(file.Path)}");
     }
 
+    public Task CreateAsync(FileUpsert file, CancellationToken cancellationToken = default)
+    {
+        return _api.Post().With(file).ExecuteAsync($"{_repoPath}/files/{EncodeFilePath(file.Path)}", cancellationToken);
+    }
+
     public void Update(FileUpsert file)
     {
         _api.Put().With(file).Execute($"{_repoPath}/files/{EncodeFilePath(file.Path)}");
     }
 
+    public Task UpdateAsync(FileUpsert file, CancellationToken cancellationToken = default)
+    {
+        return _api.Put().With(file).ExecuteAsync($"{_repoPath}/files/{EncodeFilePath(file.Path)}", cancellationToken);
+    }
+
     public void Delete(FileDelete file)
     {
         _api.Delete().With(file).Execute($"{_repoPath}/files/{EncodeFilePath(file.Path)}");
+    }
+
+    public Task DeleteAsync(FileDelete file, CancellationToken cancellationToken = default)
+    {
+        return _api.Delete().With(file).ExecuteAsync($"{_repoPath}/files/{EncodeFilePath(file.Path)}", cancellationToken);
     }
 
     public FileData Get(string filePath, string @ref)
@@ -47,6 +62,19 @@ public class FilesClient : IFilesClient
         try
         {
             _api.Head().Execute(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={@ref}");
+            return true;
+        }
+        catch (GitLabException e) when (e.StatusCode == HttpStatusCode.NotFound)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> FileExistsAsync(string filePath, string @ref, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await _api.Head().ExecuteAsync(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={@ref}", cancellationToken).ConfigureAwait(false);
             return true;
         }
         catch (GitLabException e) when (e.StatusCode == HttpStatusCode.NotFound)
