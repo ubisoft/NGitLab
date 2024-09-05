@@ -70,30 +70,23 @@ public class FilesClient : IFilesClient
         }
     }
 
-    public Task<bool> FileExistsAsync(string filePath, string @ref, CancellationToken cancellationToken = default)
+    public async Task<bool> FileExistsAsync(string filePath, string @ref, CancellationToken cancellationToken = default)
     {
-        return _api.Head().ExecuteAsync(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={@ref}", cancellationToken)
-            .ContinueWith(t =>
-            {
-                if (t.Status == TaskStatus.RanToCompletion)
-                {
-                    return true;
-                }
-                if (t.Status == TaskStatus.Canceled)
-                {
-                    return false;
-                }
-                if (t.Status == TaskStatus.Faulted)
-                {
-                    if (t.Exception.InnerException is GitLabException gitLabException && gitLabException.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        return false;
-                    }
-                        
-                    throw t.Exception.Flatten();
-                }
-                return false;
-            }, cancellationToken);
+        try
+        {
+            await _api.Head().ExecuteAsync(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={@ref}", cancellationToken).ConfigureAwait(false);
+            return true;
+        }
+        catch (Exception ex) when (ex is OperationCanceledException ||
+                                  (ex is GitLabException gitLabException && gitLabException.StatusCode == HttpStatusCode.NotFound))
+
+        {
+            return false;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public Blame[] Blame(string filePath, string @ref)
