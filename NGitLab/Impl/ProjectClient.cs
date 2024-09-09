@@ -244,7 +244,7 @@ public class ProjectClient : IProjectClient
         // So now we wait for the languages to be returned with a max wait time of 10 s.
         // The waiting logic should be removed once GitLab fix the issue in a version > 11.10.4-ee.
         var started = DateTime.UtcNow;
-        while (!languages.Any() && (DateTime.UtcNow - started) < TimeSpan.FromSeconds(10))
+        while (languages.Count == 0 && (DateTime.UtcNow - started) < TimeSpan.FromSeconds(10))
         {
             Thread.Sleep(1000);
             languages = DoGetLanguages(id);

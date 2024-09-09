@@ -25,7 +25,7 @@ public sealed class GitLabTestContext : IDisposable
     private static readonly Policy s_gitlabRetryPolicy = Policy.Handle<GitLabException>()
         .WaitAndRetry(MaxRetryCount, _ => TimeSpan.FromSeconds(1), (exception, timespan, retryCount, context) =>
         {
-            TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {exception.Message} -> Polly Retry {retryCount} of {MaxRetryCount}...");
+            TestContext.Out.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] {exception.Message} -> Polly Retry {retryCount} of {MaxRetryCount}...");
         });
 
     private static readonly HashSet<string> s_generatedValues = new(StringComparer.Ordinal);
@@ -381,7 +381,7 @@ public sealed class GitLabTestContext : IDisposable
                 }
             }
 
-            TestContext.WriteLine("Test runner downloaded");
+            TestContext.Out.WriteLine("Test runner downloaded");
             if (OperatingSystem.IsLinux())
             {
                 using var chmodProcess = Process.Start("chmod", "+x \"" + path + "\"");
@@ -389,7 +389,7 @@ public sealed class GitLabTestContext : IDisposable
                 if (chmodProcess.ExitCode != 0)
                     throw new InvalidOperationException("chmod failed");
 
-                TestContext.WriteLine("chmod run");
+                TestContext.Out.WriteLine("chmod run");
             }
 
             if (!IsContinuousIntegration())
@@ -401,7 +401,7 @@ public sealed class GitLabTestContext : IDisposable
                 if (gitConfigProcess.ExitCode != 0)
                     throw new InvalidOperationException("git config failed");
 
-                TestContext.WriteLine("git config changed");
+                TestContext.Out.WriteLine("git config changed");
             }
 
             var project = AdminClient.Projects[projectId];
@@ -412,7 +412,7 @@ public sealed class GitLabTestContext : IDisposable
             if (runner.Token == null)
                 throw new InvalidOperationException("Runner token is null");
 
-            TestContext.WriteLine($"Runner registered '{runner.Token}'");
+            TestContext.Out.WriteLine($"Runner registered '{runner.Token}'");
 
             // Use run-single, so we don't need to manage the configuration file.
             // Also, I don't think there is a need to run multiple jobs in a test
@@ -437,9 +437,7 @@ public sealed class GitLabTestContext : IDisposable
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
             };
-            var process = Process.Start(psi);
-            if (process == null)
-                throw new InvalidOperationException("Cannot start the runner");
+            var process = Process.Start(psi) ?? throw new InvalidOperationException("Cannot start the runner");
 
             // Give some time to ensure the runner doesn't stop immediately
             await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
@@ -452,7 +450,7 @@ public sealed class GitLabTestContext : IDisposable
             process.ErrorDataReceived += (sender, e) => Console.Error.WriteLine(e.Data);
             process.OutputDataReceived += (sender, e) => Console.Error.WriteLine(e.Data);
 
-            TestContext.WriteLine($"Runner started for project '{project.Id}' on '{DockerContainer.GitLabUrl}'");
+            TestContext.Out.WriteLine($"Runner started for project '{project.Id}' on '{DockerContainer.GitLabUrl}'");
             return new ProcessKill(process);
         }
         finally
@@ -474,7 +472,7 @@ public sealed class GitLabTestContext : IDisposable
         while (!predicate(result))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            TestContext.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] RetryUntilAsync {retryCount++}...");
+            TestContext.Out.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] RetryUntilAsync {retryCount++}...");
             await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
 
             result = action();

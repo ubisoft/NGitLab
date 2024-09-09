@@ -170,7 +170,7 @@ build{i.ToString(CultureInfo.InvariantCulture)}:
                 var job = jobs.FirstOrDefault();
                 if (jobs.Any())
                 {
-                    TestContext.WriteLine("Job status: " + job.Status);
+                    TestContext.Out.WriteLine("Job status: " + job.Status);
                     return job.Status == JobStatus.Success || job.Status == JobStatus.Failed;
                 }
 

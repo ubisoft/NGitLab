@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -38,8 +37,8 @@ build:
         var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), ValidCIYaml, new(), CancellationToken.None);
 
         Assert.That(result.Valid, Is.True);
-        Assert.That(result.Errors.Any(), Is.False);
-        Assert.That(result.Warnings.Any(), Is.False);
+        Assert.That(result.Errors.Length != 0, Is.False);
+        Assert.That(result.Warnings.Length != 0, Is.False);
     }
 
     [Test]
@@ -53,8 +52,8 @@ build:
         var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), InvalidCIYaml, new(), CancellationToken.None);
 
         Assert.That(result.Valid, Is.False);
-        Assert.That(result.Errors.Any(), Is.True);
-        Assert.That(result.Warnings.Any(), Is.False);
+        Assert.That(result.Errors.Length != 0, Is.True);
+        Assert.That(result.Warnings.Length != 0, Is.False);
     }
 
     [Test]
@@ -76,8 +75,8 @@ build:
         var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
 
         Assert.That(result.Valid, Is.True);
-        Assert.That(result.Errors.Any(), Is.False);
-        Assert.That(result.Warnings.Any(), Is.False);
+        Assert.That(result.Errors.Length != 0, Is.False);
+        Assert.That(result.Warnings.Length != 0, Is.False);
     }
 
     [Test]
@@ -99,7 +98,7 @@ build:
         var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
 
         Assert.That(result.Valid, Is.False);
-        Assert.That(result.Errors.Any(), Is.True);
-        Assert.That(result.Warnings.Any(), Is.False);
+        Assert.That(result.Errors.Length != 0, Is.True);
+        Assert.That(result.Warnings.Length != 0, Is.False);
     }
 }

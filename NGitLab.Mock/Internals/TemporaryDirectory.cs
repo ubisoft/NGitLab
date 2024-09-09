@@ -60,7 +60,7 @@ public sealed class TemporaryDirectory : IDisposable
         MakeReadOnly(new DirectoryInfo(FullPath));
     }
 
-    private void MakeReadOnly(FileSystemInfo fileSystemInfo)
+    private static void MakeReadOnly(FileSystemInfo fileSystemInfo)
     {
         if (fileSystemInfo is DirectoryInfo directoryInfo)
         {

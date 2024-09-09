@@ -71,8 +71,8 @@ public class PipelineTests
         var pipelineClient = context.Client.GetPipelines(project.Id);
         JobTests.AddGitLabCiFile(context.Client, project);
 
-        var allJobs = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.AllJobs.ToList(), p => p.Any(), TimeSpan.FromSeconds(120));
-        Assert.That(allJobs.Any());
+        var allJobs = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.AllJobs.ToList(), p => p.Count != 0, TimeSpan.FromSeconds(120));
+        Assert.That(allJobs.Count != 0);
     }
 
     [Test]
@@ -91,8 +91,8 @@ public class PipelineTests
         {
             PipelineId = pipeline.Id, Scope = new[] { "success", "pending" },
         };
-        var allJobs = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.GetJobsAsync(pipelineJobQuery).ToList(), p => p.Any(), TimeSpan.FromSeconds(120));
-        Assert.That(allJobs.Any());
+        var allJobs = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.GetJobsAsync(pipelineJobQuery).ToList(), p => p.Count != 0, TimeSpan.FromSeconds(120));
+        Assert.That(allJobs.Count != 0);
     }
 
     [Test]
@@ -108,9 +108,9 @@ public class PipelineTests
         {
             Ref = project.DefaultBranch,
         };
-        var pipelinesFromQuery = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.Search(query).ToList(), p => p.Any(), TimeSpan.FromSeconds(120));
+        var pipelinesFromQuery = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.Search(query).ToList(), p => p.Count != 0, TimeSpan.FromSeconds(120));
 
-        Assert.That(pipelinesFromQuery.Any(), Is.True);
+        Assert.That(pipelinesFromQuery.Count != 0, Is.True);
     }
 
     [Test]
@@ -245,7 +245,7 @@ public class PipelineTests
             {
                 if (pipeline != null)
                 {
-                    TestContext.WriteLine("Pipeline status: " + pipeline.Status);
+                    TestContext.Out.WriteLine("Pipeline status: " + pipeline.Status);
                     return pipeline.Status is JobStatus.Failed;
                 }
 

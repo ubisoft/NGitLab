@@ -108,7 +108,7 @@ public sealed class UserCollection : Collection<User>
 
         if (query.ExcludeExternal == true)
         {
-            users = users.Where(u => !u.Identities.Any() || u.Identities.All(i => string.IsNullOrEmpty(i.ExternUid)));
+            users = users.Where(u => u.Identities.Length == 0 || u.Identities.All(i => string.IsNullOrEmpty(i.ExternUid)));
         }
 
         if (!string.IsNullOrEmpty(query.Search))

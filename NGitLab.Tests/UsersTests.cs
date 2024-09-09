@@ -49,7 +49,7 @@ public class UsersTests
 
         users.Delete(addedUser.Id);
 
-        await GitLabTestContext.RetryUntilAsync(() => users.Get(addedUser.Username).ToList(), users => !users.Any(), TimeSpan.FromMinutes(2));
+        await GitLabTestContext.RetryUntilAsync(() => users.Get(addedUser.Username).ToList(), users => users.Count == 0, TimeSpan.FromMinutes(2));
     }
 
     [Test]
@@ -62,7 +62,7 @@ public class UsersTests
         var addedUser = await CreateNewUserAsync(context);
         Assert.That(addedUser.Bio, Is.EqualTo("bio"));
 
-        await GitLabTestContext.RetryUntilAsync(() => users.Get(addedUser.Username).ToList(), users => users.Any(), TimeSpan.FromMinutes(2));
+        await GitLabTestContext.RetryUntilAsync(() => users.Get(addedUser.Username).ToList(), users => users.Count != 0, TimeSpan.FromMinutes(2));
     }
 
     [Test]
@@ -106,7 +106,7 @@ public class UsersTests
 
         users.Delete(addedUser.Id);
 
-        await GitLabTestContext.RetryUntilAsync(() => users.Get(addedUser.Username).ToList(), users => !users.Any(), TimeSpan.FromMinutes(2));
+        await GitLabTestContext.RetryUntilAsync(() => users.Get(addedUser.Username).ToList(), users => users.Count == 0, TimeSpan.FromMinutes(2));
     }
 
     [Test]
