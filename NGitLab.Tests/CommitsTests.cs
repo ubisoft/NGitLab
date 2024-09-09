@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -158,6 +159,113 @@ public class CommitsTests
         Assert.That(latestCommit.Id, Is.EqualTo(cherryPickedCommit.Id));
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    [NGitLabRetry]
+    public async Task Test_create_commit_in_new_branch_can_create_branch(bool useBranchName)
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject(initializeWithCommits: true);
+
+        var commitClient = context.Client.GetCommits(project.Id);
+
+        var startBranch = project.DefaultBranch;
+        var startCommit = commitClient.GetCommit(startBranch);
+
+        // Act
+        var commit = commitClient.Create(new CommitCreate
+        {
+            Branch = "new-branch",
+            StartBranch = useBranchName ? startBranch : null,
+            StartSha = useBranchName ? null : startCommit.Id.ToString().ToLowerInvariant(),
+            CommitMessage = "First commit in new branch",
+            Actions = new List<CreateCommitAction>
+            {
+                new()
+                {
+                    Action = "update",
+                    Content = "This is in a new branch",
+                    FilePath = "README.md",
+                },
+            },
+        });
+
+        // Assert
+        Assert.That(commit.Id, Is.Not.EqualTo(startCommit.Id));
+        Assert.That(commit.Parents, Has.Length.EqualTo(1));
+        Assert.That(commit.Parents[0], Is.EqualTo(startCommit.Id));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_create_commit_in_new_branch_fails_if_both_start_branch_and_sha_specified()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject(initializeWithCommits: true);
+
+        var commitClient = context.Client.GetCommits(project.Id);
+
+        var startBranch = project.DefaultBranch;
+        var startCommit = commitClient.GetCommit(startBranch);
+
+        // Act/Assert
+        Assert.That(() => commitClient.Create(new CommitCreate
+        {
+            Branch = "new-branch",
+            StartBranch = startBranch,
+            StartSha = startCommit.Id.ToString().ToLowerInvariant(),
+            CommitMessage = "First commit in new branch",
+            Actions = new List<CreateCommitAction>
+            {
+                new()
+                {
+                    Action = "update",
+                    Content = "This is in a new branch",
+                    FilePath = "README.md",
+                },
+            },
+        }), Throws.TypeOf<GitLabException>()
+                  .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
+                  .With.Message.Contains("start_branch, start_sha are mutually exclusive."));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_create_commit_in_so_called_new_branch_fails_if_branch_exists()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject(initializeWithCommits: true);
+
+        var repoClient = context.Client.GetRepository(project.Id);
+        var commitClient = context.Client.GetCommits(project.Id);
+
+        var startBranch = project.DefaultBranch;
+
+        repoClient.Branches.Create(new BranchCreate { Name = "new-branch", Ref = startBranch });
+
+        // Act/Assert
+        Assert.That(() => commitClient.Create(new CommitCreate
+        {
+            Branch = "new-branch",
+            StartBranch = startBranch,
+            CommitMessage = "First commit in new branch",
+            Actions = new List<CreateCommitAction>
+            {
+                new()
+                {
+                    Action = "update",
+                    Content = "This is in a new branch",
+                    FilePath = "README.md",
+                },
+            },
+        }), Throws.TypeOf<GitLabException>()
+                  .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
+                  .With.Message.Contains("A branch called 'new-branch' already exists."));
+    }
+
     [Test]
     public async Task Test_commit_can_be_created_from_sha()
     {
@@ -175,7 +283,7 @@ public class CommitsTests
             StartSha = commit.Id.ToString().ToLowerInvariant(),
             Actions = new List<CreateCommitAction>
             {
-                new CreateCommitAction
+                new()
                 {
                     Action = "create",
                     FilePath = "file.txt",
@@ -203,13 +311,13 @@ public class CommitsTests
             StartBranch = project.DefaultBranch,
             Actions = new List<CreateCommitAction>
             {
-                new CreateCommitAction
+                new()
                 {
                     Action = "create",
                     FilePath = "script.sh",
                     Content = "echo 'Hello, world!'",
                 },
-                new CreateCommitAction
+                new()
                 {
                     Action = "chmod",
                     FilePath = "script.sh",
