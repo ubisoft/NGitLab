@@ -1,0 +1,8 @@
+﻿[
+  {
+    Id: 6B584E8ECE562EBFFC15D38808CD6B98FC3D97EA,
+    Name: file.txt,
+    Mode: 100644,
+    Path: file.txt
+  }
+]
