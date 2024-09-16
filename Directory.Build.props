@@ -29,7 +29,7 @@
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)/BannedSymbols.txt" Link="Properties/BannedSymbols.txt" />
     <PackageReference Include="MinVer" PrivateAssets="All" Version="6.0.0" />
 
-    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.4">
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.25">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
