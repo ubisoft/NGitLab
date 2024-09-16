@@ -321,7 +321,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         using (Context.BeginOperationScope())
         {
             var sourceProject = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.Contribute);
-            var targetProject = GetProject(mergeRequestCreate.TargetProjectId, ProjectPermission.View);
+            var targetProject = GetProject(mergeRequestCreate.TargetProjectId ?? _projectId.GetValueOrDefault(), ProjectPermission.View);
 
             // Ensure the branches exist
             _ = sourceProject.Repository.GetBranch(mergeRequestCreate.SourceBranch) ?? throw new GitLabBadRequestException("Source branch not found");

@@ -1,0 +1,21 @@
+﻿[
+  {
+    Id: 6B584E8ECE562EBFFC15D38808CD6B98FC3D97EA,
+    Name: readme.md,
+    Mode: 100644,
+    Path: readme.md
+  },
+  {
+    Id: 541550DDCF8A29BCD80B0800A142A7D47890CFD6,
+    Name: subFolder,
+    Type: tree,
+    Mode: 040000,
+    Path: subFolder
+  },
+  {
+    Id: 6B584E8ECE562EBFFC15D38808CD6B98FC3D97EA,
+    Name: file.txt,
+    Mode: 100644,
+    Path: subFolder/file.txt
+  }
+]
