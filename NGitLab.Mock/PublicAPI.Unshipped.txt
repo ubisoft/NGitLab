@@ -572,6 +572,8 @@ NGitLab.Mock.Job.DownstreamPipeline.get -> NGitLab.Mock.Pipeline
 NGitLab.Mock.Job.DownstreamPipeline.set -> void
 NGitLab.Mock.Job.Duration.get -> float?
 NGitLab.Mock.Job.Duration.set -> void
+NGitLab.Mock.Job.FailureReason.get -> string
+NGitLab.Mock.Job.FailureReason.set -> void
 NGitLab.Mock.Job.FinishedAt.get -> System.DateTime
 NGitLab.Mock.Job.FinishedAt.set -> void
 NGitLab.Mock.Job.Id.get -> int

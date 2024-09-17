@@ -38,6 +38,8 @@ public sealed class Job : GitLabObject
 
     public bool AllowFailure { get; set; }
 
+    public string FailureReason { get; set; }
+
     public User User { get; set; }
 
     public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/jobs/{Id.ToString(CultureInfo.InvariantCulture)}");
@@ -84,6 +86,7 @@ public sealed class Job : GitLabObject
             Duration = Duration,
             TagList = TagList,
             QueuedDuration = QueuedDuration,
+            FailureReason = FailureReason,
         };
     }
 
@@ -118,6 +121,7 @@ public sealed class Job : GitLabObject
             },
             Status = Status,
             AllowFailure = AllowFailure,
+            FailureReason = FailureReason,
             Tag = Tag,
             User = User?.ToClientUser(),
             WebUrl = WebUrl,
@@ -149,6 +153,7 @@ public sealed class Job : GitLabObject
             Duration = Duration,
             TagList = TagList,
             QueuedDuration = QueuedDuration,
+            FailureReason = FailureReason,
         };
     }
 }
