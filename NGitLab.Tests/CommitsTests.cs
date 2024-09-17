@@ -267,6 +267,64 @@ public class CommitsTests
     }
 
     [Test]
+    public async Task Test_create_commit_when_neither_start_branch_nor_start_sha_specified()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject(initializeWithCommits: true);
+
+        var commitClient = context.Client.GetCommits(project.Id);
+
+        // Act/Assert
+        Assert.That(() => commitClient.Create(new CommitCreate
+        {
+            Branch = "new-branch",
+            CommitMessage = "First commit in new branch",
+            Actions = new List<CreateCommitAction>
+            {
+                new()
+                {
+                    Action = "update",
+                    Content = "This is in a new branch",
+                    FilePath = "README.md",
+                },
+            },
+        }), Throws.TypeOf<GitLabException>()
+                  .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
+                  .With.Message.Contains("You can only create or edit files when you are on a branch"));
+    }
+
+    [Test]
+    public async Task Test_create_commit_on_empty_repo()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+
+        var commitClient = context.Client.GetCommits(project.Id);
+
+        // Act
+        var commit = commitClient.Create(new CommitCreate
+        {
+            Branch = "main",
+            CommitMessage = "Initial commit",
+            Actions = new List<CreateCommitAction>
+            {
+                new()
+                {
+                    Action = "create",
+                    Content = "my wonderful readme",
+                    FilePath = "README.md",
+                },
+            },
+        });
+
+        // Assert
+        Assert.That(commit.Id, Is.Not.EqualTo(default(Sha1)));
+        Assert.That(commit.Parents, Is.Empty);
+    }
+
+    [Test]
     public async Task Test_commit_can_be_created_from_sha()
     {
         using var context = await GitLabTestContext.CreateAsync();

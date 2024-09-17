@@ -201,15 +201,35 @@ public sealed class Repository : GitLabObject, IDisposable
     public Commit Commit(CommitCreate commitCreate)
     {
         var repo = GetGitRepository();
-        var mustCreateBranch = !repo.Commits.Any();
-        if (!mustCreateBranch)
+        var branchExists = repo.Branches.Any(b => string.Equals(b.FriendlyName, commitCreate.Branch, StringComparison.Ordinal));
+
+        if (branchExists)
         {
-            Commands.Checkout(repo, commitCreate.Branch);
+            throw new GitLabBadRequestException($"A branch called '{commitCreate.Branch}' already exists.");
+        }
+
+        var isRepoEmpty = !repo.Commits.Any();
+        if (!isRepoEmpty)
+        {
+            var hasStartBranch = !string.IsNullOrWhiteSpace(commitCreate.StartBranch);
+            var hasStartSha = !string.IsNullOrWhiteSpace(commitCreate.StartSha);
+
+            var @ref = (hasStartBranch, hasStartSha) switch
+            {
+                (true, true) => throw new GitLabBadRequestException(
+                    "GitLab server returned an error (BadRequest): start_branch, start_sha are mutually exclusive."),
+                (true, _) => commitCreate.StartBranch,
+                (_, true) => commitCreate.StartSha,
+                _ => throw new GitLabBadRequestException(
+                    "GitLab server returned an error (BadRequest): You can only create or edit files when you are on a branch.")
+            };
+
+            Commands.Checkout(repo, @ref);
         }
 
         var commit = CreateOnNonBareRepo(commitCreate);
         var branchStillMissing = !repo.Branches.Any(b => string.Equals(b.FriendlyName, commitCreate.Branch, StringComparison.Ordinal));
-        if (mustCreateBranch && branchStillMissing)
+        if (!isRepoEmpty || branchStillMissing)
         {
             repo.Branches.Add(commitCreate.Branch, commit.Sha);
         }
@@ -517,16 +537,7 @@ public sealed class Repository : GitLabObject, IDisposable
         };
     }
 
-    internal IEnumerable<Tree> GetTree()
-    {
-        var repo = GetGitRepository();
-        Commands.Checkout(repo, Project.DefaultBranch);
-
-        foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(FullPath))
-        {
-            yield return GetTreeItem(FullPath, fileSystemEntry);
-        }
-    }
+    internal IEnumerable<Tree> GetTree() => GetTree(new());
 
     internal IEnumerable<Tree> GetTree(RepositoryGetTreeOptions repositoryGetTreeOptions)
     {
@@ -534,11 +545,50 @@ public sealed class Repository : GitLabObject, IDisposable
         var commitOrBranch = string.IsNullOrEmpty(repositoryGetTreeOptions.Ref) ? Project.DefaultBranch : repositoryGetTreeOptions.Ref;
         Commands.Checkout(repo, commitOrBranch);
 
-        var searchOption = repositoryGetTreeOptions.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-        var fullPath = string.IsNullOrEmpty(repositoryGetTreeOptions.Path) ? FullPath : Path.Combine(FullPath, repositoryGetTreeOptions.Path);
-        foreach (var fileSystemEntry in Directory.EnumerateFileSystemEntries(fullPath, "*", searchOption))
+        var tree = string.IsNullOrWhiteSpace(repositoryGetTreeOptions.Path)
+            ? repo.Head.Tip.Tree
+            : repo.Head.Tip[repositoryGetTreeOptions.Path]?.Target as LibGit2Sharp.Tree;
+
+        if (tree is null)
         {
-            yield return GetTreeItem(FullPath, fileSystemEntry);
+            throw new GitLabNotFoundException();
+        }
+
+        return InternalGetTree(repo.Head.Tip, tree, repositoryGetTreeOptions.Recursive);
+
+        static IEnumerable<Tree> InternalGetTree(Commit tip, LibGit2Sharp.Tree tree, bool recurse)
+        {
+            foreach (var entry in tree)
+            {
+                if (entry.TargetType == TreeEntryTargetType.GitLink)
+                {
+                    continue;
+                }
+
+                yield return new Tree
+                {
+                    Id = new Sha1(entry.Target.Id.ToString()),
+                    Name = entry.Name,
+                    Type = entry.TargetType switch
+                    {
+                        TreeEntryTargetType.Blob => ObjectType.blob,
+                        TreeEntryTargetType.Tree => ObjectType.tree,
+                        _ => throw new InvalidOperationException(),
+                    },
+                    Mode = Convert.ToString((int)entry.Mode, 8).PadLeft(6, '0'),
+                    Path = entry.Path,
+                };
+
+                if (entry.TargetType == TreeEntryTargetType.Tree && recurse)
+                {
+                    var subTree = (LibGit2Sharp.Tree)tip[entry.Path].Target;
+
+                    foreach (var subEntry in InternalGetTree(tip, subTree, recurse: true))
+                    {
+                        yield return subEntry;
+                    }
+                }
+            }
         }
     }
 
@@ -556,44 +606,6 @@ public sealed class Repository : GitLabObject, IDisposable
         Commands.Fetch(repo, forkRemote.Name, new[] { branch }, new FetchOptions(), logMessage: "");
 
         return $"remotes/{forkRemote.Name}/{branch}";
-    }
-
-    private static Tree GetTreeItem(string repositoryPath, string filePath)
-    {
-        var fileAttribute = System.IO.File.GetAttributes(filePath);
-        return new Tree
-        {
-            Name = Path.GetFileName(filePath),
-            Path = GetTreeRelativePath(filePath),
-            Type = fileAttribute.HasFlag(FileAttributes.Directory) ? ObjectType.tree : ObjectType.blob,
-        };
-
-        string GetTreeRelativePath(string fileFullPath)
-        {
-            // Directories needs to end with a separator to be considered as one for a Uri
-            if (!repositoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-                repositoryPath += Path.DirectorySeparatorChar;
-
-            return GetRelativePath(repositoryPath, fileFullPath);
-        }
-    }
-
-    private static string GetRelativePath(string path, string relativeTo)
-    {
-        if (string.IsNullOrEmpty(path))
-            throw new ArgumentNullException(nameof(path));
-
-        if (string.IsNullOrEmpty(relativeTo))
-            throw new ArgumentNullException(nameof(relativeTo));
-
-        if (!Uri.TryCreate(path, UriKind.Absolute, out var pathUri) || !Uri.TryCreate(relativeTo, UriKind.Absolute, out var relativeToUri))
-            throw new GitLabException($"Failed to get Uri out of '{path}' or '{relativeTo}'");
-
-        if (!string.Equals(pathUri.Scheme, relativeToUri.Scheme, StringComparison.OrdinalIgnoreCase))
-            return relativeTo;
-
-        var relativeUri = pathUri.MakeRelativeUri(relativeToUri);
-        return Uri.UnescapeDataString(relativeUri.ToString())!;
     }
 
     public Commit Merge(User user, string sourceBranch, string targetBranch, Project targetProject)
@@ -716,7 +728,9 @@ public sealed class Repository : GitLabObject, IDisposable
         var repo = GetGitRepository();
         ApplyActions(commit);
 
-        var author = new Signature(commit.AuthorName, commit.AuthorEmail, DateTimeOffset.UtcNow);
+        var defaultUser = Parent.Server.Users.First(Project.IsUserMember);
+
+        var author = new Signature(commit.AuthorName ?? defaultUser.Name, commit.AuthorEmail ?? defaultUser.Email, DateTimeOffset.UtcNow);
         var committer = author;
 
         var newCommit = repo.Commit(commit.CommitMessage, author, committer);
@@ -761,5 +775,17 @@ public sealed class Repository : GitLabObject, IDisposable
             divergence += historyDivergence.BehindBy.Value;
 
         return divergence;
+    }
+
+    internal void GetRawBlob(string sha, Action<Stream> parser)
+    {
+        var repository = GetGitRepository();
+        var blob = repository.Lookup<Blob>(sha);
+
+        if (blob is not null)
+        {
+            using var source = blob.GetContentStream();
+            parser(source);
+        }
     }
 }

@@ -80,7 +80,11 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
 
     public void GetRawBlob(string sha, Action<Stream> parser)
     {
-        throw new NotImplementedException();
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(_projectId, ProjectPermission.View);
+            project.Repository.GetRawBlob(sha, parser);
+        }
     }
 
     public void GetArchive(Action<Stream> parser)

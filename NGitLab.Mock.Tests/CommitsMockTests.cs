@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using NGitLab.Mock.Clients;
 using NGitLab.Mock.Config;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -126,5 +127,132 @@ public class CommitsMockTests
             Branch = "main",
         });
         Assert.That(cherryPicked, Is.Not.Null);
+    }
+
+    [Test]
+    public void Test_commit_with_file_in_subdirectory()
+    {
+        using var server = new GitLabConfig()
+            .WithUser("user1", isDefault: true)
+            .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
+                .WithCommit("Initial commit"))
+            .BuildServer();
+
+        var client = server.CreateClient();
+        var commits = client.GetCommits(1);
+        var newCommit = commits.Create(new CommitCreate
+        {
+            CommitMessage = "Commit with file in subdirectory",
+            Branch = "test-branch",
+            StartSha = commits.GetCommit("main").Id.ToString().ToLowerInvariant(),
+            Actions = new[]
+            {
+                new CreateCommitAction
+                {
+                    Action = "create",
+                    FilePath = "subdirectory/file.txt",
+                    Content = "Hello, World!",
+                },
+            },
+        });
+        Assert.That(newCommit, Is.Not.Null);
+    }
+
+    [Test]
+    public void Test_create_commit_with_start_branch_and_start_sha()
+    {
+        using var server = new GitLabConfig()
+            .WithUser("user1", isDefault: true)
+            .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
+                .WithCommit("Initial commit"))
+            .BuildServer();
+
+        var client = server.CreateClient();
+        var commits = client.GetCommits(1);
+        var handler = () => commits.Create(new CommitCreate
+        {
+            CommitMessage = "Commit with file in subdirectory",
+            Branch = "test-branch",
+            StartBranch = "main",
+            StartSha = commits.GetCommit("main").Id.ToString().ToLowerInvariant(),
+            Actions = new[]
+            {
+                new CreateCommitAction
+                {
+                    Action = "create",
+                    FilePath = "subdirectory/file.txt",
+                    Content = "Hello, World!",
+                },
+            },
+        });
+
+        Assert.That(handler, Throws.TypeOf<GitLabBadRequestException>()
+            .With.Message.Contains("start_branch, start_sha are mutually exclusive."));
+    }
+
+    [Test]
+    public void Test_create_commit_with_existing_branch()
+    {
+        using var server = new GitLabConfig()
+            .WithUser("user1", isDefault: true)
+            .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
+                .WithCommit("Initial commit"))
+            .BuildServer();
+
+        var client = server.CreateClient();
+
+        var startBranch = client.Projects[1].DefaultBranch;
+        client.GetRepository(1).Branches.Create(new() { Name = "test-branch", Ref = startBranch });
+
+        var commits = client.GetCommits(1);
+        var handler = () => commits.Create(new CommitCreate
+        {
+            CommitMessage = "Commit with file in subdirectory",
+            Branch = "test-branch",
+            StartBranch = startBranch,
+            Actions = new[]
+            {
+                new CreateCommitAction
+                {
+                    Action = "create",
+                    FilePath = "subdirectory/file.txt",
+                    Content = "Hello, World!",
+                },
+            },
+        });
+
+        Assert.That(handler, Throws.TypeOf<GitLabBadRequestException>()
+            .With.Message.Contains("A branch called 'test-branch' already exists."));
+    }
+
+    [TestCase("main")]
+    [TestCase("other-than-main")]
+    public void Test_create_commit_on_empty_repo(string branch)
+    {
+        using var server = new GitLabConfig()
+            .WithUser("user1", isDefault: true)
+            .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true)
+            .BuildServer();
+
+        var client = server.CreateClient();
+        var commits = client.GetCommits(1);
+        var newCommit = commits.Create(new CommitCreate
+        {
+            CommitMessage = "Initial commit",
+            Branch = branch,
+            Actions = new[]
+            {
+                new CreateCommitAction
+                {
+                    Action = "create",
+                    FilePath = "readme.md",
+                    Content = "my wonderful readme",
+                },
+            },
+        });
+
+        Assert.That(newCommit, Is.Not.Null);
+        var branches = client.GetRepository(1).Branches.All.Select(b => b.Name).ToList();
+        Assert.That(branches, Contains.Item(branch));
     }
 }

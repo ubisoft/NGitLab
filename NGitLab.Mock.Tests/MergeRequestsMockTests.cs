@@ -412,4 +412,29 @@ public class MergeRequestsMockTests
         Assert.That(addMilestoneEvents[0].Milestone.Id, Is.EqualTo(milestones[0].Id));
         Assert.That(addMilestoneEvents[1].Milestone.Id, Is.EqualTo(milestones[1].Id));
     }
+
+    [Test]
+    public void Test_create_merge_request_without_target_project_id()
+    {
+        using var server = new GitLabConfig()
+            .WithUser("User1", isDefault: true)
+            .WithProject("Test", addDefaultUserAsMaintainer: true, configure: project => project
+                .WithCommit("Initial commit")
+                .WithCommit("Second commit", sourceBranch: "feature-branch", configure: commit => commit
+                    .WithFile("file.txt", "content")))
+            .BuildServer();
+
+        var client = server.CreateClient();
+
+        var mergeRequest = client
+            .GetMergeRequest(1)
+            .Create(new MergeRequestCreate
+            {
+                SourceBranch = "feature-branch",
+                TargetBranch = "main",
+                Title = "Merge request 1",
+            });
+
+        Assert.That(mergeRequest, Is.Not.Null);
+    }
 }
