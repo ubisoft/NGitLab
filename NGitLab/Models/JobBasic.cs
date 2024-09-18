@@ -59,6 +59,9 @@ public class JobBasic
     [JsonPropertyName("tag_list")]
     public string[] TagList { get; set; }
 
+    [JsonPropertyName("failure_reason")]
+    public string FailureReason { get; set; }
+
     public class JobPipeline
     {
         [JsonPropertyName("id")]

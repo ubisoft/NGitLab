@@ -2263,6 +2263,8 @@ NGitLab.Models.JobArtifactQuery.RefName.get -> string
 NGitLab.Models.JobArtifactQuery.RefName.set -> void
 NGitLab.Models.JobBasic
 NGitLab.Models.JobBasic.Commit.get -> NGitLab.Models.Commit
+NGitLab.Models.JobBasic.FailureReason.get -> string
+NGitLab.Models.JobBasic.FailureReason.set -> void
 NGitLab.Models.JobBasic.JobBasic() -> void
 NGitLab.Models.JobBasic.JobPipeline.JobPipeline() -> void
 NGitLab.Models.JobBasic.JobPipeline.ProjectId.get -> int
