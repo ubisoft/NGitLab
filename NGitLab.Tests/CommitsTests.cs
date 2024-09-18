@@ -247,7 +247,7 @@ public class CommitsTests
         Assert.That(() => commitClient.Create(new CommitCreate
         {
             Branch = "new-branch",
-            StartSha = startSha.ToString(),
+            StartSha = startSha.ToString().ToLowerInvariant(),
             CommitMessage = "First commit in new branch",
             Actions = new List<CreateCommitAction>
             {
