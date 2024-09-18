@@ -230,7 +230,7 @@ public sealed class Repository : GitLabObject, IDisposable
 
         var commit = CreateOnNonBareRepo(commitCreate);
         var branchStillMissing = !repo.Branches.Any(b => string.Equals(b.FriendlyName, commitCreate.Branch, StringComparison.Ordinal));
-        if (!isRepoEmpty || branchStillMissing)
+        if (isCreatingBranch && (!isRepoEmpty || branchStillMissing))
         {
             repo.Branches.Add(commitCreate.Branch, commit.Sha);
         }
