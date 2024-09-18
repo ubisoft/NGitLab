@@ -201,9 +201,13 @@ public sealed class Repository : GitLabObject, IDisposable
     public Commit Commit(CommitCreate commitCreate)
     {
         var repo = GetGitRepository();
-        var branchExists = repo.Branches.Any(b => string.Equals(b.FriendlyName, commitCreate.Branch, StringComparison.Ordinal));
+        var hasStartBranch = !string.IsNullOrWhiteSpace(commitCreate.StartBranch);
+        var hasStartSha = !string.IsNullOrWhiteSpace(commitCreate.StartSha);
+        var isCreatingBranch = hasStartBranch || hasStartSha;
 
-        if (branchExists)
+        var branchExistsAlready = repo.Branches.Any(b => string.Equals(b.FriendlyName, commitCreate.Branch, StringComparison.Ordinal));
+
+        if (isCreatingBranch && branchExistsAlready)
         {
             throw new GitLabBadRequestException($"A branch called '{commitCreate.Branch}' already exists.");
         }
@@ -211,16 +215,13 @@ public sealed class Repository : GitLabObject, IDisposable
         var isRepoEmpty = !repo.Commits.Any();
         if (!isRepoEmpty)
         {
-            var hasStartBranch = !string.IsNullOrWhiteSpace(commitCreate.StartBranch);
-            var hasStartSha = !string.IsNullOrWhiteSpace(commitCreate.StartSha);
-
             var @ref = (hasStartBranch, hasStartSha) switch
             {
                 (true, true) => throw new GitLabBadRequestException(
                     "GitLab server returned an error (BadRequest): start_branch, start_sha are mutually exclusive."),
                 (true, _) => commitCreate.StartBranch,
                 (_, true) => commitCreate.StartSha,
-                _ => throw new GitLabBadRequestException(
+                _ => branchExistsAlready ? commitCreate.Branch : throw new GitLabBadRequestException(
                     "GitLab server returned an error (BadRequest): You can only create or edit files when you are on a branch.")
             };
 
