@@ -233,7 +233,7 @@ public class CommitsTests
 
     [Test]
     [NGitLabRetry]
-    public async Task Test_create_commit_in_so_called_new_branch_fails_if_branch_exists()
+    public async Task Test_create_a_new_commit_with_start_branch_fails_if_branch_already_exists()
     {
         // Arrange
         using var context = await GitLabTestContext.CreateAsync();
@@ -267,7 +267,44 @@ public class CommitsTests
     }
 
     [Test]
-    public async Task Test_create_commit_when_neither_start_branch_nor_start_sha_specified()
+    [NGitLabRetry]
+    public async Task Test_create_a_new_commit_with_start_sha_fails_if_branch_already_exists()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject(initializeWithCommits: true);
+
+        var repoClient = context.Client.GetRepository(project.Id);
+        var commitClient = context.Client.GetCommits(project.Id);
+        var startCommit = context.Client.GetCommits(project.Id).GetCommit(project.DefaultBranch);
+
+        var startBranch = project.DefaultBranch;
+        var startSha = startCommit.Id;
+
+        repoClient.Branches.Create(new BranchCreate { Name = "new-branch", Ref = startBranch });
+
+        // Act/Assert
+        Assert.That(() => commitClient.Create(new CommitCreate
+        {
+            Branch = "new-branch",
+            StartSha = startSha.ToString().ToLowerInvariant(),
+            CommitMessage = "First commit in new branch",
+            Actions = new List<CreateCommitAction>
+            {
+                new()
+                {
+                    Action = "update",
+                    Content = "This is in a new branch",
+                    FilePath = "README.md",
+                },
+            },
+        }), Throws.TypeOf<GitLabException>()
+                  .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
+                  .With.Message.Contains("A branch called 'new-branch' already exists."));
+    }
+
+    [Test]
+    public async Task Test_create_commit_on_nonexistent_branch_fails_when_neither_start_branch_nor_start_sha_specified()
     {
         // Arrange
         using var context = await GitLabTestContext.CreateAsync();
