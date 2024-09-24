@@ -221,4 +221,7 @@ public class Project
 
     [JsonPropertyName("releases_access_level")]
     public ReleasesAccessLevel ReleasesAccessLevel { get; set; }
+
+    [JsonPropertyName("mr_default_target_self")]
+    public bool? MrDefaultTargetSelf { get; set; }
 }
