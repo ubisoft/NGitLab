@@ -2972,6 +2972,8 @@ NGitLab.Models.Project.Mirror -> bool
 NGitLab.Models.Project.MirrorOverwritesDivergedBranches -> bool
 NGitLab.Models.Project.MirrorTriggerBuilds -> bool
 NGitLab.Models.Project.MirrorUserId -> int
+NGitLab.Models.Project.MrDefaultTargetSelf.get -> bool?
+NGitLab.Models.Project.MrDefaultTargetSelf.set -> void
 NGitLab.Models.Project.Name -> string
 NGitLab.Models.Project.Namespace -> NGitLab.Models.Namespace
 NGitLab.Models.Project.NameWithNamespace -> string
