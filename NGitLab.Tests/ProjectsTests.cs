@@ -567,7 +567,7 @@ public class ProjectsTests
         var result = projectClient.Get(query).Take(10).ToArray();
 
         // Assert
-        Assert.That(result.Any(), Is.True);
+        Assert.That(result.Length != 0, Is.True);
     }
 
     [Test]

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -19,7 +18,7 @@ public class MergeRequestChangesClientTests
 
         var changes = await GitLabTestContext.RetryUntilAsync(
             () => mergeRequestChanges.MergeRequestChange.Changes,
-            changes => changes.Any(),
+            changes => changes.Length != 0,
             TimeSpan.FromSeconds(10));
 
         Assert.That(changes, Has.Length.EqualTo(1));

@@ -175,7 +175,7 @@ public class PipelineClient : IPipelineClient
             queryEntries.Add("per_page", query.PerPage.Value.ToString());
 
         var stringQuery = string.Join("&", queryEntries.Select(kp => $"{kp.Key}={kp.Value}"));
-        var url = $"{_projectPath}/pipelines{(queryEntries.Any() ? $"?{stringQuery}" : string.Empty)}";
+        var url = $"{_projectPath}/pipelines{(queryEntries.Count != 0 ? $"?{stringQuery}" : string.Empty)}";
         return url;
     }
 

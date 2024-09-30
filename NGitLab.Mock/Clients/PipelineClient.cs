@@ -135,7 +135,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         {
             var project = Context.Server.AllProjects.FindById(_projectId);
             var bridges = project.Jobs.Where(j => j.Pipeline.Id == query.PipelineId && j.DownstreamPipeline != null).Select(j => j.ToBridgeClient());
-            return (query.Scope == null || !query.Scope.Any()) ? bridges : bridges.Where(j => query.Scope.Contains(j.Status.ToString(), StringComparer.Ordinal));
+            return (query.Scope == null || query.Scope.Length == 0) ? bridges : bridges.Where(j => query.Scope.Contains(j.Status.ToString(), StringComparer.Ordinal));
         }
     }
 
@@ -152,7 +152,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         using (Context.BeginOperationScope())
         {
             var jobs = _jobClient.GetJobs(JobScopeMask.All).Where(j => j.Pipeline.Id == query.PipelineId);
-            return (query.Scope == null || !query.Scope.Any()) ? jobs : jobs.Where(j => query.Scope.Contains(j.Status.ToString(), StringComparer.Ordinal));
+            return (query.Scope == null || query.Scope.Length == 0) ? jobs : jobs.Where(j => query.Scope.Contains(j.Status.ToString(), StringComparer.Ordinal));
         }
     }
 

@@ -174,7 +174,7 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
         }
 
         var logs = sb.ToString();
-        TestContext.WriteLine(new string('-', 100) + "\nGitLab request: " + logs);
+        TestContext.Out.WriteLine(new string('-', 100) + "\nGitLab request: " + logs);
         return response;
     }
 

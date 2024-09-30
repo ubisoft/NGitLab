@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -52,7 +51,7 @@ public class GroupsClient : IGroupsClient
             return url;
         }
 
-        if (query.SkipGroups != null && query.SkipGroups.Any())
+        if (query.SkipGroups != null && query.SkipGroups.Length != 0)
         {
             foreach (var skipGroup in query.SkipGroups)
             {
@@ -116,7 +115,7 @@ public class GroupsClient : IGroupsClient
             return url;
         }
 
-        if (query.SkipGroups != null && query.SkipGroups.Any())
+        if (query.SkipGroups != null && query.SkipGroups.Length != 0)
         {
             foreach (var skipGroup in query.SkipGroups)
             {
