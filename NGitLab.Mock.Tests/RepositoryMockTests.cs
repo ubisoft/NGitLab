@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using FluentAssertions;
 using NGitLab.Mock.Clients;
 using NGitLab.Models;
