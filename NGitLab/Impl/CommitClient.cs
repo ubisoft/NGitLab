@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Impl;
@@ -26,6 +28,11 @@ public class CommitClient : ICommitClient
     public Commit GetCommit(string @ref)
     {
         return _api.Get().To<Commit>(_repoPath + $"/commits/{@ref}");
+    }
+    
+    public Task<Commit> GetCommitAsync(string @ref, CancellationToken cancellationToken = default)
+    {
+        return _api.Get().ToAsync<Commit>(_repoPath + $"/commits/{@ref}", cancellationToken);
     }
 
     public Commit CherryPick(CommitCherryPick cherryPick)
