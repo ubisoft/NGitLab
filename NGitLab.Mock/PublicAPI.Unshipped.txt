@@ -814,6 +814,8 @@ NGitLab.Mock.Pipeline.Ref.get -> string
 NGitLab.Mock.Pipeline.Ref.set -> void
 NGitLab.Mock.Pipeline.Sha.get -> NGitLab.Sha1
 NGitLab.Mock.Pipeline.Sha.set -> void
+NGitLab.Mock.Pipeline.Source.get -> string
+NGitLab.Mock.Pipeline.Source.set -> void
 NGitLab.Mock.Pipeline.StartedAt.get -> System.DateTimeOffset?
 NGitLab.Mock.Pipeline.StartedAt.set -> void
 NGitLab.Mock.Pipeline.Status.get -> NGitLab.JobStatus
@@ -836,6 +838,35 @@ NGitLab.Mock.PipelineCollection
 NGitLab.Mock.PipelineCollection.Add(string ref, NGitLab.JobStatus status, NGitLab.Mock.User user) -> NGitLab.Mock.Pipeline
 NGitLab.Mock.PipelineCollection.GetById(int id) -> NGitLab.Mock.Pipeline
 NGitLab.Mock.PipelineCollection.PipelineCollection(NGitLab.Mock.GitLabObject parent) -> void
+NGitLab.Mock.PipelineSchedule
+NGitLab.Mock.PipelineSchedule.Active.get -> bool
+NGitLab.Mock.PipelineSchedule.Active.set -> void
+NGitLab.Mock.PipelineSchedule.AddNewPipeline() -> NGitLab.Mock.Pipeline
+NGitLab.Mock.PipelineSchedule.CreatedAt.get -> System.DateTime
+NGitLab.Mock.PipelineSchedule.CreatedAt.set -> void
+NGitLab.Mock.PipelineSchedule.Cron.get -> string
+NGitLab.Mock.PipelineSchedule.Cron.set -> void
+NGitLab.Mock.PipelineSchedule.Description.get -> string
+NGitLab.Mock.PipelineSchedule.Description.set -> void
+NGitLab.Mock.PipelineSchedule.Id.get -> int
+NGitLab.Mock.PipelineSchedule.Id.set -> void
+NGitLab.Mock.PipelineSchedule.NextRunAt.get -> System.DateTime
+NGitLab.Mock.PipelineSchedule.NextRunAt.set -> void
+NGitLab.Mock.PipelineSchedule.Owner.get -> NGitLab.Mock.User
+NGitLab.Mock.PipelineSchedule.Owner.set -> void
+NGitLab.Mock.PipelineSchedule.PipelineSchedule() -> void
+NGitLab.Mock.PipelineSchedule.Project.get -> NGitLab.Mock.Project
+NGitLab.Mock.PipelineSchedule.Ref.get -> string
+NGitLab.Mock.PipelineSchedule.Ref.set -> void
+NGitLab.Mock.PipelineSchedule.ToPipelineScheduleBasicClient() -> NGitLab.Models.PipelineScheduleBasic
+NGitLab.Mock.PipelineSchedule.ToPipelineScheduleClient() -> NGitLab.Models.PipelineSchedule
+NGitLab.Mock.PipelineSchedule.UpdatedAt.get -> System.DateTime
+NGitLab.Mock.PipelineSchedule.UpdatedAt.set -> void
+NGitLab.Mock.PipelineSchedule.Variables.get -> System.Collections.Generic.IDictionary<string, string>
+NGitLab.Mock.PipelineSchedule.Variables.set -> void
+NGitLab.Mock.PipelineScheduleCollection
+NGitLab.Mock.PipelineScheduleCollection.GetById(int id) -> NGitLab.Mock.PipelineSchedule
+NGitLab.Mock.PipelineScheduleCollection.PipelineScheduleCollection(NGitLab.Mock.Project project) -> void
 NGitLab.Mock.Project
 NGitLab.Mock.Project.AccessibleMergeRequests.get -> bool
 NGitLab.Mock.Project.AccessibleMergeRequests.set -> void
@@ -911,6 +942,7 @@ NGitLab.Mock.Project.Path.get -> string
 NGitLab.Mock.Project.PathWithNamespace.get -> string
 NGitLab.Mock.Project.Permissions.get -> NGitLab.Mock.PermissionCollection
 NGitLab.Mock.Project.Pipelines.get -> NGitLab.Mock.PipelineCollection
+NGitLab.Mock.Project.PipelineSchedules.get -> NGitLab.Mock.PipelineScheduleCollection
 NGitLab.Mock.Project.Project() -> void
 NGitLab.Mock.Project.Project(string name) -> void
 NGitLab.Mock.Project.Project(string name, string path) -> void
@@ -1253,6 +1285,7 @@ override NGitLab.Mock.MilestoneCollection.Add(NGitLab.Mock.Milestone item) -> vo
 override NGitLab.Mock.NonTextFile.Content.get -> byte[]
 override NGitLab.Mock.NoteCollection<T>.Add(T item) -> void
 override NGitLab.Mock.PipelineCollection.Add(NGitLab.Mock.Pipeline pipeline) -> void
+override NGitLab.Mock.PipelineScheduleCollection.Add(NGitLab.Mock.PipelineSchedule schedule) -> void
 override NGitLab.Mock.ProjectCollection.Add(NGitLab.Mock.Project project) -> void
 override NGitLab.Mock.ProjectHookCollection.Add(NGitLab.Mock.ProjectHook item) -> void
 override NGitLab.Mock.ProjectIssueNote.NoteableType.get -> string

@@ -110,6 +110,9 @@ internal sealed class GitLabClient : ClientBase, IGitLabClient
 
     public IPipelineClient GetPipelines(ProjectId projectId) => new PipelineClient(Context, jobClient: GetJobs(projectId), projectId: projectId);
 
+    public IPipelineScheduleClient GetPipelineSchedules(ProjectId projectId)
+        => new PipelineScheduleClient(Context, projectId);
+
     public IProjectBadgeClient GetProjectBadgeClient(int projectId) => GetProjectBadgeClient((long)projectId);
 
     public IProjectBadgeClient GetProjectBadgeClient(ProjectId projectId) => new ProjectBadgeClient(Context, projectId);
