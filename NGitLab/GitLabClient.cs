@@ -138,6 +138,9 @@ public class GitLabClient : IGitLabClient
     public IPipelineClient GetPipelines(ProjectId projectId)
         => new PipelineClient(_api, projectId);
 
+    public IPipelineScheduleClient GetPipelineSchedules(ProjectId projectId)
+        => new PipelineScheduleClient(_api, projectId);
+
     public ITriggerClient GetTriggers(int projectId)
         => GetTriggers((long)projectId);
 

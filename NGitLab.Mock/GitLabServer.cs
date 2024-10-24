@@ -20,6 +20,7 @@ public sealed class GitLabServer : GitLabObject, IDisposable
     private int _lastIssueId = 10000;
     private int _lastMilestoneId = 10000;
     private int _lastPipelineId = 10000;
+    private int _lastPipelineScheduleId = 10000;
     private int _lastJobId = 10000;
     private int _lastBadgeId = 10000;
     private int _lastLabelId = 10000;
@@ -117,6 +118,8 @@ public sealed class GitLabServer : GitLabObject, IDisposable
     internal int GetNewRunnerId() => Interlocked.Increment(ref _lastRunnerId);
 
     internal int GetNewPipelineId() => Interlocked.Increment(ref _lastPipelineId);
+
+    internal int GetNewPipelineScheduleId() => Interlocked.Increment(ref _lastPipelineScheduleId);
 
     internal int GetNewJobId() => Interlocked.Increment(ref _lastJobId);
 

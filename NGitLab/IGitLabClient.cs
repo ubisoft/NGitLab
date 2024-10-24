@@ -64,6 +64,8 @@ public interface IGitLabClient
 
     IPipelineClient GetPipelines(ProjectId projectId);
 
+    IPipelineScheduleClient GetPipelineSchedules(ProjectId projectId);
+
     [EditorBrowsable(EditorBrowsableState.Never)]
     ITriggerClient GetTriggers(int projectId);
 
