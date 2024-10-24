@@ -28,8 +28,6 @@ public class PipelineScheduleCollection : Collection<PipelineSchedule>
             schedule.Id = Server.GetNewPipelineScheduleId();
         }
 
-        // MLL-TODO Check branch?
-
         base.Add(schedule);
     }
 }
