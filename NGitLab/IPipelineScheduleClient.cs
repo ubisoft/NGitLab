@@ -38,7 +38,6 @@ public interface IPipelineScheduleClient
     /// Get all pipelines triggered by a pipeline schedule in a project.
     /// </summary>
     /// <param name="id">Schedule Id</param>
-    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    GitLabCollectionResponse<PipelineBasic> GetAllSchedulePipelines(int id);
+    GitLabCollectionResponse<PipelineBasic> GetAllSchedulePipelinesAsync(int id);
 }

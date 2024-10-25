@@ -47,7 +47,7 @@ internal class PipelineScheduleClient : ClientBase, IPipelineScheduleClient
     public GitLabCollectionResponse<PipelineScheduleBasic> GetAllAsync()
         => GitLabCollectionResponse.Create(All);
 
-    public GitLabCollectionResponse<PipelineBasic> GetAllSchedulePipelines(int id)
+    public GitLabCollectionResponse<PipelineBasic> GetAllSchedulePipelinesAsync(int id)
     {
         using (Context.BeginOperationScope())
         {

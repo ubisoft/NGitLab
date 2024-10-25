@@ -1048,7 +1048,7 @@ NGitLab.IPipelineClient.UpdateMetadataAsync(int pipelineId, NGitLab.Models.Pipel
 NGitLab.IPipelineScheduleClient
 NGitLab.IPipelineScheduleClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineScheduleBasic>
 NGitLab.IPipelineScheduleClient.GetAllAsync() -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineScheduleBasic>
-NGitLab.IPipelineScheduleClient.GetAllSchedulePipelines(int id) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
+NGitLab.IPipelineScheduleClient.GetAllSchedulePipelinesAsync(int id) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
 NGitLab.IPipelineScheduleClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.PipelineSchedule>
 NGitLab.IPipelineScheduleClient.this[int id].get -> NGitLab.Models.PipelineSchedule
 NGitLab.IProjectBadgeClient
