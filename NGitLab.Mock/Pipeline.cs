@@ -28,6 +28,8 @@ public sealed class Pipeline : GitLabObject
 
     public Sha1 Sha { get; set; }
 
+    public string Source { get; set; }
+
     public Sha1 BeforeSha { get; set; }
 
     public string YamlError { get; set; }
@@ -126,6 +128,7 @@ public sealed class Pipeline : GitLabObject
             Status = Status,
             Ref = Ref,
             Sha = Sha,
+            Source = Source,
             CreatedAt = CreatedAt.UtcDateTime,
             UpdatedAt = UpdatedAt.UtcDateTime,
             ProjectId = Project.Id,
@@ -141,6 +144,7 @@ public sealed class Pipeline : GitLabObject
             Ref = Ref,
             Tag = Tag,
             Sha = Sha,
+            Source = Source,
             BeforeSha = BeforeSha,
             YamlError = YamlError,
             User = User.ToClientUser(),

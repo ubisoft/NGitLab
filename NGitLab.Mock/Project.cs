@@ -32,6 +32,7 @@ public sealed class Project : GitLabObject
         Issues = new IssueCollection(this);
         Milestones = new MilestoneCollection(this);
         Pipelines = new PipelineCollection(this);
+        PipelineSchedules = new PipelineScheduleCollection(this);
         Jobs = new JobCollection(this);
         Badges = new BadgeCollection(this);
         Labels = new LabelsCollection(this);
@@ -119,6 +120,8 @@ public sealed class Project : GitLabObject
     public MergeRequestCollection MergeRequests { get; }
 
     public PipelineCollection Pipelines { get; }
+
+    public PipelineScheduleCollection PipelineSchedules { get; }
 
     public JobCollection Jobs { get; }
 

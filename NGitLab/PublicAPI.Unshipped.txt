@@ -75,6 +75,7 @@ NGitLab.GitLabClient.GetMilestone(int projectId) -> NGitLab.IMilestoneClient
 NGitLab.GitLabClient.GetMilestone(NGitLab.Models.ProjectId projectId) -> NGitLab.IMilestoneClient
 NGitLab.GitLabClient.GetPipelines(int projectId) -> NGitLab.IPipelineClient
 NGitLab.GitLabClient.GetPipelines(NGitLab.Models.ProjectId projectId) -> NGitLab.IPipelineClient
+NGitLab.GitLabClient.GetPipelineSchedules(NGitLab.Models.ProjectId projectId) -> NGitLab.IPipelineScheduleClient
 NGitLab.GitLabClient.GetProjectBadgeClient(int projectId) -> NGitLab.IProjectBadgeClient
 NGitLab.GitLabClient.GetProjectBadgeClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectBadgeClient
 NGitLab.GitLabClient.GetProjectEvents(int projectId) -> NGitLab.IEventClient
@@ -223,6 +224,7 @@ NGitLab.IGitLabClient.GetMilestone(int projectId) -> NGitLab.IMilestoneClient
 NGitLab.IGitLabClient.GetMilestone(NGitLab.Models.ProjectId projectId) -> NGitLab.IMilestoneClient
 NGitLab.IGitLabClient.GetPipelines(int projectId) -> NGitLab.IPipelineClient
 NGitLab.IGitLabClient.GetPipelines(NGitLab.Models.ProjectId projectId) -> NGitLab.IPipelineClient
+NGitLab.IGitLabClient.GetPipelineSchedules(NGitLab.Models.ProjectId projectId) -> NGitLab.IPipelineScheduleClient
 NGitLab.IGitLabClient.GetProjectBadgeClient(int projectId) -> NGitLab.IProjectBadgeClient
 NGitLab.IGitLabClient.GetProjectBadgeClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectBadgeClient
 NGitLab.IGitLabClient.GetProjectEvents(int projectId) -> NGitLab.IEventClient
@@ -1043,6 +1045,12 @@ NGitLab.IPipelineClient.Search(NGitLab.Models.PipelineQuery query) -> System.Col
 NGitLab.IPipelineClient.SearchAsync(NGitLab.Models.PipelineQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
 NGitLab.IPipelineClient.this[int id].get -> NGitLab.Models.Pipeline
 NGitLab.IPipelineClient.UpdateMetadataAsync(int pipelineId, NGitLab.Models.PipelineMetadataUpdate update, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
+NGitLab.IPipelineScheduleClient
+NGitLab.IPipelineScheduleClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineScheduleBasic>
+NGitLab.IPipelineScheduleClient.GetAllAsync() -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineScheduleBasic>
+NGitLab.IPipelineScheduleClient.GetAllSchedulePipelinesAsync(int id) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.PipelineBasic>
+NGitLab.IPipelineScheduleClient.GetByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.PipelineSchedule>
+NGitLab.IPipelineScheduleClient.this[int id].get -> NGitLab.Models.PipelineSchedule
 NGitLab.IProjectBadgeClient
 NGitLab.IProjectBadgeClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Badge>
 NGitLab.IProjectBadgeClient.Create(NGitLab.Models.BadgeCreate badge) -> NGitLab.Models.Badge
@@ -2900,6 +2908,32 @@ NGitLab.Models.PipelineQuery.Username.get -> string
 NGitLab.Models.PipelineQuery.Username.set -> void
 NGitLab.Models.PipelineQuery.YamlErrors.get -> bool?
 NGitLab.Models.PipelineQuery.YamlErrors.set -> void
+NGitLab.Models.PipelineSchedule
+NGitLab.Models.PipelineSchedule.LastPipeline.get -> NGitLab.Models.PipelineBasic
+NGitLab.Models.PipelineSchedule.LastPipeline.set -> void
+NGitLab.Models.PipelineSchedule.PipelineSchedule() -> void
+NGitLab.Models.PipelineSchedule.Variables.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
+NGitLab.Models.PipelineSchedule.Variables.set -> void
+NGitLab.Models.PipelineScheduleBasic
+NGitLab.Models.PipelineScheduleBasic.Active.get -> bool
+NGitLab.Models.PipelineScheduleBasic.Active.set -> void
+NGitLab.Models.PipelineScheduleBasic.CreatedAt.get -> System.DateTime
+NGitLab.Models.PipelineScheduleBasic.CreatedAt.set -> void
+NGitLab.Models.PipelineScheduleBasic.Cron.get -> string
+NGitLab.Models.PipelineScheduleBasic.Cron.set -> void
+NGitLab.Models.PipelineScheduleBasic.Description.get -> string
+NGitLab.Models.PipelineScheduleBasic.Description.set -> void
+NGitLab.Models.PipelineScheduleBasic.Id.get -> int
+NGitLab.Models.PipelineScheduleBasic.Id.set -> void
+NGitLab.Models.PipelineScheduleBasic.NextRunAt.get -> System.DateTime
+NGitLab.Models.PipelineScheduleBasic.NextRunAt.set -> void
+NGitLab.Models.PipelineScheduleBasic.Owner.get -> NGitLab.Models.User
+NGitLab.Models.PipelineScheduleBasic.Owner.set -> void
+NGitLab.Models.PipelineScheduleBasic.PipelineScheduleBasic() -> void
+NGitLab.Models.PipelineScheduleBasic.Ref.get -> string
+NGitLab.Models.PipelineScheduleBasic.Ref.set -> void
+NGitLab.Models.PipelineScheduleBasic.UpdatedAt.get -> System.DateTime
+NGitLab.Models.PipelineScheduleBasic.UpdatedAt.set -> void
 NGitLab.Models.PipelineScope
 NGitLab.Models.PipelineScope.branches = 3 -> NGitLab.Models.PipelineScope
 NGitLab.Models.PipelineScope.finished = 2 -> NGitLab.Models.PipelineScope
