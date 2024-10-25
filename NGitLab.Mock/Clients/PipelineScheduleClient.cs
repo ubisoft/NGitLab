@@ -44,8 +44,21 @@ internal class PipelineScheduleClient : ClientBase, IPipelineScheduleClient
         }
     }
 
-    public GitLabCollectionResponse<PipelineScheduleBasic> GetAllAsync(CancellationToken cancellationToken = default)
+    public GitLabCollectionResponse<PipelineScheduleBasic> GetAllAsync()
         => GitLabCollectionResponse.Create(All);
+
+    public GitLabCollectionResponse<PipelineBasic> GetAllSchedulePipelines(int id)
+    {
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var pipelines = project.Pipelines
+                .Where(p => string.Equals(p.Source, "schedule", System.StringComparison.Ordinal))
+                .Select(p => p.ToPipelineBasicClient());
+
+            return GitLabCollectionResponse.Create(pipelines);
+        }
+    }
 
     public async Task<Models.PipelineSchedule> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {

@@ -15,14 +15,14 @@ public interface IPipelineScheduleClient
     /// <summary>
     /// Return the details of single schedule
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="id">Schedule Id</param>
     /// <returns></returns>
     PipelineSchedule this[int id] { get; }
 
     /// <summary>
     /// Return the details of single schedule
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="id">Schedule Id</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<PipelineSchedule> GetByIdAsync(int id, CancellationToken cancellationToken = default);
@@ -32,5 +32,13 @@ public interface IPipelineScheduleClient
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    GitLabCollectionResponse<PipelineScheduleBasic> GetAllAsync(CancellationToken cancellationToken = default);
+    GitLabCollectionResponse<PipelineScheduleBasic> GetAllAsync();
+
+    /// <summary>
+    /// Get all pipelines triggered by a pipeline schedule in a project.
+    /// </summary>
+    /// <param name="id">Schedule Id</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    GitLabCollectionResponse<PipelineBasic> GetAllSchedulePipelines(int id);
 }

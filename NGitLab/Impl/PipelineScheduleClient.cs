@@ -24,9 +24,11 @@ internal class PipelineScheduleClient : IPipelineScheduleClient
 
     public IEnumerable<PipelineScheduleBasic> All => _api.Get().GetAll<PipelineScheduleBasic>(_schedulesPath);
 
-    public GitLabCollectionResponse<PipelineScheduleBasic> GetAllAsync(CancellationToken cancellationToken = default)
+    public GitLabCollectionResponse<PipelineScheduleBasic> GetAllAsync()
         => _api.Get().GetAllAsync<PipelineScheduleBasic>(_schedulesPath);
-        
+
+    public GitLabCollectionResponse<PipelineBasic> GetAllSchedulePipelines(int id)
+        => _api.Get().GetAllAsync<PipelineBasic>($"{_schedulesPath}/{id.ToStringInvariant()}/pipelines");
 
     public Task<PipelineSchedule> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         => _api.Get().ToAsync<PipelineSchedule>($"{_schedulesPath}/{id.ToStringInvariant()}", cancellationToken);
