@@ -2919,6 +2919,8 @@ NGitLab.Models.PipelineSchedule.Description.get -> string
 NGitLab.Models.PipelineSchedule.Description.set -> void
 NGitLab.Models.PipelineSchedule.Id.get -> int
 NGitLab.Models.PipelineSchedule.Id.set -> void
+NGitLab.Models.PipelineSchedule.LastPipeline.get -> NGitLab.Models.PipelineBasic
+NGitLab.Models.PipelineSchedule.LastPipeline.set -> void
 NGitLab.Models.PipelineSchedule.NextRunAt.get -> System.DateTime
 NGitLab.Models.PipelineSchedule.NextRunAt.set -> void
 NGitLab.Models.PipelineSchedule.Owner.get -> NGitLab.Models.User

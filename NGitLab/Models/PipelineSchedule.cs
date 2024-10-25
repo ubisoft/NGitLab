@@ -30,6 +30,9 @@ public class PipelineSchedule
     [JsonPropertyName("updated_at")]
     public DateTime UpdatedAt { get; set; }
 
+    [JsonPropertyName("last_pipeline")]
+    public PipelineBasic LastPipeline { get; set; }
+
     [JsonPropertyName("owner")]
     public User Owner { get; set; }
 
