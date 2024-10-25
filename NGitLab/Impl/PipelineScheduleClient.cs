@@ -9,15 +9,13 @@ namespace NGitLab.Impl;
 internal class PipelineScheduleClient : IPipelineScheduleClient
 {
     private readonly API _api;
-
-    private readonly string _projectPath;
     private readonly string _schedulesPath;
 
     public PipelineScheduleClient(API api, ProjectId projectId)
     {
         _api = api;
-        _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
-        _schedulesPath = $"{_projectPath}/pipeline_schedules";
+        var projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
+        _schedulesPath = $"{projectPath}/pipeline_schedules";
     }
 
     public PipelineSchedule this[int id] => _api.Get().To<PipelineSchedule>($"{_schedulesPath}/{id.ToStringInvariant()}");

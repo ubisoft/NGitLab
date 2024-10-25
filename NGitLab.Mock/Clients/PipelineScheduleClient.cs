@@ -6,6 +6,7 @@ using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients;
+
 internal class PipelineScheduleClient : ClientBase, IPipelineScheduleClient
 {
     private readonly ProjectId _projectId;

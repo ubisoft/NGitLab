@@ -2909,27 +2909,9 @@ NGitLab.Models.PipelineQuery.Username.set -> void
 NGitLab.Models.PipelineQuery.YamlErrors.get -> bool?
 NGitLab.Models.PipelineQuery.YamlErrors.set -> void
 NGitLab.Models.PipelineSchedule
-NGitLab.Models.PipelineSchedule.Active.get -> bool
-NGitLab.Models.PipelineSchedule.Active.set -> void
-NGitLab.Models.PipelineSchedule.CreatedAt.get -> System.DateTime
-NGitLab.Models.PipelineSchedule.CreatedAt.set -> void
-NGitLab.Models.PipelineSchedule.Cron.get -> string
-NGitLab.Models.PipelineSchedule.Cron.set -> void
-NGitLab.Models.PipelineSchedule.Description.get -> string
-NGitLab.Models.PipelineSchedule.Description.set -> void
-NGitLab.Models.PipelineSchedule.Id.get -> int
-NGitLab.Models.PipelineSchedule.Id.set -> void
 NGitLab.Models.PipelineSchedule.LastPipeline.get -> NGitLab.Models.PipelineBasic
 NGitLab.Models.PipelineSchedule.LastPipeline.set -> void
-NGitLab.Models.PipelineSchedule.NextRunAt.get -> System.DateTime
-NGitLab.Models.PipelineSchedule.NextRunAt.set -> void
-NGitLab.Models.PipelineSchedule.Owner.get -> NGitLab.Models.User
-NGitLab.Models.PipelineSchedule.Owner.set -> void
 NGitLab.Models.PipelineSchedule.PipelineSchedule() -> void
-NGitLab.Models.PipelineSchedule.Ref.get -> string
-NGitLab.Models.PipelineSchedule.Ref.set -> void
-NGitLab.Models.PipelineSchedule.UpdatedAt.get -> System.DateTime
-NGitLab.Models.PipelineSchedule.UpdatedAt.set -> void
 NGitLab.Models.PipelineSchedule.Variables.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
 NGitLab.Models.PipelineSchedule.Variables.set -> void
 NGitLab.Models.PipelineScheduleBasic
