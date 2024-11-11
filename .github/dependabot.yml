@@ -46,3 +46,10 @@ updates:
           - 'System.*'
         exclude-patterns:
           - 'Microsoft.Playwright'
+      test-dependencies:
+        patterns:
+          - 'coverlet.collector'
+          - 'FluentAssertions'
+          - 'Microsoft.Playwright'
+          - 'NSubstitute'
+          - '*NUnit*'
