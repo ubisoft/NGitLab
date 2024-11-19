@@ -43,6 +43,7 @@ public class TagClient : ITagClient
             url = Utils.AddParameter(url, "order_by", query.OrderBy);
             url = Utils.AddParameter(url, "sort", query.Sort);
             url = Utils.AddParameter(url, "per_page", query.PerPage);
+            url = Utils.AddParameter(url, "search", query.Search);
         }
 
         return _api.Get().GetAllAsync<Tag>(url);
