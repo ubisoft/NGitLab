@@ -38,6 +38,11 @@ public class TagTests
     [TestCase("^v0", 2)]
     [TestCase("^v1", 0)]
     [TestCase("v1", 0)]
+    [TestCase("0.5$", 1)]
+    [TestCase("0\\.", 0)]
+    [TestCase(".5$", 1)]
+    [TestCase("\\.5$", 0)]
+    [TestCase(".[0-9]$", 0)]
     public async Task SearchTags(string search, int expectedCount)
     {
         // Arrange
