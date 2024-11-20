@@ -7,4 +7,6 @@ public class TagQuery
     public string Sort { get; set; }
 
     public int? PerPage { get; set; }
+
+    public string Search { get; set; }
 }

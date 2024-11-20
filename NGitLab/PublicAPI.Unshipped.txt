@@ -3812,6 +3812,8 @@ NGitLab.Models.TagQuery.OrderBy.get -> string
 NGitLab.Models.TagQuery.OrderBy.set -> void
 NGitLab.Models.TagQuery.PerPage.get -> int?
 NGitLab.Models.TagQuery.PerPage.set -> void
+NGitLab.Models.TagQuery.Search.get -> string
+NGitLab.Models.TagQuery.Search.set -> void
 NGitLab.Models.TagQuery.Sort.get -> string
 NGitLab.Models.TagQuery.Sort.set -> void
 NGitLab.Models.TagQuery.TagQuery() -> void
