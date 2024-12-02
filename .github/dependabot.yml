@@ -5,8 +5,8 @@
 
 version: 2
 updates:
-  - package-ecosystem: 'github-actions'
-    directory: '/'
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
       interval: weekly
     rebase-strategy: auto
@@ -14,28 +14,31 @@ updates:
     groups:
       github-actions:
         patterns:
-          - '*'
+          - "*"
 
-  - package-ecosystem: 'nuget'
-    directory: '/'
+  - package-ecosystem: "nuget"
+    directory: "/"
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: "Microsoft.Bcl.AsyncInterfaces"
+      - dependency-name: "System.Text.Json"
     rebase-strategy: auto
     open-pull-requests-limit: 20
     groups:
       code-analyzers:
         patterns:
-          - '*Analyzer*'
+          - "*Analyzer*"
       ms-dependencies:
         patterns:
-          - 'Microsoft.*'
-          - 'System.*'
+          - "Microsoft.*"
+          - "System.*"
         exclude-patterns:
-          - 'Microsoft.Playwright'
+          - "Microsoft.Playwright"
       test-dependencies:
         patterns:
-          - 'coverlet.collector'
-          - 'FluentAssertions'
-          - 'Microsoft.Playwright'
-          - 'NSubstitute'
-          - '*NUnit*'
+          - "coverlet.collector"
+          - "FluentAssertions"
+          - "Microsoft.Playwright"
+          - "NSubstitute"
+          - "*NUnit*"
