@@ -73,4 +73,7 @@ public class Issue
 
     [JsonPropertyName("moved_to_id")]
     public int? MovedToId;
+
+    [JsonPropertyName("references")]
+    public References References;
 }
