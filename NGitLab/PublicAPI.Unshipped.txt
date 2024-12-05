@@ -3341,6 +3341,7 @@ NGitLab.Models.Ref.Name -> string
 NGitLab.Models.Ref.Ref() -> void
 NGitLab.Models.Ref.Type -> string
 NGitLab.Models.References
+NGitLab.Models.References.References() -> void
 NGitLab.Models.References.Short.get -> string
 NGitLab.Models.References.Short.set -> void
 NGitLab.Models.References.Relative.get -> string
