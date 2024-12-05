@@ -2117,6 +2117,7 @@ NGitLab.Models.Issue.MergeRequestsCount.get -> int
 NGitLab.Models.Issue.MergeRequestsCount.set -> void
 NGitLab.Models.Issue.Milestone -> NGitLab.Models.Milestone
 NGitLab.Models.Issue.MovedToId -> int?
+NGitLab.Models.Issue.References -> NGitLab.Models.References
 NGitLab.Models.Issue.ProjectId -> int
 NGitLab.Models.Issue.State -> string
 NGitLab.Models.Issue.Title -> string
@@ -3339,6 +3340,13 @@ NGitLab.Models.Ref
 NGitLab.Models.Ref.Name -> string
 NGitLab.Models.Ref.Ref() -> void
 NGitLab.Models.Ref.Type -> string
+NGitLab.Models.References
+NGitLab.Models.References.Short.get -> string
+NGitLab.Models.References.Short.set -> void
+NGitLab.Models.References.Relative.get -> string
+NGitLab.Models.References.Relative.set -> void
+NGitLab.Models.References.Full.get -> string
+NGitLab.Models.References.Full.set -> void
 NGitLab.Models.RelatedMergeRequestsQuery
 NGitLab.Models.RelatedMergeRequestsQuery.RelatedMergeRequestsQuery() -> void
 NGitLab.Models.RelatedMergeRequestsQuery.Sha.get -> NGitLab.Sha1
