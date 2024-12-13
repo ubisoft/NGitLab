@@ -10,7 +10,7 @@ namespace NGitLab.Models;
 public class Event
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [JsonPropertyName("title")]
     public string Title { get; set; }

@@ -68,7 +68,7 @@ public sealed class EventCollection : Collection<Event>
         return events;
     }
 
-    private int GetNewId()
+    private long GetNewId()
     {
         return this.Select(evt => evt.Id).DefaultIfEmpty().Max() + 1;
     }
