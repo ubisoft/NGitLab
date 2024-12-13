@@ -6,7 +6,7 @@ public sealed class ProjectHook : GitLabObject
 {
     public new Project Parent => (Project)base.Parent;
 
-    public int Id { get; internal set; }
+    public long Id { get; internal set; }
 
     public Uri Url { get; set; }
 

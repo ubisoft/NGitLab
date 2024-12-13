@@ -85,7 +85,7 @@ public class GroupsTests
         await GitLabTestContext.RetryUntilAsync(() => TryGetGroup(groupClient, group.Id), group => group == null || group.MarkedForDeletionOn != null, TimeSpan.FromMinutes(2));
     }
 
-    private static Group TryGetGroup(IGroupsClient groupClient, int groupId)
+    private static Group TryGetGroup(IGroupsClient groupClient, long groupId)
     {
         try
         {
@@ -473,7 +473,7 @@ public class GroupsTests
             Search = project.Name,
         }).ToArray();
 
-        Assert.That(projects.Select(p => p.Id), Is.EquivalentTo(new int[] { project.Id }));
+        Assert.That(projects.Select(p => p.Id), Is.EquivalentTo(new[] { project.Id }));
     }
 
     [Test]

@@ -169,11 +169,11 @@ public class GroupsClient : IGroupsClient
     public GitLabCollectionResponse<Group> SearchAsync(string search) =>
         _api.Get().GetAllAsync<Group>(Utils.AddOrderBy($"{Url}?search={Uri.EscapeDataString(search)}"));
 
-    public Group this[int id] => GetGroup(id);
+    public Group this[long id] => GetGroup(id);
 
     public Group this[string fullPath] => GetGroup(fullPath);
 
-    public Task<Group> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
+    public Task<Group> GetByIdAsync(long id, CancellationToken cancellationToken = default) =>
         GetGroupAsync(id, cancellationToken);
 
     public Task<Group> GetByFullPathAsync(string fullPath, CancellationToken cancellationToken = default) =>
@@ -185,7 +185,7 @@ public class GroupsClient : IGroupsClient
     public Task<Group> GetGroupAsync(GroupId id, CancellationToken cancellationToken = default) =>
         _api.Get().ToAsync<Group>($"{Url}/{id.ValueAsUriParameter()}", cancellationToken);
 
-    public GitLabCollectionResponse<Group> GetSubgroupsByIdAsync(int id, SubgroupQuery query = null) =>
+    public GitLabCollectionResponse<Group> GetSubgroupsByIdAsync(long id, SubgroupQuery query = null) =>
         GetSubgroupsAsync(id, query);
 
     public GitLabCollectionResponse<Group> GetSubgroupsByFullPathAsync(string fullPath, SubgroupQuery query = null) =>
@@ -203,13 +203,13 @@ public class GroupsClient : IGroupsClient
         return _api.Get().PageAsync<Group>(url, cancellationToken);
     }
 
-    public IEnumerable<Project> SearchProjects(int groupId, string search) =>
+    public IEnumerable<Project> SearchProjects(long groupId, string search) =>
         SearchProjectsAsync(groupId, new GroupProjectsQuery
         {
             Search = search,
         });
 
-    public GitLabCollectionResponse<Project> GetProjectsAsync(int groupId, GroupProjectsQuery query) =>
+    public GitLabCollectionResponse<Project> GetProjectsAsync(long groupId, GroupProjectsQuery query) =>
         SearchProjectsAsync(groupId, query);
 
     public GitLabCollectionResponse<Project> SearchProjectsAsync(GroupId groupId, GroupProjectsQuery query)
@@ -268,21 +268,21 @@ public class GroupsClient : IGroupsClient
     public Task<Group> CreateAsync(GroupCreate group, CancellationToken cancellationToken = default) =>
         _api.Post().With(group).ToAsync<Group>(Url, cancellationToken);
 
-    public void Delete(int id) =>
+    public void Delete(long id) =>
         _api.Delete().Execute($"{Url}/{new GroupId(id).ValueAsUriParameter()}");
 
-    public Task DeleteAsync(int id, CancellationToken cancellationToken = default) =>
+    public Task DeleteAsync(long id, CancellationToken cancellationToken = default) =>
         _api.Delete().ExecuteAsync($"{Url}/{new GroupId(id).ValueAsUriParameter()}", cancellationToken);
 
-    public Group Update(int id, GroupUpdate groupUpdate) =>
+    public Group Update(long id, GroupUpdate groupUpdate) =>
         _api.Put().With(groupUpdate).To<Group>($"{Url}/{new GroupId(id).ValueAsUriParameter()}");
 
-    public Task<Group> UpdateAsync(int id, GroupUpdate groupUpdate, CancellationToken cancellationToken = default) =>
+    public Task<Group> UpdateAsync(long id, GroupUpdate groupUpdate, CancellationToken cancellationToken = default) =>
         _api.Put().With(groupUpdate).ToAsync<Group>($"{Url}/{new GroupId(id).ValueAsUriParameter()}", cancellationToken);
 
-    public void Restore(int id) =>
+    public void Restore(long id) =>
         _api.Post().Execute($"{Url}/{new GroupId(id).ValueAsUriParameter()}/restore");
 
-    public Task RestoreAsync(int id, CancellationToken cancellationToken = default) =>
+    public Task RestoreAsync(long id, CancellationToken cancellationToken = default) =>
         _api.Post().ExecuteAsync($"{Url}/{new GroupId(id).ValueAsUriParameter()}/restore", cancellationToken);
 }

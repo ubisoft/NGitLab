@@ -20,11 +20,11 @@ internal sealed class ReleaseLinkClient : IReleaseLinkClient
 
     public IEnumerable<ReleaseLink> All => _api.Get().GetAll<ReleaseLink>(_linksPath);
 
-    public ReleaseLink this[int linkId] => _api.Get().To<ReleaseLink>($"{_linksPath}/{linkId.ToString(CultureInfo.InvariantCulture)}");
+    public ReleaseLink this[long linkId] => _api.Get().To<ReleaseLink>($"{_linksPath}/{linkId.ToString(CultureInfo.InvariantCulture)}");
 
     public ReleaseLink Create(ReleaseLinkCreate data) => _api.Post().With(data).To<ReleaseLink>(_linksPath);
 
-    public ReleaseLink Update(int id, ReleaseLinkUpdate data) => _api.Put().With(data).To<ReleaseLink>($"{_linksPath}/{id.ToString(CultureInfo.InvariantCulture)}");
+    public ReleaseLink Update(long id, ReleaseLinkUpdate data) => _api.Put().With(data).To<ReleaseLink>($"{_linksPath}/{id.ToString(CultureInfo.InvariantCulture)}");
 
-    public void Delete(int id) => _api.Delete().Execute($"{_linksPath}/{id.ToString(CultureInfo.InvariantCulture)}");
+    public void Delete(long id) => _api.Delete().Execute($"{_linksPath}/{id.ToString(CultureInfo.InvariantCulture)}");
 }

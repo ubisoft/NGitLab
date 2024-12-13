@@ -10,7 +10,7 @@ public sealed class MilestoneCollection : Collection<Milestone>
     {
     }
 
-    public Milestone GetByIid(int iid)
+    public Milestone GetByIid(long iid)
     {
         return this.FirstOrDefault(i => i.Iid == iid);
     }
@@ -37,7 +37,7 @@ public sealed class MilestoneCollection : Collection<Milestone>
         base.Add(item);
     }
 
-    private int GetNewIid()
+    private long GetNewIid()
     {
         return this.Select(i => i.Iid).DefaultIfEmpty().Max() + 1;
     }

@@ -16,9 +16,9 @@ public sealed class Pipeline : GitLabObject
 
     internal bool IsDownStreamPipeline { get; set; }
 
-    public int Id { get; set; }
+    public long Id { get; set; }
 
-    public int ProjectId => Project?.Id ?? 0;
+    public long ProjectId => Project?.Id ?? 0;
 
     public JobStatus Status { get; set; }
 

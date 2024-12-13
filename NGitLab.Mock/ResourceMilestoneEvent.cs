@@ -5,13 +5,13 @@ namespace NGitLab.Mock;
 
 public sealed class ResourceMilestoneEvent : GitLabObject
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public Author User { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
-    public int ResourceId { get; set; }
+    public long ResourceId { get; set; }
 
     public string ResourceType { get; set; }
 

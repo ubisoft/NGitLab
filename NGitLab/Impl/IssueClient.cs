@@ -35,42 +35,42 @@ public class IssueClient : IIssueClient
 
     public IEnumerable<Issue> Owned => _api.Get().GetAll<Issue>(IssuesUrl);
 
-    public IEnumerable<Issue> ForProject(int projectId)
+    public IEnumerable<Issue> ForProject(long projectId)
     {
         return _api.Get().GetAll<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId));
     }
 
-    public GitLabCollectionResponse<Issue> ForProjectAsync(int projectId)
+    public GitLabCollectionResponse<Issue> ForProjectAsync(long projectId)
     {
         return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId));
     }
 
-    public GitLabCollectionResponse<Issue> ForGroupsAsync(int groupId)
+    public GitLabCollectionResponse<Issue> ForGroupsAsync(long groupId)
     {
         return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, GroupIssuesUrl, groupId));
     }
 
-    public GitLabCollectionResponse<Issue> ForGroupsAsync(int groupId, IssueQuery query)
+    public GitLabCollectionResponse<Issue> ForGroupsAsync(long groupId, IssueQuery query)
     {
         return Get(string.Format(CultureInfo.InvariantCulture, GroupIssuesUrl, groupId), query);
     }
 
-    public Issue Get(int projectId, int issueIid)
+    public Issue Get(long projectId, long issueIid)
     {
         return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueIid));
     }
 
-    public Task<Issue> GetAsync(int projectId, int issueIid, CancellationToken cancellationToken = default)
+    public Task<Issue> GetAsync(long projectId, long issueIid, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, projectId, issueIid), cancellationToken);
     }
 
-    public IEnumerable<Issue> Get(int projectId, IssueQuery query)
+    public IEnumerable<Issue> Get(long projectId, IssueQuery query)
     {
         return Get(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId), query);
     }
 
-    public GitLabCollectionResponse<Issue> GetAsync(int projectId, IssueQuery query)
+    public GitLabCollectionResponse<Issue> GetAsync(long projectId, IssueQuery query)
     {
         return Get(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId), query);
     }
@@ -85,12 +85,12 @@ public class IssueClient : IIssueClient
         return Get(IssuesUrl, query);
     }
 
-    public Issue GetById(int issueId)
+    public Issue GetById(long issueId)
     {
         return _api.Get().To<Issue>(string.Format(CultureInfo.InvariantCulture, IssueByIdUrl, issueId));
     }
 
-    public Task<Issue> GetByIdAsync(int issueId, CancellationToken cancellationToken = default)
+    public Task<Issue> GetByIdAsync(long issueId, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, IssueByIdUrl, issueId), cancellationToken);
     }
@@ -115,48 +115,48 @@ public class IssueClient : IIssueClient
         return _api.Put().With(issueEdit).ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, SingleIssueUrl, issueEdit.ProjectId, issueEdit.IssueId), cancellationToken);
     }
 
-    public IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid)
+    public IEnumerable<ResourceLabelEvent> ResourceLabelEvents(long projectId, long issueIid)
     {
         return _api.Get().GetAll<ResourceLabelEvent>(string.Format(CultureInfo.InvariantCulture, ResourceLabelEventUrl, projectId, issueIid));
     }
 
-    public GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int issueIid)
+    public GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(long projectId, long issueIid)
     {
         return _api.Get().GetAllAsync<ResourceLabelEvent>(string.Format(CultureInfo.InvariantCulture, ResourceLabelEventUrl, projectId, issueIid));
     }
 
-    public IEnumerable<ResourceMilestoneEvent> ResourceMilestoneEvents(int projectId, int issueIid)
+    public IEnumerable<ResourceMilestoneEvent> ResourceMilestoneEvents(long projectId, long issueIid)
     {
         return _api.Get().GetAll<ResourceMilestoneEvent>(string.Format(CultureInfo.InvariantCulture, ResourceMilestoneEventUrl, projectId, issueIid));
     }
 
-    public GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int issueIid)
+    public GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(long projectId, long issueIid)
     {
         return _api.Get().GetAllAsync<ResourceMilestoneEvent>(string.Format(CultureInfo.InvariantCulture, ResourceMilestoneEventUrl, projectId, issueIid));
     }
 
-    public IEnumerable<ResourceStateEvent> ResourceStateEvents(int projectId, int issueIid)
+    public IEnumerable<ResourceStateEvent> ResourceStateEvents(long projectId, long issueIid)
     {
         return _api.Get().GetAll<ResourceStateEvent>(string.Format(CultureInfo.InvariantCulture, ResourceStateEventUrl, projectId, issueIid));
     }
 
-    public GitLabCollectionResponse<ResourceStateEvent> ResourceStateEventsAsync(int projectId, int issueIid)
+    public GitLabCollectionResponse<ResourceStateEvent> ResourceStateEventsAsync(long projectId, long issueIid)
     {
         return _api.Get().GetAllAsync<ResourceStateEvent>(string.Format(CultureInfo.InvariantCulture, ResourceStateEventUrl, projectId, issueIid));
     }
 
-    public IEnumerable<MergeRequest> RelatedTo(int projectId, int issueIid)
+    public IEnumerable<MergeRequest> RelatedTo(long projectId, long issueIid)
     {
         return _api.Get().GetAll<MergeRequest>(string.Format(CultureInfo.InvariantCulture, RelatedToUrl, projectId, issueIid));
     }
 
-    public GitLabCollectionResponse<Issue> LinkedToAsync(int projectId, int issueId)
+    public GitLabCollectionResponse<Issue> LinkedToAsync(long projectId, long issueId)
     {
         return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, LinkedIssuesByIdUrl, projectId, issueId));
     }
 
-    public bool CreateLinkBetweenIssues(int sourceProjectId, int sourceIssueId, int targetProjectId,
-        int targetIssueId)
+    public bool CreateLinkBetweenIssues(long sourceProjectId, long sourceIssueId, long targetProjectId,
+        long targetIssueId)
     {
         try
         {
@@ -169,37 +169,37 @@ public class IssueClient : IIssueClient
         }
     }
 
-    public GitLabCollectionResponse<MergeRequest> RelatedToAsync(int projectId, int issueIid)
+    public GitLabCollectionResponse<MergeRequest> RelatedToAsync(long projectId, long issueIid)
     {
         return _api.Get().GetAllAsync<MergeRequest>(string.Format(CultureInfo.InvariantCulture, RelatedToUrl, projectId, issueIid));
     }
 
-    public IEnumerable<MergeRequest> ClosedBy(int projectId, int issueIid)
+    public IEnumerable<MergeRequest> ClosedBy(long projectId, long issueIid)
     {
         return _api.Get().GetAll<MergeRequest>(string.Format(CultureInfo.InvariantCulture, ClosedByUrl, projectId, issueIid));
     }
 
-    public GitLabCollectionResponse<MergeRequest> ClosedByAsync(int projectId, int issueIid)
+    public GitLabCollectionResponse<MergeRequest> ClosedByAsync(long projectId, long issueIid)
     {
         return _api.Get().GetAllAsync<MergeRequest>(string.Format(CultureInfo.InvariantCulture, ClosedByUrl, projectId, issueIid));
     }
 
-    public Task<TimeStats> TimeStatsAsync(int projectId, int issueIid, CancellationToken cancellationToken = default)
+    public Task<TimeStats> TimeStatsAsync(long projectId, long issueIid, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<TimeStats>(string.Format(CultureInfo.InvariantCulture, TimeStatsUrl, projectId, issueIid), cancellationToken);
     }
 
-    public Task<Issue> CloneAsync(int projectId, int issueIid, IssueClone issueClone, CancellationToken cancellationToken = default)
+    public Task<Issue> CloneAsync(long projectId, long issueIid, IssueClone issueClone, CancellationToken cancellationToken = default)
     {
         return _api.Post().With(issueClone).ToAsync<Issue>(string.Format(CultureInfo.InvariantCulture, CloneIssueUrl, projectId, issueIid), cancellationToken);
     }
 
-    public IEnumerable<Participant> GetParticipants(ProjectId projectId, int issueIid)
+    public IEnumerable<Participant> GetParticipants(ProjectId projectId, long issueIid)
     {
         return _api.Get().GetAll<Participant>(string.Format(CultureInfo.InvariantCulture, ParticipantsUrl, projectId.ValueAsUriParameter(), issueIid));
     }
 
-    public Issue Unsubscribe(ProjectId projectId, int issueIid)
+    public Issue Unsubscribe(ProjectId projectId, long issueIid)
     {
         return _api.Post().To<Issue>(string.Format(CultureInfo.InvariantCulture, UnsubscribeUrl, projectId.ValueAsUriParameter(), issueIid));
     }

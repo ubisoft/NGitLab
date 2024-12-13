@@ -23,5 +23,5 @@ public class SearchBlob
     public int StartLine { get; set; }
 
     [JsonPropertyName("project_id")]
-    public int ProjectId { get; set; }
+    public long ProjectId { get; set; }
 }

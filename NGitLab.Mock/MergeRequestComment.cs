@@ -6,9 +6,9 @@ public sealed class MergeRequestComment : Note
 
     public override string NoteableType => "MergeRequest";
 
-    public override int NoticableId => Parent.Id;
+    public override long NoticableId => Parent.Id;
 
-    public override int NoticableIid => Parent.Iid;
+    public override long NoticableIid => Parent.Iid;
 
     internal Models.MergeRequestComment ToMergeRequestCommentClient()
     {

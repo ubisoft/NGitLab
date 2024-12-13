@@ -5,13 +5,13 @@ namespace NGitLab.Models;
 public class IssueEpic
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [JsonPropertyName("iid")]
-    public int EpicId { get; set; }
+    public long EpicId { get; set; }
 
     [JsonPropertyName("group_id")]
-    public int GroupId { get; set; }
+    public long GroupId { get; set; }
 
     [JsonPropertyName("title")]
     public string Title { get; set; }

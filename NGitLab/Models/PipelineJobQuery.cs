@@ -7,7 +7,7 @@ public class PipelineJobQuery
 {
     [Required]
     [JsonPropertyName("id")]
-    public int PipelineId { get; set; }
+    public long PipelineId { get; set; }
 
     public string[] Scope { get; set; }
 

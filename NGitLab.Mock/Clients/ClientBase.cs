@@ -30,7 +30,7 @@ internal abstract class ClientBase
 
         var group = id switch
         {
-            int idInt => Server.AllGroups.FindById(idInt),
+            long idLong => Server.AllGroups.FindById(idLong),
             string idStr => Server.AllGroups.FindGroup(idStr),
             IIdOrPathAddressable gid when gid.Path != null => Server.AllGroups.FindByNamespacedPath(gid.Path),
             IIdOrPathAddressable gid => Server.AllGroups.FindById(gid.Id),
@@ -78,7 +78,7 @@ internal abstract class ClientBase
 
         var project = id switch
         {
-            int idInt => Server.AllProjects.FindById(idInt),
+            long idLong => Server.AllProjects.FindById(idLong),
             string idStr => Server.AllProjects.FindProject(idStr),
             IIdOrPathAddressable pid when pid.Path != null => Server.AllProjects.FindByNamespacedPath(pid.Path),
             IIdOrPathAddressable pid => Server.AllProjects.FindById(pid.Id),
@@ -116,7 +116,7 @@ internal abstract class ClientBase
         return project;
     }
 
-    protected User GetUser(int userId)
+    protected User GetUser(long userId)
     {
         var user = Server.Users.GetById(userId);
         if (user == null)
@@ -125,7 +125,7 @@ internal abstract class ClientBase
         return user;
     }
 
-    protected Issue GetIssue(int projectId, int issueId)
+    protected Issue GetIssue(long projectId, long issueId)
     {
         var project = GetProject(projectId, ProjectPermission.View);
         var issue = project.Issues.GetByIid(issueId);
@@ -135,7 +135,7 @@ internal abstract class ClientBase
         return issue;
     }
 
-    protected Milestone GetMilestone(int projectId, int milestoneId)
+    protected Milestone GetMilestone(long projectId, long milestoneId)
     {
         var project = GetProject(projectId, ProjectPermission.View);
         var milestone = project.Milestones.GetByIid(milestoneId);
@@ -145,7 +145,7 @@ internal abstract class ClientBase
         return milestone;
     }
 
-    protected MergeRequest GetMergeRequest(int projectId, int mergeRequestIid)
+    protected MergeRequest GetMergeRequest(long projectId, long mergeRequestIid)
     {
         var project = GetProject(projectId, ProjectPermission.View);
         var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);

@@ -14,57 +14,57 @@ public interface IMergeRequestClient
 
     IEnumerable<MergeRequest> Get(MergeRequestQuery query);
 
-    MergeRequest this[int iid] { get; }
+    MergeRequest this[long iid] { get; }
 
-    Task<MergeRequest> GetByIidAsync(int iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default);
+    Task<MergeRequest> GetByIidAsync(long iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default);
 
     MergeRequest Create(MergeRequestCreate mergeRequest);
 
-    MergeRequest Update(int mergeRequestIid, MergeRequestUpdate mergeRequest);
+    MergeRequest Update(long mergeRequestIid, MergeRequestUpdate mergeRequest);
 
-    MergeRequest Close(int mergeRequestIid);
+    MergeRequest Close(long mergeRequestIid);
 
-    MergeRequest Reopen(int mergeRequestIid);
+    MergeRequest Reopen(long mergeRequestIid);
 
-    void Delete(int mergeRequestIid);
+    void Delete(long mergeRequestIid);
 
-    MergeRequest CancelMergeWhenPipelineSucceeds(int mergeRequestIid);
+    MergeRequest CancelMergeWhenPipelineSucceeds(long mergeRequestIid);
 
     [Obsolete("You should use MergeRequestMerge instead of MergeRequestAccept")]
-    MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message);
+    MergeRequest Accept(long mergeRequestIid, MergeRequestAccept message);
 
-    MergeRequest Accept(int mergeRequestIid, MergeRequestMerge message);
+    MergeRequest Accept(long mergeRequestIid, MergeRequestMerge message);
 
-    MergeRequest Approve(int mergeRequestIid, MergeRequestApprove message);
+    MergeRequest Approve(long mergeRequestIid, MergeRequestApprove message);
 
-    RebaseResult Rebase(int mergeRequestIid);
+    RebaseResult Rebase(long mergeRequestIid);
 
-    Task<RebaseResult> RebaseAsync(int mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default);
+    Task<RebaseResult> RebaseAsync(long mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default);
 
-    IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid);
+    IEnumerable<PipelineBasic> GetPipelines(long mergeRequestIid);
 
-    IEnumerable<Author> GetParticipants(int mergeRequestIid);
+    IEnumerable<Author> GetParticipants(long mergeRequestIid);
 
-    GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(int mergeRequestIid);
+    GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(long mergeRequestIid);
 
-    IMergeRequestCommentClient Comments(int mergeRequestIid);
+    IMergeRequestCommentClient Comments(long mergeRequestIid);
 
-    IMergeRequestDiscussionClient Discussions(int mergeRequestIid);
+    IMergeRequestDiscussionClient Discussions(long mergeRequestIid);
 
-    IMergeRequestCommitClient Commits(int mergeRequestIid);
+    IMergeRequestCommitClient Commits(long mergeRequestIid);
 
-    IMergeRequestChangeClient Changes(int mergeRequestIid);
+    IMergeRequestChangeClient Changes(long mergeRequestIid);
 
-    IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid);
+    IMergeRequestApprovalClient ApprovalClient(long mergeRequestIid);
 
-    IEnumerable<Issue> ClosesIssues(int mergeRequestIid);
+    IEnumerable<Issue> ClosesIssues(long mergeRequestIid);
 
     /// <summary>
     /// Get time tracking statistics
     /// </summary>
     /// <param name="mergeRequestIid">The id of the merge request in the project's scope.</param>
     /// <returns>The time tracking statistics of the merge request.</returns>
-    Task<TimeStats> TimeStatsAsync(int mergeRequestIid, CancellationToken cancellationToken = default);
+    Task<TimeStats> TimeStatsAsync(long mergeRequestIid, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets the resource label events.
@@ -75,7 +75,7 @@ public interface IMergeRequestClient
     /// <param name="projectId">The project id.</param>
     /// <param name="mergeRequestIid">The id of the merge request in the project's scope.</param>
     /// <returns>A collection of the resource label events linked to this merge request.</returns>
-    GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int mergeRequestIid);
+    GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(long projectId, long mergeRequestIid);
 
     /// <summary>
     /// Gets the resource milestone events.
@@ -86,7 +86,7 @@ public interface IMergeRequestClient
     /// <param name="projectId">The project id.</param>
     /// <param name="mergeRequestIid">The id of the merge request in the project's scope.</param>
     /// <returns>A collection of the resource milestone events linked to this merge request.</returns>
-    GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int mergeRequestIid);
+    GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(long projectId, long mergeRequestIid);
 
     /// <summary>
     /// Gets the resource state events.
@@ -97,5 +97,5 @@ public interface IMergeRequestClient
     /// <param name="projectId">The project id.</param>
     /// <param name="mergeRequestIid">The id of the merge request in the project's scope.</param>
     /// <returns>A collection of the resource state events linked to this merge request.</returns>
-    GitLabCollectionResponse<ResourceStateEvent> ResourceStateEventsAsync(int projectId, int mergeRequestIid);
+    GitLabCollectionResponse<ResourceStateEvent> ResourceStateEventsAsync(long projectId, long mergeRequestIid);
 }

@@ -8,7 +8,7 @@ public class Group
     public const string Url = "/groups";
 
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("name")]
     public string Name;
@@ -38,7 +38,7 @@ public class Group
     public string FullPath;
 
     [JsonPropertyName("parent_id")]
-    public int? ParentId;
+    public long? ParentId;
 
     [JsonPropertyName("runners_token")]
     public string RunnersToken;

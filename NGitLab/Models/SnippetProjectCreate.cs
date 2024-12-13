@@ -6,7 +6,7 @@ namespace NGitLab.Models;
 
 public class SnippetProjectCreate
 {
-    public int ProjectId;
+    public long ProjectId;
 
     [Required]
     [JsonPropertyName("title")]

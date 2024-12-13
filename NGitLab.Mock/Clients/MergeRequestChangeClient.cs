@@ -5,10 +5,10 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class  MergeRequestChangeClient : ClientBase, IMergeRequestChangeClient
 {
-    private readonly int _projectId;
-    private readonly int _mergeRequestIid;
+    private readonly long _projectId;
+    private readonly long _mergeRequestIid;
 
-    public MergeRequestChangeClient(ClientContext context, int projectId, int mergeRequestIid)
+    public MergeRequestChangeClient(ClientContext context, long projectId, long mergeRequestIid)
         : base(context)
     {
         _projectId = projectId;

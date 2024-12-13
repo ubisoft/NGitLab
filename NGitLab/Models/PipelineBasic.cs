@@ -8,10 +8,10 @@ public class PipelineBasic
     public const string Url = "/pipelines";
 
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("project_id")]
-    public int ProjectId;
+    public long ProjectId;
 
     [JsonPropertyName("status")]
     public JobStatus Status;

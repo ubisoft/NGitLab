@@ -65,7 +65,7 @@ public class MergeRequestQuery
     /// <summary>
     /// Returns merge requests created by the given user id. Combine with scope=all or scope=assigned_to_me
     /// </summary>
-    public int? AuthorId { get; set; }
+    public long? AuthorId { get; set; }
 
     /// <summary>
     /// Returns merge requests assigned to the given user id
@@ -81,7 +81,7 @@ public class MergeRequestQuery
     /// Returns merge requests which have specified all the users with the given ids as individual approvers.
     /// None returns merge requests without approvers. Any returns merge requests with an approver.
     /// </summary>
-    public int[] ApproverIds { get; set; }
+    public long[] ApproverIds { get; set; }
 
     /// <summary>
     /// Return merge requests with the given source branch

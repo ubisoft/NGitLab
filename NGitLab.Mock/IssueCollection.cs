@@ -10,7 +10,7 @@ public sealed class IssueCollection : Collection<Issue>
     {
     }
 
-    public Issue GetByIid(int issueId)
+    public Issue GetByIid(long issueId)
     {
         return this.FirstOrDefault(i => i.Iid == issueId);
     }
@@ -37,7 +37,7 @@ public sealed class IssueCollection : Collection<Issue>
         base.Add(item);
     }
 
-    private int GetNewIid()
+    private long GetNewIid()
     {
         return this.Select(i => i.Iid).DefaultIfEmpty().Max() + 1;
     }

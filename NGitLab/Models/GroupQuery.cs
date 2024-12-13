@@ -10,7 +10,7 @@ public class GroupQuery
     /// Skip the group IDs passed
     /// (optional)
     /// </summary>
-    public int[] SkipGroups;
+    public long[] SkipGroups;
 
     /// <summary>
     /// Show all the groups you have access to (defaults to false for authenticated users, true for admin); Attributes owned and min_access_level have precedence

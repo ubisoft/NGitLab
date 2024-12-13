@@ -3,15 +3,13 @@ using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
-#pragma warning disable CA1724  // Type names should not match .NET Framework class library namespaces
 public class Deployment
-#pragma warning restore CA1724  // Type names should not match .NET Framework class library namespaces
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [JsonPropertyName("iid")]
-    public int DeploymentId { get; set; }
+    public long DeploymentId { get; set; }
 
     [JsonPropertyName("ref")]
     public string Ref { get; set; }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab.Impl;
@@ -8,12 +7,6 @@ public class ClusterClient : IClusterClient
 {
     private readonly API _api;
     private readonly string _environmentsPath;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public ClusterClient(API api, int projectId)
-        : this(api, (long)projectId)
-    {
-    }
 
     public ClusterClient(API api, ProjectId projectId)
     {

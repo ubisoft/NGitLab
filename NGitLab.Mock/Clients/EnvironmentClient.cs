@@ -10,7 +10,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class EnvironmentClient : ClientBase, IEnvironmentClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public EnvironmentClient(ClientContext context, ProjectId projectId)
         : base(context)
@@ -25,20 +25,20 @@ internal sealed class EnvironmentClient : ClientBase, IEnvironmentClient
         throw new NotImplementedException();
     }
 
-    public void Delete(int environmentId)
+    public void Delete(long environmentId)
     {
         throw new NotImplementedException();
     }
 
-    public EnvironmentInfo Edit(int environmentId, string externalUrl) => Edit(environmentId, null, externalUrl);
+    public EnvironmentInfo Edit(long environmentId, string externalUrl) => Edit(environmentId, null, externalUrl);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public EnvironmentInfo Edit(int environmentId, string name, string externalUrl)
+    public EnvironmentInfo Edit(long environmentId, string name, string externalUrl)
     {
         throw new NotImplementedException();
     }
 
-    public EnvironmentInfo Stop(int environmentId)
+    public EnvironmentInfo Stop(long environmentId)
     {
         throw new NotImplementedException();
     }
@@ -48,12 +48,12 @@ internal sealed class EnvironmentClient : ClientBase, IEnvironmentClient
         return GitLabCollectionResponse.Create(Array.Empty<EnvironmentInfo>());
     }
 
-    public EnvironmentInfo GetById(int environmentId)
+    public EnvironmentInfo GetById(long environmentId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<EnvironmentInfo> GetByIdAsync(int environmentId, CancellationToken cancellationToken = default)
+    public Task<EnvironmentInfo> GetByIdAsync(long environmentId, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

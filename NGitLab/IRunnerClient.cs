@@ -25,7 +25,7 @@ public interface IRunnerClient
     /// <summary>
     /// Get details of a runner
     /// </summary>
-    Runner this[int id] { get; }
+    Runner this[long id] { get; }
 
     /// <summary>
     /// Deletes the specified runner.
@@ -35,47 +35,47 @@ public interface IRunnerClient
     /// <summary>
     /// Deletes the specified runner.
     /// </summary>
-    void Delete(int runnerId);
+    void Delete(long runnerId);
 
     /// <summary>
     /// Updates the tags, description, isActive
     /// </summary>
     /// <returns>The updated runner</returns>
-    Runner Update(int runnerId, RunnerUpdate runnerUpdate);
+    Runner Update(long runnerId, RunnerUpdate runnerUpdate);
 
     /// <summary>
     /// get the list of runners associated with the group
     /// </summary>
     /// <returns>the list of runners associated with the group</returns>
-    IEnumerable<Runner> OfGroup(int groupId);
+    IEnumerable<Runner> OfGroup(long groupId);
 
-    GitLabCollectionResponse<Runner> OfGroupAsync(int groupId);
+    GitLabCollectionResponse<Runner> OfGroupAsync(long groupId);
 
     /// <summary>
     /// get the list of runners associated with the project
     /// </summary>
     /// <returns>the list of runners associated with the project</returns>
-    IEnumerable<Runner> OfProject(int projectId);
+    IEnumerable<Runner> OfProject(long projectId);
 
-    GitLabCollectionResponse<Runner> OfProjectAsync(int projectId);
+    GitLabCollectionResponse<Runner> OfProjectAsync(long projectId);
 
     /// <summary>
     /// List all jobs of the given runner that meet the specified scope
     /// </summary>
     [Obsolete("Use GetJobs(int, JobStatus?) instead")]
-    IEnumerable<Job> GetJobs(int runnerId, JobScope jobScope);
+    IEnumerable<Job> GetJobs(long runnerId, JobScope jobScope);
 
     /// <summary>
     /// List all jobs of the given runner that meet the specified status
     /// </summary>
     [SuppressMessage("ApiDesign", "RS0027:Public API with optional parameter(s) should have the most parameters amongst its public overloads", Justification = "Keep compatibility")]
-    IEnumerable<Job> GetJobs(int runnerId, JobStatus? status = null);
+    IEnumerable<Job> GetJobs(long runnerId, JobStatus? status = null);
 
     /// <summary>
     /// List all runners (specific and shared) available in the project. Shared runners are listed if at least one shared runner is defined and shared runners usage is enabled in the project's settings.
     /// </summary>
     /// <param name="projectId"></param>
-    IEnumerable<Runner> GetAvailableRunners(int projectId);
+    IEnumerable<Runner> GetAvailableRunners(long projectId);
 
     /// <summary>
     /// List all runners in the GitLab instance that meet the specified scope
@@ -89,16 +89,16 @@ public interface IRunnerClient
     /// </summary>
     /// <param name="projectId"></param>
     /// <param name="runnerId"></param>
-    Runner EnableRunner(int projectId, RunnerId runnerId);
+    Runner EnableRunner(long projectId, RunnerId runnerId);
 
-    Task<Runner> EnableRunnerAsync(int projectId, RunnerId runnerId, CancellationToken cancellationToken = default);
+    Task<Runner> EnableRunnerAsync(long projectId, RunnerId runnerId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Disable a specific runner from the project. It works only if the project isn't the only project associated with the specified runner. If so, an error is returned. Use the Remove a runner call instead.
     /// </summary>
     /// <param name="projectId"></param>
     /// <param name="runnerId"></param>
-    void DisableRunner(int projectId, RunnerId runnerId);
+    void DisableRunner(long projectId, RunnerId runnerId);
 
     /// <summary>
     /// Register a new runner for the instance.

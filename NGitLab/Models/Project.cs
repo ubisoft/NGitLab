@@ -10,7 +10,7 @@ public class Project
     public const string Url = "/projects";
 
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("avatar_url")]
     public string AvatarUrl;
@@ -105,7 +105,7 @@ public class Project
     public DateTime LastActivityAt;
 
     [JsonPropertyName("creator_id")]
-    public int CreatorId;
+    public long CreatorId;
 
     [JsonPropertyName("ssh_url_to_repo")]
     public string SshUrl;
@@ -202,7 +202,7 @@ public class Project
     public bool Mirror;
 
     [JsonPropertyName("mirror_user_id")]
-    public int MirrorUserId;
+    public long MirrorUserId;
 
     [JsonPropertyName("mirror_trigger_builds")]
     public bool MirrorTriggerBuilds;

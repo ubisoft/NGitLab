@@ -5,7 +5,7 @@ namespace NGitLab.Models;
 public class PipelineBridgeQuery
 {
     [Required]
-    public int PipelineId { get; set; }
+    public long PipelineId { get; set; }
 
     public string[] Scope { get; set; }
 }

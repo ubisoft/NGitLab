@@ -25,7 +25,7 @@ public sealed class ResourceMilestoneEventCollection : Collection<ResourceMilest
         base.Add(item);
     }
 
-    internal IEnumerable<ResourceMilestoneEvent> Get(int? resourceId)
+    internal IEnumerable<ResourceMilestoneEvent> Get(long? resourceId)
     {
         var resourceMilestoneEvents = this.AsQueryable();
 
@@ -37,12 +37,12 @@ public sealed class ResourceMilestoneEventCollection : Collection<ResourceMilest
         return resourceMilestoneEvents;
     }
 
-    private int GetNewId()
+    private long GetNewId()
     {
         return this.Select(rle => rle.Id).DefaultIfEmpty().Max() + 1;
     }
 
-    internal void CreateResourceMilestoneEvents(User currentUser, int resourceId, Milestone previousMilestone, Milestone newMilestone, string resourceType)
+    internal void CreateResourceMilestoneEvents(User currentUser, long resourceId, Milestone previousMilestone, Milestone newMilestone, string resourceType)
     {
         if (previousMilestone is null)
         {
@@ -59,7 +59,7 @@ public sealed class ResourceMilestoneEventCollection : Collection<ResourceMilest
         }
     }
 
-    internal void CreateResourceMilestoneEvent(User currentUser, int resourceId, Milestone milestone, ResourceMilestoneEventAction action, string resourceType)
+    internal void CreateResourceMilestoneEvent(User currentUser, long resourceId, Milestone milestone, ResourceMilestoneEventAction action, string resourceType)
     {
         Add(new ResourceMilestoneEvent()
         {

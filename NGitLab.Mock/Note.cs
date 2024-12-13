@@ -24,9 +24,9 @@ public abstract class Note : GitLabObject
 
     public bool System { get; set; }
 
-    public abstract int NoticableId { get; }
+    public abstract long NoticableId { get; }
 
-    public abstract int NoticableIid { get; }
+    public abstract long NoticableIid { get; }
 
     public abstract string NoteableType { get; }
 

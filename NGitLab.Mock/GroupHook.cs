@@ -6,7 +6,7 @@ public sealed class GroupHook : GitLabObject
 {
     public new Group Parent => (Group)base.Parent;
 
-    public int Id { get; internal set; }
+    public long Id { get; internal set; }
 
     public Uri Url { get; set; }
 

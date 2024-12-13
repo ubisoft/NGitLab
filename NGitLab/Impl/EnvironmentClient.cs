@@ -13,12 +13,6 @@ public class EnvironmentClient : IEnvironmentClient
     private readonly API _api;
     private readonly string _environmentsPath;
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public EnvironmentClient(API api, int projectId)
-        : this(api, (long)projectId)
-    {
-    }
-
     public EnvironmentClient(API api, ProjectId projectId)
     {
         _api = api;
@@ -42,10 +36,10 @@ public class EnvironmentClient : IEnvironmentClient
         return _api.Post().To<EnvironmentInfo>(url);
     }
 
-    public EnvironmentInfo Edit(int environmentId, string externalUrl) => Edit(environmentId, null, externalUrl);
+    public EnvironmentInfo Edit(long environmentId, string externalUrl) => Edit(environmentId, null, externalUrl);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public EnvironmentInfo Edit(int environmentId, string name, string externalUrl)
+    public EnvironmentInfo Edit(long environmentId, string name, string externalUrl)
     {
         var url = $"{_environmentsPath}/{environmentId.ToStringInvariant()}";
 
@@ -62,9 +56,9 @@ public class EnvironmentClient : IEnvironmentClient
         return _api.Put().To<EnvironmentInfo>(url);
     }
 
-    public void Delete(int environmentId) => _api.Delete().Execute($"{_environmentsPath}/{environmentId.ToStringInvariant()}");
+    public void Delete(long environmentId) => _api.Delete().Execute($"{_environmentsPath}/{environmentId.ToStringInvariant()}");
 
-    public EnvironmentInfo Stop(int environmentId)
+    public EnvironmentInfo Stop(long environmentId)
     {
         return _api.Post().To<EnvironmentInfo>($"{_environmentsPath}/{environmentId.ToStringInvariant()}/stop");
     }
@@ -80,12 +74,12 @@ public class EnvironmentClient : IEnvironmentClient
         return _api.Get().GetAllAsync<EnvironmentInfo>(url);
     }
 
-    public EnvironmentInfo GetById(int environmentId)
+    public EnvironmentInfo GetById(long environmentId)
     {
         return _api.Get().To<EnvironmentInfo>($"{_environmentsPath}/{environmentId.ToStringInvariant()}");
     }
 
-    public Task<EnvironmentInfo> GetByIdAsync(int environmentId, CancellationToken cancellationToken = default)
+    public Task<EnvironmentInfo> GetByIdAsync(long environmentId, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<EnvironmentInfo>($"{_environmentsPath}/{environmentId.ToStringInvariant()}", cancellationToken);
     }

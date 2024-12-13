@@ -16,7 +16,7 @@ internal sealed class ContributorClient : IContributorClient
     }
 
     [Obsolete("Argument projectId is redundant, please use ContributorClient(API api, string repoPath) instead.")]
-    public ContributorClient(API api, string repoPath, int projectId)
+    public ContributorClient(API api, string repoPath, long projectId)
         : this(api, repoPath)
     {
     }

@@ -6,7 +6,7 @@ namespace NGitLab.Models;
 public class Snippet
 {
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("title")]
     public string Title;

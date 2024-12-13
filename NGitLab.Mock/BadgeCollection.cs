@@ -10,7 +10,7 @@ public sealed class BadgeCollection : Collection<Badge>
     {
     }
 
-    public Badge GetById(int id)
+    public Badge GetById(long id)
     {
         return this.FirstOrDefault(badge => badge.Id == id);
     }

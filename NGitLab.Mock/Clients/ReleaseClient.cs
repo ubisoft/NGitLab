@@ -11,7 +11,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class ReleaseClient : ClientBase, IReleaseClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public ReleaseClient(ClientContext context, ProjectId projectId)
         : base(context)

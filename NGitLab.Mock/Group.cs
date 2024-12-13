@@ -36,7 +36,7 @@ public sealed class Group : GitLabObject
         IsUserNamespace = true;
     }
 
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string Name
     {
@@ -249,7 +249,7 @@ public sealed class Group : GitLabObject
         return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Developer;
     }
 
-    public Runner AddRunner(string description, int id = default, string name = "gitlab-runner", bool paused = false, bool locked = true, bool isShared = false, bool runUntagged = false, string[] tagList = null, bool active = true)
+    public Runner AddRunner(string description, long id = default, string name = "gitlab-runner", bool paused = false, bool locked = true, bool isShared = false, bool runUntagged = false, string[] tagList = null, bool active = true)
     {
         var runner = new Runner
         {
@@ -270,7 +270,7 @@ public sealed class Group : GitLabObject
         return runner;
     }
 
-    public bool RemoveRunner(int runnerId)
+    public bool RemoveRunner(long runnerId)
     {
         return RegisteredRunners.Remove(runnerId);
     }

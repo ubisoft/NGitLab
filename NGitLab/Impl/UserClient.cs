@@ -20,9 +20,9 @@ public class UserClient : IUserClient
 
     public IEnumerable<User> Search(string query) => _api.Get().GetAll<User>(User.Url + $"?search={query}");
 
-    public User this[int id] => _api.Get().To<User>(User.Url + "/" + id.ToStringInvariant());
+    public User this[long id] => _api.Get().To<User>(User.Url + "/" + id.ToStringInvariant());
 
-    public Task<User> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public Task<User> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<User>(User.Url + "/" + id.ToStringInvariant(), cancellationToken);
     }
@@ -79,7 +79,7 @@ public class UserClient : IUserClient
     public Task<UserToken> CreateTokenAsync(UserTokenCreate tokenRequest, CancellationToken cancellationToken = default) =>
         _api.Post().With(tokenRequest).ToAsync<UserToken>($"{User.Url}/{tokenRequest.UserId.ToStringInvariant()}/impersonation_tokens", cancellationToken);
 
-    public User Update(int id, UserUpsert user) => _api.Put().With(user).To<User>(User.Url + "/" + id.ToStringInvariant());
+    public User Update(long id, UserUpsert user) => _api.Put().With(user).To<User>(User.Url + "/" + id.ToStringInvariant());
 
     public Session Current => _api.Get().To<Session>("/user");
 
@@ -90,19 +90,19 @@ public class UserClient : IUserClient
 
     public ISshKeyClient CurrentUserSShKeys => new SshKeyClient(_api, userId: null);
 
-    public ISshKeyClient SShKeys(int userId) => new SshKeyClient(_api, userId);
+    public ISshKeyClient SShKeys(long userId) => new SshKeyClient(_api, userId);
 
-    public void Delete(int userId)
+    public void Delete(long userId)
     {
         _api.Delete().Execute(User.Url + "/" + userId.ToStringInvariant());
     }
 
-    public void Activate(int userId)
+    public void Activate(long userId)
     {
         _api.Post().Execute($"{User.Url}/{userId.ToStringInvariant()}/activate");
     }
 
-    public void Deactivate(int userId)
+    public void Deactivate(long userId)
     {
         _api.Post().Execute($"{User.Url}/{userId.ToStringInvariant()}/deactivate");
     }

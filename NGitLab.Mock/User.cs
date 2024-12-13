@@ -14,7 +14,7 @@ public sealed class User : GitLabObject
         State = UserState.active;
     }
 
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string UserName { get; }
 

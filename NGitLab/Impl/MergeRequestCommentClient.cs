@@ -10,7 +10,7 @@ public class MergeRequestCommentClient : IMergeRequestCommentClient
     private readonly string _notesPath;
     private readonly string _discussionsPath;
 
-    public MergeRequestCommentClient(API api, string projectPath, int mergeRequestIid)
+    public MergeRequestCommentClient(API api, string projectPath, long mergeRequestIid)
     {
         _api = api;
         _notesPath = projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/notes";

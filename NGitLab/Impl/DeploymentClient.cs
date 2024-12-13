@@ -16,12 +16,12 @@ public class DeploymentClient : IDeploymentClient
         _api = api;
     }
 
-    public IEnumerable<Deployment> Get(int projectId, DeploymentQuery query)
+    public IEnumerable<Deployment> Get(long projectId, DeploymentQuery query)
     {
         return Get(string.Format(ProjectDeploymentsUrl, projectId), query);
     }
 
-    public IEnumerable<MergeRequest> GetMergeRequests(int projectId, int deploymentId)
+    public IEnumerable<MergeRequest> GetMergeRequests(long projectId, long deploymentId)
     {
         return _api.Get().GetAll<MergeRequest>(string.Format(CultureInfo.InvariantCulture, DeploymentMergeRequestsUrl, projectId, deploymentId));
     }

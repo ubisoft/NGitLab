@@ -7,11 +7,11 @@ public interface IGroupHooksClient
 {
     IEnumerable<GroupHook> All { get; }
 
-    GroupHook this[int hookId] { get; }
+    GroupHook this[long hookId] { get; }
 
     GroupHook Create(GroupHookUpsert hook);
 
-    GroupHook Update(int hookId, GroupHookUpsert hook);
+    GroupHook Update(long hookId, GroupHookUpsert hook);
 
-    void Delete(int hookId);
+    void Delete(long hookId);
 }

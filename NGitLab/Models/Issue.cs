@@ -6,13 +6,13 @@ namespace NGitLab.Models;
 public class Issue
 {
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("iid")]
-    public int IssueId;
+    public long IssueId;
 
     [JsonPropertyName("project_id")]
-    public int ProjectId;
+    public long ProjectId;
 
     [JsonPropertyName("title")]
     public string Title;
@@ -72,7 +72,7 @@ public class Issue
     public string IssueType;
 
     [JsonPropertyName("moved_to_id")]
-    public int? MovedToId;
+    public long? MovedToId;
 
     [JsonPropertyName("references")]
     public References References;

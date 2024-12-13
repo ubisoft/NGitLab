@@ -7,9 +7,9 @@ public interface ISshKeyClient
 {
     IEnumerable<SshKey> All { get; }
 
-    SshKey this[int keyId] { get; }
+    SshKey this[long keyId] { get; }
 
     SshKey Add(SshKeyCreate key);
 
-    void Remove(int keyId);
+    void Remove(long keyId);
 }

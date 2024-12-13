@@ -14,7 +14,7 @@ public sealed class PipelineCollection : Collection<Pipeline>
                    throw new ArgumentException("Parent must be a Project", nameof(parent));
     }
 
-    public Pipeline GetById(int id)
+    public Pipeline GetById(long id)
     {
         return this.FirstOrDefault(pipeline => pipeline.Id == id);
     }

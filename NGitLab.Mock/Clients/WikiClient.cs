@@ -6,7 +6,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class WikiClient : ClientBase, IWikiClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public WikiClient(ClientContext context, ProjectId projectId)
         : base(context)

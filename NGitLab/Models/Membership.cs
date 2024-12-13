@@ -9,7 +9,7 @@ public class Membership
     /// Example: 3
     /// </summary>
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     /// <summary>
     /// Example john_doe

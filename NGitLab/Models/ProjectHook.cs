@@ -6,13 +6,13 @@ namespace NGitLab.Models;
 public class ProjectHook
 {
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("url")]
     public Uri Url;
 
     [JsonPropertyName("project_id")]
-    public int ProjectId;
+    public long ProjectId;
 
     [JsonPropertyName("created_at")]
     public DateTime CreatedAt;

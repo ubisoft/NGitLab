@@ -6,7 +6,7 @@ namespace NGitLab.Models;
 public class Author
 {
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("username")]
     public string Username;

@@ -9,7 +9,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class RepositoryClient : ClientBase, IRepositoryClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public RepositoryClient(ClientContext context, ProjectId projectId)
         : base(context)

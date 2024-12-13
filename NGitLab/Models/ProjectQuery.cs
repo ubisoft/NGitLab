@@ -53,7 +53,7 @@ public class ProjectQuery
     /// <summary>
     /// Project visible by user
     /// </summary>
-    public int? UserId;
+    public long? UserId;
 
     /// <summary>
     /// Limit to projects where current user has at least this access level

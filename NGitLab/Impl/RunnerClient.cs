@@ -21,7 +21,7 @@ public class RunnerClient : IRunnerClient
 
     public IEnumerable<Runner> All => _api.Get().GetAll<Runner>(Runner.Url + "/all");
 
-    public Runner this[int id] => _api.Get().To<Runner>(Runner.Url + "/" + id.ToStringInvariant());
+    public Runner this[long id] => _api.Get().To<Runner>(Runner.Url + "/" + id.ToStringInvariant());
 
     public IEnumerable<Runner> GetAllRunnersWithScope(RunnerScope scope)
     {
@@ -30,41 +30,41 @@ public class RunnerClient : IRunnerClient
         return _api.Get().GetAll<Runner>(url);
     }
 
-    public IEnumerable<Runner> OfProject(int projectId)
+    public IEnumerable<Runner> OfProject(long projectId)
     {
         return _api.Get().GetAll<Runner>(Project.Url + $"/{projectId.ToStringInvariant()}" + Runner.Url);
     }
 
-    public GitLabCollectionResponse<Runner> OfProjectAsync(int projectId)
+    public GitLabCollectionResponse<Runner> OfProjectAsync(long projectId)
     {
         return _api.Get().GetAllAsync<Runner>(Project.Url + $"/{projectId.ToStringInvariant()}" + Runner.Url);
     }
 
-    public IEnumerable<Runner> OfGroup(int groupId)
+    public IEnumerable<Runner> OfGroup(long groupId)
     {
         return _api.Get().GetAll<Runner>(Group.Url + $"/{groupId.ToStringInvariant()}" + Runner.Url);
     }
 
-    public GitLabCollectionResponse<Runner> OfGroupAsync(int groupId)
+    public GitLabCollectionResponse<Runner> OfGroupAsync(long groupId)
     {
         return _api.Get().GetAllAsync<Runner>(Group.Url + $"/{groupId.ToStringInvariant()}" + Runner.Url);
     }
 
     public void Delete(Runner runner) => Delete(runner.Id);
 
-    public void Delete(int runnerId)
+    public void Delete(long runnerId)
     {
         _api.Delete().Execute(Runner.Url + "/" + runnerId.ToStringInvariant());
     }
 
-    public Runner Update(int runnerId, RunnerUpdate runnerUpdate)
+    public Runner Update(long runnerId, RunnerUpdate runnerUpdate)
     {
         var url = $"{Runner.Url}/{runnerId.ToStringInvariant()}";
         return _api.Put().With(runnerUpdate).To<Runner>(url);
     }
 
     [Obsolete("Use GetJobs(int, JobStatus?) instead")]
-    public IEnumerable<Job> GetJobs(int runnerId, JobScope scope)
+    public IEnumerable<Job> GetJobs(long runnerId, JobScope scope)
     {
         var url = $"{Runner.Url}/{runnerId.ToStringInvariant()}/jobs";
 
@@ -77,7 +77,7 @@ public class RunnerClient : IRunnerClient
     }
 
     [SuppressMessage("ApiDesign", "RS0027:Public API with optional parameter(s) should have the most parameters amongst its public overloads", Justification = "Keep compatibility")]
-    public IEnumerable<Job> GetJobs(int runnerId, JobStatus? status = null)
+    public IEnumerable<Job> GetJobs(long runnerId, JobStatus? status = null)
     {
         var url = $"{Runner.Url}/{runnerId.ToStringInvariant()}/jobs";
 
@@ -89,19 +89,19 @@ public class RunnerClient : IRunnerClient
         return _api.Get().GetAll<Job>(url);
     }
 
-    IEnumerable<Runner> IRunnerClient.GetAvailableRunners(int projectId)
+    IEnumerable<Runner> IRunnerClient.GetAvailableRunners(long projectId)
     {
         var url = $"{Project.Url}/{projectId.ToStringInvariant()}/runners";
         return _api.Get().GetAll<Runner>(url);
     }
 
-    public Runner EnableRunner(int projectId, RunnerId runnerId)
+    public Runner EnableRunner(long projectId, RunnerId runnerId)
     {
         var url = $"{Project.Url}/{projectId.ToStringInvariant()}/runners";
         return _api.Post().With(runnerId).To<Runner>(url);
     }
 
-    public void DisableRunner(int projectId, RunnerId runnerId)
+    public void DisableRunner(long projectId, RunnerId runnerId)
     {
         var url = $"{Project.Url}/{projectId.ToStringInvariant()}/runners/{runnerId.Id.ToStringInvariant()}";
         _api.Delete().Execute(url);
@@ -112,7 +112,7 @@ public class RunnerClient : IRunnerClient
         return _api.Post().With(request).To<Runner>(Runner.Url);
     }
 
-    public Task<Runner> EnableRunnerAsync(int projectId, RunnerId runnerId, CancellationToken cancellationToken = default)
+    public Task<Runner> EnableRunnerAsync(long projectId, RunnerId runnerId, CancellationToken cancellationToken = default)
     {
         var url = $"{Project.Url}/{projectId.ToStringInvariant()}/runners";
         return _api.Post().With(runnerId).ToAsync<Runner>(url, cancellationToken);

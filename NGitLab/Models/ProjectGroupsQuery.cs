@@ -25,5 +25,5 @@ public sealed class ProjectGroupsQuery
     /// <summary>
     /// Skip the group IDs passed
     /// </summary>
-    public int[] SkipGroups { get; set; }
+    public long[] SkipGroups { get; set; }
 }

@@ -28,7 +28,7 @@ public sealed class RunnerCollection : Collection<Runner>
         base.Add(item);
     }
 
-    public bool Remove(int id)
+    public bool Remove(long id)
     {
         var r = this.SingleOrDefault(r => r.Id == id);
         return Remove(r);

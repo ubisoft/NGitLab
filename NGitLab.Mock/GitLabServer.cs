@@ -13,23 +13,23 @@ namespace NGitLab.Mock;
 public sealed class GitLabServer : GitLabObject, IDisposable
 {
     // Setting to a 'magic' high value to avoid having equalities between IDs and IiDs
-    private int _lastProjectId = 10000;
-    private int _lastGroupId = 10000;
-    private int _lastMergeRequestId = 10000;
-    private int _lastRunnerId = 10000;
-    private int _lastIssueId = 10000;
-    private int _lastMilestoneId = 10000;
-    private int _lastPipelineId = 10000;
-    private int _lastPipelineScheduleId = 10000;
-    private int _lastJobId = 10000;
-    private int _lastBadgeId = 10000;
-    private int _lastLabelId = 10000;
-    private int _lastProtectedBranchId = 10000;
-    private int _lastResourceLabelEventId = 10000;
-    private int _lastResourceMilestoneEventId = 10000;
-    private int _lastResourceStateEventId = 10000;
-    private int _lastTokenId = 10000;
-    private int _lastRegistrationTokenId = 10000;
+    private long _lastProjectId = 10000;
+    private long _lastGroupId = 10000;
+    private long _lastMergeRequestId = 10000;
+    private long _lastRunnerId = 10000;
+    private long _lastIssueId = 10000;
+    private long _lastMilestoneId = 10000;
+    private long _lastPipelineId = 10000;
+    private long _lastPipelineScheduleId = 10000;
+    private long _lastJobId = 10000;
+    private long _lastBadgeId = 10000;
+    private long _lastLabelId = 10000;
+    private long _lastProtectedBranchId = 10000;
+    private long _lastResourceLabelEventId = 10000;
+    private long _lastResourceMilestoneEventId = 10000;
+    private long _lastResourceStateEventId = 10000;
+    private long _lastTokenId = 10000;
+    private long _lastRegistrationTokenId = 10000;
 
     public event EventHandler ClientOperation;
 
@@ -105,35 +105,35 @@ public sealed class GitLabServer : GitLabObject, IDisposable
         }
     }
 
-    internal int GetNewGroupId() => Interlocked.Increment(ref _lastGroupId);
+    internal long GetNewGroupId() => Interlocked.Increment(ref _lastGroupId);
 
-    internal int GetNewProjectId() => Interlocked.Increment(ref _lastProjectId);
+    internal long GetNewProjectId() => Interlocked.Increment(ref _lastProjectId);
 
-    internal int GetNewMergeRequestId() => Interlocked.Increment(ref _lastMergeRequestId);
+    internal long GetNewMergeRequestId() => Interlocked.Increment(ref _lastMergeRequestId);
 
-    internal int GetNewIssueId() => Interlocked.Increment(ref _lastIssueId);
+    internal long GetNewIssueId() => Interlocked.Increment(ref _lastIssueId);
 
-    internal int GetNewMilestoneId() => Interlocked.Increment(ref _lastMilestoneId);
+    internal long GetNewMilestoneId() => Interlocked.Increment(ref _lastMilestoneId);
 
-    internal int GetNewRunnerId() => Interlocked.Increment(ref _lastRunnerId);
+    internal long GetNewRunnerId() => Interlocked.Increment(ref _lastRunnerId);
 
-    internal int GetNewPipelineId() => Interlocked.Increment(ref _lastPipelineId);
+    internal long GetNewPipelineId() => Interlocked.Increment(ref _lastPipelineId);
 
-    internal int GetNewPipelineScheduleId() => Interlocked.Increment(ref _lastPipelineScheduleId);
+    internal long GetNewPipelineScheduleId() => Interlocked.Increment(ref _lastPipelineScheduleId);
 
-    internal int GetNewJobId() => Interlocked.Increment(ref _lastJobId);
+    internal long GetNewJobId() => Interlocked.Increment(ref _lastJobId);
 
-    internal int GetNewBadgeId() => Interlocked.Increment(ref _lastBadgeId);
+    internal long GetNewBadgeId() => Interlocked.Increment(ref _lastBadgeId);
 
-    internal int GetNewLabelId() => Interlocked.Increment(ref _lastLabelId);
+    internal long GetNewLabelId() => Interlocked.Increment(ref _lastLabelId);
 
-    internal int GetNewProtectedBranchId() => Interlocked.Increment(ref _lastProtectedBranchId);
+    internal long GetNewProtectedBranchId() => Interlocked.Increment(ref _lastProtectedBranchId);
 
-    internal int GetNewResourceLabelEventId() => Interlocked.Increment(ref _lastResourceLabelEventId);
+    internal long GetNewResourceLabelEventId() => Interlocked.Increment(ref _lastResourceLabelEventId);
 
-    internal int GetNewResourceMilestoneEventId() => Interlocked.Increment(ref _lastResourceMilestoneEventId);
+    internal long GetNewResourceMilestoneEventId() => Interlocked.Increment(ref _lastResourceMilestoneEventId);
 
-    internal int GetNewResourceStateEventId() => Interlocked.Increment(ref _lastResourceStateEventId);
+    internal long GetNewResourceStateEventId() => Interlocked.Increment(ref _lastResourceStateEventId);
 
     internal string GetNewRunnerToken() => MakeToken(Convert.ToString(Interlocked.Increment(ref _lastTokenId)));
 

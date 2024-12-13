@@ -9,11 +9,11 @@ public sealed class Issue : GitLabObject
 {
     public Project Project => (Project)Parent;
 
-    public int Id { get; set; }
+    public long Id { get; set; }
 
-    public int Iid { get; set; }
+    public long Iid { get; set; }
 
-    public int ProjectId => Project.Id;
+    public long ProjectId => Project.Id;
 
     public string Title { get; set; }
 

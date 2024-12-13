@@ -6,7 +6,7 @@ namespace NGitLab.Models;
 public class PipelineScheduleBasic
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [JsonPropertyName("description")]
     public string Description { get; set; }

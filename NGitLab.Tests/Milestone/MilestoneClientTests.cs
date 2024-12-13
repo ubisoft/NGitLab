@@ -98,7 +98,7 @@ public class MilestoneClientTests
         Assert.That(mergeRequests, Has.Length.EqualTo(1), "The query retrieved all merged requests that assigned to the milestone.");
     }
 
-    private static Models.Milestone CreateMilestone(GitLabTestContext context, MilestoneScope scope, int id, string title)
+    private static Models.Milestone CreateMilestone(GitLabTestContext context, MilestoneScope scope, long id, string title)
     {
         var milestoneClient = scope == MilestoneScope.Projects ? context.Client.GetMilestone(id) : context.Client.GetGroupMilestone(id);
         var milestone = milestoneClient.Create(new MilestoneCreate
@@ -120,7 +120,7 @@ public class MilestoneClientTests
         return milestone;
     }
 
-    private static Models.Milestone UpdateMilestone(GitLabTestContext context, MilestoneScope scope, int id, Models.Milestone milestone)
+    private static Models.Milestone UpdateMilestone(GitLabTestContext context, MilestoneScope scope, long id, Models.Milestone milestone)
     {
         var milestoneClient = scope == MilestoneScope.Projects ? context.Client.GetMilestone(id) : context.Client.GetGroupMilestone(id);
         var updatedMilestone = milestoneClient.Update(milestone.Id, new MilestoneUpdate
@@ -143,7 +143,7 @@ public class MilestoneClientTests
         return updatedMilestone;
     }
 
-    private static Models.Milestone UpdatePartialMilestone(GitLabTestContext context, MilestoneScope scope, int id, Models.Milestone milestone)
+    private static Models.Milestone UpdatePartialMilestone(GitLabTestContext context, MilestoneScope scope, long id, Models.Milestone milestone)
     {
         var milestoneClient = scope == MilestoneScope.Projects ? context.Client.GetMilestone(id) : context.Client.GetGroupMilestone(id);
         var updatedMilestone = milestoneClient.Update(milestone.Id, new MilestoneUpdate
@@ -163,7 +163,7 @@ public class MilestoneClientTests
         return updatedMilestone;
     }
 
-    private static Models.Milestone ActivateMilestone(GitLabTestContext context, MilestoneScope scope, int id, Models.Milestone milestone)
+    private static Models.Milestone ActivateMilestone(GitLabTestContext context, MilestoneScope scope, long id, Models.Milestone milestone)
     {
         var milestoneClient = scope == MilestoneScope.Projects ? context.Client.GetMilestone(id) : context.Client.GetGroupMilestone(id);
         var activeMilestone = milestoneClient.Activate(milestone.Id);
@@ -179,7 +179,7 @@ public class MilestoneClientTests
         return activeMilestone;
     }
 
-    private static Models.Milestone CloseMilestone(GitLabTestContext context, MilestoneScope scope, int id, Models.Milestone milestone)
+    private static Models.Milestone CloseMilestone(GitLabTestContext context, MilestoneScope scope, long id, Models.Milestone milestone)
     {
         var milestoneClient = scope == MilestoneScope.Projects ? context.Client.GetMilestone(id) : context.Client.GetGroupMilestone(id);
         var closedMilestone = milestoneClient.Close(milestone.Id);
@@ -195,7 +195,7 @@ public class MilestoneClientTests
         return closedMilestone;
     }
 
-    private static void DeleteMilestone(GitLabTestContext context, MilestoneScope scope, int id, Models.Milestone milestone)
+    private static void DeleteMilestone(GitLabTestContext context, MilestoneScope scope, long id, Models.Milestone milestone)
     {
         var milestoneClient = scope == MilestoneScope.Projects ? context.Client.GetMilestone(id) : context.Client.GetGroupMilestone(id);
         milestoneClient.Delete(milestone.Id);

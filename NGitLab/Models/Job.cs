@@ -16,7 +16,7 @@ public class Job : JobBasic
     public class JobRunner
     {
         [JsonPropertyName("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [JsonPropertyName("name")]
         public string Name { get; set; }
@@ -43,7 +43,7 @@ public class Job : JobBasic
     public class JobProject
     {
         [JsonPropertyName("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [JsonPropertyName("name")]
         public string Name { get; set; }

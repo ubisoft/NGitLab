@@ -5,11 +5,11 @@ namespace NGitLab.Mock;
 
 public sealed class Event : GitLabObject
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string Title { get; set; }
 
-    public int ProjectId { get; set; }
+    public long ProjectId { get; set; }
 
     public DynamicEnum<EventAction> Action { get; set; }
 
@@ -21,7 +21,7 @@ public sealed class Event : GitLabObject
 
     public string TargetTitle { get; set; }
 
-    public int AuthorId { get; set; }
+    public long AuthorId { get; set; }
 
     public string AuthorUserName { get; set; }
 

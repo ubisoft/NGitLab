@@ -15,7 +15,7 @@ public class MergeRequestApprovalClient : IMergeRequestApprovalClient
     private readonly string _approvePath;
     private readonly string _resetApprovalsPath;
 
-    public MergeRequestApprovalClient(API api, string projectPath, int mergeRequestIid)
+    public MergeRequestApprovalClient(API api, string projectPath, long mergeRequestIid)
     {
         var iid = mergeRequestIid.ToString(CultureInfo.InvariantCulture);
         _api = api;

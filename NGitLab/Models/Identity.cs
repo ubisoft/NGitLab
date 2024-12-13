@@ -11,5 +11,5 @@ public class Identity
     public string ExternUid;
 
     [JsonPropertyName("saml_provider_id")]
-    public int? SamlProviderId;
+    public long? SamlProviderId;
 }

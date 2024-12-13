@@ -30,9 +30,9 @@ public sealed class MergeRequest : GitLabObject
 
     public Project Project => (Project)Parent;
 
-    public int Id { get; internal set; }
+    public long Id { get; internal set; }
 
-    public int Iid { get; internal set; }
+    public long Iid { get; internal set; }
 
     public string Title { get; set; }
 

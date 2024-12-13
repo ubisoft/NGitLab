@@ -6,11 +6,11 @@ namespace NGitLab.Models;
 
 public class SnippetProjectUpdate
 {
-    public int ProjectId;
+    public long ProjectId;
 
     [Required]
     [JsonPropertyName("id")]
-    public int SnippetId { get; set; }
+    public long SnippetId { get; set; }
 
     [Required]
     [JsonPropertyName("title")]

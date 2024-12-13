@@ -11,13 +11,13 @@ public class MergeRequestUpdate
     public string TargetBranch;
 
     [JsonPropertyName("assignee_id")]
-    public int? AssigneeId;
+    public long? AssigneeId;
 
     [JsonPropertyName("assignee_ids")]
-    public int[] AssigneeIds;
+    public long[] AssigneeIds;
 
     [JsonPropertyName("reviewer_ids")]
-    public int[] ReviewerIds;
+    public long[] ReviewerIds;
 
     [JsonPropertyName("title")]
     public string Title;
@@ -38,7 +38,7 @@ public class MergeRequestUpdate
     public string RemoveLabels;
 
     [JsonPropertyName("milestone_id")]
-    public int? MilestoneId;
+    public long? MilestoneId;
 
     [JsonPropertyName("allow_collaboration")]
     public bool? AllowCollaboration;

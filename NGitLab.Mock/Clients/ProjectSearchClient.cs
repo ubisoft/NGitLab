@@ -6,7 +6,7 @@ namespace NGitLab.Mock.Clients;
 internal sealed class ProjectSearchClient : ClientBase, ISearchClient
 {
     private readonly ClientContext _context;
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public ProjectSearchClient(ClientContext context, ProjectId projectId)
         : base(context)

@@ -6,15 +6,15 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class EventClient : ClientBase, IEventClient
 {
-    private readonly int? _userId;
-    private readonly int? _projectId;
+    private readonly long? _userId;
+    private readonly long? _projectId;
 
     public EventClient(ClientContext context)
         : base(context)
     {
     }
 
-    public EventClient(ClientContext context, int? userId = null, ProjectId? projectId = null)
+    public EventClient(ClientContext context, long? userId = null, ProjectId? projectId = null)
         : base(context)
     {
         _userId = userId;

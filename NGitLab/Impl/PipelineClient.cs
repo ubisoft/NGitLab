@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,12 +14,6 @@ public class PipelineClient : IPipelineClient
     private readonly API _api;
     private readonly string _projectPath;
     private readonly string _pipelinesPath;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public PipelineClient(API api, int projectId)
-        : this(api, (long)projectId)
-    {
-    }
 
     public PipelineClient(API api, ProjectId projectId)
     {
@@ -51,14 +44,14 @@ public class PipelineClient : IPipelineClient
         return _api.Get().GetAll<Job>(url);
     }
 
-    public Pipeline this[int id] => _api.Get().To<Pipeline>($"{_pipelinesPath}/{id.ToStringInvariant()}");
+    public Pipeline this[long id] => _api.Get().To<Pipeline>($"{_pipelinesPath}/{id.ToStringInvariant()}");
 
-    public Task<Pipeline> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public Task<Pipeline> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<Pipeline>($"{_pipelinesPath}/{id.ToStringInvariant()}", cancellationToken);
     }
 
-    public Job[] GetJobs(int pipelineId)
+    public Job[] GetJobs(long pipelineId)
     {
         // For some reason GitLab returns the jobs in the reverse order as
         // they appear in their UI. Here we reverse them!
@@ -179,27 +172,27 @@ public class PipelineClient : IPipelineClient
         return url;
     }
 
-    public void Delete(int pipelineId)
+    public void Delete(long pipelineId)
     {
         _api.Delete().Execute($"{_pipelinesPath}/{pipelineId.ToStringInvariant()}");
     }
 
-    public IEnumerable<PipelineVariable> GetVariables(int pipelineId)
+    public IEnumerable<PipelineVariable> GetVariables(long pipelineId)
     {
         return _api.Get().GetAll<PipelineVariable>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/variables");
     }
 
-    public GitLabCollectionResponse<PipelineVariable> GetVariablesAsync(int pipelineId)
+    public GitLabCollectionResponse<PipelineVariable> GetVariablesAsync(long pipelineId)
     {
         return _api.Get().GetAllAsync<PipelineVariable>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/variables");
     }
 
-    public TestReport GetTestReports(int pipelineId)
+    public TestReport GetTestReports(long pipelineId)
     {
         return _api.Get().To<TestReport>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/test_report");
     }
 
-    public TestReportSummary GetTestReportsSummary(int pipelineId)
+    public TestReportSummary GetTestReportsSummary(long pipelineId)
     {
         return _api.Get().To<TestReportSummary>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/test_report_summary");
     }
@@ -217,13 +210,13 @@ public class PipelineClient : IPipelineClient
         return url;
     }
 
-    public Task<Pipeline> RetryAsync(int pipelineId, CancellationToken cancellationToken = default)
+    public Task<Pipeline> RetryAsync(long pipelineId, CancellationToken cancellationToken = default)
     {
         var url = $"{_pipelinesPath}/{pipelineId.ToStringInvariant()}/retry";
         return _api.Post().ToAsync<Pipeline>(url, cancellationToken);
     }
 
-    public Task<Pipeline> UpdateMetadataAsync(int pipelineId, PipelineMetadataUpdate update, CancellationToken cancellationToken = default)
+    public Task<Pipeline> UpdateMetadataAsync(long pipelineId, PipelineMetadataUpdate update, CancellationToken cancellationToken = default)
     {
         var updatedMetadataValues = new Dictionary<string, string>(StringComparer.Ordinal);
 

@@ -8,11 +8,11 @@ public class RunnerId
     {
     }
 
-    public RunnerId(int id)
+    public RunnerId(long id)
     {
         Id = id;
     }
 
     [JsonPropertyName("runner_id")]
-    public int Id;
+    public long Id;
 }

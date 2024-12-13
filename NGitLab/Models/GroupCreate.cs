@@ -26,7 +26,7 @@ public class GroupCreate
     public bool RequestAccessEnabled;
 
     [JsonPropertyName("parent_id")]
-    public int? ParentId;
+    public long? ParentId;
 
     [JsonPropertyName("shared_runners_minutes_limit")]
     public int? SharedRunnersMinutesLimit { get; set; }

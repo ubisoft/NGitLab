@@ -11,7 +11,7 @@ public class MergeRequestDiscussionClient : IMergeRequestDiscussionClient
     private readonly API _api;
     private readonly string _discussionsPath;
 
-    public MergeRequestDiscussionClient(API api, string projectPath, int mergeRequestIid)
+    public MergeRequestDiscussionClient(API api, string projectPath, long mergeRequestIid)
     {
         _api = api;
         _discussionsPath = projectPath + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/discussions";

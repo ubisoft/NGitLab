@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab.Impl;
@@ -12,24 +11,18 @@ public class ProjectIssueNoteClient : IProjectIssueNoteClient
     private readonly API _api;
     private readonly string _projectId;
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public ProjectIssueNoteClient(API api, int projectId)
-        : this(api, (long)projectId)
-    {
-    }
-
     public ProjectIssueNoteClient(API api, ProjectId projectId)
     {
         _api = api;
         _projectId = projectId.ValueAsUriParameter();
     }
 
-    public IEnumerable<ProjectIssueNote> ForIssue(int issueId)
+    public IEnumerable<ProjectIssueNote> ForIssue(long issueId)
     {
         return _api.Get().GetAll<ProjectIssueNote>(string.Format(IssuesNoteUrl, _projectId, issueId));
     }
 
-    public ProjectIssueNote Get(int issueId, int noteId)
+    public ProjectIssueNote Get(long issueId, long noteId)
     {
         return _api.Get().To<ProjectIssueNote>(string.Format(SingleNoteIssueUrl, _projectId, issueId, noteId));
     }

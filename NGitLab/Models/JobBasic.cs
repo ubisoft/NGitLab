@@ -9,7 +9,7 @@ public class JobBasic
     public string Name { get; set; }
 
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [JsonPropertyName("ref")]
     public string Ref { get; set; }
@@ -65,10 +65,10 @@ public class JobBasic
     public class JobPipeline
     {
         [JsonPropertyName("id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [JsonPropertyName("project_id")]
-        public int ProjectId { get; set; }
+        public long ProjectId { get; set; }
 
         [JsonPropertyName("ref")]
         public string Ref { get; set; }

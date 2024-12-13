@@ -14,7 +14,7 @@ public interface INamespacesClient
     /// </summary>
     IEnumerable<Namespace> Accessible { get; }
 
-    Namespace this[int id] { get; }
+    Namespace this[long id] { get; }
 
     /// <summary>
     /// Returns the project with the provided full path in the form Namespace/Name.

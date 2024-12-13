@@ -25,7 +25,7 @@ public sealed class ResourceStateEventCollection : Collection<ResourceStateEvent
         base.Add(item);
     }
 
-    internal IEnumerable<ResourceStateEvent> Get(int? resourceId)
+    internal IEnumerable<ResourceStateEvent> Get(long? resourceId)
     {
         var resourceStateEvents = this.AsQueryable();
 
@@ -37,12 +37,12 @@ public sealed class ResourceStateEventCollection : Collection<ResourceStateEvent
         return resourceStateEvents;
     }
 
-    private int GetNewId()
+    private long GetNewId()
     {
         return this.Select(rle => rle.Id).DefaultIfEmpty().Max() + 1;
     }
 
-    internal void CreateResourceStateEvent(User currentUser, string state, int id, string resourceType)
+    internal void CreateResourceStateEvent(User currentUser, string state, long id, string resourceType)
     {
         Add(new ResourceStateEvent()
         {

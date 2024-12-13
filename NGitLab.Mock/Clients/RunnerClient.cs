@@ -45,7 +45,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
     {
     }
 
-    public Models.Runner this[int id]
+    public Models.Runner this[long id]
     {
         get
         {
@@ -59,7 +59,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
 
     public void Delete(Models.Runner runner) => Delete(runner.Id);
 
-    public void Delete(int runnerId)
+    public void Delete(long runnerId)
     {
         using (Context.BeginOperationScope())
         {
@@ -87,7 +87,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         }
     }
 
-    public Models.Runner Update(int runnerId, RunnerUpdate runnerUpdate)
+    public Models.Runner Update(long runnerId, RunnerUpdate runnerUpdate)
     {
         using (Context.BeginOperationScope())
         {
@@ -105,7 +105,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         }
     }
 
-    public IEnumerable<Models.Runner> OfGroup(int groupId)
+    public IEnumerable<Models.Runner> OfGroup(long groupId)
     {
         using (Context.BeginOperationScope())
         {
@@ -114,12 +114,12 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         }
     }
 
-    public GitLabCollectionResponse<Models.Runner> OfGroupAsync(int groupId)
+    public GitLabCollectionResponse<Models.Runner> OfGroupAsync(long groupId)
     {
         return GitLabCollectionResponse.Create(OfGroup(groupId));
     }
 
-    public IEnumerable<Models.Runner> OfProject(int projectId)
+    public IEnumerable<Models.Runner> OfProject(long projectId)
     {
         using (Context.BeginOperationScope())
         {
@@ -128,23 +128,23 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         }
     }
 
-    public GitLabCollectionResponse<Models.Runner> OfProjectAsync(int projectId)
+    public GitLabCollectionResponse<Models.Runner> OfProjectAsync(long projectId)
     {
         return GitLabCollectionResponse.Create(OfProject(projectId));
     }
 
-    public IEnumerable<Models.Job> GetJobs(int runnerId, JobScope jobScope)
+    public IEnumerable<Models.Job> GetJobs(long runnerId, JobScope jobScope)
     {
         throw new NotImplementedException();
     }
 
-    public IEnumerable<Models.Job> GetJobs(int runnerId, JobStatus? status = null)
+    public IEnumerable<Models.Job> GetJobs(long runnerId, JobStatus? status = null)
     {
         throw new NotImplementedException();
     }
 
     [Obsolete("Use OfProject() or OfGroup() instead")]
-    IEnumerable<Models.Runner> IRunnerClient.GetAvailableRunners(int projectId)
+    IEnumerable<Models.Runner> IRunnerClient.GetAvailableRunners(long projectId)
     {
         return OfProject(projectId);
     }
@@ -154,7 +154,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         throw new NotImplementedException();
     }
 
-    public Models.Runner EnableRunner(int projectId, RunnerId runnerId)
+    public Models.Runner EnableRunner(long projectId, RunnerId runnerId)
     {
         using (Context.BeginOperationScope())
         {
@@ -174,13 +174,13 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
     }
 
     [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
-    public async Task<Models.Runner> EnableRunnerAsync(int projectId, RunnerId runnerId, CancellationToken cancellationToken = default)
+    public async Task<Models.Runner> EnableRunnerAsync(long projectId, RunnerId runnerId, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         return EnableRunner(projectId, runnerId);
     }
 
-    public void DisableRunner(int projectId, RunnerId runnerId)
+    public void DisableRunner(long projectId, RunnerId runnerId)
     {
         using (Context.BeginOperationScope())
         {
@@ -205,7 +205,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         return runners;
     }
 
-    private Runner GetServerRunner(int id)
+    private Runner GetServerRunner(long id)
     {
         return GetOwnedRunners().FirstOrDefault(runner => runner.Id == id) ?? throw new GitLabNotFoundException();
     }

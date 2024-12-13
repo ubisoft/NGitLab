@@ -14,17 +14,17 @@ public interface IMilestoneClient
 
     IEnumerable<Milestone> Get(MilestoneQuery query);
 
-    Milestone this[int id] { get; }
+    Milestone this[long id] { get; }
 
     Milestone Create(MilestoneCreate milestone);
 
-    Milestone Update(int milestoneId, MilestoneUpdate milestone);
+    Milestone Update(long milestoneId, MilestoneUpdate milestone);
 
-    void Delete(int milestoneId);
+    void Delete(long milestoneId);
 
-    Milestone Close(int milestoneId);
+    Milestone Close(long milestoneId);
 
-    Milestone Activate(int milestoneId);
+    Milestone Activate(long milestoneId);
 
-    IEnumerable<MergeRequest> GetMergeRequests(int milestoneId);
+    IEnumerable<MergeRequest> GetMergeRequests(long milestoneId);
 }

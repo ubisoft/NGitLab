@@ -25,7 +25,7 @@ public sealed class EventCollection : Collection<Event>
         base.Add(item);
     }
 
-    internal IEnumerable<Event> Get(EventQuery query, int? userId, int? projectId)
+    internal IEnumerable<Event> Get(EventQuery query, long? userId, long? projectId)
     {
         var events = this.AsQueryable();
 
@@ -68,7 +68,7 @@ public sealed class EventCollection : Collection<Event>
         return events;
     }
 
-    private int GetNewId()
+    private long GetNewId()
     {
         return this.Select(evt => evt.Id).DefaultIfEmpty().Max() + 1;
     }

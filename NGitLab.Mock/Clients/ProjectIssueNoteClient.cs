@@ -6,7 +6,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class ProjectIssueNoteClient : ClientBase, IProjectIssueNoteClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public ProjectIssueNoteClient(ClientContext context, ProjectId projectId)
         : base(context)
@@ -44,7 +44,7 @@ internal sealed class ProjectIssueNoteClient : ClientBase, IProjectIssueNoteClie
         }
     }
 
-    public IEnumerable<Models.ProjectIssueNote> ForIssue(int issueIid)
+    public IEnumerable<Models.ProjectIssueNote> ForIssue(long issueIid)
     {
         using (Context.BeginOperationScope())
         {
@@ -52,7 +52,7 @@ internal sealed class ProjectIssueNoteClient : ClientBase, IProjectIssueNoteClie
         }
     }
 
-    public Models.ProjectIssueNote Get(int issueIid, int noteId)
+    public Models.ProjectIssueNote Get(long issueIid, long noteId)
     {
         using (Context.BeginOperationScope())
         {
@@ -60,7 +60,7 @@ internal sealed class ProjectIssueNoteClient : ClientBase, IProjectIssueNoteClie
         }
     }
 
-    private Issue GetIssue(int issueIid)
+    private Issue GetIssue(long issueIid)
     {
         var project = GetProject(_projectId, ProjectPermission.View);
         var issue = project.Issues.FirstOrDefault(iss => iss.Iid == issueIid);
@@ -73,7 +73,7 @@ internal sealed class ProjectIssueNoteClient : ClientBase, IProjectIssueNoteClie
         return issue;
     }
 
-    private ProjectIssueNote GetIssueNote(int issueIid, int issueNoteId)
+    private ProjectIssueNote GetIssueNote(long issueIid, long issueNoteId)
     {
         var issue = GetIssue(issueIid);
         var note = issue.Notes.FirstOrDefault(n => n.Id == issueNoteId);

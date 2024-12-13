@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,12 +12,6 @@ public class JobClient : IJobClient
 {
     private readonly API _api;
     private readonly string _jobsPath;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public JobClient(API api, int projectId)
-        : this(api, (long)projectId)
-    {
-    }
 
     public JobClient(API api, ProjectId projectId)
     {
@@ -63,21 +56,21 @@ public class JobClient : IJobClient
         return url;
     }
 
-    public Job RunAction(int jobId, JobAction action) => _api.Post().To<Job>($"{_jobsPath}/{jobId.ToStringInvariant()}/{action.ToString().ToLowerInvariant()}");
+    public Job RunAction(long jobId, JobAction action) => _api.Post().To<Job>($"{_jobsPath}/{jobId.ToStringInvariant()}/{action.ToString().ToLowerInvariant()}");
 
-    public Task<Job> RunActionAsync(int jobId, JobAction action, CancellationToken cancellationToken = default)
+    public Task<Job> RunActionAsync(long jobId, JobAction action, CancellationToken cancellationToken = default)
     {
         return _api.Post().ToAsync<Job>($"{_jobsPath}/{jobId.ToStringInvariant()}/{action.ToString().ToLowerInvariant()}", cancellationToken);
     }
 
-    public Job Get(int jobId) => _api.Get().To<Job>($"{_jobsPath}/{jobId.ToStringInvariant()}");
+    public Job Get(long jobId) => _api.Get().To<Job>($"{_jobsPath}/{jobId.ToStringInvariant()}");
 
-    public Task<Job> GetAsync(int jobId, CancellationToken cancellationToken = default)
+    public Task<Job> GetAsync(long jobId, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<Job>($"{_jobsPath}/{jobId.ToStringInvariant()}", cancellationToken);
     }
 
-    public byte[] GetJobArtifacts(int jobId)
+    public byte[] GetJobArtifacts(long jobId)
     {
         byte[] result = null;
         _api.Get().Stream($"{_jobsPath}/{jobId.ToStringInvariant()}/artifacts", s =>
@@ -89,7 +82,7 @@ public class JobClient : IJobClient
         return result;
     }
 
-    public byte[] GetJobArtifact(int jobId, string path)
+    public byte[] GetJobArtifact(long jobId, string path)
     {
         byte[] result = null;
         _api.Get().Stream($"{_jobsPath}/{jobId.ToStringInvariant()}/artifacts/{path}", s =>
@@ -113,7 +106,7 @@ public class JobClient : IJobClient
         return result;
     }
 
-    public string GetTrace(int jobId)
+    public string GetTrace(long jobId)
     {
         var result = string.Empty;
         _api.Get().Stream($"{_jobsPath}/{jobId.ToStringInvariant()}/trace", s =>
@@ -123,7 +116,7 @@ public class JobClient : IJobClient
         return result;
     }
 
-    public async Task<string> GetTraceAsync(int jobId, CancellationToken cancellationToken = default)
+    public async Task<string> GetTraceAsync(long jobId, CancellationToken cancellationToken = default)
     {
         var result = string.Empty;
         await _api.Get().StreamAsync($"{_jobsPath}/{jobId.ToStringInvariant()}/trace", async s =>

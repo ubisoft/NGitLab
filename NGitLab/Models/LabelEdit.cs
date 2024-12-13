@@ -7,18 +7,8 @@ namespace NGitLab.Models;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public class LabelEdit
 {
-    public LabelEdit()
-    {
-    }
-
-    public LabelEdit(int projectId, Label label)
-    {
-        Id = projectId;
-        Name = label.Name;
-    }
-
     [JsonIgnore]
-    public int Id;
+    public long Id;
 
     [Required]
     [JsonPropertyName("name")]

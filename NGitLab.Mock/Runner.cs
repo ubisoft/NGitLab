@@ -7,7 +7,7 @@ public sealed class Runner : GitLabObject
 {
     public new Project Parent => (Project)base.Parent;
 
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string Name { get; set; }
 

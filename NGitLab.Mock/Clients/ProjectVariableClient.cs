@@ -6,7 +6,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class ProjectVariableClient : ClientBase, IProjectVariableClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public ProjectVariableClient(ClientContext context, ProjectId projectId)
         : base(context)

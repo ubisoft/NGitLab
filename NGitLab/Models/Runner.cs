@@ -10,7 +10,7 @@ public class Runner
     public const string Url = "/runners";
 
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("name")]
     public string Name;

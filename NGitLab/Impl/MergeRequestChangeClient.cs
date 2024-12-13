@@ -13,7 +13,7 @@ public class MergeRequestChangeClient : IMergeRequestChangeClient
     private readonly API _api;
     private readonly string _changesPath;
 
-    public MergeRequestChangeClient(API api, string projectPath, int mergeRequestIid)
+    public MergeRequestChangeClient(API api, string projectPath, long mergeRequestIid)
     {
         var iid = mergeRequestIid.ToString(CultureInfo.InvariantCulture);
         _api = api;

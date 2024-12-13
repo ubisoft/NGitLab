@@ -7,7 +7,7 @@ public class LabelDelete
 {
     [Required]
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [Required]
     [JsonPropertyName("name")]
