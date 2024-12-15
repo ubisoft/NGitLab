@@ -13,8 +13,6 @@ public sealed class Runner : GitLabObject
 
     public bool Paused { get; set; }
 
-    public bool Active { get; set; }
-
     public bool? Online { get; set; }
 
     public string Status { get; set; }
@@ -43,9 +41,7 @@ public sealed class Runner : GitLabObject
         {
             Id = Id,
             Name = Name,
-#pragma warning disable CS0618 // Type or member is obsolete
-            Active = Active,
-#pragma warning restore CS0618 // Type or member is obsolete
+            Paused = Paused,
             Online = Online ?? false,
             Status = Status,
             Description = Description,

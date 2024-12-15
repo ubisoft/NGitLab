@@ -212,10 +212,8 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
                 case ProjectQueryScope.Owned:
                     projects = projects.Where(p => p.IsUserOwner(Context.User));
                     break;
-                case ProjectQueryScope.Visible:
-                    projects = projects.Where(p => p.CanUserViewProject(Context.User));
-                    break;
                 case ProjectQueryScope.All:
+                    projects = projects.Where(p => p.CanUserViewProject(Context.User));
                     break;
             }
 

@@ -99,18 +99,6 @@ public class User
     [JsonPropertyName("identities")]
     public Identity[] Identities;
 
-    [Obsolete("Does not match GitLab's API. Use 'Identities.Provider' instead.")]
-    [JsonIgnore]
-    public string Provider;
-
-    [Obsolete("Does not match GitLab's API. Use 'Identities.ExternUid' instead.")]
-    [JsonIgnore]
-    public string ExternUid;
-
-    [Obsolete("Does not match GitLab's API. Use 'State' instead.")]
-    [JsonIgnore]
-    public bool Blocked;
-
     [JsonPropertyName("can_create_group")]
     public bool CanCreateGroup;
 

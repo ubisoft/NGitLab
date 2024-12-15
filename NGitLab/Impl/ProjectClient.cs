@@ -73,9 +73,6 @@ public class ProjectClient : IProjectClient
             case ProjectQueryScope.Owned:
                 url = Utils.AddParameter(url, "owned", value: true);
                 break;
-#pragma warning disable 618 // Obsolete
-            case ProjectQueryScope.Visible:
-#pragma warning restore 618
             case ProjectQueryScope.All:
                 // This is the default, it returns all visible projects.
                 break;

@@ -13,9 +13,6 @@ public enum AccessLevel
     Reporter = 20,
     Developer = 30,
     Maintainer = 40,
-    [Obsolete("Use Maintainer instead")]
-    Master = Maintainer,
-
     /// <summary>
     /// Only valid for groups.
     /// </summary>

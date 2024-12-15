@@ -31,14 +31,6 @@ public class Variable
     [JsonPropertyName("raw")]
     public bool Raw { get; set; }
 
-    [JsonIgnore]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public string Scope
-    {
-        get => EnvironmentScope;
-        set => EnvironmentScope = value;
-    }
-
     /// <summary>
     /// The environment scope of a variable
     /// </summary>

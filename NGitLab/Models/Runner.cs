@@ -18,10 +18,6 @@ public class Runner
     [JsonPropertyName("paused")]
     public bool Paused;
 
-    [Obsolete("Use Paused field instead")]
-    [JsonPropertyName("active")]
-    public bool Active;
-
     [JsonPropertyName("online")]
     public bool Online;
 

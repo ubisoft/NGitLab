@@ -15,12 +15,6 @@ internal sealed class ContributorClient : IContributorClient
         _contributorPath = repoPath + Contributor.Url;
     }
 
-    [Obsolete("Argument projectId is redundant, please use ContributorClient(API api, string repoPath) instead.")]
-    public ContributorClient(API api, string repoPath, long projectId)
-        : this(api, repoPath)
-    {
-    }
-
     /// <remarks>
     /// HACK: We force the order_by and sort due to a pagination bug from GitLab
     /// </remarks>

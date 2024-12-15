@@ -85,13 +85,7 @@ public enum ProjectQueryScope
     Owned,
 
     /// <summary>
-    /// Get a list of projects which the authenticated user can see.
-    /// </summary>
-    [Obsolete("Use All instead which is the same behavior.")]
-    Visible,
-
-    /// <summary>
-    /// Get a list of all GitLab projects.
+    /// Get a list of all projects which the authenticated user can see.
     /// </summary>
     All,
 }

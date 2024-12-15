@@ -249,14 +249,13 @@ public sealed class Group : GitLabObject
         return accessLevel.HasValue && accessLevel.Value >= AccessLevel.Developer;
     }
 
-    public Runner AddRunner(string description, long id = default, string name = "gitlab-runner", bool paused = false, bool locked = true, bool isShared = false, bool runUntagged = false, string[] tagList = null, bool active = true)
+    public Runner AddRunner(string description, long id = default, string name = "gitlab-runner", bool paused = false, bool locked = true, bool isShared = false, bool runUntagged = false, string[] tagList = null)
     {
         var runner = new Runner
         {
             Name = name,
             Description = description,
             Paused = paused,
-            Active = active,
             Locked = locked,
             IsShared = isShared,
             IpAddress = "0.0.0.0",

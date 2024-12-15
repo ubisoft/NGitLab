@@ -429,7 +429,7 @@ NGitLab.Mock.GitLabServer.Users.get -> NGitLab.Mock.UserCollection
 NGitLab.Mock.GitLabServer.Version.get -> NGitLab.Models.GitLabVersion
 NGitLab.Mock.GitLabServer.Version.set -> void
 NGitLab.Mock.Group
-NGitLab.Mock.Group.AddRunner(string description, long id = 0, string name = "gitlab-runner", bool paused = false, bool locked = true, bool isShared = false, bool runUntagged = false, string[] tagList = null, bool active = true) -> NGitLab.Mock.Runner
+NGitLab.Mock.Group.AddRunner(string description, long id = 0, string name = "gitlab-runner", bool paused = false, bool locked = true, bool isShared = false, bool runUntagged = false, string[] tagList = null) -> NGitLab.Mock.Runner
 NGitLab.Mock.Group.AllProjects.get -> System.Collections.Generic.IEnumerable<NGitLab.Mock.Project>
 NGitLab.Mock.Group.Badges.get -> NGitLab.Mock.BadgeCollection
 NGitLab.Mock.Group.CanUserAddGroup(NGitLab.Mock.User user) -> bool
@@ -872,7 +872,7 @@ NGitLab.Mock.Project.AccessibleMergeRequests.get -> bool
 NGitLab.Mock.Project.AccessibleMergeRequests.set -> void
 NGitLab.Mock.Project.AddRunner(string name, string description, bool active, bool locked, bool isShared) -> NGitLab.Mock.Runner
 NGitLab.Mock.Project.AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged) -> NGitLab.Mock.Runner
-NGitLab.Mock.Project.AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged, long id) -> NGitLab.Mock.Runner
+NGitLab.Mock.Project.AddRunner(string name, string description, bool paused, bool locked, bool isShared, bool runUntagged, long id) -> NGitLab.Mock.Runner
 NGitLab.Mock.Project.AllThreadsMustBeResolvedToMerge.get -> bool
 NGitLab.Mock.Project.AllThreadsMustBeResolvedToMerge.set -> void
 NGitLab.Mock.Project.ApprovalsBeforeMerge.get -> int
@@ -1148,8 +1148,6 @@ NGitLab.Mock.ResourceStateEvent.User.set -> void
 NGitLab.Mock.ResourceStateEventCollection
 NGitLab.Mock.ResourceStateEventCollection.ResourceStateEventCollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.Runner
-NGitLab.Mock.Runner.Active.get -> bool
-NGitLab.Mock.Runner.Active.set -> void
 NGitLab.Mock.Runner.ContactedAt.get -> System.DateTime
 NGitLab.Mock.Runner.ContactedAt.set -> void
 NGitLab.Mock.Runner.Description.get -> string

@@ -94,7 +94,6 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
             var runner = this[runnerId] ?? throw new GitLabNotFoundException();
             var runnerOnServer = GetServerRunner(runnerId);
 
-            runnerOnServer.Active = runnerUpdate.IsActive() ?? runnerOnServer.IsActive();
             runnerOnServer.Paused = runnerUpdate.Paused ?? runnerOnServer.Paused;
             runnerOnServer.TagList = runnerUpdate.TagList ?? runnerOnServer.TagList;
             runnerOnServer.Description = !string.IsNullOrEmpty(runnerUpdate.Description) ? runnerUpdate.Description : runnerOnServer.Description;
@@ -224,7 +223,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
             var group = Server.AllGroups.SingleOrDefault(g => string.Equals(g.RunnersToken, request.Token, StringComparison.Ordinal));
             if (group != null)
             {
-                var runner = group.AddRunner(request.Description, active: !request.Paused ?? true, paused: request.Paused ?? false, tagList: request.TagList, runUntagged: request.RunUntagged ?? false, locked: request.Locked ?? true);
+                var runner = group.AddRunner(request.Description, paused: request.Paused ?? false, tagList: request.TagList, runUntagged: request.RunUntagged ?? false, locked: request.Locked ?? true);
                 return runner.ToClientRunner(Context.User);
             }
 

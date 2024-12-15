@@ -36,7 +36,7 @@ internal sealed class TagClient : ClientBase, ITagClient
         using (Context.BeginOperationScope())
         {
             var project = GetProject(_projectId, ProjectPermission.Contribute);
-            var createdTag = project.Repository.CreateTag(Context.User, tag.Name, tag.Ref, tag.Message, tag.ReleaseDescription);
+            var createdTag = project.Repository.CreateTag(Context.User, tag.Name, tag.Ref, tag.Message);
 
             return ToTagClient(createdTag);
         }

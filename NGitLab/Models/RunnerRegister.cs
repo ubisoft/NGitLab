@@ -8,10 +8,6 @@ public class RunnerRegister
     [JsonPropertyName("token")]
     public string Token { get; set; }
 
-    [Obsolete("Use Paused property instead")]
-    [JsonPropertyName("active")]
-    public bool? Active { get; set; }
-
     [JsonPropertyName("paused")]
     public bool? Paused { get; set; }
 

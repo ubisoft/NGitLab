@@ -11,10 +11,6 @@ public class Snippet
     [JsonPropertyName("title")]
     public string Title;
 
-    [JsonPropertyName("file_name")]
-    [Obsolete("Consider using the Files array that support more than one file.")]
-    public string FileName;
-
     [JsonPropertyName("description")]
     public string Description;
 

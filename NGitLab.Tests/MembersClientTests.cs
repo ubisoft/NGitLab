@@ -170,7 +170,7 @@ public class MembersClientTests
         var user1Id = user1.Id.ToString();
 
         // Add the user to the top-level group as a Maintainer...
-        await client.Members.AddMemberToGroupAsync(group1, new()
+        await client.Members.AddMemberToGroupAsync(group1.Id, new()
         {
             AccessLevel = AccessLevel.Maintainer,
             UserId = user1Id,

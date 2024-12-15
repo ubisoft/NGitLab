@@ -1,6 +1,4 @@
-﻿#pragma warning disable IDE0250 // Make struct 'readonly', this would be a breaking change
-#pragma warning disable MA0102  // Make member readonly, this would be a breaking change
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace NGitLab;
@@ -9,7 +7,7 @@ namespace NGitLab;
 /// Allows to expose enums without knowing all the possible values
 /// that can be serialized from the client.
 /// </summary>
-public struct DynamicEnum<TEnum> : IEquatable<DynamicEnum<TEnum>>, IEquatable<TEnum>
+public readonly struct DynamicEnum<TEnum> : IEquatable<DynamicEnum<TEnum>>, IEquatable<TEnum>
     where TEnum : struct, Enum
 {
     /// <summary>

@@ -1208,7 +1208,6 @@ NGitLab.Models.AccessLevel.Admin = 60 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Developer = 30 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Guest = 10 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Maintainer = 40 -> NGitLab.Models.AccessLevel
-NGitLab.Models.AccessLevel.Master = 40 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.NoAccess = 0 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Owner = 50 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Reporter = 20 -> NGitLab.Models.AccessLevel
@@ -1925,7 +1924,6 @@ NGitLab.Models.GroupId.Equals(NGitLab.Models.GroupId other) -> bool
 NGitLab.Models.GroupId.Equals(string otherPath, long otherId) -> bool
 NGitLab.Models.GroupId.GroupId() -> void
 NGitLab.Models.GroupId.GroupId(long id) -> void
-NGitLab.Models.GroupId.GroupId(NGitLab.Models.Group group) -> void
 NGitLab.Models.GroupId.GroupId(string path) -> void
 NGitLab.Models.GroupIdControl
 NGitLab.Models.GroupIdControl.GroupId.get -> long
@@ -3048,7 +3046,6 @@ NGitLab.Models.ProjectId.Equals(NGitLab.Models.ProjectId other) -> bool
 NGitLab.Models.ProjectId.Equals(string otherPath, long otherId) -> bool
 NGitLab.Models.ProjectId.ProjectId() -> void
 NGitLab.Models.ProjectId.ProjectId(long id) -> void
-NGitLab.Models.ProjectId.ProjectId(NGitLab.Models.Project project) -> void
 NGitLab.Models.ProjectId.ProjectId(string path) -> void
 NGitLab.Models.ProjectIssueNote
 NGitLab.Models.ProjectIssueNote.Attachment -> string
@@ -3146,9 +3143,8 @@ NGitLab.Models.ProjectQuery.UserId -> long?
 NGitLab.Models.ProjectQuery.Visibility -> NGitLab.Models.VisibilityLevel?
 NGitLab.Models.ProjectQueryScope
 NGitLab.Models.ProjectQueryScope.Accessible = 0 -> NGitLab.Models.ProjectQueryScope
-NGitLab.Models.ProjectQueryScope.All = 3 -> NGitLab.Models.ProjectQueryScope
+NGitLab.Models.ProjectQueryScope.All = 2 -> NGitLab.Models.ProjectQueryScope
 NGitLab.Models.ProjectQueryScope.Owned = 1 -> NGitLab.Models.ProjectQueryScope
-NGitLab.Models.ProjectQueryScope.Visible = 2 -> NGitLab.Models.ProjectQueryScope
 NGitLab.Models.ProjectStatistics
 NGitLab.Models.ProjectStatistics.CommitCount -> long
 NGitLab.Models.ProjectStatistics.JobArtifactsSize -> long
@@ -3488,7 +3484,6 @@ NGitLab.Models.ResourceStateEvent.State.set -> void
 NGitLab.Models.ResourceStateEvent.User.get -> NGitLab.Models.Author
 NGitLab.Models.ResourceStateEvent.User.set -> void
 NGitLab.Models.Runner
-NGitLab.Models.Runner.Active -> bool
 NGitLab.Models.Runner.ContactedAt -> System.DateTime
 NGitLab.Models.Runner.Description -> string
 NGitLab.Models.Runner.Groups -> NGitLab.Models.Group[]
@@ -3511,8 +3506,6 @@ NGitLab.Models.RunnerId.Id -> long
 NGitLab.Models.RunnerId.RunnerId() -> void
 NGitLab.Models.RunnerId.RunnerId(long id) -> void
 NGitLab.Models.RunnerRegister
-NGitLab.Models.RunnerRegister.Active.get -> bool?
-NGitLab.Models.RunnerRegister.Active.set -> void
 NGitLab.Models.RunnerRegister.Description.get -> string
 NGitLab.Models.RunnerRegister.Description.set -> void
 NGitLab.Models.RunnerRegister.Locked.get -> bool?
@@ -3533,7 +3526,6 @@ NGitLab.Models.RunnerScope.Paused = 3 -> NGitLab.Models.RunnerScope
 NGitLab.Models.RunnerScope.Shared = 1 -> NGitLab.Models.RunnerScope
 NGitLab.Models.RunnerScope.Specific = 0 -> NGitLab.Models.RunnerScope
 NGitLab.Models.RunnerUpdate
-NGitLab.Models.RunnerUpdate.Active -> bool?
 NGitLab.Models.RunnerUpdate.Description -> string
 NGitLab.Models.RunnerUpdate.Locked -> bool?
 NGitLab.Models.RunnerUpdate.Paused -> bool?
@@ -3574,7 +3566,6 @@ NGitLab.Models.Snippet
 NGitLab.Models.Snippet.Author -> NGitLab.Models.Author
 NGitLab.Models.Snippet.CreatedAt -> System.DateTime
 NGitLab.Models.Snippet.Description -> string
-NGitLab.Models.Snippet.FileName -> string
 NGitLab.Models.Snippet.Files.get -> NGitLab.Models.SnippetFile[]
 NGitLab.Models.Snippet.Files.set -> void
 NGitLab.Models.Snippet.Id -> long
@@ -3583,9 +3574,7 @@ NGitLab.Models.Snippet.Title -> string
 NGitLab.Models.Snippet.UpdatedAt -> string
 NGitLab.Models.Snippet.WebUrl -> string
 NGitLab.Models.SnippetCreate
-NGitLab.Models.SnippetCreate.Content -> string
 NGitLab.Models.SnippetCreate.Description -> string
-NGitLab.Models.SnippetCreate.FileName -> string
 NGitLab.Models.SnippetCreate.Files.get -> NGitLab.Models.SnippetCreateFile[]
 NGitLab.Models.SnippetCreate.Files.set -> void
 NGitLab.Models.SnippetCreate.SnippetCreate() -> void
@@ -3604,9 +3593,7 @@ NGitLab.Models.SnippetFile.RawUrl.get -> string
 NGitLab.Models.SnippetFile.RawUrl.set -> void
 NGitLab.Models.SnippetFile.SnippetFile() -> void
 NGitLab.Models.SnippetProjectCreate
-NGitLab.Models.SnippetProjectCreate.Code -> string
 NGitLab.Models.SnippetProjectCreate.Description -> string
-NGitLab.Models.SnippetProjectCreate.FileName -> string
 NGitLab.Models.SnippetProjectCreate.Files.get -> NGitLab.Models.SnippetCreateFile[]
 NGitLab.Models.SnippetProjectCreate.Files.set -> void
 NGitLab.Models.SnippetProjectCreate.ProjectId -> long
@@ -3614,9 +3601,7 @@ NGitLab.Models.SnippetProjectCreate.SnippetProjectCreate() -> void
 NGitLab.Models.SnippetProjectCreate.Title -> string
 NGitLab.Models.SnippetProjectCreate.Visibility -> NGitLab.Models.VisibilityLevel
 NGitLab.Models.SnippetProjectUpdate
-NGitLab.Models.SnippetProjectUpdate.Code -> string
 NGitLab.Models.SnippetProjectUpdate.Description -> string
-NGitLab.Models.SnippetProjectUpdate.FileName -> string
 NGitLab.Models.SnippetProjectUpdate.Files.get -> NGitLab.Models.SnippetUpdateFile[]
 NGitLab.Models.SnippetProjectUpdate.Files.set -> void
 NGitLab.Models.SnippetProjectUpdate.ProjectId -> long
@@ -3626,9 +3611,7 @@ NGitLab.Models.SnippetProjectUpdate.SnippetProjectUpdate() -> void
 NGitLab.Models.SnippetProjectUpdate.Title -> string
 NGitLab.Models.SnippetProjectUpdate.Visibility -> NGitLab.Models.VisibilityLevel
 NGitLab.Models.SnippetUpdate
-NGitLab.Models.SnippetUpdate.Content -> string
 NGitLab.Models.SnippetUpdate.Description -> string
-NGitLab.Models.SnippetUpdate.FileName -> string
 NGitLab.Models.SnippetUpdate.Files.get -> NGitLab.Models.SnippetUpdateFile[]
 NGitLab.Models.SnippetUpdate.Files.set -> void
 NGitLab.Models.SnippetUpdate.SnippetId.get -> long
@@ -3736,7 +3719,6 @@ NGitLab.Models.TagCreate
 NGitLab.Models.TagCreate.Message -> string
 NGitLab.Models.TagCreate.Name -> string
 NGitLab.Models.TagCreate.Ref -> string
-NGitLab.Models.TagCreate.ReleaseDescription -> string
 NGitLab.Models.TagCreate.TagCreate() -> void
 NGitLab.Models.TagProtect
 NGitLab.Models.TagProtect.AllowedToCreate.get -> NGitLab.Models.AccessControl[]
@@ -3868,7 +3850,6 @@ NGitLab.Models.User
 NGitLab.Models.User.AvatarURL -> string
 NGitLab.Models.User.Bio -> string
 NGitLab.Models.User.BioHtml -> string
-NGitLab.Models.User.Blocked -> bool
 NGitLab.Models.User.Bot -> bool
 NGitLab.Models.User.CanCreateGroup -> bool
 NGitLab.Models.User.CanCreateProject -> bool
@@ -3879,7 +3860,6 @@ NGitLab.Models.User.CreatedAt -> System.DateTime
 NGitLab.Models.User.CurrentSignIn -> System.DateTime
 NGitLab.Models.User.Email -> string
 NGitLab.Models.User.External -> bool
-NGitLab.Models.User.ExternUid -> string
 NGitLab.Models.User.ExtraSharedRunnersMinutesLimit -> int
 NGitLab.Models.User.Followers -> int
 NGitLab.Models.User.Following -> int
@@ -3897,7 +3877,6 @@ NGitLab.Models.User.Note -> string
 NGitLab.Models.User.Organization -> string
 NGitLab.Models.User.PrivateProfile -> bool
 NGitLab.Models.User.ProjectsLimit -> int
-NGitLab.Models.User.Provider -> string
 NGitLab.Models.User.ProvisionedByGroupId -> long
 NGitLab.Models.User.PublicEmail -> string
 NGitLab.Models.User.SharedRunnersMinutesLimit -> int
@@ -3978,8 +3957,6 @@ NGitLab.Models.Variable.Protected.get -> bool
 NGitLab.Models.Variable.Protected.set -> void
 NGitLab.Models.Variable.Raw.get -> bool
 NGitLab.Models.Variable.Raw.set -> void
-NGitLab.Models.Variable.Scope.get -> string
-NGitLab.Models.Variable.Scope.set -> void
 NGitLab.Models.Variable.Type.get -> NGitLab.Models.VariableType
 NGitLab.Models.Variable.Type.set -> void
 NGitLab.Models.Variable.Value.get -> string
@@ -4120,12 +4097,9 @@ static NGitLab.DynamicEnum<TEnum>.operator !=(NGitLab.DynamicEnum<TEnum> obj1, N
 static NGitLab.DynamicEnum<TEnum>.operator !=(NGitLab.DynamicEnum<TEnum> obj1, TEnum obj2) -> bool
 static NGitLab.DynamicEnum<TEnum>.operator ==(NGitLab.DynamicEnum<TEnum> obj1, NGitLab.DynamicEnum<TEnum> obj2) -> bool
 static NGitLab.DynamicEnum<TEnum>.operator ==(NGitLab.DynamicEnum<TEnum> obj1, TEnum obj2) -> bool
-static NGitLab.GitLabClient.Connect(string hostUrl, string apiToken) -> NGitLab.GitLabClient
-static NGitLab.GitLabClient.Connect(string hostUrl, string username, string password) -> NGitLab.GitLabClient
 static NGitLab.Models.FileData.Base64Decode(string base64EncodedData) -> string
 static NGitLab.Models.FileUpsert.Base64Encode(string plainText) -> string
 static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(long id) -> NGitLab.Models.GroupId
-static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(NGitLab.Models.Group group) -> NGitLab.Models.GroupId
 static NGitLab.Models.GroupId.implicit operator NGitLab.Models.GroupId(string path) -> NGitLab.Models.GroupId
 static NGitLab.Models.GroupId.operator !=(NGitLab.Models.Group a, NGitLab.Models.GroupId b) -> bool
 static NGitLab.Models.GroupId.operator !=(NGitLab.Models.GroupId a, NGitLab.Models.Group b) -> bool
@@ -4136,7 +4110,6 @@ static NGitLab.Models.GroupId.operator ==(NGitLab.Models.GroupId a, NGitLab.Mode
 static NGitLab.Models.IdOrPathExtensions.ValueAsString(this NGitLab.Models.IIdOrPathAddressable idOrPath) -> string
 static NGitLab.Models.IdOrPathExtensions.ValueAsUriParameter(this NGitLab.Models.IIdOrPathAddressable idOrPath) -> string
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(long id) -> NGitLab.Models.ProjectId
-static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(NGitLab.Models.Project project) -> NGitLab.Models.ProjectId
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(string path) -> NGitLab.Models.ProjectId
 static NGitLab.Models.ProjectId.operator !=(NGitLab.Models.Project a, NGitLab.Models.ProjectId b) -> bool
 static NGitLab.Models.ProjectId.operator !=(NGitLab.Models.ProjectId a, NGitLab.Models.Project b) -> bool

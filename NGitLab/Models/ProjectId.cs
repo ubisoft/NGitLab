@@ -32,18 +32,9 @@ public readonly struct ProjectId : IIdOrPathAddressable, IEquatable<Project>, IE
         _path = path ?? throw new ArgumentNullException(nameof(path));
     }
 
-    [Obsolete("Use the non-ambiguous ProjectId(long id) or ProjectId(string path) constructor instead.")]
-    public ProjectId(Project project)
-    {
-        _id = project?.Id ?? throw new ArgumentNullException(nameof(project));
-    }
-
     public static implicit operator ProjectId(long id) => new(id);
 
     public static implicit operator ProjectId(string path) => new(path);
-
-    [Obsolete("Use the non-ambiguous ProjectId(long id) or ProjectId(string path) operator instead.")]
-    public static implicit operator ProjectId(Project project) => new(project);
 
     public override string ToString() => this.ValueAsString();
 

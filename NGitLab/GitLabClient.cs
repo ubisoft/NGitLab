@@ -94,14 +94,6 @@ public class GitLabClient : IGitLabClient
         Lint = new LintClient(_api);
     }
 
-    [Obsolete("Use GitLabClient constructor instead")]
-    public static GitLabClient Connect(string hostUrl, string apiToken)
-        => new(hostUrl, apiToken);
-
-    [Obsolete("Use GitLabClient constructor instead")]
-    public static GitLabClient Connect(string hostUrl, string username, string password)
-        => new(hostUrl, username, password);
-
     public IEventClient GetEvents()
         => new EventClient(_api, "events");
 
