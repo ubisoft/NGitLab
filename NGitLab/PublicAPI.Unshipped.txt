@@ -167,8 +167,8 @@ NGitLab.IEnvironmentClient
 NGitLab.IEnvironmentClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.EnvironmentInfo>
 NGitLab.IEnvironmentClient.Create(string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.Delete(int environmentId) -> void
-NGitLab.IEnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.Edit(int environmentId, string externalUrl) -> NGitLab.Models.EnvironmentInfo
+NGitLab.IEnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.GetById(int environmentId) -> NGitLab.Models.EnvironmentInfo
 NGitLab.IEnvironmentClient.GetByIdAsync(int environmentId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.EnvironmentInfo>
 NGitLab.IEnvironmentClient.GetEnvironmentsAsync(NGitLab.Models.EnvironmentQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.EnvironmentInfo>
@@ -542,8 +542,8 @@ NGitLab.Impl.EnvironmentClient
 NGitLab.Impl.EnvironmentClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.EnvironmentInfo>
 NGitLab.Impl.EnvironmentClient.Create(string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.Delete(int environmentId) -> void
-NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string externalUrl) -> NGitLab.Models.EnvironmentInfo
+NGitLab.Impl.EnvironmentClient.Edit(int environmentId, string name, string externalUrl) -> NGitLab.Models.EnvironmentInfo
 NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, int projectId) -> void
 NGitLab.Impl.EnvironmentClient.EnvironmentClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.EnvironmentClient.GetById(int environmentId) -> NGitLab.Models.EnvironmentInfo
@@ -1634,8 +1634,8 @@ NGitLab.Models.DetailedMergeStatus.Mergeable = 9 -> NGitLab.Models.DetailedMerge
 NGitLab.Models.DetailedMergeStatus.NotApproved = 10 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.NotOpen = 11 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.PoliciesDenied = 12 -> NGitLab.Models.DetailedMergeStatus
-NGitLab.Models.DetailedMergeStatus.Unchecked = 3 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.Preparing = 13 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.Unchecked = 3 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.Diff
 NGitLab.Models.Diff.AMode -> string
 NGitLab.Models.Diff.BMode -> string
@@ -1815,10 +1815,10 @@ NGitLab.Models.EventQuery.After.set -> void
 NGitLab.Models.EventQuery.Before.get -> System.DateTime?
 NGitLab.Models.EventQuery.Before.set -> void
 NGitLab.Models.EventQuery.EventQuery() -> void
-NGitLab.Models.EventQuery.PerPage.get -> int?
-NGitLab.Models.EventQuery.PerPage.set -> void
 NGitLab.Models.EventQuery.Page.get -> int?
 NGitLab.Models.EventQuery.Page.set -> void
+NGitLab.Models.EventQuery.PerPage.get -> int?
+NGitLab.Models.EventQuery.PerPage.set -> void
 NGitLab.Models.EventQuery.Scope.get -> string
 NGitLab.Models.EventQuery.Scope.set -> void
 NGitLab.Models.EventQuery.Sort.get -> string
@@ -1826,7 +1826,6 @@ NGitLab.Models.EventQuery.Sort.set -> void
 NGitLab.Models.EventQuery.Type.get -> NGitLab.Models.EventTargetType?
 NGitLab.Models.EventQuery.Type.set -> void
 NGitLab.Models.EventTargetType
-NGitLab.Models.EventTargetType.WorkItem = 11 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.DesignManagement = 10 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.DiffNote = 8 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.DiscussionNote = 9 -> NGitLab.Models.EventTargetType
@@ -1838,6 +1837,7 @@ NGitLab.Models.EventTargetType.Note = 4 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.Project = 5 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.Snippet = 6 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.User = 7 -> NGitLab.Models.EventTargetType
+NGitLab.Models.EventTargetType.WorkItem = 11 -> NGitLab.Models.EventTargetType
 NGitLab.Models.FileData
 NGitLab.Models.FileData.BlobId -> string
 NGitLab.Models.FileData.CommitId -> string
@@ -2217,23 +2217,16 @@ NGitLab.Models.Job
 NGitLab.Models.Job.Artifacts.get -> NGitLab.Models.Job.JobArtifact
 NGitLab.Models.Job.Artifacts.set -> void
 NGitLab.Models.Job.Job() -> void
-NGitLab.Models.Job.JobArtifact.JobArtifact() -> void
-NGitLab.Models.Job.JobProject.JobProject() -> void
-NGitLab.Models.Job.JobRunner.IsShared.get -> bool
-NGitLab.Models.Job.JobRunner.IsShared.set -> void
-NGitLab.Models.Job.JobRunner.JobRunner() -> void
-NGitLab.Models.Job.Project.get -> NGitLab.Models.Job.JobProject
-NGitLab.Models.Job.Project.set -> void
-NGitLab.Models.Job.Runner.get -> NGitLab.Models.Job.JobRunner
-NGitLab.Models.Job.Runner.set -> void
 NGitLab.Models.Job.JobArtifact
 NGitLab.Models.Job.JobArtifact.Filename.get -> string
 NGitLab.Models.Job.JobArtifact.Filename.set -> void
+NGitLab.Models.Job.JobArtifact.JobArtifact() -> void
 NGitLab.Models.Job.JobArtifact.Size.get -> long
 NGitLab.Models.Job.JobArtifact.Size.set -> void
 NGitLab.Models.Job.JobProject
 NGitLab.Models.Job.JobProject.Id.get -> int
 NGitLab.Models.Job.JobProject.Id.set -> void
+NGitLab.Models.Job.JobProject.JobProject() -> void
 NGitLab.Models.Job.JobProject.Name.get -> string
 NGitLab.Models.Job.JobProject.Name.set -> void
 NGitLab.Models.Job.JobProject.PathWithNamespace.get -> string
@@ -2245,8 +2238,15 @@ NGitLab.Models.Job.JobRunner.Description.get -> string
 NGitLab.Models.Job.JobRunner.Description.set -> void
 NGitLab.Models.Job.JobRunner.Id.get -> int
 NGitLab.Models.Job.JobRunner.Id.set -> void
+NGitLab.Models.Job.JobRunner.IsShared.get -> bool
+NGitLab.Models.Job.JobRunner.IsShared.set -> void
+NGitLab.Models.Job.JobRunner.JobRunner() -> void
 NGitLab.Models.Job.JobRunner.Name.get -> string
 NGitLab.Models.Job.JobRunner.Name.set -> void
+NGitLab.Models.Job.Project.get -> NGitLab.Models.Job.JobProject
+NGitLab.Models.Job.Project.set -> void
+NGitLab.Models.Job.Runner.get -> NGitLab.Models.Job.JobRunner
+NGitLab.Models.Job.Runner.set -> void
 NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Cancel = 0 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Erase = 2 -> NGitLab.Models.JobAction
@@ -2261,57 +2261,57 @@ NGitLab.Models.JobArtifactQuery.JobName.set -> void
 NGitLab.Models.JobArtifactQuery.RefName.get -> string
 NGitLab.Models.JobArtifactQuery.RefName.set -> void
 NGitLab.Models.JobBasic
-NGitLab.Models.JobBasic.Commit.get -> NGitLab.Models.Commit
-NGitLab.Models.JobBasic.FailureReason.get -> string
-NGitLab.Models.JobBasic.FailureReason.set -> void
-NGitLab.Models.JobBasic.JobBasic() -> void
-NGitLab.Models.JobBasic.JobPipeline.JobPipeline() -> void
-NGitLab.Models.JobBasic.JobPipeline.ProjectId.get -> int
-NGitLab.Models.JobBasic.JobPipeline.ProjectId.set -> void
-NGitLab.Models.JobBasic.Name.get -> string
-NGitLab.Models.JobBasic.Name.set -> void
-NGitLab.Models.JobBasic.Id.get -> int
-NGitLab.Models.JobBasic.Id.set -> void
-NGitLab.Models.JobBasic.Ref.get -> string
-NGitLab.Models.JobBasic.Ref.set -> void
-NGitLab.Models.JobBasic.Commit.set -> void
-NGitLab.Models.JobBasic.CreatedAt.get -> System.DateTime
-NGitLab.Models.JobBasic.CreatedAt.set -> void
-NGitLab.Models.JobBasic.StartedAt.get -> System.DateTime
-NGitLab.Models.JobBasic.StartedAt.set -> void
-NGitLab.Models.JobBasic.FinishedAt.get -> System.DateTime
-NGitLab.Models.JobBasic.FinishedAt.set -> void
-NGitLab.Models.JobBasic.Stage.get -> string
-NGitLab.Models.JobBasic.Stage.set -> void
-NGitLab.Models.JobBasic.Coverage.get -> double?
-NGitLab.Models.JobBasic.Coverage.set -> void
-NGitLab.Models.JobBasic.Status.get -> NGitLab.JobStatus
-NGitLab.Models.JobBasic.Status.set -> void
-NGitLab.Models.JobBasic.Tag.get -> bool
-NGitLab.Models.JobBasic.Tag.set -> void
 NGitLab.Models.JobBasic.AllowFailure.get -> bool
 NGitLab.Models.JobBasic.AllowFailure.set -> void
-NGitLab.Models.JobBasic.TagList.get -> string[]
-NGitLab.Models.JobBasic.TagList.set -> void
-NGitLab.Models.JobBasic.User.get -> NGitLab.Models.User
-NGitLab.Models.JobBasic.User.set -> void
-NGitLab.Models.JobBasic.Pipeline.get -> NGitLab.Models.JobBasic.JobPipeline
-NGitLab.Models.JobBasic.Pipeline.set -> void
-NGitLab.Models.JobBasic.WebUrl.get -> string
-NGitLab.Models.JobBasic.WebUrl.set -> void
+NGitLab.Models.JobBasic.Commit.get -> NGitLab.Models.Commit
+NGitLab.Models.JobBasic.Commit.set -> void
+NGitLab.Models.JobBasic.Coverage.get -> double?
+NGitLab.Models.JobBasic.Coverage.set -> void
+NGitLab.Models.JobBasic.CreatedAt.get -> System.DateTime
+NGitLab.Models.JobBasic.CreatedAt.set -> void
 NGitLab.Models.JobBasic.Duration.get -> float?
 NGitLab.Models.JobBasic.Duration.set -> void
-NGitLab.Models.JobBasic.QueuedDuration.get -> float?
-NGitLab.Models.JobBasic.QueuedDuration.set -> void
+NGitLab.Models.JobBasic.FailureReason.get -> string
+NGitLab.Models.JobBasic.FailureReason.set -> void
+NGitLab.Models.JobBasic.FinishedAt.get -> System.DateTime
+NGitLab.Models.JobBasic.FinishedAt.set -> void
+NGitLab.Models.JobBasic.Id.get -> int
+NGitLab.Models.JobBasic.Id.set -> void
+NGitLab.Models.JobBasic.JobBasic() -> void
 NGitLab.Models.JobBasic.JobPipeline
 NGitLab.Models.JobBasic.JobPipeline.Id.get -> int
 NGitLab.Models.JobBasic.JobPipeline.Id.set -> void
+NGitLab.Models.JobBasic.JobPipeline.JobPipeline() -> void
+NGitLab.Models.JobBasic.JobPipeline.ProjectId.get -> int
+NGitLab.Models.JobBasic.JobPipeline.ProjectId.set -> void
 NGitLab.Models.JobBasic.JobPipeline.Ref.get -> string
 NGitLab.Models.JobBasic.JobPipeline.Ref.set -> void
 NGitLab.Models.JobBasic.JobPipeline.Sha.get -> NGitLab.Sha1
 NGitLab.Models.JobBasic.JobPipeline.Sha.set -> void
 NGitLab.Models.JobBasic.JobPipeline.Status.get -> NGitLab.JobStatus
 NGitLab.Models.JobBasic.JobPipeline.Status.set -> void
+NGitLab.Models.JobBasic.Name.get -> string
+NGitLab.Models.JobBasic.Name.set -> void
+NGitLab.Models.JobBasic.Pipeline.get -> NGitLab.Models.JobBasic.JobPipeline
+NGitLab.Models.JobBasic.Pipeline.set -> void
+NGitLab.Models.JobBasic.QueuedDuration.get -> float?
+NGitLab.Models.JobBasic.QueuedDuration.set -> void
+NGitLab.Models.JobBasic.Ref.get -> string
+NGitLab.Models.JobBasic.Ref.set -> void
+NGitLab.Models.JobBasic.Stage.get -> string
+NGitLab.Models.JobBasic.Stage.set -> void
+NGitLab.Models.JobBasic.StartedAt.get -> System.DateTime
+NGitLab.Models.JobBasic.StartedAt.set -> void
+NGitLab.Models.JobBasic.Status.get -> NGitLab.JobStatus
+NGitLab.Models.JobBasic.Status.set -> void
+NGitLab.Models.JobBasic.Tag.get -> bool
+NGitLab.Models.JobBasic.Tag.set -> void
+NGitLab.Models.JobBasic.TagList.get -> string[]
+NGitLab.Models.JobBasic.TagList.set -> void
+NGitLab.Models.JobBasic.User.get -> NGitLab.Models.User
+NGitLab.Models.JobBasic.User.set -> void
+NGitLab.Models.JobBasic.WebUrl.get -> string
+NGitLab.Models.JobBasic.WebUrl.set -> void
 NGitLab.Models.JobQuery
 NGitLab.Models.JobQuery.JobQuery() -> void
 NGitLab.Models.JobQuery.PerPage.get -> int?
@@ -2537,13 +2537,13 @@ NGitLab.Models.MergeRequestCreate
 NGitLab.Models.MergeRequestCreate.AllowCollaboration -> bool?
 NGitLab.Models.MergeRequestCreate.AssigneeId -> int?
 NGitLab.Models.MergeRequestCreate.AssigneeIds -> int[]
-NGitLab.Models.MergeRequestCreate.ReviewerIds -> int[]
 NGitLab.Models.MergeRequestCreate.Description -> string
 NGitLab.Models.MergeRequestCreate.Labels -> string
 NGitLab.Models.MergeRequestCreate.MergeRequestCreate() -> void
 NGitLab.Models.MergeRequestCreate.MilestoneId.get -> int?
 NGitLab.Models.MergeRequestCreate.MilestoneId.set -> void
 NGitLab.Models.MergeRequestCreate.RemoveSourceBranch -> bool
+NGitLab.Models.MergeRequestCreate.ReviewerIds -> int[]
 NGitLab.Models.MergeRequestCreate.SourceBranch -> string
 NGitLab.Models.MergeRequestCreate.Squash -> bool
 NGitLab.Models.MergeRequestCreate.TargetBranch -> string
@@ -2660,23 +2660,23 @@ NGitLab.Models.MergeRequestUserInfo.CanMerge.get -> bool
 NGitLab.Models.MergeRequestUserInfo.CanMerge.set -> void
 NGitLab.Models.MergeRequestUserInfo.MergeRequestUserInfo() -> void
 NGitLab.Models.MergeRequestVersion
-NGitLab.Models.MergeRequestVersion.Id.get -> int
-NGitLab.Models.MergeRequestVersion.Id.set -> void
-NGitLab.Models.MergeRequestVersion.HeadCommitSha.get -> string
-NGitLab.Models.MergeRequestVersion.HeadCommitSha.set -> void
 NGitLab.Models.MergeRequestVersion.BaseCommitSha.get -> string
 NGitLab.Models.MergeRequestVersion.BaseCommitSha.set -> void
-NGitLab.Models.MergeRequestVersion.MergeRequestVersion() -> void
-NGitLab.Models.MergeRequestVersion.StartCommitSha.get -> string
-NGitLab.Models.MergeRequestVersion.StartCommitSha.set -> void
 NGitLab.Models.MergeRequestVersion.CreatedAt.get -> System.DateTime
 NGitLab.Models.MergeRequestVersion.CreatedAt.set -> void
+NGitLab.Models.MergeRequestVersion.HeadCommitSha.get -> string
+NGitLab.Models.MergeRequestVersion.HeadCommitSha.set -> void
+NGitLab.Models.MergeRequestVersion.Id.get -> int
+NGitLab.Models.MergeRequestVersion.Id.set -> void
 NGitLab.Models.MergeRequestVersion.MergeRequestId.get -> int
 NGitLab.Models.MergeRequestVersion.MergeRequestId.set -> void
-NGitLab.Models.MergeRequestVersion.State.get -> string
-NGitLab.Models.MergeRequestVersion.State.set -> void
+NGitLab.Models.MergeRequestVersion.MergeRequestVersion() -> void
 NGitLab.Models.MergeRequestVersion.RealSize.get -> string
 NGitLab.Models.MergeRequestVersion.RealSize.set -> void
+NGitLab.Models.MergeRequestVersion.StartCommitSha.get -> string
+NGitLab.Models.MergeRequestVersion.StartCommitSha.set -> void
+NGitLab.Models.MergeRequestVersion.State.get -> string
+NGitLab.Models.MergeRequestVersion.State.set -> void
 NGitLab.Models.Milestone
 NGitLab.Models.Milestone.CreatedAt -> System.DateTime
 NGitLab.Models.Milestone.Description -> string
@@ -2751,12 +2751,12 @@ NGitLab.Models.Note.System -> bool
 NGitLab.Models.Note.Type -> string
 NGitLab.Models.Note.UpdatedAt -> System.DateTime
 NGitLab.Models.NoteableType
-NGitLab.Models.NoteableType.None = 0 -> NGitLab.Models.NoteableType
-NGitLab.Models.NoteableType.Issue = 1 -> NGitLab.Models.NoteableType
-NGitLab.Models.NoteableType.MergeRequest = 2 -> NGitLab.Models.NoteableType
-NGitLab.Models.NoteableType.Snippet = 3 -> NGitLab.Models.NoteableType
 NGitLab.Models.NoteableType.Commit = 4 -> NGitLab.Models.NoteableType
 NGitLab.Models.NoteableType.Epic = 5 -> NGitLab.Models.NoteableType
+NGitLab.Models.NoteableType.Issue = 1 -> NGitLab.Models.NoteableType
+NGitLab.Models.NoteableType.MergeRequest = 2 -> NGitLab.Models.NoteableType
+NGitLab.Models.NoteableType.None = 0 -> NGitLab.Models.NoteableType
+NGitLab.Models.NoteableType.Snippet = 3 -> NGitLab.Models.NoteableType
 NGitLab.Models.ObjectType
 NGitLab.Models.ObjectType.blob = 0 -> NGitLab.Models.ObjectType
 NGitLab.Models.ObjectType.commit = 2 -> NGitLab.Models.ObjectType
@@ -2779,13 +2779,13 @@ NGitLab.Models.PageQuery<TQueryType>.PageQuery(int page = 1, int perPage = 20, T
 NGitLab.Models.PageQuery<TQueryType>.Query.get -> TQueryType
 NGitLab.Models.PageQuery<TQueryType>.Query.set -> void
 NGitLab.Models.Participant
-NGitLab.Models.Participant.Participant() -> void
-NGitLab.Models.Participant.Id.get -> int
-NGitLab.Models.Participant.Id.set -> void
 NGitLab.Models.Participant.AvatarURL.get -> string
 NGitLab.Models.Participant.AvatarURL.set -> void
+NGitLab.Models.Participant.Id.get -> int
+NGitLab.Models.Participant.Id.set -> void
 NGitLab.Models.Participant.Name.get -> string
 NGitLab.Models.Participant.Name.set -> void
+NGitLab.Models.Participant.Participant() -> void
 NGitLab.Models.Participant.State.get -> string
 NGitLab.Models.Participant.State.set -> void
 NGitLab.Models.Participant.Username.get -> string
@@ -4038,6 +4038,8 @@ NGitLab.Models.UserUpsert.WebsiteURL -> string
 NGitLab.Models.Variable
 NGitLab.Models.Variable.Description.get -> string
 NGitLab.Models.Variable.Description.set -> void
+NGitLab.Models.Variable.EnvironmentScope.get -> string
+NGitLab.Models.Variable.EnvironmentScope.set -> void
 NGitLab.Models.Variable.Key.get -> string
 NGitLab.Models.Variable.Key.set -> void
 NGitLab.Models.Variable.Masked.get -> bool
@@ -4046,8 +4048,6 @@ NGitLab.Models.Variable.Protected.get -> bool
 NGitLab.Models.Variable.Protected.set -> void
 NGitLab.Models.Variable.Raw.get -> bool
 NGitLab.Models.Variable.Raw.set -> void
-NGitLab.Models.Variable.EnvironmentScope.get -> string
-NGitLab.Models.Variable.EnvironmentScope.set -> void
 NGitLab.Models.Variable.Scope.get -> string
 NGitLab.Models.Variable.Scope.set -> void
 NGitLab.Models.Variable.Type.get -> NGitLab.Models.VariableType
