@@ -46,7 +46,7 @@ public sealed class PipelineSchedule : GitLabObject
     public Models.PipelineSchedule ToPipelineScheduleClient()
         => new()
         {
-            Id  = Id,
+            Id = Id,
             Active = Active,
             CreatedAt = CreatedAt,
             Cron = Cron,

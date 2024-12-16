@@ -349,7 +349,7 @@ public class GroupsMockTests
         var groupId = 1;
 
         using var server = new GitLabConfig()
-            .WithUser("user1",  isAdmin: true)
+            .WithUser("user1", isAdmin: true)
             .WithGroup("group1", groupId)
             .BuildServer();
 

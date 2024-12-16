@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using NGitLab.Mock.Clients;
 using NGitLab.Mock.Config;
 using NUnit.Framework;
+using static VerifyNUnit.Verifier;
 using RepositoryGetTreeOptions = NGitLab.Models.RepositoryGetTreeOptions;
 using Throws = NUnit.Framework.Throws;
-using static VerifyNUnit.Verifier;
 
 namespace NGitLab.Mock.Tests.UsingVerify;
 
