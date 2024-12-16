@@ -4073,7 +4073,7 @@ NGitLab.Models.Runner.Locked.get -> bool
 NGitLab.Models.Runner.Locked.set -> void
 NGitLab.Models.Runner.Name.get -> string
 NGitLab.Models.Runner.Name.set -> void
-NGitLab.Models.Runner.Online.get -> bool
+NGitLab.Models.Runner.Online.get -> bool?
 NGitLab.Models.Runner.Online.set -> void
 NGitLab.Models.Runner.Paused.get -> bool
 NGitLab.Models.Runner.Paused.set -> void

@@ -19,7 +19,7 @@ public class Runner
     public bool Paused { get; set; }
 
     [JsonPropertyName("online")]
-    public bool Online { get; set; }
+    public bool? Online { get; set; }
 
     [JsonPropertyName("status")]
     public string Status { get; set; }
