@@ -44,17 +44,17 @@ internal static class Utils
 
     public static string AddParameter(string url, string parameterName, DateTime? date)
     {
-        return Equals(date, null) ? url : AddParameterInternal(url, parameterName, date.Value.ToString("O"));
+        return !date.HasValue ? url : AddParameterInternal(url, parameterName, date.Value.ToString("O"));
     }
 
     public static string AddParameter(string url, string parameterName, long[] values)
     {
-        return Equals(values, null) ? url : AddParameterInternal(url, parameterName, string.Join(",", values));
+        return values is null ? url : AddParameterInternal(url, parameterName, string.Join(",", values.Select(v => v.ToString(CultureInfo.InvariantCulture))));
     }
 
     public static string AddArrayParameter(string url, string parameterName, string[] values)
     {
-        if (Equals(values, null))
+        if (values is null)
         {
             return url;
         }
