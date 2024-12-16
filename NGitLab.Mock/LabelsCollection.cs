@@ -10,7 +10,7 @@ public sealed class LabelsCollection : Collection<Label>
     {
     }
 
-    public Label GetById(int id)
+    public Label GetById(long id)
     {
         return this.FirstOrDefault(l => l.Id == id);
     }

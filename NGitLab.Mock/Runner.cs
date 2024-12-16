@@ -7,13 +7,11 @@ public sealed class Runner : GitLabObject
 {
     public new Project Parent => (Project)base.Parent;
 
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string Name { get; set; }
 
     public bool Paused { get; set; }
-
-    public bool Active { get; set; }
 
     public bool? Online { get; set; }
 
@@ -43,9 +41,7 @@ public sealed class Runner : GitLabObject
         {
             Id = Id,
             Name = Name,
-#pragma warning disable CS0618 // Type or member is obsolete
-            Active = Active,
-#pragma warning restore CS0618 // Type or member is obsolete
+            Paused = Paused,
             Online = Online ?? false,
             Status = Status,
             Description = Description,

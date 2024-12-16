@@ -14,7 +14,7 @@ internal sealed class UserClient : ClientBase, IUserClient
     {
     }
 
-    public Models.User this[int id]
+    public Models.User this[long id]
     {
         get
         {
@@ -83,7 +83,7 @@ internal sealed class UserClient : ClientBase, IUserClient
         return CreateToken(tokenRequest);
     }
 
-    public void Delete(int id)
+    public void Delete(long id)
     {
         using (Context.BeginOperationScope())
         {
@@ -98,7 +98,7 @@ internal sealed class UserClient : ClientBase, IUserClient
         }
     }
 
-    public void Activate(int id)
+    public void Activate(long id)
     {
         using (Context.BeginOperationScope())
         {
@@ -113,7 +113,7 @@ internal sealed class UserClient : ClientBase, IUserClient
         }
     }
 
-    public void Deactivate(int id)
+    public void Deactivate(long id)
     {
         using (Context.BeginOperationScope())
         {
@@ -154,12 +154,12 @@ internal sealed class UserClient : ClientBase, IUserClient
         }
     }
 
-    public ISshKeyClient SShKeys(int userId)
+    public ISshKeyClient SShKeys(long userId)
     {
         throw new NotImplementedException();
     }
 
-    public Models.User Update(int id, UserUpsert userUpsert)
+    public Models.User Update(long id, UserUpsert userUpsert)
     {
         using (Context.BeginOperationScope())
         {
@@ -178,7 +178,7 @@ internal sealed class UserClient : ClientBase, IUserClient
         }
     }
 
-    public async Task<Models.User> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Models.User> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         return this[id];

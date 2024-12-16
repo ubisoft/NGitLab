@@ -10,12 +10,12 @@ public interface ISnippetClient
     /// <summary>
     /// Get a list of snippets for the specified project.
     /// </summary>
-    IEnumerable<Snippet> ForProject(int projectId);
+    IEnumerable<Snippet> ForProject(long projectId);
 
     /// <summary>
     /// Return a single snippet for a given project.
     /// </summary>
-    Snippet Get(int projectId, int snippetId);
+    Snippet Get(long projectId, long snippetId);
 
     /// <summary>
     /// Return all snippets of the authenticated user
@@ -47,15 +47,15 @@ public interface ISnippetClient
     /// <summary>
     /// Delete a snippet not linked to a project but only to a user, could delete snippet linked to a project but will return an error 403 in API v4
     /// </summary>
-    void Delete(int snippetId);
+    void Delete(long snippetId);
 
     /// <summary>
     /// Delete a snippet linked to a project
     /// </summary>
-    void Delete(int projectId, int snippetId);
+    void Delete(long projectId, long snippetId);
 
     /// <summary>
     /// Get single snippet's content for a given project
     /// </summary>
-    void GetContent(int projectId, int snippetId, Action<Stream> parser);
+    void GetContent(long projectId, long snippetId, Action<Stream> parser);
 }

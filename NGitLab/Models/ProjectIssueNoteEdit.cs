@@ -6,10 +6,10 @@ namespace NGitLab.Models;
 public class ProjectIssueNoteEdit
 {
     [JsonIgnore]
-    public int IssueId;
+    public long IssueId;
 
     [JsonIgnore]
-    public int NoteId;
+    public long NoteId;
 
     [Required]
     [JsonPropertyName("body")]

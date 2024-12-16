@@ -5,7 +5,7 @@ namespace NGitLab.Models;
 public class Badge
 {
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("link_url")]
     public string LinkUrl;

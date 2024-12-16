@@ -9,10 +9,10 @@ public class MergeRequest
     public const string Url = "/merge_requests";
 
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("iid")]
-    public int Iid;
+    public long Iid;
 
     [JsonPropertyName("state")]
     public string State;
@@ -54,13 +54,13 @@ public class MergeRequest
     public string SourceBranch;
 
     [JsonPropertyName("project_id")]
-    public int ProjectId;
+    public long ProjectId;
 
     [JsonPropertyName("source_project_id")]
-    public int SourceProjectId;
+    public long SourceProjectId;
 
     [JsonPropertyName("target_project_id")]
-    public int TargetProjectId;
+    public long TargetProjectId;
 
     [Obsolete("Deprecated by GitLab. Use Draft instead")]
     [JsonPropertyName("work_in_progress")]

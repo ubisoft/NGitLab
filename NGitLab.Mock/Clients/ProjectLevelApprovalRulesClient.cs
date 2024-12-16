@@ -6,7 +6,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class ProjectLevelApprovalRulesClient : ClientBase, IProjectLevelApprovalRulesClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public ProjectLevelApprovalRulesClient(ClientContext context, ProjectId projectId)
         : base(context)
@@ -19,7 +19,7 @@ internal sealed class ProjectLevelApprovalRulesClient : ClientBase, IProjectLeve
         throw new NotImplementedException();
     }
 
-    public ApprovalRule UpdateProjectLevelApprovalRule(int approvalRuleIdToUpdate, ApprovalRuleUpdate approvalRuleUpdate)
+    public ApprovalRule UpdateProjectLevelApprovalRule(long approvalRuleIdToUpdate, ApprovalRuleUpdate approvalRuleUpdate)
     {
         throw new NotImplementedException();
     }
@@ -29,7 +29,7 @@ internal sealed class ProjectLevelApprovalRulesClient : ClientBase, IProjectLeve
         throw new NotImplementedException();
     }
 
-    public void DeleteProjectLevelRule(int approvalRuleIdToDelete)
+    public void DeleteProjectLevelRule(long approvalRuleIdToDelete)
     {
         throw new NotImplementedException();
     }

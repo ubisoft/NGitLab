@@ -13,7 +13,7 @@ public class PipelineScheduleCollection : Collection<PipelineSchedule>
         _project = project;
     }
 
-    public PipelineSchedule GetById(int id)
+    public PipelineSchedule GetById(long id)
     {
         return this.FirstOrDefault(x => x.Id == id);
     }

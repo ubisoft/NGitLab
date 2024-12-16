@@ -17,17 +17,17 @@ public class EpicClient : IEpicClient
         _api = api;
     }
 
-    public IEnumerable<Epic> Get(int groupId, EpicQuery query)
+    public IEnumerable<Epic> Get(long groupId, EpicQuery query)
     {
         return Get(string.Format(CultureInfo.InvariantCulture, GroupEpicsUrl, groupId), query);
     }
 
-    public Epic Get(int groupId, int epicId)
+    public Epic Get(long groupId, long epicId)
     {
         return _api.Get().To<Epic>(string.Format(CultureInfo.InvariantCulture, SingleEpiceUrl, groupId, epicId));
     }
 
-    public GitLabCollectionResponse<Issue> GetIssuesAsync(int groupId, int epicId)
+    public GitLabCollectionResponse<Issue> GetIssuesAsync(long groupId, long epicId)
     {
         return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, GroupEpicIssuesUrl, groupId, epicId));
     }
@@ -47,12 +47,12 @@ public class EpicClient : IEpicClient
         return _api.Get().GetAll<Epic>(url);
     }
 
-    public Epic Create(int groupId, EpicCreate epic)
+    public Epic Create(long groupId, EpicCreate epic)
     {
         return _api.Post().With(epic).To<Epic>(string.Format(CultureInfo.InvariantCulture, GroupEpicsUrl, groupId));
     }
 
-    public Epic Edit(int groupId, EpicEdit epicEdit)
+    public Epic Edit(long groupId, EpicEdit epicEdit)
     {
         return _api.Put().With(epicEdit).To<Epic>(string.Format(CultureInfo.InvariantCulture, SingleEpiceUrl, groupId, epicEdit.EpicId));
     }

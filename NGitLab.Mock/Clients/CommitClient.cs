@@ -7,7 +7,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class CommitClient : ClientBase, ICommitClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public CommitClient(ClientContext context, ProjectId projectId)
         : base(context)

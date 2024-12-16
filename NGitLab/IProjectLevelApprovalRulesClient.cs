@@ -17,7 +17,7 @@ public interface IProjectLevelApprovalRulesClient
     /// <param name="approvalRuleIdToUpdate">The Id of the approval rule to update.</param>
     /// <param name="approvalRuleUpdate">New values of the approval rule.</param>
     /// <returns>The approval rule updated for a project.</returns>
-    ApprovalRule UpdateProjectLevelApprovalRule(int approvalRuleIdToUpdate, ApprovalRuleUpdate approvalRuleUpdate);
+    ApprovalRule UpdateProjectLevelApprovalRule(long approvalRuleIdToUpdate, ApprovalRuleUpdate approvalRuleUpdate);
 
     /// <summary>
     /// Create an approval rule for a project.
@@ -30,5 +30,5 @@ public interface IProjectLevelApprovalRulesClient
     /// Delete an approval rule for a project.
     /// </summary>
     /// <param name="approvalRuleIdToDelete">The Id of the approval rule to delete for a project.</param>
-    void DeleteProjectLevelRule(int approvalRuleIdToDelete);
+    void DeleteProjectLevelRule(long approvalRuleIdToDelete);
 }

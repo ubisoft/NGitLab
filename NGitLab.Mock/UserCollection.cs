@@ -20,7 +20,7 @@ public sealed class UserCollection : Collection<User>
         return this.FirstOrDefault(u => StringComparer.OrdinalIgnoreCase.Equals(u.UserName, id));
     }
 
-    public User GetById(int id) => this.FirstOrDefault(user => user.Id == id);
+    public User GetById(long id) => this.FirstOrDefault(user => user.Id == id);
 
     public User AddNew(string name = null)
     {
@@ -77,7 +77,7 @@ public sealed class UserCollection : Collection<User>
         base.Add(user);
     }
 
-    private int GetNewId()
+    private long GetNewId()
     {
         return this.Select(user => user.Id).DefaultIfEmpty().Max() + 1;
     }

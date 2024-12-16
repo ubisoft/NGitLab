@@ -6,7 +6,7 @@ namespace NGitLab.Models;
 public class Trigger
 {
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("description")]
     public string Description;

@@ -5,7 +5,7 @@ namespace NGitLab.Models;
 public class ClusterInfo
 {
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("name")]
     public string Name;

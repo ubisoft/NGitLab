@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using NGitLab.Models;
 
 namespace NGitLab.Impl;
@@ -9,12 +8,6 @@ public class CommitStatusClient : ICommitStatusClient
     private readonly API _api;
     private readonly string _statusCreatePath;
     private readonly string _statusPath;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public CommitStatusClient(API api, int projectId)
-        : this(api, (long)projectId)
-    {
-    }
 
     public CommitStatusClient(API api, ProjectId projectId)
     {

@@ -8,9 +8,9 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class ContributorClient : ClientBase, IContributorClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
-    public ContributorClient(ClientContext context, int projectId)
+    public ContributorClient(ClientContext context, long projectId)
         : base(context)
     {
         _projectId = projectId;

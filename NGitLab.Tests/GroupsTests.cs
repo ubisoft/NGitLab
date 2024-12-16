@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -30,7 +29,7 @@ public class GroupsTests
         using var context = await GitLabTestContext.CreateAsync();
         var groupClient = context.Client.Groups;
         var group = context.CreateGroup();
-        var project = context.Client.Projects.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture) });
+        var project = context.Client.Projects.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id });
 
         group = groupClient[group.Id];
         Assert.That(group, Is.Not.Null);
@@ -85,7 +84,7 @@ public class GroupsTests
         await GitLabTestContext.RetryUntilAsync(() => TryGetGroup(groupClient, group.Id), group => group == null || group.MarkedForDeletionOn != null, TimeSpan.FromMinutes(2));
     }
 
-    private static Group TryGetGroup(IGroupsClient groupClient, int groupId)
+    private static Group TryGetGroup(IGroupsClient groupClient, long groupId)
     {
         try
         {
@@ -473,7 +472,7 @@ public class GroupsTests
             Search = project.Name,
         }).ToArray();
 
-        Assert.That(projects.Select(p => p.Id), Is.EquivalentTo(new int[] { project.Id }));
+        Assert.That(projects.Select(p => p.Id), Is.EquivalentTo(new[] { project.Id }));
     }
 
     [Test]

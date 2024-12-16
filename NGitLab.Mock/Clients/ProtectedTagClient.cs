@@ -7,7 +7,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class ProtectedTagClient : ClientBase, IProtectedTagClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public ProtectedTagClient(ClientContext context, ProjectId projectId)
         : base(context)

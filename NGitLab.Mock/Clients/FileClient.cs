@@ -8,9 +8,9 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class FileClient : ClientBase, IFilesClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
-    public FileClient(ClientContext context, int projectId)
+    public FileClient(ClientContext context, long projectId)
         : base(context)
     {
         _projectId = projectId;

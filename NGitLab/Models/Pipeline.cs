@@ -8,7 +8,7 @@ public class Pipeline
     public const string Url = "/pipelines";
 
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("name")]
     public string Name { get; set; }
@@ -68,5 +68,5 @@ public class Pipeline
     public string Source;
 
     [JsonPropertyName("project_id")]
-    public int ProjectId { get; set; }
+    public long ProjectId { get; set; }
 }

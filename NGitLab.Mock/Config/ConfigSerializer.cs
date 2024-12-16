@@ -193,11 +193,11 @@ internal sealed class ConfigSerializer
             return false;
         }
 
-        if (type == typeof(int))
+        if (type == typeof(long))
         {
-            if (valueObj is string valueString && int.TryParse(valueString, out var valueInt))
+            if (valueObj is string valueString && long.TryParse(valueString, out var valueLong))
             {
-                value = valueInt;
+                value = valueLong;
                 return true;
             }
 

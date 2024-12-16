@@ -11,14 +11,14 @@ public interface ILabelClient
     /// </summary>
     /// <param name="projectId"></param>
     /// <returns></returns>
-    IEnumerable<Label> ForProject(int projectId);
+    IEnumerable<Label> ForProject(long projectId);
 
     /// <summary>
     /// Return a list of labels for a group.
     /// </summary>
     /// <param name="groupId"></param>
     /// <returns></returns>
-    IEnumerable<Label> ForGroup(int groupId);
+    IEnumerable<Label> ForGroup(long groupId);
 
     /// <summary>
     /// Return a specified label from the project or null;
@@ -26,10 +26,10 @@ public interface ILabelClient
     /// <param name="projectId"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    Label GetProjectLabel(int projectId, string name);
+    Label GetProjectLabel(long projectId, string name);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    Label GetLabel(int projectId, string name);
+    Label GetLabel(long projectId, string name);
 
     /// <summary>
     /// Return a specified label from the group or null;
@@ -37,7 +37,7 @@ public interface ILabelClient
     /// <param name="groupId"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    Label GetGroupLabel(int groupId, string name);
+    Label GetGroupLabel(long groupId, string name);
 
     /// <summary>
     /// Create a new label for a project.
@@ -45,7 +45,7 @@ public interface ILabelClient
     /// <param name="projectId"></param>
     /// <param name="label"></param>
     /// <returns></returns>
-    Label CreateProjectLabel(int projectId, ProjectLabelCreate label);
+    Label CreateProjectLabel(long projectId, ProjectLabelCreate label);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     Label Create(LabelCreate label);
@@ -56,7 +56,7 @@ public interface ILabelClient
     /// <param name="groupId"></param>
     /// <param name="label"></param>
     /// <returns></returns>
-    Label CreateGroupLabel(int groupId, GroupLabelCreate label);
+    Label CreateGroupLabel(long groupId, GroupLabelCreate label);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     Label CreateGroupLabel(LabelCreate label);
@@ -67,7 +67,7 @@ public interface ILabelClient
     /// <param name="projectId"></param>
     /// <param name="label"></param>
     /// <returns></returns>
-    Label EditProjectLabel(int projectId, ProjectLabelEdit label);
+    Label EditProjectLabel(long projectId, ProjectLabelEdit label);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     Label Edit(LabelEdit label);
@@ -78,7 +78,7 @@ public interface ILabelClient
     /// <param name="groupId"></param>
     /// <param name="label"></param>
     /// <returns></returns>
-    Label EditGroupLabel(int groupId, GroupLabelEdit label);
+    Label EditGroupLabel(long groupId, GroupLabelEdit label);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     Label EditGroupLabel(LabelEdit label);
@@ -89,7 +89,7 @@ public interface ILabelClient
     /// <param name="projectId"></param>
     /// <param name="label"></param>
     /// <returns>True if "200", the success code for delete, was returned from the service.</returns>
-    Label DeleteProjectLabel(int projectId, ProjectLabelDelete label);
+    Label DeleteProjectLabel(long projectId, ProjectLabelDelete label);
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     Label Delete(LabelDelete label);

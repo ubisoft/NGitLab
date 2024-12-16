@@ -9,7 +9,7 @@ public class MergeRequestCommitClient : IMergeRequestCommitClient
     private readonly API _api;
     private readonly string _commitsPath;
 
-    public MergeRequestCommitClient(API api, string projectPath, int mergeRequestIid)
+    public MergeRequestCommitClient(API api, string projectPath, long mergeRequestIid)
     {
         _api = api;
         _commitsPath = projectPath + "/merge_requests/" + mergeRequestIid.ToStringInvariant() + "/commits?per_page=100";

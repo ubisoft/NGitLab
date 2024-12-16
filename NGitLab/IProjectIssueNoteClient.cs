@@ -8,7 +8,7 @@ public interface IProjectIssueNoteClient
     /// <summary>
     /// Get a list of issue notes for the specified issue.
     /// </summary>
-    IEnumerable<ProjectIssueNote> ForIssue(int issueId);
+    IEnumerable<ProjectIssueNote> ForIssue(long issueId);
 
     /// <summary>
     /// Return a single issue note for a given.
@@ -19,7 +19,7 @@ public interface IProjectIssueNoteClient
     /// <param name="issueId"></param>
     /// <param name="noteId"></param>
     /// <returns></returns>
-    ProjectIssueNote Get(int issueId, int noteId);
+    ProjectIssueNote Get(long issueId, long noteId);
 
     /// <summary>
     /// Add an project issue note with the specified body to the specified issue.

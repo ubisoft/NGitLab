@@ -184,14 +184,14 @@ public sealed class GitLabTestContext : IDisposable
         }
     }
 
-    public Project CreateProject(int parentGroupId, Action<ProjectCreate> configure = null, bool initializeWithCommits = false) =>
+    public Project CreateProject(long parentGroupId, Action<ProjectCreate> configure = null, bool initializeWithCommits = false) =>
         CreateProject(initializeWithCommits: initializeWithCommits, configure: p =>
         {
-            p.NamespaceId = new GroupId(parentGroupId).ValueAsString();
+            p.NamespaceId = parentGroupId;
             configure?.Invoke(p);
         });
 
-    public Project CreateProject(int parentGroupId, string slug, string name = null, Action<ProjectCreate> configure = null, bool initializeWithCommits = false) =>
+    public Project CreateProject(long parentGroupId, string slug, string name = null, Action<ProjectCreate> configure = null, bool initializeWithCommits = false) =>
         CreateProject(parentGroupId, initializeWithCommits: initializeWithCommits, configure: p =>
         {
             p.Path = slug;
@@ -223,14 +223,14 @@ public sealed class GitLabTestContext : IDisposable
             configure?.Invoke(g);
         });
 
-    public Group CreateSubgroup(int parentGroupId, Action<GroupCreate> configure = null) =>
+    public Group CreateSubgroup(long parentGroupId, Action<GroupCreate> configure = null) =>
         CreateGroup(g =>
         {
             g.ParentId = parentGroupId;
             configure?.Invoke(g);
         });
 
-    public Group CreateSubgroup(int parentGroupId, string slug, string name = null, Action<GroupCreate> configure = null) =>
+    public Group CreateSubgroup(long parentGroupId, string slug, string name = null, Action<GroupCreate> configure = null) =>
         CreateSubgroup(parentGroupId, g =>
         {
             g.Path = slug;
@@ -334,7 +334,7 @@ public sealed class GitLabTestContext : IDisposable
                string.Equals(Environment.GetEnvironmentVariable("GITLAB_CI"), "true", StringComparison.OrdinalIgnoreCase);
     }
 
-    public async Task<IDisposable> StartRunnerForOneJobAsync(int projectId)
+    public async Task<IDisposable> StartRunnerForOneJobAsync(long projectId)
     {
         // Download runner (windows / linux, GitLab version)
         await s_prepareRunnerLock.WaitAsync().ConfigureAwait(false);

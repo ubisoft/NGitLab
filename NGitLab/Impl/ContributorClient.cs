@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using NGitLab.Models;
 
@@ -13,12 +12,6 @@ internal sealed class ContributorClient : IContributorClient
     {
         _api = api;
         _contributorPath = repoPath + Contributor.Url;
-    }
-
-    [Obsolete("Argument projectId is redundant, please use ContributorClient(API api, string repoPath) instead.")]
-    public ContributorClient(API api, string repoPath, int projectId)
-        : this(api, repoPath)
-    {
     }
 
     /// <remarks>

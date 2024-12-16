@@ -11,7 +11,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class JobClient : ClientBase, IJobClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public JobClient(ClientContext context, ProjectId projectId)
         : base(context)
@@ -19,7 +19,7 @@ internal sealed class JobClient : ClientBase, IJobClient
         _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
-    public Models.Job Get(int jobId)
+    public Models.Job Get(long jobId)
     {
         using (Context.BeginOperationScope())
         {
@@ -34,18 +34,18 @@ internal sealed class JobClient : ClientBase, IJobClient
     }
 
     [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
-    public async Task<Models.Job> GetAsync(int jobId, CancellationToken cancellationToken = default)
+    public async Task<Models.Job> GetAsync(long jobId, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         return Get(jobId);
     }
 
-    public byte[] GetJobArtifacts(int jobId)
+    public byte[] GetJobArtifacts(long jobId)
     {
         throw new NotImplementedException();
     }
 
-    public byte[] GetJobArtifact(int jobId, string path)
+    public byte[] GetJobArtifact(long jobId, string path)
     {
         throw new NotImplementedException();
     }
@@ -88,7 +88,7 @@ internal sealed class JobClient : ClientBase, IJobClient
         return GitLabCollectionResponse.Create(GetJobs(query));
     }
 
-    public string GetTrace(int jobId)
+    public string GetTrace(long jobId)
     {
         using (Context.BeginOperationScope())
         {
@@ -103,13 +103,13 @@ internal sealed class JobClient : ClientBase, IJobClient
     }
 
     [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
-    public async Task<string> GetTraceAsync(int jobId, CancellationToken cancellationToken = default)
+    public async Task<string> GetTraceAsync(long jobId, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         return GetTrace(jobId);
     }
 
-    public Models.Job RunAction(int jobId, JobAction action)
+    public Models.Job RunAction(long jobId, JobAction action)
     {
         using (Context.BeginOperationScope())
         {
@@ -140,7 +140,7 @@ internal sealed class JobClient : ClientBase, IJobClient
     }
 
     [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
-    public async Task<Models.Job> RunActionAsync(int jobId, JobAction action, CancellationToken cancellationToken = default)
+    public async Task<Models.Job> RunActionAsync(long jobId, JobAction action, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         return RunAction(jobId, action);

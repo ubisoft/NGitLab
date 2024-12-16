@@ -6,17 +6,17 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class ReleaseLinkClient : ClientBase, IReleaseLinkClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
     private readonly string _tagName;
 
-    public ReleaseLinkClient(ClientContext context, int projectId, string tagName)
+    public ReleaseLinkClient(ClientContext context, long projectId, string tagName)
         : base(context)
     {
         _projectId = projectId;
         _tagName = tagName;
     }
 
-    public ReleaseLink this[int id] => throw new NotImplementedException();
+    public ReleaseLink this[long id] => throw new NotImplementedException();
 
     public IEnumerable<ReleaseLink> All => throw new NotImplementedException();
 
@@ -25,12 +25,12 @@ internal sealed class ReleaseLinkClient : ClientBase, IReleaseLinkClient
         throw new NotImplementedException();
     }
 
-    public void Delete(int id)
+    public void Delete(long id)
     {
         throw new NotImplementedException();
     }
 
-    public ReleaseLink Update(int id, ReleaseLinkUpdate data)
+    public ReleaseLink Update(long id, ReleaseLinkUpdate data)
     {
         throw new NotImplementedException();
     }

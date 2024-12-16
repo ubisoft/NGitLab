@@ -17,13 +17,13 @@ public class GroupHooksClient : IGroupHooksClient
 
     public IEnumerable<GroupHook> All => _api.Get().GetAll<GroupHook>(_path);
 
-    public GroupHook this[int hookId] => _api.Get().To<GroupHook>(_path + "/" + hookId.ToStringInvariant());
+    public GroupHook this[long hookId] => _api.Get().To<GroupHook>(_path + "/" + hookId.ToStringInvariant());
 
     public GroupHook Create(GroupHookUpsert hook) => _api.Post().With(hook).To<GroupHook>(_path);
 
-    public GroupHook Update(int hookId, GroupHookUpsert hook) => _api.Put().With(hook).To<GroupHook>(_path + "/" + hookId.ToStringInvariant());
+    public GroupHook Update(long hookId, GroupHookUpsert hook) => _api.Put().With(hook).To<GroupHook>(_path + "/" + hookId.ToStringInvariant());
 
-    public void Delete(int hookId)
+    public void Delete(long hookId)
     {
         _api.Delete().Execute(_path + "/" + hookId.ToStringInvariant());
     }

@@ -6,7 +6,7 @@ namespace NGitLab.Models;
 public class ProjectIssueNote
 {
     [JsonPropertyName("id")]
-    public int NoteId;
+    public long NoteId;
 
     [JsonPropertyName("body")]
     public string Body;
@@ -27,13 +27,13 @@ public class ProjectIssueNote
     public bool System;
 
     [JsonPropertyName("noteable_id")]
-    public int NoteableId;
+    public long NoteableId;
 
     [JsonPropertyName("noteable_type")]
     public string NoteableType;
 
     [JsonPropertyName("noteable_iid")]
-    public int Noteable_Iid;
+    public long Noteable_Iid;
 
     [JsonPropertyName("resolvable")]
     public bool Resolvable;

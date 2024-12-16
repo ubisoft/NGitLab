@@ -32,18 +32,9 @@ public readonly struct GroupId : IIdOrPathAddressable, IEquatable<Group>, IEquat
         _path = path ?? throw new ArgumentNullException(nameof(path));
     }
 
-    [Obsolete("Use the non-ambiguous GroupId(long id) or GroupId(string path) constructor instead.")]
-    public GroupId(Group group)
-    {
-        _id = group?.Id ?? throw new ArgumentNullException(nameof(group));
-    }
-
     public static implicit operator GroupId(long id) => new(id);
 
     public static implicit operator GroupId(string path) => new(path);
-
-    [Obsolete("Use the non-ambiguous GroupId(long id) or GroupId(string path) operator instead.")]
-    public static implicit operator GroupId(Group group) => new(group);
 
     public override string ToString() => this.ValueAsString();
 

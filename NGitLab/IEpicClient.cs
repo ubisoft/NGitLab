@@ -11,7 +11,7 @@ public interface IEpicClient
     /// <param name="groupId">Group ID</param>
     /// <param name="query">Filtering and ordering query</param>
     /// <returns></returns>
-    IEnumerable<Epic> Get(int groupId, EpicQuery query);
+    IEnumerable<Epic> Get(long groupId, EpicQuery query);
 
     /// <summary>
     /// Return a group epic
@@ -19,14 +19,14 @@ public interface IEpicClient
     /// <param name="groupId">Group ID</param>
     /// <param name="epicId">Epic ID</param>
     /// <returns></returns>
-    Epic Get(int groupId, int epicId);
+    Epic Get(long groupId, long epicId);
 
     /// <summary>
     /// Return all issues that are assigned to an epic
     /// </summary>
     /// <param name="groupId">Group ID</param>
     /// <param name="epicId">Epic ID</param>
-    GitLabCollectionResponse<Issue> GetIssuesAsync(int groupId, int epicId);
+    GitLabCollectionResponse<Issue> GetIssuesAsync(long groupId, long epicId);
 
     /// <summary>
     /// Create an epic
@@ -34,7 +34,7 @@ public interface IEpicClient
     /// <param name="groupId">Group ID</param>
     /// <param name="epic">Epic to create</param>
     /// <returns></returns>
-    Epic Create(int groupId, EpicCreate epic);
+    Epic Create(long groupId, EpicCreate epic);
 
     /// <summary>
     /// Update an epic
@@ -42,5 +42,5 @@ public interface IEpicClient
     /// <param name="groupId">Group ID</param>
     /// <param name="epicEdit">New properties values</param>
     /// <returns></returns>
-    Epic Edit(int groupId, EpicEdit epicEdit);
+    Epic Edit(long groupId, EpicEdit epicEdit);
 }

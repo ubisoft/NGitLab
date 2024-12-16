@@ -6,7 +6,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class ProtectedBranchClient : ClientBase, IProtectedBranchClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public ProtectedBranchClient(ClientContext context, ProjectId projectId)
         : base(context)

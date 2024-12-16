@@ -6,13 +6,13 @@ namespace NGitLab.Models;
 public class GroupHook
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [JsonPropertyName("url")]
     public Uri Url { get; set; }
 
     [JsonPropertyName("group_id")]
-    public int GroupId { get; set; }
+    public long GroupId { get; set; }
 
     [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; set; }

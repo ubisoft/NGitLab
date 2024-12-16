@@ -6,9 +6,9 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class ProjectHooksClient : ClientBase, IProjectHooksClient
 {
-    public int ProjectId { get; }
+    public long ProjectId { get; }
 
-    public ProjectHooksClient(ClientContext context, int projectId)
+    public ProjectHooksClient(ClientContext context, long projectId)
         : base(context)
     {
         ProjectId = projectId;
@@ -26,7 +26,7 @@ internal sealed class ProjectHooksClient : ClientBase, IProjectHooksClient
         }
     }
 
-    public Models.ProjectHook this[int hookId]
+    public Models.ProjectHook this[long hookId]
     {
         get
         {
@@ -49,7 +49,7 @@ internal sealed class ProjectHooksClient : ClientBase, IProjectHooksClient
         }
     }
 
-    public Models.ProjectHook Update(int hookId, ProjectHookUpsert hook)
+    public Models.ProjectHook Update(long hookId, ProjectHookUpsert hook)
     {
         using (Context.BeginOperationScope())
         {
@@ -69,7 +69,7 @@ internal sealed class ProjectHooksClient : ClientBase, IProjectHooksClient
         }
     }
 
-    public void Delete(int hookId)
+    public void Delete(long hookId)
     {
         using (Context.BeginOperationScope())
         {

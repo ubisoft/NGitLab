@@ -6,7 +6,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
 {
-    public int _groupId { get; }
+    public long _groupId { get; }
 
     public GroupHooksClient(ClientContext context, GroupId groupId)
         : base(context)
@@ -26,7 +26,7 @@ internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
         }
     }
 
-    public Models.GroupHook this[int hookId]
+    public Models.GroupHook this[long hookId]
     {
         get
         {
@@ -49,7 +49,7 @@ internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
         }
     }
 
-    public Models.GroupHook Update(int hookId, GroupHookUpsert hook)
+    public Models.GroupHook Update(long hookId, GroupHookUpsert hook)
     {
         using (Context.BeginOperationScope())
         {
@@ -71,7 +71,7 @@ internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
         }
     }
 
-    public void Delete(int hookId)
+    public void Delete(long hookId)
     {
         using (Context.BeginOperationScope())
         {

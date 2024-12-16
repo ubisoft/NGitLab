@@ -10,13 +10,13 @@ namespace NGitLab.Models;
 public class Event
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [JsonPropertyName("title")]
     public string Title { get; set; }
 
     [JsonPropertyName("project_id")]
-    public int ProjectId { get; set; }
+    public long ProjectId { get; set; }
 
     [JsonPropertyName("action_name")]
     public DynamicEnum<EventAction> Action { get; set; }
@@ -34,7 +34,7 @@ public class Event
     public string TargetTitle { get; set; }
 
     [JsonPropertyName("author_id")]
-    public int AuthorId { get; set; }
+    public long AuthorId { get; set; }
 
     [JsonPropertyName("author_username")]
     public string AuthorUserName { get; set; }

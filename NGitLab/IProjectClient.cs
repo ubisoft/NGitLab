@@ -30,7 +30,7 @@ public interface IProjectClient
     /// <inheritdoc cref="Get(ProjectQuery)"/>
     GitLabCollectionResponse<Project> GetAsync(ProjectQuery query);
 
-    Project this[int id] { get; }
+    Project this[long id] { get; }
 
     /// <summary>
     /// Returns the project with the provided full name in the form Namespace/Name.
@@ -46,22 +46,22 @@ public interface IProjectClient
 
     Task<Project> UpdateAsync(ProjectId projectId, ProjectUpdate projectUpdate, CancellationToken cancellationToken = default);
 
-    void Delete(int id);
+    void Delete(long id);
 
     Task DeleteAsync(ProjectId projectId, CancellationToken cancellationToken = default);
 
-    void Archive(int id);
+    void Archive(long id);
 
-    void Unarchive(int id);
+    void Unarchive(long id);
 
     /// <summary>
     /// Uploads a file to the specified project to be used in an issue or merge request description, or a comment.
     /// </summary>
     UploadedProjectFile UploadFile(string id, FormDataContent data);
 
-    Project GetById(int id, SingleProjectQuery query);
+    Project GetById(long id, SingleProjectQuery query);
 
-    Task<Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default);
+    Task<Project> GetByIdAsync(long id, SingleProjectQuery query, CancellationToken cancellationToken = default);
 
     Task<Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default);
 

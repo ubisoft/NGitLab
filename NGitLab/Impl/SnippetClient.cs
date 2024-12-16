@@ -22,12 +22,12 @@ public class SnippetClient : ISnippetClient
 
     public IEnumerable<Snippet> All => _api.Get().GetAll<Snippet>(SnippetUrl + "/public"); // all public snippets
 
-    public IEnumerable<Snippet> ForProject(int projectId)
+    public IEnumerable<Snippet> ForProject(long projectId)
     {
         return _api.Get().GetAll<Snippet>($"{ProjectUrl}/{projectId.ToStringInvariant()}/snippets");
     }
 
-    public Snippet Get(int projectId, int snippetId)
+    public Snippet Get(long projectId, long snippetId)
     {
         return _api.Get().To<Snippet>($"{ProjectUrl}/{projectId.ToStringInvariant()}/snippets/{snippetId.ToStringInvariant()}");
     }
@@ -52,10 +52,10 @@ public class SnippetClient : ISnippetClient
         _api.Put().With(snippet).To<SnippetProjectUpdate>($"{ProjectUrl}/{snippet.ProjectId.ToStringInvariant()}/snippets/{snippet.SnippetId.ToStringInvariant()}");
     }
 
-    public void Delete(int snippetId) => _api.Delete().Execute($"{SnippetUrl}/{snippetId.ToStringInvariant()}");
+    public void Delete(long snippetId) => _api.Delete().Execute($"{SnippetUrl}/{snippetId.ToStringInvariant()}");
 
-    public void Delete(int projectId, int snippetId) => _api.Delete().Execute($"{ProjectUrl}/{projectId.ToStringInvariant()}/snippets/{snippetId.ToStringInvariant()}");
+    public void Delete(long projectId, long snippetId) => _api.Delete().Execute($"{ProjectUrl}/{projectId.ToStringInvariant()}/snippets/{snippetId.ToStringInvariant()}");
 
-    public void GetContent(int projectId, int snippetId, Action<Stream> parser)
+    public void GetContent(long projectId, long snippetId, Action<Stream> parser)
         => _api.Get().Stream($"{ProjectUrl}/{projectId.ToStringInvariant()}/snippets/{snippetId.ToStringInvariant()}/raw", parser);
 }

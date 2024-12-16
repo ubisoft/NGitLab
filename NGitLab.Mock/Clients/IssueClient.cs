@@ -129,7 +129,7 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         return Edit(issueEdit);
     }
 
-    public IEnumerable<Models.ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid)
+    public IEnumerable<Models.ResourceLabelEvent> ResourceLabelEvents(long projectId, long issueIid)
     {
         using (Context.BeginOperationScope())
         {
@@ -138,7 +138,7 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         }
     }
 
-    public GitLabCollectionResponse<Models.ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int issueIid)
+    public GitLabCollectionResponse<Models.ResourceLabelEvent> ResourceLabelEventsAsync(long projectId, long issueIid)
     {
         using (Context.BeginOperationScope())
         {
@@ -149,7 +149,7 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         }
     }
 
-    public IEnumerable<Models.ResourceMilestoneEvent> ResourceMilestoneEvents(int projectId, int issueIid)
+    public IEnumerable<Models.ResourceMilestoneEvent> ResourceMilestoneEvents(long projectId, long issueIid)
     {
         using (Context.BeginOperationScope())
         {
@@ -158,7 +158,7 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         }
     }
 
-    public GitLabCollectionResponse<Models.ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int issueIid)
+    public GitLabCollectionResponse<Models.ResourceMilestoneEvent> ResourceMilestoneEventsAsync(long projectId, long issueIid)
     {
         using (Context.BeginOperationScope())
         {
@@ -169,7 +169,7 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         }
     }
 
-    public IEnumerable<Models.ResourceStateEvent> ResourceStateEvents(int projectId, int issueIid)
+    public IEnumerable<Models.ResourceStateEvent> ResourceStateEvents(long projectId, long issueIid)
     {
         using (Context.BeginOperationScope())
         {
@@ -178,7 +178,7 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         }
     }
 
-    public GitLabCollectionResponse<Models.ResourceStateEvent> ResourceStateEventsAsync(int projectId, int issueIid)
+    public GitLabCollectionResponse<Models.ResourceStateEvent> ResourceStateEventsAsync(long projectId, long issueIid)
     {
         using (Context.BeginOperationScope())
         {
@@ -189,37 +189,37 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         }
     }
 
-    public IEnumerable<Models.MergeRequest> RelatedTo(int projectId, int issueId)
+    public IEnumerable<Models.MergeRequest> RelatedTo(long projectId, long issueId)
     {
         throw new NotImplementedException();
     }
 
-    public GitLabCollectionResponse<Models.MergeRequest> RelatedToAsync(int projectId, int issueIid)
+    public GitLabCollectionResponse<Models.MergeRequest> RelatedToAsync(long projectId, long issueIid)
     {
         throw new NotImplementedException();
     }
 
-    public IEnumerable<Models.MergeRequest> ClosedBy(int projectId, int issueId)
+    public IEnumerable<Models.MergeRequest> ClosedBy(long projectId, long issueId)
     {
         throw new NotImplementedException();
     }
 
-    public GitLabCollectionResponse<Models.MergeRequest> ClosedByAsync(int projectId, int issueIid)
+    public GitLabCollectionResponse<Models.MergeRequest> ClosedByAsync(long projectId, long issueIid)
     {
         throw new NotImplementedException();
     }
 
-    public Task<TimeStats> TimeStatsAsync(int projectId, int issueIid, CancellationToken cancellationToken = default)
+    public Task<TimeStats> TimeStatsAsync(long projectId, long issueIid, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Models.Issue> CloneAsync(int projectId, int issueIid, IssueClone issueClone, CancellationToken cancellationToken = default)
+    public Task<Models.Issue> CloneAsync(long projectId, long issueIid, IssueClone issueClone, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public IEnumerable<Models.Issue> ForProject(int projectId)
+    public IEnumerable<Models.Issue> ForProject(long projectId)
     {
         using (Context.BeginOperationScope())
         {
@@ -233,22 +233,22 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         }
     }
 
-    public GitLabCollectionResponse<Models.Issue> ForProjectAsync(int projectId)
+    public GitLabCollectionResponse<Models.Issue> ForProjectAsync(long projectId)
     {
         return GitLabCollectionResponse.Create(ForProject(projectId));
     }
 
-    public GitLabCollectionResponse<Models.Issue> ForGroupsAsync(int groupId)
+    public GitLabCollectionResponse<Models.Issue> ForGroupsAsync(long groupId)
     {
         throw new NotImplementedException();
     }
 
-    public GitLabCollectionResponse<Models.Issue> ForGroupsAsync(int groupId, IssueQuery query)
+    public GitLabCollectionResponse<Models.Issue> ForGroupsAsync(long groupId, IssueQuery query)
     {
         throw new NotImplementedException();
     }
 
-    public Models.Issue Get(int projectId, int issueId)
+    public Models.Issue Get(long projectId, long issueId)
     {
         using (Context.BeginOperationScope())
         {
@@ -260,7 +260,7 @@ internal sealed class IssueClient : ClientBase, IIssueClient
     }
 
     [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
-    public async Task<Models.Issue> GetAsync(int projectId, int issueId, CancellationToken cancellationToken = default)
+    public async Task<Models.Issue> GetAsync(long projectId, long issueId, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         return Get(projectId, issueId);
@@ -281,7 +281,7 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         return GitLabCollectionResponse.Create(Get(query));
     }
 
-    public IEnumerable<Models.Issue> Get(int projectId, IssueQuery query)
+    public IEnumerable<Models.Issue> Get(long projectId, IssueQuery query)
     {
         using (Context.BeginOperationScope())
         {
@@ -291,28 +291,28 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         }
     }
 
-    public GitLabCollectionResponse<Models.Issue> GetAsync(int projectId, IssueQuery query)
+    public GitLabCollectionResponse<Models.Issue> GetAsync(long projectId, IssueQuery query)
     {
         return GitLabCollectionResponse.Create(Get(projectId, query));
     }
 
-    public async Task<Models.Issue> GetByIdAsync(int issueId, CancellationToken cancellationToken = default)
+    public async Task<Models.Issue> GetByIdAsync(long issueId, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         return GetById(issueId);
     }
 
-    public GitLabCollectionResponse<Models.Issue> LinkedToAsync(int projectId, int issueId)
+    public GitLabCollectionResponse<Models.Issue> LinkedToAsync(long projectId, long issueId)
     {
         throw new NotImplementedException();
     }
 
-    public bool CreateLinkBetweenIssues(int sourceProjectId, int sourceIssueId, int targetProjectId, int targetIssueId)
+    public bool CreateLinkBetweenIssues(long sourceProjectId, long sourceIssueId, long targetProjectId, long targetIssueId)
     {
         throw new NotImplementedException();
     }
 
-    public Models.Issue GetById(int issueId)
+    public Models.Issue GetById(long issueId)
     {
         using (Context.BeginOperationScope())
         {
@@ -452,12 +452,12 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         return issues;
     }
 
-    public IEnumerable<Participant> GetParticipants(ProjectId projectId, int issueIid)
+    public IEnumerable<Participant> GetParticipants(ProjectId projectId, long issueIid)
     {
         throw new NotImplementedException();
     }
 
-    public Models.Issue Unsubscribe(ProjectId projectId, int issueIid)
+    public Models.Issue Unsubscribe(ProjectId projectId, long issueIid)
     {
         throw new NotImplementedException();
     }

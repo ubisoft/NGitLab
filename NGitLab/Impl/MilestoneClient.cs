@@ -20,7 +20,7 @@ public class MilestoneClient : IMilestoneClient
     }
 
     [Obsolete("Use GitLabClient.GetMilestone() or GitLabClient.GetGroupMilestone() instead.")]
-    public MilestoneClient(API api, int projectId)
+    public MilestoneClient(API api, long projectId)
         : this(api, MilestoneScope.Projects, (ProjectId)projectId)
     {
     }
@@ -39,28 +39,28 @@ public class MilestoneClient : IMilestoneClient
         return _api.Get().GetAll<Milestone>(url);
     }
 
-    public Milestone this[int id] => _api.Get().To<Milestone>($"{_milestonePath}/{id.ToStringInvariant()}");
+    public Milestone this[long id] => _api.Get().To<Milestone>($"{_milestonePath}/{id.ToStringInvariant()}");
 
     public Milestone Create(MilestoneCreate milestone) => _api
         .Post().With(milestone)
         .To<Milestone>(_milestonePath);
 
-    public Milestone Update(int milestoneId, MilestoneUpdate milestone) => _api
+    public Milestone Update(long milestoneId, MilestoneUpdate milestone) => _api
         .Put().With(milestone)
         .To<Milestone>($"{_milestonePath}/{milestoneId.ToStringInvariant()}");
 
-    public Milestone Close(int milestoneId) => _api
+    public Milestone Close(long milestoneId) => _api
         .Put().With(new MilestoneUpdateState { NewState = nameof(MilestoneStateEvent.close) })
         .To<Milestone>($"{_milestonePath}/{milestoneId.ToStringInvariant()}");
 
-    public Milestone Activate(int milestoneId) => _api
+    public Milestone Activate(long milestoneId) => _api
         .Put().With(new MilestoneUpdateState { NewState = nameof(MilestoneStateEvent.activate) })
         .To<Milestone>($"{_milestonePath}/{milestoneId.ToStringInvariant()}");
 
-    public IEnumerable<MergeRequest> GetMergeRequests(int milestoneId) => _api
+    public IEnumerable<MergeRequest> GetMergeRequests(long milestoneId) => _api
         .Get().GetAll<MergeRequest>($"{_milestonePath}/{milestoneId.ToStringInvariant()}/merge_requests");
 
-    public void Delete(int milestoneId) => _api
+    public void Delete(long milestoneId) => _api
         .Delete()
         .Execute($"{_milestonePath}/{milestoneId.ToStringInvariant()}");
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -7,11 +6,6 @@ namespace NGitLab.Models;
 
 public class CommitCreate
 {
-    // Unnecessary in the POSTed JSON; the 'Project Id' is actually specified through the endpoint URL.
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [JsonIgnore]
-    public int ProjectId;
-
     [Required]
     [JsonPropertyName("branch")]
     public string Branch;

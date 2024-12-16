@@ -16,7 +16,7 @@ public class SubgroupQuery
     /// Skip the group IDs passed
     /// (optional)
     /// </summary>
-    public int[] SkipGroups { get; set; }
+    public long[] SkipGroups { get; set; }
 
     /// <summary>
     /// Show all the groups you have access to (defaults to false for authenticated users, true for admin); Attributes owned and min_access_level have precedence

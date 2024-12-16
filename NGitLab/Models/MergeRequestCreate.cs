@@ -11,13 +11,13 @@ public class MergeRequestCreate
     public string TargetBranch;
 
     [JsonPropertyName("assignee_id")]
-    public int? AssigneeId;
+    public long? AssigneeId;
 
     [JsonPropertyName("assignee_ids")]
-    public int[] AssigneeIds;
+    public long[] AssigneeIds;
 
     [JsonPropertyName("reviewer_ids")]
-    public int[] ReviewerIds;
+    public long[] ReviewerIds;
 
     [JsonPropertyName("title")]
     public string Title;
@@ -26,13 +26,13 @@ public class MergeRequestCreate
     public string Description;
 
     [JsonPropertyName("target_project_id")]
-    public int? TargetProjectId;
+    public long? TargetProjectId;
 
     [JsonPropertyName("remove_source_branch")]
     public bool RemoveSourceBranch;
 
     [JsonPropertyName("milestone_id")]
-    public int? MilestoneId { get; set; }
+    public long? MilestoneId { get; set; }
 
     [JsonPropertyName("labels")]
     public string Labels;

@@ -27,7 +27,7 @@ public class ProjectClient : IProjectClient
 
     public IEnumerable<Project> Visible => _api.Get().GetAll<Project>(Utils.AddOrderBy(Project.Url));
 
-    public Project this[int id] => GetById(id, new SingleProjectQuery());
+    public Project this[long id] => GetById(id, new SingleProjectQuery());
 
     public Project Create(ProjectCreate project) => _api.Post().With(project).To<Project>(Project.Url);
 
@@ -36,15 +36,15 @@ public class ProjectClient : IProjectClient
 
     public Project this[string fullName] => _api.Get().To<Project>($"{Project.Url}/{WebUtility.UrlEncode(fullName)}");
 
-    public void Delete(int id) =>
+    public void Delete(long id) =>
         _api.Delete().Execute($"{Project.Url}/{id.ToString(CultureInfo.InvariantCulture)}");
 
     public Task DeleteAsync(ProjectId projectId, CancellationToken cancellationToken = default) =>
         _api.Delete().ExecuteAsync($"{Project.Url}/{projectId.ValueAsUriParameter()}", cancellationToken);
 
-    public void Archive(int id) => _api.Post().Execute($"{Project.Url}/{id.ToString(CultureInfo.InvariantCulture)}/archive");
+    public void Archive(long id) => _api.Post().Execute($"{Project.Url}/{id.ToString(CultureInfo.InvariantCulture)}/archive");
 
-    public void Unarchive(int id) => _api.Post().Execute($"{Project.Url}/{id.ToString(CultureInfo.InvariantCulture)}/unarchive");
+    public void Unarchive(long id) => _api.Post().Execute($"{Project.Url}/{id.ToString(CultureInfo.InvariantCulture)}/unarchive");
 
     private static bool SupportKeysetPagination(ProjectQuery query)
     {
@@ -73,9 +73,6 @@ public class ProjectClient : IProjectClient
             case ProjectQueryScope.Owned:
                 url = Utils.AddParameter(url, "owned", value: true);
                 break;
-#pragma warning disable 618 // Obsolete
-            case ProjectQueryScope.Visible:
-#pragma warning restore 618
             case ProjectQueryScope.All:
                 // This is the default, it returns all visible projects.
                 break;
@@ -125,7 +122,7 @@ public class ProjectClient : IProjectClient
         return _api.Get().GetAllAsync<Project>(url);
     }
 
-    public Project GetById(int id, SingleProjectQuery query)
+    public Project GetById(long id, SingleProjectQuery query)
     {
         var url = $"{Project.Url}/{id.ToStringInvariant()}";
         if (query?.Statistics != null)
@@ -136,7 +133,7 @@ public class ProjectClient : IProjectClient
         return _api.Get().To<Project>(url);
     }
 
-    public Task<Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default) =>
+    public Task<Project> GetByIdAsync(long id, SingleProjectQuery query, CancellationToken cancellationToken = default) =>
         GetAsync(new ProjectId(id), query, cancellationToken);
 
     public Task<Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default) =>

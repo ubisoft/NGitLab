@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -17,7 +18,7 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
     {
     }
 
-    public Models.Project this[int id]
+    public Models.Project this[long id]
     {
         get
         {
@@ -81,7 +82,7 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         {
             project.Name ??= project.Path;
 
-            var parentGroup = GetParentGroup(project.NamespaceId);
+            var parentGroup = GetParentGroup(project.NamespaceId?.ToString(CultureInfo.InvariantCulture));
 
             var newProject = new Project(name: project.Name, path: project.Path)
             {
@@ -133,7 +134,7 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         return parentGroup;
     }
 
-    public void Delete(int id)
+    public void Delete(long id)
     {
         using (Context.BeginOperationScope())
         {
@@ -152,13 +153,13 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         }
     }
 
-    public void Archive(int id)
+    public void Archive(long id)
     {
         var project = GetProject(id, ProjectPermission.Edit);
         project.Archived = true;
     }
 
-    public void Unarchive(int id)
+    public void Unarchive(long id)
     {
         using (Context.BeginOperationScope())
         {
@@ -212,10 +213,8 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
                 case ProjectQueryScope.Owned:
                     projects = projects.Where(p => p.IsUserOwner(Context.User));
                     break;
-                case ProjectQueryScope.Visible:
-                    projects = projects.Where(p => p.CanUserViewProject(Context.User));
-                    break;
                 case ProjectQueryScope.All:
+                    projects = projects.Where(p => p.CanUserViewProject(Context.User));
                     break;
             }
 
@@ -249,9 +248,9 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         }
     }
 
-    public Models.Project GetById(int id, SingleProjectQuery query) => this[id];
+    public Models.Project GetById(long id, SingleProjectQuery query) => this[id];
 
-    public Task<Models.Project> GetByIdAsync(int id, SingleProjectQuery query, CancellationToken cancellationToken = default) =>
+    public Task<Models.Project> GetByIdAsync(long id, SingleProjectQuery query, CancellationToken cancellationToken = default) =>
         GetAsync(new ProjectId(id), query, cancellationToken);
 
     public Task<Models.Project> GetByNamespacedPathAsync(string path, SingleProjectQuery query = null, CancellationToken cancellationToken = default) =>

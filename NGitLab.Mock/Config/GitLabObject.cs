@@ -8,7 +8,7 @@ public abstract class GitLabObject
     {
     }
 
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [YamlIgnore]
     public object ParentObject { get; internal set; }

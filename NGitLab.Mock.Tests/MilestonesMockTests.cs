@@ -103,8 +103,8 @@ public class MilestonesMockTests
     [Test]
     public void Test_projects_merge_request_can_be_found_from_milestone()
     {
-        const int ProjectId = 1;
-        const int MilestoneId = 1;
+        const long ProjectId = 1;
+        const long MilestoneId = 1;
         using var server = new GitLabConfig()
             .WithUser("user1", isDefault: true)
             .WithProject("Test", id: ProjectId, addDefaultUserAsMaintainer: true, configure: project => project
@@ -122,8 +122,8 @@ public class MilestonesMockTests
     [Test]
     public void Test_groups_merge_request_can_be_found_from_milestone()
     {
-        const int projectId = 1;
-        const int milestoneId = 1;
+        const long projectId = 1;
+        const long milestoneId = 1;
         using var server = new GitLabConfig()
             .WithUser("user1", isDefault: true)
             .WithGroup("parentGroup", id: projectId, configure: group => group

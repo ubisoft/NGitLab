@@ -67,7 +67,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         return Create(group);
     }
 
-    public void Delete(int id)
+    public void Delete(long id)
     {
         using (Context.BeginOperationScope())
         {
@@ -83,7 +83,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
     }
 
     [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
-    public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(long id, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         Delete(id);
@@ -148,7 +148,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         return new(page, all.Length > PagedResponse.MaxQueryCountLimit ? null : all.Length);
     }
 
-    public Models.Group this[int id] => GetGroup(id);
+    public Models.Group this[long id] => GetGroup(id);
 
     public Models.Group this[string fullPath] => GetGroup(fullPath);
 
@@ -167,7 +167,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
 
     public Task<Models.Group> GetByFullPathAsync(string fullPath, CancellationToken cancellationToken = default) => GetGroupAsync(fullPath, cancellationToken);
 
-    public Task<Models.Group> GetByIdAsync(int id, CancellationToken cancellationToken = default) => GetGroupAsync(id, cancellationToken);
+    public Task<Models.Group> GetByIdAsync(long id, CancellationToken cancellationToken = default) => GetGroupAsync(id, cancellationToken);
 
     [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
     public async Task<Models.Group> GetGroupAsync(GroupId groupId, CancellationToken cancellationToken = default)
@@ -176,12 +176,12 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         return GetGroup(groupId);
     }
 
-    public void Restore(int id)
+    public void Restore(long id)
     {
         throw new NotImplementedException();
     }
 
-    public async Task RestoreAsync(int id, CancellationToken cancellationToken = default)
+    public async Task RestoreAsync(long id, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         Restore(id);
@@ -197,13 +197,13 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         return GitLabCollectionResponse.Create(Search(search));
     }
 
-    public IEnumerable<Models.Project> SearchProjects(int groupId, string search) =>
+    public IEnumerable<Models.Project> SearchProjects(long groupId, string search) =>
         SearchProjectsAsync(groupId, new GroupProjectsQuery
         {
             Search = search,
         });
 
-    public GitLabCollectionResponse<Models.Project> GetProjectsAsync(int groupId, GroupProjectsQuery query) => SearchProjectsAsync(groupId, query);
+    public GitLabCollectionResponse<Models.Project> GetProjectsAsync(long groupId, GroupProjectsQuery query) => SearchProjectsAsync(groupId, query);
 
     public GitLabCollectionResponse<Models.Project> SearchProjectsAsync(GroupId groupId, GroupProjectsQuery query)
     {
@@ -263,7 +263,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         return new(page, all.Length > PagedResponse.MaxQueryCountLimit ? null : all.Length);
     }
 
-    public Models.Group Update(int id, GroupUpdate groupUpdate)
+    public Models.Group Update(long id, GroupUpdate groupUpdate)
     {
         using (Context.BeginOperationScope())
         {
@@ -319,13 +319,13 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
     }
 
     [SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Would be an infinite recursion")]
-    public async Task<Models.Group> UpdateAsync(int id, GroupUpdate groupUpdate, CancellationToken cancellationToken = default)
+    public async Task<Models.Group> UpdateAsync(long id, GroupUpdate groupUpdate, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         return Update(id, groupUpdate);
     }
 
-    public GitLabCollectionResponse<Models.Group> GetSubgroupsByIdAsync(int id, SubgroupQuery query = null) => GetSubgroupsAsync(id, query);
+    public GitLabCollectionResponse<Models.Group> GetSubgroupsByIdAsync(long id, SubgroupQuery query = null) => GetSubgroupsAsync(id, query);
 
     public GitLabCollectionResponse<Models.Group> GetSubgroupsByFullPathAsync(string fullPath, SubgroupQuery query = null) => GetSubgroupsAsync(fullPath, query);
 

@@ -11,7 +11,7 @@ internal sealed class NamespacesClient : ClientBase, INamespacesClient
     {
     }
 
-    public Namespace this[int id] => throw new NotImplementedException();
+    public Namespace this[long id] => throw new NotImplementedException();
 
     public Namespace this[string fullPath] => throw new NotImplementedException();
 

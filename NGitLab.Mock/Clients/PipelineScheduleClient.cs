@@ -17,7 +17,7 @@ internal class PipelineScheduleClient : ClientBase, IPipelineScheduleClient
         _projectId = projectId;
     }
 
-    public Models.PipelineSchedule this[int id]
+    public Models.PipelineSchedule this[long id]
     {
         get
         {
@@ -48,7 +48,7 @@ internal class PipelineScheduleClient : ClientBase, IPipelineScheduleClient
     public GitLabCollectionResponse<PipelineScheduleBasic> GetAllAsync()
         => GitLabCollectionResponse.Create(All);
 
-    public GitLabCollectionResponse<PipelineBasic> GetAllSchedulePipelinesAsync(int id)
+    public GitLabCollectionResponse<PipelineBasic> GetAllSchedulePipelinesAsync(long id)
     {
         using (Context.BeginOperationScope())
         {
@@ -61,7 +61,7 @@ internal class PipelineScheduleClient : ClientBase, IPipelineScheduleClient
         }
     }
 
-    public async Task<Models.PipelineSchedule> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Models.PipelineSchedule> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
 

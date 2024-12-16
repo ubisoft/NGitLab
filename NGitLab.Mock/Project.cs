@@ -43,7 +43,7 @@ public sealed class Project : GitLabObject
         ApprovalsBeforeMerge = 0;
     }
 
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string Name { get; set; }
 
@@ -99,7 +99,7 @@ public sealed class Project : GitLabObject
 
     public bool Mirror { get; set; }
 
-    public int MirrorUserId { get; set; }
+    public long MirrorUserId { get; set; }
 
     public bool MirrorTriggerBuilds { get; set; }
 
@@ -361,18 +361,18 @@ public sealed class Project : GitLabObject
         return mr;
     }
 
-    public bool RemoveRunner(int runnerId)
+    public bool RemoveRunner(long runnerId)
     {
         return RegisteredRunners.Remove(runnerId);
     }
 
-    public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged, int id)
+    public Runner AddRunner(string name, string description, bool paused, bool locked, bool isShared, bool runUntagged, long id)
     {
         var runner = new Runner
         {
             Name = name,
             Description = description,
-            Active = active,
+            Paused = paused,
             Locked = locked,
             IsShared = isShared,
             IpAddress = "0.0.0.0",
@@ -382,7 +382,7 @@ public sealed class Project : GitLabObject
         };
 
         RegisteredRunners.Add(runner);
-        if (active)
+        if (!paused)
         {
             EnabledRunners.Add(new RunnerRef(runner));
         }

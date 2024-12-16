@@ -6,10 +6,10 @@ namespace NGitLab.Models;
 public class EnvironmentLastDeployment
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [JsonPropertyName("iid")]
-    public int IId { get; set; }
+    public long IId { get; set; }
 
     [JsonPropertyName("ref")]
     public string Ref { get; set; }

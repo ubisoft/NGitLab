@@ -13,13 +13,13 @@ public interface IProjectBadgeClient
     /// <remarks>Project Badge API returns both Group and Project badges</remarks>
     IEnumerable<Badge> ProjectsOnly { get; }
 
-    Badge this[int id] { get; }
+    Badge this[long id] { get; }
 
     Badge Create(BadgeCreate badge);
 
-    Badge Update(int id, BadgeUpdate badge);
+    Badge Update(long id, BadgeUpdate badge);
 
-    void Delete(int id);
+    void Delete(long id);
 }
 
 public interface IProjectVariableClient

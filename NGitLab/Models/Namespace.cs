@@ -6,7 +6,7 @@ namespace NGitLab.Models;
 public class Namespace
 {
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("name")]
     public string Name;

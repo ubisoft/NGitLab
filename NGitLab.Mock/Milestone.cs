@@ -9,9 +9,9 @@ public sealed class Milestone : GitLabObject
 
     public Group Group => Parent as Group;
 
-    public int Id { get; set; }
+    public long Id { get; set; }
 
-    public int Iid { get; set; }
+    public long Iid { get; set; }
 
     public string Title { get; set; }
 

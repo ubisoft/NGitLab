@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using NGitLab.Impl.Json;
@@ -9,11 +8,7 @@ namespace NGitLab.Models;
 public class IssueCreate
 {
     [JsonIgnore]
-    public int ProjectId { get => Id; set => Id = value; }
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [JsonIgnore]
-    public int Id;
+    public long ProjectId { get; set; }
 
     [Required]
     [JsonPropertyName("title")]
@@ -23,13 +18,13 @@ public class IssueCreate
     public string Description;
 
     [JsonPropertyName("assignee_id")]
-    public int? AssigneeId;
+    public long? AssigneeId;
 
     [JsonPropertyName("assignee_ids")]
-    public int[] AssigneeIds;
+    public long[] AssigneeIds;
 
     [JsonPropertyName("milestone_id")]
-    public int? MileStoneId;
+    public long? MileStoneId;
 
     [JsonPropertyName("labels")]
     public string Labels;
@@ -42,5 +37,5 @@ public class IssueCreate
     public DateTime? DueDate;
 
     [JsonPropertyName("epic_id")]
-    public int? EpicId;
+    public long? EpicId;
 }

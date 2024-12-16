@@ -20,7 +20,7 @@ public sealed class QueryAssigneeId
 
     public static QueryAssigneeId None { get; } = new QueryAssigneeId("None");
 
-    public static implicit operator QueryAssigneeId(int id)
+    public static implicit operator QueryAssigneeId(long id)
     {
         if (id == 0)
             return None;

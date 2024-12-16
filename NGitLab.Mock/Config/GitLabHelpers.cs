@@ -196,7 +196,7 @@ public static class GitLabHelpers
     /// <param name="visibility">Visibility.</param>
     /// <param name="addDefaultUserAsMaintainer">Define default user as maintainer.</param>
     /// <param name="configure">Configuration method</param>
-    public static GitLabConfig WithGroup(this GitLabConfig config, string? name = null, int id = default, string? @namespace = null, string? description = null, VisibilityLevel? visibility = null, bool addDefaultUserAsMaintainer = false, Action<GitLabGroup>? configure = null)
+    public static GitLabConfig WithGroup(this GitLabConfig config, string? name = null, long id = default, string? @namespace = null, string? description = null, VisibilityLevel? visibility = null, bool addDefaultUserAsMaintainer = false, Action<GitLabGroup>? configure = null)
     {
         return WithGroup(config, name, group =>
         {
@@ -231,7 +231,7 @@ public static class GitLabHelpers
     /// <param name="visibility">Optional visibility.</param>
     /// <param name="addDefaultUserAsMaintainer">Optionally define default user as maintainer.</param>
     /// <param name="configure">Optional configuration method</param>
-    public static GitLabConfig WithGroupOfFullPath(this GitLabConfig config, string fullPath, string? name = null, int id = default, string? description = null, VisibilityLevel? visibility = null, bool addDefaultUserAsMaintainer = false, Action<GitLabGroup>? configure = null)
+    public static GitLabConfig WithGroupOfFullPath(this GitLabConfig config, string fullPath, string? name = null, long id = default, string? description = null, VisibilityLevel? visibility = null, bool addDefaultUserAsMaintainer = false, Action<GitLabGroup>? configure = null)
     {
         if (string.IsNullOrWhiteSpace(fullPath))
             throw new ArgumentNullException(nameof(fullPath));
@@ -283,7 +283,7 @@ public static class GitLabHelpers
     /// <param name="clonePath">Path where to clone repository after server resolving</param>
     /// <param name="cloneParameters">Parameters passed to clone command</param>
     /// <param name="configure">Configuration method</param>
-    public static GitLabConfig WithProject(this GitLabConfig config, string? name = null, int id = default, string? @namespace = null, string? description = null,
+    public static GitLabConfig WithProject(this GitLabConfig config, string? name = null, long id = default, string? @namespace = null, string? description = null,
                                            string? defaultBranch = null, VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false,
                                            bool addDefaultUserAsMaintainer = false, string? clonePath = null, string? cloneParameters = null, Action<GitLabProject>? configure = null)
     {
@@ -336,7 +336,7 @@ public static class GitLabHelpers
     /// <param name="clonePath">Path where to clone repository after server resolving</param>
     /// <param name="cloneParameters">Parameters passed to clone command</param>
     /// <param name="configure">Configuration method</param>
-    public static GitLabConfig WithProjectOfFullPath(this GitLabConfig config, string? fullPath, string? name = null, int id = default, string? description = null,
+    public static GitLabConfig WithProjectOfFullPath(this GitLabConfig config, string? fullPath, string? name = null, long id = default, string? description = null,
                                                      string? defaultBranch = null, VisibilityLevel visibility = VisibilityLevel.Internal, bool initialCommit = false,
                                                      bool addDefaultUserAsMaintainer = false, string? clonePath = null, string? cloneParameters = null, Action<GitLabProject>? configure = null)
     {
@@ -575,7 +575,7 @@ public static class GitLabHelpers
     /// <param name="closedAt">Close date time.</param>
     /// <param name="labels">Labels names.</param>
     /// <param name="configure">Configuration method</param>
-    public static GitLabProject WithIssue(this GitLabProject project, string? title = null, int id = default, string? description = null, string? author = null, string? assignee = null, string? milestone = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, IEnumerable<string>? labels = null, Action<GitLabIssue>? configure = null)
+    public static GitLabProject WithIssue(this GitLabProject project, string? title = null, long id = default, string? description = null, string? author = null, string? assignee = null, string? milestone = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, IEnumerable<string>? labels = null, Action<GitLabIssue>? configure = null)
     {
         return WithIssue(project, title, author, issue =>
         {
@@ -674,7 +674,7 @@ public static class GitLabHelpers
     /// <param name="labels">Labels names.</param>
     /// <param name="milestone">Milestone name.</param>
     /// <param name="configure">Configuration method</param>
-    public static GitLabProject WithMergeRequest(this GitLabProject project, string? sourceBranch = null, string? title = null, int id = default, string? targetBranch = null, string? description = null, string? author = null, string? assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string>? approvers = null, IEnumerable<string>? labels = null, string? milestone = null, Action<GitLabMergeRequest>? configure = null)
+    public static GitLabProject WithMergeRequest(this GitLabProject project, string? sourceBranch = null, string? title = null, long id = default, string? targetBranch = null, string? description = null, string? author = null, string? assignee = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, DateTime? mergedAt = null, IEnumerable<string>? approvers = null, IEnumerable<string>? labels = null, string? milestone = null, Action<GitLabMergeRequest>? configure = null)
     {
         return WithMergeRequest(project, sourceBranch, title, author, mergeRequest =>
         {
@@ -849,7 +849,7 @@ public static class GitLabHelpers
     /// <param name="updatedAt">Update date time.</param>
     /// <param name="closedAt">Close date time.</param>
     /// <param name="configure">Configuration method</param>
-    public static GitLabGroup WithMilestone(this GitLabGroup group, string title, int id = default, string? description = null, DateTime? dueDate = null, DateTime? startDate = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, Action<GitLabMilestone>? configure = null)
+    public static GitLabGroup WithMilestone(this GitLabGroup group, string title, long id = default, string? description = null, DateTime? dueDate = null, DateTime? startDate = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, Action<GitLabMilestone>? configure = null)
     {
         return WithMilestone(group, title, milestone =>
         {
@@ -900,7 +900,7 @@ public static class GitLabHelpers
     /// <param name="updatedAt">Update date time.</param>
     /// <param name="closedAt">Close date time.</param>
     /// <param name="configure">Configuration method</param>
-    public static GitLabProject WithMilestone(this GitLabProject project, string title, int id = default, string? description = null, DateTime? dueDate = null, DateTime? startDate = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, Action<GitLabMilestone>? configure = null)
+    public static GitLabProject WithMilestone(this GitLabProject project, string title, long id = default, string? description = null, DateTime? dueDate = null, DateTime? startDate = null, DateTime? createdAt = null, DateTime? updatedAt = null, DateTime? closedAt = null, Action<GitLabMilestone>? configure = null)
     {
         return WithMilestone(project, title, milestone =>
         {
@@ -980,7 +980,7 @@ public static class GitLabHelpers
     /// <param name="resolvable">Indicates if comment is resolvable.</param>
     /// <param name="resolved">Indicates if comment is resolved.</param>
     /// <param name="configure">Configuration method</param>
-    public static GitLabIssue WithComment(this GitLabIssue issue, string? message = null, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
+    public static GitLabIssue WithComment(this GitLabIssue issue, string? message = null, long id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
     {
         return WithComment<GitLabIssue>(issue, message, id, author, system, createdAt, updatedAt, thread, resolvable, resolved, configure);
     }
@@ -999,12 +999,12 @@ public static class GitLabHelpers
     /// <param name="resolvable">Indicates if comment is resolvable.</param>
     /// <param name="resolved">Indicates if comment is resolved.</param>
     /// <param name="configure">Configuration method</param>
-    public static GitLabMergeRequest WithComment(this GitLabMergeRequest mergeRequest, string? message = null, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
+    public static GitLabMergeRequest WithComment(this GitLabMergeRequest mergeRequest, string? message = null, long id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
     {
         return WithComment<GitLabMergeRequest>(mergeRequest, message, id, author, system, createdAt, updatedAt, thread, resolvable, resolved, configure);
     }
 
-    private static T WithComment<T>(this T obj, string? message, int id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
+    private static T WithComment<T>(this T obj, string? message, long id = default, string? author = null, bool system = false, DateTime? createdAt = null, DateTime? updatedAt = null, string? thread = null, bool resolvable = false, bool resolved = false, Action<GitLabComment>? configure = null)
         where T : GitLabObject
     {
         return WithComment(obj, message, comment =>
@@ -1034,7 +1034,7 @@ public static class GitLabHelpers
     /// <param name="author">Author username (required if default user not defined)</param>
     /// <param name="createdAt">Creation date time.</param>
     /// <param name="updatedAt">Update date time.</param>
-    public static GitLabIssue WithSystemComment(this GitLabIssue issue, string? message = null, string? innerHtml = null, int id = default, string? author = null, DateTime? createdAt = null, DateTime? updatedAt = null)
+    public static GitLabIssue WithSystemComment(this GitLabIssue issue, string? message = null, string? innerHtml = null, long id = default, string? author = null, DateTime? createdAt = null, DateTime? updatedAt = null)
     {
         return WithSystemComment<GitLabIssue>(issue, message, innerHtml, id, author, createdAt, updatedAt);
     }
@@ -1049,12 +1049,12 @@ public static class GitLabHelpers
     /// <param name="author">Author username (required if default user not defined)</param>
     /// <param name="createdAt">Creation date time.</param>
     /// <param name="updatedAt">Update date time.</param>
-    public static GitLabMergeRequest WithSystemComment(this GitLabMergeRequest mergeRequest, string? message = null, string? innerHtml = null, int id = default, string? author = null, DateTime? createdAt = null, DateTime? updatedAt = null)
+    public static GitLabMergeRequest WithSystemComment(this GitLabMergeRequest mergeRequest, string? message = null, string? innerHtml = null, long id = default, string? author = null, DateTime? createdAt = null, DateTime? updatedAt = null)
     {
         return WithSystemComment<GitLabMergeRequest>(mergeRequest, message, innerHtml, id, author, createdAt, updatedAt);
     }
 
-    private static T WithSystemComment<T>(this T obj, string? message, string? innerHtml, int id, string? author, DateTime? createdAt, DateTime? updatedAt)
+    private static T WithSystemComment<T>(this T obj, string? message, string? innerHtml, long id, string? author, DateTime? createdAt, DateTime? updatedAt)
         where T : GitLabObject
     {
         var body = innerHtml == null ? message : $"{message}\n\n{innerHtml}";

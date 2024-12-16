@@ -15,13 +15,13 @@ public interface IIssueClient
     /// <summary>
     /// Get a list of issues for the specified project.
     /// </summary>
-    IEnumerable<Issue> ForProject(int projectId);
+    IEnumerable<Issue> ForProject(long projectId);
 
-    GitLabCollectionResponse<Issue> ForProjectAsync(int projectId);
+    GitLabCollectionResponse<Issue> ForProjectAsync(long projectId);
 
-    GitLabCollectionResponse<Issue> ForGroupsAsync(int groupId);
+    GitLabCollectionResponse<Issue> ForGroupsAsync(long groupId);
 
-    GitLabCollectionResponse<Issue> ForGroupsAsync(int groupId, IssueQuery query);
+    GitLabCollectionResponse<Issue> ForGroupsAsync(long groupId, IssueQuery query);
 
     /// <summary>
     ///     <para>Return a single issue for a project given project.</para>
@@ -30,9 +30,9 @@ public interface IIssueClient
     /// <param name="projectId"></param>
     /// <param name="issueIid"></param>
     /// <returns>The issue that corresponds to the project id and issue id</returns>
-    Issue Get(int projectId, int issueIid);
+    Issue Get(long projectId, long issueIid);
 
-    Task<Issue> GetAsync(int projectId, int issueIid, CancellationToken cancellationToken = default);
+    Task<Issue> GetAsync(long projectId, long issueIid, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Return issues for a given query.
@@ -55,9 +55,9 @@ public interface IIssueClient
     /// <param name="projectId"></param>
     /// <param name="query"></param>
     /// <returns>the query's related issues</returns>
-    IEnumerable<Issue> Get(int projectId, IssueQuery query);
+    IEnumerable<Issue> Get(long projectId, IssueQuery query);
 
-    GitLabCollectionResponse<Issue> GetAsync(int projectId, IssueQuery query);
+    GitLabCollectionResponse<Issue> GetAsync(long projectId, IssueQuery query);
 
     /// <summary>
     ///     <para>Return a single issue, only for administrators.</para>
@@ -65,9 +65,9 @@ public interface IIssueClient
     /// </summary>
     /// <param name="issueId"></param>
     /// <returns>The issue that corresponds to the issue id</returns>
-    Issue GetById(int issueId);
+    Issue GetById(long issueId);
 
-    Task<Issue> GetByIdAsync(int issueId, CancellationToken cancellationToken = default);
+    Task<Issue> GetByIdAsync(long issueId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Add an issue witht he proposed title to the GitLab list for the selected proejct id.
@@ -96,9 +96,9 @@ public interface IIssueClient
     /// <param name="projectId">The project id.</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
     /// <returns>A collection of the resource label events linked to this issue.</returns>
-    IEnumerable<ResourceLabelEvent> ResourceLabelEvents(int projectId, int issueIid);
+    IEnumerable<ResourceLabelEvent> ResourceLabelEvents(long projectId, long issueIid);
 
-    GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int issueIid);
+    GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(long projectId, long issueIid);
 
     /// <summary>
     /// Gets the resource milestone events.
@@ -109,9 +109,9 @@ public interface IIssueClient
     /// <param name="projectId">The project id.</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
     /// <returns>A collection of the resource milestone events linked to this issue.</returns>
-    IEnumerable<ResourceMilestoneEvent> ResourceMilestoneEvents(int projectId, int issueIid);
+    IEnumerable<ResourceMilestoneEvent> ResourceMilestoneEvents(long projectId, long issueIid);
 
-    GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int issueIid);
+    GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(long projectId, long issueIid);
 
     /// <summary>
     /// Gets the resource state events.
@@ -122,9 +122,9 @@ public interface IIssueClient
     /// <param name="projectId">The project id.</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
     /// <returns>A collection of the resource state events linked to this issue.</returns>
-    IEnumerable<ResourceStateEvent> ResourceStateEvents(int projectId, int issueIid);
+    IEnumerable<ResourceStateEvent> ResourceStateEvents(long projectId, long issueIid);
 
-    GitLabCollectionResponse<ResourceStateEvent> ResourceStateEventsAsync(int projectId, int issueIid);
+    GitLabCollectionResponse<ResourceStateEvent> ResourceStateEventsAsync(long projectId, long issueIid);
 
     /// <summary>
     /// Get all merge requests that are related to a particular issue.
@@ -132,7 +132,7 @@ public interface IIssueClient
     /// <param name="projectId">The project id.</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
     /// <returns>The list of MR that are related this issue.</returns>
-    IEnumerable<MergeRequest> RelatedTo(int projectId, int issueIid);
+    IEnumerable<MergeRequest> RelatedTo(long projectId, long issueIid);
 
     /// <summary>
     /// Get all Issues that are linked to a particular issue of particular project.
@@ -140,7 +140,7 @@ public interface IIssueClient
     /// <param name="projectId">The project id.</param>
     /// <param name="issueId">The id of the issue in the project's scope.</param>
     /// <returns>The list of Issues linked to this issue.</returns>
-    GitLabCollectionResponse<Issue> LinkedToAsync(int projectId, int issueId);
+    GitLabCollectionResponse<Issue> LinkedToAsync(long projectId, long issueId);
 
     /// <summary>
     /// Create links between Issues.
@@ -149,9 +149,9 @@ public interface IIssueClient
     /// <param name="sourceIssueId">The id of the issue in the project's scope.</param>
     /// <param name="targetProjectId">The target project id.</param>
     /// <param name="targetIssueId">The target id of the issue to link to.</param>
-    bool CreateLinkBetweenIssues(int sourceProjectId, int sourceIssueId, int targetProjectId, int targetIssueId);
+    bool CreateLinkBetweenIssues(long sourceProjectId, long sourceIssueId, long targetProjectId, long targetIssueId);
 
-    GitLabCollectionResponse<MergeRequest> RelatedToAsync(int projectId, int issueIid);
+    GitLabCollectionResponse<MergeRequest> RelatedToAsync(long projectId, long issueIid);
 
     /// <summary>
     /// Get all merge requests that close a particular issue when merged.
@@ -159,9 +159,9 @@ public interface IIssueClient
     /// <param name="projectId">The project id.</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
     /// <returns>The list of MR that closed this issue.</returns>
-    IEnumerable<MergeRequest> ClosedBy(int projectId, int issueIid);
+    IEnumerable<MergeRequest> ClosedBy(long projectId, long issueIid);
 
-    GitLabCollectionResponse<MergeRequest> ClosedByAsync(int projectId, int issueIid);
+    GitLabCollectionResponse<MergeRequest> ClosedByAsync(long projectId, long issueIid);
 
     /// <summary>
     /// Get time tracking statistics
@@ -169,7 +169,7 @@ public interface IIssueClient
     /// <param name="projectId">The project id.</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
     /// <returns>The time tracking statistics of the issue.</returns>
-    Task<TimeStats> TimeStatsAsync(int projectId, int issueIid, CancellationToken cancellationToken = default);
+    Task<TimeStats> TimeStatsAsync(long projectId, long issueIid, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Clone the issue to given project
@@ -179,7 +179,7 @@ public interface IIssueClient
     /// <param name="issueClone">Destination information</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Issue> CloneAsync(int projectId, int issueIid, IssueClone issueClone, CancellationToken cancellationToken = default);
+    Task<Issue> CloneAsync(long projectId, long issueIid, IssueClone issueClone, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get Participants
@@ -187,7 +187,7 @@ public interface IIssueClient
     /// <param name="projectId">The project id</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
     /// <returns>The participants of the issue.</returns>
-    IEnumerable<Participant> GetParticipants(ProjectId projectId, int issueIid);
+    IEnumerable<Participant> GetParticipants(ProjectId projectId, long issueIid);
 
     /// <summary>
     /// Unsubscribe to the issue
@@ -195,5 +195,5 @@ public interface IIssueClient
     /// <param name="projectId">The project id</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
     /// <returns>The issue that corresponds to the project id and issue id</returns>
-    Issue Unsubscribe(ProjectId projectId, int issueIid);
+    Issue Unsubscribe(ProjectId projectId, long issueIid);
 }

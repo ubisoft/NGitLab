@@ -25,7 +25,7 @@ public sealed class ResourceLabelEventCollection : Collection<ResourceLabelEvent
         base.Add(item);
     }
 
-    internal IEnumerable<ResourceLabelEvent> Get(int? resourceId)
+    internal IEnumerable<ResourceLabelEvent> Get(long? resourceId)
     {
         var resourceLabelEvents = this.AsQueryable();
 
@@ -37,12 +37,12 @@ public sealed class ResourceLabelEventCollection : Collection<ResourceLabelEvent
         return resourceLabelEvents;
     }
 
-    private int GetNewId()
+    private long GetNewId()
     {
         return this.Select(rle => rle.Id).DefaultIfEmpty().Max() + 1;
     }
 
-    internal void CreateResourceLabelEvents(User currentUser, string[] previousLabels, string[] newLabels, int resourceId, string resourceType)
+    internal void CreateResourceLabelEvents(User currentUser, string[] previousLabels, string[] newLabels, long resourceId, string resourceType)
     {
         foreach (var label in previousLabels)
         {

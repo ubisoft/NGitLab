@@ -6,9 +6,9 @@ public sealed class ProjectIssueNote : Note
 
     public override string NoteableType => "Issue";
 
-    public override int NoticableId => Parent.Id;
+    public override long NoticableId => Parent.Id;
 
-    public override int NoticableIid => Parent.Iid;
+    public override long NoticableIid => Parent.Iid;
 
     internal Models.ProjectIssueNote ToProjectIssueNote()
     {

@@ -11,7 +11,7 @@ public interface IDeploymentClient
     /// <param name="projectId">Project ID</param>
     /// <param name="query">Filtering and ordering query</param>
     /// <returns></returns>
-    IEnumerable<Deployment> Get(int projectId, DeploymentQuery query);
+    IEnumerable<Deployment> Get(long projectId, DeploymentQuery query);
 
     /// <summary>
     /// Return a deployment's associated Merge Requests
@@ -19,5 +19,5 @@ public interface IDeploymentClient
     /// <param name="projectId">Project ID</param>
     /// <param name="deploymentId">Deployment ID</param>
     /// <returns></returns>
-    IEnumerable<MergeRequest> GetMergeRequests(int projectId, int deploymentId);
+    IEnumerable<MergeRequest> GetMergeRequests(long projectId, long deploymentId);
 }

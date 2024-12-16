@@ -12,7 +12,7 @@ internal sealed class SystemHookClient : ClientBase, ISystemHookClient
     {
     }
 
-    public Models.SystemHook this[int hookId]
+    public Models.SystemHook this[long hookId]
     {
         get
         {
@@ -61,7 +61,7 @@ internal sealed class SystemHookClient : ClientBase, ISystemHookClient
         }
     }
 
-    public void Delete(int hookId)
+    public void Delete(long hookId)
     {
         AssertIsAdmin();
         using (Context.BeginOperationScope())

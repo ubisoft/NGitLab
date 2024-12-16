@@ -10,17 +10,13 @@ public class Runner
     public const string Url = "/runners";
 
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("name")]
     public string Name;
 
     [JsonPropertyName("paused")]
     public bool Paused;
-
-    [Obsolete("Use Paused field instead")]
-    [JsonPropertyName("active")]
-    public bool Active;
 
     [JsonPropertyName("online")]
     public bool Online;

@@ -7,7 +7,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class ProjectBadgeClient : ClientBase, IProjectBadgeClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public ProjectBadgeClient(ClientContext context, ProjectId projectId)
         : base(context)
@@ -15,7 +15,7 @@ internal sealed class ProjectBadgeClient : ClientBase, IProjectBadgeClient
         _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
-    public Models.Badge this[int id]
+    public Models.Badge this[long id]
     {
         get
         {
@@ -66,7 +66,7 @@ internal sealed class ProjectBadgeClient : ClientBase, IProjectBadgeClient
         }
     }
 
-    public void Delete(int id)
+    public void Delete(long id)
     {
         EnsureUserIsAuthenticated();
 
@@ -82,7 +82,7 @@ internal sealed class ProjectBadgeClient : ClientBase, IProjectBadgeClient
         }
     }
 
-    public Models.Badge Update(int id, BadgeUpdate badge)
+    public Models.Badge Update(long id, BadgeUpdate badge)
     {
         using (Context.BeginOperationScope())
         {

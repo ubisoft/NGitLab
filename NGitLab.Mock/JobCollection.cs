@@ -10,7 +10,7 @@ public sealed class JobCollection : Collection<Job>
     {
     }
 
-    public Job GetById(int id)
+    public Job GetById(long id)
     {
         return this.FirstOrDefault(job => job.Id == id);
     }

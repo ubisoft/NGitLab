@@ -6,7 +6,7 @@ namespace NGitLab.Models;
 public class MergeRequestVersion
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [JsonPropertyName("head_commit_sha")]
     public string HeadCommitSha { get; set; }
@@ -21,7 +21,7 @@ public class MergeRequestVersion
     public DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("merge_request_id")]
-    public int MergeRequestId { get; set; }
+    public long MergeRequestId { get; set; }
 
     [JsonPropertyName("state")]
     public string State { get; set; }

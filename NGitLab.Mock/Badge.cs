@@ -4,7 +4,7 @@ namespace NGitLab.Mock;
 
 public sealed class Badge : GitLabObject
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public string LinkUrl { get; set; }
 

@@ -10,7 +10,7 @@ public interface ITriggerClient
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    Trigger this[int id] { get; }
+    Trigger this[long id] { get; }
 
     /// <summary>
     /// Get a list of all triggers for project.

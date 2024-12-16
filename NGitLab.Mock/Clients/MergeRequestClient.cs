@@ -12,7 +12,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
 {
-    private readonly int? _projectId;
+    private readonly long? _projectId;
 
     public MergeRequestClient(ClientContext context)
         : base(context)
@@ -40,7 +40,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             throw new InvalidOperationException("Valid only for a specific project");
     }
 
-    public Models.MergeRequest this[int iid]
+    public Models.MergeRequest this[long iid]
     {
         get
         {
@@ -58,7 +58,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public Task<Models.MergeRequest> GetByIidAsync(int iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default)
+    public Task<Models.MergeRequest> GetByIidAsync(long iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(this[iid]);
     }
@@ -84,7 +84,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public Models.MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message)
+    public Models.MergeRequest Accept(long mergeRequestIid, MergeRequestAccept message)
     {
         return Accept(mergeRequestIid, new MergeRequestMerge
         {
@@ -93,7 +93,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         });
     }
 
-    public Models.MergeRequest Accept(int mergeRequestIid, MergeRequestMerge message)
+    public Models.MergeRequest Accept(long mergeRequestIid, MergeRequestMerge message)
     {
         AssertProjectId();
         using (Context.BeginOperationScope())
@@ -148,7 +148,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public Models.MergeRequest Approve(int mergeRequestIid, MergeRequestApprove message)
+    public Models.MergeRequest Approve(long mergeRequestIid, MergeRequestApprove message)
     {
         AssertProjectId();
 
@@ -194,7 +194,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public RebaseResult Rebase(int mergeRequestIid)
+    public RebaseResult Rebase(long mergeRequestIid)
     {
         AssertProjectId();
         using (Context.BeginOperationScope())
@@ -209,7 +209,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public Task<RebaseResult> RebaseAsync(int mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default)
+    public Task<RebaseResult> RebaseAsync(long mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(Rebase(mergeRequestIid));
     }
@@ -242,21 +242,21 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public IMergeRequestChangeClient Changes(int mergeRequestIid)
+    public IMergeRequestChangeClient Changes(long mergeRequestIid)
     {
         AssertProjectId();
 
         return new MergeRequestChangeClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
     }
 
-    public IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid)
+    public IMergeRequestApprovalClient ApprovalClient(long mergeRequestIid)
     {
         AssertProjectId();
 
         return new MergeRequestApprovalClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
     }
 
-    public Models.MergeRequest Close(int mergeRequestIid)
+    public Models.MergeRequest Close(long mergeRequestIid)
     {
         AssertProjectId();
 
@@ -278,21 +278,21 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public IMergeRequestCommentClient Comments(int mergeRequestIid)
+    public IMergeRequestCommentClient Comments(long mergeRequestIid)
     {
         AssertProjectId();
 
         return new MergeRequestCommentClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
     }
 
-    public IMergeRequestCommitClient Commits(int mergeRequestIid)
+    public IMergeRequestCommitClient Commits(long mergeRequestIid)
     {
         AssertProjectId();
 
         return new MergeRequestCommitClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
     }
 
-    public Models.MergeRequest CancelMergeWhenPipelineSucceeds(int mergeRequestIid)
+    public Models.MergeRequest CancelMergeWhenPipelineSucceeds(long mergeRequestIid)
     {
         AssertProjectId();
 
@@ -380,7 +380,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public void Delete(int mergeRequestIid)
+    public void Delete(long mergeRequestIid)
     {
         AssertProjectId();
 
@@ -548,7 +548,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         return mergeRequests.Select(mr => mr.ToMergeRequestClient()).ToList();
     }
 
-    public IEnumerable<Author> GetParticipants(int mergeRequestIid)
+    public IEnumerable<Author> GetParticipants(long mergeRequestIid)
     {
         AssertProjectId();
 
@@ -566,7 +566,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid)
+    public IEnumerable<PipelineBasic> GetPipelines(long mergeRequestIid)
     {
         AssertProjectId();
 
@@ -588,7 +588,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public Models.MergeRequest Reopen(int mergeRequestIid)
+    public Models.MergeRequest Reopen(long mergeRequestIid)
     {
         AssertProjectId();
 
@@ -610,7 +610,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public Models.MergeRequest Update(int mergeRequestIid, MergeRequestUpdate mergeRequestUpdate)
+    public Models.MergeRequest Update(long mergeRequestIid, MergeRequestUpdate mergeRequestUpdate)
     {
         AssertProjectId();
 
@@ -707,29 +707,29 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public IEnumerable<Models.Issue> ClosesIssues(int mergeRequestIid)
+    public IEnumerable<Models.Issue> ClosesIssues(long mergeRequestIid)
     {
         throw new NotImplementedException();
     }
 
-    public GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(int mergeRequestIid)
+    public GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(long mergeRequestIid)
     {
         throw new NotImplementedException();
     }
 
-    public Task<TimeStats> TimeStatsAsync(int mergeRequestIid, CancellationToken cancellationToken = default)
+    public Task<TimeStats> TimeStatsAsync(long mergeRequestIid, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public IMergeRequestDiscussionClient Discussions(int mergeRequestIid)
+    public IMergeRequestDiscussionClient Discussions(long mergeRequestIid)
     {
         AssertProjectId();
 
         return new MergeRequestDiscussionClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
     }
 
-    public GitLabCollectionResponse<Models.ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int mergeRequestIid)
+    public GitLabCollectionResponse<Models.ResourceLabelEvent> ResourceLabelEventsAsync(long projectId, long mergeRequestIid)
     {
         using (Context.BeginOperationScope())
         {
@@ -740,7 +740,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public GitLabCollectionResponse<Models.ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int mergeRequestIid)
+    public GitLabCollectionResponse<Models.ResourceMilestoneEvent> ResourceMilestoneEventsAsync(long projectId, long mergeRequestIid)
     {
         using (Context.BeginOperationScope())
         {
@@ -751,7 +751,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
-    public GitLabCollectionResponse<Models.ResourceStateEvent> ResourceStateEventsAsync(int projectId, int mergeRequestIid)
+    public GitLabCollectionResponse<Models.ResourceStateEvent> ResourceStateEventsAsync(long projectId, long mergeRequestIid)
     {
         using (Context.BeginOperationScope())
         {

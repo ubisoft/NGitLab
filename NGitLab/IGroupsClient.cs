@@ -48,14 +48,14 @@ public interface IGroupsClient
     Task<PagedResponse<Group>> PageAsync(PageQuery<GroupQuery> query, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="GetByIdAsync"/>
-    Group this[int id] { get; }
+    Group this[long id] { get; }
 
     /// <inheritdoc cref="GetByFullPathAsync"/>
     Group this[string fullPath] { get; }
 
     /// <inheritdoc cref="GetGroupAsync"/>
     /// <param name="id">The group's id</param>
-    Task<Group> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<Group> GetByIdAsync(long id, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="GetGroupAsync"/>
     /// <param name="fullPath">The group's path</param>
@@ -76,7 +76,7 @@ public interface IGroupsClient
 
     /// <inheritdoc cref="GetSubgroupsAsync"/>
     /// <param name="id">The group's id</param>
-    GitLabCollectionResponse<Group> GetSubgroupsByIdAsync(int id, SubgroupQuery query = null);
+    GitLabCollectionResponse<Group> GetSubgroupsByIdAsync(long id, SubgroupQuery query = null);
 
     /// <inheritdoc cref="GetSubgroupsAsync"/>
     /// <param name="fullPath">The group's path</param>
@@ -126,11 +126,11 @@ public interface IGroupsClient
     /// <param name="id">The group's id.</param>
     /// <param name="search">The search criteria.</param>
     [Obsolete("Use SearchProjectsAsync instead")]
-    IEnumerable<Project> SearchProjects(int groupId, string search);
+    IEnumerable<Project> SearchProjects(long groupId, string search);
 
     /// <inheritdoc cref="SearchProjectsAsync"/>
     /// <param name="id">The group's id.</param>
-    GitLabCollectionResponse<Project> GetProjectsAsync(int groupId, GroupProjectsQuery query);
+    GitLabCollectionResponse<Project> GetProjectsAsync(long groupId, GroupProjectsQuery query);
 
     /// <summary>
     /// Gets a list of projects in this group. When accessed without authentication, only public projects are returned.
@@ -156,7 +156,7 @@ public interface IGroupsClient
     Task<PagedResponse<Project>> PageProjectsAsync(GroupId groupId, PageQuery<GroupProjectsQuery> query, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="DeleteAsync"/>
-    void Delete(int id);
+    void Delete(long id);
 
     /// <summary>
     /// Removes a group.
@@ -164,10 +164,10 @@ public interface IGroupsClient
     /// </summary>
     /// <param name="id">The group's id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task DeleteAsync(int id, CancellationToken cancellationToken = default);
+    Task DeleteAsync(long id, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="UpdateAsync"/>
-    Group Update(int id, GroupUpdate groupUpdate);
+    Group Update(long id, GroupUpdate groupUpdate);
 
     /// <summary>
     /// Updates an existing group.
@@ -176,10 +176,10 @@ public interface IGroupsClient
     /// <param name="id">The group's id.</param>
     /// <param name="groupUpdate">The properties to update.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<Group> UpdateAsync(int id, GroupUpdate groupUpdate, CancellationToken cancellationToken = default);
+    Task<Group> UpdateAsync(long id, GroupUpdate groupUpdate, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="RestoreAsync"/>
-    void Restore(int id);
+    void Restore(long id);
 
     /// <summary>
     /// Restores a group marked for deletion.
@@ -187,5 +187,5 @@ public interface IGroupsClient
     /// </summary>
     /// <param name="id">The group's id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task RestoreAsync(int id, CancellationToken cancellationToken = default);
+    Task RestoreAsync(long id, CancellationToken cancellationToken = default);
 }

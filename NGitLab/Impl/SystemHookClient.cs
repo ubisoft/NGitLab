@@ -17,11 +17,11 @@ public sealed class SystemHookClient : ISystemHookClient
 
     public IEnumerable<SystemHook> All => _api.Get().GetAll<SystemHook>(_path);
 
-    public SystemHook this[int hookId] => _api.Get().To<SystemHook>(_path + "/" + hookId.ToStringInvariant());
+    public SystemHook this[long hookId] => _api.Get().To<SystemHook>(_path + "/" + hookId.ToStringInvariant());
 
     public SystemHook Create(SystemHookUpsert hook) => _api.Post().With(hook).To<SystemHook>(_path);
 
-    public void Delete(int hookId)
+    public void Delete(long hookId)
     {
         _api.Delete().Execute(_path + "/" + hookId.ToStringInvariant());
     }

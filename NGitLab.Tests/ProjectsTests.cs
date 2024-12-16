@@ -751,7 +751,7 @@ public class ProjectsTests
             Search = group.Name,
         }).ToArray();
 
-        Assert.That(groups.Select(g => g.Id), Is.EquivalentTo(new int[] { group.Id }));
+        Assert.That(groups.Select(g => g.Id), Is.EquivalentTo(new[] { group.Id }));
     }
 
     [Test]
@@ -766,6 +766,6 @@ public class ProjectsTests
 
         var groups = projectClient.GetGroupsAsync(project.Id, new ProjectGroupsQuery()).ToArray();
 
-        Assert.That(groups.Select(g => g.Id), Is.EquivalentTo(new int[] { group.Id, subgroup.Id }));
+        Assert.That(groups.Select(g => g.Id), Is.EquivalentTo(new[] { group.Id, subgroup.Id }));
     }
 }

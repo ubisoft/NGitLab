@@ -57,7 +57,7 @@ public class MergeRequestsMockTests
             .BuildServer();
 
         var client = server.CreateClient("user1");
-        var mergeRequests = client.MergeRequests.Get(new MergeRequestQuery { ApproverIds = new[] { 1 } }).ToArray();
+        var mergeRequests = client.MergeRequests.Get(new MergeRequestQuery { ApproverIds = [1L] }).ToArray();
 
         Assert.That(mergeRequests, Has.Length.EqualTo(1), "Merge requests count is invalid");
         Assert.That(mergeRequests[0].Title, Is.EqualTo("Merge request 2"), "Merge request found is invalid");

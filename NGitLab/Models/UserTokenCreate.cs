@@ -6,7 +6,7 @@ namespace NGitLab.Models;
 public class UserTokenCreate
 {
     [JsonPropertyName("user_id")]
-    public int UserId { get; set; }
+    public long UserId { get; set; }
 
     [JsonPropertyName("name")]
     public string Name { get; set; }

@@ -6,7 +6,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class GroupVariableClient : ClientBase, IGroupVariableClient
 {
-    private readonly int _groupId;
+    private readonly long _groupId;
 
     public GroupVariableClient(ClientContext context, GroupId groupId)
         : base(context)

@@ -4,7 +4,7 @@ namespace NGitLab.Mock;
 
 public sealed class SystemHook : GitLabObject
 {
-    public int Id { get; internal set; }
+    public long Id { get; internal set; }
 
     public Uri Url { get; set; }
 

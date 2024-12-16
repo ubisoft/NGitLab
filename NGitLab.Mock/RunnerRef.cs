@@ -7,7 +7,7 @@ public sealed class RunnerRef : GitLabObject
 {
     private readonly Runner _runner;
 
-    public int Id => _runner.Id;
+    public long Id => _runner.Id;
 
     public RunnerRef(Runner runner)
     {
@@ -17,11 +17,11 @@ public sealed class RunnerRef : GitLabObject
     public override bool Equals(object obj)
     {
         return obj is RunnerRef @ref &&
-               EqualityComparer<int>.Default.Equals(Id, @ref.Id);
+               EqualityComparer<long>.Default.Equals(Id, @ref.Id);
     }
 
     public override int GetHashCode()
     {
-        return -1771473357 + EqualityComparer<int>.Default.GetHashCode(Id);
+        return -1771473357 + EqualityComparer<long>.Default.GetHashCode(Id);
     }
 }

@@ -10,7 +10,7 @@ public class User
     public const string Url = "/users";
 
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("name")]
     public string Name;
@@ -85,10 +85,10 @@ public class User
     public string Email;
 
     [JsonPropertyName("theme_id")]
-    public int ThemeId;
+    public long ThemeId;
 
     [JsonPropertyName("color_scheme_id")]
-    public int ColorSchemeId;
+    public long ColorSchemeId;
 
     [JsonPropertyName("projects_limit")]
     public int ProjectsLimit;
@@ -98,18 +98,6 @@ public class User
 
     [JsonPropertyName("identities")]
     public Identity[] Identities;
-
-    [Obsolete("Does not match GitLab's API. Use 'Identities.Provider' instead.")]
-    [JsonIgnore]
-    public string Provider;
-
-    [Obsolete("Does not match GitLab's API. Use 'Identities.ExternUid' instead.")]
-    [JsonIgnore]
-    public string ExternUid;
-
-    [Obsolete("Does not match GitLab's API. Use 'State' instead.")]
-    [JsonIgnore]
-    public bool Blocked;
 
     [JsonPropertyName("can_create_group")]
     public bool CanCreateGroup;
@@ -148,5 +136,5 @@ public class User
     public bool IsAuditor;
 
     [JsonPropertyName("provisioned_by_group_id")]
-    public int ProvisionedByGroupId;
+    public long ProvisionedByGroupId;
 }

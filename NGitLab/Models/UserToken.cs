@@ -6,7 +6,7 @@ namespace NGitLab.Models;
 public class UserToken
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [JsonPropertyName("revoked")]
     public bool Revoked { get; set; }

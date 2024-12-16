@@ -6,7 +6,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class GroupBadgeClient : ClientBase, IGroupBadgeClient
 {
-    private readonly int _groupId;
+    private readonly long _groupId;
 
     public GroupBadgeClient(ClientContext context, GroupId groupId)
         : base(context)
@@ -14,7 +14,7 @@ internal sealed class GroupBadgeClient : ClientBase, IGroupBadgeClient
         _groupId = Server.AllGroups.FindGroup(groupId.ValueAsString()).Id;
     }
 
-    public Models.Badge this[int id]
+    public Models.Badge this[long id]
     {
         get
         {
@@ -53,7 +53,7 @@ internal sealed class GroupBadgeClient : ClientBase, IGroupBadgeClient
         }
     }
 
-    public void Delete(int id)
+    public void Delete(long id)
     {
         EnsureUserIsAuthenticated();
 
@@ -69,7 +69,7 @@ internal sealed class GroupBadgeClient : ClientBase, IGroupBadgeClient
         }
     }
 
-    public Models.Badge Update(int id, BadgeUpdate badge)
+    public Models.Badge Update(long id, BadgeUpdate badge)
     {
         using (Context.BeginOperationScope())
         {

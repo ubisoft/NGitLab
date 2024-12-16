@@ -67,6 +67,6 @@ public class JsonTests
         public string Title;
 
         [JsonPropertyName("id")]
-        public int Id;
+        public long Id;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Net;
 using NGitLab.Models;
 
@@ -9,12 +8,6 @@ public class CommitClient : ICommitClient
 {
     private readonly API _api;
     private readonly string _repoPath;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public CommitClient(API api, int projectId)
-        : this(api, (long)projectId)
-    {
-    }
 
     public CommitClient(API api, ProjectId projectId)
     {

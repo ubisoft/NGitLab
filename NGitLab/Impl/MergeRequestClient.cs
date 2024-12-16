@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,12 +15,6 @@ public class MergeRequestClient : IMergeRequestClient
     private const string ResourceStateEventUrl = "/projects/{0}/merge_requests/{1}/resource_state_events";
     private readonly string _path;
     private readonly API _api;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public MergeRequestClient(API api, int projectId)
-        : this(api, projectId: (long)projectId)
-    {
-    }
 
     public MergeRequestClient(API api, ProjectId projectId)
     {
@@ -73,7 +66,7 @@ public class MergeRequestClient : IMergeRequestClient
         return _api.Get().GetAll<MergeRequest>(url);
     }
 
-    public MergeRequest this[int iid]
+    public MergeRequest this[long iid]
     {
         get
         {
@@ -85,7 +78,7 @@ public class MergeRequestClient : IMergeRequestClient
         }
     }
 
-    public Task<MergeRequest> GetByIidAsync(int iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default)
+    public Task<MergeRequest> GetByIidAsync(long iid, SingleMergeRequestQuery options, CancellationToken cancellationToken = default)
     {
         var url = $"{_path}{MergeRequest.Url}/{iid.ToStringInvariant()}";
         if (options != null)
@@ -108,92 +101,92 @@ public class MergeRequestClient : IMergeRequestClient
             .To<MergeRequest>(_path + "/merge_requests");
     }
 
-    public MergeRequest Update(int mergeRequestIid, MergeRequestUpdate mergeRequest) => _api
+    public MergeRequest Update(long mergeRequestIid, MergeRequestUpdate mergeRequest) => _api
         .Put().With(mergeRequest)
         .To<MergeRequest>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture));
 
-    public MergeRequest Close(int mergeRequestIid) => _api
+    public MergeRequest Close(long mergeRequestIid) => _api
         .Put().With(new MergeRequestUpdateState { NewState = nameof(MergeRequestStateEvent.close) })
         .To<MergeRequest>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture));
 
-    public MergeRequest Reopen(int mergeRequestIid) => _api
+    public MergeRequest Reopen(long mergeRequestIid) => _api
         .Put().With(new MergeRequestUpdateState { NewState = nameof(MergeRequestStateEvent.reopen) })
         .To<MergeRequest>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture));
 
-    public void Delete(int mergeRequestIid) => _api
+    public void Delete(long mergeRequestIid) => _api
         .Delete()
         .Execute(_path + "/merge_requests/" + mergeRequestIid.ToStringInvariant());
 
-    public MergeRequest CancelMergeWhenPipelineSucceeds(int mergeRequestIid) => _api
+    public MergeRequest CancelMergeWhenPipelineSucceeds(long mergeRequestIid) => _api
         .Post()
         .To<MergeRequest>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/cancel_merge_when_pipeline_succeeds");
 
-    public MergeRequest Accept(int mergeRequestIid, MergeRequestAccept message) => _api
+    public MergeRequest Accept(long mergeRequestIid, MergeRequestAccept message) => _api
         .Put().With(message)
         .To<MergeRequest>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/merge");
 
-    public MergeRequest Accept(int mergeRequestIid, MergeRequestMerge message) => _api
+    public MergeRequest Accept(long mergeRequestIid, MergeRequestMerge message) => _api
         .Put().With(message)
         .To<MergeRequest>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/merge");
 
-    public MergeRequest Approve(int mergeRequestIid, MergeRequestApprove message) => _api
+    public MergeRequest Approve(long mergeRequestIid, MergeRequestApprove message) => _api
         .Post().With(message)
         .To<MergeRequest>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/approve");
 
-    public RebaseResult Rebase(int mergeRequestIid) => _api
+    public RebaseResult Rebase(long mergeRequestIid) => _api
         .Put()
         .To<RebaseResult>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/rebase");
 
-    public Task<RebaseResult> RebaseAsync(int mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default) => _api
+    public Task<RebaseResult> RebaseAsync(long mergeRequestIid, MergeRequestRebase options, CancellationToken cancellationToken = default) => _api
         .Put().With(options)
         .ToAsync<RebaseResult>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/rebase", cancellationToken);
 
-    public IEnumerable<PipelineBasic> GetPipelines(int mergeRequestIid)
+    public IEnumerable<PipelineBasic> GetPipelines(long mergeRequestIid)
     {
         return _api.Get().GetAll<PipelineBasic>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/pipelines");
     }
 
-    public IEnumerable<Author> GetParticipants(int mergeRequestIid)
+    public IEnumerable<Author> GetParticipants(long mergeRequestIid)
     {
         return _api.Get().GetAll<Author>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/participants");
     }
 
-    public IEnumerable<Issue> ClosesIssues(int mergeRequestIid)
+    public IEnumerable<Issue> ClosesIssues(long mergeRequestIid)
     {
         return _api.Get().GetAll<Issue>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/closes_issues");
     }
 
-    public GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(int mergeRequestIid)
+    public GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(long mergeRequestIid)
     {
         return _api.Get().GetAllAsync<MergeRequestVersion>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/versions");
     }
 
-    public Task<TimeStats> TimeStatsAsync(int mergeRequestIid, CancellationToken cancellationToken = default)
+    public Task<TimeStats> TimeStatsAsync(long mergeRequestIid, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<TimeStats>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/time_stats", cancellationToken);
     }
 
-    public IMergeRequestCommentClient Comments(int mergeRequestIid) => new MergeRequestCommentClient(_api, _path, mergeRequestIid);
+    public IMergeRequestCommentClient Comments(long mergeRequestIid) => new MergeRequestCommentClient(_api, _path, mergeRequestIid);
 
-    public IMergeRequestDiscussionClient Discussions(int mergeRequestIid) => new MergeRequestDiscussionClient(_api, _path, mergeRequestIid);
+    public IMergeRequestDiscussionClient Discussions(long mergeRequestIid) => new MergeRequestDiscussionClient(_api, _path, mergeRequestIid);
 
-    public IMergeRequestCommitClient Commits(int mergeRequestIid) => new MergeRequestCommitClient(_api, _path, mergeRequestIid);
+    public IMergeRequestCommitClient Commits(long mergeRequestIid) => new MergeRequestCommitClient(_api, _path, mergeRequestIid);
 
-    public IMergeRequestApprovalClient ApprovalClient(int mergeRequestIid) => new MergeRequestApprovalClient(_api, _path, mergeRequestIid);
+    public IMergeRequestApprovalClient ApprovalClient(long mergeRequestIid) => new MergeRequestApprovalClient(_api, _path, mergeRequestIid);
 
-    public IMergeRequestChangeClient Changes(int mergeRequestIid) => new MergeRequestChangeClient(_api, _path, mergeRequestIid);
+    public IMergeRequestChangeClient Changes(long mergeRequestIid) => new MergeRequestChangeClient(_api, _path, mergeRequestIid);
 
-    public GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(int projectId, int mergeRequestIid)
+    public GitLabCollectionResponse<ResourceLabelEvent> ResourceLabelEventsAsync(long projectId, long mergeRequestIid)
     {
         return _api.Get().GetAllAsync<ResourceLabelEvent>(string.Format(CultureInfo.InvariantCulture, ResourceLabelEventUrl, projectId, mergeRequestIid));
     }
 
-    public GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(int projectId, int mergeRequestIid)
+    public GitLabCollectionResponse<ResourceMilestoneEvent> ResourceMilestoneEventsAsync(long projectId, long mergeRequestIid)
     {
         return _api.Get().GetAllAsync<ResourceMilestoneEvent>(string.Format(CultureInfo.InvariantCulture, ResourceMilestoneEventUrl, projectId, mergeRequestIid));
     }
 
-    public GitLabCollectionResponse<ResourceStateEvent> ResourceStateEventsAsync(int projectId, int mergeRequestIid)
+    public GitLabCollectionResponse<ResourceStateEvent> ResourceStateEventsAsync(long projectId, long mergeRequestIid)
     {
         return _api.Get().GetAllAsync<ResourceStateEvent>(string.Format(CultureInfo.InvariantCulture, ResourceStateEventUrl, projectId, mergeRequestIid));
     }

@@ -12,7 +12,7 @@ public sealed class UserRef
         _user = user ?? throw new ArgumentNullException(nameof(user));
     }
 
-    public int Id => _user.Id;
+    public long Id => _user.Id;
 
     public string Name => _user.Name;
 

@@ -6,7 +6,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class TriggerClient : ClientBase, ITriggerClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
 
     public TriggerClient(ClientContext context, ProjectId projectId)
         : base(context)
@@ -14,7 +14,7 @@ internal sealed class TriggerClient : ClientBase, ITriggerClient
         _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
-    public Trigger this[int id] => throw new NotImplementedException();
+    public Trigger this[long id] => throw new NotImplementedException();
 
     public IEnumerable<Trigger> All => throw new NotImplementedException();
 

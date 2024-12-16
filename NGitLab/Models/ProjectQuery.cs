@@ -53,7 +53,7 @@ public class ProjectQuery
     /// <summary>
     /// Project visible by user
     /// </summary>
-    public int? UserId;
+    public long? UserId;
 
     /// <summary>
     /// Limit to projects where current user has at least this access level
@@ -85,13 +85,7 @@ public enum ProjectQueryScope
     Owned,
 
     /// <summary>
-    /// Get a list of projects which the authenticated user can see.
-    /// </summary>
-    [Obsolete("Use All instead which is the same behavior.")]
-    Visible,
-
-    /// <summary>
-    /// Get a list of all GitLab projects.
+    /// Get a list of all projects which the authenticated user can see.
     /// </summary>
     All,
 }

@@ -70,7 +70,7 @@ public class IssueQuery
     /// <summary>
     /// Returns issues created by the given user id. Combine with scope=all or scope=assigned_to_me
     /// </summary>
-    public int? AuthorId { get; set; }
+    public long? AuthorId { get; set; }
 
     /// <summary>
     /// Returns issues assigned to the given user id

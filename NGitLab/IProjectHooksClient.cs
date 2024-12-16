@@ -7,11 +7,11 @@ public interface IProjectHooksClient
 {
     IEnumerable<ProjectHook> All { get; }
 
-    ProjectHook this[int hookId] { get; }
+    ProjectHook this[long hookId] { get; }
 
     ProjectHook Create(ProjectHookUpsert hook);
 
-    ProjectHook Update(int hookId, ProjectHookUpsert hook);
+    ProjectHook Update(long hookId, ProjectHookUpsert hook);
 
-    void Delete(int hookId);
+    void Delete(long hookId);
 }

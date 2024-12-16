@@ -8,7 +8,7 @@ public sealed class ApprovalRule
     /// The rule Id.
     /// </summary>
     [JsonPropertyName("id")]
-    public int RuleId { get; set; }
+    public long RuleId { get; set; }
 
     /// <summary>
     /// The name of the approval rule.

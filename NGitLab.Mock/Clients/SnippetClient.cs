@@ -36,27 +36,27 @@ internal sealed class SnippetClient : ClientBase, ISnippetClient
         throw new NotImplementedException();
     }
 
-    public void Delete(int snippetId)
+    public void Delete(long snippetId)
     {
         throw new NotImplementedException();
     }
 
-    public void Delete(int projectId, int snippetId)
+    public void Delete(long projectId, long snippetId)
     {
         throw new NotImplementedException();
     }
 
-    public IEnumerable<Snippet> ForProject(int projectId)
+    public IEnumerable<Snippet> ForProject(long projectId)
     {
         throw new NotImplementedException();
     }
 
-    public Snippet Get(int projectId, int snippetId)
+    public Snippet Get(long projectId, long snippetId)
     {
         throw new NotImplementedException();
     }
 
-    public void GetContent(int projectId, int snippetId, Action<Stream> parser)
+    public void GetContent(long projectId, long snippetId, Action<Stream> parser)
     {
         throw new NotImplementedException();
     }

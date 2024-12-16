@@ -1,15 +1,9 @@
-﻿using System.ComponentModel;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
 public class CommitStatusCreate
 {
-    // Unnecessary in the POSTed JSON; the 'Project Id' is actually specified through the endpoint URL.
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [JsonIgnore]
-    public int ProjectId;
-
     [JsonPropertyName("sha")]
     public string CommitSha;
 
@@ -35,5 +29,5 @@ public class CommitStatusCreate
     public int? Coverage;
 
     [JsonPropertyName("pipeline_id")]
-    public int? PipelineId;
+    public long? PipelineId;
 }

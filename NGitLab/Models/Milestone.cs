@@ -6,10 +6,10 @@ namespace NGitLab.Models;
 public class Milestone
 {
     [JsonPropertyName("id")]
-    public int Id;
+    public long Id;
 
     [JsonPropertyName("iid")]
-    public int Iid;
+    public long Iid;
 
     [JsonPropertyName("title")]
     public string Title;
@@ -21,10 +21,10 @@ public class Milestone
     public string DueDate;
 
     [JsonPropertyName("group_id")]
-    public int? GroupId;
+    public long? GroupId;
 
     [JsonPropertyName("project_id")]
-    public int? ProjectId;
+    public long? ProjectId;
 
     [JsonPropertyName("start_date")]
     public string StartDate;

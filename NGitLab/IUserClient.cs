@@ -12,9 +12,9 @@ public interface IUserClient
 
     IEnumerable<User> Search(string query);
 
-    User this[int id] { get; }
+    User this[long id] { get; }
 
-    Task<User> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<User> GetByIdAsync(long id, CancellationToken cancellationToken = default);
 
     Task<User> GetByUserNameAsync(string username, CancellationToken cancellationToken = default);
 
@@ -22,7 +22,7 @@ public interface IUserClient
 
     Task<User> CreateAsync(UserUpsert user, CancellationToken cancellationToken = default);
 
-    User Update(int id, UserUpsert user);
+    User Update(long id, UserUpsert user);
 
     /// <summary>
     /// Request a token for user impersonation.
@@ -38,11 +38,11 @@ public interface IUserClient
     /// <inheritdoc cref="CreateTokenAsync(UserTokenCreate, CancellationToken)"/>>
     UserToken CreateToken(UserTokenCreate tokenRequest);
 
-    void Delete(int id);
+    void Delete(long id);
 
-    void Activate(int id);
+    void Activate(long id);
 
-    void Deactivate(int id);
+    void Deactivate(long id);
 
     Session Current { get; }
 
@@ -57,7 +57,7 @@ public interface IUserClient
     /// <summary>
     /// Allows to manipulate the ssh keys of a given user, needs GitLab admin rights.
     /// </summary>
-    ISshKeyClient SShKeys(int userId);
+    ISshKeyClient SShKeys(long userId);
 
     /// <summary>
     /// Get users that match the username

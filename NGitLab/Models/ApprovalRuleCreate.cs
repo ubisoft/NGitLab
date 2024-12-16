@@ -1,16 +1,10 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
 public class ApprovalRuleCreate
 {
-    // Unnecessary in the POSTed JSON; the 'Project Id' is actually specified through the endpoint URL.
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [JsonIgnore]
-    public int Id { get; set; }
-
     /// <summary>
     /// Type of the rule.
     /// </summary>
@@ -36,17 +30,17 @@ public class ApprovalRuleCreate
     /// The ids of users as approvers.
     /// </summary>
     [JsonPropertyName("user_ids")]
-    public int[] UserIds { get; set; }
+    public long[] UserIds { get; set; }
 
     /// <summary>
     /// The ids of groups as approvers.
     /// </summary>
     [JsonPropertyName("group_ids")]
-    public int[] GroupIds { get; set; }
+    public long[] GroupIds { get; set; }
 
     /// <summary>
     /// The ids of protected branches to scope the rule by.
     /// </summary>
     [JsonPropertyName("protected_branch_ids")]
-    public int[] ProtectedBranchIds { get; set; }
+    public long[] ProtectedBranchIds { get; set; }
 }

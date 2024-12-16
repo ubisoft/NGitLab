@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
@@ -25,11 +24,4 @@ public class TagCreate
     /// </summary>
     [JsonPropertyName("message")]
     public string Message;
-
-    /// <summary>
-    /// (optional) - Add release notes to the git tag and store it in the GitLab database.
-    /// </summary>
-    [JsonPropertyName("release_description")]
-    [Obsolete("Starting in GitLab 14, releases cannot be made through tags. Use `Repository.Releases.Create` instead", false)]
-    public string ReleaseDescription;
 }

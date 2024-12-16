@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
@@ -33,10 +32,10 @@ public class MergeRequestApprovals
 public class MergeRequestApproversChange
 {
     [JsonPropertyName("approver_ids")]
-    public int[] Approvers = Array.Empty<int>();
+    public long[] Approvers = [];
 
     [JsonPropertyName("approver_group_ids")]
-    public int[] ApproverGroups = Array.Empty<int>();
+    public long[] ApproverGroups = [];
 }
 
 public class MergeRequestApproveRequest

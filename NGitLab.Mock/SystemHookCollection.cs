@@ -23,7 +23,7 @@ public class SystemHookCollection : Collection<SystemHook>
         base.Add(item);
     }
 
-    private int GetNewId()
+    private long GetNewId()
     {
         return this.Select(hook => hook.Id).DefaultIfEmpty().Max() + 1;
     }

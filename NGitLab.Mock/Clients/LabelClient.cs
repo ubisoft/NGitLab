@@ -13,7 +13,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
     {
     }
 
-    public Models.Label CreateProjectLabel(int projectId, ProjectLabelCreate label)
+    public Models.Label CreateProjectLabel(long projectId, ProjectLabelCreate label)
     {
         using (Context.BeginOperationScope())
         {
@@ -33,7 +33,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         });
     }
 
-    public Models.Label CreateGroupLabel(int groupId, GroupLabelCreate label)
+    public Models.Label CreateGroupLabel(long groupId, GroupLabelCreate label)
     {
         using (Context.BeginOperationScope())
         {
@@ -53,7 +53,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         });
     }
 
-    public Models.Label DeleteProjectLabel(int projectId, ProjectLabelDelete label)
+    public Models.Label DeleteProjectLabel(long projectId, ProjectLabelDelete label)
     {
         using (Context.BeginOperationScope())
         {
@@ -74,7 +74,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         });
     }
 
-    public Models.Label EditProjectLabel(int projectId, ProjectLabelEdit label)
+    public Models.Label EditProjectLabel(long projectId, ProjectLabelEdit label)
     {
         using (Context.BeginOperationScope())
         {
@@ -112,7 +112,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         });
     }
 
-    public Models.Label EditGroupLabel(int groupId, GroupLabelEdit label)
+    public Models.Label EditGroupLabel(long groupId, GroupLabelEdit label)
     {
         using (Context.BeginOperationScope())
         {
@@ -150,7 +150,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         });
     }
 
-    public IEnumerable<Models.Label> ForGroup(int groupId)
+    public IEnumerable<Models.Label> ForGroup(long groupId)
     {
         using (Context.BeginOperationScope())
         {
@@ -159,7 +159,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    public IEnumerable<Models.Label> ForProject(int projectId)
+    public IEnumerable<Models.Label> ForProject(long projectId)
     {
         using (Context.BeginOperationScope())
         {
@@ -168,7 +168,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    public Models.Label GetGroupLabel(int groupId, string name)
+    public Models.Label GetGroupLabel(long groupId, string name)
     {
         using (Context.BeginOperationScope())
         {
@@ -177,7 +177,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    public Models.Label GetProjectLabel(int projectId, string name)
+    public Models.Label GetProjectLabel(long projectId, string name)
     {
         using (Context.BeginOperationScope())
         {
@@ -187,7 +187,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public Models.Label GetLabel(int projectId, string name)
+    public Models.Label GetLabel(long projectId, string name)
     {
         return GetProjectLabel(projectId, name);
     }

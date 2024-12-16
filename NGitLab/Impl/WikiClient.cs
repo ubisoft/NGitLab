@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 using NGitLab.Models;
 
@@ -10,12 +9,6 @@ public class WikiClient : IWikiClient
 {
     private readonly API _api;
     private readonly string _projectPath;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public WikiClient(API api, int projectId)
-        : this(api, (long)projectId)
-    {
-    }
 
     public WikiClient(API api, ProjectId projectId)
     {

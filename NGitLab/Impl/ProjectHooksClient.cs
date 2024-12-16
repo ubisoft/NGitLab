@@ -17,13 +17,13 @@ public class ProjectHooksClient : IProjectHooksClient
 
     public IEnumerable<ProjectHook> All => _api.Get().GetAll<ProjectHook>(_path);
 
-    public ProjectHook this[int hookId] => _api.Get().To<ProjectHook>(_path + "/" + hookId.ToStringInvariant());
+    public ProjectHook this[long hookId] => _api.Get().To<ProjectHook>(_path + "/" + hookId.ToStringInvariant());
 
     public ProjectHook Create(ProjectHookUpsert hook) => _api.Post().With(hook).To<ProjectHook>(_path);
 
-    public ProjectHook Update(int hookId, ProjectHookUpsert hook) => _api.Put().With(hook).To<ProjectHook>(_path + "/" + hookId.ToStringInvariant());
+    public ProjectHook Update(long hookId, ProjectHookUpsert hook) => _api.Put().With(hook).To<ProjectHook>(_path + "/" + hookId.ToStringInvariant());
 
-    public void Delete(int hookId)
+    public void Delete(long hookId)
     {
         _api.Delete().Execute(_path + "/" + hookId.ToStringInvariant());
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,12 +13,6 @@ public class RepositoryClient : IRepositoryClient
     private readonly API _api;
     private readonly string _repoPath;
     private readonly string _projectPath;
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public RepositoryClient(API api, int projectId)
-        : this(api, (long)projectId)
-    {
-    }
 
     public RepositoryClient(API api, ProjectId projectId)
     {

@@ -12,7 +12,7 @@ public sealed class MergeRequestCollection : Collection<MergeRequest>
     {
     }
 
-    public MergeRequest GetByIid(int iid)
+    public MergeRequest GetByIid(long iid)
     {
         return this.FirstOrDefault(mr => mr.Iid == iid);
     }
@@ -87,7 +87,7 @@ public sealed class MergeRequestCollection : Collection<MergeRequest>
         return mergeRequest;
     }
 
-    private int GetNewIid()
+    private long GetNewIid()
     {
         return this.Select(mr => mr.Iid).DefaultIfEmpty().Max() + 1;
     }

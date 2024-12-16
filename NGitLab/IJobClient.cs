@@ -13,21 +13,21 @@ public interface IJobClient
 
     GitLabCollectionResponse<Job> GetJobsAsync(JobQuery query);
 
-    Job RunAction(int jobId, JobAction action);
+    Job RunAction(long jobId, JobAction action);
 
-    Task<Job> RunActionAsync(int jobId, JobAction action, CancellationToken cancellationToken = default);
+    Task<Job> RunActionAsync(long jobId, JobAction action, CancellationToken cancellationToken = default);
 
-    Job Get(int jobId);
+    Job Get(long jobId);
 
-    Task<Job> GetAsync(int jobId, CancellationToken cancellationToken = default);
+    Task<Job> GetAsync(long jobId, CancellationToken cancellationToken = default);
 
-    byte[] GetJobArtifacts(int jobId);
+    byte[] GetJobArtifacts(long jobId);
 
-    byte[] GetJobArtifact(int jobId, string path);
+    byte[] GetJobArtifact(long jobId, string path);
 
     byte[] GetJobArtifact(JobArtifactQuery query);
 
-    string GetTrace(int jobId);
+    string GetTrace(long jobId);
 
-    Task<string> GetTraceAsync(int jobId, CancellationToken cancellationToken = default);
+    Task<string> GetTraceAsync(long jobId, CancellationToken cancellationToken = default);
 }

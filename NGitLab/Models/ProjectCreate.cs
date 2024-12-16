@@ -12,7 +12,7 @@ public class ProjectCreate
     public string Name;
 
     [JsonPropertyName("namespace_id")]
-    public string NamespaceId;
+    public long? NamespaceId { get; set; }
 
     /// <summary>
     /// The default branch name. Requires <see cref="InitializeWithReadme"/> to be true.

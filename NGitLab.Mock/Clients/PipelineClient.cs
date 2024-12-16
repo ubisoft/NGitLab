@@ -11,7 +11,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class PipelineClient : ClientBase, IPipelineClient
 {
-    private readonly int _projectId;
+    private readonly long _projectId;
     private readonly IJobClient _jobClient;
 
     public PipelineClient(ClientContext context, IJobClient jobClient, ProjectId projectId)
@@ -21,7 +21,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
-    public Models.Pipeline this[int id]
+    public Models.Pipeline this[long id]
     {
         get
         {
@@ -84,7 +84,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         }
     }
 
-    public void Delete(int pipelineId)
+    public void Delete(long pipelineId)
     {
         using (Context.BeginOperationScope())
         {
@@ -94,7 +94,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         }
     }
 
-    public IEnumerable<PipelineVariable> GetVariables(int pipelineId)
+    public IEnumerable<PipelineVariable> GetVariables(long pipelineId)
     {
         using (Context.BeginOperationScope())
         {
@@ -104,7 +104,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         }
     }
 
-    public TestReport GetTestReports(int pipelineId)
+    public TestReport GetTestReports(long pipelineId)
     {
         using (Context.BeginOperationScope())
         {
@@ -114,7 +114,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         }
     }
 
-    public TestReportSummary GetTestReportsSummary(int pipelineId)
+    public TestReportSummary GetTestReportsSummary(long pipelineId)
     {
         using (Context.BeginOperationScope())
         {
@@ -139,7 +139,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         }
     }
 
-    public Models.Job[] GetJobs(int pipelineId)
+    public Models.Job[] GetJobs(long pipelineId)
     {
         using (Context.BeginOperationScope())
         {
@@ -259,7 +259,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         return pipelines.OrderBy(expression);
     }
 
-    public async Task<Models.Pipeline> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Models.Pipeline> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
         return this[id];
@@ -287,12 +287,12 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         return GitLabCollectionResponse.Create(Search(query));
     }
 
-    public GitLabCollectionResponse<PipelineVariable> GetVariablesAsync(int pipelineId)
+    public GitLabCollectionResponse<PipelineVariable> GetVariablesAsync(long pipelineId)
     {
         return GitLabCollectionResponse.Create(GetVariables(pipelineId));
     }
 
-    public Task<Models.Pipeline> RetryAsync(int pipelineId, CancellationToken cancellationToken = default)
+    public Task<Models.Pipeline> RetryAsync(long pipelineId, CancellationToken cancellationToken = default)
     {
         using (Context.BeginOperationScope())
         {
@@ -306,7 +306,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         }
     }
 
-    public Task<Models.Pipeline> UpdateMetadataAsync(int pipelineId, PipelineMetadataUpdate update, CancellationToken cancellationToken = default)
+    public Task<Models.Pipeline> UpdateMetadataAsync(long pipelineId, PipelineMetadataUpdate update, CancellationToken cancellationToken = default)
     {
         using (Context.BeginOperationScope())
         {

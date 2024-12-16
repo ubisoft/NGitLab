@@ -10,7 +10,7 @@ namespace NGitLab.Mock;
 
 internal sealed class MilestoneClient : ClientBase, IMilestoneClient
 {
-    private readonly int _resourceId;
+    private readonly long _resourceId;
 
     public MilestoneClient(ClientContext context, IIdOrPathAddressable id, MilestoneScope scope)
         : base(context)
@@ -24,7 +24,7 @@ internal sealed class MilestoneClient : ClientBase, IMilestoneClient
         Scope = scope;
     }
 
-    public Models.Milestone this[int id]
+    public Models.Milestone this[long id]
     {
         get
         {
@@ -39,7 +39,7 @@ internal sealed class MilestoneClient : ClientBase, IMilestoneClient
 
     public MilestoneScope Scope { get; }
 
-    public Models.Milestone Activate(int milestoneId)
+    public Models.Milestone Activate(long milestoneId)
     {
         using (Context.BeginOperationScope())
         {
@@ -49,7 +49,7 @@ internal sealed class MilestoneClient : ClientBase, IMilestoneClient
         }
     }
 
-    public IEnumerable<Models.MergeRequest> GetMergeRequests(int milestoneId)
+    public IEnumerable<Models.MergeRequest> GetMergeRequests(long milestoneId)
     {
         using (Context.BeginOperationScope())
         {
@@ -78,7 +78,7 @@ internal sealed class MilestoneClient : ClientBase, IMilestoneClient
         return Get(new MilestoneQuery { State = state });
     }
 
-    public Models.Milestone Close(int milestoneId)
+    public Models.Milestone Close(long milestoneId)
     {
         using (Context.BeginOperationScope())
         {
@@ -118,7 +118,7 @@ internal sealed class MilestoneClient : ClientBase, IMilestoneClient
         }
     }
 
-    public void Delete(int milestoneId)
+    public void Delete(long milestoneId)
     {
         using (Context.BeginOperationScope())
         {
@@ -171,7 +171,7 @@ internal sealed class MilestoneClient : ClientBase, IMilestoneClient
         }
     }
 
-    public Models.Milestone Update(int milestoneId, MilestoneUpdate milestone)
+    public Models.Milestone Update(long milestoneId, MilestoneUpdate milestone)
     {
         using (Context.BeginOperationScope())
         {
@@ -201,7 +201,7 @@ internal sealed class MilestoneClient : ClientBase, IMilestoneClient
         }
     }
 
-    private Milestone GetMilestone(int milestoneId, bool editing)
+    private Milestone GetMilestone(long milestoneId, bool editing)
     {
         Milestone milestone;
 

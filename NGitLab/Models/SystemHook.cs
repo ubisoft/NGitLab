@@ -6,7 +6,7 @@ namespace NGitLab.Models;
 public sealed class SystemHook
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     [JsonPropertyName("url")]
     public Uri Url { get; set; }

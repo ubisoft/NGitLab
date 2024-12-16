@@ -18,9 +18,9 @@ public interface IPipelineClient
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    Pipeline this[int id] { get; }
+    Pipeline this[long id] { get; }
 
-    Task<Pipeline> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<Pipeline> GetByIdAsync(long id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get all jobs in a project
@@ -39,7 +39,7 @@ public interface IPipelineClient
     /// <summary>
     /// Returns the jobs of a pipeline.
     /// </summary>
-    Job[] GetJobs(int pipelineId);
+    Job[] GetJobs(long pipelineId);
 
     /// <summary>
     /// Returns the jobs of a pipeline.
@@ -88,27 +88,27 @@ public interface IPipelineClient
     /// Delete a pipeline.
     /// </summary>
     /// <param name="pipelineId">ID of the pipeline</param>
-    void Delete(int pipelineId);
+    void Delete(long pipelineId);
 
     /// <summary>
     /// Get variables for a pipeline.
     /// </summary>
     /// <param name="pipelineId">ID of the pipeline</param>
-    IEnumerable<PipelineVariable> GetVariables(int pipelineId);
+    IEnumerable<PipelineVariable> GetVariables(long pipelineId);
 
-    GitLabCollectionResponse<PipelineVariable> GetVariablesAsync(int pipelineId);
+    GitLabCollectionResponse<PipelineVariable> GetVariablesAsync(long pipelineId);
 
     /// <summary>
     /// Get test reports for a pipeline.
     /// </summary>
     /// <param name="pipelineId">ID of the pipeline</param>
-    TestReport GetTestReports(int pipelineId);
+    TestReport GetTestReports(long pipelineId);
 
     /// <summary>
     /// Get test reports summary for a pipeline.
     /// </summary>
     /// <param name="pipelineId">ID of the pipeline</param>
-    TestReportSummary GetTestReportsSummary(int pipelineId);
+    TestReportSummary GetTestReportsSummary(long pipelineId);
 
     /// <summary>
     /// Returns the bridges of a pipeline.
@@ -116,7 +116,7 @@ public interface IPipelineClient
     /// <param name="query"></param>
     GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineBridgeQuery query);
 
-    Task<Pipeline> RetryAsync(int pipelineId, CancellationToken cancellationToken = default);
+    Task<Pipeline> RetryAsync(long pipelineId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Updates the metadata for the specified pipeline
@@ -125,5 +125,5 @@ public interface IPipelineClient
     /// <param name="update">The metadata to update</param>
     /// <param name="cancellationToken">The cancellation otken for the operation</param>
     /// <seealso href="https://docs.gitlab.com/ee/api/pipelines.html#update-pipeline-metadata" />
-    Task<Pipeline> UpdateMetadataAsync(int pipelineId, PipelineMetadataUpdate update, CancellationToken cancellationToken = default);
+    Task<Pipeline> UpdateMetadataAsync(long pipelineId, PipelineMetadataUpdate update, CancellationToken cancellationToken = default);
 }
