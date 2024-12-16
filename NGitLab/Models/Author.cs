@@ -6,26 +6,26 @@ namespace NGitLab.Models;
 public class Author
 {
     [JsonPropertyName("id")]
-    public long Id;
+    public long Id { get; set; }
 
     [JsonPropertyName("username")]
-    public string Username;
+    public string Username { get; set; }
 
     [JsonPropertyName("email")]
-    public string Email;
+    public string Email { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [JsonPropertyName("state")]
-    public string State;
+    public string State { get; set; }
 
     [JsonPropertyName("created_at")]
-    public DateTime CreatedAt;
+    public DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("avatar_url")]
-    public string AvatarUrl;
+    public string AvatarUrl { get; set; }
 
     [JsonPropertyName("web_url")]
-    public string WebUrl;
+    public string WebUrl { get; set; }
 }

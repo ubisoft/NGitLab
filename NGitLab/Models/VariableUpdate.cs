@@ -5,7 +5,7 @@ namespace NGitLab.Models;
 public class VariableUpdate
 {
     [JsonPropertyName("value")]
-    public string Value;
+    public string Value { get; set; }
 
     /// <summary>
     /// The description of a variable
@@ -13,19 +13,19 @@ public class VariableUpdate
     /// <returns>The description of a variable</returns>
     /// <remarks>Introduced in GitLab 16.2</remarks>
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 
     [JsonPropertyName("protected")]
-    public bool Protected;
+    public bool Protected { get; set; }
 
     [JsonPropertyName("variable_type")]
-    public VariableType Type;
+    public VariableType Type { get; set; }
 
     [JsonPropertyName("masked")]
-    public bool Masked;
+    public bool Masked { get; set; }
 
     [JsonPropertyName("raw")]
-    public bool Raw;
+    public bool Raw { get; set; }
 
     /// <summary>
     /// The environment scope of a variable
@@ -35,5 +35,5 @@ public class VariableUpdate
     /// Create and Update of group variable: Premium and Ultimate only.
     /// </remarks>
     [JsonPropertyName("environment_scope")]
-    public string EnvironmentScope;
+    public string EnvironmentScope { get; set; }
 }

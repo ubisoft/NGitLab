@@ -8,5 +8,5 @@ public class SingleProjectQuery
     /// <summary>
     /// Include project statistics
     /// </summary>
-    public bool? Statistics;
+    public bool? Statistics { get; set; }
 }

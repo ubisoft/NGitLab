@@ -8,53 +8,53 @@ public class Group
     public const string Url = "/groups";
 
     [JsonPropertyName("id")]
-    public long Id;
+    public long Id { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [JsonPropertyName("path")]
-    public string Path;
+    public string Path { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 
     [JsonPropertyName("visibility")]
-    public VisibilityLevel Visibility;
+    public VisibilityLevel Visibility { get; set; }
 
     [JsonPropertyName("lfs_enabled")]
-    public bool LfsEnabled;
+    public bool LfsEnabled { get; set; }
 
     [JsonPropertyName("avatar_url")]
-    public string AvatarUrl;
+    public string AvatarUrl { get; set; }
 
     [JsonPropertyName("request_access_enabled")]
-    public bool RequestAccessEnabled;
+    public bool RequestAccessEnabled { get; set; }
 
     [JsonPropertyName("full_name")]
-    public string FullName;
+    public string FullName { get; set; }
 
     [JsonPropertyName("full_path")]
-    public string FullPath;
+    public string FullPath { get; set; }
 
     [JsonPropertyName("parent_id")]
-    public long? ParentId;
+    public long? ParentId { get; set; }
 
     [JsonPropertyName("runners_token")]
-    public string RunnersToken;
+    public string RunnersToken { get; set; }
 
     [JsonPropertyName("projects")]
-    public Project[] Projects;
+    public Project[] Projects { get; set; }
 
     [JsonPropertyName("shared_runners_minutes_limit")]
-    public int? SharedRunnersMinutesLimit;
+    public int? SharedRunnersMinutesLimit { get; set; }
 
     [JsonPropertyName("extra_shared_runners_minutes_limit")]
-    public int? ExtraSharedRunnersMinutesLimit;
+    public int? ExtraSharedRunnersMinutesLimit { get; set; }
 
     [JsonPropertyName("marked_for_deletion_on")]
-    public string MarkedForDeletionOn;
+    public string MarkedForDeletionOn { get; set; }
 
     [JsonPropertyName("created_at")]
-    public DateTime CreatedAt;
+    public DateTime CreatedAt { get; set; }
 }

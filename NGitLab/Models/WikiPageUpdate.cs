@@ -5,11 +5,11 @@ namespace NGitLab.Models;
 public class WikiPageUpdate
 {
     [JsonPropertyName("format")]
-    public string Format;
+    public string Format { get; set; }
 
     [JsonPropertyName("content")]
-    public string Content;
+    public string Content { get; set; }
 
     [JsonPropertyName("title")]
-    public string Title;
+    public string Title { get; set; }
 }

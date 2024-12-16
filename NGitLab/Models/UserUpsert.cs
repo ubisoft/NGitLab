@@ -7,56 +7,56 @@ public class UserUpsert
 {
     [Required]
     [JsonPropertyName("email")]
-    public string Email;
+    public string Email { get; set; }
 
     [Required]
     [JsonPropertyName("password")]
-    public string Password;
+    public string Password { get; set; }
 
     [Required]
     [JsonPropertyName("username")]
-    public string Username;
+    public string Username { get; set; }
 
     [Required]
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [JsonPropertyName("skype")]
-    public string Skype;
+    public string Skype { get; set; }
 
     [JsonPropertyName("linkedin")]
-    public string Linkedin;
+    public string Linkedin { get; set; }
 
     [JsonPropertyName("twitter")]
-    public string Twitter;
+    public string Twitter { get; set; }
 
     [JsonPropertyName("website_url")]
-    public string WebsiteURL;
+    public string WebsiteURL { get; set; }
 
     [JsonPropertyName("projects_limit")]
-    public int? ProjectsLimit;
+    public int? ProjectsLimit { get; set; }
 
     [JsonPropertyName("provider")]
-    public string Provider;
+    public string Provider { get; set; }
 
     [JsonPropertyName("extern_uid")]
-    public string ExternalUid;
+    public string ExternalUid { get; set; }
 
     [JsonPropertyName("bio")]
-    public string Bio;
+    public string Bio { get; set; }
 
     [JsonPropertyName("admin")]
-    public bool? IsAdmin;
+    public bool? IsAdmin { get; set; }
 
     [JsonPropertyName("can_create_group")]
-    public bool? CanCreateGroup;
+    public bool? CanCreateGroup { get; set; }
 
     [JsonPropertyName("reset_password")]
-    public bool? ResetPassword;
+    public bool? ResetPassword { get; set; }
 
     [JsonPropertyName("skip_confirmation")]
-    public bool? SkipConfirmation;
+    public bool? SkipConfirmation { get; set; }
 
     [JsonPropertyName("private_profile")]
-    public bool? IsPrivateProfile;
+    public bool? IsPrivateProfile { get; set; }
 }

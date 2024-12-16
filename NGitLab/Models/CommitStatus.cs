@@ -8,26 +8,26 @@ public class CommitStatus
     public long Id { get; set; }
 
     [JsonPropertyName("sha")]
-    public string CommitSha;
+    public string CommitSha { get; set; }
 
     [JsonPropertyName("ref")]
-    public string Ref;
+    public string Ref { get; set; }
 
     [JsonPropertyName("status")]
-    public string Status;
+    public string Status { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [JsonPropertyName("target_url")]
-    public string TargetUrl;
+    public string TargetUrl { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 
     [JsonPropertyName("coverage")]
-    public int? Coverage;
+    public int? Coverage { get; set; }
 
     [JsonPropertyName("author")]
-    public Author Author;
+    public Author Author { get; set; }
 }

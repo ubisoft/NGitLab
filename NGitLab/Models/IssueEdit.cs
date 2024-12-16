@@ -12,33 +12,33 @@ public class IssueEdit
 
     [Required]
     [JsonPropertyName("issue_id")]
-    public long IssueId;
+    public long IssueId { get; set; }
 
     [JsonPropertyName("title")]
-    public string Title;
+    public string Title { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 
     [JsonPropertyName("assignee_id")]
-    public long? AssigneeId;
+    public long? AssigneeId { get; set; }
 
     [JsonPropertyName("assignee_ids")]
-    public long[] AssigneeIds;
+    public long[] AssigneeIds { get; set; }
 
     [JsonPropertyName("milestone_id")]
-    public long? MilestoneId;
+    public long? MilestoneId { get; set; }
 
     [JsonPropertyName("labels")]
-    public string Labels;
+    public string Labels { get; set; }
 
     [JsonPropertyName("state_event")]
-    public string State;
+    public string State { get; set; }
 
     [JsonPropertyName("due_date")]
     [JsonConverter(typeof(DateOnlyConverter))]
-    public DateTime? DueDate;
+    public DateTime? DueDate { get; set; }
 
     [JsonPropertyName("epic_id")]
-    public long? EpicId;
+    public long? EpicId { get; set; }
 }

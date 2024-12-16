@@ -5,14 +5,14 @@ namespace NGitLab.Models;
 public class ClusterInfo
 {
     [JsonPropertyName("id")]
-    public long Id;
+    public long Id { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [JsonPropertyName("platform_type")]
-    public string PlatformType;
+    public string PlatformType { get; set; }
 
     [JsonPropertyName("environment_scope")]
-    public string EnvionmentScope;
+    public string EnvionmentScope { get; set; }
 }

@@ -8,50 +8,50 @@ public class Commit
     public const string Url = "/commits";
 
     [JsonPropertyName("id")]
-    public Sha1 Id;
+    public Sha1 Id { get; set; }
 
     [JsonPropertyName("title")]
-    public string Title;
+    public string Title { get; set; }
 
     [JsonPropertyName("short_id")]
-    public string ShortId;
+    public string ShortId { get; set; }
 
     [JsonPropertyName("author_name")]
-    public string AuthorName;
+    public string AuthorName { get; set; }
 
     [JsonPropertyName("author_email")]
-    public string AuthorEmail;
+    public string AuthorEmail { get; set; }
 
     [JsonPropertyName("authored_date")]
-    public DateTime AuthoredDate;
+    public DateTime AuthoredDate { get; set; }
 
     [JsonPropertyName("committer_name")]
-    public string CommitterName;
+    public string CommitterName { get; set; }
 
     [JsonPropertyName("committer_email")]
-    public string CommitterEmail;
+    public string CommitterEmail { get; set; }
 
     [JsonPropertyName("committed_date")]
-    public DateTime CommittedDate;
+    public DateTime CommittedDate { get; set; }
 
     [JsonPropertyName("created_at")]
-    public DateTime CreatedAt;
+    public DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("message")]
-    public string Message;
+    public string Message { get; set; }
 
     [JsonPropertyName("parent_ids")]
-    public Sha1[] Parents;
+    public Sha1[] Parents { get; set; }
 
     [JsonPropertyName("status")]
-    public string Status;
+    public string Status { get; set; }
 
     [JsonPropertyName("stats")]
-    public CommitStats Stats;
+    public CommitStats Stats { get; set; }
 
     [JsonPropertyName("web_url")]
-    public string WebUrl;
+    public string WebUrl { get; set; }
 
     [JsonPropertyName("last_pipeline")]
-    public Pipeline LastPipeline;
+    public Pipeline LastPipeline { get; set; }
 }

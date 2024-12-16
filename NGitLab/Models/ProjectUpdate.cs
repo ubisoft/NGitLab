@@ -69,7 +69,7 @@ public sealed class ProjectUpdate
     public bool? SharedRunnersEnabled { get; set; }
 
     [JsonPropertyName("group_runners_enabled")]
-    public bool? GroupRunnersEnabled;
+    public bool? GroupRunnersEnabled { get; set; }
 
     [JsonPropertyName("visibility")]
     public VisibilityLevel? Visibility { get; set; }
@@ -96,11 +96,11 @@ public sealed class ProjectUpdate
     public bool? PackagesEnabled { get; set; }
 
     [JsonPropertyName("build_timeout")]
-    public int? BuildTimeout;
+    public int? BuildTimeout { get; set; }
 
     [JsonPropertyName("tag_list")]
     [Obsolete("Deprecated by GitLab. Use Topics instead")]
-    public string[] TagList;
+    public string[] TagList { get; set; }
 
     [JsonPropertyName("topics")]
     public List<string> Topics { get; set; }

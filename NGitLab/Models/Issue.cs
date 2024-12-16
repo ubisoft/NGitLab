@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
@@ -6,43 +6,43 @@ namespace NGitLab.Models;
 public class Issue
 {
     [JsonPropertyName("id")]
-    public long Id;
+    public long Id { get; set; }
 
     [JsonPropertyName("iid")]
-    public long IssueId;
+    public long IssueId { get; set; }
 
     [JsonPropertyName("project_id")]
-    public long ProjectId;
+    public long ProjectId { get; set; }
 
     [JsonPropertyName("title")]
-    public string Title;
+    public string Title { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 
     [JsonPropertyName("labels")]
-    public string[] Labels;
+    public string[] Labels { get; set; }
 
     [JsonPropertyName("milestone")]
-    public Milestone Milestone;
+    public Milestone Milestone { get; set; }
 
     [JsonPropertyName("assignee")]
-    public Assignee Assignee;
+    public Assignee Assignee { get; set; }
 
     [JsonPropertyName("assignees")]
-    public Assignee[] Assignees;
+    public Assignee[] Assignees { get; set; }
 
     [JsonPropertyName("author")]
-    public Author Author;
+    public Author Author { get; set; }
 
     [JsonPropertyName("state")]
-    public string State;
+    public string State { get; set; }
 
     [JsonPropertyName("created_at")]
-    public DateTime CreatedAt;
+    public DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("updated_at")]
-    public DateTime UpdatedAt;
+    public DateTime UpdatedAt { get; set; }
 
     [JsonPropertyName("closed_at")]
     public DateTime ClosedAt { get; set; }
@@ -51,29 +51,29 @@ public class Issue
     public User ClosedBy { get; set; }
 
     [JsonPropertyName("due_date")]
-    public DateTime? DueDate;
+    public DateTime? DueDate { get; set; }
 
     [JsonPropertyName("web_url")]
-    public string WebUrl;
+    public string WebUrl { get; set; }
 
     [JsonPropertyName("merge_requests_count")]
     public int MergeRequestsCount { get; set; }
 
     [JsonPropertyName("epic")]
-    public IssueEpic Epic;
+    public IssueEpic Epic { get; set; }
 
     [JsonPropertyName("confidential")]
-    public bool Confidential;
+    public bool Confidential { get; set; }
 
     [JsonPropertyName("weight")]
     public int? Weight { get; set; }
 
     [JsonPropertyName("issue_type")]
-    public string IssueType;
+    public string IssueType { get; set; }
 
     [JsonPropertyName("moved_to_id")]
-    public long? MovedToId;
+    public long? MovedToId { get; set; }
 
     [JsonPropertyName("references")]
-    public References References;
+    public References References { get; set; }
 }

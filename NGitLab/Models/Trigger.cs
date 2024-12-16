@@ -6,20 +6,20 @@ namespace NGitLab.Models;
 public class Trigger
 {
     [JsonPropertyName("id")]
-    public long Id;
+    public long Id { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 
     [JsonPropertyName("created_at")]
-    public DateTime CreatedAt;
+    public DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("last_used")]
-    public DateTime LastUsed;
+    public DateTime LastUsed { get; set; }
 
     [JsonPropertyName("token")]
-    public string Token;
+    public string Token { get; set; }
 
     [JsonPropertyName("updated_at")]
-    public DateTime UpdatedAt;
+    public DateTime UpdatedAt { get; set; }
 }

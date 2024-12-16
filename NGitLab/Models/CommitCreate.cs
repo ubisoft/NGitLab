@@ -8,28 +8,28 @@ public class CommitCreate
 {
     [Required]
     [JsonPropertyName("branch")]
-    public string Branch;
+    public string Branch { get; set; }
 
     [JsonPropertyName("commit_message")]
-    public string CommitMessage;
+    public string CommitMessage { get; set; }
 
     [JsonPropertyName("start_branch")]
-    public string StartBranch;
+    public string StartBranch { get; set; }
 
     [JsonPropertyName("start_sha")]
-    public string StartSha;
+    public string StartSha { get; set; }
 
     [JsonPropertyName("author_email")]
-    public string AuthorEmail;
+    public string AuthorEmail { get; set; }
 
     [JsonPropertyName("author_name")]
-    public string AuthorName;
+    public string AuthorName { get; set; }
 
     [JsonPropertyName("actions")]
-    public IList<CreateCommitAction> Actions = new List<CreateCommitAction>();
+    public IList<CreateCommitAction> Actions { get; set; } = new List<CreateCommitAction>();
 
     [JsonPropertyName("force")]
-    public bool? Force;
+    public bool? Force { get; set; }
 }
 
 public class CreateCommitAction

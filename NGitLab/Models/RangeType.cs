@@ -1,4 +1,4 @@
-namespace NGitLab.Models;
+﻿namespace NGitLab.Models;
 
 public enum RangeType
 {

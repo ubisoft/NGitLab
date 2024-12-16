@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
@@ -6,31 +6,31 @@ namespace NGitLab.Models;
 public class MergeRequestComment
 {
     [JsonPropertyName("id")]
-    public long Id;
+    public long Id { get; set; }
 
     [JsonPropertyName("body")]
-    public string Body;
+    public string Body { get; set; }
 
     [JsonPropertyName("created_at")]
-    public DateTime CreatedAt;
+    public DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("updated_at")]
-    public DateTime UpdatedAt;
+    public DateTime UpdatedAt { get; set; }
 
     [JsonPropertyName("author")]
     public User Author { get; set; }
 
     [JsonPropertyName("resolved")]
-    public bool Resolved;
+    public bool Resolved { get; set; }
 
     [JsonPropertyName("resolvable")]
-    public bool Resolvable;
+    public bool Resolvable { get; set; }
 
     [JsonPropertyName("type")]
-    public string Type;
+    public string Type { get; set; }
 
     [JsonPropertyName("system")]
-    public bool System;
+    public bool System { get; set; }
 
     [JsonPropertyName("position")]
     public Position Position { get; set; }

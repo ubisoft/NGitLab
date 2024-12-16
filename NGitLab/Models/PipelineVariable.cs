@@ -5,11 +5,11 @@ namespace NGitLab.Models;
 public class PipelineVariable
 {
     [JsonPropertyName("key")]
-    public string Key;
+    public string Key { get; set; }
 
     [JsonPropertyName("value")]
-    public string Value;
+    public string Value { get; set; }
 
     [JsonPropertyName("variable_type")]
-    public string VariableType;
+    public string VariableType { get; set; }
 }

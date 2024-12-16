@@ -5,8 +5,8 @@ namespace NGitLab.Models;
 public class BranchCreate
 {
     [JsonPropertyName("branch")]
-    public string Name;
+    public string Name { get; set; }
 
     [JsonPropertyName("ref")]
-    public string Ref;
+    public string Ref { get; set; }
 }
