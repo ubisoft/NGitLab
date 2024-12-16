@@ -132,11 +132,6 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         return GitLabCollectionResponse.Create(OfProject(projectId));
     }
 
-    public IEnumerable<Models.Job> GetJobs(long runnerId, JobScope jobScope)
-    {
-        throw new NotImplementedException();
-    }
-
     public IEnumerable<Models.Job> GetJobs(long runnerId, JobStatus? status = null)
     {
         throw new NotImplementedException();

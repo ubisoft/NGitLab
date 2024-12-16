@@ -382,7 +382,7 @@ public sealed class Project : GitLabObject
         };
 
         RegisteredRunners.Add(runner);
-        if (paused)
+        if (!paused)
         {
             EnabledRunners.Add(new RunnerRef(runner));
         }

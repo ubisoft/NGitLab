@@ -880,7 +880,6 @@ NGitLab.Impl.RunnerClient.EnableRunner(long projectId, NGitLab.Models.RunnerId r
 NGitLab.Impl.RunnerClient.EnableRunnerAsync(long projectId, NGitLab.Models.RunnerId runnerId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Runner>
 NGitLab.Impl.RunnerClient.GetAllRunnersWithScope(NGitLab.Models.RunnerScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.Impl.RunnerClient.GetJobs(long runnerId, NGitLab.JobStatus? status = null) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
-NGitLab.Impl.RunnerClient.GetJobs(long runnerId, NGitLab.Models.JobScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.RunnerClient.OfGroup(long groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.Impl.RunnerClient.OfGroupAsync(long groupId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Runner>
 NGitLab.Impl.RunnerClient.OfProject(long projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
@@ -1112,7 +1111,6 @@ NGitLab.IRunnerClient.EnableRunnerAsync(long projectId, NGitLab.Models.RunnerId 
 NGitLab.IRunnerClient.GetAllRunnersWithScope(NGitLab.Models.RunnerScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.GetAvailableRunners(long projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.GetJobs(long runnerId, NGitLab.JobStatus? status = null) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
-NGitLab.IRunnerClient.GetJobs(long runnerId, NGitLab.Models.JobScope jobScope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IRunnerClient.OfGroup(long groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.OfGroupAsync(long groupId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Runner>
 NGitLab.IRunnerClient.OfProject(long projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Runner>

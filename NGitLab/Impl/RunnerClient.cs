@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Extensions;
@@ -63,20 +61,6 @@ public class RunnerClient : IRunnerClient
         return _api.Put().With(runnerUpdate).To<Runner>(url);
     }
 
-    [Obsolete("Use GetJobs(int, JobStatus?) instead")]
-    public IEnumerable<Job> GetJobs(long runnerId, JobScope scope)
-    {
-        var url = $"{Runner.Url}/{runnerId.ToStringInvariant()}/jobs";
-
-        if (scope != JobScope.All)
-        {
-            url = Utils.AddParameter(url, "status", scope.ToString().ToLowerInvariant());
-        }
-
-        return _api.Get().GetAll<Job>(url);
-    }
-
-    [SuppressMessage("ApiDesign", "RS0027:Public API with optional parameter(s) should have the most parameters amongst its public overloads", Justification = "Keep compatibility")]
     public IEnumerable<Job> GetJobs(long runnerId, JobStatus? status = null)
     {
         var url = $"{Runner.Url}/{runnerId.ToStringInvariant()}/jobs";

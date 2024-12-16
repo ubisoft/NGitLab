@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -60,15 +58,8 @@ public interface IRunnerClient
     GitLabCollectionResponse<Runner> OfProjectAsync(long projectId);
 
     /// <summary>
-    /// List all jobs of the given runner that meet the specified scope
-    /// </summary>
-    [Obsolete("Use GetJobs(int, JobStatus?) instead")]
-    IEnumerable<Job> GetJobs(long runnerId, JobScope jobScope);
-
-    /// <summary>
     /// List all jobs of the given runner that meet the specified status
     /// </summary>
-    [SuppressMessage("ApiDesign", "RS0027:Public API with optional parameter(s) should have the most parameters amongst its public overloads", Justification = "Keep compatibility")]
     IEnumerable<Job> GetJobs(long runnerId, JobStatus? status = null);
 
     /// <summary>
