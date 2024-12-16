@@ -8,18 +8,18 @@ namespace NGitLab.Models;
 public class LabelEdit
 {
     [JsonIgnore]
-    public long Id;
+    public long Id { get; set; }
 
     [Required]
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [JsonPropertyName("new_name")]
-    public string NewName;
+    public string NewName { get; set; }
 
     [JsonPropertyName("color")]
-    public string Color;
+    public string Color { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 }

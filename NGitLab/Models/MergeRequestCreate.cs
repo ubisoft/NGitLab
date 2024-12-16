@@ -5,41 +5,41 @@ namespace NGitLab.Models;
 public class MergeRequestCreate
 {
     [JsonPropertyName("source_branch")]
-    public string SourceBranch;
+    public string SourceBranch { get; set; }
 
     [JsonPropertyName("target_branch")]
-    public string TargetBranch;
+    public string TargetBranch { get; set; }
 
     [JsonPropertyName("assignee_id")]
-    public long? AssigneeId;
+    public long? AssigneeId { get; set; }
 
     [JsonPropertyName("assignee_ids")]
-    public long[] AssigneeIds;
+    public long[] AssigneeIds { get; set; }
 
     [JsonPropertyName("reviewer_ids")]
-    public long[] ReviewerIds;
+    public long[] ReviewerIds { get; set; }
 
     [JsonPropertyName("title")]
-    public string Title;
+    public string Title { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 
     [JsonPropertyName("target_project_id")]
-    public long? TargetProjectId;
+    public long? TargetProjectId { get; set; }
 
     [JsonPropertyName("remove_source_branch")]
-    public bool RemoveSourceBranch;
+    public bool RemoveSourceBranch { get; set; }
 
     [JsonPropertyName("milestone_id")]
     public long? MilestoneId { get; set; }
 
     [JsonPropertyName("labels")]
-    public string Labels;
+    public string Labels { get; set; }
 
     [JsonPropertyName("squash")]
-    public bool Squash;
+    public bool Squash { get; set; }
 
     [JsonPropertyName("allow_collaboration")]
-    public bool? AllowCollaboration;
+    public bool? AllowCollaboration { get; set; }
 }

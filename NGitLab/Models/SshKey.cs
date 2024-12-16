@@ -6,14 +6,14 @@ namespace NGitLab.Models;
 public class SshKey
 {
     [JsonPropertyName("id")]
-    public long Id;
+    public long Id { get; set; }
 
     [JsonPropertyName("title")]
-    public string Title;
+    public string Title { get; set; }
 
     [JsonPropertyName("key")]
-    public string Key;
+    public string Key { get; set; }
 
     [JsonPropertyName("created_at")]
-    public DateTime CreateAt;
+    public DateTime CreateAt { get; set; }
 }

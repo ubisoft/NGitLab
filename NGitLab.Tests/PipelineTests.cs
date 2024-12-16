@@ -89,7 +89,8 @@ public class PipelineTests
 
         var pipelineJobQuery = new PipelineJobQuery
         {
-            PipelineId = pipeline.Id, Scope = new[] { "success", "pending" },
+            PipelineId = pipeline.Id,
+            Scope = new[] { "success", "pending" },
         };
         var allJobs = await GitLabTestContext.RetryUntilAsync(() => pipelineClient.GetJobsAsync(pipelineJobQuery).ToList(), p => p.Count != 0, TimeSpan.FromSeconds(120));
         Assert.That(allJobs.Count != 0);

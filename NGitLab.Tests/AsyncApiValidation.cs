@@ -34,7 +34,7 @@ public class AsyncApiValidation
 
                     if (parameterInfo.ParameterType != typeof(CancellationToken))
                     {
-                       Assert.Fail($"The last parameter of method '{method}' must be of type 'CancellationToken' and named 'cancellationToken'");
+                        Assert.Fail($"The last parameter of method '{method}' must be of type 'CancellationToken' and named 'cancellationToken'");
                     }
 
                     if (!string.Equals(parameterInfo.Name, "cancellationToken", StringComparison.Ordinal))

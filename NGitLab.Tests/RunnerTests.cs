@@ -132,6 +132,6 @@ public class RunnerTests
     {
         return Policy
             .Handle<GitLabException>(ex => ex.StatusCode is HttpStatusCode.Forbidden)
-            .WaitAndRetry(3, sleepDurationProvider: attempt => TimeSpan.FromSeconds(2 * attempt));    
+            .WaitAndRetry(3, sleepDurationProvider: attempt => TimeSpan.FromSeconds(2 * attempt));
     }
 }

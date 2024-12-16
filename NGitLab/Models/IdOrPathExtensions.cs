@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NGitLab.Extensions;
 
 namespace NGitLab.Models;

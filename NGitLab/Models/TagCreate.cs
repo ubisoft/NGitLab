@@ -10,18 +10,18 @@ public class TagCreate
     /// </summary>
     [Required]
     [JsonPropertyName("tag_name")]
-    public string Name;
+    public string Name { get; set; }
 
     /// <summary>
     /// (required) - Create tag using commit SHA, another tag name, or branch name.
     /// </summary>
     [Required]
     [JsonPropertyName("ref")]
-    public string Ref;
+    public string Ref { get; set; }
 
     /// <summary>
     /// (optional) - Creates annotated tag.
     /// </summary>
     [JsonPropertyName("message")]
-    public string Message;
+    public string Message { get; set; }
 }

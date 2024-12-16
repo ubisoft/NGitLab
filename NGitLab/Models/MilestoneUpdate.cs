@@ -5,22 +5,22 @@ namespace NGitLab.Models;
 public class MilestoneUpdate
 {
     [JsonPropertyName("title")]
-    public string Title;
+    public string Title { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 
     [JsonPropertyName("due_date")]
-    public string DueDate;
+    public string DueDate { get; set; }
 
     [JsonPropertyName("start_date")]
-    public string StartDate;
+    public string StartDate { get; set; }
 }
 
 public class MilestoneUpdateState
 {
     [JsonPropertyName("state_event")]
-    public string NewState;
+    public string NewState { get; set; }
 }
 
 // ReSharper disable InconsistentNaming

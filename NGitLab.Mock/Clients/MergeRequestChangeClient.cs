@@ -3,7 +3,7 @@ using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients;
 
-internal sealed class  MergeRequestChangeClient : ClientBase, IMergeRequestChangeClient
+internal sealed class MergeRequestChangeClient : ClientBase, IMergeRequestChangeClient
 {
     private readonly long _projectId;
     private readonly long _mergeRequestIid;

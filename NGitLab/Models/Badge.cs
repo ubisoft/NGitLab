@@ -5,20 +5,20 @@ namespace NGitLab.Models;
 public class Badge
 {
     [JsonPropertyName("id")]
-    public long Id;
+    public long Id { get; set; }
 
     [JsonPropertyName("link_url")]
-    public string LinkUrl;
+    public string LinkUrl { get; set; }
 
     [JsonPropertyName("image_url")]
-    public string ImageUrl;
+    public string ImageUrl { get; set; }
 
     [JsonPropertyName("rendered_link_url")]
-    public string RenderedLinkUrl;
+    public string RenderedLinkUrl { get; set; }
 
     [JsonPropertyName("rendered_image_url")]
-    public string RenderedImageUrl;
+    public string RenderedImageUrl { get; set; }
 
     [JsonPropertyName("kind")]
-    public BadgeKind Kind;
+    public BadgeKind Kind { get; set; }
 }

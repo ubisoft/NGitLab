@@ -6,19 +6,19 @@ namespace NGitLab.Models;
 public class Namespace
 {
     [JsonPropertyName("id")]
-    public long Id;
+    public long Id { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [JsonPropertyName("path")]
-    public string Path;
+    public string Path { get; set; }
 
     [JsonPropertyName("kind")]
-    public string Kind;
+    public string Kind { get; set; }
 
     [JsonPropertyName("full_path")]
-    public string FullPath;
+    public string FullPath { get; set; }
 
     public enum Type
     {

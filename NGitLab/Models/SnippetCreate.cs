@@ -7,13 +7,13 @@ public class SnippetCreate
 {
     [Required]
     [JsonPropertyName("title")]
-    public string Title;
+    public string Title { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 
     [JsonPropertyName("visibility")]
-    public VisibilityLevel Visibility;
+    public VisibilityLevel Visibility { get; set; }
 
     /// <summary>
     /// An array of snippet files. Required when updating snippets with multiple files.

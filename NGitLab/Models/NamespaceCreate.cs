@@ -7,12 +7,12 @@ public class NamespaceCreate
 {
     [Required]
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [Required]
     [JsonPropertyName("path")]
-    public string Path;
+    public string Path { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 }

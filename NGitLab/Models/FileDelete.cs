@@ -7,13 +7,13 @@ public class FileDelete
 {
     [Required]
     [JsonPropertyName("path")]
-    public string Path;
+    public string Path { get; set; }
 
     [Required]
     [JsonPropertyName("branch")]
-    public string Branch;
+    public string Branch { get; set; }
 
     [Required]
     [JsonPropertyName("commit_message")]
-    public string CommitMessage;
+    public string CommitMessage { get; set; }
 }

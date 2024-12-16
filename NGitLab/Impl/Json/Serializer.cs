@@ -8,7 +8,6 @@ internal static class Serializer
 {
     private static readonly JsonSerializerOptions _options = new()
     {
-        IncludeFields = true,
         Converters =
         {
             new BooleanConverter(),

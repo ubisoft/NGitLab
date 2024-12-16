@@ -5,18 +5,18 @@ namespace NGitLab.Models;
 
 public class SnippetProjectCreate
 {
-    public long ProjectId;
+    public long ProjectId { get; set; }
 
     [Required]
     [JsonPropertyName("title")]
-    public string Title;
+    public string Title { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 
     [Required]
     [JsonPropertyName("visibility")]
-    public VisibilityLevel Visibility;
+    public VisibilityLevel Visibility { get; set; }
 
     /// <summary>
     /// An array of snippet files. Required when updating snippets with multiple files.

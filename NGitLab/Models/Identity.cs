@@ -5,11 +5,11 @@ namespace NGitLab.Models;
 public class Identity
 {
     [JsonPropertyName("provider")]
-    public string Provider;
+    public string Provider { get; set; }
 
     [JsonPropertyName("extern_uid")]
-    public string ExternUid;
+    public string ExternUid { get; set; }
 
     [JsonPropertyName("saml_provider_id")]
-    public long? SamlProviderId;
+    public long? SamlProviderId { get; set; }
 }

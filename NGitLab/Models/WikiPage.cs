@@ -5,14 +5,14 @@ namespace NGitLab.Models;
 public class WikiPage
 {
     [JsonPropertyName("content")]
-    public string Content;
+    public string Content { get; set; }
 
     [JsonPropertyName("format")]
-    public string Format;
+    public string Format { get; set; }
 
     [JsonPropertyName("slug")]
-    public string Slug;
+    public string Slug { get; set; }
 
     [JsonPropertyName("title")]
-    public string Title;
+    public string Title { get; set; }
 }

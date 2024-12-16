@@ -6,37 +6,37 @@ namespace NGitLab.Models;
 public class Milestone
 {
     [JsonPropertyName("id")]
-    public long Id;
+    public long Id { get; set; }
 
     [JsonPropertyName("iid")]
-    public long Iid;
+    public long Iid { get; set; }
 
     [JsonPropertyName("title")]
-    public string Title;
+    public string Title { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description;
+    public string Description { get; set; }
 
     [JsonPropertyName("due_date")]
-    public string DueDate;
+    public string DueDate { get; set; }
 
     [JsonPropertyName("group_id")]
-    public long? GroupId;
+    public long? GroupId { get; set; }
 
     [JsonPropertyName("project_id")]
-    public long? ProjectId;
+    public long? ProjectId { get; set; }
 
     [JsonPropertyName("start_date")]
-    public string StartDate;
+    public string StartDate { get; set; }
 
     [JsonPropertyName("state")]
-    public string State;
+    public string State { get; set; }
 
     [JsonPropertyName("created_at")]
-    public DateTime CreatedAt;
+    public DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("updated_at")]
-    public DateTime UpdatedAt;
+    public DateTime UpdatedAt { get; set; }
 }
 
 public enum MilestoneState

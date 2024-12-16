@@ -20,7 +20,7 @@ public class Change : GitLabObject
 
     public Models.Change ToChange()
     {
-        return new ()
+        return new()
         {
             Diff = Diff,
             AMode = AMode,

@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
@@ -14,5 +14,5 @@ public class RunnerId
     }
 
     [JsonPropertyName("runner_id")]
-    public long Id;
+    public long Id { get; set; }
 }

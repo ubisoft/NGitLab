@@ -5,7 +5,7 @@ namespace NGitLab.Models;
 public class MergeRequestApprovals
 {
     [JsonPropertyName("approvers")]
-    public MergeRequestApprover[] Approvers;
+    public MergeRequestApprover[] Approvers { get; set; }
 
     [JsonPropertyName("approved_by")]
     public MergeRequestApprover[] ApprovedBy { get; set; }
@@ -32,10 +32,10 @@ public class MergeRequestApprovals
 public class MergeRequestApproversChange
 {
     [JsonPropertyName("approver_ids")]
-    public long[] Approvers = [];
+    public long[] Approvers { get; set; } = [];
 
     [JsonPropertyName("approver_group_ids")]
-    public long[] ApproverGroups = [];
+    public long[] ApproverGroups { get; set; } = [];
 }
 
 public class MergeRequestApproveRequest

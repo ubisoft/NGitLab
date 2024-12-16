@@ -7,26 +7,26 @@ public class GroupCreate
 {
     [Required]
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [Required]
     [JsonPropertyName("path")]
-    public string Path;
+    public string Path { get; set; }
 
     [JsonPropertyName("description")]
-    public string Description = string.Empty;
+    public string Description { get; set; } = string.Empty;
 
     [JsonPropertyName("visibility")]
-    public VisibilityLevel Visibility;
+    public VisibilityLevel Visibility { get; set; }
 
     [JsonPropertyName("lfs_enabled")]
-    public bool LfsEnabled;
+    public bool LfsEnabled { get; set; }
 
     [JsonPropertyName("request_access_enabled")]
-    public bool RequestAccessEnabled;
+    public bool RequestAccessEnabled { get; set; }
 
     [JsonPropertyName("parent_id")]
-    public long? ParentId;
+    public long? ParentId { get; set; }
 
     [JsonPropertyName("shared_runners_minutes_limit")]
     public int? SharedRunnersMinutesLimit { get; set; }

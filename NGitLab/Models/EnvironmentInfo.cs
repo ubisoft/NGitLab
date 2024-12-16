@@ -5,20 +5,20 @@ namespace NGitLab.Models;
 public class EnvironmentInfo
 {
     [JsonPropertyName("id")]
-    public long Id;
+    public long Id { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name;
+    public string Name { get; set; }
 
     [JsonPropertyName("slug")]
-    public string Slug;
+    public string Slug { get; set; }
 
     [JsonPropertyName("external_url")]
-    public string ExternalUrl;
+    public string ExternalUrl { get; set; }
 
     [JsonPropertyName("state")]
-    public string State;
+    public string State { get; set; }
 
     [JsonPropertyName("last_deployment")]
-    public EnvironmentLastDeployment LastDeployment;
+    public EnvironmentLastDeployment LastDeployment { get; set; }
 }

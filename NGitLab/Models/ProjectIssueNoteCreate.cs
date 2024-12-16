@@ -6,12 +6,12 @@ namespace NGitLab.Models;
 public class ProjectIssueNoteCreate
 {
     [JsonIgnore]
-    public long IssueId;
+    public long IssueId { get; set; }
 
     [Required]
     [JsonPropertyName("body")]
-    public string Body;
+    public string Body { get; set; }
 
     [JsonPropertyName("confidential")]
-    public bool Confidential;
+    public bool Confidential { get; set; }
 }

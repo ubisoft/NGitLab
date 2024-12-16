@@ -5,8 +5,8 @@ namespace NGitLab.Models;
 public class BadgeUpdate
 {
     [JsonPropertyName("link_url")]
-    public string LinkUrl;
+    public string LinkUrl { get; set; }
 
     [JsonPropertyName("image_url")]
-    public string ImageUrl;
+    public string ImageUrl { get; set; }
 }

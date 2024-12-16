@@ -5,5 +5,5 @@ namespace NGitLab.Models;
 public class MergeRequestApprover
 {
     [JsonPropertyName("user")]
-    public User User;
+    public User User { get; set; }
 }
