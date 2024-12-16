@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -213,7 +214,7 @@ public class ProjectsMockTests
         {
             Name = "MyProject",
             Path = "my-project",
-            NamespaceId = "my-group",
+            NamespaceId = server.Groups.First(g => string.Equals(g.Name, "MyGroup", StringComparison.Ordinal)).Id,
             Description = "Description",
             DefaultBranch = "foo",
             InitializeWithReadme = true,
@@ -228,7 +229,7 @@ public class ProjectsMockTests
         actual.Name.Should().Be(expected.Name);
         actual.Path.Should().Be(expected.Path);
         actual.Description.Should().Be(expected.Description);
-        actual.Namespace.FullPath.Should().Be(expected.NamespaceId);
+        actual.Namespace.Id.Should().Be(expected.NamespaceId);
         actual.NameWithNamespace.Should().Be($"MyGroup / {expected.Name}");
         actual.PathWithNamespace.Should().Be($"my-group/{expected.Path}");
         actual.DefaultBranch.Should().Be(expected.DefaultBranch);

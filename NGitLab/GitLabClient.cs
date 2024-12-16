@@ -1,5 +1,4 @@
-﻿using System;
-using NGitLab.Extensions;
+﻿using NGitLab.Extensions;
 using NGitLab.Impl;
 using NGitLab.Models;
 

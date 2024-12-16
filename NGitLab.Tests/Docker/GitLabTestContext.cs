@@ -187,7 +187,7 @@ public sealed class GitLabTestContext : IDisposable
     public Project CreateProject(long parentGroupId, Action<ProjectCreate> configure = null, bool initializeWithCommits = false) =>
         CreateProject(initializeWithCommits: initializeWithCommits, configure: p =>
         {
-            p.NamespaceId = new GroupId(parentGroupId).ValueAsString();
+            p.NamespaceId = parentGroupId;
             configure?.Invoke(p);
         });
 

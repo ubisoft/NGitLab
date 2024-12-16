@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -81,7 +82,7 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         {
             project.Name ??= project.Path;
 
-            var parentGroup = GetParentGroup(project.NamespaceId);
+            var parentGroup = GetParentGroup(project.NamespaceId?.ToString(CultureInfo.InvariantCulture));
 
             var newProject = new Project(name: project.Name, path: project.Path)
             {

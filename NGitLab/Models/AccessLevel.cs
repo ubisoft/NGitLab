@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NGitLab.Models;
+﻿namespace NGitLab.Models;
 
 /// <summary>
 /// The access levels are defined in the GitLab::Access module. Currently, these levels are recognized:

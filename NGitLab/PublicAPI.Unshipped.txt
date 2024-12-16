@@ -2987,7 +2987,8 @@ NGitLab.Models.ProjectCreate.MergeRequestsAccessLevel -> string
 NGitLab.Models.ProjectCreate.MergeRequestsEnabled -> bool
 NGitLab.Models.ProjectCreate.MergeTrainsEnabled -> bool
 NGitLab.Models.ProjectCreate.Name -> string
-NGitLab.Models.ProjectCreate.NamespaceId -> string
+NGitLab.Models.ProjectCreate.NamespaceId.get -> long?
+NGitLab.Models.ProjectCreate.NamespaceId.set -> void
 NGitLab.Models.ProjectCreate.Path -> string
 NGitLab.Models.ProjectCreate.ProjectCreate() -> void
 NGitLab.Models.ProjectCreate.SnippetsAccessLevel -> string

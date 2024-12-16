@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -30,7 +29,7 @@ public class GroupsTests
         using var context = await GitLabTestContext.CreateAsync();
         var groupClient = context.Client.Groups;
         var group = context.CreateGroup();
-        var project = context.Client.Projects.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id.ToString(CultureInfo.InvariantCulture) });
+        var project = context.Client.Projects.Create(new ProjectCreate { Name = "test", NamespaceId = group.Id });
 
         group = groupClient[group.Id];
         Assert.That(group, Is.Not.Null);

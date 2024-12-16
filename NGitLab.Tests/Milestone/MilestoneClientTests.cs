@@ -86,7 +86,7 @@ public class MilestoneClientTests
     {
         using var context = await GitLabTestContext.CreateAsync();
         var group = context.CreateGroup();
-        var (project, mergeRequest) = context.CreateMergeRequest(configureProject: project => project.NamespaceId = group.Id.ToString());
+        var (project, mergeRequest) = context.CreateMergeRequest(configureProject: project => project.NamespaceId = group.Id);
 
         var milestoneClient = context.Client.GetGroupMilestone(group.Id);
         var milestone = CreateMilestone(context, MilestoneScope.Groups, group.Id, "my-super-milestone");
