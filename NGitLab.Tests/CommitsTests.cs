@@ -119,6 +119,54 @@ public class CommitsTests
         Assert.That(latestCommit.Id, Is.EqualTo(cherryPickedCommit.Id));
     }
 
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_can_revert_commit()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+
+        var testBranchName = "revert-test";
+
+        var repositoryClient = context.Client.GetRepository(project.Id);
+        repositoryClient.Branches.Create(new BranchCreate
+        {
+            Name = testBranchName,
+            Ref = project.DefaultBranch,
+        });
+
+        var commitClient = context.Client.GetCommits(project.Id);
+        var testCommit = commitClient.Create(new CommitCreate
+        {
+            Branch = testBranchName,
+            CommitMessage = "This commit will be reverted",
+            Actions =
+            [
+                new()
+                {
+                    Action = "update",
+                    Content = "Testing commit revert",
+                    FilePath = "README.md",
+                },
+            ],
+        });
+
+        var compareResults = repositoryClient.Compare(new CompareQuery(project.DefaultBranch, testBranchName));
+        Assert.That(compareResults.Diff, Has.Length.EqualTo(1));
+
+        // Act
+        var revertedCommit = commitClient.Revert(new CommitRevert
+        {
+            Branch = testBranchName,
+            Sha = testCommit.Id,
+        });
+
+        // Assert
+        compareResults = repositoryClient.Compare(new CompareQuery(project.DefaultBranch, testBranchName));
+        Assert.That(compareResults.Diff, Is.Empty);
+    }
+
     [TestCase(false)]
     [TestCase(true)]
     [NGitLabRetry]

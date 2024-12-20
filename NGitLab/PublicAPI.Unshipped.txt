@@ -132,6 +132,7 @@ NGitLab.ICommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.Mode
 NGitLab.ICommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
 NGitLab.ICommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
 NGitLab.ICommitClient.GetRelatedMergeRequestsAsync(NGitLab.Models.RelatedMergeRequestsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
+NGitLab.ICommitClient.Revert(NGitLab.Models.CommitRevert revert) -> NGitLab.Models.Commit
 NGitLab.ICommitStatusClient
 NGitLab.ICommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
 NGitLab.ICommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
@@ -475,6 +476,7 @@ NGitLab.Impl.CommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.
 NGitLab.Impl.CommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
 NGitLab.Impl.CommitClient.GetRelatedMergeRequestsAsync(NGitLab.Models.RelatedMergeRequestsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
+NGitLab.Impl.CommitClient.Revert(NGitLab.Models.CommitRevert revert) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitStatusClient
 NGitLab.Impl.CommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
 NGitLab.Impl.CommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
@@ -1530,6 +1532,14 @@ NGitLab.Models.CommitRefType
 NGitLab.Models.CommitRefType.All = 0 -> NGitLab.Models.CommitRefType
 NGitLab.Models.CommitRefType.Branch = 1 -> NGitLab.Models.CommitRefType
 NGitLab.Models.CommitRefType.Tag = 2 -> NGitLab.Models.CommitRefType
+NGitLab.Models.CommitRevert
+NGitLab.Models.CommitRevert.Branch.get -> string
+NGitLab.Models.CommitRevert.Branch.set -> void
+NGitLab.Models.CommitRevert.CommitRevert() -> void
+NGitLab.Models.CommitRevert.DryRun.get -> bool?
+NGitLab.Models.CommitRevert.DryRun.set -> void
+NGitLab.Models.CommitRevert.Sha.get -> NGitLab.Sha1
+NGitLab.Models.CommitRevert.Sha.set -> void
 NGitLab.Models.CommitStats
 NGitLab.Models.CommitStats.Additions.get -> int
 NGitLab.Models.CommitStats.Additions.set -> void
