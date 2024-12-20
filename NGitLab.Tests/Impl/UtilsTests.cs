@@ -6,7 +6,7 @@ namespace NGitLab.Tests.Impl;
 public class UtilsTests
 {
     [TestCase(EventAction.PushedTo, "pushed+to")]
-    [TestCase(EventAction.Accepted, "Accepted")]
+    [TestCase(EventAction.Accepted, "accepted")]
     public void AddParameter_ConsidersEnumMemberAttribute(EventAction value, string expectedQueryParamValue)
     {
         const string basePath = "https://gitlab.org/api/v4/stuff";

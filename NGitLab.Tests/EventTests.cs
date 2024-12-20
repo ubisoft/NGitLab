@@ -72,10 +72,13 @@ public class EventTests
         var userEventClient = context.Client.GetUserEvents(currentUserId);
 
         // Act
-        var closedEvents = userEventClient.Get(new EventQuery { Action = EventAction.Closed });
-        var issueClosedEvent = closedEvents.SingleOrDefault(e => string.Equals(e.TargetTitle, issueTitle));
+        var closedEvents = userEventClient.Get(new EventQuery { Action = EventAction.Closed }).ToArray();
 
         // Assert
+        Assert.That(closedEvents.All(e => e.Action.EnumValue is EventAction.Closed), Is.True);
+
+        var issueClosedEvent = closedEvents.SingleOrDefault(e => string.Equals(e.TargetTitle, issueTitle, StringComparison.Ordinal));
         Assert.That(issueClosedEvent, Is.Not.Null);
+        Assert.That(issueClosedEvent.TargetType.EnumValue, Is.EqualTo(EventTargetType.Issue));
     }
 }
