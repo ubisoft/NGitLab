@@ -132,6 +132,7 @@ NGitLab.ICommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.Mode
 NGitLab.ICommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
 NGitLab.ICommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
 NGitLab.ICommitClient.GetRelatedMergeRequestsAsync(NGitLab.Models.RelatedMergeRequestsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
+NGitLab.ICommitClient.Revert(NGitLab.Models.CommitRevert revert) -> NGitLab.Models.Commit
 NGitLab.ICommitStatusClient
 NGitLab.ICommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
 NGitLab.ICommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
@@ -475,6 +476,7 @@ NGitLab.Impl.CommitClient.Create(NGitLab.Models.CommitCreate commit) -> NGitLab.
 NGitLab.Impl.CommitClient.GetCommit(string ref) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitClient.GetJobStatus(string branchName) -> NGitLab.JobStatus
 NGitLab.Impl.CommitClient.GetRelatedMergeRequestsAsync(NGitLab.Models.RelatedMergeRequestsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequest>
+NGitLab.Impl.CommitClient.Revert(NGitLab.Models.CommitRevert revert) -> NGitLab.Models.Commit
 NGitLab.Impl.CommitStatusClient
 NGitLab.Impl.CommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
 NGitLab.Impl.CommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
@@ -1530,6 +1532,14 @@ NGitLab.Models.CommitRefType
 NGitLab.Models.CommitRefType.All = 0 -> NGitLab.Models.CommitRefType
 NGitLab.Models.CommitRefType.Branch = 1 -> NGitLab.Models.CommitRefType
 NGitLab.Models.CommitRefType.Tag = 2 -> NGitLab.Models.CommitRefType
+NGitLab.Models.CommitRevert
+NGitLab.Models.CommitRevert.Branch.get -> string
+NGitLab.Models.CommitRevert.Branch.set -> void
+NGitLab.Models.CommitRevert.CommitRevert() -> void
+NGitLab.Models.CommitRevert.DryRun.get -> bool?
+NGitLab.Models.CommitRevert.DryRun.set -> void
+NGitLab.Models.CommitRevert.Sha.get -> NGitLab.Sha1
+NGitLab.Models.CommitRevert.Sha.set -> void
 NGitLab.Models.CommitStats
 NGitLab.Models.CommitStats.Additions.get -> int
 NGitLab.Models.CommitStats.Additions.set -> void
@@ -2291,6 +2301,8 @@ NGitLab.Models.IssueCreate.ProjectId.get -> long
 NGitLab.Models.IssueCreate.ProjectId.set -> void
 NGitLab.Models.IssueCreate.Title.get -> string
 NGitLab.Models.IssueCreate.Title.set -> void
+NGitLab.Models.IssueCreate.Weight.get -> int?
+NGitLab.Models.IssueCreate.Weight.set -> void
 NGitLab.Models.IssueEdit
 NGitLab.Models.IssueEdit.AssigneeId.get -> long?
 NGitLab.Models.IssueEdit.AssigneeId.set -> void
@@ -2315,6 +2327,8 @@ NGitLab.Models.IssueEdit.State.get -> string
 NGitLab.Models.IssueEdit.State.set -> void
 NGitLab.Models.IssueEdit.Title.get -> string
 NGitLab.Models.IssueEdit.Title.set -> void
+NGitLab.Models.IssueEdit.Weight.get -> int?
+NGitLab.Models.IssueEdit.Weight.set -> void
 NGitLab.Models.IssueEpic
 NGitLab.Models.IssueEpic.EpicId.get -> long
 NGitLab.Models.IssueEpic.EpicId.set -> void
@@ -3734,6 +3748,8 @@ NGitLab.Models.ProjectUpdate.GroupRunnersEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.GroupRunnersEnabled.set -> void
 NGitLab.Models.ProjectUpdate.IssuesAccessLeve.get -> string
 NGitLab.Models.ProjectUpdate.IssuesAccessLeve.set -> void
+NGitLab.Models.ProjectUpdate.IssuesAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.IssuesAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.IssuesEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.IssuesEnabled.set -> void
 NGitLab.Models.ProjectUpdate.JobsEnabled.get -> bool?
@@ -3763,6 +3779,8 @@ NGitLab.Models.ProjectUpdate.PublicBuilds.get -> bool?
 NGitLab.Models.ProjectUpdate.PublicBuilds.set -> void
 NGitLab.Models.ProjectUpdate.RemoveSourceBranchAfterMerge.get -> bool?
 NGitLab.Models.ProjectUpdate.RemoveSourceBranchAfterMerge.set -> void
+NGitLab.Models.ProjectUpdate.RepositoryAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.RepositoryAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.RequestAccessEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.RequestAccessEnabled.set -> void
 NGitLab.Models.ProjectUpdate.ResolveOutdatedDiffDiscussions.get -> bool?

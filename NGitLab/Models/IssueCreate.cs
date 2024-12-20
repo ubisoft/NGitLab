@@ -38,4 +38,7 @@ public class IssueCreate
 
     [JsonPropertyName("epic_id")]
     public long? EpicId { get; set; }
+
+    [JsonPropertyName("weight")]
+    public int? Weight { get; set; }
 }

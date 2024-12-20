@@ -22,8 +22,12 @@ public sealed class ProjectUpdate
     [Obsolete("Deprecated by GitLab. Use IssuesAccessLevel instead")]
     public bool? IssuesEnabled { get; set; }
 
+    [JsonIgnore]
+    [Obsolete("Use IssuesAccessLevel instead")]
+    public string IssuesAccessLeve { get => IssuesAccessLevel; set => IssuesAccessLevel = value; }
+
     [JsonPropertyName("issues_access_level")]
-    public string IssuesAccessLeve { get; set; }
+    public string IssuesAccessLevel { get; set; }
 
     [JsonPropertyName("merge_pipelines_enabled")]
     public bool MergePipelinesEnabled { get; set; }
@@ -91,6 +95,9 @@ public sealed class ProjectUpdate
 
     [JsonPropertyName("request_access_enabled")]
     public bool? RequestAccessEnabled { get; set; }
+
+    [JsonPropertyName("repository_access_level")]
+    public string RepositoryAccessLevel { get; set; }
 
     [JsonPropertyName("packages_enabled")]
     public bool? PackagesEnabled { get; set; }

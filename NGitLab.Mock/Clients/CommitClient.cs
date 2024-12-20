@@ -67,4 +67,9 @@ internal sealed class CommitClient : ClientBase, ICommitClient
             return GitLabCollectionResponse.Create(relatedMerqueRequests);
         }
     }
+
+    public Commit Revert(CommitRevert revert)
+    {
+        throw new NotImplementedException();
+    }
 }

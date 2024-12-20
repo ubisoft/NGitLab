@@ -28,6 +28,11 @@ public interface ICommitClient
     Commit CherryPick(CommitCherryPick cherryPick);
 
     /// <summary>
+    /// Reverts a specific branch commit
+    /// </summary>
+    Commit Revert(CommitRevert revert);
+
+    /// <summary>
     /// Get merge requests related to a commit
     /// </summary>
     GitLabCollectionResponse<MergeRequest> GetRelatedMergeRequestsAsync(RelatedMergeRequestsQuery query);

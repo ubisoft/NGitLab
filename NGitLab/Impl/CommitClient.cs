@@ -55,4 +55,9 @@ public class CommitClient : ICommitClient
     {
         return _api.Get().GetAllAsync<MergeRequest>(_repoPath + $"/commits/{query.Sha}/merge_requests");
     }
+
+    public Commit Revert(CommitRevert revert)
+    {
+        return _api.Post().With(revert).To<Commit>($"{_repoPath}/commits/{revert.Sha}/revert");
+    }
 }
