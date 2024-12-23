@@ -76,4 +76,7 @@ public class Issue
 
     [JsonPropertyName("references")]
     public References References { get; set; }
+
+    [JsonPropertyName("user_notes_count")]
+    public int UserNotesCount { get; set; }
 }

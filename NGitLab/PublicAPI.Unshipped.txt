@@ -2269,6 +2269,8 @@ NGitLab.Models.Issue.Title.get -> string
 NGitLab.Models.Issue.Title.set -> void
 NGitLab.Models.Issue.UpdatedAt.get -> System.DateTime
 NGitLab.Models.Issue.UpdatedAt.set -> void
+NGitLab.Models.Issue.UserNotesCount.get -> int
+NGitLab.Models.Issue.UserNotesCount.set -> void
 NGitLab.Models.Issue.WebUrl.get -> string
 NGitLab.Models.Issue.WebUrl.set -> void
 NGitLab.Models.Issue.Weight.get -> int?
