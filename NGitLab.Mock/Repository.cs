@@ -552,6 +552,11 @@ public sealed class Repository : GitLabObject, IDisposable
 
         if (tree is null)
         {
+            // As confirmed by the GetAllTreeObjectsAtInvalidPath() test, GitLab's behavior for
+            // GetTree() when Path doesn't exist is to return an empty collection.
+            if (!string.IsNullOrWhiteSpace(repositoryGetTreeOptions.Path))
+                return [];
+
             throw new GitLabNotFoundException();
         }
 
