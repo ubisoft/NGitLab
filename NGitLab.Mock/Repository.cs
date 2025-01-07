@@ -552,6 +552,9 @@ public sealed class Repository : GitLabObject, IDisposable
 
         if (tree is null)
         {
+            if (!string.IsNullOrWhiteSpace(repositoryGetTreeOptions.Path))
+                return[];
+
             throw new GitLabNotFoundException();
         }
 
