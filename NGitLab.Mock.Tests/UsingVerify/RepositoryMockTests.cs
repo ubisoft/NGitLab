@@ -1,12 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using NGitLab.Mock.Clients;
 using NGitLab.Mock.Config;
 using NUnit.Framework;
 using static VerifyNUnit.Verifier;
 using RepositoryGetTreeOptions = NGitLab.Models.RepositoryGetTreeOptions;
-using Throws = NUnit.Framework.Throws;
 
 namespace NGitLab.Mock.Tests.UsingVerify;
 
@@ -26,10 +24,10 @@ public class RepositoryMockTests
         var repository = client.GetRepository(1);
 
         // Act
-        var handler = () => repository.GetTreeAsync(new RepositoryGetTreeOptions { Path = "non-existing-directory" });
+        var tree = repository.GetTreeAsync(new RepositoryGetTreeOptions { Path = "non-existing-directory" });
 
         // Assert
-        Assert.That(handler, Throws.InstanceOf<GitLabNotFoundException>());
+        Assert.That(tree, Is.Empty);
     }
 
     [Test]
