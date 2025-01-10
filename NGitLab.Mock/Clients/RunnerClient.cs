@@ -211,7 +211,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
             var project = Server.AllProjects.SingleOrDefault(p => string.Equals(p.RunnersToken, request.Token, StringComparison.Ordinal));
             if (project != null)
             {
-                var runner = project.AddRunner(null, request.Description, request.IsActive() ?? true, request.Locked ?? true, false, request.RunUntagged ?? false);
+                var runner = project.AddRunner(null, request.Description, request.Paused ?? false, request.Locked ?? true, false, request.RunUntagged ?? false);
                 return runner.ToClientRunner(Context.User);
             }
 

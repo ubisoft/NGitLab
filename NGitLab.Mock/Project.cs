@@ -390,14 +390,14 @@ public sealed class Project : GitLabObject
         return runner;
     }
 
-    public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared)
+    public Runner AddRunner(string name, string description, bool paused, bool locked, bool isShared)
     {
-        return AddRunner(name, description, active, locked, isShared, runUntagged: false, default);
+        return AddRunner(name, description, paused, locked, isShared, runUntagged: false, default);
     }
 
-    public Runner AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged)
+    public Runner AddRunner(string name, string description, bool paused, bool locked, bool isShared, bool runUntagged)
     {
-        return AddRunner(name, description, active, locked, isShared, runUntagged, default);
+        return AddRunner(name, description, paused, locked, isShared, runUntagged, default);
     }
 
     public Project Fork(User user)

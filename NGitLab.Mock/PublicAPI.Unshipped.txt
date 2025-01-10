@@ -870,8 +870,8 @@ NGitLab.Mock.PipelineScheduleCollection.PipelineScheduleCollection(NGitLab.Mock.
 NGitLab.Mock.Project
 NGitLab.Mock.Project.AccessibleMergeRequests.get -> bool
 NGitLab.Mock.Project.AccessibleMergeRequests.set -> void
-NGitLab.Mock.Project.AddRunner(string name, string description, bool active, bool locked, bool isShared) -> NGitLab.Mock.Runner
-NGitLab.Mock.Project.AddRunner(string name, string description, bool active, bool locked, bool isShared, bool runUntagged) -> NGitLab.Mock.Runner
+NGitLab.Mock.Project.AddRunner(string name, string description, bool paused, bool locked, bool isShared) -> NGitLab.Mock.Runner
+NGitLab.Mock.Project.AddRunner(string name, string description, bool paused, bool locked, bool isShared, bool runUntagged) -> NGitLab.Mock.Runner
 NGitLab.Mock.Project.AddRunner(string name, string description, bool paused, bool locked, bool isShared, bool runUntagged, long id) -> NGitLab.Mock.Runner
 NGitLab.Mock.Project.AllThreadsMustBeResolvedToMerge.get -> bool
 NGitLab.Mock.Project.AllThreadsMustBeResolvedToMerge.set -> void
