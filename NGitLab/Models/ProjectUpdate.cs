@@ -111,4 +111,43 @@ public sealed class ProjectUpdate
 
     [JsonPropertyName("topics")]
     public List<string> Topics { get; set; }
+
+    [JsonPropertyName("analytics_access_level")]
+    public RepositoryAccessLevel? AnalyticsAccessLevel { get; set; }
+
+    [JsonPropertyName("environments_access_level")]
+    public RepositoryAccessLevel? EnvironmentsAccessLevel { get; set; }
+
+    [JsonPropertyName("feature_flags_access_level")]
+    public RepositoryAccessLevel? FeatureFlagsAccessLevel { get; set; }
+
+    [JsonPropertyName("forking_access_level")]
+    public RepositoryAccessLevel? ForkingAccessLevel { get; set; }
+
+    [JsonPropertyName("infrastructure_access_level")]
+    public RepositoryAccessLevel? InfrastructureAccessLevel { get; set; }
+
+    [JsonPropertyName("model_experiments_access_level")]
+    public RepositoryAccessLevel? ModelExperimentsAccessLevel { get; set; }
+
+    [JsonPropertyName("model_registry_access_level")]
+    public RepositoryAccessLevel? ModelRegistryAccessLevel { get; set; }
+
+    [JsonPropertyName("monitor_access_level")]
+    public RepositoryAccessLevel? MonitorAccessLevel { get; set; }
+
+    [JsonPropertyName("pages_access_level")]
+    public RepositoryAccessLevel? PagesAccessLevel { get; set; }
+
+    [JsonPropertyName("requirements_access_level")]
+    public RepositoryAccessLevel? RequirementsAccessLevel { get; set; }
+
+    [JsonPropertyName("operations_access_level")]
+    public RepositoryAccessLevel? OperationsAccessLevel { get; set; }
+
+    [JsonPropertyName("security_and_compliance_access_level")]
+    public RepositoryAccessLevel? SecurityAndComplianceAccessLevel { get; set; }
+
+    [JsonPropertyName("service_desk_enabled")]
+    public bool? ServiceDeskEnabled { get; set; }
 }
