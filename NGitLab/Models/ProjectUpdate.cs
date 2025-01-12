@@ -149,5 +149,5 @@ public sealed class ProjectUpdate
     public string SecurityAndComplianceAccessLevel { get; set; }
 
     [JsonPropertyName("service_desk_enabled")]
-    public bool ServiceDeskEnabled { get; set; }
+    public bool? ServiceDeskEnabled { get; set; }
 }

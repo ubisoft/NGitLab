@@ -3817,6 +3817,7 @@ NGitLab.Models.ProjectUpdate.RequestAccessEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.RequestAccessEnabled.set -> void
 NGitLab.Models.ProjectUpdate.ResolveOutdatedDiffDiscussions.get -> bool?
 NGitLab.Models.ProjectUpdate.ResolveOutdatedDiffDiscussions.set -> void
+NGitLab.Models.ProjectUpdate.ServiceDeskEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.SharedRunnersEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.SharedRunnersEnabled.set -> void
 NGitLab.Models.ProjectUpdate.SnippetsAccessLevel.get -> string
@@ -3853,7 +3854,6 @@ NGitLab.Models.ProjectUpdate.OperationsAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.OperationsAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.SecurityAndComplianceAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.SecurityAndComplianceAccessLevel.set -> void
-NGitLab.Models.ProjectUpdate.ServiceDeskEnabled.get -> bool
 NGitLab.Models.ProjectUpdate.ServiceDeskEnabled.set -> void
 NGitLab.Models.ProtectedBranch
 NGitLab.Models.ProtectedBranch.AllowForcePush.get -> bool
