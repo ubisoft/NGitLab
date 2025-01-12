@@ -3326,6 +3326,8 @@ NGitLab.Models.PositionType
 NGitLab.Models.PositionType.Image = 1 -> NGitLab.Models.PositionType
 NGitLab.Models.PositionType.Text = 0 -> NGitLab.Models.PositionType
 NGitLab.Models.Project
+NGitLab.Models.Project.AnalyticsAccessLevel.get -> string
+NGitLab.Models.Project.AnalyticsAccessLevel.set -> void
 NGitLab.Models.Project.ApprovalsBeforeMerge.get -> int
 NGitLab.Models.Project.ApprovalsBeforeMerge.set -> void
 NGitLab.Models.Project.Archived.get -> bool
@@ -3412,6 +3414,8 @@ NGitLab.Models.Project.OpenIssuesCount.get -> int
 NGitLab.Models.Project.OpenIssuesCount.set -> void
 NGitLab.Models.Project.Owner.get -> NGitLab.Models.User
 NGitLab.Models.Project.Owner.set -> void
+NGitLab.Models.Project.PackagesEnabled.get -> bool
+NGitLab.Models.Project.PackagesEnabled.set -> void
 NGitLab.Models.Project.Path.get -> string
 NGitLab.Models.Project.Path.set -> void
 NGitLab.Models.Project.PathWithNamespace.get -> string
@@ -3465,6 +3469,28 @@ NGitLab.Models.Project.WikiAccessLevel.get -> string
 NGitLab.Models.Project.WikiAccessLevel.set -> void
 NGitLab.Models.Project.WikiEnabled.get -> bool
 NGitLab.Models.Project.WikiEnabled.set -> void
+NGitLab.Models.Project.EnvironmentsAccessLevel.get -> string
+NGitLab.Models.Project.EnvironmentsAccessLevel.set -> void
+NGitLab.Models.Project.FeatureFlagsAccessLevel.get -> string
+NGitLab.Models.Project.FeatureFlagsAccessLevel.set -> void
+NGitLab.Models.Project.InfrastructureAccessLevel.get -> string
+NGitLab.Models.Project.InfrastructureAccessLevel.set -> void
+NGitLab.Models.Project.ModelExperimentsAccessLevel.get -> string
+NGitLab.Models.Project.ModelExperimentsAccessLevel.set -> void
+NGitLab.Models.Project.ModelRegistryAccessLevel.get -> string
+NGitLab.Models.Project.ModelRegistryAccessLevel.set -> void
+NGitLab.Models.Project.MonitorAccessLevel.get -> string
+NGitLab.Models.Project.MonitorAccessLevel.set -> void
+NGitLab.Models.Project.PagesAccessLevel.get -> string
+NGitLab.Models.Project.PagesAccessLevel.set -> void
+NGitLab.Models.Project.RequirementsAccessLevel.get -> string
+NGitLab.Models.Project.RequirementsAccessLevel.set -> void
+NGitLab.Models.Project.OperationsAccessLevel.get -> string
+NGitLab.Models.Project.OperationsAccessLevel.set -> void
+NGitLab.Models.Project.SecurityAndComplianceAccessLevel.get -> string
+NGitLab.Models.Project.SecurityAndComplianceAccessLevel.set -> void
+NGitLab.Models.Project.ServiceDeskEnabled.get -> bool
+NGitLab.Models.Project.ServiceDeskEnabled.set -> void
 NGitLab.Models.ProjectCreate
 NGitLab.Models.ProjectCreate.BuildTimeout.get -> int?
 NGitLab.Models.ProjectCreate.BuildTimeout.set -> void
@@ -3736,6 +3762,8 @@ NGitLab.Models.ProjectStatistics.RepositorySize.set -> void
 NGitLab.Models.ProjectStatistics.StorageSize.get -> long
 NGitLab.Models.ProjectStatistics.StorageSize.set -> void
 NGitLab.Models.ProjectUpdate
+NGitLab.Models.ProjectUpdate.AnalyticsAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.AnalyticsAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.BuildsAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.BuildsAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.BuildTimeout.get -> int?
@@ -3746,6 +3774,8 @@ NGitLab.Models.ProjectUpdate.DefaultBranch.get -> string
 NGitLab.Models.ProjectUpdate.DefaultBranch.set -> void
 NGitLab.Models.ProjectUpdate.Description.get -> string
 NGitLab.Models.ProjectUpdate.Description.set -> void
+NGitLab.Models.ProjectUpdate.ForkingAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.ForkingAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.GroupRunnersEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.GroupRunnersEnabled.set -> void
 NGitLab.Models.ProjectUpdate.IssuesAccessLeve.get -> string
@@ -3803,6 +3833,28 @@ NGitLab.Models.ProjectUpdate.WikiAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.WikiAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.WikiEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.WikiEnabled.set -> void
+NGitLab.Models.ProjectUpdate.EnvironmentsAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.EnvironmentsAccessLevel.set -> void
+NGitLab.Models.ProjectUpdate.FeatureFlagsAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.FeatureFlagsAccessLevel.set -> void
+NGitLab.Models.ProjectUpdate.InfrastructureAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.InfrastructureAccessLevel.set -> void
+NGitLab.Models.ProjectUpdate.ModelExperimentsAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.ModelExperimentsAccessLevel.set -> void
+NGitLab.Models.ProjectUpdate.ModelRegistryAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.ModelRegistryAccessLevel.set -> void
+NGitLab.Models.ProjectUpdate.MonitorAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.MonitorAccessLevel.set -> void
+NGitLab.Models.ProjectUpdate.PagesAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.PagesAccessLevel.set -> void
+NGitLab.Models.ProjectUpdate.RequirementsAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.RequirementsAccessLevel.set -> void
+NGitLab.Models.ProjectUpdate.OperationsAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.OperationsAccessLevel.set -> void
+NGitLab.Models.ProjectUpdate.SecurityAndComplianceAccessLevel.get -> string
+NGitLab.Models.ProjectUpdate.SecurityAndComplianceAccessLevel.set -> void
+NGitLab.Models.ProjectUpdate.ServiceDeskEnabled.get -> bool
+NGitLab.Models.ProjectUpdate.ServiceDeskEnabled.set -> void
 NGitLab.Models.ProtectedBranch
 NGitLab.Models.ProtectedBranch.AllowForcePush.get -> bool
 NGitLab.Models.ProtectedBranch.AllowForcePush.set -> void
