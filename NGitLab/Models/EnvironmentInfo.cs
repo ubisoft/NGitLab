@@ -24,5 +24,5 @@ public class EnvironmentInfo
     public EnvironmentLastDeployment LastDeployment { get; set; }
 
     [JsonPropertyName("auto_stop_at")]
-    public DateTime AutoStopAt { get; set;  }
+    public DateTime? AutoStopAt { get; set;  }
 }
