@@ -85,6 +85,9 @@ public class Project
     [JsonPropertyName("repository_access_level")]
     public RepositoryAccessLevel RepositoryAccessLevel { get; set; }
 
+    [JsonPropertyName("packages_enabled")]
+    public bool PackagesEnabled { get; set; }
+
     [JsonPropertyName("merge_method")]
     public string MergeMethod { get; set; }
 
@@ -224,4 +227,40 @@ public class Project
 
     [JsonPropertyName("mr_default_target_self")]
     public bool? MrDefaultTargetSelf { get; set; }
+
+    [JsonPropertyName("analytics_access_level")]
+    public string AnalyticsAccessLevel { get; set; }
+
+    [JsonPropertyName("environments_access_level")]
+    public string EnvironmentsAccessLevel { get; set; }
+
+    [JsonPropertyName("feature_flags_access_level")]
+    public string FeatureFlagsAccessLevel { get; set; }
+
+    [JsonPropertyName("infrastructure_access_level")]
+    public string InfrastructureAccessLevel { get; set; }
+
+    [JsonPropertyName("model_experiments_access_level")]
+    public string ModelExperimentsAccessLevel { get; set; }
+
+    [JsonPropertyName("model_registry_access_level")]
+    public string ModelRegistryAccessLevel { get; set; }
+
+    [JsonPropertyName("monitor_access_level")]
+    public string MonitorAccessLevel { get; set; }
+
+    [JsonPropertyName("pages_access_level")]
+    public string PagesAccessLevel { get; set; }
+
+    [JsonPropertyName("requirements_access_level")]
+    public string RequirementsAccessLevel { get; set; }
+
+    [JsonPropertyName("operations_access_level")]
+    public string OperationsAccessLevel { get; set; }
+
+    [JsonPropertyName("security_and_compliance_access_level")]
+    public string SecurityAndComplianceAccessLevel { get; set; }
+
+    [JsonPropertyName("service_desk_enabled")]
+    public bool ServiceDeskEnabled { get; set; }
 }
