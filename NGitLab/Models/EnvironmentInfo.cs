@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
@@ -21,4 +22,7 @@ public class EnvironmentInfo
 
     [JsonPropertyName("last_deployment")]
     public EnvironmentLastDeployment LastDeployment { get; set; }
+
+    [JsonPropertyName("auto_stop_at")]
+    public DateTime? AutoStopAt { get; set;  }
 }

@@ -1710,6 +1710,8 @@ NGitLab.Models.DiffRefs.HeadSha.set -> void
 NGitLab.Models.DiffRefs.StartSha.get -> string
 NGitLab.Models.DiffRefs.StartSha.set -> void
 NGitLab.Models.EnvironmentInfo
+NGitLab.Models.EnvironmentInfo.AutoStopAt.get -> System.DateTime?
+NGitLab.Models.EnvironmentInfo.AutoStopAt.set -> void
 NGitLab.Models.EnvironmentInfo.EnvironmentInfo() -> void
 NGitLab.Models.EnvironmentInfo.ExternalUrl.get -> string
 NGitLab.Models.EnvironmentInfo.ExternalUrl.set -> void
