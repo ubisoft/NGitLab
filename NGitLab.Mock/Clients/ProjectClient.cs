@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Impl;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
@@ -289,6 +290,12 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         }
     }
 
+    public Task<ProjectMergeRequestTemplate> GetProjectMergeRequestTemplateAsync(ProjectId projectId, string name,
+        CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public Dictionary<string, double> GetLanguages(string id)
     {
         // Basic implementation, the results are not expected to be accurrate
@@ -410,6 +417,11 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
     }
 
     public GitLabCollectionResponse<Models.Group> GetGroupsAsync(ProjectId projectId, ProjectGroupsQuery query)
+    {
+        throw new NotImplementedException();
+    }
+
+    public GitLabCollectionResponse<ProjectTemplate> GetProjectTemplatesAsync(ProjectId projectId, DynamicEnum<ProjectTemplateType> projectTemplateType)
     {
         throw new NotImplementedException();
     }

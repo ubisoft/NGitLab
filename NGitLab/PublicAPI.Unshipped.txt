@@ -1029,6 +1029,8 @@ NGitLab.IProjectClient.GetForks(string id, NGitLab.Models.ForkedProjectQuery que
 NGitLab.IProjectClient.GetForksAsync(string id, NGitLab.Models.ForkedProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.IProjectClient.GetGroupsAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectGroupsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.IProjectClient.GetLanguages(string id) -> System.Collections.Generic.Dictionary<string, double>
+NGitLab.IProjectClient.GetProjectMergeRequestTemplateAsync(NGitLab.Models.ProjectId projectId, string name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.ProjectMergeRequestTemplate>
+NGitLab.IProjectClient.GetProjectTemplatesAsync(NGitLab.Models.ProjectId projectId, NGitLab.DynamicEnum<NGitLab.Impl.ProjectTemplateType> projectTemplateType) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ProjectTemplate>
 NGitLab.IProjectClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IProjectClient.this[long id].get -> NGitLab.Models.Project
 NGitLab.IProjectClient.this[string fullName].get -> NGitLab.Models.Project
