@@ -813,6 +813,8 @@ NGitLab.Impl.ProjectClient.GetForks(string id, NGitLab.Models.ForkedProjectQuery
 NGitLab.Impl.ProjectClient.GetForksAsync(string id, NGitLab.Models.ForkedProjectQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.GetGroupsAsync(NGitLab.Models.ProjectId id, NGitLab.Models.ProjectGroupsQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Group>
 NGitLab.Impl.ProjectClient.GetLanguages(string id) -> System.Collections.Generic.Dictionary<string, double>
+NGitLab.Impl.ProjectClient.GetProjectMergeRequestTemplateAsync(NGitLab.Models.ProjectId projectId, string name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.ProjectMergeRequestTemplate>
+NGitLab.Impl.ProjectClient.GetProjectTemplatesAsync(NGitLab.Models.ProjectId projectId, NGitLab.DynamicEnum<NGitLab.Impl.ProjectTemplateType> projectTemplateType) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ProjectTemplate>
 NGitLab.Impl.ProjectClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.Impl.ProjectClient.ProjectClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.ProjectClient.this[long id].get -> NGitLab.Models.Project
@@ -841,6 +843,13 @@ NGitLab.Impl.ProjectLevelApprovalRulesClient.DeleteProjectLevelRule(long approva
 NGitLab.Impl.ProjectLevelApprovalRulesClient.GetProjectLevelApprovalRules() -> System.Collections.Generic.List<NGitLab.Models.ApprovalRule>
 NGitLab.Impl.ProjectLevelApprovalRulesClient.ProjectLevelApprovalRulesClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.ProjectLevelApprovalRulesClient.UpdateProjectLevelApprovalRule(long approvalRuleIdToUpdate, NGitLab.Models.ApprovalRuleUpdate approvalRuleUpdate) -> NGitLab.Models.ApprovalRule
+NGitLab.Impl.ProjectTemplateType
+NGitLab.Impl.ProjectTemplateType.Dockerfiles = 0 -> NGitLab.Impl.ProjectTemplateType
+NGitLab.Impl.ProjectTemplateType.Gitignores = 1 -> NGitLab.Impl.ProjectTemplateType
+NGitLab.Impl.ProjectTemplateType.GitlabCiYmls = 2 -> NGitLab.Impl.ProjectTemplateType
+NGitLab.Impl.ProjectTemplateType.Issues = 4 -> NGitLab.Impl.ProjectTemplateType
+NGitLab.Impl.ProjectTemplateType.Licenses = 3 -> NGitLab.Impl.ProjectTemplateType
+NGitLab.Impl.ProjectTemplateType.MergeRequests = 5 -> NGitLab.Impl.ProjectTemplateType
 NGitLab.Impl.ProtectedTagClient
 NGitLab.Impl.ProtectedTagClient.GetProtectedTag(string name) -> NGitLab.Models.ProtectedTag
 NGitLab.Impl.ProtectedTagClient.GetProtectedTagAsync(string name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.ProtectedTag>
@@ -3682,6 +3691,12 @@ NGitLab.Models.ProjectMemberUpdate.ExpiresAt.set -> void
 NGitLab.Models.ProjectMemberUpdate.ProjectMemberUpdate() -> void
 NGitLab.Models.ProjectMemberUpdate.UserId.get -> string
 NGitLab.Models.ProjectMemberUpdate.UserId.set -> void
+NGitLab.Models.ProjectMergeRequestTemplate
+NGitLab.Models.ProjectMergeRequestTemplate.Content.get -> string
+NGitLab.Models.ProjectMergeRequestTemplate.Content.set -> void
+NGitLab.Models.ProjectMergeRequestTemplate.Name.get -> string
+NGitLab.Models.ProjectMergeRequestTemplate.Name.set -> void
+NGitLab.Models.ProjectMergeRequestTemplate.ProjectMergeRequestTemplate() -> void
 NGitLab.Models.ProjectPermission
 NGitLab.Models.ProjectPermission.AccessLevel.get -> NGitLab.Models.AccessLevel
 NGitLab.Models.ProjectPermission.AccessLevel.set -> void
@@ -3737,6 +3752,12 @@ NGitLab.Models.ProjectStatistics.RepositorySize.get -> long
 NGitLab.Models.ProjectStatistics.RepositorySize.set -> void
 NGitLab.Models.ProjectStatistics.StorageSize.get -> long
 NGitLab.Models.ProjectStatistics.StorageSize.set -> void
+NGitLab.Models.ProjectTemplate
+NGitLab.Models.ProjectTemplate.Key.get -> string
+NGitLab.Models.ProjectTemplate.Key.set -> void
+NGitLab.Models.ProjectTemplate.Name.get -> string
+NGitLab.Models.ProjectTemplate.Name.set -> void
+NGitLab.Models.ProjectTemplate.ProjectTemplate() -> void
 NGitLab.Models.ProjectUpdate
 NGitLab.Models.ProjectUpdate.BuildsAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.BuildsAccessLevel.set -> void
