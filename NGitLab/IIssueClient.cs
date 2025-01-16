@@ -190,7 +190,7 @@ public interface IIssueClient
     IEnumerable<Participant> GetParticipants(ProjectId projectId, long issueIid);
 
     /// <summary>
-    /// Subscribes to the issue.
+    /// Subscribes the authenticated user to an issue to receive notifications.
     /// </summary>
     /// <param name="projectId">The project id</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
@@ -198,7 +198,7 @@ public interface IIssueClient
     Issue Subscribe(ProjectId projectId, long issueIid);
 
     /// <summary>
-    /// Unsubscribes from the issue.
+    /// Unsubscribes the authenticated user from the issue to not receive notifications from it.
     /// </summary>
     /// <param name="projectId">The project id</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
