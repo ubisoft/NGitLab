@@ -24,6 +24,7 @@ public class IssueClient : IIssueClient
     private const string TimeStatsUrl = "/projects/{0}/issues/{1}/time_stats";
     private const string CloneIssueUrl = "/projects/{0}/issues/{1}/clone";
     private const string ParticipantsUrl = "/projects/{0}/issues/{1}/participants";
+    private const string SubscribeUrl = "/projects/{0}/issues/{1}/subscribe";
     private const string UnsubscribeUrl = "/projects/{0}/issues/{1}/unsubscribe";
 
     private readonly API _api;
@@ -197,6 +198,11 @@ public class IssueClient : IIssueClient
     public IEnumerable<Participant> GetParticipants(ProjectId projectId, long issueIid)
     {
         return _api.Get().GetAll<Participant>(string.Format(CultureInfo.InvariantCulture, ParticipantsUrl, projectId.ValueAsUriParameter(), issueIid));
+    }
+
+    public Issue Subscribe(ProjectId projectId, long issueIid)
+    {
+        return _api.Post().To<Issue>(string.Format(CultureInfo.InvariantCulture, SubscribeUrl, projectId.ValueAsUriParameter(), issueIid));
     }
 
     public Issue Unsubscribe(ProjectId projectId, long issueIid)
