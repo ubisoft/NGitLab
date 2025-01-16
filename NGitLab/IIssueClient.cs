@@ -70,7 +70,7 @@ public interface IIssueClient
     Task<Issue> GetByIdAsync(long issueId, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Add an issue with he proposed title to the GitLab list for the selected project id.
+    /// Add an issue with the proposed title to the GitLab list for the selected project id.
     /// </summary>
     /// <param name="issueCreate"></param>
     /// <returns>The issue if it was created.  Null if not.</returns>
