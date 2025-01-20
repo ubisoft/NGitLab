@@ -421,7 +421,7 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         throw new NotImplementedException();
     }
 
-    public GitLabCollectionResponse<ProjectTemplate> GetProjectTemplatesAsync(ProjectId projectId, DynamicEnum<ProjectTemplateType> projectTemplateType)
+    public GitLabCollectionResponse<ProjectTemplate> GetProjectTemplatesAsync(ProjectId projectId, ProjectTemplateType projectTemplateType)
     {
         throw new NotImplementedException();
     }

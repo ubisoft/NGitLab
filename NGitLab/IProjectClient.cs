@@ -85,7 +85,7 @@ public interface IProjectClient
     /// <returns>All ancestor groups.</returns>
     GitLabCollectionResponse<Group> GetGroupsAsync(ProjectId projectId, ProjectGroupsQuery query);
 
-    GitLabCollectionResponse<ProjectTemplate> GetProjectTemplatesAsync(ProjectId projectId, DynamicEnum<ProjectTemplateType> projectTemplateType);
+    GitLabCollectionResponse<ProjectTemplate> GetProjectTemplatesAsync(ProjectId projectId, ProjectTemplateType projectTemplateType);
 
     Task<ProjectMergeRequestTemplate> GetProjectMergeRequestTemplateAsync(ProjectId projectId, string name, CancellationToken cancellationToken = default);
 
