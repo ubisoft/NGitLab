@@ -1912,6 +1912,8 @@ NGitLab.Models.FileData.CommitId.get -> string
 NGitLab.Models.FileData.CommitId.set -> void
 NGitLab.Models.FileData.Content.get -> string
 NGitLab.Models.FileData.Content.set -> void
+NGitLab.Models.FileData.ContentSha256.get -> string
+NGitLab.Models.FileData.ContentSha256.set -> void
 NGitLab.Models.FileData.DecodedContent.get -> string
 NGitLab.Models.FileData.Encoding.get -> string
 NGitLab.Models.FileData.Encoding.set -> void

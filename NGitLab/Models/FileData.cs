@@ -21,6 +21,9 @@ public class FileData
     [JsonPropertyName("content")]
     public string Content { get; set; }
 
+    [JsonPropertyName("content_sha256")]
+    public string ContentSha256 { get; set; }
+
     [JsonPropertyName("ref")]
     public string Ref { get; set; }
 
