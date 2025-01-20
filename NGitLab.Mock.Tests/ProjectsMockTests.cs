@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using FluentAssertions;
 using NGitLab.Mock.Config;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -161,9 +160,9 @@ public class ProjectsMockTests
         var client = server.CreateClient();
         var project = client.Projects["testgroup/Test"];
 
-        project.Should().NotBeNull();
-        project.Permissions.GroupAccess.Should().BeNull();
-        project.Permissions.ProjectAccess.AccessLevel.Should().Be(AccessLevel.Maintainer);
+        Assert.That(project, Is.Not.Null);
+        Assert.That(project.Permissions.GroupAccess, Is.Null);
+        Assert.That(project.Permissions.ProjectAccess.AccessLevel, Is.EqualTo(AccessLevel.Maintainer));
     }
 
     [Test]
@@ -177,9 +176,9 @@ public class ProjectsMockTests
         var client = server.CreateClient();
         var project = client.Projects["testgroup/Test"];
 
-        project.Should().NotBeNull();
-        project.Permissions.GroupAccess.Should().BeNull();
-        project.Permissions.ProjectAccess.Should().BeNull();
+        Assert.That(project, Is.Not.Null);
+        Assert.That(project.Permissions.GroupAccess, Is.Null);
+        Assert.That(project.Permissions.ProjectAccess, Is.Null);
     }
 
     [Test]
@@ -194,9 +193,9 @@ public class ProjectsMockTests
         var client = server.CreateClient();
         var project = client.Projects["testgroup/Test"];
 
-        project.Should().NotBeNull();
-        project.Permissions.ProjectAccess.Should().BeNull();
-        project.Permissions.GroupAccess.AccessLevel.Should().Be(AccessLevel.Maintainer);
+        Assert.That(project, Is.Not.Null);
+        Assert.That(project.Permissions.ProjectAccess, Is.Null);
+        Assert.That(project.Permissions.GroupAccess.AccessLevel, Is.EqualTo(AccessLevel.Maintainer));
     }
 
     [Test]
@@ -226,15 +225,15 @@ public class ProjectsMockTests
         var actual = await projectClient.CreateAsync(expected);
 
         // Assert
-        actual.Name.Should().Be(expected.Name);
-        actual.Path.Should().Be(expected.Path);
-        actual.Description.Should().Be(expected.Description);
-        actual.Namespace.Id.Should().Be(expected.NamespaceId);
-        actual.NameWithNamespace.Should().Be($"MyGroup / {expected.Name}");
-        actual.PathWithNamespace.Should().Be($"my-group/{expected.Path}");
-        actual.DefaultBranch.Should().Be(expected.DefaultBranch);
-        actual.Topics.Should().BeEquivalentTo(expected.Topics);
-        actual.BuildTimeout.Should().Be(expected.BuildTimeout);
+        Assert.That(actual.Name, Is.EqualTo(expected.Name));
+        Assert.That(actual.Path, Is.EqualTo(expected.Path));
+        Assert.That(actual.Description, Is.EqualTo(expected.Description));
+        Assert.That(actual.Namespace.Id, Is.EqualTo(expected.NamespaceId));
+        Assert.That(actual.NameWithNamespace, Is.EqualTo($"MyGroup / {expected.Name}"));
+        Assert.That(actual.PathWithNamespace, Is.EqualTo($"my-group/{expected.Path}"));
+        Assert.That(actual.DefaultBranch, Is.EqualTo(expected.DefaultBranch));
+        Assert.That(actual.Topics, Is.EquivalentTo(expected.Topics));
+        Assert.That(actual.BuildTimeout, Is.EqualTo(expected.BuildTimeout));
     }
 
     [Test]
@@ -258,8 +257,8 @@ public class ProjectsMockTests
         var actual = await projectClient.CreateAsync(expected);
 
         // Assert
-        actual.Name.Should().Be(expected.Name);
-        actual.DefaultBranch.Should().NotBe(expected.DefaultBranch);
+        Assert.That(actual.Name, Is.EqualTo(expected.Name));
+        Assert.That(actual.DefaultBranch, Is.Not.EqualTo(expected.DefaultBranch));
     }
 
     [Test]

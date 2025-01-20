@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using FluentAssertions;
 using NGitLab.Mock.Config;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -129,12 +128,10 @@ public class ConfigTests
 
         var project1 = server.AllProjects.FirstOrDefault();
         Assert.That(project1, Is.Not.Null);
-
-        project1.Jobs.Should().BeEquivalentTo(new[] { new { Id = 1 }, new { Id = 2 }, new { Id = 3 } });
+        Assert.That(project1.Jobs.Select(j => j.Id), Is.EquivalentTo([1, 2, 3]));
 
         var project2 = server.AllProjects.LastOrDefault();
         Assert.That(project2, Is.Not.Null);
-
-        project2.Jobs.Should().BeEquivalentTo(new[] { new { Id = 4 }, new { Id = 5 } });
+        Assert.That(project2.Jobs.Select(j => j.Id), Is.EquivalentTo([4, 5]));
     }
 }
