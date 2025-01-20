@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NGitLab.Impl;
+namespace NGitLab.Models;
 
 public enum ProjectTemplateType
 {
