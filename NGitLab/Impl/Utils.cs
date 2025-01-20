@@ -10,26 +10,28 @@ internal static class Utils
 {
     public static string AddParameter<T>(string url, string parameterName, T value)
     {
+        return value is not null ? AddParameterInternal(url, parameterName, ToValueString(value)) : url;
+    }
+
+    public static string ToValueString<T>(T value)
+    {
         if (value is null)
-            return url;
+            return string.Empty;
 
         var valueString = value.ToString();
         var type = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
-        if (type.IsEnum)
-        {
-            var enumField = type.GetFields().FirstOrDefault(f => string.Equals(f.Name, valueString, StringComparison.Ordinal));
-            if (enumField is not null)
-            {
-                var enumMemberValue = enumField.GetCustomAttributes(typeof(EnumMemberAttribute), inherit: true)
-                    .Cast<EnumMemberAttribute>()
-                    .FirstOrDefault()?
-                    .Value;
-                if (enumMemberValue is not null)
-                    return AddParameterInternal(url, parameterName, enumMemberValue);
-            }
-        }
+        if (!type.IsEnum)
+            return valueString;
 
-        return AddParameterInternal(url, parameterName, valueString);
+        var enumField = type.GetFields().FirstOrDefault(f => string.Equals(f.Name, valueString, StringComparison.Ordinal));
+        if (enumField is null)
+            return valueString;
+
+        var enumMemberValue = enumField.GetCustomAttributes(typeof(EnumMemberAttribute), inherit: true)
+            .Cast<EnumMemberAttribute>()
+            .FirstOrDefault()?
+            .Value;
+        return enumMemberValue ?? valueString;
     }
 
     public static string AddParameter(string url, string parameterName, int? value)

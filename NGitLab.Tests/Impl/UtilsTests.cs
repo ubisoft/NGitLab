@@ -15,4 +15,13 @@ public class UtilsTests
 
         Assert.That(url, Is.EqualTo($"{basePath}?event_action={expectedQueryParamValue}"));
     }
+
+    [TestCase(EventAction.PushedTo, "pushed to")]
+    [TestCase(EventAction.Accepted, "accepted")]
+    public void ToValueString_ConsidersEnumMemberAttribute(EventAction value, string expectedValueResult)
+    {
+        var valueMember = NGitLab.Impl.Utils.ToValueString(value);
+
+        Assert.That(valueMember, Is.EqualTo(expectedValueResult));
+    }
 }

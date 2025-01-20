@@ -178,6 +178,16 @@ public class ProjectClient : IProjectClient
         return _api.Get().GetAllAsync<Group>(url);
     }
 
+    public GitLabCollectionResponse<ProjectTemplate> GetProjectTemplatesAsync(ProjectId projectId, ProjectTemplateType projectTemplateType)
+    {
+        return _api.Get().GetAllAsync<ProjectTemplate>($"{Project.Url}/{projectId.ValueAsUriParameter()}/templates/{Utils.ToValueString(projectTemplateType)}");
+    }
+
+    public Task<ProjectMergeRequestTemplate> GetProjectMergeRequestTemplateAsync(ProjectId projectId, string name, CancellationToken cancellationToken = default)
+    {
+        return _api.Get().ToAsync<ProjectMergeRequestTemplate>($"{Project.Url}/{projectId.ValueAsUriParameter()}/templates/{Utils.ToValueString(ProjectTemplateType.MergeRequests)}/{name}", cancellationToken);
+    }
+
     private static string CreateGetGroupsUrl(ProjectId projectId, ProjectGroupsQuery query)
     {
         var url = $"{Url}/{projectId.ValueAsUriParameter()}/groups";
