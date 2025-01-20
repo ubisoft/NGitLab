@@ -457,6 +457,11 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         throw new NotImplementedException();
     }
 
+    public Models.Issue Subscribe(ProjectId projectId, long issueIid)
+    {
+        throw new NotImplementedException();
+    }
+
     public Models.Issue Unsubscribe(ProjectId projectId, long issueIid)
     {
         throw new NotImplementedException();

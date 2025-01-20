@@ -70,7 +70,7 @@ public interface IIssueClient
     Task<Issue> GetByIdAsync(long issueId, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Add an issue witht he proposed title to the GitLab list for the selected proejct id.
+    /// Add an issue with the proposed title to the GitLab list for the selected project id.
     /// </summary>
     /// <param name="issueCreate"></param>
     /// <returns>The issue if it was created.  Null if not.</returns>
@@ -190,7 +190,15 @@ public interface IIssueClient
     IEnumerable<Participant> GetParticipants(ProjectId projectId, long issueIid);
 
     /// <summary>
-    /// Unsubscribe to the issue
+    /// Subscribes the authenticated user to an issue to receive notifications.
+    /// </summary>
+    /// <param name="projectId">The project id</param>
+    /// <param name="issueIid">The id of the issue in the project's scope.</param>
+    /// <returns>The issue that corresponds to the project id and issue id</returns>
+    Issue Subscribe(ProjectId projectId, long issueIid);
+
+    /// <summary>
+    /// Unsubscribes the authenticated user from the issue to not receive notifications from it.
     /// </summary>
     /// <param name="projectId">The project id</param>
     /// <param name="issueIid">The id of the issue in the project's scope.</param>
