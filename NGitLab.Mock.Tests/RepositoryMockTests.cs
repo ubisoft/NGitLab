@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using FluentAssertions;
 using NGitLab.Mock.Clients;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -133,7 +132,7 @@ public class RepositoryMockTests
                 },
             },
         });
-        newCommit.Message.Trim().Should().Be(commitMessage);
+        Assert.That(newCommit.Message.Trim(), Is.EqualTo(commitMessage));
     }
 
     [Test]
@@ -164,7 +163,7 @@ public class RepositoryMockTests
                 },
             },
         });
-        newCommit.Message.Trim().Should().Be(commitMessage);
+        Assert.That(newCommit.Message.Trim(), Is.EqualTo(commitMessage));
     }
 
     [Test]
@@ -220,6 +219,6 @@ public class RepositoryMockTests
                 },
             },
         });
-        newCommit.Message.Trim().Should().Be(commitMessage);
+        Assert.That(newCommit.Message.Trim(), Is.EqualTo(commitMessage));
     }
 }

@@ -21,8 +21,12 @@ updates:
     schedule:
       interval: weekly
     ignore:
+      # Don't bump these to 9.x.y, as those versions may not be totally compatible with .NET 6 or 8
+      - dependency-name: "Microsoft.AspNetCore.WebUtilities"
       - dependency-name: "Microsoft.Bcl.AsyncInterfaces"
       - dependency-name: "System.Text.Json"
+      # LibGit2Sharp 0.31.0+ no longer targets net6.0
+      - dependency-name: "LibGit2Sharp"
     rebase-strategy: auto
     open-pull-requests-limit: 20
     groups:
@@ -38,7 +42,6 @@ updates:
       test-dependencies:
         patterns:
           - "coverlet.collector"
-          - "FluentAssertions"
           - "Microsoft.Playwright"
           - "NSubstitute"
           - "*NUnit*"
