@@ -85,8 +85,15 @@ internal abstract class ClientBase
             _ => throw new ArgumentException($"Id of type '{id.GetType()}' is not supported"),
         };
 
-        if (project == null || !project.CanUserViewProject(Context.User))
-            throw new GitLabNotFoundException("Project does not exist or User doesn't have permission to view it");
+        if (project is null || !project.CanUserViewProject(Context.User))
+        {
+            throw new GitLabException("GitLab server returned an error (NotFound): 404 Project Not Found.")
+            {
+                MethodType = Impl.MethodType.Get,
+                StatusCode = HttpStatusCode.NotFound,
+                ErrorMessage = "404 Project Not Found",
+            };
+        }
 
         switch (permissions)
         {
