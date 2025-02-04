@@ -69,7 +69,7 @@ internal sealed class BranchClient : ClientBase, IBranchClient
                 var project = GetProject(_projectId, ProjectPermission.View);
                 var branch = project.Repository.GetBranch(name);
                 if (branch == null)
-                    throw new GitLabNotFoundException();
+                    throw GitLabException.NotFound();
 
                 return branch.ToBranchClient(project);
             }

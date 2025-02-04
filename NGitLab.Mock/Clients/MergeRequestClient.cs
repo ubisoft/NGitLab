@@ -51,7 +51,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
                 var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
                 var mergeRequest = project.MergeRequests.GetByIid(iid);
                 if (mergeRequest == null)
-                    throw new GitLabNotFoundException();
+                    throw GitLabException.NotFound();
 
                 return mergeRequest.ToMergeRequestClient();
             }
@@ -101,7 +101,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             var project = GetProject(_projectId, ProjectPermission.Contribute);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             mergeRequest.ShouldRemoveSourceBranch = message.ShouldRemoveSourceBranch ?? false;
 
@@ -159,7 +159,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
 
             if (mergeRequest == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             // Check if user has already aproved the merge request
             if (mergeRequest.Approvers.Any(x => x.Id == Context.User.Id))
@@ -203,7 +203,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
 
             if (mergeRequest == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             return mergeRequest.Rebase(Context.User);
         }
@@ -265,10 +265,10 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             if (mergeRequest.State != MergeRequestState.opened)
-                throw new GitLabBadRequestException();
+                throw GitLabException.BadRequest();
 
             mergeRequest.ClosedAt = DateTimeOffset.UtcNow;
             mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
@@ -301,10 +301,10 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             if (mergeRequest.State != MergeRequestState.opened)
-                throw new GitLabBadRequestException();
+                throw GitLabException.BadRequest();
 
             mergeRequest.MergeWhenPipelineSucceeds = false;
             mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
@@ -324,13 +324,13 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             var targetProject = GetProject(mergeRequestCreate.TargetProjectId ?? _projectId.GetValueOrDefault(), ProjectPermission.View);
 
             // Ensure the branches exist
-            _ = sourceProject.Repository.GetBranch(mergeRequestCreate.SourceBranch) ?? throw new GitLabBadRequestException("Source branch not found");
-            _ = targetProject.Repository.GetBranch(mergeRequestCreate.TargetBranch) ?? throw new GitLabBadRequestException("Target branch not found");
+            _ = sourceProject.Repository.GetBranch(mergeRequestCreate.SourceBranch) ?? throw GitLabException.BadRequest("Source branch not found");
+            _ = targetProject.Repository.GetBranch(mergeRequestCreate.TargetBranch) ?? throw GitLabException.BadRequest("Target branch not found");
 
             UserRef assignee = null;
             if (mergeRequestCreate.AssigneeId != null)
             {
-                assignee = Server.Users.GetById(mergeRequestCreate.AssigneeId.Value) ?? throw new GitLabBadRequestException("assignee not found");
+                assignee = Server.Users.GetById(mergeRequestCreate.AssigneeId.Value) ?? throw GitLabException.BadRequest("assignee not found");
             }
 
             var mergeRequest = targetProject.MergeRequests.Add(sourceProject, mergeRequestCreate.SourceBranch, mergeRequestCreate.TargetBranch, mergeRequestCreate.Title, Context.User);
@@ -389,7 +389,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             project.MergeRequests.Remove(mergeRequest);
         }
@@ -557,7 +557,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             return mergeRequest.Comments.Select(c => c.Author)
                 .Union(new[] { mergeRequest.Author })
@@ -576,7 +576,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
 
             if (mergeRequest == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             var allSha1 = mergeRequest.Commits.Select(m => new Sha1(m.Sha));
 
@@ -597,10 +597,10 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             if (mergeRequest.State != MergeRequestState.closed)
-                throw new GitLabBadRequestException();
+                throw GitLabException.BadRequest();
 
             mergeRequest.ClosedAt = null;
             mergeRequest.UpdatedAt = DateTimeOffset.UtcNow;
@@ -619,7 +619,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             var project = GetProject(_projectId.GetValueOrDefault(), ProjectPermission.View);
             var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
             if (mergeRequest == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             if (mergeRequestUpdate.AssigneeIds != null)
             {
@@ -634,7 +634,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
                     {
                         var user = Server.Users.GetById(assigneeId);
                         if (user == null)
-                            throw new GitLabBadRequestException("user not found");
+                            throw GitLabException.BadRequest("user not found");
 
                         mergeRequest.Assignees.Add(new UserRef(user));
                     }
@@ -650,7 +650,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
                 {
                     var user = Server.Users.GetById(mergeRequestUpdate.AssigneeId.Value);
                     if (user == null)
-                        throw new GitLabBadRequestException("user not found");
+                        throw GitLabException.BadRequest("user not found");
 
                     mergeRequest.Assignee = new UserRef(user);
                 }
@@ -669,7 +669,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
                 {
                     var reviewer = Server.Users.GetById(reviewerId);
                     if (reviewer == null)
-                        throw new GitLabBadRequestException("user not found");
+                        throw GitLabException.BadRequest("user not found");
 
                     mergeRequest.Reviewers.Add(reviewer);
                 }

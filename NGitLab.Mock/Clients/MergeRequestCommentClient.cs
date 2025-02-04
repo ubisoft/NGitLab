@@ -58,7 +58,7 @@ internal sealed class MergeRequestCommentClient : ClientBase, IMergeRequestComme
         {
             var project = GetProject(_projectId, ProjectPermission.View);
             if (project.Archived)
-                throw new GitLabForbiddenException();
+                throw GitLabException.Forbidden();
 
             var comment = new MergeRequestComment
             {
@@ -79,7 +79,7 @@ internal sealed class MergeRequestCommentClient : ClientBase, IMergeRequestComme
         {
             var project = GetProject(_projectId, ProjectPermission.View);
             if (project.Archived)
-                throw new GitLabForbiddenException();
+                throw GitLabException.Forbidden();
 
             var comment = new MergeRequestComment
             {
@@ -98,11 +98,11 @@ internal sealed class MergeRequestCommentClient : ClientBase, IMergeRequestComme
         {
             var project = GetProject(_projectId, ProjectPermission.View);
             if (project.Archived)
-                throw new GitLabForbiddenException();
+                throw GitLabException.Forbidden();
 
             var comment = GetMergeRequest().Comments.GetById(id);
             if (comment == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             comment.Body = edit.Body;
             return comment.ToMergeRequestCommentClient();
@@ -116,7 +116,7 @@ internal sealed class MergeRequestCommentClient : ClientBase, IMergeRequestComme
             var comments = GetMergeRequest().Comments;
             var comment = comments.GetById(id);
             if (comment == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             comments.Remove(comment);
         }

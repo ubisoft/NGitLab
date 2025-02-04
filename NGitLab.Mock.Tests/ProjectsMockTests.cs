@@ -48,6 +48,45 @@ public class ProjectsMockTests
     }
 
     [Test]
+    public void GetProjectAsync_WhenProjectDoesNotExist_ShouldThrowNotFound()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("TestUser", isDefault: true)
+            .BuildServer();
+        var gitLabClient = server.CreateClient();
+        var projectClient = gitLabClient.Projects;
+
+        // Act/Assert
+        var ex = Assert.ThrowsAsync<GitLabException>(() => projectClient.GetAsync("baz1234"));
+
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public void GetProjectAsync_WhenProjectInaccessible_ShouldThrowNotFound()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("TestUser1", isDefault: true)
+            .WithUser("TestUser2")
+            .BuildServer();
+        var testUser1ProjectClient = server.CreateClient("TestUser1").Projects;
+        var testUser2ProjectClient = server.CreateClient("TestUser2").Projects;
+
+        var testUser2Project = testUser2ProjectClient.Create(new ProjectCreate
+        {
+            Name = $"Project_Test_{Guid.NewGuid()}",
+            VisibilityLevel = VisibilityLevel.Private,
+        });
+
+        // Act/Assert
+        var ex = Assert.ThrowsAsync<GitLabException>(() => testUser1ProjectClient.GetAsync(testUser2Project.Id));
+
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
     public void Test_project_can_be_cloned_by_default()
     {
         using var tempDir = TemporaryDirectory.Create();

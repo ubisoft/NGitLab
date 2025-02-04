@@ -260,7 +260,7 @@ internal sealed class IssueClient : ClientBase, IIssueClient
             var project = GetProject(projectId, ProjectPermission.View);
             return project.Issues.FirstOrDefault(i => i.Iid == issueId &&
                     i.CanUserViewIssue(Context.User))?
-                    .ToClientIssue() ?? throw new GitLabNotFoundException();
+                    .ToClientIssue() ?? throw GitLabException.NotFound();
         }
     }
 
@@ -325,7 +325,7 @@ internal sealed class IssueClient : ClientBase, IIssueClient
             return viewableProjects
                 .SelectMany(p => p.Issues.Where(i => i.CanUserViewIssue(Context.User) && i.Id == issueId))
                 .FirstOrDefault()?
-                .ToClientIssue() ?? throw new GitLabNotFoundException();
+                .ToClientIssue() ?? throw GitLabException.NotFound();
         }
     }
 

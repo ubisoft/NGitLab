@@ -24,7 +24,7 @@ internal sealed class ProjectBadgeClient : ClientBase, IProjectBadgeClient
                 var project = GetProject(_projectId, ProjectPermission.View);
                 var badge = project.Badges.GetById(id);
                 if (badge == null)
-                    throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
+                    throw GitLabException.NotFound($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
 
                 return badge.ToBadgeModel();
             }
@@ -75,7 +75,7 @@ internal sealed class ProjectBadgeClient : ClientBase, IProjectBadgeClient
             var badgeToRemove = GetProject(_projectId, ProjectPermission.View).Badges.FirstOrDefault(b => b.Id == id);
             if (badgeToRemove == null)
             {
-                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
+                throw GitLabException.NotFound($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
             }
 
             GetProject(_projectId, ProjectPermission.Edit).Badges.Remove(badgeToRemove);
@@ -89,7 +89,7 @@ internal sealed class ProjectBadgeClient : ClientBase, IProjectBadgeClient
             var badgeToUpdate = GetProject(_projectId, ProjectPermission.Edit).Badges.FirstOrDefault(b => b.Id == id);
             if (badgeToUpdate == null)
             {
-                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
+                throw GitLabException.NotFound($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
             }
 
             badgeToUpdate.LinkUrl = badge.LinkUrl;

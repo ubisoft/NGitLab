@@ -89,6 +89,27 @@ public class ProjectsTests
 
     [Test]
     [NGitLabRetry]
+    public async Task GetProjectAsync_WhenProjectInaccessible_ShouldThrowNotFound()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var adminProjectClient = context.AdminClient.Projects;
+        var userProjectClient = context.Client.Projects;
+
+        var adminProject = adminProjectClient.Create(new ProjectCreate
+        {
+            Name = "Project_Test_" + context.GetRandomNumber().ToStringInvariant(),
+            VisibilityLevel = VisibilityLevel.Private,
+        });
+
+        // Act/Assert
+        var ex = Assert.ThrowsAsync<GitLabException>(() => userProjectClient.GetAsync(adminProject.Id));
+
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task GetProjectsAsync()
     {
         using var context = await GitLabTestContext.CreateAsync();

@@ -20,7 +20,7 @@ internal sealed class UserClient : ClientBase, IUserClient
         {
             using (Context.BeginOperationScope())
             {
-                return Server.Users.GetById(id)?.ToClientUser() ?? throw new GitLabNotFoundException();
+                return Server.Users.GetById(id)?.ToClientUser() ?? throw GitLabException.NotFound();
             }
         }
     }
@@ -91,7 +91,7 @@ internal sealed class UserClient : ClientBase, IUserClient
 
             if (user == null)
             {
-                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deleted");
+                throw GitLabException.NotFound($"User '{id}' is not found. Cannot be deleted");
             }
 
             Server.Users.Remove(user);
@@ -106,7 +106,7 @@ internal sealed class UserClient : ClientBase, IUserClient
 
             if (user == null)
             {
-                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be activated");
+                throw GitLabException.NotFound($"User '{id}' is not found. Cannot be activated");
             }
 
             user.State = UserState.active;
@@ -121,7 +121,7 @@ internal sealed class UserClient : ClientBase, IUserClient
 
             if (user == null)
             {
-                throw new GitLabNotFoundException($"User '{id}' is not found. Cannot be deactivated");
+                throw GitLabException.NotFound($"User '{id}' is not found. Cannot be deactivated");
             }
 
             user.State = UserState.deactivated;
@@ -174,7 +174,7 @@ internal sealed class UserClient : ClientBase, IUserClient
                 return user.ToClientUser();
             }
 
-            throw new GitLabNotFoundException();
+            throw GitLabException.NotFound();
         }
     }
 

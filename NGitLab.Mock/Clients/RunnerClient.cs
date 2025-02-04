@@ -28,7 +28,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         {
             if (!Context.User.IsAdmin)
             {
-                throw new GitLabForbiddenException();
+                throw GitLabException.Forbidden();
             }
 
             using (Context.BeginOperationScope())
@@ -51,7 +51,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         {
             using (Context.BeginOperationScope())
             {
-                var runner = Accessible.FirstOrDefault(r => r.Id == id) ?? throw new GitLabNotFoundException();
+                var runner = Accessible.FirstOrDefault(r => r.Id == id) ?? throw GitLabException.NotFound();
                 return runner;
             }
         }
@@ -68,7 +68,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
             {
                 if (projects.Skip(1).Any())
                 {
-                    throw new GitLabBadRequestException("Runner is enabled in multiple projects");
+                    throw GitLabException.BadRequest("Runner is enabled in multiple projects");
                 }
                 var project = GetProject(projects.Single().Id, ProjectPermission.Edit);
                 project.RemoveRunner(runnerId);
@@ -83,7 +83,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
                 return;
             }
 
-            throw new GitLabNotFoundException("Runner is not found in any project or group");
+            throw GitLabException.NotFound("Runner is not found in any project or group");
         }
     }
 
@@ -91,7 +91,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
     {
         using (Context.BeginOperationScope())
         {
-            var runner = this[runnerId] ?? throw new GitLabNotFoundException();
+            var runner = this[runnerId] ?? throw GitLabException.NotFound();
             var runnerOnServer = GetServerRunner(runnerId);
 
             runnerOnServer.Paused = runnerUpdate.Paused ?? runnerOnServer.Paused;
@@ -159,7 +159,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
 
             if (project.EnabledRunners.Contains(runnerReference))
             {
-                throw new GitLabBadRequestException("Runner has already been taken");
+                throw GitLabException.BadRequest("Runner has already been taken");
             }
 
             project.EnabledRunners.Add(runnerReference);
@@ -183,7 +183,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
 
             if (project.EnabledRunners.All(r => r.Id != runnerId.Id))
             {
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
             }
 
             var runnerReference = new RunnerRef(runner);
@@ -201,7 +201,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
 
     private Runner GetServerRunner(long id)
     {
-        return GetOwnedRunners().FirstOrDefault(runner => runner.Id == id) ?? throw new GitLabNotFoundException();
+        return GetOwnedRunners().FirstOrDefault(runner => runner.Id == id) ?? throw GitLabException.NotFound();
     }
 
     public Models.Runner Register(RunnerRegister request)
@@ -222,7 +222,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
                 return runner.ToClientRunner(Context.User);
             }
 
-            throw new GitLabNotFoundException("Invalid token: no matching project or group found.");
+            throw GitLabException.NotFound("Invalid token: no matching project or group found.");
         }
     }
 }

@@ -32,7 +32,7 @@ internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
         {
             using (Context.BeginOperationScope())
             {
-                var hook = All.FirstOrDefault(h => h.Id == hookId) ?? throw new GitLabNotFoundException();
+                var hook = All.FirstOrDefault(h => h.Id == hookId) ?? throw GitLabException.NotFound();
                 return hook;
             }
         }
@@ -53,7 +53,7 @@ internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
     {
         using (Context.BeginOperationScope())
         {
-            var currentHook = GetGroup(_groupId, GroupPermission.Edit).Hooks.FirstOrDefault(h => h.Id == hookId) ?? throw new GitLabNotFoundException();
+            var currentHook = GetGroup(_groupId, GroupPermission.Edit).Hooks.FirstOrDefault(h => h.Id == hookId) ?? throw GitLabException.NotFound();
 
             currentHook.Url = hook.Url;
             currentHook.PushEvents = hook.PushEvents ?? false;
@@ -76,7 +76,7 @@ internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
         using (Context.BeginOperationScope())
         {
             var groupHooks = GetGroup(_groupId, GroupPermission.Edit).Hooks;
-            var hook = groupHooks.FirstOrDefault(h => h.Id == hookId) ?? throw new GitLabNotFoundException();
+            var hook = groupHooks.FirstOrDefault(h => h.Id == hookId) ?? throw GitLabException.NotFound();
 
             groupHooks.Remove(hook);
         }

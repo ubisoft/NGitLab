@@ -38,7 +38,7 @@ internal abstract class ClientBase
         };
 
         if (group == null || !group.CanUserViewGroup(Context.User))
-            throw new GitLabNotFoundException("Group does not exist or user doesn't have permission to view it");
+            throw GitLabException.NotFound("Group does not exist or user doesn't have permission to view it");
 
         switch (permissions)
         {
@@ -48,12 +48,12 @@ internal abstract class ClientBase
 
             case GroupPermission.Edit:
                 if (!group.CanUserEditGroup(Context.User))
-                    throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to edit the group '{group.Name}'");
+                    throw GitLabException.Forbidden($"User '{Context.User.Name}' does not have the permission to edit the group '{group.Name}'");
                 break;
 
             case GroupPermission.Delete:
                 if (!group.CanUserDeleteGroup(Context.User))
-                    throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to delete the group '{group.Name}'");
+                    throw GitLabException.Forbidden($"User '{Context.User.Name}' does not have the permission to delete the group '{group.Name}'");
                 break;
 
             default:
@@ -85,8 +85,8 @@ internal abstract class ClientBase
             _ => throw new ArgumentException($"Id of type '{id.GetType()}' is not supported"),
         };
 
-        if (project == null || !project.CanUserViewProject(Context.User))
-            throw new GitLabNotFoundException("Project does not exist or User doesn't have permission to view it");
+        if (project is null || !project.CanUserViewProject(Context.User))
+            throw GitLabException.NotFound("Project does not exist or User doesn't have permission to view it");
 
         switch (permissions)
         {
@@ -96,17 +96,17 @@ internal abstract class ClientBase
 
             case ProjectPermission.Contribute:
                 if (!project.CanUserContributeToProject(Context.User))
-                    throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to contribute to the project '{project.Name}'");
+                    throw GitLabException.Forbidden($"User '{Context.User.Name}' does not have the permission to contribute to the project '{project.Name}'");
                 break;
 
             case ProjectPermission.Edit:
                 if (!project.CanUserEditProject(Context.User))
-                    throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to edit the project '{project.Name}'");
+                    throw GitLabException.Forbidden($"User '{Context.User.Name}' does not have the permission to edit the project '{project.Name}'");
                 break;
 
             case ProjectPermission.Delete:
                 if (!project.CanUserDeleteProject(Context.User))
-                    throw new GitLabForbiddenException($"User '{Context.User.Name}' does not have the permission to delete the project '{project.Name}'");
+                    throw GitLabException.Forbidden($"User '{Context.User.Name}' does not have the permission to delete the project '{project.Name}'");
                 break;
 
             default:
@@ -120,7 +120,7 @@ internal abstract class ClientBase
     {
         var user = Server.Users.GetById(userId);
         if (user == null)
-            throw new GitLabNotFoundException();
+            throw GitLabException.NotFound();
 
         return user;
     }
@@ -130,7 +130,7 @@ internal abstract class ClientBase
         var project = GetProject(projectId, ProjectPermission.View);
         var issue = project.Issues.GetByIid(issueId);
         if (issue == null)
-            throw new GitLabNotFoundException();
+            throw GitLabException.NotFound();
 
         return issue;
     }
@@ -140,7 +140,7 @@ internal abstract class ClientBase
         var project = GetProject(projectId, ProjectPermission.View);
         var milestone = project.Milestones.GetByIid(milestoneId);
         if (milestone == null)
-            throw new GitLabNotFoundException();
+            throw GitLabException.NotFound();
 
         return milestone;
     }
@@ -150,7 +150,7 @@ internal abstract class ClientBase
         var project = GetProject(projectId, ProjectPermission.View);
         var mergeRequest = project.MergeRequests.GetByIid(mergeRequestIid);
         if (mergeRequest == null)
-            throw new GitLabNotFoundException();
+            throw GitLabException.NotFound();
 
         return mergeRequest;
     }

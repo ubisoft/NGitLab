@@ -20,7 +20,7 @@ internal sealed class GlobalJobsClient : ClientBase, IGlobalJobClient
             var job = Server.AllProjects.SelectMany(p => p.Jobs).FirstOrDefault(j => string.Equals(j.JobToken, token, StringComparison.Ordinal));
 
             if (job == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             return job.ToJobClient();
         }

@@ -122,10 +122,10 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         {
             parentGroup = Server.AllGroups.FindGroup(namespaceId);
             if (parentGroup == null || !parentGroup.CanUserViewGroup(Context.User))
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             if (!parentGroup.CanUserAddProject(Context.User))
-                throw new GitLabForbiddenException();
+                throw GitLabException.Forbidden();
         }
         else
         {

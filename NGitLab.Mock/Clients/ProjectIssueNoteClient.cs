@@ -67,7 +67,7 @@ internal sealed class ProjectIssueNoteClient : ClientBase, IProjectIssueNoteClie
 
         if (issue == null)
         {
-            throw new GitLabNotFoundException("Issue does not exist.");
+            throw GitLabException.NotFound("Issue does not exist.");
         }
 
         return issue;
@@ -80,7 +80,7 @@ internal sealed class ProjectIssueNoteClient : ClientBase, IProjectIssueNoteClie
 
         if (note == null)
         {
-            throw new GitLabNotFoundException("Issue Note does not exist.");
+            throw GitLabException.NotFound("Issue Note does not exist.");
         }
 
         return note;

@@ -26,7 +26,7 @@ internal class PipelineScheduleClient : ClientBase, IPipelineScheduleClient
                 var project = GetProject(_projectId, ProjectPermission.View);
                 var schedule = project.PipelineSchedules.GetById(id);
                 if (schedule == null)
-                    throw new GitLabNotFoundException();
+                    throw GitLabException.NotFound();
 
                 return schedule.ToPipelineScheduleClient();
             }

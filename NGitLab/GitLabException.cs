@@ -57,4 +57,10 @@ public class GitLabException : Exception
     /// HTTP request method, if any, that triggered this exception
     /// </summary>
     public MethodType? MethodType { get; set; }
+
+    internal static GitLabException NotFound(string message = null) => new(message) { StatusCode = HttpStatusCode.NotFound };
+
+    internal static GitLabException Forbidden(string message = null) => new(message) { StatusCode = HttpStatusCode.Forbidden };
+
+    internal static GitLabException BadRequest(string message = null) => new(message) { StatusCode = HttpStatusCode.BadRequest };
 }

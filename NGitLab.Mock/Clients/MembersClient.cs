@@ -76,7 +76,7 @@ internal sealed class MembersClient : ClientBase, IMembersClient
             var user = Server.Users.GetById(projectMemberUpdate.UserId);
 
             var curPermission = project.Permissions.SingleOrDefault(p => p.User.Id == user.Id)
-                ?? throw new GitLabNotFoundException();
+                ?? throw GitLabException.NotFound();
 
             ValidateNewProjectPermission(projectMemberUpdate.AccessLevel, user, project);
 
@@ -102,7 +102,7 @@ internal sealed class MembersClient : ClientBase, IMembersClient
     {
         return OfProject(projectId, includeInheritedMembers)
            .FirstOrDefault(u => string.Equals(u.Id.ToStringInvariant(), userId, StringComparison.Ordinal))
-           ?? throw new GitLabNotFoundException();
+           ?? throw GitLabException.NotFound();
     }
 
     public async Task<Membership> GetMemberOfProjectAsync(ProjectId projectId, long userId, bool includeInheritedMembers = false, CancellationToken cancellationToken = default)
@@ -119,7 +119,7 @@ internal sealed class MembersClient : ClientBase, IMembersClient
             var project = GetProject(projectId, ProjectPermission.Edit);
 
             var permission = project.Permissions.SingleOrDefault(p => p.User.Id == userId)
-                ?? throw new GitLabNotFoundException();
+                ?? throw GitLabException.NotFound();
 
             project.Permissions.Remove(permission);
         }
@@ -190,7 +190,7 @@ internal sealed class MembersClient : ClientBase, IMembersClient
             var user = Server.Users.GetById(groupMemberUpdate.UserId);
 
             var curPermission = group.Permissions.SingleOrDefault(p => p.User.Id == user.Id)
-                ?? throw new GitLabNotFoundException();
+                ?? throw GitLabException.NotFound();
 
             ValidateNewGroupPermission(groupMemberUpdate.AccessLevel, user, group);
 
@@ -216,7 +216,7 @@ internal sealed class MembersClient : ClientBase, IMembersClient
     {
         return OfGroup(groupId, includeInheritedMembers: includeInheritedMembers)
             .FirstOrDefault(u => string.Equals(u.Id.ToStringInvariant(), userId, StringComparison.Ordinal))
-            ?? throw new GitLabNotFoundException();
+            ?? throw GitLabException.NotFound();
     }
 
     public async Task<Membership> GetMemberOfGroupAsync(GroupId groupId, long userId, bool includeInheritedMembers = false, CancellationToken cancellationToken = default)
@@ -233,7 +233,7 @@ internal sealed class MembersClient : ClientBase, IMembersClient
             var group = GetGroup(groupId, GroupPermission.Edit);
 
             var permission = group.Permissions.SingleOrDefault(p => p.User.Id == userId)
-                ?? throw new GitLabNotFoundException();
+                ?? throw GitLabException.NotFound();
 
             group.Permissions.Remove(permission);
         }

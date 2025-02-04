@@ -27,7 +27,7 @@ internal sealed class JobClient : ClientBase, IJobClient
             var job = project.Jobs.GetById(jobId);
 
             if (job == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             return job.ToJobClient();
         }
@@ -96,7 +96,7 @@ internal sealed class JobClient : ClientBase, IJobClient
             var job = project.Jobs.GetById(jobId);
 
             if (job == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             return job.Trace;
         }

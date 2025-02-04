@@ -219,6 +219,6 @@ internal sealed class MilestoneClient : ClientBase, IMilestoneClient
                 throw new NotSupportedException($"{Scope} milestone is not supported yet.");
         }
 
-        return milestone ?? throw new GitLabNotFoundException($"Cannot find milestone with ID {milestoneId}");
+        return milestone ?? throw GitLabException.NotFound($"Cannot find milestone with ID {milestoneId}");
     }
 }

@@ -186,7 +186,7 @@ public class CommitsMockTests
             },
         });
 
-        Assert.That(handler, Throws.TypeOf<GitLabBadRequestException>()
+        Assert.That(handler, Throws.TypeOf<GitLabException>()
             .With.Message.Contains("start_branch, start_sha are mutually exclusive."));
     }
 
@@ -221,7 +221,7 @@ public class CommitsMockTests
             },
         });
 
-        Assert.That(handler, Throws.TypeOf<GitLabBadRequestException>()
+        Assert.That(handler, Throws.TypeOf<GitLabException>()
             .With.Message.Contains("A branch called 'test-branch' already exists."));
     }
 
