@@ -530,6 +530,8 @@ NGitLab.Mock.Issue.CreatedAt.get -> System.DateTimeOffset
 NGitLab.Mock.Issue.CreatedAt.set -> void
 NGitLab.Mock.Issue.Description.get -> string
 NGitLab.Mock.Issue.Description.set -> void
+NGitLab.Mock.Issue.DiscussionLocked.get -> bool
+NGitLab.Mock.Issue.DiscussionLocked.set -> void
 NGitLab.Mock.Issue.Id.get -> long
 NGitLab.Mock.Issue.Id.set -> void
 NGitLab.Mock.Issue.Iid.get -> long

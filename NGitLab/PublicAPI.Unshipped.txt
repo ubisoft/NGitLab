@@ -2250,6 +2250,8 @@ NGitLab.Models.Issue.CreatedAt.get -> System.DateTime
 NGitLab.Models.Issue.CreatedAt.set -> void
 NGitLab.Models.Issue.Description.get -> string
 NGitLab.Models.Issue.Description.set -> void
+NGitLab.Models.Issue.DiscussionLocked.get -> bool
+NGitLab.Models.Issue.DiscussionLocked.set -> void
 NGitLab.Models.Issue.DueDate.get -> System.DateTime?
 NGitLab.Models.Issue.DueDate.set -> void
 NGitLab.Models.Issue.Epic.get -> NGitLab.Models.IssueEpic
@@ -2322,6 +2324,8 @@ NGitLab.Models.IssueEdit.AssigneeIds.get -> long[]
 NGitLab.Models.IssueEdit.AssigneeIds.set -> void
 NGitLab.Models.IssueEdit.Description.get -> string
 NGitLab.Models.IssueEdit.Description.set -> void
+NGitLab.Models.IssueEdit.DiscussionLocked.get -> bool?
+NGitLab.Models.IssueEdit.DiscussionLocked.set -> void
 NGitLab.Models.IssueEdit.DueDate.get -> System.DateTime?
 NGitLab.Models.IssueEdit.DueDate.set -> void
 NGitLab.Models.IssueEdit.EpicId.get -> long?

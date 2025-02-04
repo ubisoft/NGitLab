@@ -79,4 +79,7 @@ public class Issue
 
     [JsonPropertyName("user_notes_count")]
     public int UserNotesCount { get; set; }
+
+    [JsonPropertyName("discussion_locked")]
+    public bool DiscussionLocked { get; set; }
 }
