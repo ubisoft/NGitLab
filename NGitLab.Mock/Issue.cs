@@ -41,6 +41,8 @@ public sealed class Issue : GitLabObject
 
     public bool Confidential { get; set; }
 
+    public bool DiscussionLocked { get; set; }
+
     public IList<ProjectIssueNote> Notes { get; set; } = new List<ProjectIssueNote>();
 
     public string WebUrl => Server.MakeUrl($"{Project.PathWithNamespace}/-/issues/{Iid.ToString(CultureInfo.InvariantCulture)}");
@@ -93,6 +95,7 @@ public sealed class Issue : GitLabObject
             UpdatedAt = UpdatedAt.UtcDateTime,
             WebUrl = WebUrl,
             Confidential = Confidential,
+            DiscussionLocked = DiscussionLocked,
         };
     }
 

@@ -44,4 +44,7 @@ public class IssueEdit
 
     [JsonPropertyName("weight")]
     public int? Weight { get; set; }
+
+    [JsonPropertyName("discussion_locked")]
+    public bool? DiscussionLocked { get; set; }
 }

@@ -118,6 +118,11 @@ internal sealed class IssueClient : ClientBase, IIssueClient
                 issueToModify.State = (IssueState)requestedState;
             }
 
+            if (issueEdit.DiscussionLocked.HasValue)
+            {
+                issueToModify.DiscussionLocked = issueEdit.DiscussionLocked.Value;
+            }
+
             return issueToModify.ToClientIssue();
         }
     }

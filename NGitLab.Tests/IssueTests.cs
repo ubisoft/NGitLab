@@ -325,4 +325,25 @@ public class IssueTests
 
         Assert.That(participant.Count, Is.EqualTo(1));
     }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_lock_discussion()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var issuesClient = context.Client.Issues;
+        var issue = await issuesClient.CreateAsync(new IssueCreate { ProjectId = project.Id, Title = "title1" });
+
+        Assert.That(issue.DiscussionLocked, Is.False);
+
+        var editedIssue = await issuesClient.EditAsync(new IssueEdit
+        {
+            ProjectId = issue.ProjectId,
+            IssueId = issue.IssueId,
+            DiscussionLocked = true,
+        });
+
+        Assert.That(editedIssue.DiscussionLocked, Is.True);
+    }
 }
