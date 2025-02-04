@@ -86,9 +86,7 @@ internal abstract class ClientBase
         };
 
         if (project is null || !project.CanUserViewProject(Context.User))
-        {
-            throw GitLabException.NotFound();
-        }
+            throw GitLabException.NotFound("Project does not exist or User doesn't have permission to view it");
 
         switch (permissions)
         {
