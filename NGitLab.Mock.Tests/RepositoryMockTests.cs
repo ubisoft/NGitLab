@@ -33,7 +33,7 @@ public class RepositoryMockTests
                     FilePath = "README.md",
                 },
             },
-        }), Throws.TypeOf<GitLabBadRequestException>()
+        }), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains("GitLab server returned an error (BadRequest): start_branch, start_sha are mutually exclusive."));
     }
 
@@ -66,7 +66,7 @@ public class RepositoryMockTests
                     FilePath = "README.md",
                 },
             },
-        }), Throws.TypeOf<GitLabBadRequestException>()
+        }), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains($"A branch called '{newBranch}' already exists."));
     }
 
@@ -99,7 +99,7 @@ public class RepositoryMockTests
                     FilePath = "README.md",
                 },
             },
-        }), Throws.TypeOf<GitLabBadRequestException>()
+        }), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains($"A branch called '{newBranch}' already exists."));
     }
 
@@ -190,7 +190,7 @@ public class RepositoryMockTests
                     FilePath = "README.md",
                 },
             },
-        }), Throws.TypeOf<GitLabBadRequestException>()
+        }), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains("You can only create or edit files when you are on a branch."));
     }
 

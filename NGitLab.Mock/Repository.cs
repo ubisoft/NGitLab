@@ -209,7 +209,7 @@ public sealed class Repository : GitLabObject, IDisposable
 
         if (isCreatingBranch && branchExistsAlready)
         {
-            throw new GitLabBadRequestException($"A branch called '{commitCreate.Branch}' already exists.");
+            throw GitLabException.BadRequest($"A branch called '{commitCreate.Branch}' already exists.");
         }
 
         var isRepoEmpty = !repo.Commits.Any();
@@ -217,11 +217,11 @@ public sealed class Repository : GitLabObject, IDisposable
         {
             var @ref = (hasStartBranch, hasStartSha) switch
             {
-                (true, true) => throw new GitLabBadRequestException(
+                (true, true) => throw GitLabException.BadRequest(
                     "GitLab server returned an error (BadRequest): start_branch, start_sha are mutually exclusive."),
                 (true, _) => commitCreate.StartBranch,
                 (_, true) => commitCreate.StartSha,
-                _ => branchExistsAlready ? commitCreate.Branch : throw new GitLabBadRequestException(
+                _ => branchExistsAlready ? commitCreate.Branch : throw GitLabException.BadRequest(
                     "GitLab server returned an error (BadRequest): You can only create or edit files when you are on a branch.")
             };
 
@@ -335,7 +335,7 @@ public sealed class Repository : GitLabObject, IDisposable
     {
         if (_releaseTags.Any(r => string.Equals(r.Name, tagName, StringComparison.Ordinal)))
         {
-            throw new GitLabBadRequestException();
+            throw GitLabException.BadRequest();
         }
 
         var releaseTag = new ReleaseTag(tagName, releaseNotes);
@@ -347,7 +347,7 @@ public sealed class Repository : GitLabObject, IDisposable
     {
         if (!_releaseTags.Any(r => string.Equals(r.Name, tagName, StringComparison.Ordinal)))
         {
-            throw new GitLabBadRequestException();
+            throw GitLabException.BadRequest();
         }
 
         var releaseTag = _releaseTags.First(r => string.Equals(r.Name, tagName, StringComparison.Ordinal));
@@ -512,14 +512,14 @@ public sealed class Repository : GitLabObject, IDisposable
         }
         catch (LibGit2Sharp.NotFoundException)
         {
-            throw new GitLabNotFoundException("File not found");
+            throw GitLabException.NotFound("File not found");
         }
 
         var fileCompletePath = Path.Combine(FullPath, filePath);
 
         if (!System.IO.File.Exists(fileCompletePath))
         {
-            throw new GitLabNotFoundException("File not found");
+            throw GitLabException.NotFound("File not found");
         }
 
         var fileInfo = new FileInfo(fileCompletePath);
@@ -557,7 +557,7 @@ public sealed class Repository : GitLabObject, IDisposable
             if (!string.IsNullOrWhiteSpace(repositoryGetTreeOptions.Path))
                 return [];
 
-            throw new GitLabNotFoundException();
+            throw GitLabException.NotFound();
         }
 
         return InternalGetTree(repo.Head.Tip, tree, repositoryGetTreeOptions.Recursive);

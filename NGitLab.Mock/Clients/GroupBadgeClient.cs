@@ -23,7 +23,7 @@ internal sealed class GroupBadgeClient : ClientBase, IGroupBadgeClient
                 var group = GetGroup(_groupId, GroupPermission.View);
                 var badge = group.Badges.GetById(id);
                 if (badge == null)
-                    throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
+                    throw GitLabException.NotFound($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
 
                 return badge.ToBadgeModel();
             }
@@ -62,7 +62,7 @@ internal sealed class GroupBadgeClient : ClientBase, IGroupBadgeClient
             var badgeToRemove = GetGroup(_groupId, GroupPermission.View).Badges.FirstOrDefault(b => b.Id == id);
             if (badgeToRemove == null)
             {
-                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
+                throw GitLabException.NotFound($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
             }
 
             GetGroup(_groupId, GroupPermission.Edit).Badges.Remove(badgeToRemove);
@@ -76,7 +76,7 @@ internal sealed class GroupBadgeClient : ClientBase, IGroupBadgeClient
             var badgeToUpdate = GetGroup(_groupId, GroupPermission.Edit).Badges.FirstOrDefault(b => b.Id == id);
             if (badgeToUpdate == null)
             {
-                throw new GitLabNotFoundException($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
+                throw GitLabException.NotFound($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
             }
 
             badgeToUpdate.LinkUrl = badge.LinkUrl;

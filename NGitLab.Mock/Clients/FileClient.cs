@@ -99,7 +99,7 @@ internal sealed class FileClient : ClientBase, IFilesClient
             {
                 return Get(filePath, @ref) != null;
             }
-            catch (GitLabNotFoundException)
+            catch (GitLabException ex) when (ex.StatusCode is HttpStatusCode.NotFound)
             {
                 return false;
             }

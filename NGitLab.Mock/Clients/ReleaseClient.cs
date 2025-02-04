@@ -63,7 +63,7 @@ internal sealed class ReleaseClient : ClientBase, IReleaseClient
             var release = project.Releases.GetByTagName(data.TagName);
             if (release == null)
             {
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
             }
 
             if (data.Name != null)
@@ -92,7 +92,7 @@ internal sealed class ReleaseClient : ClientBase, IReleaseClient
             var project = GetProject(_projectId, ProjectPermission.Contribute);
             var release = project.Releases.FirstOrDefault(r => r.TagName.Equals(tagName, StringComparison.Ordinal));
             if (release == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             project.Releases.Remove(release);
         }

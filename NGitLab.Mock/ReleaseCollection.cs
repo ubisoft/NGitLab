@@ -56,7 +56,7 @@ public class ReleaseCollection : Collection<ReleaseInfo>
         if (!Project.Repository.GetTags().Any(r => string.Equals(r.FriendlyName, tagName, StringComparison.Ordinal)))
         {
             if (string.IsNullOrEmpty(reference))
-                throw new GitLabBadRequestException("A reference must be set when the tag does not exist");
+                throw GitLabException.BadRequest("A reference must be set when the tag does not exist");
 
             Project.Repository.CreateTag(tagName);
         }

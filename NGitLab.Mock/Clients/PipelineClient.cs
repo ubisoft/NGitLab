@@ -30,7 +30,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
                 var project = GetProject(_projectId, ProjectPermission.View);
                 var pipeline = project.Pipelines.GetById(id);
                 if (pipeline == null)
-                    throw new GitLabNotFoundException();
+                    throw GitLabException.NotFound();
 
                 return pipeline.ToPipelineClient();
             }
@@ -323,7 +323,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
             }
             else
             {
-                throw new GitLabBadRequestException("name is missing");
+                throw GitLabException.BadRequest("name is missing");
             }
 
             return Task.FromResult(pipeline.ToPipelineClient());

@@ -21,7 +21,7 @@ internal sealed class SystemHookClient : ClientBase, ISystemHookClient
             {
                 var result = Server.SystemHooks.FirstOrDefault(hook => hook.Id == hookId);
                 if (result == null)
-                    throw new GitLabNotFoundException();
+                    throw GitLabException.NotFound();
 
                 return result.ToClientSystemHook();
             }
@@ -68,7 +68,7 @@ internal sealed class SystemHookClient : ClientBase, ISystemHookClient
         {
             var result = Server.SystemHooks.FirstOrDefault(hook => hook.Id == hookId);
             if (result == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             Server.SystemHooks.Remove(result);
         }

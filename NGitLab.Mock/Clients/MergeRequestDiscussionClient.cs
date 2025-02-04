@@ -38,7 +38,7 @@ internal sealed class MergeRequestDiscussionClient : ClientBase, IMergeRequestDi
         {
             var discussions = GetMergeRequest().GetDiscussions();
             var discussion = discussions.FirstOrDefault(x => string.Equals(x.Id, id, StringComparison.Ordinal));
-            return discussion ?? throw new GitLabNotFoundException();
+            return discussion ?? throw GitLabException.NotFound();
         }
     }
 
@@ -64,7 +64,7 @@ internal sealed class MergeRequestDiscussionClient : ClientBase, IMergeRequestDi
         {
             var project = GetProject(_projectId, ProjectPermission.View);
             if (project.Archived)
-                throw new GitLabForbiddenException();
+                throw GitLabException.Forbidden();
 
             var comment = new MergeRequestComment
             {
@@ -90,7 +90,7 @@ internal sealed class MergeRequestDiscussionClient : ClientBase, IMergeRequestDi
             var discussions = GetMergeRequest().GetDiscussions();
             var discussion = discussions.FirstOrDefault(x => string.Equals(x.Id, resolve.Id, StringComparison.Ordinal));
             if (discussion == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             foreach (var note in discussion.Notes)
             {
@@ -108,7 +108,7 @@ internal sealed class MergeRequestDiscussionClient : ClientBase, IMergeRequestDi
             var discussions = GetMergeRequest().GetDiscussions();
             var discussion = discussions.FirstOrDefault(x => string.Equals(x.Id, discussionId, StringComparison.Ordinal));
             if (discussion == null)
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             var allComments = GetMergeRequest().Comments;
             foreach (var discussionNote in discussion.Notes.Where(x => x.Id == noteId))

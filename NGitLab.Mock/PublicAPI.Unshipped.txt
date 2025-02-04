@@ -39,18 +39,6 @@ NGitLab.Mock.Change.OldPath.set -> void
 NGitLab.Mock.Change.RenamedFile.get -> bool
 NGitLab.Mock.Change.RenamedFile.set -> void
 NGitLab.Mock.Change.ToChange() -> NGitLab.Models.Change
-NGitLab.Mock.Clients.GitLabBadRequestException
-NGitLab.Mock.Clients.GitLabBadRequestException.GitLabBadRequestException() -> void
-NGitLab.Mock.Clients.GitLabBadRequestException.GitLabBadRequestException(string message) -> void
-NGitLab.Mock.Clients.GitLabBadRequestException.GitLabBadRequestException(string message, System.Exception inner) -> void
-NGitLab.Mock.Clients.GitLabForbiddenException
-NGitLab.Mock.Clients.GitLabForbiddenException.GitLabForbiddenException() -> void
-NGitLab.Mock.Clients.GitLabForbiddenException.GitLabForbiddenException(string message) -> void
-NGitLab.Mock.Clients.GitLabForbiddenException.GitLabForbiddenException(string message, System.Exception inner) -> void
-NGitLab.Mock.Clients.GitLabNotFoundException
-NGitLab.Mock.Clients.GitLabNotFoundException.GitLabNotFoundException() -> void
-NGitLab.Mock.Clients.GitLabNotFoundException.GitLabNotFoundException(string message) -> void
-NGitLab.Mock.Clients.GitLabNotFoundException.GitLabNotFoundException(string message, System.Exception inner) -> void
 NGitLab.Mock.Clients.LibGit2SharpExtensions
 NGitLab.Mock.Collection<T>
 NGitLab.Mock.Collection<T>.Clear() -> void

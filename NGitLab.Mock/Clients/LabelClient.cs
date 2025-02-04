@@ -58,7 +58,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         using (Context.BeginOperationScope())
         {
             var project = GetProject(projectId, ProjectPermission.Edit);
-            var l = FindLabel(project.Labels, label.Name) ?? throw new GitLabNotFoundException($"Cannot find label '{label.Name}'");
+            var l = FindLabel(project.Labels, label.Name) ?? throw GitLabException.NotFound($"Cannot find label '{label.Name}'");
             project.Labels.Remove(l);
             return l.ToClientLabel();
         }
@@ -79,7 +79,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         using (Context.BeginOperationScope())
         {
             var project = GetProject(projectId, ProjectPermission.Edit);
-            var l = FindLabel(project.Labels, label.Name) ?? throw new GitLabNotFoundException($"Cannot find label '{label.Name}'");
+            var l = FindLabel(project.Labels, label.Name) ?? throw GitLabException.NotFound($"Cannot find label '{label.Name}'");
 
             if (!string.IsNullOrEmpty(label.NewName))
             {
@@ -117,7 +117,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         using (Context.BeginOperationScope())
         {
             var group = GetGroup(groupId, GroupPermission.Edit);
-            var l = FindLabel(group.Labels, label.Name) ?? throw new GitLabNotFoundException($"Cannot find label '{label.Name}'");
+            var l = FindLabel(group.Labels, label.Name) ?? throw GitLabException.NotFound($"Cannot find label '{label.Name}'");
 
             if (!string.IsNullOrEmpty(label.NewName))
             {

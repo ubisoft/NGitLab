@@ -124,7 +124,7 @@ public class GroupsMockTests
     {
         using var server = CreateGroupHierarchy();
         var client = server.CreateClient("user1");
-        Assert.ThrowsAsync<Clients.GitLabBadRequestException>(() => client.Groups.PageAsync(new(perPage: 0)));
+        Assert.ThrowsAsync<GitLabException>(() => client.Groups.PageAsync(new(perPage: 0)));
     }
 
     [Test]
@@ -276,7 +276,7 @@ public class GroupsMockTests
     {
         using var server = CreateGroupHierarchy();
         var client = server.CreateClient("user1");
-        Assert.ThrowsAsync<Clients.GitLabBadRequestException>(() => client.Groups.PageSubgroupsAsync(1, new(page: 1, perPage: 0)));
+        Assert.ThrowsAsync<GitLabException>(() => client.Groups.PageSubgroupsAsync(1, new(page: 1, perPage: 0)));
     }
 
     [Test]

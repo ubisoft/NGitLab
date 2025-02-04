@@ -25,10 +25,10 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             {
                 parentGroup = Server.AllGroups.FirstOrDefault(g => g.Id == group.ParentId.Value);
                 if (parentGroup == null || !parentGroup.CanUserViewGroup(Context.User))
-                    throw new GitLabNotFoundException();
+                    throw GitLabException.NotFound();
 
                 if (!parentGroup.CanUserAddGroup(Context.User))
-                    throw new GitLabForbiddenException();
+                    throw GitLabException.Forbidden();
             }
 
             var newGroup = new Group
@@ -73,10 +73,10 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         {
             var group = Server.AllGroups.FirstOrDefault(g => g.Id == id);
             if (group == null || !group.CanUserViewGroup(Context.User))
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             if (!group.CanUserDeleteGroup(Context.User))
-                throw new GitLabForbiddenException();
+                throw GitLabException.Forbidden();
 
             group.ToClientGroup(Context.User);
         }
@@ -137,7 +137,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         if (perPage < PageQuery.MinPerPage)
         {
             // Max isn't enforced the same way
-            throw new GitLabBadRequestException($"per_page value ({perPage}) is invalid: cannot be lower than MinPerPage ({PageQuery.MinPerPage})");
+            throw GitLabException.BadRequest($"per_page value ({perPage}) is invalid: cannot be lower than MinPerPage ({PageQuery.MinPerPage})");
         }
 
         var all = Get(query?.Query).ToArray();
@@ -159,7 +159,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             var group = Server.AllGroups.FirstOrDefault(g => id.Equals(g.PathWithNameSpace, g.Id));
 
             if (group == null || !group.CanUserViewGroup(Context.User))
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             return group.ToClientGroup(Context.User);
         }
@@ -212,7 +212,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             var group = Server.AllGroups.FirstOrDefault(g => groupId.Equals(g.PathWithNameSpace, g.Id));
 
             if (group == null || !group.CanUserViewGroup(Context.User))
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             var projects = query?.IncludeSubGroups is true ? group.AllProjects : group.Projects;
 
@@ -252,7 +252,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         var perPage = query?.PerPage ?? PageQuery.DefaultPerPage;
         if (perPage < 1)
         {
-            throw new GitLabBadRequestException($"per_page value ({perPage}) is invalid: cannot be lower than MinPerPage ({PageQuery.MinPerPage})");
+            throw GitLabException.BadRequest($"per_page value ({perPage}) is invalid: cannot be lower than MinPerPage ({PageQuery.MinPerPage})");
         }
 
         var all = SearchProjectsAsync(groupId, query?.Query).ToArray();
@@ -269,10 +269,10 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         {
             var group = Server.AllGroups.FindById(id);
             if (group == null || !group.CanUserViewGroup(Context.User))
-                throw new GitLabNotFoundException();
+                throw GitLabException.NotFound();
 
             if (!group.CanUserEditGroup(Context.User))
-                throw new GitLabForbiddenException();
+                throw GitLabException.Forbidden();
 
             if (groupUpdate.Description != null)
             {
@@ -392,7 +392,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
         var perPage = query?.PerPage ?? PageQuery.DefaultPerPage;
         if (perPage < 1)
         {
-            throw new GitLabBadRequestException($"per_page value ({perPage}) is invalid: cannot be lower than MinPerPage ({PageQuery.MinPerPage})");
+            throw GitLabException.BadRequest($"per_page value ({perPage}) is invalid: cannot be lower than MinPerPage ({PageQuery.MinPerPage})");
         }
 
         var all = GetSubgroupsAsync(groupId, query?.Query).ToArray();
