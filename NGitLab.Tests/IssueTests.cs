@@ -346,4 +346,25 @@ public class IssueTests
 
         Assert.That(editedIssue.DiscussionLocked, Is.True);
     }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_edit_issue_confidential()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var issuesClient = context.Client.Issues;
+        var issue = await issuesClient.CreateAsync(new IssueCreate { ProjectId = project.Id, Title = "title1" });
+
+        Assert.That(issue.Confidential, Is.False);
+
+        var editedIssue = await issuesClient.EditAsync(new IssueEdit
+        {
+            ProjectId = issue.ProjectId,
+            IssueId = issue.IssueId,
+            Confidential = true,
+        });
+
+        Assert.That(editedIssue.Confidential, Is.True);
+    }
 }

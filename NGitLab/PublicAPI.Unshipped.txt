@@ -2322,6 +2322,8 @@ NGitLab.Models.IssueEdit.AssigneeId.get -> long?
 NGitLab.Models.IssueEdit.AssigneeId.set -> void
 NGitLab.Models.IssueEdit.AssigneeIds.get -> long[]
 NGitLab.Models.IssueEdit.AssigneeIds.set -> void
+NGitLab.Models.IssueEdit.Confidential.get -> bool?
+NGitLab.Models.IssueEdit.Confidential.set -> void
 NGitLab.Models.IssueEdit.Description.get -> string
 NGitLab.Models.IssueEdit.Description.set -> void
 NGitLab.Models.IssueEdit.DiscussionLocked.get -> bool?

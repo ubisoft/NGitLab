@@ -123,6 +123,11 @@ internal sealed class IssueClient : ClientBase, IIssueClient
                 issueToModify.DiscussionLocked = issueEdit.DiscussionLocked.Value;
             }
 
+            if (issueEdit.Confidential.HasValue)
+            {
+                issueToModify.Confidential = issueEdit.Confidential.Value;
+            }
+
             return issueToModify.ToClientIssue();
         }
     }
