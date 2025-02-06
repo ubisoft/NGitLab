@@ -50,21 +50,67 @@ public class GitLabClient : IGitLabClient
         set => _api.RequestOptions = value;
     }
 
+    /// <summary>
+    /// Initialize a GitLab client without any authentication
+    /// </summary>
+    /// <param name="hostUrl">GitLab absolute URL (with or without the /api/v* path)</param>
+    public GitLabClient(string hostUrl)
+        : this(new GitLabCredentials(hostUrl), RequestOptions.Default)
+    {
+    }
+
+    /// <summary>
+    /// Initialize a GitLab client without any authentication
+    /// </summary>
+    /// <param name="hostUrl">GitLab absolute URL (with or without the /api/v* path)</param>
+    /// <param name="options">Request options</param>
+    public GitLabClient(string hostUrl, RequestOptions options)
+       : this(new GitLabCredentials(hostUrl), options)
+    {
+    }
+
+    /// <summary>
+    /// Initialize an authenticated GitLab client
+    /// </summary>
+    /// <param name="hostUrl">GitLab absolute URL (with or without the /api/v* path)</param>
+    /// <param name="apiToken">Token to use in any request</param>
     public GitLabClient(string hostUrl, string apiToken)
         : this(hostUrl, apiToken, RequestOptions.Default)
     {
     }
 
+    /// <summary>
+    /// Initialize an authenticated GitLab client
+    /// </summary>
+    /// <param name="hostUrl">GitLab absolute URL (with or without the /api/v* path)</param>
+    /// <param name="userName">Username to connect with</param>
+    /// <param name="password">Password of the user account</param>
+    /// <remarks>
+    /// When using username/password, a <see cref="Session"/> will be created and its token will be used to authenticate
+    /// </remarks>
     public GitLabClient(string hostUrl, string userName, string password)
         : this(hostUrl, userName, password, RequestOptions.Default)
     {
     }
 
+    /// <summary>
+    /// Initialize an authenticated GitLab client
+    /// </summary>
+    /// <param name="hostUrl">GitLab absolute URL (with or without the /api/v* path)</param>
+    /// <param name="apiToken">Token to use in any request</param>
+    /// <param name="options">Request options</param>
     public GitLabClient(string hostUrl, string apiToken, RequestOptions options)
         : this(new GitLabCredentials(hostUrl, apiToken), options)
     {
     }
 
+    /// <summary>
+    /// Initialize an authenticated GitLab client
+    /// </summary>
+    /// <param name="hostUrl">GitLab absolute URL (with or without the /api/v* path)</param>
+    /// <param name="userName">Username to connect with</param>
+    /// <param name="password">Password of the user account</param>
+    /// <param name="options">Request options</param>
     public GitLabClient(string hostUrl, string userName, string password, RequestOptions options)
         : this(new GitLabCredentials(hostUrl, userName, password), options)
     {

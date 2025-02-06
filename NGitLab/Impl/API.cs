@@ -38,9 +38,22 @@ public class API
 
     protected virtual IHttpRequestor CreateRequestor(MethodType methodType)
     {
-        _credentials.ApiToken ??= OpenPrivateSession();
+        string token;
+        if (_credentials.AuthenticationMethod == AuthenticationMethod.ApiKey)
+        {
+            token = _credentials.ApiToken;
+        }
+        else if (_credentials.AuthenticationMethod == AuthenticationMethod.UsernamePassword)
+        {
+            _credentials.ApiToken ??= OpenPrivateSession();
+            token = _credentials.ApiToken;
+        }
+        else
+        {
+            token = null;
+        }
 
-        return new HttpRequestor(_credentials.HostUrl, _credentials.ApiToken, methodType, RequestOptions);
+        return new HttpRequestor(_credentials.HostUrl, token, methodType, RequestOptions);
     }
 
     private string OpenPrivateSession()

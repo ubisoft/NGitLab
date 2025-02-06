@@ -14,11 +14,24 @@ public class GitLabCredentials
 {
     private string _apiToken;
 
+    internal AuthenticationMethod AuthenticationMethod { get; }
+
     public string HostUrl { get; }
 
     public string UserName { get; set; }
 
     public string Password { get; set; }
+
+    internal GitLabCredentials(string hostUrl)
+    {
+        if (string.IsNullOrEmpty(hostUrl))
+            throw new ArgumentException("HostUrl is mandatory", nameof(hostUrl));
+
+        ValidateHostUrl(hostUrl);
+
+        HostUrl = GetApiUrl(hostUrl);
+        AuthenticationMethod = AuthenticationMethod.None;
+    }
 
     public GitLabCredentials(string hostUrl, string apiToken)
     {
@@ -31,6 +44,7 @@ public class GitLabCredentials
 
         HostUrl = GetApiUrl(hostUrl);
         _apiToken = apiToken;
+        AuthenticationMethod = AuthenticationMethod.ApiKey;
     }
 
     public GitLabCredentials(string hostUrl, string userName, string password)
@@ -47,6 +61,7 @@ public class GitLabCredentials
         HostUrl = GetApiUrl(hostUrl);
         UserName = userName;
         Password = password;
+        AuthenticationMethod = AuthenticationMethod.UsernamePassword;
     }
 
     public string ApiToken
