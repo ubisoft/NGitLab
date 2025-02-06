@@ -51,7 +51,7 @@ public class GitLabClient : IGitLabClient
     }
 
     /// <summary>
-    /// Initialize a GitLab client without any authentication and default options
+    /// Initialize a GitLab client without any authentication
     /// </summary>
     /// <param name="hostUrl">GitLab absolute URL (with or without the /api/v* path)</param>
     public GitLabClient(string hostUrl)
