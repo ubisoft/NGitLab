@@ -77,6 +77,8 @@ NGitLab.GitLabClient.GetRepository(NGitLab.Models.ProjectId projectId) -> NGitLa
 NGitLab.GitLabClient.GetTriggers(NGitLab.Models.ProjectId projectId) -> NGitLab.ITriggerClient
 NGitLab.GitLabClient.GetUserEvents(long userId) -> NGitLab.IEventClient
 NGitLab.GitLabClient.GetWikiClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IWikiClient
+NGitLab.GitLabClient.GitLabClient(string hostUrl) -> void
+NGitLab.GitLabClient.GitLabClient(string hostUrl, NGitLab.RequestOptions options) -> void
 NGitLab.GitLabClient.GitLabClient(string hostUrl, string apiToken) -> void
 NGitLab.GitLabClient.GitLabClient(string hostUrl, string apiToken, NGitLab.RequestOptions options) -> void
 NGitLab.GitLabClient.GitLabClient(string hostUrl, string userName, string password) -> void
