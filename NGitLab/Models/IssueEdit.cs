@@ -47,4 +47,7 @@ public class IssueEdit
 
     [JsonPropertyName("discussion_locked")]
     public bool? DiscussionLocked { get; set; }
+
+    [JsonPropertyName("confidential")]
+    public bool? Confidential { get; set; }
 }
