@@ -22,7 +22,7 @@ internal sealed class MembersClient : ClientBase, IMembersClient
         return OfProject(projectId, includeInheritedMembers: false);
     }
 
-    public IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers)
+    public IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers, MemberQuery query = null)
     {
         using (Context.BeginOperationScope())
         {
@@ -32,7 +32,7 @@ internal sealed class MembersClient : ClientBase, IMembersClient
         }
     }
 
-    public GitLabCollectionResponse<Membership> OfProjectAsync(ProjectId projectId, bool includeInheritedMembers = false)
+    public GitLabCollectionResponse<Membership> OfProjectAsync(ProjectId projectId, bool includeInheritedMembers = false, MemberQuery query = null)
     {
         return GitLabCollectionResponse.Create(OfProject(projectId.ValueAsString(), includeInheritedMembers));
     }
@@ -136,7 +136,7 @@ internal sealed class MembersClient : ClientBase, IMembersClient
         return OfGroup(groupId, includeInheritedMembers: false);
     }
 
-    public IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers)
+    public IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers, MemberQuery query = null)
     {
         using (Context.BeginOperationScope())
         {
@@ -146,7 +146,7 @@ internal sealed class MembersClient : ClientBase, IMembersClient
         }
     }
 
-    public GitLabCollectionResponse<Membership> OfGroupAsync(GroupId groupId, bool includeInheritedMembers = false)
+    public GitLabCollectionResponse<Membership> OfGroupAsync(GroupId groupId, bool includeInheritedMembers = false, MemberQuery query = null)
     {
         return GitLabCollectionResponse.Create(OfGroup(groupId.ValueAsString(), includeInheritedMembers));
     }

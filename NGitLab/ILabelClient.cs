@@ -11,14 +11,14 @@ public interface ILabelClient
     /// </summary>
     /// <param name="projectId"></param>
     /// <returns></returns>
-    IEnumerable<Label> ForProject(long projectId);
+    IEnumerable<Label> ForProject(long projectId, LabelQuery labelQuery = null);
 
     /// <summary>
     /// Return a list of labels for a group.
     /// </summary>
     /// <param name="groupId"></param>
     /// <returns></returns>
-    IEnumerable<Label> ForGroup(long groupId);
+    IEnumerable<Label> ForGroup(long groupId, LabelQuery labelQuery = null);
 
     /// <summary>
     /// Return a specified label from the project or null;

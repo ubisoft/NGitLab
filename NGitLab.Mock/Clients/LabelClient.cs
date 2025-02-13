@@ -150,7 +150,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         });
     }
 
-    public IEnumerable<Models.Label> ForGroup(long groupId)
+    public IEnumerable<Models.Label> ForGroup(long groupId, LabelQuery query = null)
     {
         using (Context.BeginOperationScope())
         {
@@ -159,7 +159,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    public IEnumerable<Models.Label> ForProject(long projectId)
+    public IEnumerable<Models.Label> ForProject(long projectId, LabelQuery query = null)
     {
         using (Context.BeginOperationScope())
         {

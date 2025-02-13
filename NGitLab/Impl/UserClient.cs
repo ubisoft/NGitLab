@@ -65,6 +65,10 @@ public class UserClient : IUserClient
         url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
         url = Utils.AddParameter(url, "two_factor", query.TwoFactor);
         url = Utils.AddParameter(url, "admins", query.IsAdmin);
+        url = Utils.AddParameter(url, "humans", query.IsHuman);
+        url = Utils.AddParameter(url, "exclude_active", query.ExcludeActive);
+        url = Utils.AddParameter(url, "exclude_humans", query.ExcludeHumans);
+        url = Utils.AddParameter(url, "exclude_internal", query.ExcludeInternal);
 
         return _api.Get().GetAll<User>(url);
     }

@@ -19,19 +19,39 @@ public class LabelClient : ILabelClient
         _api = api;
     }
 
-    public IEnumerable<Label> ForProject(long projectId)
+    public IEnumerable<Label> ForProject(long projectId, LabelQuery query = null)
     {
-        return _api.Get().GetAll<Label>(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId));
+        string url = string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId);
+
+        if (query != null)
+        {
+            url = Utils.AddParameter(url, "with_counts", query.WithCounts);
+            url = Utils.AddParameter(url, "per_page", query.PerPage);
+            url = Utils.AddParameter(url, "search", query.Search);
+            url = Utils.AddParameter(url, "include_ancestor_groups ", query.IncludeAncestorGroups);
+        }
+
+        return _api.Get().GetAll<Label>(url);
     }
 
-    public IEnumerable<Label> ForGroup(long groupId)
+    public IEnumerable<Label> ForGroup(long groupId, LabelQuery query = null)
     {
-        return _api.Get().GetAll<Label>(string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, groupId));
+        string url = string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, groupId);
+
+        if (query != null)
+        {
+            url = Utils.AddParameter(url, "with_counts", query.WithCounts);
+            url = Utils.AddParameter(url, "per_page", query.PerPage);
+            url = Utils.AddParameter(url, "search", query.Search);
+            url = Utils.AddParameter(url, "include_ancestor_groups ", query.IncludeAncestorGroups);
+        }
+
+        return _api.Get().GetAll<Label>(url);
     }
 
     public Label GetProjectLabel(long projectId, string name)
     {
-        return ForProject(projectId).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
+        return ForProject(projectId, new LabelQuery() { Search = name }).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -42,7 +62,7 @@ public class LabelClient : ILabelClient
 
     public Label GetGroupLabel(long groupId, string name)
     {
-        return ForGroup(groupId).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
+        return ForGroup(groupId, new LabelQuery() { Search = name }).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
     }
 
     public Label CreateProjectLabel(long projectId, ProjectLabelCreate label)

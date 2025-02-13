@@ -17,7 +17,28 @@ public class MembersClient : IMembersClient
         _api = api;
     }
 
-    private IEnumerable<Membership> GetAll(string url, bool includeInheritedMembers)
+    private IEnumerable<Membership> GetAll(string url, bool includeInheritedMembers, MemberQuery query)
+    {
+        url += "/members";
+        if (includeInheritedMembers)
+        {
+            url += "/all";
+
+        }
+
+        if (query != null)
+        {
+            url = Utils.AddParameter(url, "user_ids", query.UserIds);
+            url = Utils.AddParameter(url, "state", query.State);
+            url = Utils.AddParameter(url, "per_page ", query.PerPage);
+            url = Utils.AddParameter(url, "query", query.Query);
+            url = Utils.AddParameter(url, "show_seat_info", query.ShowSeatInfo);
+        }
+
+        return _api.Get().GetAll<Membership>(url);
+    }
+
+    private GitLabCollectionResponse<Membership> GetAllAsync(string url, bool includeInheritedMembers, MemberQuery query)
     {
         url += "/members";
         if (includeInheritedMembers)
@@ -25,15 +46,13 @@ public class MembersClient : IMembersClient
             url += "/all";
         }
 
-        return _api.Get().GetAll<Membership>(url);
-    }
-
-    private GitLabCollectionResponse<Membership> GetAllAsync(string url, bool includeInheritedMembers)
-    {
-        url += "/members";
-        if (includeInheritedMembers)
+        if (query != null)
         {
-            url += "/all";
+            url = Utils.AddParameter(url, "user_ids", query.UserIds);
+            url = Utils.AddParameter(url, "state", query.State);
+            url = Utils.AddParameter(url, "per_page ", query.PerPage);
+            url = Utils.AddParameter(url, "query", query.Query);
+            url = Utils.AddParameter(url, "show_seat_info", query.ShowSeatInfo);
         }
 
         return _api.Get().GetAllAsync<Membership>(url);
@@ -41,17 +60,17 @@ public class MembersClient : IMembersClient
 
     public IEnumerable<Membership> OfProject(string projectId)
     {
-        return OfProject(projectId, includeInheritedMembers: false);
+        return OfProject(projectId, includeInheritedMembers: false, null);
     }
 
-    public IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers)
+    public IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers, MemberQuery query = null)
     {
-        return GetAll($"{Project.Url}/{WebUtility.UrlEncode(projectId)}", includeInheritedMembers);
+        return GetAll($"{Project.Url}/{WebUtility.UrlEncode(projectId)}", includeInheritedMembers, query);
     }
 
-    public GitLabCollectionResponse<Membership> OfProjectAsync(ProjectId projectId, bool includeInheritedMembers = false)
+    public GitLabCollectionResponse<Membership> OfProjectAsync(ProjectId projectId, bool includeInheritedMembers = false, MemberQuery query = null)
     {
-        return GetAllAsync($"{Project.Url}/{projectId.ValueAsUriParameter()}", includeInheritedMembers);
+        return GetAllAsync($"{Project.Url}/{projectId.ValueAsUriParameter()}", includeInheritedMembers, query);
     }
 
     public Membership GetMemberOfProject(string projectId, string userId)
@@ -104,17 +123,17 @@ public class MembersClient : IMembersClient
 
     public IEnumerable<Membership> OfGroup(string groupId)
     {
-        return OfGroup(groupId, includeInheritedMembers: false);
+        return OfGroup(groupId, includeInheritedMembers: false, null);
     }
 
-    public IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers)
+    public IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers, MemberQuery query = null)
     {
-        return GetAll($"{Group.Url}/{WebUtility.UrlEncode(groupId)}", includeInheritedMembers);
+        return GetAll($"{Group.Url}/{WebUtility.UrlEncode(groupId)}", includeInheritedMembers, query);
     }
 
-    public GitLabCollectionResponse<Membership> OfGroupAsync(GroupId groupId, bool includeInheritedMembers = false)
+    public GitLabCollectionResponse<Membership> OfGroupAsync(GroupId groupId, bool includeInheritedMembers = false, MemberQuery query = null)
     {
-        return GetAllAsync($"{Group.Url}/{groupId.ValueAsUriParameter()}", includeInheritedMembers);
+        return GetAllAsync($"{Group.Url}/{groupId.ValueAsUriParameter()}", includeInheritedMembers, query);
     }
 
     public Membership GetMemberOfGroup(string groupId, string userId)
