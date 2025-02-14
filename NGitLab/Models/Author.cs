@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
-public class Author
+public class Author : IEquatable<Author>
 {
     [JsonPropertyName("id")]
     public long Id { get; set; }
@@ -28,4 +28,29 @@ public class Author
 
     [JsonPropertyName("web_url")]
     public string WebUrl { get; set; }
+
+    public bool Equals(Author other)
+    {
+        if (other is null)
+            return false;
+
+        if (ReferenceEquals(this, other))
+            return true;
+
+        if (GetType() != other.GetType())
+            return false;
+
+        // Compare IDs only
+        return Id == other.Id;
+    }
+
+    public override bool Equals(object obj)
+    {
+        return Equals(obj as Author);
+    }
+
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
+    }
 }

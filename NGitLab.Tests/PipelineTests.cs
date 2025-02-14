@@ -53,7 +53,6 @@ public class PipelineTests
             Name = "test",
             Coverage = 50,
             Description = "descr",
-            Status = "success",
             State = "success",
             TargetUrl = "https://example.com",
         });
