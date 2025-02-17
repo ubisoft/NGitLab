@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="Microsoft.Playwright" Version="1.50.0" />
-    <PackageReference Include="NuGet.Versioning" Version="6.12.1" />
+    <PackageReference Include="NuGet.Versioning" Version="6.13.1" />
     <PackageReference Include="NUnit" Version="4.3.2" />
     <PackageReference Include="NUnit.Analyzers" Version="4.6.0">
       <PrivateAssets>all</PrivateAssets>
