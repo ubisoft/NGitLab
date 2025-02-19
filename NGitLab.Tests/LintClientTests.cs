@@ -36,9 +36,12 @@ build:
 
         var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), ValidCIYaml, new(), CancellationToken.None);
 
-        Assert.That(result.Valid, Is.True);
-        Assert.That(result.Errors.Length != 0, Is.False);
-        Assert.That(result.Warnings.Length != 0, Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Valid, Is.True);
+            Assert.That(result.Errors, Is.Empty);
+            Assert.That(result.Warnings, Is.Empty);
+        });
     }
 
     [Test]
@@ -51,9 +54,12 @@ build:
 
         var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), InvalidCIYaml, new(), CancellationToken.None);
 
-        Assert.That(result.Valid, Is.False);
-        Assert.That(result.Errors.Length != 0, Is.True);
-        Assert.That(result.Warnings.Length != 0, Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Valid, Is.False);
+            Assert.That(result.Errors, Is.Not.Empty);
+            Assert.That(result.Warnings, Is.Empty);
+        });
     }
 
     [Test]
@@ -74,9 +80,12 @@ build:
 
         var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
 
-        Assert.That(result.Valid, Is.True);
-        Assert.That(result.Errors.Length != 0, Is.False);
-        Assert.That(result.Warnings.Length != 0, Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Valid, Is.True);
+            Assert.That(result.Errors, Is.Empty);
+            Assert.That(result.Warnings, Is.Empty);
+        });
     }
 
     [Test]
@@ -97,8 +106,11 @@ build:
 
         var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
 
-        Assert.That(result.Valid, Is.False);
-        Assert.That(result.Errors.Length != 0, Is.True);
-        Assert.That(result.Warnings.Length != 0, Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Valid, Is.False);
+            Assert.That(result.Errors, Is.Not.Empty);
+            Assert.That(result.Warnings, Is.Empty);
+        });
     }
 }
