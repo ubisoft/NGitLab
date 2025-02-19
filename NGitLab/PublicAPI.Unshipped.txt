@@ -2578,6 +2578,8 @@ NGitLab.Models.LineRange.Start.set -> void
 NGitLab.Models.LintCI
 NGitLab.Models.LintCI.Errors.get -> string[]
 NGitLab.Models.LintCI.Errors.set -> void
+NGitLab.Models.LintCI.Jobs.get -> NGitLab.Models.LintCIJob[]
+NGitLab.Models.LintCI.Jobs.set -> void
 NGitLab.Models.LintCI.LintCI() -> void
 NGitLab.Models.LintCI.MergedYaml.get -> string
 NGitLab.Models.LintCI.MergedYaml.set -> void
@@ -2585,6 +2587,26 @@ NGitLab.Models.LintCI.Valid.get -> bool
 NGitLab.Models.LintCI.Valid.set -> void
 NGitLab.Models.LintCI.Warnings.get -> string[]
 NGitLab.Models.LintCI.Warnings.set -> void
+NGitLab.Models.LintCIJob
+NGitLab.Models.LintCIJob.AfterScript.get -> string[]
+NGitLab.Models.LintCIJob.AfterScript.set -> void
+NGitLab.Models.LintCIJob.AllowFailure.get -> bool
+NGitLab.Models.LintCIJob.AllowFailure.set -> void
+NGitLab.Models.LintCIJob.BeforeScript.get -> string[]
+NGitLab.Models.LintCIJob.BeforeScript.set -> void
+NGitLab.Models.LintCIJob.Environment.get -> string
+NGitLab.Models.LintCIJob.Environment.set -> void
+NGitLab.Models.LintCIJob.LintCIJob() -> void
+NGitLab.Models.LintCIJob.Name.get -> string
+NGitLab.Models.LintCIJob.Name.set -> void
+NGitLab.Models.LintCIJob.Script.get -> string[]
+NGitLab.Models.LintCIJob.Script.set -> void
+NGitLab.Models.LintCIJob.Stage.get -> string
+NGitLab.Models.LintCIJob.Stage.set -> void
+NGitLab.Models.LintCIJob.TagList.get -> string[]
+NGitLab.Models.LintCIJob.TagList.set -> void
+NGitLab.Models.LintCIJob.When.get -> string
+NGitLab.Models.LintCIJob.When.set -> void
 NGitLab.Models.LintCIOptions
 NGitLab.Models.LintCIOptions.DryRun.get -> bool?
 NGitLab.Models.LintCIOptions.DryRun.set -> void
