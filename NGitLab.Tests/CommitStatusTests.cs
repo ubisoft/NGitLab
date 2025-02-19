@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -9,6 +10,155 @@ namespace NGitLab.Tests;
 
 public class CommitStatusTests
 {
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_get_commit_status()
+    {
+        using var context = await CommitStatusTestContext.Create();
+        var createdCommitStatus = context.AddOrUpdateCommitStatus();
+
+        var commitStatus = context.CommitStatusClient.AllBySha(context.Commit.Id.ToString()).ToList();
+        Assert.That(commitStatus.FirstOrDefault()?.Status, Is.Not.Null);
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_post_commit_status_with_no_coverage()
+    {
+        using var context = await CommitStatusTestContext.Create();
+        var createdCommitStatus = context.AddOrUpdateCommitStatus(coverage: null);
+
+        Assert.That(createdCommitStatus.Coverage, Is.Null);
+    }
+
+    [Test]
+    public async Task Test_AddingSameCommitStatusTwice_Throws()
+    {
+        // Arrange
+        using var context = await CommitStatusTestContext.Create();
+        var commitStatusCreate = context.SetUpCommitStatusCreate("running");
+
+        _ = context.CommitStatusClient.AddOrUpdate(commitStatusCreate);
+
+        // Act/Assert
+        var ex = Assert.Throws<GitLabException>(() => _ = context.CommitStatusClient.AddOrUpdate(commitStatusCreate));
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(ex.ErrorMessage, Is.EqualTo("Cannot transition status via :run from :running (Reason(s): Status cannot transition via \"run\")"));
+    }
+
+    [Test]
+    public async Task Test_AddingCommitStatusesWithDifferentNamesOnSameCommit_Succeeds()
+    {
+        // Arrange
+        using var context = await CommitStatusTestContext.Create();
+        var commitStatusCreate = context.SetUpCommitStatusCreate("running", "Status 1");
+
+        var commitStatus1 = context.CommitStatusClient.AddOrUpdate(commitStatusCreate);
+
+        // Act
+        commitStatusCreate.Name = "Status 2";
+        var commitStatus2 = context.CommitStatusClient.AddOrUpdate(commitStatusCreate);
+
+        // Assert
+        var properties = typeof(CommitStatusCreate).GetProperties();
+
+        // All properties should be the same except 'Name' & 'Id'
+        foreach (var property in properties)
+        {
+            var value1 = property.GetValue(commitStatus1);
+            var value2 = property.GetValue(commitStatus2);
+
+            if (string.Equals(property.Name, nameof(CommitStatus.Name), StringComparison.Ordinal) ||
+                string.Equals(property.Name, nameof(CommitStatus.Id), StringComparison.Ordinal))
+            {
+                Assert.That(value1, Is.Not.EqualTo(value2));
+            }
+            else
+            {
+                Assert.That(value1, Is.EqualTo(value2));
+            }
+        }
+    }
+
+    [TestCase(["pending", "failed"])]
+    [TestCase(["pending", "canceled"])]
+    [TestCase(["pending", "success"])]
+    [TestCase(["canceled", "pending"])]
+    [TestCase(["success", "pending"])]
+    [TestCase(["success", "failed"])]
+    [TestCase(["success", "canceled"])]
+    [TestCase(["pending", "running", "success"])]
+    [TestCase(["pending", "running", "failed"])]
+    [TestCase(["pending", "running", "canceled"])]
+    public async Task Test_UpdatingCommitStatus_SucceedsIfTransitionSupported(params string[] successiveStates)
+    {
+        // Arrange
+        using var context = await CommitStatusTestContext.Create();
+        var commitStatusCreate = context.SetUpCommitStatusCreate("unknown");
+
+        // Act/Assert
+        foreach (var state in successiveStates)
+        {
+            commitStatusCreate.State = state;
+            var commitStatus = context.CommitStatusClient.AddOrUpdate(commitStatusCreate);
+            Assert.That(commitStatus.Status, Is.EqualTo(state));
+        }
+    }
+
+    [TestCase(["whatever"])]
+    [TestCase(["running", "pending"])]
+    public async Task Test_UpdatingCommitStatus_FailsIfStateUnknownOrTransitionUnsupported(params string[] successiveStates)
+    {
+        // Arrange
+        using var context = await CommitStatusTestContext.Create();
+        var commitStatusCreate = context.SetUpCommitStatusCreate("unknown");
+
+        for (var i = 0; i < successiveStates.Length - 1; i++)
+        {
+            var validState = successiveStates[i];
+            commitStatusCreate.State = validState;
+            var commitStatus = context.CommitStatusClient.AddOrUpdate(commitStatusCreate);
+            Assert.That(commitStatus.Status, Is.EqualTo(validState));
+        }
+
+        // Act/Assert
+        var invalidState = successiveStates[successiveStates.Length - 1];
+        commitStatusCreate.State = invalidState;
+
+        var ex = Assert.Throws<GitLabException>(() => _ = context.CommitStatusClient.AddOrUpdate(commitStatusCreate));
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        Assert.That(ex.ErrorMessage, Does.StartWith("state does not have a valid value").Or
+                                         .StartWith("Cannot transition status via"));
+    }
+
+    [TestCase("whatever", false)]
+    [TestCase(null, true)]  // Will set 'nameToLookUp' to a dynamically created name
+    public async Task Test_QueryByName(string nameToLookUp, bool expectToFind)
+    {
+        // Arrange
+        using var context = await CommitStatusTestContext.Create();
+
+        string commitStatusName = null;
+        for (var i = 0; i < 10; i++)
+        {
+            commitStatusName = $"Commit Status {Guid.NewGuid().ToString("N")}";
+            var commitStatusCreate = context.SetUpCommitStatusCreate("running", commitStatusName);
+            _ = context.CommitStatusClient.AddOrUpdate(commitStatusCreate);
+        }
+
+        // If 'nameToLookUp' is null, use the latest commit status name instead
+        nameToLookUp ??= commitStatusName;
+
+        // Act
+        var statuses = context.CommitStatusClient.GetAsync(context.Commit.Id.ToString(), new CommitStatusQuery
+        {
+            Name = nameToLookUp,
+        }).ToArray();
+
+        // Assert
+        Assert.That(statuses.Count, Is.EqualTo(expectToFind ? 1 : 0));
+    }
+
     private sealed class CommitStatusTestContext : IDisposable
     {
         public GitLabTestContext Context { get; }
@@ -19,7 +169,7 @@ public class CommitStatusTests
 
         public ICommitStatusClient CommitStatusClient { get; }
 
-        public CommitStatusTestContext(GitLabTestContext context, Project project, Commit commit, ICommitStatusClient commitStatusClient)
+        private CommitStatusTestContext(GitLabTestContext context, Project project, Commit commit, ICommitStatusClient commitStatusClient)
         {
             Context = context;
             Project = project;
@@ -52,141 +202,34 @@ public class CommitStatusTests
 
         public CommitStatusCreate AddOrUpdateCommitStatus(string state = "success", int? coverage = null)
         {
-            var commitStatus = SetupCommitStatus(state, coverage);
+            var commitStatusCreate = SetUpCommitStatusCreate(state, coverage: coverage);
 
-            var createdCommitStatus = CommitStatusClient.AddOrUpdate(commitStatus);
+            var createdCommitStatus = CommitStatusClient.AddOrUpdate(commitStatusCreate);
 
-            Assert.That(createdCommitStatus.Ref, Is.EqualTo(commitStatus.Ref));
-            Assert.That(createdCommitStatus.Coverage, Is.EqualTo(commitStatus.Coverage));
-            Assert.That(createdCommitStatus.Description, Is.EqualTo(commitStatus.Description));
-            Assert.That(createdCommitStatus.Status, Is.EqualTo(commitStatus.State));
-            Assert.That(createdCommitStatus.Name, Is.EqualTo(commitStatus.Name));
-            Assert.That(createdCommitStatus.TargetUrl, Is.EqualTo(commitStatus.TargetUrl));
-            Assert.That(string.Equals(commitStatus.CommitSha, createdCommitStatus.CommitSha, StringComparison.OrdinalIgnoreCase), Is.True);
+            Assert.That(createdCommitStatus.Ref, Is.EqualTo(commitStatusCreate.Ref));
+            Assert.That(createdCommitStatus.Coverage, Is.EqualTo(commitStatusCreate.Coverage));
+            Assert.That(createdCommitStatus.Description, Is.EqualTo(commitStatusCreate.Description));
+            Assert.That(createdCommitStatus.Status, Is.EqualTo(commitStatusCreate.State));
+            Assert.That(createdCommitStatus.Name, Is.EqualTo(commitStatusCreate.Name));
+            Assert.That(createdCommitStatus.TargetUrl, Is.EqualTo(commitStatusCreate.TargetUrl));
+            Assert.That(createdCommitStatus.CommitSha, Is.EqualTo(commitStatusCreate.CommitSha).IgnoreCase);
 
             return createdCommitStatus;
         }
 
-        private CommitStatusCreate SetupCommitStatus(string state, int? coverage = 100)
+        public CommitStatusCreate SetUpCommitStatusCreate(string state, string name = null, int? coverage = 100)
         {
+            name ??= "Some Commit Status";
             return new CommitStatusCreate
             {
                 Ref = Project.DefaultBranch,
                 CommitSha = Commit.Id.ToString(),
-                Name = "Commit for CommitStatusTests",
+                Name = name,
                 State = state,
-                Description = "desc",
+                Description = "Description for this commit status",
                 Coverage = coverage,
                 TargetUrl = "https://google.ca/",
             };
         }
-    }
-
-    [Test]
-    [NGitLabRetry]
-    public async Task Test_get_commit_status()
-    {
-        using var context = await CommitStatusTestContext.Create();
-        var createdCommitStatus = context.AddOrUpdateCommitStatus();
-
-        var commitStatus = context.CommitStatusClient.AllBySha(context.Commit.Id.ToString().ToLowerInvariant()).ToList();
-        Assert.That(commitStatus.FirstOrDefault()?.Status, Is.Not.Null);
-    }
-
-    [Test]
-    [NGitLabRetry]
-    public async Task Test_post_commit_status_with_no_coverage()
-    {
-        using var context = await CommitStatusTestContext.Create();
-        var commitStatus = context.AddOrUpdateCommitStatus(coverage: null);
-
-        Assert.That(commitStatus.Coverage, Is.Null);
-    }
-
-    [Test]
-    [NGitLabRetry]
-    public async Task Test_post_commit_status_and_update_it_from_pending_to_running_to_success()
-    {
-        using var context = await CommitStatusTestContext.Create();
-        var commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
-        Assert.That(commitStatus.Status, Is.EqualTo("pending"));
-
-        commitStatus = context.AddOrUpdateCommitStatus(state: "running");
-        Assert.That(commitStatus.Status, Is.EqualTo("running"));
-
-        commitStatus = context.AddOrUpdateCommitStatus(state: "success");
-        Assert.That(commitStatus.Status, Is.EqualTo("success"));
-    }
-
-    [Test]
-    [NGitLabRetry]
-    public async Task Test_post_commit_status_and_update_it_from_pending_to_failed()
-    {
-        using var context = await CommitStatusTestContext.Create();
-        var commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
-        Assert.That(commitStatus.Status, Is.EqualTo("pending"));
-
-        commitStatus = context.AddOrUpdateCommitStatus(state: "failed");
-        Assert.That(commitStatus.Status, Is.EqualTo("failed"));
-    }
-
-    [Test]
-    [NGitLabRetry]
-    public async Task Test_post_commit_status_and_update_it_from_pending_to_canceled()
-    {
-        using var context = await CommitStatusTestContext.Create();
-        var commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
-        Assert.That(commitStatus.Status, Is.EqualTo("pending"));
-
-        commitStatus = context.AddOrUpdateCommitStatus(state: "canceled");
-        Assert.That(commitStatus.Status, Is.EqualTo("canceled"));
-    }
-
-    [Test]
-    [NGitLabRetry]
-    public async Task Test_post_commit_status_and_update_it_from_success_to_pending()
-    {
-        using var context = await CommitStatusTestContext.Create();
-        var commitStatus = context.AddOrUpdateCommitStatus(state: "success");
-        Assert.That(commitStatus.Status, Is.EqualTo("success"));
-
-        commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
-        Assert.That(commitStatus.Status, Is.EqualTo("pending"));
-    }
-
-    [Test]
-    [NGitLabRetry]
-    public async Task Test_post_commit_status_and_update_it_from_success_to_failed()
-    {
-        using var context = await CommitStatusTestContext.Create();
-        var commitStatus = context.AddOrUpdateCommitStatus(state: "success");
-        Assert.That(commitStatus.Status, Is.EqualTo("success"));
-
-        commitStatus = context.AddOrUpdateCommitStatus(state: "failed");
-        Assert.That(commitStatus.Status, Is.EqualTo("failed"));
-    }
-
-    [Test]
-    [NGitLabRetry]
-    public async Task Test_post_commit_status_and_update_it_from_success_to_canceled()
-    {
-        using var context = await CommitStatusTestContext.Create();
-        var commitStatus = context.AddOrUpdateCommitStatus(state: "success");
-        Assert.That(commitStatus.Status, Is.EqualTo("success"));
-
-        commitStatus = context.AddOrUpdateCommitStatus(state: "canceled");
-        Assert.That(commitStatus.Status, Is.EqualTo("canceled"));
-    }
-
-    [Test]
-    [NGitLabRetry]
-    public async Task Test_post_commit_status_and_update_it_from_canceled_to_pending()
-    {
-        using var context = await CommitStatusTestContext.Create();
-        var commitStatus = context.AddOrUpdateCommitStatus(state: "canceled");
-        Assert.That(commitStatus.Status, Is.EqualTo("canceled"));
-
-        commitStatus = context.AddOrUpdateCommitStatus(state: "pending");
-        Assert.That(commitStatus.Status, Is.EqualTo("pending"));
     }
 }

@@ -138,6 +138,7 @@ NGitLab.ICommitClient.Revert(NGitLab.Models.CommitRevert revert) -> NGitLab.Mode
 NGitLab.ICommitStatusClient
 NGitLab.ICommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
 NGitLab.ICommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
+NGitLab.ICommitStatusClient.GetAsync(string commitSha, NGitLab.Models.CommitStatusQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.CommitStatus>
 NGitLab.IContributorClient
 NGitLab.IContributorClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Contributor>
 NGitLab.IDeploymentClient
@@ -484,6 +485,7 @@ NGitLab.Impl.CommitStatusClient
 NGitLab.Impl.CommitStatusClient.AddOrUpdate(NGitLab.Models.CommitStatusCreate status) -> NGitLab.Models.CommitStatusCreate
 NGitLab.Impl.CommitStatusClient.AllBySha(string commitSha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.CommitStatus>
 NGitLab.Impl.CommitStatusClient.CommitStatusClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
+NGitLab.Impl.CommitStatusClient.GetAsync(string commitSha, NGitLab.Models.CommitStatusQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.CommitStatus>
 NGitLab.Impl.DeploymentClient
 NGitLab.Impl.DeploymentClient.DeploymentClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.DeploymentClient.Get(long projectId, NGitLab.Models.DeploymentQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Deployment>
@@ -1295,6 +1297,7 @@ NGitLab.Models.Author.CreatedAt.get -> System.DateTime
 NGitLab.Models.Author.CreatedAt.set -> void
 NGitLab.Models.Author.Email.get -> string
 NGitLab.Models.Author.Email.set -> void
+NGitLab.Models.Author.Equals(NGitLab.Models.Author other) -> bool
 NGitLab.Models.Author.Id.get -> long
 NGitLab.Models.Author.Id.set -> void
 NGitLab.Models.Author.Name.get -> string
@@ -1596,6 +1599,24 @@ NGitLab.Models.CommitStatusCreate.Status.get -> string
 NGitLab.Models.CommitStatusCreate.Status.set -> void
 NGitLab.Models.CommitStatusCreate.TargetUrl.get -> string
 NGitLab.Models.CommitStatusCreate.TargetUrl.set -> void
+NGitLab.Models.CommitStatusQuery
+NGitLab.Models.CommitStatusQuery.All.get -> bool?
+NGitLab.Models.CommitStatusQuery.All.init -> void
+NGitLab.Models.CommitStatusQuery.CommitStatusQuery() -> void
+NGitLab.Models.CommitStatusQuery.Name.get -> string
+NGitLab.Models.CommitStatusQuery.Name.init -> void
+NGitLab.Models.CommitStatusQuery.OrderBy.get -> string
+NGitLab.Models.CommitStatusQuery.OrderBy.init -> void
+NGitLab.Models.CommitStatusQuery.PerPage.get -> int?
+NGitLab.Models.CommitStatusQuery.PerPage.init -> void
+NGitLab.Models.CommitStatusQuery.PipelineId.get -> long?
+NGitLab.Models.CommitStatusQuery.PipelineId.init -> void
+NGitLab.Models.CommitStatusQuery.Ref.get -> string
+NGitLab.Models.CommitStatusQuery.Ref.init -> void
+NGitLab.Models.CommitStatusQuery.Sort.get -> string
+NGitLab.Models.CommitStatusQuery.Sort.init -> void
+NGitLab.Models.CommitStatusQuery.Stage.get -> string
+NGitLab.Models.CommitStatusQuery.Stage.init -> void
 NGitLab.Models.CompareQuery
 NGitLab.Models.CompareQuery.CompareQuery(string source, string target) -> void
 NGitLab.Models.CompareQuery.Source.get -> string
@@ -4883,6 +4904,8 @@ NGitLab.UserQuery.WithoutProjects.set -> void
 override NGitLab.DynamicEnum<TEnum>.Equals(object obj) -> bool
 override NGitLab.DynamicEnum<TEnum>.GetHashCode() -> int
 override NGitLab.DynamicEnum<TEnum>.ToString() -> string
+override NGitLab.Models.Author.Equals(object obj) -> bool
+override NGitLab.Models.Author.GetHashCode() -> int
 override NGitLab.Models.Blame.Equals(object obj) -> bool
 override NGitLab.Models.Blame.GetHashCode() -> int
 override NGitLab.Models.BlameCommit.Equals(object obj) -> bool

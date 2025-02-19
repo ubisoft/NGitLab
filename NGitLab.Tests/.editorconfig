@@ -1,6 +1,0 @@
-[*.cs]
-
-# Lots of false positive because of TestContext.Out/Progress
-dotnet_diagnostic.MA0042.severity = none
-
-dotnet_diagnostic.MA0076.severity = none
