@@ -17,4 +17,7 @@ public class LintCI
 
     [JsonPropertyName("warnings")]
     public string[] Warnings { get; set; }
+
+    [JsonPropertyName("jobs")]
+    public LintCIJob[] Jobs { get; set; }
 }

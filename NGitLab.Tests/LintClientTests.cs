@@ -11,15 +11,27 @@ public class LintClientTests
     private const string ValidCIYaml = @"
 variables:
   CI_DEBUG_TRACE: ""true""
-build:
+build-job:
+  stage: build
+  tags:
+    - Runner-Build
+  before_script:
+    - echo before start
+    - echo before end
   script:
-    - echo test
+    - echo test start
+    - echo test end
+  after_script:
+    - echo after start
+    - echo after end
+  when: always
+  allow_failure: true
 ";
 
     private const string InvalidCIYaml = @"
 variables:
   CI_DEBUG_TRACE: ""true""
-build:
+build-job:
   script:
     - echo test
   this_key_should_not_exist:
@@ -41,6 +53,32 @@ build:
             Assert.That(result.Valid, Is.True);
             Assert.That(result.Errors, Is.Empty);
             Assert.That(result.Warnings, Is.Empty);
+        });
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task LintValidCIYamlWithJobs()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var lintClient = context.Client.Lint;
+
+        var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), ValidCIYaml, new() { IncludeJobs = true }, CancellationToken.None);
+
+        Assert.That(result.Jobs, Has.Length.EqualTo(1));
+        var job = result.Jobs[0];
+        Assert.Multiple(() =>
+        {
+            Assert.That(job.Name, Is.EqualTo("build-job"));
+            Assert.That(job.Stage, Is.EqualTo("build"));
+            Assert.That(job.BeforeScript, Is.EqualTo(["echo before start", "echo before end"]));
+            Assert.That(job.Script, Is.EqualTo(["echo test start", "echo test end"]));
+            Assert.That(job.AfterScript, Is.EqualTo(["echo after start", "echo after end"]));
+            Assert.That(job.TagList, Is.EqualTo(["Runner-Build"]));
+            Assert.That(job.Environment, Is.Null);
+            Assert.That(job.When, Is.EqualTo("always"));
+            Assert.That(job.AllowFailure, Is.True);
         });
     }
 
