@@ -60,12 +60,22 @@ public class MembersClient : IMembersClient
 
     public IEnumerable<Membership> OfProject(string projectId)
     {
-        return OfProject(projectId, includeInheritedMembers: false, null);
+        return OfProject(projectId, includeInheritedMembers: false, query: null);
     }
 
-    public IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers, MemberQuery query = null)
+    public IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers)
+    {
+        return OfProject(projectId, includeInheritedMembers, query: null);
+    }
+
+    public IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers, MemberQuery query)
     {
         return GetAll($"{Project.Url}/{WebUtility.UrlEncode(projectId)}", includeInheritedMembers, query);
+    }
+
+    public GitLabCollectionResponse<Membership> OfProjectAsync(ProjectId projectId, bool includeInheritedMembers)
+    {
+        return OfProjectAsync(projectId, includeInheritedMembers, query: null);
     }
 
     public GitLabCollectionResponse<Membership> OfProjectAsync(ProjectId projectId, bool includeInheritedMembers = false, MemberQuery query = null)
@@ -126,9 +136,19 @@ public class MembersClient : IMembersClient
         return OfGroup(groupId, includeInheritedMembers: false, null);
     }
 
-    public IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers, MemberQuery query = null)
+    public IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers)
+    {
+        return OfGroup(groupId, includeInheritedMembers, query: null);
+    }
+
+    public IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers, MemberQuery query)
     {
         return GetAll($"{Group.Url}/{WebUtility.UrlEncode(groupId)}", includeInheritedMembers, query);
+    }
+
+    public GitLabCollectionResponse<Membership> OfGroupAsync(GroupId groupId, bool includeInheritedMembers)
+    {
+        return OfGroupAsync(groupId, includeInheritedMembers, query: null);
     }
 
     public GitLabCollectionResponse<Membership> OfGroupAsync(GroupId groupId, bool includeInheritedMembers = false, MemberQuery query = null)

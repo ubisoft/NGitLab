@@ -13,7 +13,11 @@ public interface IMembersClient
 {
     IEnumerable<Membership> OfProject(string projectId);
 
-    IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers, MemberQuery query = null);
+    IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers);
+
+    IEnumerable<Membership> OfProject(string projectId, bool includeInheritedMembers, MemberQuery query);
+
+    GitLabCollectionResponse<Membership> OfProjectAsync(ProjectId projectId, bool includeInheritedMembers);
 
     GitLabCollectionResponse<Membership> OfProjectAsync(ProjectId projectId, bool includeInheritedMembers = false, MemberQuery query = null);
 
@@ -38,7 +42,11 @@ public interface IMembersClient
 
     IEnumerable<Membership> OfGroup(string groupId);
 
-    IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers, MemberQuery query = null);
+    IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers);
+
+    IEnumerable<Membership> OfGroup(string groupId, bool includeInheritedMembers, MemberQuery query);
+
+    GitLabCollectionResponse<Membership> OfGroupAsync(GroupId groupId, bool includeInheritedMembers);
 
     GitLabCollectionResponse<Membership> OfGroupAsync(GroupId groupId, bool includeInheritedMembers = false, MemberQuery query = null);
 

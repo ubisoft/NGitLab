@@ -19,7 +19,12 @@ public class LabelClient : ILabelClient
         _api = api;
     }
 
-    public IEnumerable<Label> ForProject(long projectId, LabelQuery query = null)
+    public IEnumerable<Label> ForProject(long projectId)
+    {
+        return ForProject(projectId, query: null);
+    }
+
+    public IEnumerable<Label> ForProject(long projectId, LabelQuery query)
     {
         string url = string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId);
 
@@ -34,7 +39,12 @@ public class LabelClient : ILabelClient
         return _api.Get().GetAll<Label>(url);
     }
 
-    public IEnumerable<Label> ForGroup(long groupId, LabelQuery query = null)
+    public IEnumerable<Label> ForGroup(long groupId)
+    {
+        return ForGroup(groupId, query: null);
+    }
+
+    public IEnumerable<Label> ForGroup(long groupId, LabelQuery query)
     {
         string url = string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, groupId);
 
