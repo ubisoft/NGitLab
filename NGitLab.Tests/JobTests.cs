@@ -16,6 +16,7 @@ public class JobTests
         var content = """
             variables:
               CI_DEBUG_TRACE: "true"
+            
             """;
 
         for (var i = 0; i < jobCount; i++)
@@ -29,12 +30,14 @@ public class JobTests
                   artifacts:
                     paths:
                       - '*.txt'
+                
                 """;
 
             if (manualAction)
             {
                 content += """
-                    when: manual
+                      when: manual
+                    
                     """;
             }
         }
