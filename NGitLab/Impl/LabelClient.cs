@@ -26,15 +26,7 @@ public class LabelClient : ILabelClient
 
     public IEnumerable<Label> ForProject(long projectId, LabelQuery query)
     {
-        string url = string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId);
-
-        if (query != null)
-        {
-            url = Utils.AddParameter(url, "with_counts", query.WithCounts);
-            url = Utils.AddParameter(url, "per_page", query.PerPage);
-            url = Utils.AddParameter(url, "search", query.Search);
-            url = Utils.AddParameter(url, "include_ancestor_groups ", query.IncludeAncestorGroups);
-        }
+        string url = AddLabelParameterQuery(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId), query);
 
         return _api.Get().GetAll<Label>(url);
     }
@@ -46,15 +38,7 @@ public class LabelClient : ILabelClient
 
     public IEnumerable<Label> ForGroup(long groupId, LabelQuery query)
     {
-        string url = string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, groupId);
-
-        if (query != null)
-        {
-            url = Utils.AddParameter(url, "with_counts", query.WithCounts);
-            url = Utils.AddParameter(url, "per_page", query.PerPage);
-            url = Utils.AddParameter(url, "search", query.Search);
-            url = Utils.AddParameter(url, "include_ancestor_groups ", query.IncludeAncestorGroups);
-        }
+        string url = AddLabelParameterQuery(string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, groupId), query);
 
         return _api.Get().GetAll<Label>(url);
     }
@@ -154,5 +138,20 @@ public class LabelClient : ILabelClient
             Id = label.Id,
             Name = label.Name,
         });
+    }
+
+    private static string AddLabelParameterQuery(string url, LabelQuery query)
+    {
+        if (query == null)
+        {
+            return url;
+        }
+
+        url = Utils.AddParameter(url, "with_counts", query.WithCounts);
+        url = Utils.AddParameter(url, "per_page", query.PerPage);
+        url = Utils.AddParameter(url, "search", query.Search);
+        url = Utils.AddParameter(url, "include_ancestor_groups ", query.IncludeAncestorGroups);
+
+        return url;
     }
 }

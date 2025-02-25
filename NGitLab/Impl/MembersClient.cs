@@ -19,41 +19,14 @@ public class MembersClient : IMembersClient
 
     private IEnumerable<Membership> GetAll(string url, bool includeInheritedMembers, MemberQuery query)
     {
-        url += "/members";
-        if (includeInheritedMembers)
-        {
-            url += "/all";
-
-        }
-
-        if (query != null)
-        {
-            url = Utils.AddParameter(url, "user_ids", query.UserIds);
-            url = Utils.AddParameter(url, "state", query.State);
-            url = Utils.AddParameter(url, "per_page ", query.PerPage);
-            url = Utils.AddParameter(url, "query", query.Query);
-            url = Utils.AddParameter(url, "show_seat_info", query.ShowSeatInfo);
-        }
+        url = GetMemberUrlWithQueryParameters(url, includeInheritedMembers, query);
 
         return _api.Get().GetAll<Membership>(url);
     }
 
     private GitLabCollectionResponse<Membership> GetAllAsync(string url, bool includeInheritedMembers, MemberQuery query)
     {
-        url += "/members";
-        if (includeInheritedMembers)
-        {
-            url += "/all";
-        }
-
-        if (query != null)
-        {
-            url = Utils.AddParameter(url, "user_ids", query.UserIds);
-            url = Utils.AddParameter(url, "state", query.State);
-            url = Utils.AddParameter(url, "per_page ", query.PerPage);
-            url = Utils.AddParameter(url, "query", query.Query);
-            url = Utils.AddParameter(url, "show_seat_info", query.ShowSeatInfo);
-        }
+        url = GetMemberUrlWithQueryParameters(url, includeInheritedMembers, query);
 
         return _api.Get().GetAllAsync<Membership>(url);
     }
@@ -196,5 +169,26 @@ public class MembersClient : IMembersClient
     public Task RemoveMemberFromGroupAsync(GroupId groupId, long userId, CancellationToken cancellationToken = default)
     {
         return _api.Delete().ExecuteAsync($"{Group.Url}/{groupId.ValueAsUriParameter()}/members/{userId.ToStringInvariant()}", cancellationToken);
+    }
+
+    private static string GetMemberUrlWithQueryParameters(string url, bool includeInheritedMembers, MemberQuery query)
+    {
+        url += "/members";
+        if (includeInheritedMembers)
+        {
+            url += "/all";
+        }
+
+        if (query != null)
+        {
+            url = Utils.AddParameter(url, "user_ids", query.UserIds);
+            url = Utils.AddParameter(url, "state", query.State);
+            url = Utils.AddParameter(url, "per_page ", query.PerPage);
+            url = Utils.AddParameter(url, "query", query.Query);
+            url = Utils.AddParameter(url, "show_seat_info", query.ShowSeatInfo);
+            url = Utils.AddParameter(url, "skip_users", query.SkipUsers);
+        }
+
+        return url;
     }
 }
