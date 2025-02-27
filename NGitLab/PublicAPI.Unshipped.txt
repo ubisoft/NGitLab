@@ -350,7 +350,9 @@ NGitLab.ILabelClient.EditGroupLabel(long groupId, NGitLab.Models.GroupLabelEdit 
 NGitLab.ILabelClient.EditGroupLabel(NGitLab.Models.LabelEdit label) -> NGitLab.Models.Label
 NGitLab.ILabelClient.EditProjectLabel(long projectId, NGitLab.Models.ProjectLabelEdit label) -> NGitLab.Models.Label
 NGitLab.ILabelClient.ForGroup(long groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Label>
+NGitLab.ILabelClient.ForGroup(long groupId, NGitLab.Models.LabelQuery labelQuery) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Label>
 NGitLab.ILabelClient.ForProject(long projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Label>
+NGitLab.ILabelClient.ForProject(long projectId, NGitLab.Models.LabelQuery labelQuery) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Label>
 NGitLab.ILabelClient.GetGroupLabel(long groupId, string name) -> NGitLab.Models.Label
 NGitLab.ILabelClient.GetLabel(long projectId, string name) -> NGitLab.Models.Label
 NGitLab.ILabelClient.GetProjectLabel(long projectId, string name) -> NGitLab.Models.Label
@@ -370,11 +372,15 @@ NGitLab.IMembersClient.GetMemberOfProject(string projectId, string userId, bool 
 NGitLab.IMembersClient.GetMemberOfProjectAsync(NGitLab.Models.ProjectId projectId, long userId, bool includeInheritedMembers = false, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfGroup(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfGroup(string groupId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
-NGitLab.IMembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers = false) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
+NGitLab.IMembersClient.OfGroup(string groupId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
+NGitLab.IMembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers = false, NGitLab.Models.MemberQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
+NGitLab.IMembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfNamespace(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
-NGitLab.IMembersClient.OfProjectAsync(NGitLab.Models.ProjectId projectId, bool includeInheritedMembers = false) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
+NGitLab.IMembersClient.OfProject(string projectId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
+NGitLab.IMembersClient.OfProjectAsync(NGitLab.Models.ProjectId projectId, bool includeInheritedMembers = false, NGitLab.Models.MemberQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
+NGitLab.IMembersClient.OfProjectAsync(NGitLab.Models.ProjectId projectId, bool includeInheritedMembers) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
 NGitLab.IMembersClient.RemoveMemberFromGroupAsync(NGitLab.Models.GroupId groupId, long userId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IMembersClient.RemoveMemberFromProjectAsync(NGitLab.Models.ProjectId projectId, long userId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IMembersClient.UpdateMemberOfGroup(string groupId, NGitLab.Models.GroupMemberUpdate user) -> NGitLab.Models.Membership
@@ -650,7 +656,9 @@ NGitLab.Impl.LabelClient.EditGroupLabel(long groupId, NGitLab.Models.GroupLabelE
 NGitLab.Impl.LabelClient.EditGroupLabel(NGitLab.Models.LabelEdit label) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.EditProjectLabel(long projectId, NGitLab.Models.ProjectLabelEdit label) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.ForGroup(long groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Label>
+NGitLab.Impl.LabelClient.ForGroup(long groupId, NGitLab.Models.LabelQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Label>
 NGitLab.Impl.LabelClient.ForProject(long projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Label>
+NGitLab.Impl.LabelClient.ForProject(long projectId, NGitLab.Models.LabelQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Label>
 NGitLab.Impl.LabelClient.GetGroupLabel(long groupId, string name) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.GetLabel(long projectId, string name) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.GetProjectLabel(long projectId, string name) -> NGitLab.Models.Label
@@ -673,11 +681,15 @@ NGitLab.Impl.MembersClient.GetMemberOfProjectAsync(NGitLab.Models.ProjectId proj
 NGitLab.Impl.MembersClient.MembersClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.MembersClient.OfGroup(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfGroup(string groupId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
-NGitLab.Impl.MembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers = false) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
+NGitLab.Impl.MembersClient.OfGroup(string groupId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
+NGitLab.Impl.MembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers = false, NGitLab.Models.MemberQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
+NGitLab.Impl.MembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfNamespace(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
-NGitLab.Impl.MembersClient.OfProjectAsync(NGitLab.Models.ProjectId projectId, bool includeInheritedMembers = false) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
+NGitLab.Impl.MembersClient.OfProject(string projectId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
+NGitLab.Impl.MembersClient.OfProjectAsync(NGitLab.Models.ProjectId projectId, bool includeInheritedMembers = false, NGitLab.Models.MemberQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
+NGitLab.Impl.MembersClient.OfProjectAsync(NGitLab.Models.ProjectId projectId, bool includeInheritedMembers) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.RemoveMemberFromGroupAsync(NGitLab.Models.GroupId groupId, long userId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.MembersClient.RemoveMemberFromProjectAsync(NGitLab.Models.ProjectId projectId, long userId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.MembersClient.UpdateMemberOfGroup(string groupId, NGitLab.Models.GroupMemberUpdate user) -> NGitLab.Models.Membership
@@ -2549,6 +2561,8 @@ NGitLab.Models.JobScopeMask.Running = 4 -> NGitLab.Models.JobScopeMask
 NGitLab.Models.JobScopeMask.Skipped = 64 -> NGitLab.Models.JobScopeMask
 NGitLab.Models.JobScopeMask.Success = 16 -> NGitLab.Models.JobScopeMask
 NGitLab.Models.Label
+NGitLab.Models.Label.ClosedIssuesCount.get -> int
+NGitLab.Models.Label.ClosedIssuesCount.set -> void
 NGitLab.Models.Label.Color.get -> string
 NGitLab.Models.Label.Color.set -> void
 NGitLab.Models.Label.Description.get -> string
@@ -2556,6 +2570,10 @@ NGitLab.Models.Label.Description.set -> void
 NGitLab.Models.Label.Label() -> void
 NGitLab.Models.Label.Name.get -> string
 NGitLab.Models.Label.Name.set -> void
+NGitLab.Models.Label.OpenIssuesCount.get -> int
+NGitLab.Models.Label.OpenIssuesCount.set -> void
+NGitLab.Models.Label.OpenMergeRequestsCount.get -> int
+NGitLab.Models.Label.OpenMergeRequestsCount.set -> void
 NGitLab.Models.LabelCreate
 NGitLab.Models.LabelCreate.Color.get -> string
 NGitLab.Models.LabelCreate.Color.set -> void
@@ -2584,6 +2602,16 @@ NGitLab.Models.LabelEdit.Name.get -> string
 NGitLab.Models.LabelEdit.Name.set -> void
 NGitLab.Models.LabelEdit.NewName.get -> string
 NGitLab.Models.LabelEdit.NewName.set -> void
+NGitLab.Models.LabelQuery
+NGitLab.Models.LabelQuery.IncludeAncestorGroups.get -> bool?
+NGitLab.Models.LabelQuery.IncludeAncestorGroups.set -> void
+NGitLab.Models.LabelQuery.LabelQuery() -> void
+NGitLab.Models.LabelQuery.PerPage.get -> int?
+NGitLab.Models.LabelQuery.PerPage.set -> void
+NGitLab.Models.LabelQuery.Search.get -> string
+NGitLab.Models.LabelQuery.Search.set -> void
+NGitLab.Models.LabelQuery.WithCounts.get -> bool?
+NGitLab.Models.LabelQuery.WithCounts.set -> void
 NGitLab.Models.LastActivityDate
 NGitLab.Models.LastActivityDate.LastActivityDate() -> void
 NGitLab.Models.LastActivityDate.LastActivityOn.get -> System.DateTimeOffset
@@ -2636,6 +2664,20 @@ NGitLab.Models.LintCIOptions.IncludeJobs.set -> void
 NGitLab.Models.LintCIOptions.LintCIOptions() -> void
 NGitLab.Models.LintCIOptions.Ref.get -> string
 NGitLab.Models.LintCIOptions.Ref.set -> void
+NGitLab.Models.MemberQuery
+NGitLab.Models.MemberQuery.MemberQuery() -> void
+NGitLab.Models.MemberQuery.PerPage.get -> int?
+NGitLab.Models.MemberQuery.PerPage.set -> void
+NGitLab.Models.MemberQuery.Query.get -> string
+NGitLab.Models.MemberQuery.Query.set -> void
+NGitLab.Models.MemberQuery.ShowSeatInfo.get -> bool?
+NGitLab.Models.MemberQuery.ShowSeatInfo.set -> void
+NGitLab.Models.MemberQuery.SkipUsers.get -> long[]
+NGitLab.Models.MemberQuery.SkipUsers.set -> void
+NGitLab.Models.MemberQuery.State.get -> string
+NGitLab.Models.MemberQuery.State.set -> void
+NGitLab.Models.MemberQuery.UserIds.get -> long[]
+NGitLab.Models.MemberQuery.UserIds.set -> void
 NGitLab.Models.Membership
 NGitLab.Models.Membership.AccessLevel.get -> int
 NGitLab.Models.Membership.AccessLevel.set -> void
@@ -4870,8 +4912,14 @@ NGitLab.UserQuery.CreatedAfter.get -> System.DateTime?
 NGitLab.UserQuery.CreatedAfter.set -> void
 NGitLab.UserQuery.CreatedBefore.get -> System.DateTime?
 NGitLab.UserQuery.CreatedBefore.set -> void
+NGitLab.UserQuery.ExcludeActive.get -> bool?
+NGitLab.UserQuery.ExcludeActive.set -> void
 NGitLab.UserQuery.ExcludeExternal.get -> bool?
 NGitLab.UserQuery.ExcludeExternal.set -> void
+NGitLab.UserQuery.ExcludeHumans.get -> bool?
+NGitLab.UserQuery.ExcludeHumans.set -> void
+NGitLab.UserQuery.ExcludeInternal.get -> bool?
+NGitLab.UserQuery.ExcludeInternal.set -> void
 NGitLab.UserQuery.ExternalUid.get -> string
 NGitLab.UserQuery.ExternalUid.set -> void
 NGitLab.UserQuery.IsActive.get -> bool?
@@ -4882,6 +4930,8 @@ NGitLab.UserQuery.IsBlocked.get -> bool?
 NGitLab.UserQuery.IsBlocked.set -> void
 NGitLab.UserQuery.IsExternal.get -> bool?
 NGitLab.UserQuery.IsExternal.set -> void
+NGitLab.UserQuery.IsHuman.get -> bool?
+NGitLab.UserQuery.IsHuman.set -> void
 NGitLab.UserQuery.OrderBy.get -> string
 NGitLab.UserQuery.OrderBy.set -> void
 NGitLab.UserQuery.PerPage.get -> int?

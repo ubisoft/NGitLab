@@ -21,17 +21,31 @@ public class LabelClient : ILabelClient
 
     public IEnumerable<Label> ForProject(long projectId)
     {
-        return _api.Get().GetAll<Label>(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId));
+        return ForProject(projectId, query: null);
+    }
+
+    public IEnumerable<Label> ForProject(long projectId, LabelQuery query)
+    {
+        string url = AddLabelParameterQuery(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId), query);
+
+        return _api.Get().GetAll<Label>(url);
     }
 
     public IEnumerable<Label> ForGroup(long groupId)
     {
-        return _api.Get().GetAll<Label>(string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, groupId));
+        return ForGroup(groupId, query: null);
+    }
+
+    public IEnumerable<Label> ForGroup(long groupId, LabelQuery query)
+    {
+        string url = AddLabelParameterQuery(string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, groupId), query);
+
+        return _api.Get().GetAll<Label>(url);
     }
 
     public Label GetProjectLabel(long projectId, string name)
     {
-        return ForProject(projectId).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
+        return ForProject(projectId, new LabelQuery() { Search = name }).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -42,7 +56,7 @@ public class LabelClient : ILabelClient
 
     public Label GetGroupLabel(long groupId, string name)
     {
-        return ForGroup(groupId).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
+        return ForGroup(groupId, new LabelQuery() { Search = name }).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
     }
 
     public Label CreateProjectLabel(long projectId, ProjectLabelCreate label)
@@ -124,5 +138,20 @@ public class LabelClient : ILabelClient
             Id = label.Id,
             Name = label.Name,
         });
+    }
+
+    private static string AddLabelParameterQuery(string url, LabelQuery query)
+    {
+        if (query == null)
+        {
+            return url;
+        }
+
+        url = Utils.AddParameter(url, "with_counts", query.WithCounts);
+        url = Utils.AddParameter(url, "per_page", query.PerPage);
+        url = Utils.AddParameter(url, "search", query.Search);
+        url = Utils.AddParameter(url, "include_ancestor_groups ", query.IncludeAncestorGroups);
+
+        return url;
     }
 }

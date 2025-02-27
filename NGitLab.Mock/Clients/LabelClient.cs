@@ -152,6 +152,11 @@ internal sealed class LabelClient : ClientBase, ILabelClient
 
     public IEnumerable<Models.Label> ForGroup(long groupId)
     {
+        return ForGroup(groupId, query: null);
+    }
+
+    public IEnumerable<Models.Label> ForGroup(long groupId, LabelQuery query)
+    {
         using (Context.BeginOperationScope())
         {
             var group = GetGroup(groupId, GroupPermission.View);
@@ -160,6 +165,11 @@ internal sealed class LabelClient : ClientBase, ILabelClient
     }
 
     public IEnumerable<Models.Label> ForProject(long projectId)
+    {
+        return ForProject(projectId, query: null);
+    }
+
+    public IEnumerable<Models.Label> ForProject(long projectId, LabelQuery query)
     {
         using (Context.BeginOperationScope())
         {

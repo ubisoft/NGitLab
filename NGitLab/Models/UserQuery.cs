@@ -36,9 +36,29 @@ public class UserQuery
     public bool? IsExternal { get; set; }
 
     /// <summary>
-    /// Exclude external users
+    /// If true, get regular users that are not bot or internal users.
+    /// </summary>
+    public bool? IsHuman { get; set; }
+
+    /// <summary>
+    /// Exclude external users.
     /// </summary>
     public bool? ExcludeExternal { get; set; }
+
+    /// <summary>
+    /// Exclude internal users.
+    /// </summary>
+    public bool? ExcludeInternal { get; set; }
+
+    /// <summary>
+    /// Exclude active users.
+    /// </summary>
+    public bool? ExcludeActive { get; set; }
+
+    /// <summary>
+    /// Exclude regular users that are not bot or internal users.
+    /// </summary>
+    public bool? ExcludeHumans { get; set; }
 
     /// <summary>
     /// (Admin only) Return projects ordered by id, name, username, created_at, or updated_at. Default is id.
