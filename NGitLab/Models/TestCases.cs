@@ -16,7 +16,7 @@ public class TestCases
     [JsonPropertyName("execution_time")]
     public int ExecutionTime { get; set; }
 
-    [JsonPropertyName("system_ouput")]
+    [JsonPropertyName("system_output")]
     public string SystemOutput { get; set; }
 
     [JsonPropertyName("stack_trace")]

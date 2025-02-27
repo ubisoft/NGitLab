@@ -2,6 +2,11 @@
 
 namespace NGitLab.Models;
 
+/// <summary>
+/// JSON properties used to add or update a pipeline status of a commit. Refer to
+/// <see href="https://docs.gitlab.com/api/commits/#set-the-pipeline-status-of-a-commit">GitLab's documentation</see>
+/// for further details.
+/// </summary>
 public class CommitStatusCreate
 {
     [JsonPropertyName("sha")]
