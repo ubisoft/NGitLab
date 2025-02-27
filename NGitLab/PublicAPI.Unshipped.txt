@@ -2540,7 +2540,7 @@ NGitLab.Models.JobScopeMask.Running = 4 -> NGitLab.Models.JobScopeMask
 NGitLab.Models.JobScopeMask.Skipped = 64 -> NGitLab.Models.JobScopeMask
 NGitLab.Models.JobScopeMask.Success = 16 -> NGitLab.Models.JobScopeMask
 NGitLab.Models.Label
-NGitLab.Models.Label.ClosedIssuesCount.get -> string
+NGitLab.Models.Label.ClosedIssuesCount.get -> int
 NGitLab.Models.Label.ClosedIssuesCount.set -> void
 NGitLab.Models.Label.Color.get -> string
 NGitLab.Models.Label.Color.set -> void
@@ -2549,9 +2549,9 @@ NGitLab.Models.Label.Description.set -> void
 NGitLab.Models.Label.Label() -> void
 NGitLab.Models.Label.Name.get -> string
 NGitLab.Models.Label.Name.set -> void
-NGitLab.Models.Label.OpenIssuesCount.get -> string
+NGitLab.Models.Label.OpenIssuesCount.get -> int
 NGitLab.Models.Label.OpenIssuesCount.set -> void
-NGitLab.Models.Label.OpenMergeRequestsCount.get -> string
+NGitLab.Models.Label.OpenMergeRequestsCount.get -> int
 NGitLab.Models.Label.OpenMergeRequestsCount.set -> void
 NGitLab.Models.LabelCreate
 NGitLab.Models.LabelCreate.Color.get -> string
