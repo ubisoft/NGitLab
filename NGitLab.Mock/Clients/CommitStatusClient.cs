@@ -15,7 +15,7 @@ internal sealed class CommitStatusClient : ClientBase, ICommitStatusClient
         _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
-    public CommitStatusCreate AddOrUpdate(CommitStatusCreate status)
+    CommitStatusCreate ICommitStatusClient.AddOrUpdate(CommitStatusCreate status)
     {
         using (Context.BeginOperationScope())
         {
@@ -34,6 +34,7 @@ internal sealed class CommitStatusClient : ClientBase, ICommitStatusClient
             commitStatus.Sha = status.CommitSha;
             commitStatus.Status = status.Status;
             commitStatus.TargetUrl = status.TargetUrl;
+
             return commitStatus.ToClientCommitStatusCreate();
         }
 
@@ -46,7 +47,7 @@ internal sealed class CommitStatusClient : ClientBase, ICommitStatusClient
         }
     }
 
-    public IEnumerable<Models.CommitStatus> AllBySha(string commitSha)
+    IEnumerable<Models.CommitStatus> ICommitStatusClient.AllBySha(string commitSha)
     {
         using (Context.BeginOperationScope())
         {
@@ -56,5 +57,10 @@ internal sealed class CommitStatusClient : ClientBase, ICommitStatusClient
                 .Select(p => p.ToClientCommitStatus())
                 .ToList();
         }
+    }
+
+    GitLabCollectionResponse<Models.CommitStatus> ICommitStatusClient.GetAsync(string commitSha, CommitStatusQuery query)
+    {
+        throw new NotImplementedException();
     }
 }

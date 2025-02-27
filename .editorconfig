@@ -57,7 +57,7 @@ dotnet_style_collection_initializer = true : suggestion
 dotnet_style_explicit_tuple_names = true : warning
 dotnet_style_null_propagation = true : suggestion
 dotnet_style_object_initializer = true : suggestion
-dotnet_style_require_accessibility_modifiers = always : warning
+dotnet_style_require_accessibility_modifiers = for_non_interface_members : warning
 
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true : warning
 dotnet_style_readonly_field = true : warning
