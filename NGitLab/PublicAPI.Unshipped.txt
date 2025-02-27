@@ -2629,11 +2629,11 @@ NGitLab.Models.MemberQuery.Query.get -> string
 NGitLab.Models.MemberQuery.Query.set -> void
 NGitLab.Models.MemberQuery.ShowSeatInfo.get -> bool?
 NGitLab.Models.MemberQuery.ShowSeatInfo.set -> void
-NGitLab.Models.MemberQuery.SkipUsers.get -> System.Collections.Generic.List<int>
+NGitLab.Models.MemberQuery.SkipUsers.get -> long[]
 NGitLab.Models.MemberQuery.SkipUsers.set -> void
 NGitLab.Models.MemberQuery.State.get -> string
 NGitLab.Models.MemberQuery.State.set -> void
-NGitLab.Models.MemberQuery.UserIds.get -> System.Collections.Generic.List<int>
+NGitLab.Models.MemberQuery.UserIds.get -> long[]
 NGitLab.Models.MemberQuery.UserIds.set -> void
 NGitLab.Models.Membership
 NGitLab.Models.Membership.AccessLevel.get -> int
