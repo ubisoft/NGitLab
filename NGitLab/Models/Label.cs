@@ -12,4 +12,13 @@ public class Label
 
     [JsonPropertyName("description")]
     public string Description { get; set; }
+
+    [JsonPropertyName("open_issues_count")]
+    public string OpenIssuesCount { get; set; }
+
+    [JsonPropertyName("closed_issues_count")]
+    public string ClosedIssuesCount { get; set; }
+
+    [JsonPropertyName("open_merge_requests_count")]
+    public string OpenMergeRequestsCount { get; set; }
 }

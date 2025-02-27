@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace NGitLab.Models;
+﻿namespace NGitLab.Models;
 
 public class MemberQuery
 {
@@ -17,12 +15,12 @@ public class MemberQuery
     /// <summary>
     /// Filter the results on the given user IDs.
     /// </summary>
-    public List<int> UserIds { get; set; }
+    public long[] UserIds { get; set; }
 
     /// <summary>
     /// Filter skipped users out of the results.
     /// </summary>
-    public List<int> SkipUsers { get; set; }
+    public long[] SkipUsers { get; set; }
 
     /// <summary>
     /// Filter results by member state, one of awaiting or active. Premium and Ultimate only.
