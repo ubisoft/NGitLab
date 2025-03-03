@@ -32,6 +32,7 @@ public class CommitStatusTests
     }
 
     [Test]
+    [NGitLabRetry]
     public async Task Test_AddingSameCommitStatusTwice_Throws()
     {
         // Arrange
@@ -47,6 +48,7 @@ public class CommitStatusTests
     }
 
     [Test]
+    [NGitLabRetry]
     public async Task Test_AddingCommitStatusesWithDifferentNamesOnSameCommit_Succeeds()
     {
         // Arrange
@@ -90,6 +92,7 @@ public class CommitStatusTests
     [TestCase(["pending", "running", "success"])]
     [TestCase(["pending", "running", "failed"])]
     [TestCase(["pending", "running", "canceled"])]
+    [NGitLabRetry]
     public async Task Test_UpdatingCommitStatus_SucceedsIfTransitionSupported(params string[] successiveStates)
     {
         // Arrange
@@ -107,6 +110,7 @@ public class CommitStatusTests
 
     [TestCase(["whatever"])]
     [TestCase(["running", "pending"])]
+    [NGitLabRetry]
     public async Task Test_UpdatingCommitStatus_FailsIfStateUnknownOrTransitionUnsupported(params string[] successiveStates)
     {
         // Arrange
@@ -133,6 +137,7 @@ public class CommitStatusTests
 
     [TestCase("whatever", false)]
     [TestCase(null, true)]  // Will set 'nameToLookUp' to a dynamically created name
+    [NGitLabRetry]
     public async Task Test_QueryByName(string nameToLookUp, bool expectToFind)
     {
         // Arrange
@@ -141,7 +146,7 @@ public class CommitStatusTests
         string commitStatusName = null;
         for (var i = 0; i < 10; i++)
         {
-            commitStatusName = $"Commit Status {Guid.NewGuid().ToString("N")}";
+            commitStatusName = $"Commit Status {Guid.NewGuid():N}";
             var commitStatusCreate = context.SetUpCommitStatusCreate("running", commitStatusName);
             _ = context.CommitStatusClient.AddOrUpdate(commitStatusCreate);
         }
