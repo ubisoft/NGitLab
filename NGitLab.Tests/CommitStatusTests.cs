@@ -209,17 +209,17 @@ public class CommitStatusTests
         {
             var commitStatusCreate = SetUpCommitStatusCreate(state, coverage: coverage);
 
-            var commitStatus = CommitStatusClient.AddOrUpdate(commitStatusCreate);
+            var createdCommitStatus = CommitStatusClient.AddOrUpdate(commitStatusCreate);
 
-            Assert.That(commitStatus.Ref, Is.EqualTo(commitStatusCreate.Ref));
-            Assert.That(commitStatus.Coverage, Is.EqualTo(commitStatusCreate.Coverage));
-            Assert.That(commitStatus.Description, Is.EqualTo(commitStatusCreate.Description));
-            Assert.That(commitStatus.Status, Is.EqualTo(commitStatusCreate.State));
-            Assert.That(commitStatus.Name, Is.EqualTo(commitStatusCreate.Name));
-            Assert.That(commitStatus.TargetUrl, Is.EqualTo(commitStatusCreate.TargetUrl));
-            Assert.That(commitStatus.CommitSha, Is.EqualTo(commitStatusCreate.CommitSha).IgnoreCase);
+            Assert.That(createdCommitStatus.Ref, Is.EqualTo(commitStatusCreate.Ref));
+            Assert.That(createdCommitStatus.Coverage, Is.EqualTo(commitStatusCreate.Coverage));
+            Assert.That(createdCommitStatus.Description, Is.EqualTo(commitStatusCreate.Description));
+            Assert.That(createdCommitStatus.Status, Is.EqualTo(commitStatusCreate.State));
+            Assert.That(createdCommitStatus.Name, Is.EqualTo(commitStatusCreate.Name));
+            Assert.That(createdCommitStatus.TargetUrl, Is.EqualTo(commitStatusCreate.TargetUrl));
+            Assert.That(createdCommitStatus.CommitSha, Is.EqualTo(commitStatusCreate.CommitSha).IgnoreCase);
 
-            return commitStatus;
+            return createdCommitStatus;
         }
 
         public CommitStatusCreate SetUpCommitStatusCreate(string state, string name = null, int? coverage = 100)
