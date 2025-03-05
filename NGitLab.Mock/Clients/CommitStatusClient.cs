@@ -32,6 +32,7 @@ internal sealed class CommitStatusClient : ClientBase, ICommitStatusClient
             commitStatus.Coverage = status.Coverage;
             commitStatus.Ref = status.Ref;
             commitStatus.Sha = status.CommitSha;
+            commitStatus.Status = status.State;
             commitStatus.TargetUrl = status.TargetUrl;
 
             return commitStatus.ToClientCommitStatus();
