@@ -25,4 +25,7 @@ internal sealed class ProtectedBranchClient : IProtectedBranchClient
 
     public ProtectedBranch[] GetProtectedBranches(string search = null)
         => _api.Get().To<ProtectedBranch[]>(Utils.AddParameter(_protectedBranchesUrl, "search", search));
+
+    public ProtectedBranch UpdateProtectedBranch(string branchName, ProtectedBranchUpdate protectedBranchUpdate)
+        => _api.Patch().With(protectedBranchUpdate).To<ProtectedBranch>($"{_protectedBranchesUrl}/{Uri.EscapeDataString(branchName)}");
 }
