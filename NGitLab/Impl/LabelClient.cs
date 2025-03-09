@@ -150,7 +150,7 @@ public class LabelClient : ILabelClient
         url = Utils.AddParameter(url, "with_counts", query.WithCounts);
         url = Utils.AddParameter(url, "per_page", query.PerPage);
         url = Utils.AddParameter(url, "search", query.Search);
-        url = Utils.AddParameter(url, "include_ancestor_groups ", query.IncludeAncestorGroups);
+        url = Utils.AddParameter(url, "include_ancestor_groups", query.IncludeAncestorGroups);
 
         return url;
     }
