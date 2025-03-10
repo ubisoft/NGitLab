@@ -62,7 +62,7 @@ public class CommitStatusTests
         var commitStatus2 = context.CommitStatusClient.AddOrUpdate(commitStatusCreate);
 
         // Assert
-        var properties = typeof(CommitStatusCreate).GetProperties();
+        var properties = typeof(CommitStatus).GetProperties();
 
         // All properties should be the same except 'Name' & 'Id'
         foreach (var property in properties)
@@ -205,7 +205,7 @@ public class CommitStatusTests
             return new CommitStatusTestContext(context, project, commit, client);
         }
 
-        public CommitStatusCreate AddOrUpdateCommitStatus(string state = "success", int? coverage = null)
+        public CommitStatus AddOrUpdateCommitStatus(string state = "success", int? coverage = null)
         {
             var commitStatusCreate = SetUpCommitStatusCreate(state, coverage: coverage);
 
