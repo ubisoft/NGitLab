@@ -33,7 +33,7 @@ public interface IUserClient
     /// <param name="tokenRequest">info required to create the token</param>
     /// <param name="cancellationToken">Optional cancellation token.</param>
     /// <returns>The new impersonation token.</returns>
-    public Task<UserToken> CreateTokenAsync(UserTokenCreate tokenRequest, CancellationToken cancellationToken = default);
+    Task<UserToken> CreateTokenAsync(UserTokenCreate tokenRequest, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="CreateTokenAsync(UserTokenCreate, CancellationToken)"/>>
     UserToken CreateToken(UserTokenCreate tokenRequest);

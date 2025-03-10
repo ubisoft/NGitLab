@@ -4,5 +4,5 @@ namespace NGitLab.Impl;
 
 public interface IGitDiffChangeCounter
 {
-    public DiffStats Compute(MergeRequestChange mergeRequestChange);
+    DiffStats Compute(MergeRequestChange mergeRequestChange);
 }
