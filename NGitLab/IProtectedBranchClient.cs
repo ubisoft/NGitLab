@@ -11,4 +11,6 @@ public interface IProtectedBranchClient
     ProtectedBranch GetProtectedBranch(string branchName);
 
     ProtectedBranch[] GetProtectedBranches(string search = null);
+
+    ProtectedBranch UpdateProtectedBranch(string branchName, ProtectedBranchUpdate protectedBranchUpdate);
 }

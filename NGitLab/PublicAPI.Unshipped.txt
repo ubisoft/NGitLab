@@ -1080,6 +1080,7 @@ NGitLab.IProtectedBranchClient.GetProtectedBranch(string branchName) -> NGitLab.
 NGitLab.IProtectedBranchClient.GetProtectedBranches(string search = null) -> NGitLab.Models.ProtectedBranch[]
 NGitLab.IProtectedBranchClient.ProtectBranch(NGitLab.Models.BranchProtect branchProtect) -> NGitLab.Models.ProtectedBranch
 NGitLab.IProtectedBranchClient.UnprotectBranch(string branchName) -> void
+NGitLab.IProtectedBranchClient.UpdateProtectedBranch(string branchName, NGitLab.Models.ProtectedBranchUpdate protectedBranchUpdate) -> NGitLab.Models.ProtectedBranch
 NGitLab.IProtectedTagClient
 NGitLab.IProtectedTagClient.GetProtectedTag(string name) -> NGitLab.Models.ProtectedTag
 NGitLab.IProtectedTagClient.GetProtectedTagAsync(string name, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.ProtectedTag>
