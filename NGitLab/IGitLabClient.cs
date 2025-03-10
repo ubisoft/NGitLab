@@ -101,9 +101,9 @@ public interface IGitLabClient
 
     IProtectedTagClient GetProtectedTagClient(ProjectId projectId);
 
-    public ISearchClient GetGroupSearchClient(GroupId groupId);
+    ISearchClient GetGroupSearchClient(GroupId groupId);
 
-    public ISearchClient GetProjectSearchClient(ProjectId projectId);
+    ISearchClient GetProjectSearchClient(ProjectId projectId);
 
-    public IGroupHooksClient GetGroupHooksClient(GroupId groupId);
+    IGroupHooksClient GetGroupHooksClient(GroupId groupId);
 }
