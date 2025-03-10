@@ -256,7 +256,7 @@ public class GroupsClient : IGroupsClient
         url = Utils.AddParameter(url, "with_shared", query.WithShared);
         url = Utils.AddParameter(url, "include_subgroups", query.IncludeSubGroups);
         url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
-        url = Utils.AddParameter(url, "with_security_reports ", query.WithSecurityReports);
+        url = Utils.AddParameter(url, "with_security_reports", query.WithSecurityReports);
         url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: page is null);
 
         return url;

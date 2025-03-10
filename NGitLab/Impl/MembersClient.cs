@@ -183,7 +183,7 @@ public class MembersClient : IMembersClient
         {
             url = Utils.AddParameter(url, "user_ids", query.UserIds);
             url = Utils.AddParameter(url, "state", query.State);
-            url = Utils.AddParameter(url, "per_page ", query.PerPage);
+            url = Utils.AddParameter(url, "per_page", query.PerPage);
             url = Utils.AddParameter(url, "query", query.Query);
             url = Utils.AddParameter(url, "show_seat_info", query.ShowSeatInfo);
             url = Utils.AddParameter(url, "skip_users", query.SkipUsers);
