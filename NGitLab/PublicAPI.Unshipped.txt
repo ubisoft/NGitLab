@@ -462,6 +462,7 @@ NGitLab.Impl.API.ConnectionToken.set -> void
 NGitLab.Impl.API.Delete() -> NGitLab.IHttpRequestor
 NGitLab.Impl.API.Get() -> NGitLab.IHttpRequestor
 NGitLab.Impl.API.Head() -> NGitLab.IHttpRequestor
+NGitLab.Impl.API.Patch() -> NGitLab.IHttpRequestor
 NGitLab.Impl.API.Post() -> NGitLab.IHttpRequestor
 NGitLab.Impl.API.Put() -> NGitLab.IHttpRequestor
 NGitLab.Impl.API.RequestOptions.get -> NGitLab.RequestOptions
@@ -1244,6 +1245,26 @@ NGitLab.Models.AccessLevelInfo.AccessLevel.set -> void
 NGitLab.Models.AccessLevelInfo.AccessLevelInfo() -> void
 NGitLab.Models.AccessLevelInfo.Description.get -> string
 NGitLab.Models.AccessLevelInfo.Description.set -> void
+NGitLab.Models.AccessLevelInfo.GroupId.get -> int
+NGitLab.Models.AccessLevelInfo.GroupId.set -> void
+NGitLab.Models.AccessLevelInfo.Id.get -> int
+NGitLab.Models.AccessLevelInfo.Id.set -> void
+NGitLab.Models.AccessLevelInfo.UserId.get -> int
+NGitLab.Models.AccessLevelInfo.UserId.set -> void
+NGitLab.Models.AccessLevelUpdate
+NGitLab.Models.AccessLevelUpdate.AccessLevel.get -> NGitLab.Models.AccessLevel?
+NGitLab.Models.AccessLevelUpdate.AccessLevel.set -> void
+NGitLab.Models.AccessLevelUpdate.AccessLevelUpdate() -> void
+NGitLab.Models.AccessLevelUpdate.Description.get -> string
+NGitLab.Models.AccessLevelUpdate.Description.set -> void
+NGitLab.Models.AccessLevelUpdate.Destroy.get -> bool?
+NGitLab.Models.AccessLevelUpdate.Destroy.set -> void
+NGitLab.Models.AccessLevelUpdate.GroupId.get -> int?
+NGitLab.Models.AccessLevelUpdate.GroupId.set -> void
+NGitLab.Models.AccessLevelUpdate.Id.get -> int?
+NGitLab.Models.AccessLevelUpdate.Id.set -> void
+NGitLab.Models.AccessLevelUpdate.UserId.get -> int?
+NGitLab.Models.AccessLevelUpdate.UserId.set -> void
 NGitLab.Models.ApprovalRule
 NGitLab.Models.ApprovalRule.ApprovalRule() -> void
 NGitLab.Models.ApprovalRule.ApprovalsRequired.get -> int
@@ -3940,6 +3961,16 @@ NGitLab.Models.ProtectedBranch.Name.set -> void
 NGitLab.Models.ProtectedBranch.ProtectedBranch() -> void
 NGitLab.Models.ProtectedBranch.PushAccessLevels.get -> NGitLab.Models.AccessLevelInfo[]
 NGitLab.Models.ProtectedBranch.PushAccessLevels.set -> void
+NGitLab.Models.ProtectedBranchUpdate
+NGitLab.Models.ProtectedBranchUpdate.AllowedToMerge.get -> NGitLab.Models.AccessLevelUpdate[]
+NGitLab.Models.ProtectedBranchUpdate.AllowedToMerge.set -> void
+NGitLab.Models.ProtectedBranchUpdate.AllowedToPush.get -> NGitLab.Models.AccessLevelUpdate[]
+NGitLab.Models.ProtectedBranchUpdate.AllowedToPush.set -> void
+NGitLab.Models.ProtectedBranchUpdate.AllowForcePush.get -> bool?
+NGitLab.Models.ProtectedBranchUpdate.AllowForcePush.set -> void
+NGitLab.Models.ProtectedBranchUpdate.CodeOwnerApprovalRequired.get -> bool?
+NGitLab.Models.ProtectedBranchUpdate.CodeOwnerApprovalRequired.set -> void
+NGitLab.Models.ProtectedBranchUpdate.ProtectedBranchUpdate() -> void
 NGitLab.Models.ProtectedTag
 NGitLab.Models.ProtectedTag.CreateAccessLevels.get -> NGitLab.Models.AccessLevelInfo[]
 NGitLab.Models.ProtectedTag.CreateAccessLevels.set -> void

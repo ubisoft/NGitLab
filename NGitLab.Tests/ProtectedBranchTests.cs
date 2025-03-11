@@ -21,21 +21,10 @@ public class ProtectedBranchTests
             PushAccessLevel = AccessLevel.Maintainer,
             MergeAccessLevel = AccessLevel.NoAccess,
             AllowForcePush = true,
-            AllowedToPush = new[]
-            {
-                new AccessLevelInfo
-                {
-                    AccessLevel = AccessLevel.Admin,
-                    Description = "Admin",
-                },
-            },
+            AllowedToPush = new[] { new AccessLevelInfo { AccessLevel = AccessLevel.Admin, Description = "Admin", }, },
             AllowedToUnprotect = new[]
             {
-                new AccessLevelInfo
-                {
-                    AccessLevel = AccessLevel.Admin,
-                    Description = "Example",
-                },
+                new AccessLevelInfo { AccessLevel = AccessLevel.Admin, Description = "Example", },
             },
         };
 
@@ -56,7 +45,8 @@ public class ProtectedBranchTests
         Assert.That(protectedBranchClient.GetProtectedBranches(branch.Name), Is.Empty);
     }
 
-    private static void ProtectedBranchAndBranchProtectAreEquals(BranchProtect branchProtect, ProtectedBranch protectedBranch)
+    private static void ProtectedBranchAndBranchProtectAreEquals(BranchProtect branchProtect,
+        ProtectedBranch protectedBranch)
     {
         Assert.That(protectedBranch.Name, Is.EqualTo(branchProtect.BranchName));
         Assert.That(protectedBranch.PushAccessLevels[0].AccessLevel, Is.EqualTo(branchProtect.PushAccessLevel));

@@ -91,7 +91,7 @@ internal sealed class ProtectedBranchClient : ClientBase, IProtectedBranchClient
                 UpdateAccessLevels(
                     protectedBranchUpdate.AllowedToMerge,
                     (id, level) => protectedBranch.MergeAccessLevels.First(l => l.Id == id).AccessLevel = level,
-                    newAccessLevel => protectedBranch.MergeAccessLevels = protectedBranch.MergeAccessLevels.Concat(new[] { newAccessLevel }).ToArray(),
+                    newAccessLevel => protectedBranch.MergeAccessLevels = protectedBranch.MergeAccessLevels.Concat([newAccessLevel]).ToArray(),
                     id => protectedBranch.MergeAccessLevels = protectedBranch.MergeAccessLevels.Where(l => l.Id != id).ToArray()
                 );
             }
@@ -101,7 +101,7 @@ internal sealed class ProtectedBranchClient : ClientBase, IProtectedBranchClient
                 UpdateAccessLevels(
                     protectedBranchUpdate.AllowedToPush,
                     (id, level) => protectedBranch.PushAccessLevels.First(l => l.Id == id).AccessLevel = level,
-                    newAccessLevel => protectedBranch.PushAccessLevels = protectedBranch.PushAccessLevels.Concat(new[] { newAccessLevel }).ToArray(),
+                    newAccessLevel => protectedBranch.PushAccessLevels = protectedBranch.PushAccessLevels.Concat([newAccessLevel]).ToArray(),
                     id => protectedBranch.PushAccessLevels = protectedBranch.PushAccessLevels.Where(l => l.Id != id).ToArray()
                 );
             }
