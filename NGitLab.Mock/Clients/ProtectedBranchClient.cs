@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NGitLab.Models;
 
@@ -87,88 +88,72 @@ internal sealed class ProtectedBranchClient : ClientBase, IProtectedBranchClient
 
             if (protectedBranchUpdate.AllowedToMerge is not null)
             {
-                foreach (var allowedToMerge in protectedBranchUpdate.AllowedToMerge)
-                {
-                    if (allowedToMerge.Id is not null && allowedToMerge.Destroy is true)
-                    {
-                        protectedBranch.MergeAccessLevels = protectedBranch.MergeAccessLevels.Where(l => l.Id != allowedToMerge.Id).ToArray();
-                    }
-                    else if (allowedToMerge.Id is not null && allowedToMerge.Destroy is false && allowedToMerge.AccessLevel is not null)
-                    {
-                        protectedBranch.MergeAccessLevels.First(l => l.Id == allowedToMerge.Id).AccessLevel =
-                            allowedToMerge.AccessLevel.Value;
-                    }
-                    else if (allowedToMerge.Id is null && allowedToMerge.Destroy is false)
-                    {
-                        var accessLevel = new AccessLevelInfo();
-
-                        if (allowedToMerge.AccessLevel is not null)
-                        {
-                            accessLevel.AccessLevel = allowedToMerge.AccessLevel.Value;
-                        }
-
-                        accessLevel.Description = allowedToMerge.Description;
-
-                        if (allowedToMerge.GroupId is not null)
-                        {
-                            accessLevel.GroupId = allowedToMerge.GroupId.Value;
-                        }
-
-                        if (allowedToMerge.UserId is not null)
-                        {
-                            accessLevel.UserId = allowedToMerge.UserId.Value;
-                        }
-
-                        protectedBranch.MergeAccessLevels =
-                            protectedBranch.MergeAccessLevels.Concat([accessLevel]).ToArray();
-                    }
-
-                }
+                UpdateAccessLevels(
+                    protectedBranchUpdate.AllowedToMerge,
+                    (id, level) => protectedBranch.MergeAccessLevels.First(l => l.Id == id).AccessLevel = level,
+                    newAccessLevel => protectedBranch.MergeAccessLevels = protectedBranch.MergeAccessLevels.Concat(new[] { newAccessLevel }).ToArray(),
+                    id => protectedBranch.MergeAccessLevels = protectedBranch.MergeAccessLevels.Where(l => l.Id != id).ToArray()
+                );
             }
 
             if (protectedBranchUpdate.AllowedToPush is not null)
             {
-                foreach (var allowedToPush in protectedBranchUpdate.AllowedToPush)
-                {
-                    if (allowedToPush.Id is not null && allowedToPush.Destroy is true)
-                    {
-                        protectedBranch.PushAccessLevels = protectedBranch.PushAccessLevels.Where(l => l.Id != allowedToPush.Id).ToArray();
-                    }
-                    else if (allowedToPush.Id is not null && allowedToPush.Destroy is false && allowedToPush.AccessLevel is not null)
-                    {
-                        protectedBranch.PushAccessLevels.First(l => l.Id == allowedToPush.Id).AccessLevel =
-                            allowedToPush.AccessLevel.Value;
-                    }
-                    else if (allowedToPush.Id is null && allowedToPush.Destroy is false)
-                    {
-                        var accessLevel = new AccessLevelInfo();
-
-                        if (allowedToPush.AccessLevel is not null)
-                        {
-                            accessLevel.AccessLevel = allowedToPush.AccessLevel.Value;
-                        }
-
-                        accessLevel.Description = allowedToPush.Description;
-
-                        if (allowedToPush.GroupId is not null)
-                        {
-                            accessLevel.GroupId = allowedToPush.GroupId.Value;
-                        }
-
-                        if (allowedToPush.UserId is not null)
-                        {
-                            accessLevel.UserId = allowedToPush.UserId.Value;
-                        }
-
-                        protectedBranch.PushAccessLevels =
-                            protectedBranch.PushAccessLevels.Concat([accessLevel]).ToArray();
-                    }
-
-                }
+                UpdateAccessLevels(
+                    protectedBranchUpdate.AllowedToPush,
+                    (id, level) => protectedBranch.PushAccessLevels.First(l => l.Id == id).AccessLevel = level,
+                    newAccessLevel => protectedBranch.PushAccessLevels = protectedBranch.PushAccessLevels.Concat(new[] { newAccessLevel }).ToArray(),
+                    id => protectedBranch.PushAccessLevels = protectedBranch.PushAccessLevels.Where(l => l.Id != id).ToArray()
+                );
             }
 
             return protectedBranch.ToProtectedBranchClient();
         }
+    }
 
+    private void UpdateAccessLevels(IEnumerable<AccessLevelUpdate> accessLevels, Action<int, AccessLevel> updateAccessLevel, Action<AccessLevelInfo> addAccessLevel, Action<int> removeAccessLevel)
+    {
+        foreach (var accessLevel in accessLevels)
+        {
+            UpdateAccessLevel(updateAccessLevel, addAccessLevel, removeAccessLevel, accessLevel);
+        }
+    }
+
+    private static void UpdateAccessLevel(Action<int, AccessLevel> updateAccessLevel, Action<AccessLevelInfo> addAccessLevel, Action<int> removeAccessLevel,
+        AccessLevelUpdate accessLevel)
+    {
+        if (accessLevel.Id is not null && accessLevel.Destroy is true)
+        {
+            removeAccessLevel(accessLevel.Id.Value);
+            return;
+        }
+
+        if (accessLevel.Id is not null && accessLevel.Destroy is false && accessLevel.AccessLevel is not null)
+        {
+            updateAccessLevel(accessLevel.Id.Value, accessLevel.AccessLevel.Value);
+            return;
+        }
+
+        if (accessLevel.Id is not null || accessLevel.Destroy is not false) return;
+
+        var newAccessLevel = new AccessLevelInfo();
+
+        if (accessLevel.AccessLevel is not null)
+        {
+            accessLevel.AccessLevel = accessLevel.AccessLevel.Value;
+        }
+
+        accessLevel.Description = accessLevel.Description;
+
+        if (accessLevel.GroupId is not null)
+        {
+            accessLevel.GroupId = accessLevel.GroupId.Value;
+        }
+
+        if (accessLevel.UserId is not null)
+        {
+            accessLevel.UserId = accessLevel.UserId.Value;
+        }
+
+        addAccessLevel(newAccessLevel);
     }
 }
