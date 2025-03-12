@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
@@ -128,6 +130,11 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
     }
 
     public CompareResults Compare(CompareQuery query)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<CompareResults> CompareAsync(CompareQuery query, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

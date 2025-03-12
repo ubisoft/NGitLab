@@ -876,6 +876,7 @@ NGitLab.Impl.RepositoryClient
 NGitLab.Impl.RepositoryClient.Branches.get -> NGitLab.IBranchClient
 NGitLab.Impl.RepositoryClient.Commits.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
 NGitLab.Impl.RepositoryClient.Compare(NGitLab.Models.CompareQuery query) -> NGitLab.Models.CompareResults
+NGitLab.Impl.RepositoryClient.CompareAsync(NGitLab.Models.CompareQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.CompareResults>
 NGitLab.Impl.RepositoryClient.Contributors.get -> NGitLab.IContributorClient
 NGitLab.Impl.RepositoryClient.Files.get -> NGitLab.IFilesClient
 NGitLab.Impl.RepositoryClient.GetArchive(System.Action<System.IO.Stream> parser) -> void
@@ -1110,6 +1111,7 @@ NGitLab.IRepositoryClient
 NGitLab.IRepositoryClient.Branches.get -> NGitLab.IBranchClient
 NGitLab.IRepositoryClient.Commits.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
 NGitLab.IRepositoryClient.Compare(NGitLab.Models.CompareQuery query) -> NGitLab.Models.CompareResults
+NGitLab.IRepositoryClient.CompareAsync(NGitLab.Models.CompareQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.CompareResults>
 NGitLab.IRepositoryClient.Contributors.get -> NGitLab.IContributorClient
 NGitLab.IRepositoryClient.Files.get -> NGitLab.IFilesClient
 NGitLab.IRepositoryClient.GetArchive(System.Action<System.IO.Stream> parser) -> void
