@@ -36,6 +36,8 @@ public class API
 
     public IHttpRequestor Head() => CreateRequestor(MethodType.Head);
 
+    public IHttpRequestor Patch() => CreateRequestor(MethodType.Patch);
+
     protected virtual IHttpRequestor CreateRequestor(MethodType methodType)
     {
         string token;
