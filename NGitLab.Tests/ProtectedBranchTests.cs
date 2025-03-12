@@ -10,7 +10,7 @@ namespace NGitLab.Tests;
 public class ProtectedBranchTests
 {
     [Test]
-    //[NGitLabRetry]
+    [NGitLabRetry]
     public async Task ProtectBranch_Test()
     {
         using var context = await GitLabTestContext.CreateAsync();
