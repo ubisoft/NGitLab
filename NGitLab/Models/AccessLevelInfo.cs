@@ -5,7 +5,7 @@ namespace NGitLab.Models;
 public class AccessLevelInfo
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     [JsonPropertyName("access_level")]
     public AccessLevel AccessLevel { get; set; }
@@ -14,8 +14,8 @@ public class AccessLevelInfo
     public string Description { get; set; }
 
     [JsonPropertyName("user_id")]
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     [JsonPropertyName("group_id")]
-    public int GroupId { get; set; }
+    public int? GroupId { get; set; }
 }

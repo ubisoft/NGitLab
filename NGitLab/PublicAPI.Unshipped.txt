@@ -1245,11 +1245,11 @@ NGitLab.Models.AccessLevelInfo.AccessLevel.set -> void
 NGitLab.Models.AccessLevelInfo.AccessLevelInfo() -> void
 NGitLab.Models.AccessLevelInfo.Description.get -> string
 NGitLab.Models.AccessLevelInfo.Description.set -> void
-NGitLab.Models.AccessLevelInfo.GroupId.get -> int
+NGitLab.Models.AccessLevelInfo.GroupId.get -> int?
 NGitLab.Models.AccessLevelInfo.GroupId.set -> void
-NGitLab.Models.AccessLevelInfo.Id.get -> int
+NGitLab.Models.AccessLevelInfo.Id.get -> int?
 NGitLab.Models.AccessLevelInfo.Id.set -> void
-NGitLab.Models.AccessLevelInfo.UserId.get -> int
+NGitLab.Models.AccessLevelInfo.UserId.get -> int?
 NGitLab.Models.AccessLevelInfo.UserId.set -> void
 NGitLab.Models.AccessLevelUpdate
 NGitLab.Models.AccessLevelUpdate.AccessLevel.get -> NGitLab.Models.AccessLevel?
