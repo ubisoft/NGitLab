@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Extensions;
 using NGitLab.Models;
 
@@ -108,6 +110,11 @@ public class RepositoryClient : IRepositoryClient
     public CompareResults Compare(CompareQuery query)
     {
         return _api.Get().To<CompareResults>(_repoPath + $@"/compare?from={query.Source}&to={query.Target}");
+    }
+
+    public Task<CompareResults> CompareAsync(CompareQuery query, CancellationToken cancellationToken = default)
+    {
+        return _api.Get().ToAsync<CompareResults>(_repoPath + $@"/compare?from={query.Source}&to={query.Target}", cancellationToken);
     }
 
     public Commit GetCommit(Sha1 sha) => _api.Get().To<Commit>(_repoPath + "/commits/" + sha);

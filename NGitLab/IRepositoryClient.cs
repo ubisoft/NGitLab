@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab;
@@ -53,4 +55,7 @@ public interface IRepositoryClient
     /// Compare two branches/tags/commit hashes
     /// </summary>
     CompareResults Compare(CompareQuery query);
+
+    /// <inheritdoc cref="Compare"/>
+    Task<CompareResults> CompareAsync(CompareQuery query, CancellationToken cancellationToken = default);
 }
