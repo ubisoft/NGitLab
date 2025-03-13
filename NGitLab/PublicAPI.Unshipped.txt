@@ -1655,7 +1655,7 @@ NGitLab.Models.CommitStatusQuery.Stage.get -> string
 NGitLab.Models.CommitStatusQuery.Stage.init -> void
 NGitLab.Models.CompareQuery
 NGitLab.Models.CompareQuery.CompareQuery(string source, string target) -> void
-NGitLab.Models.CompareQuery.FromProjectId.get -> int
+NGitLab.Models.CompareQuery.FromProjectId.get -> int?
 NGitLab.Models.CompareQuery.FromProjectId.set -> void
 NGitLab.Models.CompareQuery.Source.get -> string
 NGitLab.Models.CompareQuery.Source.set -> void
