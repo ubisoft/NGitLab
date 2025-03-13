@@ -34,7 +34,7 @@ public partial class HttpRequestor
         public WebHeaderCollection Headers { get; } = [];
 
         private bool HasOutput
-            => (Method == MethodType.Delete || Method == MethodType.Post || Method == MethodType.Put)
+            => (Method == MethodType.Delete || Method == MethodType.Post || Method == MethodType.Put || Method == MethodType.Patch)
                 && Data != null;
 
         public GitLabRequest(Uri url, MethodType method, object data, string apiToken, RequestOptions options = null)
