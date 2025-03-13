@@ -109,7 +109,11 @@ public class RepositoryClient : IRepositoryClient
 
     public CompareResults Compare(CompareQuery query)
     {
-        return _api.Get().To<CompareResults>(_repoPath + $@"/compare?from={query.Source}&to={query.Target}");
+        var url = _repoPath + $"/compare?from={query.Source}&to={query.Target}";
+        url = Utils.AddParameter(url, "from_project_id", query.FromProjectId);
+        url = Utils.AddParameter(url, "straight", query.Straight);
+        url = Utils.AddParameter(url, "unidiff", query.Unidiff);
+        return _api.Get().To<CompareResults>(url);
     }
 
     public Task<CompareResults> CompareAsync(CompareQuery query, CancellationToken cancellationToken = default)
