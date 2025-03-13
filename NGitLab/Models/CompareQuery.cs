@@ -31,7 +31,7 @@ public class CompareQuery
     /// The ID to compare from.
     /// </summary>
     [JsonPropertyName("from_project_id")]
-    public int? FromProjectId { get; set; }
+    public long? FromProjectId { get; set; }
 
     public CompareQuery(string source, string target)
     {
