@@ -471,7 +471,7 @@ public sealed class Repository : GitLabObject, IDisposable
     {
         var filter = new CommitFilter
         {
-            SortBy = CommitSortStrategies.Topological | CommitSortStrategies.Reverse,
+            SortBy = CommitSortStrategies.Topological,
         };
 
         if (!string.IsNullOrEmpty(request.RefName))
