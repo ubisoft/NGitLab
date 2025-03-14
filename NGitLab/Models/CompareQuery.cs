@@ -20,17 +20,16 @@ public class CompareQuery
     /// <summary>
     /// Comparison method: true for direct comparison between from and to (from..to), false to compare using merge base (from…to)’. Default is false.
     /// </summary>
-    public bool Straight { get; set; }
+    public bool? Straight { get; set; }
 
     /// <summary>
     /// Present diffs in the unified diff format https://www.gnu.org/software/diffutils/manual/html_node/Detailed-Unified.html. Default is false. Introduced in GitLab 16.5.
     /// </summary>
-    public bool Unidiff { get; set; }
+    public bool? Unidiff { get; set; }
 
     /// <summary>
     /// The ID to compare from.
     /// </summary>
-    [JsonPropertyName("from_project_id")]
     public long? FromProjectId { get; set; }
 
     public CompareQuery(string source, string target)

@@ -1659,11 +1659,11 @@ NGitLab.Models.CompareQuery.FromProjectId.get -> long?
 NGitLab.Models.CompareQuery.FromProjectId.set -> void
 NGitLab.Models.CompareQuery.Source.get -> string
 NGitLab.Models.CompareQuery.Source.set -> void
-NGitLab.Models.CompareQuery.Straight.get -> bool
+NGitLab.Models.CompareQuery.Straight.get -> bool?
 NGitLab.Models.CompareQuery.Straight.set -> void
 NGitLab.Models.CompareQuery.Target.get -> string
 NGitLab.Models.CompareQuery.Target.set -> void
-NGitLab.Models.CompareQuery.Unidiff.get -> bool
+NGitLab.Models.CompareQuery.Unidiff.get -> bool?
 NGitLab.Models.CompareQuery.Unidiff.set -> void
 NGitLab.Models.CompareResults
 NGitLab.Models.CompareResults.Commit.get -> NGitLab.Models.Commit

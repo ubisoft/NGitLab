@@ -109,16 +109,12 @@ public class RepositoryClient : IRepositoryClient
 
     public CompareResults Compare(CompareQuery query)
     {
-        var url = _repoPath + $"/compare?from={query.Source}&to={query.Target}";
-        url = Utils.AddParameter(url, "from_project_id", query.FromProjectId);
-        url = Utils.AddParameter(url, "straight", query.Straight);
-        url = Utils.AddParameter(url, "unidiff", query.Unidiff);
-        return _api.Get().To<CompareResults>(url);
+        return _api.Get().To<CompareResults>(BuildCompareUrl(query));
     }
 
     public Task<CompareResults> CompareAsync(CompareQuery query, CancellationToken cancellationToken = default)
     {
-        return _api.Get().ToAsync<CompareResults>(_repoPath + $@"/compare?from={query.Source}&to={query.Target}", cancellationToken);
+        return _api.Get().ToAsync<CompareResults>(BuildCompareUrl(query), cancellationToken);
     }
 
     public Commit GetCommit(Sha1 sha) => _api.Get().To<Commit>(_repoPath + "/commits/" + sha);
@@ -142,6 +138,15 @@ public class RepositoryClient : IRepositoryClient
         url = Utils.AddParameter(url, "recursive", options.Recursive);
         url = Utils.AddParameter(url, "per_page", options.PerPage);
 
+        return url;
+    }
+
+    private string BuildCompareUrl(CompareQuery query)
+    {
+        var url = _repoPath + $"/compare?from={query.Source}&to={query.Target}";
+        url = Utils.AddParameter(url, "from_project_id", query.FromProjectId);
+        url = Utils.AddParameter(url, "straight", query.Straight);
+        url = Utils.AddParameter(url, "unidiff", query.Unidiff);
         return url;
     }
 }
