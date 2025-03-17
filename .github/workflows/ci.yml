@@ -90,7 +90,7 @@ jobs:
           retention-days: 3
           path: ${{env.TestResultsDirectory}}/**/*
       - name: Test Report
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2
         if: github.actor != 'dependabot[bot]' && !github.event.pull_request.head.repo.fork && (success() || failure())
         with:
           name: test-results-${{steps.set-artifact-name.outputs.artifact_name}}
