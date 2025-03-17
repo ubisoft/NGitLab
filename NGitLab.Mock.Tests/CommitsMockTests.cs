@@ -131,6 +131,30 @@ public class CommitsMockTests
     }
 
     [Test]
+    public void Test_GetCommitsFromRef()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("user1", isDefault: true)
+            .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, defaultBranch: "main",
+                configure: project => project
+                    .WithCommit("Initial commit")
+                    .WithCommit("Commit")
+                    .WithCommit("Yet another commit"))
+            .BuildServer();
+
+        var client = server.CreateClient();
+        var repository = client.GetRepository(1);
+
+        // Act
+        var intermediateCommits = repository.GetCommits("main");
+
+        // Assert
+        Assert.That(intermediateCommits.Select(c => c.Title),
+            Is.EqualTo(new[] { "Yet another commit", "Commit", "Initial commit", }).AsCollection);
+    }
+
+    [Test]
     public void Test_commits_can_be_cherry_pick()
     {
         using var server = new GitLabConfig()
