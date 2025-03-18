@@ -111,4 +111,7 @@ public sealed class ProjectUpdate
 
     [JsonPropertyName("topics")]
     public List<string> Topics { get; set; }
+
+    [JsonPropertyName("ci_default_git_depth")]
+    public bool? CiDefaultGitDepth { get; set; }
 }
