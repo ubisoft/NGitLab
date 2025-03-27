@@ -46,6 +46,11 @@ public class IssueClient : IIssueClient
         return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId));
     }
 
+    public GitLabCollectionResponse<Issue> ForProjectAsync(long projectId, IssueQuery query)
+    {
+        return Get(string.Format(CultureInfo.InvariantCulture, ProjectIssuesUrl, projectId), query);
+    }
+
     public GitLabCollectionResponse<Issue> ForGroupsAsync(long groupId)
     {
         return _api.Get().GetAllAsync<Issue>(string.Format(CultureInfo.InvariantCulture, GroupIssuesUrl, groupId));
