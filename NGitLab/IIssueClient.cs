@@ -19,6 +19,8 @@ public interface IIssueClient
 
     GitLabCollectionResponse<Issue> ForProjectAsync(long projectId);
 
+    GitLabCollectionResponse<Issue> ForProjectAsync(long projectId, IssueQuery query);
+
     GitLabCollectionResponse<Issue> ForGroupsAsync(long groupId);
 
     GitLabCollectionResponse<Issue> ForGroupsAsync(long groupId, IssueQuery query);

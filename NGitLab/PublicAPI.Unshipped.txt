@@ -303,6 +303,7 @@ NGitLab.IIssueClient.ForGroupsAsync(long groupId) -> NGitLab.GitLabCollectionRes
 NGitLab.IIssueClient.ForGroupsAsync(long groupId, NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.ForProject(long projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.IIssueClient.ForProjectAsync(long projectId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
+NGitLab.IIssueClient.ForProjectAsync(long projectId, NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.Get(long projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.IIssueClient.Get(long projectId, NGitLab.Models.IssueQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.IIssueClient.Get(NGitLab.Models.IssueQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
@@ -608,6 +609,7 @@ NGitLab.Impl.IssueClient.ForGroupsAsync(long groupId) -> NGitLab.GitLabCollectio
 NGitLab.Impl.IssueClient.ForGroupsAsync(long groupId, NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.ForProject(long projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.ForProjectAsync(long projectId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
+NGitLab.Impl.IssueClient.ForProjectAsync(long projectId, NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.Get(long projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.Impl.IssueClient.Get(long projectId, NGitLab.Models.IssueQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.Get(NGitLab.Models.IssueQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
