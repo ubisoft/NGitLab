@@ -248,6 +248,11 @@ internal sealed class IssueClient : ClientBase, IIssueClient
         return GitLabCollectionResponse.Create(ForProject(projectId));
     }
 
+    public GitLabCollectionResponse<Models.Issue> ForProjectAsync(long projectId, IssueQuery query)
+    {
+        throw new NotImplementedException();
+    }
+
     public GitLabCollectionResponse<Models.Issue> ForGroupsAsync(long groupId)
     {
         throw new NotImplementedException();
