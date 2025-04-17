@@ -24,6 +24,24 @@ public class CommitsTests
 
     [Test]
     [NGitLabRetry]
+    public async Task Test_can_get_commit_of_branch()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject(initializeWithCommits: true);
+
+        var branch = context.Client.GetRepository(project.Id).Branches.Create(new()
+        {
+            Name = "feature/my-branch",
+            Ref = project.DefaultBranch,
+        });
+
+        var commit = context.Client.GetCommits(project.Id).GetCommit(branch.Name);
+        Assert.That(commit.Message, Is.Not.Null);
+        Assert.That(commit.ShortId, Is.Not.Null);
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task Test_can_get_stats_in_commit()
     {
         using var context = await GitLabTestContext.CreateAsync();
