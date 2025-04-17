@@ -23,6 +23,8 @@ public interface IJobClient
 
     byte[] GetJobArtifacts(long jobId);
 
+    Task DeleteJobArtifactsAsync(long jobId, CancellationToken cancellationToken = default);
+
     byte[] GetJobArtifact(long jobId, string path);
 
     byte[] GetJobArtifact(JobArtifactQuery query);
