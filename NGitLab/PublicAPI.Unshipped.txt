@@ -327,6 +327,7 @@ NGitLab.IIssueClient.TimeStatsAsync(long projectId, long issueIid, System.Thread
 NGitLab.IIssueClient.Subscribe(NGitLab.Models.ProjectId projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.IIssueClient.Unsubscribe(NGitLab.Models.ProjectId projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.IJobClient
+NGitLab.IJobClient.DeleteJobArtifactsAsync(long jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IJobClient.Get(long jobId) -> NGitLab.Models.Job
 NGitLab.IJobClient.GetAsync(long jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.IJobClient.GetJobArtifact(long jobId, string path) -> byte[]
@@ -634,6 +635,7 @@ NGitLab.Impl.IssueClient.TimeStatsAsync(long projectId, long issueIid, System.Th
 NGitLab.Impl.IssueClient.Subscribe(NGitLab.Models.ProjectId projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.Impl.IssueClient.Unsubscribe(NGitLab.Models.ProjectId projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.Impl.JobClient
+NGitLab.Impl.JobClient.DeleteJobArtifactsAsync(long jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.JobClient.Get(long jobId) -> NGitLab.Models.Job
 NGitLab.Impl.JobClient.GetAsync(long jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.Impl.JobClient.GetJobArtifact(long jobId, string path) -> byte[]

@@ -210,6 +210,30 @@ public class JobTests
 
     [Test]
     [NGitLabRetry]
+    public async Task Test_delete_job_artifacts()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var jobsClient = context.Client.GetJobs(project.Id);
+
+        using var runnerScope = await context.StartRunnerForOneJobAsync(project.Id);
+
+        AddGitLabCiFile(context.Client, project);
+        var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Success), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
+        var job = jobs.Single();
+        Assert.That(job.Artifacts, Is.Not.Null);
+
+        // Act
+        await jobsClient.DeleteJobArtifactsAsync(job.Id);
+
+        // Assert
+        job = await jobsClient.GetAsync(job.Id);
+        Assert.That(job.Artifacts, Is.Null);
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task Test_get_job_artifact()
     {
         using var context = await GitLabTestContext.CreateAsync();

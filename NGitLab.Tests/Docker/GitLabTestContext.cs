@@ -342,7 +342,7 @@ public sealed class GitLabTestContext : IDisposable
         try
         {
             // Version availables: https://gitlab.com/gitlab-org/gitlab-runner/-/releases
-            var version = "15.6.3";
+            var version = "16.11.0";
             var path = Path.Combine(Path.GetTempPath(), "GitLabClient", "Runners", version, "gitlab-runner.exe");
             if (!File.Exists(path))
             {
