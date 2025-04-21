@@ -135,12 +135,6 @@ internal sealed class MembersClient : ClientBase, IMembersClient
         }
     }
 
-    [Obsolete("Use OfGroup")]
-    public IEnumerable<Membership> OfNamespace(string groupId)
-    {
-        return OfGroup(groupId);
-    }
-
     public IEnumerable<Membership> OfGroup(string groupId)
     {
         return OfGroup(groupId, includeInheritedMembers: false, null);

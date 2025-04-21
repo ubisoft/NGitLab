@@ -156,12 +156,6 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
         }
     }
 
-    [Obsolete("Use JobClient.GetJobs() instead")]
-    public IEnumerable<Models.Job> GetJobsInProject(JobScope scope)
-    {
-        throw new NotImplementedException();
-    }
-
     public IEnumerable<PipelineBasic> Search(PipelineQuery query)
     {
         using (Context.BeginOperationScope())
