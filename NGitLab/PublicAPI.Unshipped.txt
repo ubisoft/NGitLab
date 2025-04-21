@@ -377,7 +377,6 @@ NGitLab.IMembersClient.OfGroup(string groupId, bool includeInheritedMembers) -> 
 NGitLab.IMembersClient.OfGroup(string groupId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers = false, NGitLab.Models.MemberQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
-NGitLab.IMembersClient.OfNamespace(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
@@ -689,7 +688,6 @@ NGitLab.Impl.MembersClient.OfGroup(string groupId, bool includeInheritedMembers)
 NGitLab.Impl.MembersClient.OfGroup(string groupId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers = false, NGitLab.Models.MemberQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
-NGitLab.Impl.MembersClient.OfNamespace(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
@@ -3904,8 +3902,6 @@ NGitLab.Models.ProjectUpdate.Description.get -> string
 NGitLab.Models.ProjectUpdate.Description.set -> void
 NGitLab.Models.ProjectUpdate.GroupRunnersEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.GroupRunnersEnabled.set -> void
-NGitLab.Models.ProjectUpdate.IssuesAccessLeve.get -> string
-NGitLab.Models.ProjectUpdate.IssuesAccessLeve.set -> void
 NGitLab.Models.ProjectUpdate.IssuesAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.IssuesAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.IssuesEnabled.get -> bool?
