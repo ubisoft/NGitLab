@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Mock.Config;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -35,7 +37,7 @@ public class LabelsMockTests
             .BuildServer();
 
         var client = server.CreateClient();
-        client.Labels.CreateProjectLabel(1, new ProjectLabelCreate { Name = "test1" });
+        client.Labels.CreateProjectLabel(1, new ProjectLabelCreate { Name = "test1", Color = "rebeccapurple" });
         var labels = client.Labels.ForProject(1).ToArray();
 
         Assert.That(labels, Has.Length.EqualTo(1), "Labels count is invalid");
@@ -60,7 +62,7 @@ public class LabelsMockTests
     }
 
     [Test]
-    public void Test_labels_can_be_deleted_from_project()
+    public async Task Test_labels_can_be_deleted_from_project()
     {
         using var server = new GitLabConfig()
             .WithUser("user1", isDefault: true)
@@ -69,7 +71,7 @@ public class LabelsMockTests
             .BuildServer();
 
         var client = server.CreateClient();
-        client.Labels.DeleteProjectLabel(1, new ProjectLabelDelete { Name = "test1" });
+        await client.Labels.DeleteProjectLabelAsync(1, "test1", CancellationToken.None);
         var labels = client.Labels.ForProject(1).ToArray();
 
         Assert.That(labels, Is.Empty, "Labels count is invalid");

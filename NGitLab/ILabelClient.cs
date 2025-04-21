@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab;
@@ -97,14 +100,25 @@ public interface ILabelClient
     [Obsolete("Use other EditGroupLabel instead")]
     Label EditGroupLabel(LabelEdit label);
 
-    /// <summary>
-    /// Delete a label from the project.
-    /// </summary>
-    /// <param name="projectId"></param>
-    /// <param name="label"></param>
-    /// <returns>True if "200", the success code for delete, was returned from the service.</returns>
+    [Obsolete("Use DeleteProjectLabelAsync instead")]
     Label DeleteProjectLabel(long projectId, ProjectLabelDelete label);
 
-    [Obsolete("Use DeleteProjectLabel instead")]
+    /// <summary>
+    /// Delete a project label using its ID.
+    /// </summary>
+    /// <param name="projectId">Project ID</param>
+    /// <param name="labelId">Label ID</param>
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
+    Task DeleteProjectLabelAsync(long projectId, long labelId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Delete a project label using its name.
+    /// </summary>
+    /// <param name="projectId">Project ID</param>
+    /// <param name="labelName">Label Name</param>
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
+    Task DeleteProjectLabelAsync(long projectId, string labelName, CancellationToken cancellationToken = default);
+
+    [Obsolete("Use DeleteProjectLabelAsync instead")]
     Label Delete(LabelDelete label);
 }
