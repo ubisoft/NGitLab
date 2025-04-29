@@ -42,9 +42,6 @@ public interface ILabelClient
     /// <returns></returns>
     Label GetProjectLabel(long projectId, string name);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    Label GetLabel(long projectId, string name);
-
     /// <summary>
     /// Return a specified label from the group or null;
     /// </summary>
@@ -61,9 +58,6 @@ public interface ILabelClient
     /// <returns></returns>
     Label CreateProjectLabel(long projectId, ProjectLabelCreate label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    Label Create(LabelCreate label);
-
     /// <summary>
     /// Create a new label for a group.
     /// </summary>
@@ -71,9 +65,6 @@ public interface ILabelClient
     /// <param name="label"></param>
     /// <returns></returns>
     Label CreateGroupLabel(long groupId, GroupLabelCreate label);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    Label CreateGroupLabel(LabelCreate label);
 
     /// <summary>
     /// Edit the contents of an existing project label.
@@ -83,9 +74,6 @@ public interface ILabelClient
     /// <returns></returns>
     Label EditProjectLabel(long projectId, ProjectLabelEdit label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    Label Edit(LabelEdit label);
-
     /// <summary>
     /// Edit the contents of an existing label.
     /// </summary>
@@ -94,9 +82,6 @@ public interface ILabelClient
     /// <returns></returns>
     Label EditGroupLabel(long groupId, GroupLabelEdit label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    Label EditGroupLabel(LabelEdit label);
-
     /// <summary>
     /// Delete a label from the project.
     /// </summary>
@@ -104,7 +89,4 @@ public interface ILabelClient
     /// <param name="label"></param>
     /// <returns>True if "200", the success code for delete, was returned from the service.</returns>
     Label DeleteProjectLabel(long projectId, ProjectLabelDelete label);
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    Label Delete(LabelDelete label);
 }

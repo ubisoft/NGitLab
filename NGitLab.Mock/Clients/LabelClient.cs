@@ -22,17 +22,6 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Models.Label Create(LabelCreate label)
-    {
-        return CreateProjectLabel(label.Id, new ProjectLabelCreate
-        {
-            Name = label.Name,
-            Color = label.Color,
-            Description = label.Description,
-        });
-    }
-
     public Models.Label CreateGroupLabel(long groupId, GroupLabelCreate label)
     {
         using (Context.BeginOperationScope())
@@ -40,17 +29,6 @@ internal sealed class LabelClient : ClientBase, ILabelClient
             var group = GetGroup(groupId, GroupPermission.Edit);
             return group.Labels.Add(label.Name, label.Color, label.Description).ToClientLabel();
         }
-    }
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Models.Label CreateGroupLabel(LabelCreate label)
-    {
-        return CreateGroupLabel(label.Id, new GroupLabelCreate
-        {
-            Name = label.Name,
-            Color = label.Color,
-            Description = label.Description,
-        });
     }
 
     public Models.Label DeleteProjectLabel(long projectId, ProjectLabelDelete label)
@@ -62,16 +40,6 @@ internal sealed class LabelClient : ClientBase, ILabelClient
             project.Labels.Remove(l);
             return l.ToClientLabel();
         }
-    }
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Models.Label Delete(LabelDelete label)
-    {
-        return DeleteProjectLabel(label.Id, new ProjectLabelDelete
-        {
-            Id = label.Id,
-            Name = label.Name,
-        });
     }
 
     public Models.Label EditProjectLabel(long projectId, ProjectLabelEdit label)
@@ -100,18 +68,6 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Models.Label Edit(LabelEdit label)
-    {
-        return EditProjectLabel(label.Id, new ProjectLabelEdit
-        {
-            Name = label.Name,
-            NewName = label.NewName,
-            Color = label.Color,
-            Description = label.Description,
-        });
-    }
-
     public Models.Label EditGroupLabel(long groupId, GroupLabelEdit label)
     {
         using (Context.BeginOperationScope())
@@ -136,18 +92,6 @@ internal sealed class LabelClient : ClientBase, ILabelClient
 
             return l.ToClientLabel();
         }
-    }
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Models.Label EditGroupLabel(LabelEdit label)
-    {
-        return EditGroupLabel(label.Id, new GroupLabelEdit
-        {
-            Name = label.Name,
-            NewName = label.NewName,
-            Color = label.Color,
-            Description = label.Description,
-        });
     }
 
     public IEnumerable<Models.Label> ForGroup(long groupId)
@@ -194,12 +138,6 @@ internal sealed class LabelClient : ClientBase, ILabelClient
             var project = GetProject(projectId, ProjectPermission.View);
             return FindLabel(project.Labels, name)?.ToClientLabel();
         }
-    }
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Models.Label GetLabel(long projectId, string name)
-    {
-        return GetProjectLabel(projectId, name);
     }
 
     private static Label FindLabel(LabelsCollection collection, string name)
