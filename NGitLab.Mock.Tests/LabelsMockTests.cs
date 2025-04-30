@@ -69,11 +69,7 @@ public class LabelsMockTests
             .BuildServer();
 
         var client = server.CreateClient();
-        client.Labels.DeleteProjectLabel(1, new ProjectLabelDelete
-        {
-            Id = 1,
-            Name = "test1",
-        });
+        client.Labels.DeleteProjectLabel(1, new ProjectLabelDelete { Name = "test1" });
         var labels = client.Labels.ForProject(1).ToArray();
 
         Assert.That(labels, Is.Empty, "Labels count is invalid");

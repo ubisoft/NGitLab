@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab;
@@ -42,6 +42,9 @@ public interface ILabelClient
     /// <returns></returns>
     Label GetProjectLabel(long projectId, string name);
 
+    [Obsolete("Use GetProjectLabel instead")]
+    Label GetLabel(long projectId, string name);
+
     /// <summary>
     /// Return a specified label from the group or null;
     /// </summary>
@@ -58,6 +61,9 @@ public interface ILabelClient
     /// <returns></returns>
     Label CreateProjectLabel(long projectId, ProjectLabelCreate label);
 
+    [Obsolete("Use CreateProjectLabel instead")]
+    Label Create(LabelCreate label);
+
     /// <summary>
     /// Create a new label for a group.
     /// </summary>
@@ -65,6 +71,9 @@ public interface ILabelClient
     /// <param name="label"></param>
     /// <returns></returns>
     Label CreateGroupLabel(long groupId, GroupLabelCreate label);
+
+    [Obsolete("Use other CreateGroupLabel instead")]
+    Label CreateGroupLabel(LabelCreate label);
 
     /// <summary>
     /// Edit the contents of an existing project label.
@@ -74,6 +83,9 @@ public interface ILabelClient
     /// <returns></returns>
     Label EditProjectLabel(long projectId, ProjectLabelEdit label);
 
+    [Obsolete("Use EditProjectLabel instead")]
+    Label Edit(LabelEdit label);
+
     /// <summary>
     /// Edit the contents of an existing label.
     /// </summary>
@@ -82,6 +94,9 @@ public interface ILabelClient
     /// <returns></returns>
     Label EditGroupLabel(long groupId, GroupLabelEdit label);
 
+    [Obsolete("Use other EditGroupLabel instead")]
+    Label EditGroupLabel(LabelEdit label);
+
     /// <summary>
     /// Delete a label from the project.
     /// </summary>
@@ -89,4 +104,7 @@ public interface ILabelClient
     /// <param name="label"></param>
     /// <returns>True if "200", the success code for delete, was returned from the service.</returns>
     Label DeleteProjectLabel(long projectId, ProjectLabelDelete label);
+
+    [Obsolete("Use DeleteProjectLabel instead")]
+    Label Delete(LabelDelete label);
 }
