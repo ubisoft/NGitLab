@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using NGitLab.Extensions;
 using NGitLab.Models;
 
 namespace NGitLab.Impl;
@@ -48,7 +51,7 @@ public class LabelClient : ILabelClient
         return ForProject(projectId, new LabelQuery() { Search = name }).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use GetProjectLabel instead")]
     public Label GetLabel(long projectId, string name)
     {
         return GetProjectLabel(projectId, name);
@@ -64,7 +67,7 @@ public class LabelClient : ILabelClient
         return _api.Post().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId));
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use CreateProjectLabel instead")]
     public Label Create(LabelCreate label)
     {
         return CreateProjectLabel(label.Id, new ProjectLabelCreate
@@ -80,7 +83,7 @@ public class LabelClient : ILabelClient
         return _api.Post().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, groupId));
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other CreateGroupLabel instead")]
     public Label CreateGroupLabel(LabelCreate label)
     {
         return CreateGroupLabel(label.Id, new GroupLabelCreate
@@ -96,7 +99,7 @@ public class LabelClient : ILabelClient
         return _api.Put().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId));
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use EditProjectLabel instead")]
     public Label Edit(LabelEdit label)
     {
         return EditProjectLabel(label.Id, new ProjectLabelEdit
@@ -113,7 +116,7 @@ public class LabelClient : ILabelClient
         return _api.Put().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, GroupLabelUrl, groupId));
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other EditGroupLabel instead")]
     public Label EditGroupLabel(LabelEdit label)
     {
         return EditGroupLabel(label.Id, new GroupLabelEdit
@@ -125,12 +128,25 @@ public class LabelClient : ILabelClient
         });
     }
 
+    [Obsolete("Use DeleteProjectLabelAsync instead")]
     public Label DeleteProjectLabel(long projectId, ProjectLabelDelete label)
     {
         return _api.Delete().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId));
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
+    public Task DeleteProjectLabelAsync(long projectId, long labelId, CancellationToken cancellationToken = default)
+    {
+        return _api.Delete().ExecuteAsync($"/projects/{projectId.ToStringInvariant()}/labels/{labelId.ToStringInvariant()}", cancellationToken);
+    }
+
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
+    public Task DeleteProjectLabelAsync(long projectId, string labelName, CancellationToken cancellationToken = default)
+    {
+        return _api.Delete().ExecuteAsync($"/projects/{projectId.ToStringInvariant()}/labels/{labelName}", cancellationToken);
+    }
+
+    [Obsolete("Use DeleteProjectLabelAsync instead")]
     public Label Delete(LabelDelete label)
     {
         return DeleteProjectLabel(label.Id, new ProjectLabelDelete
