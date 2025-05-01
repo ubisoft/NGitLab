@@ -168,7 +168,7 @@ public partial class HttpRequestor
             request.AutomaticDecompression = DecompressionMethods.GZip;
             request.Timeout = (int)options.HttpClientTimeout.TotalMilliseconds;
             request.ReadWriteTimeout = (int)options.HttpClientTimeout.TotalMilliseconds;
-
+            if (options.Proxy!=null) request.Proxy=options.Proxy;
             if (HasOutput)
             {
                 if (FormData != null)
