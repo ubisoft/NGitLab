@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -153,5 +154,16 @@ internal sealed class FileClient : ClientBase, IFilesClient
     {
         await Task.Yield();
         return Get(filePath, @ref);
+    }
+
+    public void GetRaw(string filePath, Action<Stream> parser, GetRawFileRequest request = null)
+    {
+        using (Context.BeginOperationScope())
+        {
+            var fileSystemPath = WebUtility.UrlDecode(filePath);
+
+            var project = GetProject(_projectId, ProjectPermission.View);
+            project.Repository.GetRawFile(fileSystemPath, parser, request);
+        }
     }
 }

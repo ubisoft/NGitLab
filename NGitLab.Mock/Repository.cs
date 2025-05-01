@@ -538,6 +538,32 @@ public sealed class Repository : GitLabObject, IDisposable
         };
     }
 
+    public void GetRawFile(string filePath, Action<Stream> parser, GetRawFileRequest request)
+    {
+        var repo = GetGitRepository();
+        try
+        {
+            var @ref = request?.Ref ?? repo.Head.FriendlyName;
+            Commands.Checkout(repo, @ref);
+        }
+        catch (LibGit2Sharp.NotFoundException)
+        {
+            throw GitLabException.NotFound("File not found");
+        }
+
+        var fileCompletePath = Path.Combine(FullPath, filePath);
+
+        if (!System.IO.File.Exists(fileCompletePath))
+        {
+            throw GitLabException.NotFound("File not found");
+        }
+
+        using (var fileStream = System.IO.File.OpenRead(fileCompletePath))
+        {
+            parser(fileStream);
+        }
+    }
+
     internal IEnumerable<Tree> GetTree() => GetTree(new());
 
     internal IEnumerable<Tree> GetTree(RepositoryGetTreeOptions repositoryGetTreeOptions)
