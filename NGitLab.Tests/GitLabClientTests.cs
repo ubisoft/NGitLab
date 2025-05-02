@@ -12,7 +12,6 @@ public sealed class GitLabClientTests
         const long GitLabProjectId = 278964;
 
         var client = new GitLabClient("https://gitlab.com");
-        //client.Options.Proxy = new System.Net.WebProxy("http://127.0.0.1:7890");
         var project = await client.Projects.GetByIdAsync(GitLabProjectId, new Models.SingleProjectQuery { Statistics = false});
 
         Assert.That(project, Is.Not.Null);
