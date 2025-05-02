@@ -12,7 +12,7 @@ public sealed class GitLabClientTests
         const long GitLabProjectId = 278964;
 
         var client = new GitLabClient("https://gitlab.com");
-        var project = await client.Projects.GetByIdAsync(GitLabProjectId, new Models.SingleProjectQuery { Statistics = false});
+        var project = await client.Projects.GetByIdAsync(GitLabProjectId, new Models.SingleProjectQuery { Statistics = false });
 
         Assert.That(project, Is.Not.Null);
         Assert.That(project.Id, Is.EqualTo(GitLabProjectId));

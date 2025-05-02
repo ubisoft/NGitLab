@@ -172,6 +172,7 @@ public partial class HttpRequestor
             {
                 request.Proxy = options.Proxy;
             }
+
             if (HasOutput)
             {
                 if (FormData != null)

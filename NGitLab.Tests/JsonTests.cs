@@ -7,6 +7,13 @@ namespace NGitLab.Tests;
 
 public class JsonTests
 {
+    private const string Json = """
+        {
+          "title": "Newer Contract",
+          "id": 100
+        }
+        """;
+
     public enum TestEnum
     {
         [EnumMember(Value = "v1")]
@@ -34,39 +41,40 @@ public class JsonTests
     }
 
     [Test]
-    public void DeserializeNewerContract_Ok()
+    public void DeserializeToTestContractV1_Ok()
     {
-        var newContractObject = new TestContractV2 { Id = 100, Title = "Newer Contract" };
-        var newContractJson = Serializer.Serialize(newContractObject);
+        // Act
+        var testContractV1Object = Serializer.Deserialize<TestContractV1>(Json);
 
-        TestContractV1 oldContractObject = null;
-        Assert.DoesNotThrow(() => oldContractObject = Serializer.Deserialize<TestContractV1>(newContractJson));
-        Assert.That(oldContractObject, Is.Not.Null);
+        // Assert
+        Assert.That(testContractV1Object, Is.Not.Null);
+        Assert.That(testContractV1Object.Title, Is.EqualTo("Newer Contract"));
     }
 
     [Test]
-    public void DeserializeOlderContract_Ok()
+    public void DeserializeToTestContractV2_Ok()
     {
-        var oldContractObject = new TestContractV1 { Title = "Older Contract" };
-        var oldContractJson = Serializer.Serialize(oldContractObject);
+        // Act
+        var testContractV2Object = Serializer.Deserialize<TestContractV2>(Json);
 
-        TestContractV2 newContractObject = null;
-        Assert.DoesNotThrow(() => newContractObject = Serializer.Deserialize<TestContractV2>(oldContractJson));
-        Assert.That(newContractObject, Is.Not.Null);
+        // Assert
+        Assert.That(testContractV2Object, Is.Not.Null);
+        Assert.That(testContractV2Object.Title, Is.EqualTo("Newer Contract"));
+        Assert.That(testContractV2Object.Id, Is.EqualTo(100));
     }
 
     public class TestContractV1
     {
         [JsonPropertyName("title")]
-        public string Title;
+        public string Title { get; set; }
     }
 
     public class TestContractV2
     {
         [JsonPropertyName("title")]
-        public string Title;
+        public string Title { get; set; }
 
         [JsonPropertyName("id")]
-        public long Id;
+        public long Id { get; set; }
     }
 }

@@ -54,8 +54,8 @@ public class ProtectedBranchTests
             },
             AllowedToMerge = new[]
             {
-                new AccessLevelUpdate { Id = existingBranch.MergeAccessLevels.First(l => l.AccessLevel == AccessLevel.Admin).Id, AccessLevel = AccessLevel.Maintainer } // The existing one should be updated
-            }
+                new AccessLevelUpdate { Id = existingBranch.MergeAccessLevels.First(l => l.AccessLevel == AccessLevel.Admin).Id, AccessLevel = AccessLevel.Maintainer }, // The existing one should be updated
+            },
         };
         var updatedBranch = protectedBranchClient.UpdateProtectedBranch(branch.Name, protectedBranchUpdate);
         Assert.That(updatedBranch.AllowForcePush, Is.EqualTo(protectedBranchUpdate.AllowForcePush));
@@ -69,7 +69,7 @@ public class ProtectedBranchTests
             AllowedToPush = new[]
             {
                 new AccessLevelUpdate { AccessLevel = AccessLevel.Admin }, // This one should be created
-            }
+            },
         };
         updatedBranch = protectedBranchClient.UpdateProtectedBranch(branch.Name, protectedBranchUpdate);
         Assert.That(updatedBranch.PushAccessLevels.Count(l => l.AccessLevel == AccessLevel.Admin), Is.EqualTo(1));

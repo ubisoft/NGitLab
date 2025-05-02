@@ -106,6 +106,7 @@ internal sealed class FileClient : ClientBase, IFilesClient
             }
         }
     }
+
     public async Task<bool> FileExistsAsync(string filePath, string @ref, CancellationToken cancellationToken = default)
     {
         await Task.Yield();

@@ -24,10 +24,10 @@ public class RepositoryMockTests
         var repository = client.GetRepository(1);
 
         // Act
-        var treeCollection  = repository.GetTreeAsync(new RepositoryGetTreeOptions { Path = "non-existing-directory" });
+        var treeCollection = repository.GetTreeAsync(new RepositoryGetTreeOptions { Path = "non-existing-directory" });
 
         // Assert
-        Assert.That(treeCollection , Is.Empty);
+        Assert.That(treeCollection, Is.Empty);
     }
 
     [Test]
