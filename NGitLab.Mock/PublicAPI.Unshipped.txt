@@ -550,8 +550,10 @@ NGitLab.Mock.IssueState.opened = 0 -> NGitLab.Mock.IssueState
 NGitLab.Mock.Job
 NGitLab.Mock.Job.AllowFailure.get -> bool
 NGitLab.Mock.Job.AllowFailure.set -> void
-NGitLab.Mock.Job.Artifacts.get -> NGitLab.Models.Job.JobArtifact
+NGitLab.Mock.Job.Artifacts.get -> NGitLab.Mock.JobArtifactCollection
 NGitLab.Mock.Job.Artifacts.set -> void
+NGitLab.Mock.Job.ArtifactsFile.get -> NGitLab.Models.Job.JobArtifact
+NGitLab.Mock.Job.ArtifactsFile.set -> void
 NGitLab.Mock.Job.Commit.get -> NGitLab.Models.Commit
 NGitLab.Mock.Job.Commit.set -> void
 NGitLab.Mock.Job.Coverage.get -> double?
@@ -597,6 +599,15 @@ NGitLab.Mock.Job.Trace.set -> void
 NGitLab.Mock.Job.User.get -> NGitLab.Mock.User
 NGitLab.Mock.Job.User.set -> void
 NGitLab.Mock.Job.WebUrl.get -> string
+NGitLab.Mock.JobArtifact
+NGitLab.Mock.JobArtifact.Filename.get -> string
+NGitLab.Mock.JobArtifact.Filename.set -> void
+NGitLab.Mock.JobArtifact.JobArtifact() -> void
+NGitLab.Mock.JobArtifact.Size.get -> long
+NGitLab.Mock.JobArtifact.Size.set -> void
+NGitLab.Mock.JobArtifactCollection
+NGitLab.Mock.JobArtifactCollection.Clear() -> void
+NGitLab.Mock.JobArtifactCollection.JobArtifactCollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.JobCollection
 NGitLab.Mock.JobCollection.Add(NGitLab.Mock.Job job, NGitLab.Mock.Pipeline pipeline) -> NGitLab.Mock.Job
 NGitLab.Mock.JobCollection.AddNew() -> NGitLab.Mock.Job
@@ -1264,6 +1275,7 @@ override NGitLab.Mock.EventCollection.Add(NGitLab.Mock.Event item) -> void
 override NGitLab.Mock.GroupCollection.Add(NGitLab.Mock.Group group) -> void
 override NGitLab.Mock.GroupHookCollection.Add(NGitLab.Mock.GroupHook item) -> void
 override NGitLab.Mock.IssueCollection.Add(NGitLab.Mock.Issue item) -> void
+override NGitLab.Mock.JobArtifactCollection.Add(NGitLab.Mock.JobArtifact artifact) -> void
 override NGitLab.Mock.JobCollection.Add(NGitLab.Mock.Job job) -> void
 override NGitLab.Mock.LabelsCollection.Add(NGitLab.Mock.Label label) -> void
 override NGitLab.Mock.MergeRequestCollection.Add(NGitLab.Mock.MergeRequest mergeRequest) -> void

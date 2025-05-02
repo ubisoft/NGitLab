@@ -222,14 +222,16 @@ public class JobTests
         AddGitLabCiFile(context.Client, project);
         var jobs = await GitLabTestContext.RetryUntilAsync(() => jobsClient.GetJobs(JobScopeMask.Success), jobs => jobs.Any(), TimeSpan.FromMinutes(2));
         var job = jobs.Single();
-        Assert.That(job.Artifacts, Is.Not.Null);
+        Assert.That(job.ArtifactsFile, Is.Not.Null);
+        Assert.That(job.Artifacts, Is.Not.Empty);
 
         // Act
         await jobsClient.DeleteJobArtifactsAsync(job.Id);
 
         // Assert
         job = await jobsClient.GetAsync(job.Id);
-        Assert.That(job.Artifacts, Is.Null);
+        Assert.That(job.ArtifactsFile, Is.Null);
+        Assert.That(job.Artifacts, Is.Empty);
     }
 
     [Test]
