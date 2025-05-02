@@ -33,6 +33,8 @@ public class RequestOptions
 
     public string UserAgent { get; set; }
 
+    public WebProxy Proxy { get; set; }
+
     public RequestOptions(int retryCount, TimeSpan retryInterval, bool isIncremental = true)
     {
         RetryCount = retryCount;

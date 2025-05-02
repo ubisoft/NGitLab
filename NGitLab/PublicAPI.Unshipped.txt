@@ -4922,6 +4922,8 @@ NGitLab.RequestOptions.HttpClientTimeout.get -> System.TimeSpan
 NGitLab.RequestOptions.HttpClientTimeout.set -> void
 NGitLab.RequestOptions.IsIncremental.get -> bool
 NGitLab.RequestOptions.IsIncremental.set -> void
+NGitLab.RequestOptions.Proxy.get -> System.Net.WebProxy
+NGitLab.RequestOptions.Proxy.set -> void
 NGitLab.RequestOptions.RequestOptions(int retryCount, System.TimeSpan retryInterval, bool isIncremental = true) -> void
 NGitLab.RequestOptions.RetryCount.get -> int
 NGitLab.RequestOptions.RetryCount.set -> void
