@@ -47,9 +47,9 @@ NGitLab.GetCommitsRequest.Until.set -> void
 NGitLab.GetRawFileRequest
 NGitLab.GetRawFileRequest.GetRawFileRequest() -> void
 NGitLab.GetRawFileRequest.Lfs.get -> bool?
-NGitLab.GetRawFileRequest.Lfs.set -> void
+NGitLab.GetRawFileRequest.Lfs.init -> void
 NGitLab.GetRawFileRequest.Ref.get -> string
-NGitLab.GetRawFileRequest.Ref.set -> void
+NGitLab.GetRawFileRequest.Ref.init -> void
 NGitLab.GitLabClient
 NGitLab.GitLabClient.AdvancedSearch.get -> NGitLab.ISearchClient
 NGitLab.GitLabClient.Deployments.get -> NGitLab.IDeploymentClient

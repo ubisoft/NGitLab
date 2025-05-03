@@ -60,16 +60,16 @@ public class FilesClient : IFilesClient
 
     public void GetRaw(string filePath, Action<Stream> parser, GetRawFileRequest request = null)
     {
-        var url = _repoPath + $"/files/{EncodeFilePath(filePath)}/raw/";
+        var url = _repoPath + $"/files/{EncodeFilePath(filePath)}/raw";
 
-        if (!String.IsNullOrWhiteSpace(request?.Ref))
+        if (!string.IsNullOrWhiteSpace(request?.Ref))
         {
-            url = Utils.AddParameter(url, "ref", Uri.EscapeDataString(request?.Ref));
+            url = Utils.AddParameter(url, "ref", Uri.EscapeDataString(request.Ref));
         }
 
         if (request is not null && request.Lfs.HasValue)
         {
-            url = Utils.AddParameter(url, "lfs", request?.Lfs.Value);
+            url = Utils.AddParameter(url, "lfs", request.Lfs.Value);
         }
 
         _api.Get().Stream(url, parser);

@@ -548,7 +548,7 @@ public sealed class Repository : GitLabObject, IDisposable
         }
         catch (LibGit2Sharp.NotFoundException)
         {
-            throw GitLabException.NotFound("File not found");
+            throw GitLabException.NotFound("Revision not found");
         }
 
         var fileCompletePath = Path.Combine(FullPath, filePath);
