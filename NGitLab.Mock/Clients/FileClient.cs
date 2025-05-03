@@ -156,14 +156,14 @@ internal sealed class FileClient : ClientBase, IFilesClient
         return Get(filePath, @ref);
     }
 
-    public void GetRaw(string filePath, Action<Stream> parser, GetRawFileRequest request = null)
+    public async Task GetRawAsync(string filePath, Func<Stream, Task> parser, GetRawFileRequest request = null, CancellationToken cancellationToken = default)
     {
         using (Context.BeginOperationScope())
         {
             var fileSystemPath = WebUtility.UrlDecode(filePath);
 
             var project = GetProject(_projectId, ProjectPermission.View);
-            project.Repository.GetRawFile(fileSystemPath, parser, request);
+            await project.Repository.GetRawFileAsync(fileSystemPath, parser, request).ConfigureAwait(false);
         }
     }
 }

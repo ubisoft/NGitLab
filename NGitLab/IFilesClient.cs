@@ -24,7 +24,7 @@ public interface IFilesClient
 
     Task<FileData> GetAsync(string filePath, string @ref, CancellationToken cancellationToken = default);
 
-    void GetRaw(string filePath, Action<Stream> parser, GetRawFileRequest request = null);
+    Task GetRawAsync(string filePath, Func<Stream, Task> parser, GetRawFileRequest request = null, CancellationToken cancellationToken = default);
 
     bool FileExists(string filePath, string @ref);
 

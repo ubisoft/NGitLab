@@ -109,7 +109,7 @@ public class FilesTests
 
     [Test]
     [NGitLabRetry]
-    public async Task Test_get_raw_file()
+    public async Task Test_get_raw_file_async()
     {
         using var context = await GitLabTestContext.CreateAsync();
         var project = context.CreateProject();
@@ -129,15 +129,15 @@ public class FilesTests
 
 
         string downloadedContent = null;
-        filesClient.GetRaw(fileName, stream =>
+        await filesClient.GetRawAsync(fileName, async stream =>
         {
             using var streamReader = new StreamReader(stream);
-            downloadedContent = streamReader.ReadToEnd();
+            downloadedContent = await streamReader.ReadToEndAsync();
         });
         Assert.That(downloadedContent, Is.Not.Null);
         Assert.That(downloadedContent, Is.EqualTo("test"));
 
-        Assert.Throws(Is.InstanceOf<GitLabException>(), () => filesClient.GetRaw("does-not-exist.md", _ => { }));
+        Assert.ThrowsAsync(Is.InstanceOf<GitLabException>(), () => filesClient.GetRawAsync("does-not-exist.md", _ => Task.CompletedTask));
     }
 
     [Test]

@@ -58,7 +58,7 @@ public class FilesClient : IFilesClient
         return _api.Get().ToAsync<FileData>(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={Uri.EscapeDataString(@ref)}", cancellationToken);
     }
 
-    public void GetRaw(string filePath, Action<Stream> parser, GetRawFileRequest request = null)
+    public Task GetRawAsync(string filePath, Func<Stream, Task> parser, GetRawFileRequest request = null, CancellationToken cancellationToken = default)
     {
         var url = _repoPath + $"/files/{EncodeFilePath(filePath)}/raw";
 
@@ -72,7 +72,7 @@ public class FilesClient : IFilesClient
             url = Utils.AddParameter(url, "lfs", request.Lfs.Value);
         }
 
-        _api.Get().Stream(url, parser);
+        return _api.Get().StreamAsync(url, parser, cancellationToken);
     }
 
     public bool FileExists(string filePath, string @ref)

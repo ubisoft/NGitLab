@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using LibGit2Sharp;
 using NGitLab.Mock.Clients;
 using NGitLab.Models;
@@ -538,7 +539,7 @@ public sealed class Repository : GitLabObject, IDisposable
         };
     }
 
-    public void GetRawFile(string filePath, Action<Stream> parser, GetRawFileRequest request)
+    public async Task GetRawFileAsync(string filePath, Func<Stream, Task> parser, GetRawFileRequest request)
     {
         var repo = GetGitRepository();
         try
@@ -560,7 +561,7 @@ public sealed class Repository : GitLabObject, IDisposable
 
         using (var fileStream = System.IO.File.OpenRead(fileCompletePath))
         {
-            parser(fileStream);
+            await parser(fileStream).ConfigureAwait(false);
         }
     }
 
