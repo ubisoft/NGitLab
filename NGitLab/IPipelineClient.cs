@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -28,13 +27,6 @@ public interface IPipelineClient
     IEnumerable<Job> AllJobs { get; }
 
     GitLabCollectionResponse<Job> GetAllJobsAsync();
-
-    /// <summary>
-    /// Get jobs in a project meeting the scope
-    /// </summary>
-    /// <param name="scope"></param>
-    [Obsolete("Use JobClient.GetJobs() instead")]
-    IEnumerable<Job> GetJobsInProject(JobScope scope);
 
     /// <summary>
     /// Returns the jobs of a pipeline.

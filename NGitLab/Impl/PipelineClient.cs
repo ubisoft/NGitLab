@@ -31,19 +31,6 @@ public class PipelineClient : IPipelineClient
         return _api.Get().GetAllAsync<Job>($"{_projectPath}/jobs");
     }
 
-    [Obsolete("Use JobClient.GetJobs() instead")]
-    public IEnumerable<Job> GetJobsInProject(JobScope scope)
-    {
-        var url = $"{_projectPath}/jobs";
-
-        if (scope != JobScope.All)
-        {
-            url = Utils.AddParameter(url, "scope", scope.ToString().ToLowerInvariant());
-        }
-
-        return _api.Get().GetAll<Job>(url);
-    }
-
     public Pipeline this[long id] => _api.Get().To<Pipeline>($"{_pipelinesPath}/{id.ToStringInvariant()}");
 
     public Task<Pipeline> GetByIdAsync(long id, CancellationToken cancellationToken = default)

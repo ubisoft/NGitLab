@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using NGitLab.Models;
 
@@ -22,7 +21,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use CreateProjectLabel instead")]
     public Models.Label Create(LabelCreate label)
     {
         return CreateProjectLabel(label.Id, new ProjectLabelCreate
@@ -42,7 +41,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other CreateGroupLabel instead")]
     public Models.Label CreateGroupLabel(LabelCreate label)
     {
         return CreateGroupLabel(label.Id, new GroupLabelCreate
@@ -64,7 +63,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use DeleteProjectLabel instead")]
     public Models.Label Delete(LabelDelete label)
     {
         return DeleteProjectLabel(label.Id, new ProjectLabelDelete
@@ -100,7 +99,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use EditProjectLabel instead")]
     public Models.Label Edit(LabelEdit label)
     {
         return EditProjectLabel(label.Id, new ProjectLabelEdit
@@ -138,7 +137,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other EditGroupLabel instead")]
     public Models.Label EditGroupLabel(LabelEdit label)
     {
         return EditGroupLabel(label.Id, new GroupLabelEdit
@@ -196,7 +195,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use GetProjectLabel instead")]
     public Models.Label GetLabel(long projectId, string name)
     {
         return GetProjectLabel(projectId, name);

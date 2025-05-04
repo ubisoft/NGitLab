@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
 using NGitLab.Models;
 
 namespace NGitLab;
@@ -42,7 +42,7 @@ public interface ILabelClient
     /// <returns></returns>
     Label GetProjectLabel(long projectId, string name);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use GetProjectLabel instead")]
     Label GetLabel(long projectId, string name);
 
     /// <summary>
@@ -61,7 +61,7 @@ public interface ILabelClient
     /// <returns></returns>
     Label CreateProjectLabel(long projectId, ProjectLabelCreate label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use CreateProjectLabel instead")]
     Label Create(LabelCreate label);
 
     /// <summary>
@@ -72,7 +72,7 @@ public interface ILabelClient
     /// <returns></returns>
     Label CreateGroupLabel(long groupId, GroupLabelCreate label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other CreateGroupLabel instead")]
     Label CreateGroupLabel(LabelCreate label);
 
     /// <summary>
@@ -83,7 +83,7 @@ public interface ILabelClient
     /// <returns></returns>
     Label EditProjectLabel(long projectId, ProjectLabelEdit label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use EditProjectLabel instead")]
     Label Edit(LabelEdit label);
 
     /// <summary>
@@ -94,7 +94,7 @@ public interface ILabelClient
     /// <returns></returns>
     Label EditGroupLabel(long groupId, GroupLabelEdit label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other EditGroupLabel instead")]
     Label EditGroupLabel(LabelEdit label);
 
     /// <summary>
@@ -105,6 +105,6 @@ public interface ILabelClient
     /// <returns>True if "200", the success code for delete, was returned from the service.</returns>
     Label DeleteProjectLabel(long projectId, ProjectLabelDelete label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use DeleteProjectLabel instead")]
     Label Delete(LabelDelete label);
 }
