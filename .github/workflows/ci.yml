@@ -10,6 +10,9 @@ on:
     branches:
       - '*'
 
+permissions:
+  contents: read
+
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
@@ -101,6 +104,9 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     needs: [create_nuget, build_and_test]
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/download-artifact@v4
         with:
