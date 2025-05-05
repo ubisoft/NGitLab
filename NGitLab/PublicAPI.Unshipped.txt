@@ -44,6 +44,12 @@ NGitLab.GetCommitsRequest.Since.get -> System.DateTime?
 NGitLab.GetCommitsRequest.Since.set -> void
 NGitLab.GetCommitsRequest.Until.get -> System.DateTime?
 NGitLab.GetCommitsRequest.Until.set -> void
+NGitLab.GetRawFileRequest
+NGitLab.GetRawFileRequest.GetRawFileRequest() -> void
+NGitLab.GetRawFileRequest.Lfs.get -> bool?
+NGitLab.GetRawFileRequest.Lfs.init -> void
+NGitLab.GetRawFileRequest.Ref.get -> string
+NGitLab.GetRawFileRequest.Ref.init -> void
 NGitLab.GitLabClient
 NGitLab.GitLabClient.AdvancedSearch.get -> NGitLab.ISearchClient
 NGitLab.GitLabClient.Deployments.get -> NGitLab.IDeploymentClient
@@ -172,6 +178,7 @@ NGitLab.IFilesClient.FileExists(string filePath, string ref) -> bool
 NGitLab.IFilesClient.FileExistsAsync(string filePath, string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>
 NGitLab.IFilesClient.Get(string filePath, string ref) -> NGitLab.Models.FileData
 NGitLab.IFilesClient.GetAsync(string filePath, string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.FileData>
+NGitLab.IFilesClient.GetRawAsync(string filePath, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, NGitLab.GetRawFileRequest request = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IFilesClient.Update(NGitLab.Models.FileUpsert file) -> void
 NGitLab.IFilesClient.UpdateAsync(NGitLab.Models.FileUpsert file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IGitLabClient
@@ -537,6 +544,7 @@ NGitLab.Impl.FilesClient.FileExistsAsync(string filePath, string ref, System.Thr
 NGitLab.Impl.FilesClient.FilesClient(NGitLab.Impl.API api, string repoPath) -> void
 NGitLab.Impl.FilesClient.Get(string filePath, string ref) -> NGitLab.Models.FileData
 NGitLab.Impl.FilesClient.GetAsync(string filePath, string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.FileData>
+NGitLab.Impl.FilesClient.GetRawAsync(string filePath, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, NGitLab.GetRawFileRequest request = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.FilesClient.Update(NGitLab.Models.FileUpsert file) -> void
 NGitLab.Impl.FilesClient.UpdateAsync(NGitLab.Models.FileUpsert file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.GitLabChangeDiffCounter

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using LibGit2Sharp;
 using NGitLab.Mock.Clients;
 using NGitLab.Models;
@@ -536,6 +537,32 @@ public sealed class Repository : GitLabObject, IDisposable
             CommitId = commit.Sha,
             LastCommitId = repo.GetLastCommitForFileChanges(filePath)?.Sha,
         };
+    }
+
+    public async Task GetRawFileAsync(string filePath, Func<Stream, Task> parser, GetRawFileRequest request)
+    {
+        var repo = GetGitRepository();
+        try
+        {
+            var @ref = request?.Ref ?? repo.Head.FriendlyName;
+            Commands.Checkout(repo, @ref);
+        }
+        catch (LibGit2Sharp.NotFoundException)
+        {
+            throw GitLabException.NotFound("Revision not found");
+        }
+
+        var fileCompletePath = Path.Combine(FullPath, filePath);
+
+        if (!System.IO.File.Exists(fileCompletePath))
+        {
+            throw GitLabException.NotFound("File not found");
+        }
+
+        using (var fileStream = System.IO.File.OpenRead(fileCompletePath))
+        {
+            await parser(fileStream).ConfigureAwait(false);
+        }
     }
 
     internal IEnumerable<Tree> GetTree() => GetTree(new());

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -104,6 +105,39 @@ public class FilesTests
         Assert.That(exists, Is.False);
 
         Assert.ThrowsAsync(Is.InstanceOf<GitLabException>(), () => filesClient.GetAsync("testDelete.md", project.DefaultBranch));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_get_raw_file_async()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var filesClient = context.Client.GetRepository(project.Id).Files;
+
+        // Don't use txt extensions: https://gitlab.com/gitlab-org/gitlab-ce/issues/31790
+        var fileName = "test.md";
+        var fileUpsert = new FileUpsert
+        {
+            Branch = project.DefaultBranch,
+            CommitMessage = "Add SonarQube badges to README.md",
+            RawContent = "test",
+            Encoding = "base64",
+            Path = fileName,
+        };
+        await filesClient.CreateAsync(fileUpsert);
+
+
+        string downloadedContent = null;
+        await filesClient.GetRawAsync(fileName, async stream =>
+        {
+            using var streamReader = new StreamReader(stream);
+            downloadedContent = await streamReader.ReadToEndAsync();
+        });
+        Assert.That(downloadedContent, Is.Not.Null);
+        Assert.That(downloadedContent, Is.EqualTo("test"));
+
+        Assert.ThrowsAsync(Is.InstanceOf<GitLabException>(), () => filesClient.GetRawAsync("does-not-exist.md", _ => Task.CompletedTask));
     }
 
     [Test]

@@ -1071,6 +1071,7 @@ NGitLab.Mock.Repository.GetCommits() -> System.Collections.Generic.IEnumerable<L
 NGitLab.Mock.Repository.GetCommits(NGitLab.GetCommitsRequest request) -> System.Collections.Generic.IEnumerable<LibGit2Sharp.Commit>
 NGitLab.Mock.Repository.GetCommits(string ref) -> System.Collections.Generic.IEnumerable<LibGit2Sharp.Commit>
 NGitLab.Mock.Repository.GetFile(string filePath, string ref) -> NGitLab.Models.FileData
+NGitLab.Mock.Repository.GetRawFileAsync(string filePath, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, NGitLab.GetRawFileRequest request) -> System.Threading.Tasks.Task
 NGitLab.Mock.Repository.GetReleaseTag(string tagName) -> NGitLab.Mock.ReleaseTag
 NGitLab.Mock.Repository.GetTags() -> LibGit2Sharp.TagCollection
 NGitLab.Mock.Repository.IsEmpty.get -> bool
