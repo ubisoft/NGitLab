@@ -70,6 +70,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
                 {
                     throw GitLabException.BadRequest("Runner is enabled in multiple projects");
                 }
+
                 var project = GetProject(projects.Single().Id, ProjectPermission.Edit);
                 project.RemoveRunner(runnerId);
                 return;

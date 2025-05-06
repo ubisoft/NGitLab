@@ -5,7 +5,9 @@ namespace NGitLab.Mock.Config;
 public abstract class GitLabCollection<TItem> : System.Collections.ObjectModel.Collection<TItem>
     where TItem : GitLabObject
 {
+#pragma warning disable SA1401 // Fields should be private
     internal readonly object _parent;
+#pragma warning restore SA1401 // Fields should be private
 
     protected internal GitLabCollection(object parent)
     {
