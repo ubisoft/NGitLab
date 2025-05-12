@@ -127,7 +127,8 @@ internal sealed class JobClient : ClientBase, IJobClient
                     job.Status = JobStatus.Canceled;
                     break;
                 case JobAction.Erase:
-                    job.Artifacts = null;
+                    job.ArtifactsFile = null;
+                    job.Artifacts.Clear();
                     job.Trace = null;
                     break;
                 case JobAction.Play:
