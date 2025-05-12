@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -96,12 +95,6 @@ public class MembersClient : IMembersClient
     public Task RemoveMemberFromProjectAsync(ProjectId projectId, long userId, CancellationToken cancellationToken = default)
     {
         return _api.Delete().ExecuteAsync($"{Project.Url}/{projectId.ValueAsUriParameter()}/members/{userId.ToStringInvariant()}", cancellationToken);
-    }
-
-    [Obsolete("Use OfGroup")]
-    public IEnumerable<Membership> OfNamespace(string groupId)
-    {
-        return OfGroup(groupId);
     }
 
     public IEnumerable<Membership> OfGroup(string groupId)

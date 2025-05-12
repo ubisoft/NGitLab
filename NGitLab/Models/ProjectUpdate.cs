@@ -22,10 +22,6 @@ public sealed class ProjectUpdate
     [Obsolete("Deprecated by GitLab. Use IssuesAccessLevel instead")]
     public bool? IssuesEnabled { get; set; }
 
-    [JsonIgnore]
-    [Obsolete("Use IssuesAccessLevel instead")]
-    public string IssuesAccessLeve { get => IssuesAccessLevel; set => IssuesAccessLevel = value; }
-
     [JsonPropertyName("issues_access_level")]
     public string IssuesAccessLevel { get; set; }
 
