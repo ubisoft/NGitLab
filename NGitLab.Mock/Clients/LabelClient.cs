@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients;
@@ -22,7 +23,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use CreateProjectLabel instead")]
     public Models.Label Create(LabelCreate label)
     {
         return CreateProjectLabel(label.Id, new ProjectLabelCreate
@@ -42,7 +43,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other CreateGroupLabel instead")]
     public Models.Label CreateGroupLabel(LabelCreate label)
     {
         return CreateGroupLabel(label.Id, new GroupLabelCreate
@@ -53,6 +54,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         });
     }
 
+    [Obsolete("Use DeleteProjectLabelAsync instead")]
     public Models.Label DeleteProjectLabel(long projectId, ProjectLabelDelete label)
     {
         using (Context.BeginOperationScope())
@@ -64,7 +66,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use DeleteProjectLabelAsync instead")]
     public Models.Label Delete(LabelDelete label)
     {
         return DeleteProjectLabel(label.Id, new ProjectLabelDelete
@@ -100,7 +102,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use EditProjectLabel instead")]
     public Models.Label Edit(LabelEdit label)
     {
         return EditProjectLabel(label.Id, new ProjectLabelEdit
@@ -138,7 +140,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other EditGroupLabel instead")]
     public Models.Label EditGroupLabel(LabelEdit label)
     {
         return EditGroupLabel(label.Id, new GroupLabelEdit
@@ -196,7 +198,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use GetProjectLabel instead")]
     public Models.Label GetLabel(long projectId, string name)
     {
         return GetProjectLabel(projectId, name);
@@ -205,5 +207,32 @@ internal sealed class LabelClient : ClientBase, ILabelClient
     private static Label FindLabel(LabelsCollection collection, string name)
     {
         return collection.FirstOrDefault(x => x.Name.Equals(name, StringComparison.Ordinal));
+    }
+
+    private static Label FindLabel(LabelsCollection collection, long id)
+    {
+        return collection.FirstOrDefault(x => x.Id == id);
+    }
+
+    public async Task DeleteProjectLabelAsync(long projectId, long labelId, CancellationToken cancellation = default)
+    {
+        await Task.Yield();
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(projectId, ProjectPermission.Edit);
+            var l = FindLabel(project.Labels, labelId) ?? throw GitLabException.NotFound($"Cannot find label with ID {labelId}");
+            project.Labels.Remove(l);
+        }
+    }
+
+    public async Task DeleteProjectLabelAsync(long projectId, string labelName, CancellationToken cancellation = default)
+    {
+        await Task.Yield();
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(projectId, ProjectPermission.Edit);
+            var l = FindLabel(project.Labels, labelName) ?? throw GitLabException.NotFound($"Cannot find label '{labelName}'");
+            project.Labels.Remove(l);
+        }
     }
 }

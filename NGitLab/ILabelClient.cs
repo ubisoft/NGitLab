@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab;
@@ -42,7 +45,7 @@ public interface ILabelClient
     /// <returns></returns>
     Label GetProjectLabel(long projectId, string name);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use GetProjectLabel instead")]
     Label GetLabel(long projectId, string name);
 
     /// <summary>
@@ -61,7 +64,7 @@ public interface ILabelClient
     /// <returns></returns>
     Label CreateProjectLabel(long projectId, ProjectLabelCreate label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use CreateProjectLabel instead")]
     Label Create(LabelCreate label);
 
     /// <summary>
@@ -72,7 +75,7 @@ public interface ILabelClient
     /// <returns></returns>
     Label CreateGroupLabel(long groupId, GroupLabelCreate label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other CreateGroupLabel instead")]
     Label CreateGroupLabel(LabelCreate label);
 
     /// <summary>
@@ -83,7 +86,7 @@ public interface ILabelClient
     /// <returns></returns>
     Label EditProjectLabel(long projectId, ProjectLabelEdit label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use EditProjectLabel instead")]
     Label Edit(LabelEdit label);
 
     /// <summary>
@@ -94,17 +97,28 @@ public interface ILabelClient
     /// <returns></returns>
     Label EditGroupLabel(long groupId, GroupLabelEdit label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other EditGroupLabel instead")]
     Label EditGroupLabel(LabelEdit label);
 
-    /// <summary>
-    /// Delete a label from the project.
-    /// </summary>
-    /// <param name="projectId"></param>
-    /// <param name="label"></param>
-    /// <returns>True if "200", the success code for delete, was returned from the service.</returns>
+    [Obsolete("Use DeleteProjectLabelAsync instead")]
     Label DeleteProjectLabel(long projectId, ProjectLabelDelete label);
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    /// <summary>
+    /// Delete a project label using its ID.
+    /// </summary>
+    /// <param name="projectId">Project ID</param>
+    /// <param name="labelId">Label ID</param>
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
+    Task DeleteProjectLabelAsync(long projectId, long labelId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Delete a project label using its name.
+    /// </summary>
+    /// <param name="projectId">Project ID</param>
+    /// <param name="labelName">Label Name</param>
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
+    Task DeleteProjectLabelAsync(long projectId, string labelName, CancellationToken cancellationToken = default);
+
+    [Obsolete("Use DeleteProjectLabelAsync instead")]
     Label Delete(LabelDelete label);
 }
