@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NGitLab.Mock.Clients;
 
 internal sealed class ClientContext
 {
-    private readonly object _operationLock = new();
+    private readonly SemaphoreSlim _operationLock = new SemaphoreSlim(1, 1);
 
     public ClientContext(GitLabServer server, User user)
     {
@@ -22,22 +23,22 @@ internal sealed class ClientContext
     public IDisposable BeginOperationScope()
     {
         Server.RaiseOnClientOperation();
-        Monitor.Enter(_operationLock);
+        _operationLock.Wait();
         return new Releaser(_operationLock);
     }
 
     private sealed class Releaser : IDisposable
     {
-        private readonly object _operationLock;
+        private readonly SemaphoreSlim _semaphore;
 
-        public Releaser(object operationLock)
+        public Releaser(SemaphoreSlim semaphore)
         {
-            _operationLock = operationLock;
+            _semaphore = semaphore;
         }
 
         public void Dispose()
         {
-            Monitor.Exit(_operationLock);
+            _semaphore.Release();
         }
     }
 }
