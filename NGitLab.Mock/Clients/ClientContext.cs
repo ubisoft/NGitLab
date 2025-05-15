@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Threading;
 
 namespace NGitLab.Mock.Clients;
 
 internal sealed class ClientContext
 {
-    private readonly object _operationLock = new();
-
     public ClientContext(GitLabServer server, User user)
     {
         Server = server;
@@ -22,22 +19,17 @@ internal sealed class ClientContext
     public IDisposable BeginOperationScope()
     {
         Server.RaiseOnClientOperation();
-        Monitor.Enter(_operationLock);
-        return new Releaser(_operationLock);
+        return new Releaser();
     }
 
     private sealed class Releaser : IDisposable
     {
-        private readonly object _operationLock;
-
-        public Releaser(object operationLock)
+        public Releaser()
         {
-            _operationLock = operationLock;
         }
 
         public void Dispose()
         {
-            Monitor.Exit(_operationLock);
         }
     }
 }
