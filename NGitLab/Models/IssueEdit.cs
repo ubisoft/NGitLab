@@ -50,4 +50,10 @@ public class IssueEdit
 
     [JsonPropertyName("confidential")]
     public bool? Confidential { get; set; }
+
+    /// <summary>
+    /// Requires administrator or project/group owner rights.
+    /// </summary>
+    [JsonPropertyName("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 }
