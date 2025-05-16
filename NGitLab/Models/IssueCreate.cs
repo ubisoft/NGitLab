@@ -42,6 +42,9 @@ public class IssueCreate
     [JsonPropertyName("weight")]
     public int? Weight { get; set; }
 
+    /// <summary>
+    /// Requires administrator or project/group owner rights.
+    /// </summary>
     [JsonPropertyName("created_at")]
     public DateTime? CreatedAt { get; set; }
 }
