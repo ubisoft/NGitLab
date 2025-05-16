@@ -41,4 +41,7 @@ public class IssueCreate
 
     [JsonPropertyName("weight")]
     public int? Weight { get; set; }
+
+    [JsonPropertyName("created_at")]
+    public DateTime? CreatedAt { get; set; }
 }

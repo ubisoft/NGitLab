@@ -2377,6 +2377,8 @@ NGitLab.Models.IssueCreate.AssigneeIds.get -> long[]
 NGitLab.Models.IssueCreate.AssigneeIds.set -> void
 NGitLab.Models.IssueCreate.Confidential.get -> bool
 NGitLab.Models.IssueCreate.Confidential.set -> void
+NGitLab.Models.IssueCreate.CreatedAt.get -> System.DateTime?
+NGitLab.Models.IssueCreate.CreatedAt.set -> void
 NGitLab.Models.IssueCreate.Description.get -> string
 NGitLab.Models.IssueCreate.Description.set -> void
 NGitLab.Models.IssueCreate.DueDate.get -> System.DateTime?
@@ -2422,6 +2424,8 @@ NGitLab.Models.IssueEdit.State.get -> string
 NGitLab.Models.IssueEdit.State.set -> void
 NGitLab.Models.IssueEdit.Title.get -> string
 NGitLab.Models.IssueEdit.Title.set -> void
+NGitLab.Models.IssueEdit.UpdatedAt.get -> System.DateTime?
+NGitLab.Models.IssueEdit.UpdatedAt.set -> void
 NGitLab.Models.IssueEdit.Weight.get -> int?
 NGitLab.Models.IssueEdit.Weight.set -> void
 NGitLab.Models.IssueEpic

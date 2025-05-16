@@ -50,4 +50,7 @@ public class IssueEdit
 
     [JsonPropertyName("confidential")]
     public bool? Confidential { get; set; }
+
+    [JsonPropertyName("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 }
