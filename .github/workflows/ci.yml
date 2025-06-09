@@ -3,12 +3,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'main'
+      - "main"
     tags:
-      - '*'
+      - "*"
   pull_request:
     branches:
-      - '*'
+      - "*"
 
 permissions:
   contents: read
@@ -33,7 +33,7 @@ jobs:
       - name: Set up latest .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
       - run: dotnet pack NGitLab.sln --configuration Release --output ${{env.NuGetDirectory}} /bl
       - uses: actions/upload-artifact@v4
         with:
@@ -46,7 +46,7 @@ jobs:
           name: binlogs
           if-no-files-found: error
           retention-days: 7
-          path: '**/*.binlog'
+          path: "**/*.binlog"
 
   build_and_test:
     runs-on: ubuntu-22.04
@@ -57,9 +57,9 @@ jobs:
         # Keep in sync with the version in GitLabDockerContainer.cs
         # Available tags: https://hub.docker.com/r/gitlab/gitlab-ee/tags
         gitlab:
-          - 'gitlab/gitlab-ee:15.11.9-ee.0'
-          - 'gitlab/gitlab-ee:16.11.4-ee.0'
-          - 'gitlab/gitlab-ee:17.0.2-ee.0'
+          - "gitlab/gitlab-ee:15.11.9-ee.0"
+          - "gitlab/gitlab-ee:16.11.4-ee.0"
+          - "gitlab/gitlab-ee:17.0.2-ee.0"
         configuration: [Release]
       fail-fast: false
     services:
@@ -76,7 +76,7 @@ jobs:
       - name: Set up latest .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
       - name: Set artifact name
         id: set-artifact-name
         run: |
@@ -98,7 +98,7 @@ jobs:
         with:
           name: test-results-${{steps.set-artifact-name.outputs.artifact_name}}
           path: ${{env.TestResultsDirectory}}/**/*.trx
-          path-replace-backslashes: 'true'
+          path-replace-backslashes: "true"
           reporter: dotnet-trx
 
   deploy:
@@ -115,7 +115,7 @@ jobs:
       - name: Set up latest .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
       - name: Publish NuGet packages
         run: |
           Write-Host "Current ref: $env:GITHUB_REF"

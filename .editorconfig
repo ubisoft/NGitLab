@@ -272,6 +272,9 @@ MA0051.maximum_statements_per_method = 100
 
 MA0053.public_class_should_be_sealed = false
 
+# RS0037: Enable tracking of nullability of reference types in the declared API
+dotnet_diagnostic.RS0037.severity = suggestion
+
 # SA0001: XML comment analysis is disabled due to project configuration
 dotnet_diagnostic.SA0001.severity = none
 

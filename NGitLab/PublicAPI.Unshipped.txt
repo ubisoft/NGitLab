@@ -3234,8 +3234,10 @@ NGitLab.Models.ObjectType.commit = 2 -> NGitLab.Models.ObjectType
 NGitLab.Models.ObjectType.tree = 1 -> NGitLab.Models.ObjectType
 NGitLab.Models.PagedResponse
 NGitLab.Models.PagedResponse<T>
+NGitLab.Models.PagedResponse<T>.Deconstruct(out System.Collections.Generic.IReadOnlyCollection<T> Page, out int? Total) -> void
 NGitLab.Models.PagedResponse<T>.Page.get -> System.Collections.Generic.IReadOnlyCollection<T>
 NGitLab.Models.PagedResponse<T>.Page.init -> void
+NGitLab.Models.PagedResponse<T>.PagedResponse(NGitLab.Models.PagedResponse<T> original) -> void
 NGitLab.Models.PagedResponse<T>.PagedResponse(System.Collections.Generic.IReadOnlyCollection<T> Page, int? Total) -> void
 NGitLab.Models.PagedResponse<T>.Total.get -> int?
 NGitLab.Models.PagedResponse<T>.Total.init -> void
@@ -4598,6 +4600,8 @@ NGitLab.Models.TestReport.TotalCount.set -> void
 NGitLab.Models.TestReport.TotalTime.get -> int
 NGitLab.Models.TestReport.TotalTime.set -> void
 NGitLab.Models.TestReportSummary
+NGitLab.Models.TestReportSummary.TestReportSummary() -> void
+NGitLab.Models.TestReportSummary.TestReportSummary(NGitLab.Models.TestReportSummary original) -> void
 NGitLab.Models.TestReportSummary.TestSuites.get -> System.Collections.Generic.IReadOnlyCollection<NGitLab.Models.TestSuites>
 NGitLab.Models.TestReportSummary.TestSuites.set -> void
 NGitLab.Models.TestReportSummary.Total.get -> NGitLab.Models.TestReportSummaryTotals
@@ -5023,10 +5027,16 @@ override NGitLab.Models.GroupId.Equals(object other) -> bool
 override NGitLab.Models.GroupId.GetHashCode() -> int
 override NGitLab.Models.GroupId.ToString() -> string
 override NGitLab.Models.MergeRequest.ToString() -> string
+override NGitLab.Models.PagedResponse<T>.Equals(object obj) -> bool
+override NGitLab.Models.PagedResponse<T>.GetHashCode() -> int
+override NGitLab.Models.PagedResponse<T>.ToString() -> string
 override NGitLab.Models.ProjectId.Equals(object other) -> bool
 override NGitLab.Models.ProjectId.GetHashCode() -> int
 override NGitLab.Models.ProjectId.ToString() -> string
 override NGitLab.Models.QueryAssigneeId.ToString() -> string
+override NGitLab.Models.TestReportSummary.Equals(object obj) -> bool
+override NGitLab.Models.TestReportSummary.GetHashCode() -> int
+override NGitLab.Models.TestReportSummary.ToString() -> string
 override NGitLab.Sha1.Equals(object obj) -> bool
 override NGitLab.Sha1.GetHashCode() -> int
 override NGitLab.Sha1.ToString() -> string
@@ -5046,6 +5056,8 @@ static NGitLab.Models.GroupId.operator ==(NGitLab.Models.GroupId a, NGitLab.Mode
 static NGitLab.Models.GroupId.operator ==(NGitLab.Models.GroupId a, NGitLab.Models.GroupId b) -> bool
 static NGitLab.Models.IdOrPathExtensions.ValueAsString(this NGitLab.Models.IIdOrPathAddressable idOrPath) -> string
 static NGitLab.Models.IdOrPathExtensions.ValueAsUriParameter(this NGitLab.Models.IIdOrPathAddressable idOrPath) -> string
+static NGitLab.Models.PagedResponse<T>.operator !=(NGitLab.Models.PagedResponse<T> left, NGitLab.Models.PagedResponse<T> right) -> bool
+static NGitLab.Models.PagedResponse<T>.operator ==(NGitLab.Models.PagedResponse<T> left, NGitLab.Models.PagedResponse<T> right) -> bool
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(long id) -> NGitLab.Models.ProjectId
 static NGitLab.Models.ProjectId.implicit operator NGitLab.Models.ProjectId(string path) -> NGitLab.Models.ProjectId
 static NGitLab.Models.ProjectId.operator !=(NGitLab.Models.Project a, NGitLab.Models.ProjectId b) -> bool
@@ -5057,6 +5069,8 @@ static NGitLab.Models.ProjectId.operator ==(NGitLab.Models.ProjectId a, NGitLab.
 static NGitLab.Models.QueryAssigneeId.Any.get -> NGitLab.Models.QueryAssigneeId
 static NGitLab.Models.QueryAssigneeId.implicit operator NGitLab.Models.QueryAssigneeId(long id) -> NGitLab.Models.QueryAssigneeId
 static NGitLab.Models.QueryAssigneeId.None.get -> NGitLab.Models.QueryAssigneeId
+static NGitLab.Models.TestReportSummary.operator !=(NGitLab.Models.TestReportSummary left, NGitLab.Models.TestReportSummary right) -> bool
+static NGitLab.Models.TestReportSummary.operator ==(NGitLab.Models.TestReportSummary left, NGitLab.Models.TestReportSummary right) -> bool
 static NGitLab.RequestOptions.Default.get -> NGitLab.RequestOptions
 static NGitLab.Sha1.operator !=(NGitLab.Sha1 left, NGitLab.Sha1 right) -> bool
 static NGitLab.Sha1.operator ==(NGitLab.Sha1 left, NGitLab.Sha1 right) -> bool
@@ -5073,6 +5087,14 @@ virtual NGitLab.Impl.HttpRequestor.StreamAndHeadersAsync(string tailAPIUrl, Syst
 virtual NGitLab.Impl.HttpRequestor.StreamAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 virtual NGitLab.Impl.HttpRequestor.To<T>(string tailAPIUrl) -> T
 virtual NGitLab.Impl.HttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<T>
+virtual NGitLab.Models.PagedResponse<T>.<Clone>$() -> NGitLab.Models.PagedResponse<T>
+virtual NGitLab.Models.PagedResponse<T>.EqualityContract.get -> System.Type
+virtual NGitLab.Models.PagedResponse<T>.Equals(NGitLab.Models.PagedResponse<T> other) -> bool
+virtual NGitLab.Models.PagedResponse<T>.PrintMembers(System.Text.StringBuilder builder) -> bool
+virtual NGitLab.Models.TestReportSummary.<Clone>$() -> NGitLab.Models.TestReportSummary
+virtual NGitLab.Models.TestReportSummary.EqualityContract.get -> System.Type
+virtual NGitLab.Models.TestReportSummary.Equals(NGitLab.Models.TestReportSummary other) -> bool
+virtual NGitLab.Models.TestReportSummary.PrintMembers(System.Text.StringBuilder builder) -> bool
 virtual NGitLab.RequestOptions.GetResponse(System.Net.HttpWebRequest request) -> System.Net.WebResponse
 virtual NGitLab.RequestOptions.GetResponseAsync(System.Net.HttpWebRequest request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.WebResponse>
 virtual NGitLab.RequestOptions.ShouldRetry(System.Exception ex, int retryNumber) -> bool
