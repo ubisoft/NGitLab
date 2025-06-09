@@ -127,12 +127,11 @@ public class FilesTests
         };
         await filesClient.CreateAsync(fileUpsert);
 
-
         string downloadedContent = null;
         await filesClient.GetRawAsync(fileName, async stream =>
         {
             using var streamReader = new StreamReader(stream);
-            downloadedContent = await streamReader.ReadToEndAsync();
+            downloadedContent = await streamReader.ReadToEndAsync().ConfigureAwait(false);
         });
         Assert.That(downloadedContent, Is.Not.Null);
         Assert.That(downloadedContent, Is.EqualTo("test"));
