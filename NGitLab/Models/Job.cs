@@ -11,7 +11,7 @@ public class Job : JobBasic
     public JobRunner Runner { get; set; }
 
     [JsonPropertyName("runner_manager")]
-    public JobRunner Runner { get; set; }
+    public JobRunner RunnerManager { get; set; }
 
     [JsonPropertyName("project")]
     public JobProject Project { get; set; }
