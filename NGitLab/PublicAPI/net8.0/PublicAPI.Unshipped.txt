@@ -3484,6 +3484,8 @@ NGitLab.Models.Project.BuildsAccessLevel.get -> string
 NGitLab.Models.Project.BuildsAccessLevel.set -> void
 NGitLab.Models.Project.BuildTimeout.get -> int?
 NGitLab.Models.Project.BuildTimeout.set -> void
+NGitLab.Models.Project.CiDefaultGitDepth.get -> int?
+NGitLab.Models.Project.CiDefaultGitDepth.set -> void
 NGitLab.Models.Project.ContainerRegistryEnabled.get -> bool
 NGitLab.Models.Project.ContainerRegistryEnabled.set -> void
 NGitLab.Models.Project.CreatedAt.get -> System.DateTime
@@ -3907,6 +3909,8 @@ NGitLab.Models.ProjectUpdate.BuildsAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.BuildsAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.BuildTimeout.get -> int?
 NGitLab.Models.ProjectUpdate.BuildTimeout.set -> void
+NGitLab.Models.ProjectUpdate.CiDefaultGitDepth.get -> int?
+NGitLab.Models.ProjectUpdate.CiDefaultGitDepth.set -> void
 NGitLab.Models.ProjectUpdate.ContainerRegistryEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.ContainerRegistryEnabled.set -> void
 NGitLab.Models.ProjectUpdate.DefaultBranch.get -> string
