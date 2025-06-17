@@ -82,6 +82,11 @@ public class JobClient : IJobClient
         return result;
     }
 
+    public Task DeleteJobArtifactsAsync(long jobId, CancellationToken cancellationToken = default)
+    {
+        return _api.Delete().ExecuteAsync($"{_jobsPath}/{jobId.ToStringInvariant()}/artifacts", cancellationToken);
+    }
+
     public byte[] GetJobArtifact(long jobId, string path)
     {
         byte[] result = null;

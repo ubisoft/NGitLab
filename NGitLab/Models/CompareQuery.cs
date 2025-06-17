@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace NGitLab.Models;
+﻿namespace NGitLab.Models;
 
 /// <summary>
 /// Query details for comparison of branches/tags/commit hashes

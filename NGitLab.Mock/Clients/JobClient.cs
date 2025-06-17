@@ -45,6 +45,11 @@ internal sealed class JobClient : ClientBase, IJobClient
         throw new NotImplementedException();
     }
 
+    public Task DeleteJobArtifactsAsync(long jobId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public byte[] GetJobArtifact(long jobId, string path)
     {
         throw new NotImplementedException();

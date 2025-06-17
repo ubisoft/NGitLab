@@ -206,7 +206,7 @@ public class GitLabDockerContainer
             {
                 PortBindings = new Dictionary<string, IList<PortBinding>>(StringComparer.Ordinal)
                 {
-                    {  HttpPort.ToString(CultureInfo.InvariantCulture) + "/tcp", new List<PortBinding> { new PortBinding { HostPort = HttpPort.ToString(CultureInfo.InvariantCulture) } } },
+                    { HttpPort.ToString(CultureInfo.InvariantCulture) + "/tcp", new List<PortBinding> { new PortBinding { HostPort = HttpPort.ToString(CultureInfo.InvariantCulture) } } },
                 },
             };
 

@@ -30,5 +30,4 @@ public class LintCIJob
 
     [JsonPropertyName("allow_failure")]
     public bool AllowFailure { get; set; }
-
 }

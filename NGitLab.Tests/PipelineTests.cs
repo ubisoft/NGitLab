@@ -257,7 +257,6 @@ public class PipelineTests
         }
     }
 
-
     [Test]
     [NGitLabRetry]
     public async Task Test_update_pipeline_metadata()
@@ -271,12 +270,10 @@ public class PipelineTests
         var pipelineClient = context.Client.GetPipelines(project.Id);
         JobTests.AddGitLabCiFile(context.Client, project);
 
-
         var pipeline = await pipelineClient.CreateAsync(new PipelineCreate
         {
             Ref = project.DefaultBranch,
         });
-
 
         var updatedPipeline = await pipelineClient.UpdateMetadataAsync(pipeline.Id, new PipelineMetadataUpdate() { Name = "Updated Name" });
 

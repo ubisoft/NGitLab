@@ -9,7 +9,6 @@ using NUnit.Framework;
 
 namespace NGitLab.Mock.Tests;
 
-
 public class GitLabClientMockTest
 {
     public static IEnumerable ProjectClientTestCases
@@ -45,7 +44,6 @@ public class GitLabClientMockTest
 
                 yield return TestCase(method.Name, (client, id) => method.Invoke(client, new object[] { id }));
             }
-
         }
     }
 
@@ -97,7 +95,6 @@ public class GitLabClientMockTest
         // This test checkes that this assumption still holds true and the method is rightly is skipped in GroupClientTestCases
         // When a mock for GetGroupMergeRequest(), this test will fail.
         // In this case, this test special logic for GetGroupMergeRequest() in GroupClientTestCases can be removed
-
         using var server = new GitLabConfig()
             .WithUser("user1", isDefault: true)
             .WithGroup("test-group", group =>

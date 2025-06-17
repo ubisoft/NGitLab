@@ -18,7 +18,9 @@ public class CommitClient : ICommitClient
 
     public Commit GetCommit(string @ref)
     {
-        return _api.Get().To<Commit>(_repoPath + $"/commits/{@ref}");
+        var encodedRef = WebUtility.UrlEncode(@ref);
+
+        return _api.Get().To<Commit>(_repoPath + $"/commits/{encodedRef}");
     }
 
     public Commit CherryPick(CommitCherryPick cherryPick)

@@ -44,6 +44,12 @@ NGitLab.GetCommitsRequest.Since.get -> System.DateTime?
 NGitLab.GetCommitsRequest.Since.set -> void
 NGitLab.GetCommitsRequest.Until.get -> System.DateTime?
 NGitLab.GetCommitsRequest.Until.set -> void
+NGitLab.GetRawFileRequest
+NGitLab.GetRawFileRequest.GetRawFileRequest() -> void
+NGitLab.GetRawFileRequest.Lfs.get -> bool?
+NGitLab.GetRawFileRequest.Lfs.init -> void
+NGitLab.GetRawFileRequest.Ref.get -> string
+NGitLab.GetRawFileRequest.Ref.init -> void
 NGitLab.GitLabClient
 NGitLab.GitLabClient.AdvancedSearch.get -> NGitLab.ISearchClient
 NGitLab.GitLabClient.Deployments.get -> NGitLab.IDeploymentClient
@@ -110,7 +116,6 @@ NGitLab.GitLabException.ErrorObject.set -> void
 NGitLab.GitLabException.GitLabException() -> void
 NGitLab.GitLabException.GitLabException(string message) -> void
 NGitLab.GitLabException.GitLabException(string message, System.Exception inner) -> void
-NGitLab.GitLabException.GitLabException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
 NGitLab.GitLabException.MethodType.get -> NGitLab.Impl.MethodType?
 NGitLab.GitLabException.MethodType.set -> void
 NGitLab.GitLabException.OriginalCall.get -> System.Uri
@@ -172,6 +177,7 @@ NGitLab.IFilesClient.FileExists(string filePath, string ref) -> bool
 NGitLab.IFilesClient.FileExistsAsync(string filePath, string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>
 NGitLab.IFilesClient.Get(string filePath, string ref) -> NGitLab.Models.FileData
 NGitLab.IFilesClient.GetAsync(string filePath, string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.FileData>
+NGitLab.IFilesClient.GetRawAsync(string filePath, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, NGitLab.GetRawFileRequest request = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IFilesClient.Update(NGitLab.Models.FileUpsert file) -> void
 NGitLab.IFilesClient.UpdateAsync(NGitLab.Models.FileUpsert file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IGitLabClient
@@ -303,6 +309,7 @@ NGitLab.IIssueClient.ForGroupsAsync(long groupId) -> NGitLab.GitLabCollectionRes
 NGitLab.IIssueClient.ForGroupsAsync(long groupId, NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.ForProject(long projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.IIssueClient.ForProjectAsync(long projectId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
+NGitLab.IIssueClient.ForProjectAsync(long projectId, NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.IIssueClient.Get(long projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.IIssueClient.Get(long projectId, NGitLab.Models.IssueQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.IIssueClient.Get(NGitLab.Models.IssueQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
@@ -326,6 +333,7 @@ NGitLab.IIssueClient.TimeStatsAsync(long projectId, long issueIid, System.Thread
 NGitLab.IIssueClient.Subscribe(NGitLab.Models.ProjectId projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.IIssueClient.Unsubscribe(NGitLab.Models.ProjectId projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.IJobClient
+NGitLab.IJobClient.DeleteJobArtifactsAsync(long jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IJobClient.Get(long jobId) -> NGitLab.Models.Job
 NGitLab.IJobClient.GetAsync(long jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.IJobClient.GetJobArtifact(long jobId, string path) -> byte[]
@@ -535,6 +543,7 @@ NGitLab.Impl.FilesClient.FileExistsAsync(string filePath, string ref, System.Thr
 NGitLab.Impl.FilesClient.FilesClient(NGitLab.Impl.API api, string repoPath) -> void
 NGitLab.Impl.FilesClient.Get(string filePath, string ref) -> NGitLab.Models.FileData
 NGitLab.Impl.FilesClient.GetAsync(string filePath, string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.FileData>
+NGitLab.Impl.FilesClient.GetRawAsync(string filePath, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, NGitLab.GetRawFileRequest request = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.FilesClient.Update(NGitLab.Models.FileUpsert file) -> void
 NGitLab.Impl.FilesClient.UpdateAsync(NGitLab.Models.FileUpsert file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.GitLabChangeDiffCounter
@@ -608,6 +617,7 @@ NGitLab.Impl.IssueClient.ForGroupsAsync(long groupId) -> NGitLab.GitLabCollectio
 NGitLab.Impl.IssueClient.ForGroupsAsync(long groupId, NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.ForProject(long projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.ForProjectAsync(long projectId) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
+NGitLab.Impl.IssueClient.ForProjectAsync(long projectId, NGitLab.Models.IssueQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.Get(long projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.Impl.IssueClient.Get(long projectId, NGitLab.Models.IssueQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
 NGitLab.Impl.IssueClient.Get(NGitLab.Models.IssueQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Issue>
@@ -632,6 +642,7 @@ NGitLab.Impl.IssueClient.TimeStatsAsync(long projectId, long issueIid, System.Th
 NGitLab.Impl.IssueClient.Subscribe(NGitLab.Models.ProjectId projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.Impl.IssueClient.Unsubscribe(NGitLab.Models.ProjectId projectId, long issueIid) -> NGitLab.Models.Issue
 NGitLab.Impl.JobClient
+NGitLab.Impl.JobClient.DeleteJobArtifactsAsync(long jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.JobClient.Get(long jobId) -> NGitLab.Models.Job
 NGitLab.Impl.JobClient.GetAsync(long jobId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Job>
 NGitLab.Impl.JobClient.GetJobArtifact(long jobId, string path) -> byte[]
@@ -2365,6 +2376,8 @@ NGitLab.Models.IssueCreate.AssigneeIds.get -> long[]
 NGitLab.Models.IssueCreate.AssigneeIds.set -> void
 NGitLab.Models.IssueCreate.Confidential.get -> bool
 NGitLab.Models.IssueCreate.Confidential.set -> void
+NGitLab.Models.IssueCreate.CreatedAt.get -> System.DateTime?
+NGitLab.Models.IssueCreate.CreatedAt.set -> void
 NGitLab.Models.IssueCreate.Description.get -> string
 NGitLab.Models.IssueCreate.Description.set -> void
 NGitLab.Models.IssueCreate.DueDate.get -> System.DateTime?
@@ -2410,6 +2423,8 @@ NGitLab.Models.IssueEdit.State.get -> string
 NGitLab.Models.IssueEdit.State.set -> void
 NGitLab.Models.IssueEdit.Title.get -> string
 NGitLab.Models.IssueEdit.Title.set -> void
+NGitLab.Models.IssueEdit.UpdatedAt.get -> System.DateTime?
+NGitLab.Models.IssueEdit.UpdatedAt.set -> void
 NGitLab.Models.IssueEdit.Weight.get -> int?
 NGitLab.Models.IssueEdit.Weight.set -> void
 NGitLab.Models.IssueEpic
@@ -4918,6 +4933,8 @@ NGitLab.RequestOptions.HttpClientTimeout.get -> System.TimeSpan
 NGitLab.RequestOptions.HttpClientTimeout.set -> void
 NGitLab.RequestOptions.IsIncremental.get -> bool
 NGitLab.RequestOptions.IsIncremental.set -> void
+NGitLab.RequestOptions.Proxy.get -> System.Net.WebProxy
+NGitLab.RequestOptions.Proxy.set -> void
 NGitLab.RequestOptions.RequestOptions(int retryCount, System.TimeSpan retryInterval, bool isIncremental = true) -> void
 NGitLab.RequestOptions.RetryCount.get -> int
 NGitLab.RequestOptions.RetryCount.set -> void
