@@ -12,7 +12,7 @@ public class Job : JobBasic
     public JobRunner Runner { get; set; }
 
     [JsonPropertyName("runner_manager")]
-    public JobRunner RunnerManager { get; set; }
+    public JobRunnerManager RunnerManager { get; set; }
 
     [JsonPropertyName("project")]
     public JobProject Project { get; set; }
