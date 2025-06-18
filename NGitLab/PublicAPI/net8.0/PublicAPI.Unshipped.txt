@@ -383,7 +383,6 @@ NGitLab.IMembersClient.OfGroup(string groupId, bool includeInheritedMembers) -> 
 NGitLab.IMembersClient.OfGroup(string groupId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers = false, NGitLab.Models.MemberQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
-NGitLab.IMembersClient.OfNamespace(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.IMembersClient.OfProject(string projectId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
@@ -696,7 +695,6 @@ NGitLab.Impl.MembersClient.OfGroup(string groupId, bool includeInheritedMembers)
 NGitLab.Impl.MembersClient.OfGroup(string groupId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers = false, NGitLab.Models.MemberQuery query = null) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfGroupAsync(NGitLab.Models.GroupId groupId, bool includeInheritedMembers) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Membership>
-NGitLab.Impl.MembersClient.OfNamespace(string groupId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId, bool includeInheritedMembers) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
 NGitLab.Impl.MembersClient.OfProject(string projectId, bool includeInheritedMembers, NGitLab.Models.MemberQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Membership>
@@ -813,7 +811,6 @@ NGitLab.Impl.PipelineClient.GetByIdAsync(long id, System.Threading.CancellationT
 NGitLab.Impl.PipelineClient.GetJobs(long pipelineId) -> NGitLab.Models.Job[]
 NGitLab.Impl.PipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.PipelineClient.GetJobsAsync(NGitLab.Models.PipelineJobQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
-NGitLab.Impl.PipelineClient.GetJobsInProject(NGitLab.Models.JobScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.PipelineClient.GetTestReports(long pipelineId) -> NGitLab.Models.TestReport
 NGitLab.Impl.PipelineClient.GetTestReportsSummary(long pipelineId) -> NGitLab.Models.TestReportSummary
 NGitLab.Impl.PipelineClient.GetVariables(long pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
@@ -1011,7 +1008,6 @@ NGitLab.IPipelineClient.GetByIdAsync(long id, System.Threading.CancellationToken
 NGitLab.IPipelineClient.GetJobs(long pipelineId) -> NGitLab.Models.Job[]
 NGitLab.IPipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IPipelineClient.GetJobsAsync(NGitLab.Models.PipelineJobQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
-NGitLab.IPipelineClient.GetJobsInProject(NGitLab.Models.JobScope scope) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IPipelineClient.GetTestReports(long pipelineId) -> NGitLab.Models.TestReport
 NGitLab.IPipelineClient.GetTestReportsSummary(long pipelineId) -> NGitLab.Models.TestReportSummary
 NGitLab.IPipelineClient.GetVariables(long pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
@@ -2607,16 +2603,6 @@ NGitLab.Models.JobQuery.PerPage.get -> int?
 NGitLab.Models.JobQuery.PerPage.set -> void
 NGitLab.Models.JobQuery.Scope.get -> NGitLab.Models.JobScopeMask
 NGitLab.Models.JobQuery.Scope.set -> void
-NGitLab.Models.JobScope
-NGitLab.Models.JobScope.All = 0 -> NGitLab.Models.JobScope
-NGitLab.Models.JobScope.Canceled = 6 -> NGitLab.Models.JobScope
-NGitLab.Models.JobScope.Created = 1 -> NGitLab.Models.JobScope
-NGitLab.Models.JobScope.Failed = 4 -> NGitLab.Models.JobScope
-NGitLab.Models.JobScope.Manual = 8 -> NGitLab.Models.JobScope
-NGitLab.Models.JobScope.Pending = 2 -> NGitLab.Models.JobScope
-NGitLab.Models.JobScope.Running = 3 -> NGitLab.Models.JobScope
-NGitLab.Models.JobScope.Skipped = 7 -> NGitLab.Models.JobScope
-NGitLab.Models.JobScope.Success = 5 -> NGitLab.Models.JobScope
 NGitLab.Models.JobScopeMask
 NGitLab.Models.JobScopeMask.All = NGitLab.Models.JobScopeMask.Created | NGitLab.Models.JobScopeMask.Pending | NGitLab.Models.JobScopeMask.Running | NGitLab.Models.JobScopeMask.Failed | NGitLab.Models.JobScopeMask.Success | NGitLab.Models.JobScopeMask.Canceled | NGitLab.Models.JobScopeMask.Skipped | NGitLab.Models.JobScopeMask.Manual -> NGitLab.Models.JobScopeMask
 NGitLab.Models.JobScopeMask.Canceled = 32 -> NGitLab.Models.JobScopeMask
@@ -3941,8 +3927,6 @@ NGitLab.Models.ProjectUpdate.Description.get -> string
 NGitLab.Models.ProjectUpdate.Description.set -> void
 NGitLab.Models.ProjectUpdate.GroupRunnersEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.GroupRunnersEnabled.set -> void
-NGitLab.Models.ProjectUpdate.IssuesAccessLeve.get -> string
-NGitLab.Models.ProjectUpdate.IssuesAccessLeve.set -> void
 NGitLab.Models.ProjectUpdate.IssuesAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.IssuesAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.IssuesEnabled.get -> bool?

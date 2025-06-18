@@ -35,7 +35,7 @@ public class LabelsMockTests
             .BuildServer();
 
         var client = server.CreateClient();
-        client.Labels.Create(new LabelCreate { Id = 1, Name = "test1" });
+        client.Labels.CreateProjectLabel(1, new ProjectLabelCreate { Name = "test1" });
         var labels = client.Labels.ForProject(1).ToArray();
 
         Assert.That(labels, Has.Length.EqualTo(1), "Labels count is invalid");
@@ -52,7 +52,7 @@ public class LabelsMockTests
             .BuildServer();
 
         var client = server.CreateClient();
-        client.Labels.Edit(new LabelEdit { Id = 1, Name = "test1", NewName = "test2" });
+        client.Labels.EditProjectLabel(1, new ProjectLabelEdit { Name = "test1", NewName = "test2" });
         var labels = client.Labels.ForProject(1).ToArray();
 
         Assert.That(labels, Has.Length.EqualTo(1), "Labels count is invalid");
@@ -69,7 +69,7 @@ public class LabelsMockTests
             .BuildServer();
 
         var client = server.CreateClient();
-        client.Labels.Delete(new LabelDelete { Id = 1, Name = "test1" });
+        client.Labels.DeleteProjectLabel(1, new ProjectLabelDelete { Name = "test1" });
         var labels = client.Labels.ForProject(1).ToArray();
 
         Assert.That(labels, Is.Empty, "Labels count is invalid");
@@ -102,7 +102,7 @@ public class LabelsMockTests
             .BuildServer();
 
         var client = server.CreateClient();
-        client.Labels.CreateGroupLabel(new LabelCreate { Id = 2, Name = "test1" });
+        client.Labels.CreateGroupLabel(2, new GroupLabelCreate { Name = "test1" });
         var labels = client.Labels.ForGroup(2).ToArray();
 
         Assert.That(labels, Has.Length.EqualTo(1), "Labels count is invalid");
@@ -119,7 +119,7 @@ public class LabelsMockTests
             .BuildServer();
 
         var client = server.CreateClient();
-        client.Labels.EditGroupLabel(new LabelEdit { Id = 2, Name = "test1", NewName = "test2" });
+        client.Labels.EditGroupLabel(2, new GroupLabelEdit { Name = "test1", NewName = "test2" });
         var labels = client.Labels.ForGroup(2).ToArray();
 
         Assert.That(labels, Has.Length.EqualTo(1), "Labels count is invalid");
