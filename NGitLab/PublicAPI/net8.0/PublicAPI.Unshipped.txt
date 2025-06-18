@@ -353,6 +353,8 @@ NGitLab.ILabelClient.CreateGroupLabel(NGitLab.Models.LabelCreate label) -> NGitL
 NGitLab.ILabelClient.CreateProjectLabel(long projectId, NGitLab.Models.ProjectLabelCreate label) -> NGitLab.Models.Label
 NGitLab.ILabelClient.Delete(NGitLab.Models.LabelDelete label) -> NGitLab.Models.Label
 NGitLab.ILabelClient.DeleteProjectLabel(long projectId, NGitLab.Models.ProjectLabelDelete label) -> NGitLab.Models.Label
+NGitLab.ILabelClient.DeleteProjectLabelAsync(long projectId, long labelId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.ILabelClient.DeleteProjectLabelAsync(long projectId, string labelName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.ILabelClient.Edit(NGitLab.Models.LabelEdit label) -> NGitLab.Models.Label
 NGitLab.ILabelClient.EditGroupLabel(long groupId, NGitLab.Models.GroupLabelEdit label) -> NGitLab.Models.Label
 NGitLab.ILabelClient.EditGroupLabel(NGitLab.Models.LabelEdit label) -> NGitLab.Models.Label
@@ -662,6 +664,8 @@ NGitLab.Impl.LabelClient.CreateGroupLabel(NGitLab.Models.LabelCreate label) -> N
 NGitLab.Impl.LabelClient.CreateProjectLabel(long projectId, NGitLab.Models.ProjectLabelCreate label) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.Delete(NGitLab.Models.LabelDelete label) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.DeleteProjectLabel(long projectId, NGitLab.Models.ProjectLabelDelete label) -> NGitLab.Models.Label
+NGitLab.Impl.LabelClient.DeleteProjectLabelAsync(long projectId, long labelId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.Impl.LabelClient.DeleteProjectLabelAsync(long projectId, string labelName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.LabelClient.Edit(NGitLab.Models.LabelEdit label) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.EditGroupLabel(long groupId, NGitLab.Models.GroupLabelEdit label) -> NGitLab.Models.Label
 NGitLab.Impl.LabelClient.EditGroupLabel(NGitLab.Models.LabelEdit label) -> NGitLab.Models.Label
@@ -2622,6 +2626,8 @@ NGitLab.Models.Label.Color.get -> string
 NGitLab.Models.Label.Color.set -> void
 NGitLab.Models.Label.Description.get -> string
 NGitLab.Models.Label.Description.set -> void
+NGitLab.Models.Label.Id.get -> long
+NGitLab.Models.Label.Id.set -> void
 NGitLab.Models.Label.Label() -> void
 NGitLab.Models.Label.Name.get -> string
 NGitLab.Models.Label.Name.set -> void

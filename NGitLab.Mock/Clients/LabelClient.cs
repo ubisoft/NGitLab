@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients;
@@ -52,6 +54,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         });
     }
 
+    [Obsolete("Use DeleteProjectLabelAsync instead")]
     public Models.Label DeleteProjectLabel(long projectId, ProjectLabelDelete label)
     {
         using (Context.BeginOperationScope())
@@ -63,7 +66,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [Obsolete("Use DeleteProjectLabel instead")]
+    [Obsolete("Use DeleteProjectLabelAsync instead")]
     public Models.Label Delete(LabelDelete label)
     {
         return DeleteProjectLabel(label.Id, new ProjectLabelDelete
@@ -204,5 +207,32 @@ internal sealed class LabelClient : ClientBase, ILabelClient
     private static Label FindLabel(LabelsCollection collection, string name)
     {
         return collection.FirstOrDefault(x => x.Name.Equals(name, StringComparison.Ordinal));
+    }
+
+    private static Label FindLabel(LabelsCollection collection, long id)
+    {
+        return collection.FirstOrDefault(x => x.Id == id);
+    }
+
+    public async Task DeleteProjectLabelAsync(long projectId, long labelId, CancellationToken cancellation = default)
+    {
+        await Task.Yield();
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(projectId, ProjectPermission.Edit);
+            var l = FindLabel(project.Labels, labelId) ?? throw GitLabException.NotFound($"Cannot find label with ID {labelId}");
+            project.Labels.Remove(l);
+        }
+    }
+
+    public async Task DeleteProjectLabelAsync(long projectId, string labelName, CancellationToken cancellation = default)
+    {
+        await Task.Yield();
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(projectId, ProjectPermission.Edit);
+            var l = FindLabel(project.Labels, labelName) ?? throw GitLabException.NotFound($"Cannot find label '{labelName}'");
+            project.Labels.Remove(l);
+        }
     }
 }
