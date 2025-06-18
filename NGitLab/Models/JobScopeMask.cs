@@ -2,20 +2,6 @@
 
 namespace NGitLab.Models;
 
-[Obsolete("Use JobScopeMask instead")]
-public enum JobScope
-{
-    All,
-    Created,
-    Pending,
-    Running,
-    Failed,
-    Success,
-    Canceled,
-    Skipped,
-    Manual,
-}
-
 [Flags]
 public enum JobScopeMask
 {
