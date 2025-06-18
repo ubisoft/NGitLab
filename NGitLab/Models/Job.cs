@@ -6,7 +6,10 @@ namespace NGitLab.Models;
 public class Job : JobBasic
 {
     [JsonPropertyName("artifacts_file")]
-    public JobArtifact Artifacts { get; set; }
+    public JobArtifact ArtifactsFile { get; set; }
+
+    [JsonPropertyName("artifacts")]
+    public JobArtifact[] Artifacts { get; set; }
 
     [JsonPropertyName("runner")]
     public JobRunner Runner { get; set; }

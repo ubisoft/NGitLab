@@ -2476,8 +2476,10 @@ NGitLab.Models.IssueType.incident = 1 -> NGitLab.Models.IssueType
 NGitLab.Models.IssueType.issue = 0 -> NGitLab.Models.IssueType
 NGitLab.Models.IssueType.test_case = 2 -> NGitLab.Models.IssueType
 NGitLab.Models.Job
-NGitLab.Models.Job.Artifacts.get -> NGitLab.Models.Job.JobArtifact
+NGitLab.Models.Job.Artifacts.get -> NGitLab.Models.Job.JobArtifact[]
 NGitLab.Models.Job.Artifacts.set -> void
+NGitLab.Models.Job.ArtifactsFile.get -> NGitLab.Models.Job.JobArtifact
+NGitLab.Models.Job.ArtifactsFile.set -> void
 NGitLab.Models.Job.Job() -> void
 NGitLab.Models.Job.JobArtifact
 NGitLab.Models.Job.JobArtifact.Filename.get -> string
