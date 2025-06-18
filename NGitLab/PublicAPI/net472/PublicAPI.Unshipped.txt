@@ -2511,10 +2511,34 @@ NGitLab.Models.Job.JobRunner.IsShared.set -> void
 NGitLab.Models.Job.JobRunner.JobRunner() -> void
 NGitLab.Models.Job.JobRunner.Name.get -> string
 NGitLab.Models.Job.JobRunner.Name.set -> void
+NGitLab.Models.Job.JobRunnerManager
+NGitLab.Models.Job.JobRunnerManager.Architecture.get -> string
+NGitLab.Models.Job.JobRunnerManager.Architecture.set -> void
+NGitLab.Models.Job.JobRunnerManager.ContactedAt.get -> System.DateTime
+NGitLab.Models.Job.JobRunnerManager.ContactedAt.set -> void
+NGitLab.Models.Job.JobRunnerManager.CreatedAt.get -> System.DateTime
+NGitLab.Models.Job.JobRunnerManager.CreatedAt.set -> void
+NGitLab.Models.Job.JobRunnerManager.Id.get -> long
+NGitLab.Models.Job.JobRunnerManager.Id.set -> void
+NGitLab.Models.Job.JobRunnerManager.IpAddress.get -> string
+NGitLab.Models.Job.JobRunnerManager.IpAddress.set -> void
+NGitLab.Models.Job.JobRunnerManager.JobRunnerManager() -> void
+NGitLab.Models.Job.JobRunnerManager.Platform.get -> string
+NGitLab.Models.Job.JobRunnerManager.Platform.set -> void
+NGitLab.Models.Job.JobRunnerManager.Revision.get -> string
+NGitLab.Models.Job.JobRunnerManager.Revision.set -> void
+NGitLab.Models.Job.JobRunnerManager.Status.get -> string
+NGitLab.Models.Job.JobRunnerManager.Status.set -> void
+NGitLab.Models.Job.JobRunnerManager.SystemId.get -> string
+NGitLab.Models.Job.JobRunnerManager.SystemId.set -> void
+NGitLab.Models.Job.JobRunnerManager.Version.get -> string
+NGitLab.Models.Job.JobRunnerManager.Version.set -> void
 NGitLab.Models.Job.Project.get -> NGitLab.Models.Job.JobProject
 NGitLab.Models.Job.Project.set -> void
 NGitLab.Models.Job.Runner.get -> NGitLab.Models.Job.JobRunner
 NGitLab.Models.Job.Runner.set -> void
+NGitLab.Models.Job.RunnerManager.get -> NGitLab.Models.Job.JobRunnerManager
+NGitLab.Models.Job.RunnerManager.set -> void
 NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Cancel = 0 -> NGitLab.Models.JobAction
 NGitLab.Models.JobAction.Erase = 2 -> NGitLab.Models.JobAction

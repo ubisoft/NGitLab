@@ -39,31 +39,31 @@ public class Job : JobBasic
     {
         [JsonPropertyName("id")]
         public long Id { get; set; }
-    
+
         [JsonPropertyName("system_id")]
         public string SystemId { get; set; }
-    
+
         [JsonPropertyName("version")]
         public string Version { get; set; }
-    
+
         [JsonPropertyName("revision")]
         public string Revision { get; set; }
-    
+
         [JsonPropertyName("platform")]
         public string Platform { get; set; }
-    
+
         [JsonPropertyName("architecture")]
         public string Architecture { get; set; }
-    
+
         [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; set; }
-    
+
         [JsonPropertyName("contacted_at")]
         public DateTime ContactedAt { get; set; }
-    
+
         [JsonPropertyName("ip_address")]
         public string IpAddress { get; set; }
-    
+
         [JsonPropertyName("status")]
         public string Status { get; set; }
     }
