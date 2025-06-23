@@ -1793,9 +1793,17 @@ NGitLab.Models.DiffRefs.StartSha.set -> void
 NGitLab.Models.EnvironmentInfo
 NGitLab.Models.EnvironmentInfo.AutoStopAt.get -> System.DateTime?
 NGitLab.Models.EnvironmentInfo.AutoStopAt.set -> void
+NGitLab.Models.EnvironmentInfo.CreatedAt.get -> System.DateTime?
+NGitLab.Models.EnvironmentInfo.CreatedAt.set -> void
+NGitLab.Models.EnvironmentInfo.UpdatedAt.get -> System.DateTime?
+NGitLab.Models.EnvironmentInfo.UpdatedAt.set -> void
 NGitLab.Models.EnvironmentInfo.EnvironmentInfo() -> void
 NGitLab.Models.EnvironmentInfo.ExternalUrl.get -> string
 NGitLab.Models.EnvironmentInfo.ExternalUrl.set -> void
+NGitLab.Models.EnvironmentInfo.Description.get -> string
+NGitLab.Models.EnvironmentInfo.Description.set -> void
+NGitLab.Models.EnvironmentInfo.Tier.get -> string
+NGitLab.Models.EnvironmentInfo.Tier.set -> void
 NGitLab.Models.EnvironmentInfo.Id.get -> long
 NGitLab.Models.EnvironmentInfo.Id.set -> void
 NGitLab.Models.EnvironmentInfo.LastDeployment.get -> NGitLab.Models.EnvironmentLastDeployment
