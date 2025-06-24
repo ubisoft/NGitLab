@@ -161,6 +161,11 @@ public class MergeRequestClient : IMergeRequestClient
         return _api.Get().GetAllAsync<MergeRequestVersion>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/versions");
     }
 
+    public GitLabCollectionResponse<Diff> GetDiffsAsync(long mergeRequestIid)
+    {
+        return _api.Get().GetAllAsync<Diff>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/diffs");
+    }
+
     public Task<TimeStats> TimeStatsAsync(long mergeRequestIid, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<TimeStats>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/time_stats", cancellationToken);

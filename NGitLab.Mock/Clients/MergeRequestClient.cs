@@ -717,6 +717,11 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         throw new NotImplementedException();
     }
 
+    public GitLabCollectionResponse<Diff> GetDiffsAsync(long mergeRequestIid)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<TimeStats> TimeStatsAsync(long mergeRequestIid, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();

@@ -47,6 +47,8 @@ public interface IMergeRequestClient
 
     GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(long mergeRequestIid);
 
+    GitLabCollectionResponse<Diff> GetDiffsAsync(long mergeRequestIid);
+
     IMergeRequestCommentClient Comments(long mergeRequestIid);
 
     IMergeRequestDiscussionClient Discussions(long mergeRequestIid);
