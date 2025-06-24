@@ -421,6 +421,7 @@ NGitLab.IMergeRequestClient.Delete(long mergeRequestIid) -> void
 NGitLab.IMergeRequestClient.Discussions(long mergeRequestIid) -> NGitLab.IMergeRequestDiscussionClient
 NGitLab.IMergeRequestClient.Get(NGitLab.Models.MergeRequestQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.IMergeRequestClient.GetByIidAsync(long iid, NGitLab.Models.SingleMergeRequestQuery options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.MergeRequest>
+NGitLab.IMergeRequestClient.GetDiffsAsync(long mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Diff>
 NGitLab.IMergeRequestClient.GetParticipants(long mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Author>
 NGitLab.IMergeRequestClient.GetPipelines(long mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.IMergeRequestClient.GetVersionsAsync(long mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequestVersion>
@@ -734,6 +735,7 @@ NGitLab.Impl.MergeRequestClient.Delete(long mergeRequestIid) -> void
 NGitLab.Impl.MergeRequestClient.Discussions(long mergeRequestIid) -> NGitLab.IMergeRequestDiscussionClient
 NGitLab.Impl.MergeRequestClient.Get(NGitLab.Models.MergeRequestQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.Impl.MergeRequestClient.GetByIidAsync(long iid, NGitLab.Models.SingleMergeRequestQuery options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.MergeRequest>
+NGitLab.Impl.MergeRequestClient.GetDiffsAsync(long mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Diff>
 NGitLab.Impl.MergeRequestClient.GetParticipants(long mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Author>
 NGitLab.Impl.MergeRequestClient.GetPipelines(long mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.Impl.MergeRequestClient.GetVersionsAsync(long mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequestVersion>
