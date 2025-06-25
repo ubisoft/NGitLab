@@ -2335,6 +2335,8 @@ NGitLab.Models.Issue.Description.get -> string
 NGitLab.Models.Issue.Description.set -> void
 NGitLab.Models.Issue.DiscussionLocked.get -> bool
 NGitLab.Models.Issue.DiscussionLocked.set -> void
+NGitLab.Models.Issue.Downvotes.get -> int
+NGitLab.Models.Issue.Downvotes.set -> void
 NGitLab.Models.Issue.DueDate.get -> System.DateTime?
 NGitLab.Models.Issue.DueDate.set -> void
 NGitLab.Models.Issue.Epic.get -> NGitLab.Models.IssueEpic
@@ -2364,6 +2366,8 @@ NGitLab.Models.Issue.Title.get -> string
 NGitLab.Models.Issue.Title.set -> void
 NGitLab.Models.Issue.UpdatedAt.get -> System.DateTime
 NGitLab.Models.Issue.UpdatedAt.set -> void
+NGitLab.Models.Issue.Upvotes.get -> int
+NGitLab.Models.Issue.Upvotes.set -> void
 NGitLab.Models.Issue.UserNotesCount.get -> int
 NGitLab.Models.Issue.UserNotesCount.set -> void
 NGitLab.Models.Issue.WebUrl.get -> string
