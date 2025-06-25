@@ -1,4 +1,6 @@
-﻿namespace NGitLab.Models;
+﻿using System;
+
+namespace NGitLab.Models;
 
 /// <summary>
 /// Query details for comparison of branches/tags/commit hashes
@@ -8,12 +10,24 @@ public class CompareQuery
     /// <summary>
     /// The source for comparison, can be a branch, tag or a commit hash.
     /// </summary>
+    [Obsolete("Use 'From' instead.")]
     public string Source { get; set; }
+
+    /// <summary>
+    /// The most recent reference for comparison, can be a branch, tag or a commit hash.
+    /// </summary>
+    public string From { get; set; }
 
     /// <summary>
     /// The target for comparison, can be a branch, tag or a commit hash.
     /// </summary>
+    [Obsolete("Use 'To' instead.")]
     public string Target { get; set; }
+
+    /// <summary>
+    /// The reference to compare against, can be a branch, tag or a commit hash.
+    /// </summary>
+    public string To { get; set; }
 
     /// <summary>
     /// Comparison method: true for direct comparison between from and to (from..to), false to compare using merge base (from…to)’. Default is false.

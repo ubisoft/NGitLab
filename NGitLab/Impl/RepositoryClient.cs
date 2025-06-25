@@ -143,7 +143,9 @@ public class RepositoryClient : IRepositoryClient
 
     private string BuildCompareUrl(CompareQuery query)
     {
-        var url = _repoPath + $"/compare?from={query.Source}&to={query.Target}";
+        var from = query.From ?? query.Target;
+        var to = query.To ?? query.Source;
+        var url = _repoPath + $"/compare?from={from}&to={to}";
         url = Utils.AddParameter(url, "from_project_id", query.FromProjectId);
         url = Utils.AddParameter(url, "straight", query.Straight);
         url = Utils.AddParameter(url, "unidiff", query.Unidiff);

@@ -1671,6 +1671,8 @@ NGitLab.Models.CommitStatusQuery.Stage.get -> string
 NGitLab.Models.CommitStatusQuery.Stage.init -> void
 NGitLab.Models.CompareQuery
 NGitLab.Models.CompareQuery.CompareQuery(string source, string target) -> void
+NGitLab.Models.CompareQuery.From.get -> string
+NGitLab.Models.CompareQuery.From.set -> void
 NGitLab.Models.CompareQuery.FromProjectId.get -> long?
 NGitLab.Models.CompareQuery.FromProjectId.set -> void
 NGitLab.Models.CompareQuery.Source.get -> string
@@ -1679,6 +1681,8 @@ NGitLab.Models.CompareQuery.Straight.get -> bool?
 NGitLab.Models.CompareQuery.Straight.set -> void
 NGitLab.Models.CompareQuery.Target.get -> string
 NGitLab.Models.CompareQuery.Target.set -> void
+NGitLab.Models.CompareQuery.To.get -> string
+NGitLab.Models.CompareQuery.To.set -> void
 NGitLab.Models.CompareQuery.Unidiff.get -> bool?
 NGitLab.Models.CompareQuery.Unidiff.set -> void
 NGitLab.Models.CompareResults
