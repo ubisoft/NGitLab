@@ -4935,6 +4935,30 @@ NGitLab.Models.VariableUpdate.Type.set -> void
 NGitLab.Models.VariableUpdate.Value.get -> string
 NGitLab.Models.VariableUpdate.Value.set -> void
 NGitLab.Models.VariableUpdate.VariableUpdate() -> void
+NGitLab.Models.VersionedDiffResult
+NGitLab.Models.VersionedDiffResult.BaseCommitSha.get -> long
+NGitLab.Models.VersionedDiffResult.BaseCommitSha.set -> void
+NGitLab.Models.VersionedDiffResult.Commits.get -> NGitLab.Models.Commit[]
+NGitLab.Models.VersionedDiffResult.Commits.set -> void
+NGitLab.Models.VersionedDiffResult.CreatedAt.get -> System.DateTime
+NGitLab.Models.VersionedDiffResult.CreatedAt.set -> void
+NGitLab.Models.VersionedDiffResult.Diff.get -> NGitLab.Models.Diff[]
+NGitLab.Models.VersionedDiffResult.Diff.set -> void
+NGitLab.Models.VersionedDiffResult.HeadCommitSha.get -> string
+NGitLab.Models.VersionedDiffResult.HeadCommitSha.set -> void
+NGitLab.Models.VersionedDiffResult.Id.get -> long
+NGitLab.Models.VersionedDiffResult.Id.set -> void
+NGitLab.Models.VersionedDiffResult.MergeRequestId.get -> long
+NGitLab.Models.VersionedDiffResult.MergeRequestId.set -> void
+NGitLab.Models.VersionedDiffResult.PatchIdSha.get -> string
+NGitLab.Models.VersionedDiffResult.PatchIdSha.set -> void
+NGitLab.Models.VersionedDiffResult.RealSize.get -> string
+NGitLab.Models.VersionedDiffResult.RealSize.set -> void
+NGitLab.Models.VersionedDiffResult.StartCommitSha.get -> string
+NGitLab.Models.VersionedDiffResult.StartCommitSha.set -> void
+NGitLab.Models.VersionedDiffResult.State.get -> string
+NGitLab.Models.VersionedDiffResult.State.set -> void
+NGitLab.Models.VersionedDiffResult.VersionedDiffResult() -> void
 NGitLab.Models.VisibilityLevel
 NGitLab.Models.VisibilityLevel.Internal = 10 -> NGitLab.Models.VisibilityLevel
 NGitLab.Models.VisibilityLevel.Private = 0 -> NGitLab.Models.VisibilityLevel
