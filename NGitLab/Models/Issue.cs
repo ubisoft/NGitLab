@@ -82,4 +82,10 @@ public class Issue
 
     [JsonPropertyName("discussion_locked")]
     public bool DiscussionLocked { get; set; }
+
+    [JsonPropertyName("upvotes")]
+    public int Upvotes { get; set; }
+
+    [JsonPropertyName("downvotes")]
+    public int Downvotes { get; set; }
 }
