@@ -45,6 +45,8 @@ public interface IMergeRequestClient
 
     IEnumerable<Author> GetParticipants(long mergeRequestIid);
 
+    Task<VersionedDiffResult> GetDiffsAsync(long mergeRequestIid, long versionId, CancellationToken cancellationToken = default);
+
     GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(long mergeRequestIid);
 
     GitLabCollectionResponse<Diff> GetDiffsAsync(long mergeRequestIid);
