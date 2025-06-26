@@ -48,5 +48,7 @@ public class CompareQuery
     {
         Source = source;
         Target = target;
+        From = source;
+        To = target;
     }
 }

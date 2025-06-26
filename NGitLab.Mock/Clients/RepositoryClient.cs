@@ -109,6 +109,11 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
         }
     }
 
+    public Task<Commit> GetMergeBaseAsync(string[] refs, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public Commit GetCommit(Sha1 sha)
     {
         throw new NotImplementedException();
