@@ -38,6 +38,18 @@ public class EnvironmentClient : IEnvironmentClient
 
     public EnvironmentInfo Edit(long environmentId, string externalUrl) => Edit(environmentId, null, externalUrl);
 
+    public EnvironmentInfo EditDescription(long environmentId, string description)
+    {
+        var url = $"{_environmentsPath}/{environmentId.ToStringInvariant()}";
+
+        if (!string.IsNullOrEmpty(description))
+        {
+            url = Utils.AddParameter(url, "description", description);
+        }
+
+        return _api.Put().To<EnvironmentInfo>(url);
+    }
+
     [EditorBrowsable(EditorBrowsableState.Never)]
     public EnvironmentInfo Edit(long environmentId, string name, string externalUrl)
     {
@@ -81,6 +93,7 @@ public class EnvironmentClient : IEnvironmentClient
 
     public Task<EnvironmentInfo> GetByIdAsync(long environmentId, CancellationToken cancellationToken = default)
     {
-        return _api.Get().ToAsync<EnvironmentInfo>($"{_environmentsPath}/{environmentId.ToStringInvariant()}", cancellationToken);
+        return _api.Get().ToAsync<EnvironmentInfo>($"{_environmentsPath}/{environmentId.ToStringInvariant()}",
+            cancellationToken);
     }
 }

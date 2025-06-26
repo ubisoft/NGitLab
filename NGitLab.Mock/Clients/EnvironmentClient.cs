@@ -25,6 +25,11 @@ internal sealed class EnvironmentClient : ClientBase, IEnvironmentClient
         throw new NotImplementedException();
     }
 
+    public EnvironmentInfo EditDescription(long environmentId, string description)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Delete(long environmentId)
     {
         throw new NotImplementedException();

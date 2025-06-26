@@ -44,6 +44,14 @@ public interface IEnvironmentClient
     EnvironmentInfo Edit(long environmentId, string externalUrl);
 
     /// <summary>
+    /// Updates an existing environment's description.
+    /// </summary>
+    /// <param name="environmentId">The ID of the environment</param>
+    /// <param name="description">The new description</param>
+    /// <returns>The updated environment</returns>
+    EnvironmentInfo EditDescription(long environmentId, string description);
+
+    /// <summary>
     /// Delete an environment.
     /// </summary>
     /// <param name="environmentId">The ID of the environment</param>
