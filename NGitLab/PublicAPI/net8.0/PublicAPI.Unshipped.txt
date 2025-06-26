@@ -815,6 +815,7 @@ NGitLab.Impl.PipelineClient.GetByIdAsync(long id, System.Threading.CancellationT
 NGitLab.Impl.PipelineClient.GetJobs(long pipelineId) -> NGitLab.Models.Job[]
 NGitLab.Impl.PipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.Impl.PipelineClient.GetJobsAsync(NGitLab.Models.PipelineJobQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
+NGitLab.Impl.PipelineClient.GetLatest(string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.Impl.PipelineClient.GetTestReports(long pipelineId) -> NGitLab.Models.TestReport
 NGitLab.Impl.PipelineClient.GetTestReportsSummary(long pipelineId) -> NGitLab.Models.TestReportSummary
 NGitLab.Impl.PipelineClient.GetVariables(long pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>
@@ -1012,6 +1013,7 @@ NGitLab.IPipelineClient.GetByIdAsync(long id, System.Threading.CancellationToken
 NGitLab.IPipelineClient.GetJobs(long pipelineId) -> NGitLab.Models.Job[]
 NGitLab.IPipelineClient.GetJobs(NGitLab.Models.PipelineJobQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Job>
 NGitLab.IPipelineClient.GetJobsAsync(NGitLab.Models.PipelineJobQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Job>
+NGitLab.IPipelineClient.GetLatest(string ref, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Pipeline>
 NGitLab.IPipelineClient.GetTestReports(long pipelineId) -> NGitLab.Models.TestReport
 NGitLab.IPipelineClient.GetTestReportsSummary(long pipelineId) -> NGitLab.Models.TestReportSummary
 NGitLab.IPipelineClient.GetVariables(long pipelineId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable>

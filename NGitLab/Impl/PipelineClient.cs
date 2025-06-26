@@ -26,6 +26,12 @@ public class PipelineClient : IPipelineClient
 
     public IEnumerable<Job> AllJobs => _api.Get().GetAll<Job>($"{_projectPath}/jobs");
 
+    public Task<Pipeline> GetLatest(string @ref, CancellationToken cancellationToken = default)
+    {
+        var urlParameter = string.IsNullOrWhiteSpace(@ref) ? string.Empty : $"?ref={Uri.EscapeDataString(@ref)}";
+        return _api.Get().ToAsync<Pipeline>($"latest{urlParameter}", cancellationToken);
+    }
+
     public GitLabCollectionResponse<Job> GetAllJobsAsync()
     {
         return _api.Get().GetAllAsync<Job>($"{_projectPath}/jobs");

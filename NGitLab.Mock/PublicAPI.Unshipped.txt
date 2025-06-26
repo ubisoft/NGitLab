@@ -837,6 +837,7 @@ NGitLab.Mock.Pipeline.YamlError.set -> void
 NGitLab.Mock.PipelineCollection
 NGitLab.Mock.PipelineCollection.Add(string ref, NGitLab.JobStatus status, NGitLab.Mock.User user) -> NGitLab.Mock.Pipeline
 NGitLab.Mock.PipelineCollection.GetById(long id) -> NGitLab.Mock.Pipeline
+NGitLab.Mock.PipelineCollection.GetLatest(string ref) -> NGitLab.Mock.Pipeline
 NGitLab.Mock.PipelineCollection.PipelineCollection(NGitLab.Mock.GitLabObject parent) -> void
 NGitLab.Mock.PipelineSchedule
 NGitLab.Mock.PipelineSchedule.Active.get -> bool
