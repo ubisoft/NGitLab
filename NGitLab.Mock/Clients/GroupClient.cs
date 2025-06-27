@@ -156,13 +156,18 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
     {
         using (Context.BeginOperationScope())
         {
-            var group = Server.AllGroups.FirstOrDefault(g => id.Equals(g.PathWithNameSpace, g.Id));
-
-            if (group == null || !group.CanUserViewGroup(Context.User))
-                throw GitLabException.NotFound();
-
-            return group.ToClientGroup(Context.User);
+            return GetGroupLockless(id);
         }
+    }
+
+    private Models.Group GetGroupLockless(GroupId id)
+    {
+        var group = Server.AllGroups.FirstOrDefault(g => id.Equals(g.PathWithNameSpace, g.Id));
+
+        if (group == null || !group.CanUserViewGroup(Context.User))
+            throw GitLabException.NotFound();
+
+        return group.ToClientGroup(Context.User);
     }
 
     public Task<Models.Group> GetByFullPathAsync(string fullPath, CancellationToken cancellationToken = default) => GetGroupAsync(fullPath, cancellationToken);
@@ -333,7 +338,7 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
     {
         using (Context.BeginOperationScope())
         {
-            var parentGroup = GetGroup(groupId);
+            var parentGroup = GetGroupLockless(groupId);
             var groups = Server.AllGroups.Where(group => group.CanUserViewGroup(Context.User));
 
             if (query is not null)
