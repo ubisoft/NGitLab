@@ -43,7 +43,7 @@ public class PipelineTests
         using (await context.StartRunnerForOneJobAsync(project.Id))
         {
             latestPipeline = await GitLabTestContext.RetryUntilAsync(
-                () => pipelineClient.GetLatest(project.DefaultBranch),
+                () => pipelineClient.GetLatestAsync(project.DefaultBranch),
                 p => Task.FromResult(p != null),
                 TimeSpan.FromSeconds(120));
         }

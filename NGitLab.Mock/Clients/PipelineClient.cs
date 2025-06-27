@@ -51,7 +51,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
 
     public IEnumerable<Models.Job> AllJobs => _jobClient.GetJobs(JobScopeMask.All);
 
-    public Task<Models.Pipeline> GetLatest(string @ref, CancellationToken cancellationToken = default)
+    public Task<Models.Pipeline> GetLatestAsync(string @ref, CancellationToken cancellationToken = default)
     {
         using (Context.BeginOperationScope())
         {

@@ -34,7 +34,7 @@ public interface IPipelineClient
     /// <param name="ref">Optional reference (e.g., branch name or tag) for which to retrieve the latest pipeline.
     /// Defaults to the default branch when not specified.</param>
     /// <returns>The task result contains the latest <see cref="Pipeline"/> associated with the specified reference.</returns>
-    Task<Pipeline> GetLatest(string @ref, CancellationToken cancellationToken = default);
+    Task<Pipeline> GetLatestAsync(string @ref, CancellationToken cancellationToken = default);
 
     GitLabCollectionResponse<Job> GetAllJobsAsync();
 
