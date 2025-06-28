@@ -62,7 +62,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
                 return Task.FromResult(pipeline.ToPipelineClient());
             }
 
-            // Ubisoft's internal instance of GitLab returns 403 Forbidden if the ref is invalid, so we mimic that behavior here
+            // GitLab returns 403 Forbidden if the ref is invalid, so we mimic that behavior here
             throw GitLabException.Forbidden();
         }
     }
