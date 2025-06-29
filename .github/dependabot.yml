@@ -25,10 +25,6 @@ updates:
       - dependency-name: "Microsoft.AspNetCore.WebUtilities"
       - dependency-name: "Microsoft.Bcl.AsyncInterfaces"
       - dependency-name: "System.Text.Json"
-      # The following should not be bumped until we use .NET 9+, otherwise we'll get
-      #   error CS8032: Could not load file or assembly 'System.Collections.Immutable, Version=9.0.0.0
-      - dependency-name: "Microsoft.CodeAnalysis.BannedApiAnalyzers"
-      - dependency-name: "Microsoft.CodeAnalysis.PublicApiAnalyzers"
       # LibGit2Sharp 0.31.0+ no longer targets net6.0
       - dependency-name: "LibGit2Sharp"
     rebase-strategy: auto
