@@ -26,6 +26,16 @@ public interface IPipelineClient
     /// </summary>
     IEnumerable<Job> AllJobs { get; }
 
+    /// <summary>
+    /// Retrieves the latest pipeline associated with the specified reference.
+    /// </summary>
+    /// <remarks>Use this method to retrieve the most recent pipeline for a given branch or tag
+    /// tag.</remarks>
+    /// <param name="ref">Optional reference (e.g., branch name or tag) for which to retrieve the latest pipeline.
+    /// Defaults to the default branch when not specified.</param>
+    /// <returns>The task result contains the latest <see cref="Pipeline"/> associated with the specified reference.</returns>
+    Task<Pipeline> GetLatestAsync(string @ref, CancellationToken cancellationToken = default);
+
     GitLabCollectionResponse<Job> GetAllJobsAsync();
 
     /// <summary>

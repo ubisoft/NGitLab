@@ -33,6 +33,52 @@ public class PipelineTests
 
     [Test]
     [NGitLabRetry]
+    public async Task Test_can_get_latest_pipeline()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var pipelineClient = context.Client.GetPipelines(project.Id);
+        JobTests.AddGitLabCiFile(context.Client, project);
+        Pipeline latestPipeline;
+        using (await context.StartRunnerForOneJobAsync(project.Id))
+        {
+            latestPipeline = await GitLabTestContext.RetryUntilAsync(
+                () => pipelineClient.GetLatestAsync(project.DefaultBranch),
+                p => Task.FromResult(p != null),
+                TimeSpan.FromSeconds(120));
+        }
+
+        Assert.That(latestPipeline, Is.Not.Null);
+        Assert.That(latestPipeline.ProjectId, Is.EqualTo(project.Id));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_get_latest_pipeline_for_non_existing_ref_returns_forbidden()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var pipelineClient = context.Client.GetPipelines(project.Id);
+        JobTests.AddGitLabCiFile(context.Client, project);
+
+        const string nonExistingRef = "non-existing-branch";
+
+        GitLabException exception = null;
+        try
+        {
+            await pipelineClient.GetLatestAsync(nonExistingRef);
+        }
+        catch (GitLabException ex) when (ex.StatusCode == HttpStatusCode.Forbidden)
+        {
+            exception = ex;
+        }
+
+        Assert.That(exception, Is.Not.Null, "Expected a Forbidden exception when retrieving the latest pipeline for a non-existing ref.");
+        Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task Test_can_get_coverage()
     {
         using var context = await GitLabTestContext.CreateAsync();

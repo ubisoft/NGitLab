@@ -51,6 +51,22 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
 
     public IEnumerable<Models.Job> AllJobs => _jobClient.GetJobs(JobScopeMask.All);
 
+    public Task<Models.Pipeline> GetLatestAsync(string @ref, CancellationToken cancellationToken = default)
+    {
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var pipeline = project.Pipelines.GetLatest(@ref);
+            if (pipeline != null)
+            {
+                return Task.FromResult(pipeline.ToPipelineClient());
+            }
+
+            // GitLab returns 403 Forbidden if the ref is invalid, so we mimic that behavior here
+            throw GitLabException.Forbidden();
+        }
+    }
+
     public Models.Pipeline Create(string @ref)
     {
         using (Context.BeginOperationScope())
