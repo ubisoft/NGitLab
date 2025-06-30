@@ -9,7 +9,7 @@ public class VersionedDiffResult
     public long Id { get; set; }
 
     [JsonPropertyName("base_commit_sha")]
-    public long BaseCommitSha { get; set; }
+    public string BaseCommitSha { get; set; }
 
     [JsonPropertyName("commits")]
     public Commit[] Commits { get; set; }
@@ -18,7 +18,7 @@ public class VersionedDiffResult
     public DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("diffs")]
-    public Diff[] Diff { get; set; }
+    public Diff[] Diffs { get; set; }
 
     [JsonPropertyName("head_commit_sha")]
     public string HeadCommitSha { get; set; }

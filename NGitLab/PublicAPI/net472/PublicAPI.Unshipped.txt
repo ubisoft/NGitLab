@@ -4942,14 +4942,14 @@ NGitLab.Models.VariableUpdate.Value.get -> string
 NGitLab.Models.VariableUpdate.Value.set -> void
 NGitLab.Models.VariableUpdate.VariableUpdate() -> void
 NGitLab.Models.VersionedDiffResult
-NGitLab.Models.VersionedDiffResult.BaseCommitSha.get -> long
+NGitLab.Models.VersionedDiffResult.BaseCommitSha.get -> string
 NGitLab.Models.VersionedDiffResult.BaseCommitSha.set -> void
 NGitLab.Models.VersionedDiffResult.Commits.get -> NGitLab.Models.Commit[]
 NGitLab.Models.VersionedDiffResult.Commits.set -> void
 NGitLab.Models.VersionedDiffResult.CreatedAt.get -> System.DateTime
 NGitLab.Models.VersionedDiffResult.CreatedAt.set -> void
-NGitLab.Models.VersionedDiffResult.Diff.get -> NGitLab.Models.Diff[]
-NGitLab.Models.VersionedDiffResult.Diff.set -> void
+NGitLab.Models.VersionedDiffResult.Diffs.get -> NGitLab.Models.Diff[]
+NGitLab.Models.VersionedDiffResult.Diffs.set -> void
 NGitLab.Models.VersionedDiffResult.HeadCommitSha.get -> string
 NGitLab.Models.VersionedDiffResult.HeadCommitSha.set -> void
 NGitLab.Models.VersionedDiffResult.Id.get -> long
