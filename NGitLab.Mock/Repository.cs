@@ -810,19 +810,6 @@ public sealed class Repository : GitLabObject, IDisposable
         return divergence;
     }
 
-    internal TreeChanges Compare(string fromRef, string toRef)
-    {
-        var repository = GetGitRepository();
-        var fromCommit = repository.Lookup<Commit>(fromRef);
-        var toCommit = repository.Lookup<Commit>(toRef);
-
-        if (fromCommit is null || toCommit is null)
-            throw GitLabException.NotFound("One of the commits does not exist");
-
-        var changes = repository.Diff.Compare<TreeChanges>(fromCommit.Tree, toCommit.Tree);
-        return changes;
-    }
-
     internal void GetRawBlob(string sha, Action<Stream> parser)
     {
         var repository = GetGitRepository();
