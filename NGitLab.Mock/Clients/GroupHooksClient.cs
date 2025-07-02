@@ -20,10 +20,15 @@ internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
         {
             using (Context.BeginOperationScope())
             {
-                var hooks = GetGroup(_groupId, GroupPermission.Edit).Hooks;
-                return ToClientGroupHooks(hooks).ToList();
+                return GetAllLockless();
             }
         }
+    }
+
+    private List<Models.GroupHook> GetAllLockless()
+    {
+        var hooks = GetGroup(_groupId, GroupPermission.Edit).Hooks;
+        return ToClientGroupHooks(hooks).ToList();
     }
 
     public Models.GroupHook this[long hookId]
@@ -32,7 +37,7 @@ internal sealed class GroupHooksClient : ClientBase, IGroupHooksClient
         {
             using (Context.BeginOperationScope())
             {
-                var hook = All.FirstOrDefault(h => h.Id == hookId) ?? throw GitLabException.NotFound();
+                var hook = GetAllLockless().FirstOrDefault(h => h.Id == hookId) ?? throw GitLabException.NotFound();
                 return hook;
             }
         }
