@@ -422,6 +422,8 @@ NGitLab.IMergeRequestClient.Delete(long mergeRequestIid) -> void
 NGitLab.IMergeRequestClient.Discussions(long mergeRequestIid) -> NGitLab.IMergeRequestDiscussionClient
 NGitLab.IMergeRequestClient.Get(NGitLab.Models.MergeRequestQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.IMergeRequestClient.GetByIidAsync(long iid, NGitLab.Models.SingleMergeRequestQuery options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.MergeRequest>
+NGitLab.IMergeRequestClient.GetDiffsAsync(long mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Diff>
+NGitLab.IMergeRequestClient.GetDiffsAsync(long mergeRequestIid, long versionId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.VersionedDiffResult>
 NGitLab.IMergeRequestClient.GetParticipants(long mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Author>
 NGitLab.IMergeRequestClient.GetPipelines(long mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.IMergeRequestClient.GetVersionsAsync(long mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequestVersion>
@@ -735,6 +737,8 @@ NGitLab.Impl.MergeRequestClient.Delete(long mergeRequestIid) -> void
 NGitLab.Impl.MergeRequestClient.Discussions(long mergeRequestIid) -> NGitLab.IMergeRequestDiscussionClient
 NGitLab.Impl.MergeRequestClient.Get(NGitLab.Models.MergeRequestQuery query) -> System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequest>
 NGitLab.Impl.MergeRequestClient.GetByIidAsync(long iid, NGitLab.Models.SingleMergeRequestQuery options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.MergeRequest>
+NGitLab.Impl.MergeRequestClient.GetDiffsAsync(long mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Diff>
+NGitLab.Impl.MergeRequestClient.GetDiffsAsync(long mergeRequestIid, long versionId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.VersionedDiffResult>
 NGitLab.Impl.MergeRequestClient.GetParticipants(long mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Author>
 NGitLab.Impl.MergeRequestClient.GetPipelines(long mergeRequestIid) -> System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineBasic>
 NGitLab.Impl.MergeRequestClient.GetVersionsAsync(long mergeRequestIid) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.MergeRequestVersion>
@@ -899,6 +903,7 @@ NGitLab.Impl.RepositoryClient.GetCommitDiff(NGitLab.Sha1 sha) -> System.Collecti
 NGitLab.Impl.RepositoryClient.GetCommitRefs(NGitLab.Sha1 sha, NGitLab.Models.CommitRefType type = NGitLab.Models.CommitRefType.All) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Ref>
 NGitLab.Impl.RepositoryClient.GetCommits(NGitLab.GetCommitsRequest request) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
 NGitLab.Impl.RepositoryClient.GetCommits(string refName, int maxResults = 0) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
+NGitLab.Impl.RepositoryClient.GetMergeBaseAsync(string[] refs, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Commit>
 NGitLab.Impl.RepositoryClient.GetRawBlob(string sha, System.Action<System.IO.Stream> parser) -> void
 NGitLab.Impl.RepositoryClient.GetTree(NGitLab.Models.RepositoryGetTreeOptions options) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
 NGitLab.Impl.RepositoryClient.GetTree(string path) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
@@ -1134,6 +1139,7 @@ NGitLab.IRepositoryClient.GetCommitDiff(NGitLab.Sha1 sha) -> System.Collections.
 NGitLab.IRepositoryClient.GetCommitRefs(NGitLab.Sha1 sha, NGitLab.Models.CommitRefType type = NGitLab.Models.CommitRefType.All) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Ref>
 NGitLab.IRepositoryClient.GetCommits(NGitLab.GetCommitsRequest request) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
 NGitLab.IRepositoryClient.GetCommits(string refName, int maxResults = 0) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Commit>
+NGitLab.IRepositoryClient.GetMergeBaseAsync(string[] refs, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Commit>
 NGitLab.IRepositoryClient.GetRawBlob(string sha, System.Action<System.IO.Stream> parser) -> void
 NGitLab.IRepositoryClient.GetTree(NGitLab.Models.RepositoryGetTreeOptions options) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
 NGitLab.IRepositoryClient.GetTree(string path) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Tree>
@@ -1667,6 +1673,8 @@ NGitLab.Models.CommitStatusQuery.Stage.get -> string
 NGitLab.Models.CommitStatusQuery.Stage.init -> void
 NGitLab.Models.CompareQuery
 NGitLab.Models.CompareQuery.CompareQuery(string source, string target) -> void
+NGitLab.Models.CompareQuery.From.get -> string
+NGitLab.Models.CompareQuery.From.set -> void
 NGitLab.Models.CompareQuery.FromProjectId.get -> long?
 NGitLab.Models.CompareQuery.FromProjectId.set -> void
 NGitLab.Models.CompareQuery.Source.get -> string
@@ -1675,6 +1683,8 @@ NGitLab.Models.CompareQuery.Straight.get -> bool?
 NGitLab.Models.CompareQuery.Straight.set -> void
 NGitLab.Models.CompareQuery.Target.get -> string
 NGitLab.Models.CompareQuery.Target.set -> void
+NGitLab.Models.CompareQuery.To.get -> string
+NGitLab.Models.CompareQuery.To.set -> void
 NGitLab.Models.CompareQuery.Unidiff.get -> bool?
 NGitLab.Models.CompareQuery.Unidiff.set -> void
 NGitLab.Models.CompareResults
@@ -4931,6 +4941,30 @@ NGitLab.Models.VariableUpdate.Type.set -> void
 NGitLab.Models.VariableUpdate.Value.get -> string
 NGitLab.Models.VariableUpdate.Value.set -> void
 NGitLab.Models.VariableUpdate.VariableUpdate() -> void
+NGitLab.Models.VersionedDiffResult
+NGitLab.Models.VersionedDiffResult.BaseCommitSha.get -> string
+NGitLab.Models.VersionedDiffResult.BaseCommitSha.set -> void
+NGitLab.Models.VersionedDiffResult.Commits.get -> NGitLab.Models.Commit[]
+NGitLab.Models.VersionedDiffResult.Commits.set -> void
+NGitLab.Models.VersionedDiffResult.CreatedAt.get -> System.DateTime
+NGitLab.Models.VersionedDiffResult.CreatedAt.set -> void
+NGitLab.Models.VersionedDiffResult.Diffs.get -> NGitLab.Models.Diff[]
+NGitLab.Models.VersionedDiffResult.Diffs.set -> void
+NGitLab.Models.VersionedDiffResult.HeadCommitSha.get -> string
+NGitLab.Models.VersionedDiffResult.HeadCommitSha.set -> void
+NGitLab.Models.VersionedDiffResult.Id.get -> long
+NGitLab.Models.VersionedDiffResult.Id.set -> void
+NGitLab.Models.VersionedDiffResult.MergeRequestId.get -> long
+NGitLab.Models.VersionedDiffResult.MergeRequestId.set -> void
+NGitLab.Models.VersionedDiffResult.PatchIdSha.get -> string
+NGitLab.Models.VersionedDiffResult.PatchIdSha.set -> void
+NGitLab.Models.VersionedDiffResult.RealSize.get -> string
+NGitLab.Models.VersionedDiffResult.RealSize.set -> void
+NGitLab.Models.VersionedDiffResult.StartCommitSha.get -> string
+NGitLab.Models.VersionedDiffResult.StartCommitSha.set -> void
+NGitLab.Models.VersionedDiffResult.State.get -> string
+NGitLab.Models.VersionedDiffResult.State.set -> void
+NGitLab.Models.VersionedDiffResult.VersionedDiffResult() -> void
 NGitLab.Models.VisibilityLevel
 NGitLab.Models.VisibilityLevel.Internal = 10 -> NGitLab.Models.VisibilityLevel
 NGitLab.Models.VisibilityLevel.Private = 0 -> NGitLab.Models.VisibilityLevel

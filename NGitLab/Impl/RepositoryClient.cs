@@ -124,6 +124,13 @@ public class RepositoryClient : IRepositoryClient
     public IEnumerable<Ref> GetCommitRefs(Sha1 sha, CommitRefType type = CommitRefType.All) =>
         _api.Get().GetAll<Ref>($"{_repoPath}/commits/{sha}/refs?type={type.ToString().ToLowerInvariant()}");
 
+    public Task<Commit> GetMergeBaseAsync(string[] refs, CancellationToken cancellationToken = default)
+    {
+        var url = _repoPath + "/merge_base";
+        url = Utils.AddArrayParameter(url, "refs", refs);
+        return _api.Get().ToAsync<Commit>(url, cancellationToken);
+    }
+
     public IFilesClient Files => new FilesClient(_api, _repoPath);
 
     public IBranchClient Branches => new BranchClient(_api, _repoPath);
@@ -143,7 +150,9 @@ public class RepositoryClient : IRepositoryClient
 
     private string BuildCompareUrl(CompareQuery query)
     {
-        var url = _repoPath + $"/compare?from={query.Source}&to={query.Target}";
+        var from = query.From ?? query.Source;
+        var to = query.To ?? query.Target;
+        var url = _repoPath + $"/compare?from={from}&to={to}";
         url = Utils.AddParameter(url, "from_project_id", query.FromProjectId);
         url = Utils.AddParameter(url, "straight", query.Straight);
         url = Utils.AddParameter(url, "unidiff", query.Unidiff);

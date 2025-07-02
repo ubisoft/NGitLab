@@ -4,8 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LibGit2Sharp;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
+using Commit = NGitLab.Models.Commit;
+using Diff = NGitLab.Models.Diff;
+using Tree = NGitLab.Models.Tree;
 
 namespace NGitLab.Mock.Clients;
 
@@ -109,6 +113,11 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
         }
     }
 
+    public Task<Commit> GetMergeBaseAsync(string[] refs, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public Commit GetCommit(Sha1 sha)
     {
         throw new NotImplementedException();
@@ -131,11 +140,30 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
 
     public CompareResults Compare(CompareQuery query)
     {
-        throw new NotImplementedException();
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(_projectId, ProjectPermission.View);
+            var treeChanges = project.Repository.Compare(query.From, query.To);
+            return new CompareResults()
+            {
+                Diff = treeChanges.Select(change
+                    => new Diff()
+                    {
+                        NewPath = change.Path,
+                        OldPath = change.OldPath,
+                        IsNewFile = change.Status is ChangeKind.Added,
+                        IsDeletedFile = change.Status is ChangeKind.Deleted,
+                        IsRenamedFile = change.Status is ChangeKind.Renamed,
+                    }).ToArray(),
+            };
+        }
     }
 
     public Task<CompareResults> CompareAsync(CompareQuery query, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        using (Context.BeginOperationScope())
+        {
+            return Task.FromResult(Compare(query));
+        }
     }
 }
