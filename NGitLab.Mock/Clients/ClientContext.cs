@@ -1,43 +1,40 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 
 namespace NGitLab.Mock.Clients;
 
-internal sealed class ClientContext
+internal sealed class ClientContext(GitLabServer server, User user)
 {
-    private readonly object _operationLock = new();
+    private readonly SemaphoreSlim _operationLock = new(1, 1);
 
-    public ClientContext(GitLabServer server, User user)
-    {
-        Server = server;
-        User = user;
-    }
+    public GitLabServer Server { get; } = server;
 
-    public GitLabServer Server { get; }
-
-    public User User { get; }
+    public User User { get; } = user;
 
     public bool IsAuthenticated => User != null;
 
     public IDisposable BeginOperationScope()
     {
         Server.RaiseOnClientOperation();
-        Monitor.Enter(_operationLock);
         return new Releaser(_operationLock);
     }
 
     private sealed class Releaser : IDisposable
     {
-        private readonly object _operationLock;
+        private readonly SemaphoreSlim _operationLock;
 
-        public Releaser(object operationLock)
+        public Releaser(SemaphoreSlim operationLock)
         {
             _operationLock = operationLock;
+            if (Debugger.IsAttached && _operationLock.CurrentCount == 0)
+                Debugger.Break();
+            _operationLock.Wait();
         }
 
         public void Dispose()
         {
-            Monitor.Exit(_operationLock);
+            _operationLock.Release();
         }
     }
 }
