@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 
@@ -29,14 +29,14 @@ public class Project
     public bool JobEnabled { get; set; }
 
     [JsonPropertyName("builds_access_level")]
-    public ProjectFeatureAccessLevel BuildsAccessLevel { get; set; }
+    public RepositoryAccessLevel BuildsAccessLevel { get; set; }
 
     [JsonPropertyName("snippets_enabled")]
     [Obsolete("Deprecated by GitLab. Use SnippetsAccessLevel instead")]
     public bool SnippetsEnabled { get; set; }
 
     [JsonPropertyName("snippets_access_level")]
-    public ProjectFeatureAccessLevel SnippetsAccessLevel { get; set; }
+    public RepositoryAccessLevel SnippetsAccessLevel { get; set; }
 
     [JsonPropertyName("resolve_outdated_diff_discussions")]
     public bool ResolveOutdatedDiffDiscussions { get; set; }
@@ -67,7 +67,7 @@ public class Project
     public bool IssuesEnabled { get; set; }
 
     [JsonPropertyName("issues_access_level")]
-    public ProjectFeatureAccessLevel IssuesAccessLevel { get; set; }
+    public RepositoryAccessLevel IssuesAccessLevel { get; set; }
 
     [JsonPropertyName("merge_pipelines_enabled")]
     public bool MergePipelinesEnabled { get; set; }
