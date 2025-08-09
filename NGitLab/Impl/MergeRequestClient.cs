@@ -62,6 +62,7 @@ public class MergeRequestClient : IMergeRequestClient
         url = Utils.AddParameter(url, "target_branch", query.TargetBranch);
         url = Utils.AddParameter(url, "search", query.Search);
         url = Utils.AddParameter(url, "wip", query.Wip.HasValue ? (query.Wip.Value ? "yes" : "no") : null);
+        url = Utils.AddParameter(url, "with_merge_status_recheck", query.WithMergeStatusRecheck?.ToString().ToLowerInvariant());
 
         return _api.Get().GetAll<MergeRequest>(url);
     }
