@@ -30,10 +30,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Get all the history so MinGit can compute the version
-      - name: Set up latest .NET 8.0
+      - name: Set up latest .NET 9.0
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: "9.0.x"
       - run: dotnet pack NGitLab.sln --configuration Release --output ${{env.NuGetDirectory}} /bl
       - uses: actions/upload-artifact@v4
         with:
@@ -73,10 +73,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-      - name: Set up latest .NET 8.0
+      - name: Set up latest .NET 9.0
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: "9.0.x"
       - name: Set artifact name
         id: set-artifact-name
         run: |
@@ -112,10 +112,10 @@ jobs:
         with:
           name: nuget
           path: ${{env.NuGetDirectory}}
-      - name: Set up latest .NET 8.0
+      - name: Set up latest .NET 9.0
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: "9.0.x"
       - name: Publish NuGet packages
         run: |
           Write-Host "Current ref: $env:GITHUB_REF"
