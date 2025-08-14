@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0 # Get all the history so MinGit can compute the version
       - name: Set up latest .NET 8.0
@@ -72,7 +72,7 @@ jobs:
           GITLAB_ROOT_PASSWORD: "Pa$$w0rd"
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up latest .NET 8.0
         uses: actions/setup-dotnet@v4
         with:
