@@ -12,12 +12,12 @@ namespace NGitLab.Mock.Clients;
 internal sealed class PipelineClient : ClientBase, IPipelineClient
 {
     private readonly long _projectId;
-    private readonly IJobClient _jobClient;
+    private readonly JobClient _jobClient;
 
     public PipelineClient(ClientContext context, IJobClient jobClient, ProjectId projectId)
         : base(context)
     {
-        _jobClient = jobClient;
+        _jobClient = jobClient as JobClient;
         _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
     }
 
@@ -167,7 +167,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
     {
         using (Context.BeginOperationScope())
         {
-            var jobs = _jobClient.GetJobs(JobScopeMask.All).Where(j => j.Pipeline.Id == query.PipelineId);
+            var jobs = _jobClient.GetJobsLockless(new JobQuery { Scope = JobScopeMask.All }).Where(j => j.Pipeline.Id == query.PipelineId);
             return (query.Scope == null || query.Scope.Length == 0) ? jobs : jobs.Where(j => query.Scope.Contains(j.Status.ToString(), StringComparer.Ordinal));
         }
     }
