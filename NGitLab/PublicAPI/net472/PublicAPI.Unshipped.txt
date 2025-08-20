@@ -4378,7 +4378,7 @@ NGitLab.Models.SearchBlob.Path.get -> string
 NGitLab.Models.SearchBlob.Path.set -> void
 NGitLab.Models.SearchBlob.ProjectId.get -> long
 NGitLab.Models.SearchBlob.ProjectId.set -> void
-NGitLab.Models.SearchBlob.Ref.get -> NGitLab.Sha1
+NGitLab.Models.SearchBlob.Ref.get -> string
 NGitLab.Models.SearchBlob.Ref.set -> void
 NGitLab.Models.SearchBlob.SearchBlob() -> void
 NGitLab.Models.SearchBlob.StartLine.get -> int
