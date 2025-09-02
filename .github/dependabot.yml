@@ -50,3 +50,5 @@ updates:
           - "Microsoft.Playwright"
           - "NSubstitute"
           - "*NUnit*"
+        exclude-patterns:
+          - "NUnit.Analyzers"

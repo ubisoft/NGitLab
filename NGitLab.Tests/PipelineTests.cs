@@ -310,7 +310,7 @@ public class PipelineTests
         using var context = await GitLabTestContext.CreateAsync();
 
         // The "Update pipeline metadata" was added in GitLab 16, the earliest available docs that include the API is for version 16.11
-        context.ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange.Parse("[16.11,)"));
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[16.11,)"));
 
         var project = context.CreateProject();
         var pipelineClient = context.Client.GetPipelines(project.Id);
