@@ -192,7 +192,7 @@ public class MergeRequestClientTests
         using var context = await GitLabTestContext.CreateAsync();
 
         // https://about.gitlab.com/releases/2021/04/22/gitlab-13-11-released/#removal-of-merge-request-approvers-endpoint-in-favor-of-approval-rules-api
-        context.ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange.Parse("[,13.11)"));
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[,13.11)"));
 
         var (project, mergeRequest) = context.CreateMergeRequest();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
