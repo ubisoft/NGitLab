@@ -318,7 +318,7 @@ public sealed class GitLabTestContext : IDisposable
     public void ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange versionRange)
     {
         if (!IsGitLabVersionInRange(versionRange, out var gitLabVersion))
-            Assert.Inconclusive($"Test supported by GitLab '{versionRange}', but currently running against '{gitLabVersion}'");
+            Assert.Ignore($"Test supported by GitLab '{versionRange}', but currently running against '{gitLabVersion}'");
     }
 
     private IGitLabClient CreateClient(string token)
