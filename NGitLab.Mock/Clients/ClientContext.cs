@@ -16,17 +16,17 @@ internal sealed class ClientContext(GitLabServer server, User user)
     public bool IsAuthenticated => User != null;
 
     public IDisposable BeginOperationScope(
-        [CallerMemberName] string memberName = null,
-        [CallerFilePath] string sourceFilePath = null,
-        [CallerLineNumber] int sourceLineNumber = -1)
+        [CallerMemberName] string callingMethod = null,
+        [CallerFilePath] string callingFilePath = null,
+        [CallerLineNumber] int callingLineNumber = -1)
     {
         Server.RaiseOnClientOperation();
         var releaser = new Releaser(_operationLock);
 
         // Store caller info for debugging purposes
-        Releaser.CallerMemberName = memberName;
-        Releaser.CallerFilePath = sourceFilePath;
-        Releaser.SourceLineNumber = sourceLineNumber;
+        Releaser.MethodWhereLockWasTaken = callingMethod;
+        Releaser.FilePathWhereLockWasTaken = callingFilePath;
+        Releaser.LineNumberWhereLockWasTaken = callingLineNumber;
 
         return releaser;
     }
@@ -38,17 +38,17 @@ internal sealed class ClientContext(GitLabServer server, User user)
         public Releaser(SemaphoreSlim operationLock)
         {
             _operationLock = operationLock;
-            if (Debugger.IsAttached && _operationLock.CurrentCount == 0)
+            if (_operationLock.CurrentCount == 0 && Debugger.IsAttached)
                 Debugger.Break();
             _operationLock.Wait();
         }
 
-        // The following is for debugging purposes only. It stores the caller info of the current operation scope.
-        public static string CallerMemberName { get; set; }
+        // The following is for debugging purposes only. It stores info about where the active lock was taken.
+        public static string MethodWhereLockWasTaken { get; set; }
 
-        public static string CallerFilePath { get; set; }
+        public static string FilePathWhereLockWasTaken { get; set; }
 
-        public static int SourceLineNumber { get; set; }
+        public static int LineNumberWhereLockWasTaken { get; set; }
 
         public void Dispose()
         {
