@@ -31,7 +31,7 @@ jobs:
         with:
           fetch-depth: 0 # Get all the history so MinGit can compute the version
       - name: Set up latest .NET 8.0
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
       - run: dotnet pack NGitLab.sln --configuration Release --output ${{env.NuGetDirectory}} /bl
@@ -74,7 +74,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v5
       - name: Set up latest .NET 8.0
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
       - name: Set artifact name
@@ -113,7 +113,7 @@ jobs:
           name: nuget
           path: ${{env.NuGetDirectory}}
       - name: Set up latest .NET 8.0
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
       - name: Publish NuGet packages
