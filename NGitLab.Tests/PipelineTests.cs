@@ -11,7 +11,7 @@ using Polly;
 
 namespace NGitLab.Tests;
 
-[Timeout(240_000)]
+[CancelAfter(240_000)]
 public class PipelineTests
 {
     [Test]

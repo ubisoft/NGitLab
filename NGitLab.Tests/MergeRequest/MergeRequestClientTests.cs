@@ -30,7 +30,7 @@ public class MergeRequestClientTests
 
         await GitLabTestContext.RetryUntilAsync(
                 () => mergeRequestClient[mergeRequest.Iid],
-                mr => string.Equals(mr.MergeStatus, "can_be_merged", StringComparison.Ordinal),
+                mr => mr.DetailedMergeStatus == DetailedMergeStatus.Mergeable,
                 TimeSpan.FromSeconds(120))
             .ConfigureAwait(false);
 
