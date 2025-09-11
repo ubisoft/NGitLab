@@ -299,10 +299,9 @@ public class ProjectsTests
         Assert.That(context.LastRequest.RequestUri.ToString(), Contains.Substring("per_page=5"));
     }
 
-    [TestCase(false)]
-    [TestCase(true)]
+    [Test]
     [NGitLabRetry]
-    public async Task CreateUpdateDelete(bool initiallySetTagsInsteadOfTopics)
+    public async Task CreateUpdateDelete()
     {
         using var context = await GitLabTestContext.CreateAsync();
         var projectClient = context.Client.Projects;
@@ -310,46 +309,39 @@ public class ProjectsTests
         var project = new ProjectCreate
         {
             Description = "desc",
-            IssuesEnabled = true,
-            MergeRequestsEnabled = true,
+            IssuesAccessLevel = "enabled",
+            MergeRequestsAccessLevel = "enabled",
             Name = "CreateDelete_Test_" + context.GetRandomNumber().ToStringInvariant(),
             NamespaceId = null,
-            SnippetsEnabled = true,
+            SnippetsAccessLevel = "enabled",
             VisibilityLevel = VisibilityLevel.Internal,
-            WikiEnabled = true,
+            WikiAccessLevel = "enabled",
         };
 
-        var expectedTopics = new List<string> { "Tag-1", "Tag-2" };
-        if (initiallySetTagsInsteadOfTopics)
-            project.Tags = expectedTopics;
-        else
-            project.Topics = expectedTopics;
+        project.Topics = ["Tag-1", "Tag-2"];
 
         var createdProject = projectClient.Create(project);
 
         Assert.That(createdProject.Description, Is.EqualTo(project.Description));
-        Assert.That(createdProject.IssuesEnabled, Is.EqualTo(project.IssuesEnabled));
-        Assert.That(createdProject.MergeRequestsEnabled, Is.EqualTo(project.MergeRequestsEnabled));
+        Assert.That(createdProject.IssuesAccessLevel, Is.EqualTo(project.IssuesAccessLevel));
+        Assert.That(createdProject.MergeRequestsAccessLevel, Is.EqualTo(project.MergeRequestsAccessLevel));
         Assert.That(createdProject.Name, Is.EqualTo(project.Name));
         Assert.That(createdProject.VisibilityLevel, Is.EqualTo(project.VisibilityLevel));
-        Assert.That(createdProject.Topics, Is.EquivalentTo(expectedTopics));
-        Assert.That(createdProject.TagList, Is.EquivalentTo(expectedTopics));
+        Assert.That(createdProject.Topics, Is.EquivalentTo(project.Topics));
         Assert.That(createdProject.RepositoryAccessLevel, Is.EqualTo(RepositoryAccessLevel.Enabled));
 
         // Update
-        expectedTopics = ["Tag-3"];
+        var expectedTopics = new List<string> { "Tag-3" };
         var updateOptions = new ProjectUpdate { Visibility = VisibilityLevel.Private, Topics = expectedTopics };
         var updatedProject = projectClient.Update(createdProject.Id.ToStringInvariant(), updateOptions);
         Assert.That(updatedProject.VisibilityLevel, Is.EqualTo(VisibilityLevel.Private));
         Assert.That(updatedProject.Topics, Is.EquivalentTo(expectedTopics));
-        Assert.That(updatedProject.TagList, Is.EquivalentTo(expectedTopics));
 
         updateOptions.Visibility = VisibilityLevel.Public;
         updateOptions.Topics = null;    // If Topics are null, the project's existing topics will remain
         updatedProject = projectClient.Update(createdProject.Id.ToStringInvariant(), updateOptions);
         Assert.That(updatedProject.VisibilityLevel, Is.EqualTo(VisibilityLevel.Public));
         Assert.That(updatedProject.Topics, Is.EquivalentTo(expectedTopics));
-        Assert.That(updatedProject.TagList, Is.EquivalentTo(expectedTopics));
 
         var updatedProject2 = projectClient.Update(createdProject.PathWithNamespace, new ProjectUpdate { Visibility = VisibilityLevel.Internal });
         Assert.That(updatedProject2.VisibilityLevel, Is.EqualTo(VisibilityLevel.Internal));
@@ -374,8 +366,8 @@ public class ProjectsTests
             Description = "desc",
             DefaultBranch = "foo",
             InitializeWithReadme = true,
-            IssuesEnabled = true,
-            MergeRequestsEnabled = true,
+            IssuesAccessLevel = "enabled",
+            MergeRequestsAccessLevel = "enabled",
             VisibilityLevel = VisibilityLevel.Private,
             Topics = ["t1", "t2"],
             BuildTimeout = (int)TimeSpan.FromMinutes(15).TotalSeconds,
@@ -393,8 +385,8 @@ public class ProjectsTests
             Assert.That(actual.PathWithNamespace, Is.EqualTo($"{user.Username}/{expected.Path}"));
             Assert.That(actual.Description, Is.EqualTo(expected.Description));
             Assert.That(actual.DefaultBranch, Is.EqualTo(expected.DefaultBranch));
-            Assert.That(actual.IssuesEnabled, Is.EqualTo(expected.IssuesEnabled));
-            Assert.That(actual.MergeRequestsEnabled, Is.EqualTo(expected.MergeRequestsEnabled));
+            Assert.That(actual.IssuesAccessLevel, Is.EqualTo(expected.IssuesAccessLevel));
+            Assert.That(actual.MergeRequestsAccessLevel, Is.EqualTo(expected.MergeRequestsAccessLevel));
             Assert.That(actual.VisibilityLevel, Is.EqualTo(expected.VisibilityLevel));
             Assert.That(actual.Topics, Is.EquivalentTo(expected.Topics));
             Assert.That(actual.RepositoryAccessLevel, Is.EqualTo(RepositoryAccessLevel.Enabled));
@@ -601,13 +593,13 @@ public class ProjectsTests
         var createdProject = context.CreateProject(p =>
         {
             p.Description = "desc";
-            p.IssuesEnabled = true;
-            p.MergeRequestsEnabled = true;
+            p.IssuesAccessLevel = "enabled";
+            p.MergeRequestsAccessLevel = "enabled";
             p.Name = "ForkProject_Test_" + context.GetRandomNumber().ToStringInvariant();
             p.NamespaceId = null;
-            p.SnippetsEnabled = true;
+            p.SnippetsAccessLevel = "enabled";
             p.VisibilityLevel = VisibilityLevel.Internal;
-            p.WikiEnabled = true;
+            p.WikiAccessLevel = "enabled";
             p.Topics = ["Tag-1", "Tag-2"];
         });
 

@@ -30,7 +30,7 @@ public interface IMergeRequestClient
 
     MergeRequest CancelMergeWhenPipelineSucceeds(long mergeRequestIid);
 
-    [Obsolete("You should use MergeRequestMerge instead of MergeRequestAccept")]
+    [Obsolete("Use the Accept method that takes a MergeRequestMerge")]
     MergeRequest Accept(long mergeRequestIid, MergeRequestAccept message);
 
     MergeRequest Accept(long mergeRequestIid, MergeRequestMerge message);

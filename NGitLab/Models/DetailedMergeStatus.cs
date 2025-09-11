@@ -1,14 +1,17 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace NGitLab.Models;
 
 /// <summary>
-/// Values that represent <see href="https://docs.gitlab.com/ee/api/merge_requests.html#merge-status">the 'detailed_merge_status' potential values</see>.
+/// Some of the possible <see href="https://docs.gitlab.com/api/merge_requests/#merge-status">detailed_merge_status</see> values.
 /// </summary>
 public enum DetailedMergeStatus
 {
+    [Obsolete("Not part of the GitLab API documentation: https://docs.gitlab.com/api/merge_requests/#merge-status")]
     [EnumMember(Value = "blocked_status")]
     BlockedStatus,
+    [Obsolete("Not part of the GitLab API documentation: https://docs.gitlab.com/api/merge_requests/#merge-status")]
     [EnumMember(Value = "broken_status")]
     BrokenStatus,
     [EnumMember(Value = "checking")]
@@ -23,6 +26,7 @@ public enum DetailedMergeStatus
     DiscussionsNotResolved,
     [EnumMember(Value = "draft_status")]
     DraftStatus,
+    [Obsolete("Not part of the GitLab API documentation: https://docs.gitlab.com/api/merge_requests/#merge-status")]
     [EnumMember(Value = "external_status_checks")]
     ExternalStatusChecks,
     [EnumMember(Value = "mergeable")]
@@ -31,9 +35,9 @@ public enum DetailedMergeStatus
     NotApproved,
     [EnumMember(Value = "not_open")]
     NotOpen,
+    [Obsolete("Not part of the GitLab API documentation: https://docs.gitlab.com/api/merge_requests/#merge-status")]
     [EnumMember(Value = "policies_denied")]
     PoliciesDenied,
-    // Undocumented member
     [EnumMember(Value = "preparing")]
     Preparing,
 }

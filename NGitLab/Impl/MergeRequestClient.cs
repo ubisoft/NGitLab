@@ -121,6 +121,7 @@ public class MergeRequestClient : IMergeRequestClient
         .Post()
         .To<MergeRequest>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/cancel_merge_when_pipeline_succeeds");
 
+    [Obsolete("Use the Accept method that takes a MergeRequestMerge")]
     public MergeRequest Accept(long mergeRequestIid, MergeRequestAccept message) => _api
         .Put().With(message)
         .To<MergeRequest>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/merge");

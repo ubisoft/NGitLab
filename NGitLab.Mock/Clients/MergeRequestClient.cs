@@ -84,6 +84,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
+    [Obsolete("Use the Accept method that takes a MergeRequestMerge")]
     public Models.MergeRequest Accept(long mergeRequestIid, MergeRequestAccept message)
     {
         return Accept(mergeRequestIid, new MergeRequestMerge

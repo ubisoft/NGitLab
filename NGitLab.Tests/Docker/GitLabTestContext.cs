@@ -125,11 +125,11 @@ public sealed class GitLabTestContext : IDisposable
                 Name = GetUniqueRandomString(),
                 DefaultBranch = defaultBranch,
                 Description = "Test project",
-                IssuesEnabled = true,
-                MergeRequestsEnabled = true,
-                SnippetsEnabled = true,
+                IssuesAccessLevel = "enabled",
+                MergeRequestsAccessLevel = "enabled",
+                SnippetsAccessLevel = "enabled",
                 VisibilityLevel = VisibilityLevel.Internal,
-                WikiEnabled = true,
+                WikiAccessLevel = "enabled",
             };
 
             configure?.Invoke(projectCreate);
