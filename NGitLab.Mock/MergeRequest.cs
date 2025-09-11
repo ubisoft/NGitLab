@@ -307,6 +307,7 @@ public sealed class MergeRequest : GitLabObject
             WorkInProgress = WorkInProgress,
             Squash = Squash,
             MergeStatus = "can_be_merged",
+            DetailedMergeStatus = new DynamicEnum<DetailedMergeStatus>(DetailedMergeStatus.Mergeable),
             State = State.ToString(),
             WebUrl = WebUrl,
             HeadPipeline = HeadPipeline?.ToPipelineClient(),

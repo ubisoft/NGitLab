@@ -9,7 +9,7 @@ public class TriggerTests
 {
     [Test]
     [NGitLabRetry]
-    [Timeout(10000)]
+    [CancelAfter(10000)]
     public async Task Test_can_get_triggers_for_project()
     {
         using var context = await GitLabTestContext.CreateAsync();
