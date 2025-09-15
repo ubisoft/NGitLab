@@ -14,6 +14,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" Version="5.1.0" />
-    <PackageReference Include="Verify.NUnit" Version="30.11.0" />
+    <PackageReference Include="Verify.NUnit" Version="30.13.0" />
   </ItemGroup>
 </Project>
