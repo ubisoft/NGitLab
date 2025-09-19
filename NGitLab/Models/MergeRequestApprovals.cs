@@ -46,3 +46,12 @@ public class MergeRequestApproveRequest
     [JsonPropertyName("approval_password")]
     public string ApprovalPassword { get; set; }
 }
+
+public class MergeRequestApprovalState
+{
+    [JsonPropertyName("approval_rules_overwritten")]
+    public bool ApprovalRulesOverwritten { get; set; }
+
+    [JsonPropertyName("rules")]
+    public ApprovalRule[] Rules { get; set; }
+}
