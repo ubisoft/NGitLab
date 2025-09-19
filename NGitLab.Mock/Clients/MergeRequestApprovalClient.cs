@@ -31,4 +31,9 @@ internal sealed class MergeRequestApprovalClient : ClientBase, IMergeRequestAppr
     {
         throw new NotImplementedException();
     }
+
+    public ApprovalRule[] GetApprovalRules()
+    {
+        throw new NotImplementedException();
+    }
 }
