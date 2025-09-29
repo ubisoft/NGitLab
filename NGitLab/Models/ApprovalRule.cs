@@ -16,6 +16,21 @@ public sealed class ApprovalRule
     [JsonPropertyName("name")]
     public string Name { get; set; }
 
+    /// <summary>
+    /// The type of the approval rule.
+    /// </summary>
+    [JsonPropertyName("rule_type")]
+    public string RuleType { get; set; }
+
+    /// <summary>
+    /// The eligible approvers for the rule.
+    /// </summary>
+    [JsonPropertyName("eligible_approvers")]
+    public User[] EligibleApprovers { get; set; }
+
+    /// <summary>
+    /// The number of required approvers.
+    /// </summary>
     [JsonPropertyName("approvals_required")]
     public int ApprovalsRequired { get; set; }
 

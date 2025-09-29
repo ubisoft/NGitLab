@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients;
@@ -28,6 +28,11 @@ internal sealed class MergeRequestApprovalClient : ClientBase, IMergeRequestAppr
     }
 
     public void ChangeApprovers(MergeRequestApproversChange approversChange)
+    {
+        throw new NotImplementedException();
+    }
+
+    public MergeRequestApprovalState GetApprovalState()
     {
         throw new NotImplementedException();
     }
