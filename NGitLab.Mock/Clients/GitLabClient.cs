@@ -110,4 +110,6 @@ internal sealed class GitLabClient : ClientBase, IGitLabClient
     public ISearchClient GetProjectSearchClient(ProjectId projectId) => new ProjectSearchClient(Context, projectId);
 
     public IGroupHooksClient GetGroupHooksClient(GroupId groupId) => new GroupHooksClient(Context, groupId);
+
+    public IProjectJobTokenScopeClient GetProjectJobTokenScopeClient(ProjectId projectId) => throw new System.NotImplementedException();
 }

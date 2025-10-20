@@ -73,6 +73,7 @@ NGitLab.GitLabClient.GetPipelineSchedules(NGitLab.Models.ProjectId projectId) ->
 NGitLab.GitLabClient.GetProjectBadgeClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectBadgeClient
 NGitLab.GitLabClient.GetProjectEvents(NGitLab.Models.ProjectId projectId) -> NGitLab.IEventClient
 NGitLab.GitLabClient.GetProjectIssueNoteClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectIssueNoteClient
+NGitLab.GitLabClient.GetProjectJobTokenScopeClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectJobTokenScopeClient
 NGitLab.GitLabClient.GetProjectLevelApprovalRulesClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectLevelApprovalRulesClient
 NGitLab.GitLabClient.GetProjectSearchClient(NGitLab.Models.ProjectId projectId) -> NGitLab.ISearchClient
 NGitLab.GitLabClient.GetProjectVariableClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectVariableClient
@@ -203,6 +204,7 @@ NGitLab.IGitLabClient.GetPipelineSchedules(NGitLab.Models.ProjectId projectId) -
 NGitLab.IGitLabClient.GetProjectBadgeClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectBadgeClient
 NGitLab.IGitLabClient.GetProjectEvents(NGitLab.Models.ProjectId projectId) -> NGitLab.IEventClient
 NGitLab.IGitLabClient.GetProjectIssueNoteClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectIssueNoteClient
+NGitLab.IGitLabClient.GetProjectJobTokenScopeClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectJobTokenScopeClient
 NGitLab.IGitLabClient.GetProjectLevelApprovalRulesClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectLevelApprovalRulesClient
 NGitLab.IGitLabClient.GetProjectSearchClient(NGitLab.Models.ProjectId projectId) -> NGitLab.ISearchClient
 NGitLab.IGitLabClient.GetProjectVariableClient(NGitLab.Models.ProjectId projectId) -> NGitLab.IProjectVariableClient
@@ -875,6 +877,9 @@ NGitLab.Impl.ProjectIssueNoteClient.Edit(NGitLab.Models.ProjectIssueNoteEdit edi
 NGitLab.Impl.ProjectIssueNoteClient.ForIssue(long issueId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ProjectIssueNote>
 NGitLab.Impl.ProjectIssueNoteClient.Get(long issueId, long noteId) -> NGitLab.Models.ProjectIssueNote
 NGitLab.Impl.ProjectIssueNoteClient.ProjectIssueNoteClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
+NGitLab.Impl.ProjectJobTokenScopeClient
+NGitLab.Impl.ProjectJobTokenScopeClient.GetProjectJobTokenScope(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.JobTokenScope>
+NGitLab.Impl.ProjectJobTokenScopeClient.UpdateProjectJobTokenScope(NGitLab.Models.JobTokenScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.ProjectLevelApprovalRulesClient
 NGitLab.Impl.ProjectLevelApprovalRulesClient.CreateProjectLevelRule(NGitLab.Models.ApprovalRuleCreate approvalRuleCreate) -> NGitLab.Models.ApprovalRule
 NGitLab.Impl.ProjectLevelApprovalRulesClient.DeleteProjectLevelRule(long approvalRuleIdToDelete) -> void
@@ -1083,6 +1088,9 @@ NGitLab.IProjectIssueNoteClient.Create(NGitLab.Models.ProjectIssueNoteCreate cre
 NGitLab.IProjectIssueNoteClient.Edit(NGitLab.Models.ProjectIssueNoteEdit edit) -> NGitLab.Models.ProjectIssueNote
 NGitLab.IProjectIssueNoteClient.ForIssue(long issueId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ProjectIssueNote>
 NGitLab.IProjectIssueNoteClient.Get(long issueId, long noteId) -> NGitLab.Models.ProjectIssueNote
+NGitLab.IProjectJobTokenScopeClient
+NGitLab.IProjectJobTokenScopeClient.GetProjectJobTokenScope(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.JobTokenScope>
+NGitLab.IProjectJobTokenScopeClient.UpdateProjectJobTokenScope(NGitLab.Models.JobTokenScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IProjectLevelApprovalRulesClient
 NGitLab.IProjectLevelApprovalRulesClient.CreateProjectLevelRule(NGitLab.Models.ApprovalRuleCreate approvalRuleCreate) -> NGitLab.Models.ApprovalRule
 NGitLab.IProjectLevelApprovalRulesClient.DeleteProjectLevelRule(long approvalRuleIdToDelete) -> void
@@ -2649,6 +2657,10 @@ NGitLab.Models.JobScopeMask.Pending = 2 -> NGitLab.Models.JobScopeMask
 NGitLab.Models.JobScopeMask.Running = 4 -> NGitLab.Models.JobScopeMask
 NGitLab.Models.JobScopeMask.Skipped = 64 -> NGitLab.Models.JobScopeMask
 NGitLab.Models.JobScopeMask.Success = 16 -> NGitLab.Models.JobScopeMask
+NGitLab.Models.JobTokenScope
+NGitLab.Models.JobTokenScope.InboundEnabled.get -> bool
+NGitLab.Models.JobTokenScope.InboundEnabled.set -> void
+NGitLab.Models.JobTokenScope.JobTokenScope() -> void
 NGitLab.Models.Label
 NGitLab.Models.Label.ClosedIssuesCount.get -> int
 NGitLab.Models.Label.ClosedIssuesCount.set -> void

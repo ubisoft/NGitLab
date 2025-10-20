@@ -789,4 +789,23 @@ public class ProjectsTests
 
         Assert.That(groups.Select(g => g.Id), Is.EquivalentTo(new[] { group.Id, subgroup.Id }));
     }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetAndSetProjectJobTokenScope()
+    {
+        // Arrange
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var gitLabClient = context.Client;
+        var jobTokenScopeClient = gitLabClient.GetProjectJobTokenScopeClient(project.Id);
+
+        // Act/Assert
+        var scope = await jobTokenScopeClient.GetProjectJobTokenScope(CancellationToken.None);
+        Assert.That(scope.InboundEnabled, Is.True);
+
+        await jobTokenScopeClient.UpdateProjectJobTokenScope(new JobTokenScope { InboundEnabled = false }, CancellationToken.None);
+        scope = await jobTokenScopeClient.GetProjectJobTokenScope(CancellationToken.None);
+        Assert.That(scope.InboundEnabled, Is.False);
+    }
 }

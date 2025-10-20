@@ -225,4 +225,7 @@ public class GitLabClient : IGitLabClient
 
     public IGroupHooksClient GetGroupHooksClient(GroupId groupId)
         => new GroupHooksClient(_api, groupId);
+
+    public IProjectJobTokenScopeClient GetProjectJobTokenScopeClient(ProjectId projectId)
+        => new ProjectJobTokenScopeClient(_api, projectId);
 }
