@@ -106,4 +106,6 @@ public interface IGitLabClient
     ISearchClient GetProjectSearchClient(ProjectId projectId);
 
     IGroupHooksClient GetGroupHooksClient(GroupId groupId);
+
+    IProjectJobTokenScopeClient GetProjectJobTokenScopeClient(ProjectId projectId);
 }
