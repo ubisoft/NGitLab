@@ -879,8 +879,8 @@ NGitLab.Impl.ProjectIssueNoteClient.ForIssue(long issueId) -> System.Collections
 NGitLab.Impl.ProjectIssueNoteClient.Get(long issueId, long noteId) -> NGitLab.Models.ProjectIssueNote
 NGitLab.Impl.ProjectIssueNoteClient.ProjectIssueNoteClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
 NGitLab.Impl.ProjectJobTokenScopeClient
-NGitLab.Impl.ProjectJobTokenScopeClient.GetProjectJobTokenScope(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.JobTokenScope>
-NGitLab.Impl.ProjectJobTokenScopeClient.UpdateProjectJobTokenScope(NGitLab.Models.JobTokenScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.Impl.ProjectJobTokenScopeClient.GetProjectJobTokenScopeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.JobTokenScope>
+NGitLab.Impl.ProjectJobTokenScopeClient.UpdateProjectJobTokenScopeAsync(NGitLab.Models.JobTokenScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.ProjectLevelApprovalRulesClient
 NGitLab.Impl.ProjectLevelApprovalRulesClient.CreateProjectLevelRule(NGitLab.Models.ApprovalRuleCreate approvalRuleCreate) -> NGitLab.Models.ApprovalRule
 NGitLab.Impl.ProjectLevelApprovalRulesClient.DeleteProjectLevelRule(long approvalRuleIdToDelete) -> void
@@ -1090,8 +1090,8 @@ NGitLab.IProjectIssueNoteClient.Edit(NGitLab.Models.ProjectIssueNoteEdit edit) -
 NGitLab.IProjectIssueNoteClient.ForIssue(long issueId) -> System.Collections.Generic.IEnumerable<NGitLab.Models.ProjectIssueNote>
 NGitLab.IProjectIssueNoteClient.Get(long issueId, long noteId) -> NGitLab.Models.ProjectIssueNote
 NGitLab.IProjectJobTokenScopeClient
-NGitLab.IProjectJobTokenScopeClient.GetProjectJobTokenScope(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.JobTokenScope>
-NGitLab.IProjectJobTokenScopeClient.UpdateProjectJobTokenScope(NGitLab.Models.JobTokenScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.IProjectJobTokenScopeClient.GetProjectJobTokenScopeAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.JobTokenScope>
+NGitLab.IProjectJobTokenScopeClient.UpdateProjectJobTokenScopeAsync(NGitLab.Models.JobTokenScope scope, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IProjectLevelApprovalRulesClient
 NGitLab.IProjectLevelApprovalRulesClient.CreateProjectLevelRule(NGitLab.Models.ApprovalRuleCreate approvalRuleCreate) -> NGitLab.Models.ApprovalRule
 NGitLab.IProjectLevelApprovalRulesClient.DeleteProjectLevelRule(long approvalRuleIdToDelete) -> void

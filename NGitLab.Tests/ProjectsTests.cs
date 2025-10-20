@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using NGitLab.Extensions;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
+using NuGet.Versioning;
 using NUnit.Framework;
 
 namespace NGitLab.Tests;
@@ -796,16 +797,19 @@ public class ProjectsTests
     {
         // Arrange
         using var context = await GitLabTestContext.CreateAsync();
+
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[16.1,)"));
+
         var project = context.CreateProject();
         var gitLabClient = context.Client;
         var jobTokenScopeClient = gitLabClient.GetProjectJobTokenScopeClient(project.Id);
 
         // Act/Assert
-        var scope = await jobTokenScopeClient.GetProjectJobTokenScope(CancellationToken.None);
+        var scope = await jobTokenScopeClient.GetProjectJobTokenScopeAsync(CancellationToken.None);
         Assert.That(scope.InboundEnabled, Is.True);
 
-        await jobTokenScopeClient.UpdateProjectJobTokenScope(new JobTokenScope { InboundEnabled = false }, CancellationToken.None);
-        scope = await jobTokenScopeClient.GetProjectJobTokenScope(CancellationToken.None);
+        await jobTokenScopeClient.UpdateProjectJobTokenScopeAsync(new JobTokenScope { InboundEnabled = false }, CancellationToken.None);
+        scope = await jobTokenScopeClient.GetProjectJobTokenScopeAsync(CancellationToken.None);
         Assert.That(scope.InboundEnabled, Is.False);
     }
 }
