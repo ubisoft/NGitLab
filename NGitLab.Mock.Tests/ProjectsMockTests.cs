@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Mock.Config;
 using NGitLab.Models;
@@ -423,5 +424,28 @@ public class ProjectsMockTests
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task GetAndSetProjectJobTokenScope()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProject("Test", @namespace: "testgroup", addDefaultUserAsMaintainer: true)
+            .BuildServer();
+
+        var gitLabClient = server.CreateClient();
+        var project = gitLabClient.Projects["testgroup/Test"];
+
+        var jobTokenScopeClient = gitLabClient.GetProjectJobTokenScopeClient(project.Id);
+
+        // Act/Assert
+        var scope = await jobTokenScopeClient.GetProjectJobTokenScopeAsync(CancellationToken.None);
+        Assert.That(scope.InboundEnabled, Is.True);
+
+        await jobTokenScopeClient.UpdateProjectJobTokenScopeAsync(new JobTokenScope { InboundEnabled = false }, CancellationToken.None);
+        scope = await jobTokenScopeClient.GetProjectJobTokenScopeAsync(CancellationToken.None);
+        Assert.That(scope.InboundEnabled, Is.False);
     }
 }
