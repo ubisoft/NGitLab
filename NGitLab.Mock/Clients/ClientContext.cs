@@ -1,43 +1,21 @@
 ﻿using System;
-using System.Threading;
+using NeoSmart.AsyncLock;
 
 namespace NGitLab.Mock.Clients;
 
-internal sealed class ClientContext
+internal sealed class ClientContext(GitLabServer server, User user)
 {
-    private readonly object _operationLock = new();
+    private readonly AsyncLock _operationLock = new();
 
-    public ClientContext(GitLabServer server, User user)
-    {
-        Server = server;
-        User = user;
-    }
+    public GitLabServer Server { get; } = server;
 
-    public GitLabServer Server { get; }
+    public User User { get; } = user;
 
-    public User User { get; }
-
-    public bool IsAuthenticated => User != null;
+    public bool IsAuthenticated => User is not null;
 
     public IDisposable BeginOperationScope()
     {
         Server.RaiseOnClientOperation();
-        Monitor.Enter(_operationLock);
-        return new Releaser(_operationLock);
-    }
-
-    private sealed class Releaser : IDisposable
-    {
-        private readonly object _operationLock;
-
-        public Releaser(object operationLock)
-        {
-            _operationLock = operationLock;
-        }
-
-        public void Dispose()
-        {
-            Monitor.Exit(_operationLock);
-        }
+        return _operationLock.Lock();
     }
 }

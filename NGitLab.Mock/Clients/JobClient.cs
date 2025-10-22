@@ -62,30 +62,38 @@ internal sealed class JobClient : ClientBase, IJobClient
 
     public IEnumerable<Models.Job> GetJobs(JobScopeMask scope)
     {
-        return GetJobs(new JobQuery { Scope = scope });
+        using (Context.BeginOperationScope())
+        {
+            return GetJobsLockless(new JobQuery { Scope = scope });
+        }
     }
 
     public IEnumerable<Models.Job> GetJobs(JobQuery query)
     {
         using (Context.BeginOperationScope())
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
-
-            if (query.Scope == JobScopeMask.All)
-                return project.Jobs.Select(j => j.ToJobClient());
-
-            var scopes = new List<string>();
-            foreach (Enum value in Enum.GetValues(query.Scope.GetType()))
-            {
-                if (query.Scope.HasFlag(value))
-                {
-                    scopes.Add(value.ToString());
-                }
-            }
-
-            var jobs = project.Jobs.Where(j => scopes.Exists(scope => string.Equals(j.Status.ToString(), scope, StringComparison.OrdinalIgnoreCase)));
-            return jobs.Select(j => j.ToJobClient()).ToList();
+            return GetJobsLockless(query);
         }
+    }
+
+    internal IEnumerable<Models.Job> GetJobsLockless(JobQuery query)
+    {
+        var project = GetProject(_projectId, ProjectPermission.View);
+
+        if (query.Scope == JobScopeMask.All)
+            return project.Jobs.Select(j => j.ToJobClient());
+
+        var scopes = new List<string>();
+        foreach (Enum value in Enum.GetValues(query.Scope.GetType()))
+        {
+            if (query.Scope.HasFlag(value))
+            {
+                scopes.Add(value.ToString());
+            }
+        }
+
+        var jobs = project.Jobs.Where(j => scopes.Exists(scope => string.Equals(j.Status.ToString(), scope, StringComparison.OrdinalIgnoreCase)));
+        return jobs.Select(j => j.ToJobClient()).ToList();
     }
 
     public GitLabCollectionResponse<Models.Job> GetJobsAsync(JobQuery query)

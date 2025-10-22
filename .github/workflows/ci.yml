@@ -27,11 +27,11 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0 # Get all the history so MinGit can compute the version
       - name: Set up latest .NET 8.0
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
       - run: dotnet pack NGitLab.sln --configuration Release --output ${{env.NuGetDirectory}} /bl
@@ -54,12 +54,11 @@ jobs:
       TestResultsDirectory: ${{github.workspace}}/TestResults
     strategy:
       matrix:
-        # Keep in sync with the version in GitLabDockerContainer.cs
-        # Available tags: https://hub.docker.com/r/gitlab/gitlab-ee/tags
         gitlab:
-          - "gitlab/gitlab-ee:15.11.9-ee.0"
-          - "gitlab/gitlab-ee:16.11.4-ee.0"
-          - "gitlab/gitlab-ee:17.0.2-ee.0"
+          # Keep in sync with the version in GitLabDockerContainer.cs
+          # Available tags: https://hub.docker.com/r/gitlab/gitlab-ee/tags?name=-ee.0
+          - "gitlab/gitlab-ee:16.11.10-ee.0"
+          - "gitlab/gitlab-ee:17.1.8-ee.0"
         configuration: [Release]
       fail-fast: false
     services:
@@ -72,9 +71,9 @@ jobs:
           GITLAB_ROOT_PASSWORD: "Pa$$w0rd"
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up latest .NET 8.0
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
       - name: Set artifact name
@@ -108,12 +107,12 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: nuget
           path: ${{env.NuGetDirectory}}
       - name: Set up latest .NET 8.0
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "8.0.x"
       - name: Publish NuGet packages

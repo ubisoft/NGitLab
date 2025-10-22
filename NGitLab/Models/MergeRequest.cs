@@ -75,6 +75,7 @@ public class MergeRequest
     [JsonPropertyName("merge_when_pipeline_succeeds")]
     public bool MergeWhenPipelineSucceeds { get; set; }
 
+    [Obsolete("Deprecated in GitLab 15.6. Use DetailedMergeStatus instead.")]
     [JsonPropertyName("merge_status")]
     public string MergeStatus { get; set; }
 

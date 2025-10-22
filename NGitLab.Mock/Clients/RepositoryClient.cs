@@ -142,28 +142,33 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
     {
         using (Context.BeginOperationScope())
         {
-            var project = GetProject(_projectId, ProjectPermission.View);
-            var treeChanges = project.Repository.Compare(query.From, query.To);
-            return new CompareResults()
-            {
-                Diff = treeChanges.Select(change
-                    => new Diff()
-                    {
-                        NewPath = change.Path,
-                        OldPath = change.OldPath,
-                        IsNewFile = change.Status is ChangeKind.Added,
-                        IsDeletedFile = change.Status is ChangeKind.Deleted,
-                        IsRenamedFile = change.Status is ChangeKind.Renamed,
-                    }).ToArray(),
-            };
+            return CompareLockless(query);
         }
+    }
+
+    private CompareResults CompareLockless(CompareQuery query)
+    {
+        var project = GetProject(_projectId, ProjectPermission.View);
+        var treeChanges = project.Repository.Compare(query.From, query.To);
+        return new CompareResults()
+        {
+            Diff = treeChanges.Select(change
+                => new Diff()
+                {
+                    NewPath = change.Path,
+                    OldPath = change.OldPath,
+                    IsNewFile = change.Status is ChangeKind.Added,
+                    IsDeletedFile = change.Status is ChangeKind.Deleted,
+                    IsRenamedFile = change.Status is ChangeKind.Renamed,
+                }).ToArray(),
+        };
     }
 
     public Task<CompareResults> CompareAsync(CompareQuery query, CancellationToken cancellationToken = default)
     {
         using (Context.BeginOperationScope())
         {
-            return Task.FromResult(Compare(query));
+            return Task.FromResult(CompareLockless(query));
         }
     }
 }

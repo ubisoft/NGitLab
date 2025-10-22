@@ -315,10 +315,10 @@ public sealed class GitLabTestContext : IDisposable
         return NuGetVersion.TryParse(gitLabVersion, out var nuGetVersion) && nuGetVersion.Major == major;
     }
 
-    public void ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange versionRange)
+    public void IgnoreTestIfGitLabVersionOutOfRange(VersionRange versionRange)
     {
         if (!IsGitLabVersionInRange(versionRange, out var gitLabVersion))
-            Assert.Inconclusive($"Test supported by GitLab '{versionRange}', but currently running against '{gitLabVersion}'");
+            Assert.Ignore($"Test supported by GitLab '{versionRange}', but currently running against '{gitLabVersion}'");
     }
 
     private IGitLabClient CreateClient(string token)

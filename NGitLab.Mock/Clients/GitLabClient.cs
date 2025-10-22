@@ -3,14 +3,9 @@ using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients;
 
-internal sealed class GitLabClient : ClientBase, IGitLabClient
+internal sealed class GitLabClient(ClientContext context) : ClientBase(context), IGitLabClient
 {
     private IGraphQLClient _graphQLClient;
-
-    public GitLabClient(ClientContext context)
-        : base(context)
-    {
-    }
 
     public IGroupsClient Groups => new GroupClient(Context);
 
@@ -110,4 +105,6 @@ internal sealed class GitLabClient : ClientBase, IGitLabClient
     public ISearchClient GetProjectSearchClient(ProjectId projectId) => new ProjectSearchClient(Context, projectId);
 
     public IGroupHooksClient GetGroupHooksClient(GroupId groupId) => new GroupHooksClient(Context, groupId);
+
+    public IProjectJobTokenScopeClient GetProjectJobTokenScopeClient(ProjectId projectId) => new ProjectJobTokenScopeClient(Context, projectId);
 }
