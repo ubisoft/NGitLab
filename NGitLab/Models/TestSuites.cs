@@ -9,7 +9,7 @@ public class TestSuites
     public string Name { get; set; }
 
     [JsonPropertyName("total_time")]
-    public int TotalTime { get; set; }
+    public double TotalTime { get; set; }
 
     [JsonPropertyName("total_count")]
     public int TotalCount { get; set; }
