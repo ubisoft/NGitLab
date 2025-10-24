@@ -13,8 +13,11 @@ public class TestCases
     [JsonPropertyName("classname")]
     public string Classname { get; set; }
 
+    [JsonPropertyName("file")]
+    public string File { get; set; }
+
     [JsonPropertyName("execution_time")]
-    public int ExecutionTime { get; set; }
+    public double ExecutionTime { get; set; }
 
     [JsonPropertyName("system_output")]
     public string SystemOutput { get; set; }
