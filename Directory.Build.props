@@ -18,6 +18,7 @@
     <!-- Package info -->
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>GitLab REST API Client</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
