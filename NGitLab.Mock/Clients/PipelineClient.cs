@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Impl;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
 
@@ -186,7 +187,7 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
 
             if (query.Name != null)
             {
-                pipelines = pipelines.Where(pipeline => string.Equals(pipeline.User.Name, query.Name, StringComparison.Ordinal));
+                pipelines = pipelines.Where(pipeline => string.Equals(pipeline.Name, query.Name, StringComparison.Ordinal));
             }
 
             if (query.Ref != null)
@@ -196,30 +197,15 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
 
             if (query.Scope.HasValue)
             {
-                if (query.Scope.Value == PipelineScope.tags)
+                pipelines = query.Scope.Value switch
                 {
-                    pipelines = pipelines.Where(p => p.Tag);
-                }
-                else if (query.Scope.Value == PipelineScope.branches)
-                {
-                    pipelines = pipelines.Where(p => !p.Tag);
-                }
-                else if (query.Scope.Value == PipelineScope.running)
-                {
-                    pipelines = pipelines.Where(p => p.Status == JobStatus.Running);
-                }
-                else if (query.Scope.Value == PipelineScope.pending)
-                {
-                    pipelines = pipelines.Where(p => p.Status == JobStatus.Pending);
-                }
-                else if (query.Scope.Value == PipelineScope.finished)
-                {
-                    pipelines = pipelines.Where(p => p.FinishedAt.HasValue);
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
+                    PipelineScope.tags => pipelines.Where(p => p.Tag),
+                    PipelineScope.branches => pipelines.Where(p => !p.Tag),
+                    PipelineScope.running => pipelines.Where(p => p.Status == JobStatus.Running),
+                    PipelineScope.pending => pipelines.Where(p => p.Status == JobStatus.Pending),
+                    PipelineScope.finished => pipelines.Where(p => p.FinishedAt.HasValue),
+                    _ => throw new NotImplementedException(),
+                };
             }
 
             if (query.Status.HasValue)
@@ -235,6 +221,22 @@ internal sealed class PipelineClient : ClientBase, IPipelineClient
             if (query.YamlErrors.HasValue)
             {
                 pipelines = pipelines.Where(pipeline => !string.IsNullOrEmpty(pipeline.YamlError));
+            }
+
+            if (query.UpdatedAfter.HasValue)
+            {
+                pipelines = pipelines.Where(pipeline => pipeline.UpdatedAt > query.UpdatedAfter);
+            }
+
+            if (query.UpdatedBefore.HasValue)
+            {
+                pipelines = pipelines.Where(pipeline => pipeline.UpdatedAt < query.UpdatedBefore);
+            }
+
+            if (query.Source.HasValue)
+            {
+                var source = Utils.ToValueString(query.Source.Value);
+                pipelines = pipelines.Where(pipeline => string.Equals(pipeline.Source, source, StringComparison.Ordinal));
             }
 
             if (query.OrderBy.HasValue)
