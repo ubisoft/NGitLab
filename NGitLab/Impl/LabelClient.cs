@@ -51,12 +51,6 @@ public class LabelClient : ILabelClient
         return ForProject(projectId, new LabelQuery() { Search = name }).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
     }
 
-    [Obsolete("Use GetProjectLabel instead")]
-    public Label GetLabel(long projectId, string name)
-    {
-        return GetProjectLabel(projectId, name);
-    }
-
     public Label GetGroupLabel(long groupId, string name)
     {
         return ForGroup(groupId, new LabelQuery() { Search = name }).FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
@@ -65,17 +59,6 @@ public class LabelClient : ILabelClient
     public Label CreateProjectLabel(long projectId, ProjectLabelCreate label)
     {
         return _api.Post().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId));
-    }
-
-    [Obsolete("Use CreateProjectLabel instead")]
-    public Label Create(LabelCreate label)
-    {
-        return CreateProjectLabel(label.Id, new ProjectLabelCreate
-        {
-            Name = label.Name,
-            Color = label.Color,
-            Description = label.Description,
-        });
     }
 
     public Label CreateGroupLabel(long groupId, GroupLabelCreate label)
@@ -97,18 +80,6 @@ public class LabelClient : ILabelClient
     public Label EditProjectLabel(long projectId, ProjectLabelEdit label)
     {
         return _api.Put().With(label).To<Label>(string.Format(CultureInfo.InvariantCulture, ProjectLabelUrl, projectId));
-    }
-
-    [Obsolete("Use EditProjectLabel instead")]
-    public Label Edit(LabelEdit label)
-    {
-        return EditProjectLabel(label.Id, new ProjectLabelEdit
-        {
-            Name = label.Name,
-            NewName = label.NewName,
-            Color = label.Color,
-            Description = label.Description,
-        });
     }
 
     public Label EditGroupLabel(long groupId, GroupLabelEdit label)
@@ -144,16 +115,6 @@ public class LabelClient : ILabelClient
     public Task DeleteProjectLabelAsync(long projectId, string labelName, CancellationToken cancellationToken = default)
     {
         return _api.Delete().ExecuteAsync($"/projects/{projectId.ToStringInvariant()}/labels/{labelName}", cancellationToken);
-    }
-
-    [Obsolete("Use DeleteProjectLabelAsync instead")]
-    public Label Delete(LabelDelete label)
-    {
-        return DeleteProjectLabel(label.Id, new ProjectLabelDelete
-        {
-            Id = label.Id,
-            Name = label.Name,
-        });
     }
 
     private static string AddLabelParameterQuery(string url, LabelQuery query)
