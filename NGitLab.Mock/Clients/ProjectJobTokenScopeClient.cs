@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -8,7 +7,7 @@ namespace NGitLab.Mock.Clients;
 
 internal sealed class ProjectJobTokenScopeClient : ClientBase, IProjectJobTokenScopeClient
 {
-    private static Dictionary<long, JobTokenScope> _projectScopes = [];
+    private static readonly Dictionary<long, JobTokenScope> s_projectScopes = [];
 
     private readonly long _projectId;
 
@@ -16,11 +15,11 @@ internal sealed class ProjectJobTokenScopeClient : ClientBase, IProjectJobTokenS
         : base(context)
     {
         _projectId = Server.AllProjects.FindProject(projectId.ValueAsString()).Id;
-        lock (_projectScopes)
+        lock (s_projectScopes)
         {
-            if (!_projectScopes.ContainsKey(_projectId))
+            if (!s_projectScopes.ContainsKey(_projectId))
             {
-                _projectScopes[_projectId] = new JobTokenScope
+                s_projectScopes[_projectId] = new JobTokenScope
                 {
                     InboundEnabled = true,
                 };
@@ -31,18 +30,18 @@ internal sealed class ProjectJobTokenScopeClient : ClientBase, IProjectJobTokenS
     public async Task<JobTokenScope> GetProjectJobTokenScopeAsync(CancellationToken cancellationToken = default)
     {
         await Task.Yield();
-        lock (_projectScopes)
+        lock (s_projectScopes)
         {
-            return _projectScopes[_projectId];
+            return s_projectScopes[_projectId];
         }
     }
 
     public async Task UpdateProjectJobTokenScopeAsync(JobTokenScope scope, CancellationToken cancellationToken = default)
     {
         await Task.Yield();
-        lock (_projectScopes)
+        lock (s_projectScopes)
         {
-            _projectScopes[_projectId] = scope;
+            s_projectScopes[_projectId] = scope;
         }
     }
 }

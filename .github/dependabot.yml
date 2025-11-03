@@ -54,3 +54,6 @@ updates:
           - "*NUnit*"
         exclude-patterns:
           - "NUnit.Analyzers"
+      misc-dependencies:
+        patterns:
+          - "*"
