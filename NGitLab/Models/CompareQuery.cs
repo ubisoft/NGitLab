@@ -3,17 +3,17 @@
 /// <summary>
 /// Query details for comparison of branches/tags/commit hashes
 /// </summary>
-public class CompareQuery(string source, string target)
+public class CompareQuery(string from, string to)
 {
     /// <summary>
     /// The most recent reference for comparison, can be a branch, tag or a commit hash.
     /// </summary>
-    public string From { get; set; } = source;
+    public string From { get; set; } = from;
 
     /// <summary>
     /// The reference to compare against, can be a branch, tag or a commit hash.
     /// </summary>
-    public string To { get; set; } = target;
+    public string To { get; set; } = to;
 
     /// <summary>
     /// Comparison method: true for direct comparison between from and to (from..to), false to compare using merge base (from…to)’. Default is false.

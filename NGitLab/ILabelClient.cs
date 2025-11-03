@@ -45,9 +45,6 @@ public interface ILabelClient
     /// <returns></returns>
     Label GetProjectLabel(long projectId, string name);
 
-    [Obsolete("Use GetProjectLabel instead")]
-    Label GetLabel(long projectId, string name);
-
     /// <summary>
     /// Return a specified label from the group or null;
     /// </summary>
@@ -63,9 +60,6 @@ public interface ILabelClient
     /// <param name="label"></param>
     /// <returns></returns>
     Label CreateProjectLabel(long projectId, ProjectLabelCreate label);
-
-    [Obsolete("Use CreateProjectLabel instead")]
-    Label Create(LabelCreate label);
 
     /// <summary>
     /// Create a new label for a group.
@@ -85,9 +79,6 @@ public interface ILabelClient
     /// <param name="label"></param>
     /// <returns></returns>
     Label EditProjectLabel(long projectId, ProjectLabelEdit label);
-
-    [Obsolete("Use EditProjectLabel instead")]
-    Label Edit(LabelEdit label);
 
     /// <summary>
     /// Edit the contents of an existing label.
@@ -118,7 +109,4 @@ public interface ILabelClient
     /// <param name="labelName">Label Name</param>
     [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
     Task DeleteProjectLabelAsync(long projectId, string labelName, CancellationToken cancellationToken = default);
-
-    [Obsolete("Use DeleteProjectLabelAsync instead")]
-    Label Delete(LabelDelete label);
 }
