@@ -1256,8 +1256,10 @@ NGitLab.Models.AccessLevel.Admin = 60 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Developer = 30 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Guest = 10 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Maintainer = 40 -> NGitLab.Models.AccessLevel
+NGitLab.Models.AccessLevel.MinimalAccess = 5 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.NoAccess = 0 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Owner = 50 -> NGitLab.Models.AccessLevel
+NGitLab.Models.AccessLevel.Planner = 15 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevel.Reporter = 20 -> NGitLab.Models.AccessLevel
 NGitLab.Models.AccessLevelControl
 NGitLab.Models.AccessLevelControl.AccessLevel.get -> NGitLab.Models.AccessLevel
