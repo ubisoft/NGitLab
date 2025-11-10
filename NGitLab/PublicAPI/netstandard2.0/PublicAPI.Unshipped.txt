@@ -1775,6 +1775,7 @@ NGitLab.Models.DetailedMergeStatus.DiscussionsNotResolved = 6 -> NGitLab.Models.
 NGitLab.Models.DetailedMergeStatus.DraftStatus = 7 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.ExternalStatusChecks = 8 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.Mergeable = 9 -> NGitLab.Models.DetailedMergeStatus
+NGitLab.Models.DetailedMergeStatus.MergeRequestBlocked = 14 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.NotApproved = 10 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.NotOpen = 11 -> NGitLab.Models.DetailedMergeStatus
 NGitLab.Models.DetailedMergeStatus.PoliciesDenied = 12 -> NGitLab.Models.DetailedMergeStatus

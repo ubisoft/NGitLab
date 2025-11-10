@@ -40,4 +40,6 @@ public enum DetailedMergeStatus
     PoliciesDenied,
     [EnumMember(Value = "preparing")]
     Preparing,
+    [EnumMember(Value = "merge_request_blocked")]
+    MergeRequestBlocked,
 }
