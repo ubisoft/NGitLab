@@ -57,3 +57,12 @@ updates:
       misc-dependencies:
         patterns:
           - "*"
+        exclude-patterns:
+          - "*Analyzer*"
+          - "Microsoft.*"
+          - "System.*"
+          - "coverlet.collector"
+          - "Microsoft.NET.Test.Sdk"
+          - "Microsoft.Playwright"
+          - "NSubstitute"
+          - "*NUnit*"
