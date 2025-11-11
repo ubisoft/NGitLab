@@ -3452,6 +3452,8 @@ NGitLab.Models.PipelineQuery.Sha.get -> string
 NGitLab.Models.PipelineQuery.Sha.set -> void
 NGitLab.Models.PipelineQuery.Sort.get -> NGitLab.Models.PipelineSort?
 NGitLab.Models.PipelineQuery.Sort.set -> void
+NGitLab.Models.PipelineQuery.Source.get -> NGitLab.Models.PipelineSource?
+NGitLab.Models.PipelineQuery.Source.set -> void
 NGitLab.Models.PipelineQuery.Status.get -> NGitLab.JobStatus?
 NGitLab.Models.PipelineQuery.Status.set -> void
 NGitLab.Models.PipelineQuery.UpdatedAfter.get -> System.DateTimeOffset?
@@ -3497,6 +3499,26 @@ NGitLab.Models.PipelineScope.tags = 4 -> NGitLab.Models.PipelineScope
 NGitLab.Models.PipelineSort
 NGitLab.Models.PipelineSort.asc = 0 -> NGitLab.Models.PipelineSort
 NGitLab.Models.PipelineSort.desc = 1 -> NGitLab.Models.PipelineSort
+NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.Api = 5 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.Chat = 8 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.ContainerRegistryPush = 16 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.DuoWorkflow = 17 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.External = 6 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.ExternalPullRequestEvent = 11 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.PipelineExecutionPolicySchedule = 18 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.MergeRequestEvent = 10 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.OndemandDastScan = 13 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.OndemandDastValidation = 14 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.ParentPipeline = 12 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.Pipeline = 7 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.Push = 1 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.Schedule = 4 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.SecurityOrchestrationPolicy = 15 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.Trigger = 3 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.Unknown = 0 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.Web = 2 -> NGitLab.Models.PipelineSource
+NGitLab.Models.PipelineSource.WebIde = 9 -> NGitLab.Models.PipelineSource
 NGitLab.Models.PipelineVariable
 NGitLab.Models.PipelineVariable.Key.get -> string
 NGitLab.Models.PipelineVariable.Key.set -> void
