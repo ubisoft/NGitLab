@@ -14,6 +14,9 @@ public class Deployment
     [JsonPropertyName("ref")]
     public string Ref { get; set; }
 
+    [JsonPropertyName("sha")]
+    public Sha1 Sha { get; set; }
+
     [JsonPropertyName("environment")]
     public EnvironmentInfo Environment { get; set; }
 
@@ -25,4 +28,7 @@ public class Deployment
 
     [JsonPropertyName("updated_at")]
     public DateTime UpdatedAt { get; set; }
+
+    [JsonPropertyName("deployable")]
+    public Deployable Deployable { get; set; }
 }
