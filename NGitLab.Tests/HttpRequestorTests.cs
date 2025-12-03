@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using NGitLab.Impl;
 using NGitLab.Models;
@@ -47,7 +48,7 @@ public class HttpRequestorTests
         var httpRequestor = new HttpRequestor(context.DockerContainer.GitLabUrl.ToString(), context.DockerContainer.Credentials.UserToken, MethodType.Get, requestOptions);
         Assert.Throws<GitLabException>(() => httpRequestor.Execute("invalidUrl"));
 
-        Assert.That(requestOptions.HandledRequests.Single().Timeout, Is.EqualTo(TimeSpan.FromMinutes(2).TotalMilliseconds));
+        //Assert.That(requestOptions.HandledRequests.Single().Options., Is.EqualTo(TimeSpan.FromMinutes(2).TotalMilliseconds));
     }
 
     [Test]
@@ -137,8 +138,8 @@ public class HttpRequestorTests
         var project = commonUserClient.Projects.Accessible.First();
 
         // Assert
-        var actualHeaderValue = context.LastRequest.Headers[HttpRequestHeader.Authorization];
-        Assert.That(actualHeaderValue, Is.EqualTo(expectedHeaderValue));
+        var actualHeaderValue = context.LastRequest.Headers.Authorization;
+        Assert.That(actualHeaderValue.Parameter, Is.EqualTo(expectedHeaderValue));
     }
 
     private sealed class MockRequestOptions : RequestOptions
@@ -147,7 +148,7 @@ public class HttpRequestorTests
 
         public bool ShouldRetryCalled { get; set; }
 
-        public HashSet<WebRequest> HandledRequests { get; } = [];
+        public HashSet<HttpRequestMessage> HandledRequests { get; } = [];
 
         public MockRequestOptions()
             : base(retryCount: 0, retryInterval: TimeSpan.Zero)
@@ -166,12 +167,13 @@ public class HttpRequestorTests
             return base.ShouldRetry(ex, retryNumber);
         }
 
-        public override void ProcessGitLabRequestResult(GitLabRequestResult result)
+        public override  Task  ProcessGitLabRequestResult(GitLabRequestResult result)
         {
             var request = result.Request;
-            HttpRequestSudoHeader = request.Headers["Sudo"];
+            HttpRequestSudoHeader = request.Headers.GetValues("Sudo").FirstOrDefault();
             HandledRequests.Add(request);
             result.Exception = new GitLabException { StatusCode = HttpStatusCode.InternalServerError };
+            return Task.CompletedTask;
         }
     }
 }

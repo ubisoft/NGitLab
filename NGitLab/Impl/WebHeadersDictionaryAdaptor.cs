@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 
 namespace NGitLab.Impl;
 
@@ -18,6 +19,19 @@ internal sealed class WebHeadersDictionaryAdaptor : IReadOnlyDictionary<string, 
     public WebHeadersDictionaryAdaptor(WebHeaderCollection headers)
     {
         _headers = headers ?? throw new ArgumentNullException(nameof(headers));
+    }
+
+    public WebHeadersDictionaryAdaptor(HttpResponseHeaders headers)
+    {
+        _headers = new WebHeaderCollection();
+        var tmp = headers ?? throw new ArgumentNullException(nameof(headers));
+        foreach (var header in tmp)
+        {
+            foreach (var value in header.Value)
+            {
+                _headers.Add(header.Key, value);
+            }
+        }
     }
 
     public int Count => _headers.Count;

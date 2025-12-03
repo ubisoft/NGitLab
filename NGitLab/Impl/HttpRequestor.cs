@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Extensions;
 using NGitLab.Impl.Json;
 using NGitLab.Models;
 
@@ -213,8 +215,7 @@ public partial class HttpRequestor : IHttpRequestor
                 using (var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false))
                 {
                     nextUrlToLoad = GetNextPageUrl(response);
-
-                    using var stream = response.GetResponseStream();
+                    using var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
                     responseText = await ReadTextAsync(stream).ConfigureAwait(false);
                 }
 
@@ -234,8 +235,7 @@ public partial class HttpRequestor : IHttpRequestor
                 using (var response = request.GetResponse(_options))
                 {
                     nextUrlToLoad = GetNextPageUrl(response);
-
-                    using var stream = response.GetResponseStream();
+                    using var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
                     responseText = ReadText(stream);
                 }
 
@@ -245,11 +245,10 @@ public partial class HttpRequestor : IHttpRequestor
             }
         }
 
-        private static Uri GetNextPageUrl(WebResponse response)
+        private static Uri GetNextPageUrl(HttpResponseMessage response)
         {
             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
-            var link = response.Headers["Link"] ?? response.Headers["Links"];
-
+            var link = response.Headers.FirstOrDefault(f => string.Equals(f.Key, "Link", StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
             string[] nextLink = null;
             if (!string.IsNullOrEmpty(link))
             {
