@@ -4,7 +4,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,12 +20,12 @@ namespace NGitLab.Tests.Docker;
 /// </summary>
 internal sealed class GitLabTestContextRequestOptions : RequestOptions
 {
-    private readonly List<WebRequest> _allRequests = [];
+    private readonly List<HttpRequestMessage> _allRequests = [];
     private static readonly SemaphoreSlim s_semaphoreSlim = new(1, 1);
 
-    private readonly ConcurrentDictionary<WebRequest, LoggableRequestStream> _pendingRequest = new();
+    private readonly ConcurrentDictionary<HttpRequestMessage, LoggableRequestStream> _pendingRequest = new();
 
-    public IReadOnlyList<WebRequest> AllRequests => _allRequests;
+    public IReadOnlyList<HttpRequestMessage> AllRequests => _allRequests;
 
     public GitLabTestContextRequestOptions()
         : base(retryCount: 0, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
@@ -30,7 +33,7 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
         UserAgent = "NGitLab.Tests/1.0.0";
     }
 
-    public override void ProcessGitLabRequestResult(GitLabRequestResult result)
+    public override Task ProcessGitLabRequestResult(GitLabRequestResult result)
     {
         var request = result.Request;
         lock (_allRequests)
@@ -38,26 +41,27 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
             _allRequests.Add(request);
         }
 
-        WebResponse response = result.Response;
+        HttpResponseMessage response = result.Response;
         try
         {
-            if (result.Exception is WebException exception)
+            if (result.Exception is HttpRequestException exception)
             {
-                response = exception.Response;
-                if (response is HttpWebResponse webResponse)
-                {
-                    response = new LoggableHttpWebResponse(webResponse);
-                    result.Exception = new WebException(exception.Message, exception, exception.Status, response);
-                }
+                //response = exception.Response;
+                //if (response is HttpResponseMessage webResponse)
+                //{
+                //    response = new LoggableHttpWebResponse(webResponse);
+                //    result.Exception = new WebException(exception.Message, exception, exception.Status, response);
+                //}
             }
         }
         finally
         {
             result.Response = LogRequest(request, response);
         }
+        return Task.CompletedTask;
     }
 
-    private WebResponse LogRequest(HttpWebRequest request, WebResponse response)
+    private HttpResponseMessage LogRequest( HttpRequestMessage request, HttpResponseMessage response)
     {
         byte[] requestContent = null;
         if (_pendingRequest.TryRemove(request, out var requestStream))
@@ -75,7 +79,7 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
         {
             sb.AppendLine();
 
-            if (string.Equals(request.ContentType, "application/json", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(request.Content.Headers.ContentType.MediaType, "application/json", StringComparison.OrdinalIgnoreCase))
             {
                 sb.AppendLine(Encoding.UTF8.GetString(requestContent));
             }
@@ -91,29 +95,26 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
         {
             sb.AppendLine("----------");
 
-            if (response.ResponseUri != request.RequestUri)
-            {
-                sb.Append(request.RequestUri).AppendLine();
-            }
+        
 
-            if (response is HttpWebResponse webResponse)
+            if (response is HttpResponseMessage webResponse)
             {
                 sb.Append((int)webResponse.StatusCode).Append(' ').AppendLine(webResponse.StatusCode.ToString());
-                LogHeaders(sb, response.Headers);
-                if (string.Equals(webResponse.ContentType, "application/json", StringComparison.OrdinalIgnoreCase))
+                LogHeaders(sb,  response.Headers);
+                if (string.Equals(webResponse.Content.Headers.ContentType.MediaType, "application/json", StringComparison.OrdinalIgnoreCase))
                 {
                     // This response allows multiple reads, so NGitLab can also read the response
                     // AllowResponseBuffering does not seem to work for WebException.Response
                     response = new LoggableHttpWebResponse(webResponse);
                     sb.AppendLine();
-                    using var responseStream = response.GetResponseStream();
+                    using var responseStream = response.Content.ReadAsStream();
                     using var sr = new StreamReader(responseStream);
                     var responseText = sr.ReadToEnd();
                     sb.AppendLine(responseText);
                 }
                 else
                 {
-                    sb.Append("Binary data: ").Append(response.ContentLength).AppendLine(" bytes");
+                    sb.Append("Binary data: ").Append(response.Content).AppendLine(" bytes");
                 }
             }
         }
@@ -123,22 +124,56 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
         return response;
     }
 
-    internal override Stream GetRequestStream(HttpWebRequest request)
+    internal  Stream GetRequestStream(HttpRequestMessage request)
     {
-        var stream = new LoggableRequestStream(request.GetRequestStream());
+        var stream = new LoggableRequestStream(request.Content.ReadAsStream());
         _pendingRequest.AddOrUpdate(request, stream, (_, _) => stream);
         return stream;
     }
-
-    private static void LogHeaders(StringBuilder sb, WebHeaderCollection headers)
+    private static void LogHeaders(StringBuilder sb,  HttpRequestHeaders _headers)
     {
+        var headers = _headers.ToList();
         for (var i = 0; i < headers.Count; i++)
         {
-            var headerName = headers.GetKey(i);
+            var headerName = headers[i]!.Key ?? null;
             if (headerName == null)
                 continue;
 
-            var headerValues = headers.GetValues(i);
+            var headerValues = _headers.GetValues(headerName);
+            if (headerValues == null)
+                continue;
+
+            foreach (var headerValue in headerValues)
+            {
+                sb.Append(headerName).Append(": ");
+                if (string.Equals(headerName, "Private-Token", StringComparison.OrdinalIgnoreCase))
+                {
+                    sb.AppendLine("******");
+                }
+                else if (string.Equals(headerName, "Authorization", StringComparison.OrdinalIgnoreCase))
+                {
+                    const string BearerTokenPrefix = "Bearer ";
+                    if (headerValue.StartsWith(BearerTokenPrefix, StringComparison.Ordinal))
+                        sb.Append(BearerTokenPrefix);
+                    sb.AppendLine("******");
+                }
+                else
+                {
+                    sb.AppendLine(headerValue);
+                }
+            }
+        }
+    }
+    private static void LogHeaders(StringBuilder sb, HttpResponseHeaders _headers)
+    {
+        var headers = _headers.ToList();
+        for (var i = 0; i < headers.Count; i++)
+        {
+            var headerName = headers[i]!.Key ?? null;
+            if (headerName == null)
+                continue;
+
+            var headerValues = _headers.GetValues(headerName);
             if (headerValues == null)
                 continue;
 
@@ -164,42 +199,42 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
         }
     }
 
-    private sealed class LoggableHttpWebResponse : HttpWebResponse
+    private sealed class LoggableHttpWebResponse : HttpResponseMessage
     {
-        private readonly HttpWebResponse _innerWebResponse;
+        private readonly HttpResponseMessage _innerWebResponse;
         private byte[] _stream;
 
         [Obsolete("We have to use it")]
-        public LoggableHttpWebResponse(HttpWebResponse innerWebResponse)
+        public LoggableHttpWebResponse(HttpResponseMessage innerWebResponse)
         {
             _innerWebResponse = innerWebResponse;
         }
 
-        public override long ContentLength => _innerWebResponse.ContentLength;
+        //public override long ContentLength => _innerWebResponse.Cont;
 
-        public override string ContentType => _innerWebResponse.ContentType;
+        //public override string ContentType => _innerWebResponse.ContentType;
 
-        public override CookieCollection Cookies
-        {
-            get => _innerWebResponse.Cookies;
-            set => _innerWebResponse.Cookies = value;
-        }
+        //public override CookieCollection Cookies
+        //{
+        //    get => _innerWebResponse.Cookies;
+        //    set => _innerWebResponse.Cookies = value;
+        //}
 
-        public override WebHeaderCollection Headers => _innerWebResponse.Headers;
+        //public override WebHeaderCollection Headers => _innerWebResponse.Headers;
 
-        public override bool IsFromCache => _innerWebResponse.IsFromCache;
+        //public override bool IsFromCache => _innerWebResponse.IsFromCache;
 
-        public override bool IsMutuallyAuthenticated => _innerWebResponse.IsMutuallyAuthenticated;
+        //public override bool IsMutuallyAuthenticated => _innerWebResponse.IsMutuallyAuthenticated;
 
-        public override string Method => _innerWebResponse.Method;
+        //public override string Method => _innerWebResponse.Method;
 
-        public override Uri ResponseUri => _innerWebResponse.ResponseUri;
+        //public override Uri ResponseUri => _innerWebResponse.ResponseUri;
 
-        public override HttpStatusCode StatusCode => _innerWebResponse.StatusCode;
+        //public override HttpStatusCode StatusCode => _innerWebResponse.StatusCode;
 
-        public override string StatusDescription => _innerWebResponse.StatusDescription;
+        //public override string StatusDescription => _innerWebResponse.StatusDescription;
 
-        public override bool SupportsHeaders => _innerWebResponse.SupportsHeaders;
+        //public override bool SupportsHeaders => _innerWebResponse.SupportsHeaders;
 
         public override bool Equals(object obj)
         {
@@ -211,10 +246,10 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
             return _innerWebResponse.GetHashCode();
         }
 
-        public override void Close()
-        {
-            _innerWebResponse.Close();
-        }
+        //public override void Close()
+        //{
+        //    _innerWebResponse.Close();
+        //}
 
         protected override void Dispose(bool disposing)
         {
@@ -231,25 +266,25 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
             return _innerWebResponse.ToString();
         }
 
-        public override object InitializeLifetimeService()
-        {
-            return _innerWebResponse.InitializeLifetimeService();
-        }
+        //public override object InitializeLifetimeService()
+        //{
+        //    return _innerWebResponse.InitializeLifetimeService();
+        //}
 
-        public override Stream GetResponseStream()
-        {
-            if (_stream == null)
-            {
-                using var ms = new MemoryStream();
-                using var responseStream = _innerWebResponse.GetResponseStream();
-                responseStream.CopyTo(ms);
+        //public override Stream GetResponseStream()
+        //{
+        //    if (_stream == null)
+        //    {
+        //        using var ms = new MemoryStream();
+        //        using var responseStream = _innerWebResponse.GetResponseStream();
+        //        responseStream.CopyTo(ms);
 
-                _stream = ms.ToArray();
-            }
+        //        _stream = ms.ToArray();
+        //    }
 
-            var result = new MemoryStream(_stream);
-            return result;
-        }
+        //    var result = new MemoryStream(_stream);
+        //    return result;
+        //}
     }
 
     private sealed class LoggableRequestStream : Stream
