@@ -124,7 +124,7 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
         return response;
     }
 
-    internal  Stream GetRequestStream(HttpRequestMessage request)
+    internal  override  Stream GetRequestStream(HttpRequestMessage request)
     {
         var stream = new LoggableRequestStream(request.Content.ReadAsStream());
         _pendingRequest.AddOrUpdate(request, stream, (_, _) => stream);
@@ -202,7 +202,7 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
     private sealed class LoggableHttpWebResponse : HttpResponseMessage
     {
         private readonly HttpResponseMessage _innerWebResponse;
-        private byte[] _stream;
+      //  private byte[] _stream;
 
         [Obsolete("We have to use it")]
         public LoggableHttpWebResponse(HttpResponseMessage innerWebResponse)
