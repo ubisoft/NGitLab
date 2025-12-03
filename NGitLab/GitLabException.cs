@@ -26,13 +26,14 @@ public class GitLabException : Exception
     {
     }
 
+#if NET472
     protected GitLabException(
         SerializationInfo info,
         StreamingContext context)
         : base(info, context)
     {
     }
-
+#endif
     /// <summary>
     /// The error code returned from the server.
     /// </summary>
