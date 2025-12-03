@@ -76,9 +76,9 @@ public partial class HttpRequestor
             }
         }
 
-        public WebResponse GetResponse(RequestOptions options)
+        public HttpResponseMessage GetResponse(RequestOptions options)
         {
-            Func<WebResponse> getResponseImpl = () => GetResponseImpl(options);
+            Func<HttpResponseMessage> getResponseImpl = () => GetResponseImpl(options);
 
             return getResponseImpl.Retry(options.ShouldRetry,
                 options.RetryInterval,
@@ -86,9 +86,9 @@ public partial class HttpRequestor
                 options.IsIncremental);
         }
 
-        public Task<WebResponse> GetResponseAsync(RequestOptions options, CancellationToken cancellationToken)
+        public Task<HttpResponseMessage> GetResponseAsync(RequestOptions options, CancellationToken cancellationToken)
         {
-            Func<Task<WebResponse>> getResponseImpl = () => GetResponseImplAsync(options, cancellationToken);
+            Func<Task<HttpResponseMessage>> getResponseImpl = () => GetResponseImplAsync(options, cancellationToken);
 
             return getResponseImpl.RetryAsync(options.ShouldRetry,
                 options.RetryInterval,
@@ -96,13 +96,13 @@ public partial class HttpRequestor
                 options.IsIncremental);
         }
 
-        private WebResponse GetResponseImpl(RequestOptions options)
+        private HttpResponseMessage GetResponseImpl(RequestOptions options)
         {
             var result = new GitLabRequestResult();
             try
             {
                 result.Request = CreateRequest(options);
-                result.Response = result.Request.GetResponse();
+                result.Response = _httpClient.SendAsync(result.Request).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
@@ -116,13 +116,13 @@ public partial class HttpRequestor
             return result.Exception is not null ? throw result.Exception : result.Response;
         }
 
-        private async Task<WebResponse> GetResponseImplAsync(RequestOptions options, CancellationToken cancellationToken)
+        private async Task<HttpResponseMessage> GetResponseImplAsync(RequestOptions options, CancellationToken cancellationToken)
         {
             var result = new GitLabRequestResult();
             try
             {
                 result.Request = CreateRequest(options);
-                result.Response = await result.Request.GetResponseAsync().ConfigureAwait(false);
+                result.Response = await _httpClient.SendAsync(result.Request, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -165,20 +165,22 @@ public partial class HttpRequestor
             };
         }
 
-        private HttpWebRequest CreateRequest(RequestOptions options)
-        {
-            var request = WebRequest.CreateHttp(Url);
-            request.Method = Method.ToString().ToUpperInvariant();
-            request.Accept = "application/json";
-            request.Headers = Headers;
-            request.AutomaticDecompression = DecompressionMethods.GZip;
-            request.Timeout = (int)options.HttpClientTimeout.TotalMilliseconds;
-            request.ReadWriteTimeout = (int)options.HttpClientTimeout.TotalMilliseconds;
-            if (options.Proxy != null)
-            {
-                request.Proxy = options.Proxy;
-            }
+        private static HttpClient _httpClient = null;
 
+        private HttpRequestMessage CreateRequest(RequestOptions options)
+        {
+            if (_httpClient != null)
+            {
+                var handler = new HttpClientHandler
+                {
+                    AutomaticDecompression = DecompressionMethods.GZip,
+                    Proxy = options.Proxy,
+                    UseProxy = options.Proxy != null,
+                };
+                _httpClient = new HttpClient(handler);
+                _httpClient.Timeout = options.HttpClientTimeout;
+            }
+            var request = new HttpRequestMessage(new HttpMethod(Method.ToString().ToUpperInvariant()), Url);
             if (HasOutput)
             {
                 if (FormData != null)
@@ -196,29 +198,27 @@ public partial class HttpRequestor
             }
             else if (Method == MethodType.Put)
             {
-                request.ContentLength = 0;
+                //request.ContentLength = 0;
             }
 
             return request;
         }
 
-        private void AddJsonData(HttpWebRequest request, RequestOptions options)
+        private void AddJsonData(HttpRequestMessage request, RequestOptions options)
         {
-            request.ContentType = "application/json";
-
+            request.Content.Headers.ContentType.MediaType = "application/json";
             using var writer = new StreamWriter(options.GetRequestStream(request));
             writer.Write(JsonData);
             writer.Flush();
             writer.Close();
         }
 
-        public void AddFileData(HttpWebRequest request, RequestOptions options)
+        public void AddFileData(HttpRequestMessage request, RequestOptions options)
         {
             var boundary = $"--------------------------{DateTime.UtcNow.Ticks.ToStringInvariant()}";
             if (Data is not FormDataContent formData)
                 return;
-            request.ContentType = "multipart/form-data; boundary=" + boundary;
-
+            request.Content.Headers.ContentType.MediaType = "multipart/form-data; boundary=" + boundary;
             using var uploadContent = new MultipartFormDataContent(boundary)
             {
                 { new StreamContent(formData.Stream), "file", formData.Name },
@@ -227,10 +227,9 @@ public partial class HttpRequestor
             uploadContent.CopyToAsync(options.GetRequestStream(request)).Wait();
         }
 
-        public void AddUrlEncodedData(HttpWebRequest request, RequestOptions options)
+        public void AddUrlEncodedData(HttpRequestMessage request, RequestOptions options)
         {
-            request.ContentType = "application/x-www-form-urlencoded";
-
+            request.Content.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
             using var content = new FormUrlEncodedContent(UrlEncodedData.Values);
             content.CopyToAsync(options.GetRequestStream(request)).Wait();
         }

@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Net;
+using System.Net.Http;
 
 namespace NGitLab;
 
 public sealed class GitLabRequestResult
 {
-    public HttpWebRequest Request { get; set; }
+    public HttpRequestMessage Request { get; set; }
 
-    public WebResponse Response { get; set; }
+    public HttpResponseMessage   Response { get; set; }
 
     public Exception Exception { get; set; }
 }

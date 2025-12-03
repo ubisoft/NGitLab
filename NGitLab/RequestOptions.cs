@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using NGitLab.Impl;
 
 namespace NGitLab;
@@ -77,8 +78,13 @@ public class RequestOptions
     {
     }
 
-    internal virtual Stream GetRequestStream(HttpWebRequest request)
+    internal virtual Stream GetRequestStream(HttpRequestMessage request)
     {
-        return request.GetRequestStream();
+#if NET472  || NETSTANDARD2_0
+  return request.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
+#else
+        return request.Content.ReadAsStream();
+#endif
+
     }
 }

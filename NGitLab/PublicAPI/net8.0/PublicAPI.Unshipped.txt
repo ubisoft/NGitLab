@@ -5163,6 +5163,6 @@ virtual NGitLab.Impl.HttpRequestor.StreamAndHeadersAsync(string tailAPIUrl, Syst
 virtual NGitLab.Impl.HttpRequestor.StreamAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 virtual NGitLab.Impl.HttpRequestor.To<T>(string tailAPIUrl) -> T
 virtual NGitLab.Impl.HttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<T>
-virtual NGitLab.RequestOptions.GetResponse(System.Net.HttpWebRequest request) -> System.Net.WebResponse
-virtual NGitLab.RequestOptions.GetResponseAsync(System.Net.HttpWebRequest request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.WebResponse>
+virtual NGitLab.RequestOptions.GetResponse(System.Net.Http.HttpRequestMessage request) ->  System.Net.Http.HttpResponseMessage
+virtual NGitLab.RequestOptions.GetResponseAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage>
 virtual NGitLab.RequestOptions.ShouldRetry(System.Exception ex, int retryNumber) -> bool
