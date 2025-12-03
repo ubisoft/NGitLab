@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using NGitLab.Models;
 
 namespace NGitLab.Mock;
 
 public sealed class Job : GitLabObject
 {
+    public Job()
+    {
+        Artifacts = new JobArtifactCollection(this);
+    }
+
     public string Name { get; set; }
 
     public long Id { get; set; }
@@ -24,7 +30,9 @@ public sealed class Job : GitLabObject
 
     public double? Coverage { get; set; }
 
-    public Models.Job.JobArtifact Artifacts { get; set; }
+    public Models.Job.JobArtifact ArtifactsFile { get; set; }
+
+    public JobArtifactCollection Artifacts { get; set; }
 
     public Models.Job.JobRunner Runner { get; set; }
 
@@ -103,7 +111,8 @@ public sealed class Job : GitLabObject
             FinishedAt = FinishedAt,
             Stage = Stage,
             Coverage = Coverage,
-            Artifacts = Artifacts,
+            ArtifactsFile = ArtifactsFile,
+            Artifacts = [.. Artifacts.Select(mockArtifact => new Models.Job.JobArtifact { Filename = mockArtifact.Filename, Size = mockArtifact.Size })],
             Runner = Runner,
             Pipeline = new JobBasic.JobPipeline
             {
@@ -144,6 +153,7 @@ public sealed class Job : GitLabObject
             FinishedAt = FinishedAt,
             Stage = Stage,
             Coverage = Coverage,
+            ArtifactsFile = ArtifactsFile,
             Artifacts = Artifacts,
             Runner = Runner,
             Pipeline = Pipeline,

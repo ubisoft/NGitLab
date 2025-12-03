@@ -39,6 +39,8 @@ public interface IRepositoryClient
     /// </summary>
     IEnumerable<Commit> GetCommits(GetCommitsRequest request);
 
+    Task<Commit> GetMergeBaseAsync(string[] refs, CancellationToken cancellationToken = default);
+
     Commit GetCommit(Sha1 sha);
 
     IEnumerable<Diff> GetCommitDiff(Sha1 sha);

@@ -19,6 +19,16 @@ public sealed class PipelineCollection : Collection<Pipeline>
         return this.FirstOrDefault(pipeline => pipeline.Id == id);
     }
 
+    public Pipeline GetLatest(string @ref)
+    {
+        var branchName = string.IsNullOrWhiteSpace(@ref) ? _project.DefaultBranch : @ref;
+
+        return this
+            .Where(pipeline => string.Equals(pipeline.Ref, branchName, StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(pipeline => pipeline.CreatedAt)
+            .FirstOrDefault();
+    }
+
     public override void Add(Pipeline pipeline)
     {
         if (pipeline is null)

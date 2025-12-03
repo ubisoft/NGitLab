@@ -19,29 +19,22 @@ public class PipelineClient : IPipelineClient
     {
         _api = api;
         _projectPath = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
-        _pipelinesPath = $"{_projectPath}/pipelines";
+        _pipelinesPath = _projectPath + PipelineBasic.Url;
     }
 
     public IEnumerable<PipelineBasic> All => _api.Get().GetAll<PipelineBasic>(_pipelinesPath);
 
     public IEnumerable<Job> AllJobs => _api.Get().GetAll<Job>($"{_projectPath}/jobs");
 
+    public Task<Pipeline> GetLatestAsync(string @ref, CancellationToken cancellationToken = default)
+    {
+        var urlParameter = string.IsNullOrWhiteSpace(@ref) ? string.Empty : $"?ref={Uri.EscapeDataString(@ref)}";
+        return _api.Get().ToAsync<Pipeline>($"{_pipelinesPath}/latest{urlParameter}", cancellationToken);
+    }
+
     public GitLabCollectionResponse<Job> GetAllJobsAsync()
     {
         return _api.Get().GetAllAsync<Job>($"{_projectPath}/jobs");
-    }
-
-    [Obsolete("Use JobClient.GetJobs() instead")]
-    public IEnumerable<Job> GetJobsInProject(JobScope scope)
-    {
-        var url = $"{_projectPath}/jobs";
-
-        if (scope != JobScope.All)
-        {
-            url = Utils.AddParameter(url, "scope", scope.ToString().ToLowerInvariant());
-        }
-
-        return _api.Get().GetAll<Job>(url);
     }
 
     public Pipeline this[long id] => _api.Get().To<Pipeline>($"{_pipelinesPath}/{id.ToStringInvariant()}");
@@ -141,34 +134,24 @@ public class PipelineClient : IPipelineClient
         if (query == null)
             throw new ArgumentNullException(nameof(query));
 
-        var queryEntries = new Dictionary<string, string>(StringComparer.Ordinal);
-        if (query.Scope.HasValue)
-            queryEntries.Add("scope", query.Scope.Value.ToString());
+        var url = _pipelinesPath;
+        url = Utils.AddParameter(url, "scope", query.Scope);
         if (query.Status.HasValue)
-            queryEntries.Add("status", query.Status.Value.ToString().ToLowerInvariant());
-        if (!string.IsNullOrWhiteSpace(query.Ref))
-            queryEntries.Add("ref", query.Ref);
-        if (!string.IsNullOrWhiteSpace(query.Sha))
-            queryEntries.Add("sha", query.Sha);
-        if (query.YamlErrors.HasValue)
-            queryEntries.Add("yaml_errors", query.YamlErrors.Value.ToString());
-        if (!string.IsNullOrWhiteSpace(query.Name))
-            queryEntries.Add("name", query.Name);
-        if (!string.IsNullOrWhiteSpace(query.Username))
-            queryEntries.Add("username", query.Username);
-        if (query.UpdatedAfter.HasValue)
-            queryEntries.Add("updated_after", query.UpdatedAfter.Value.ToString("O"));
-        if (query.UpdatedBefore.HasValue)
-            queryEntries.Add("updated_before", query.UpdatedBefore.Value.ToString("O"));
-        if (query.OrderBy.HasValue)
-            queryEntries.Add("order_by", query.OrderBy.Value.ToString());
-        if (query.Sort.HasValue)
-            queryEntries.Add("sort", query.Sort.Value.ToString());
-        if (query.PerPage.HasValue)
-            queryEntries.Add("per_page", query.PerPage.Value.ToString());
+        {
+            url = Utils.AddParameter(url, "status", query.Status.Value.ToString().ToLowerInvariant());
+        }
 
-        var stringQuery = string.Join("&", queryEntries.Select(kp => $"{kp.Key}={kp.Value}"));
-        var url = $"{_projectPath}/pipelines{(queryEntries.Count != 0 ? $"?{stringQuery}" : string.Empty)}";
+        url = Utils.AddParameter(url, "ref", query.Ref);
+        url = Utils.AddParameter(url, "sha", query.Sha);
+        url = Utils.AddParameter(url, "yaml_errors", query.YamlErrors);
+        url = Utils.AddParameter(url, "name", query.Name);
+        url = Utils.AddParameter(url, "username", query.Username);
+        url = Utils.AddParameter(url, "updated_after", query.UpdatedAfter);
+        url = Utils.AddParameter(url, "updated_before", query.UpdatedBefore);
+        url = Utils.AddParameter(url, "order_by", query.OrderBy);
+        url = Utils.AddParameter(url, "sort", query.Sort);
+        url = Utils.AddParameter(url, "per_page", query.PerPage);
+        url = Utils.AddParameter(url, "source", query.Source);
         return url;
     }
 
@@ -179,22 +162,22 @@ public class PipelineClient : IPipelineClient
 
     public IEnumerable<PipelineVariable> GetVariables(long pipelineId)
     {
-        return _api.Get().GetAll<PipelineVariable>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/variables");
+        return _api.Get().GetAll<PipelineVariable>($"{_pipelinesPath}/{pipelineId.ToStringInvariant()}/variables");
     }
 
     public GitLabCollectionResponse<PipelineVariable> GetVariablesAsync(long pipelineId)
     {
-        return _api.Get().GetAllAsync<PipelineVariable>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/variables");
+        return _api.Get().GetAllAsync<PipelineVariable>($"{_pipelinesPath}/{pipelineId.ToStringInvariant()}/variables");
     }
 
     public TestReport GetTestReports(long pipelineId)
     {
-        return _api.Get().To<TestReport>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/test_report");
+        return _api.Get().To<TestReport>($"{_pipelinesPath}/{pipelineId.ToStringInvariant()}/test_report");
     }
 
     public TestReportSummary GetTestReportsSummary(long pipelineId)
     {
-        return _api.Get().To<TestReportSummary>($"{_projectPath}/pipelines/{pipelineId.ToStringInvariant()}/test_report_summary");
+        return _api.Get().To<TestReportSummary>($"{_pipelinesPath}/{pipelineId.ToStringInvariant()}/test_report_summary");
     }
 
     public GitLabCollectionResponse<Bridge> GetBridgesAsync(PipelineBridgeQuery query)

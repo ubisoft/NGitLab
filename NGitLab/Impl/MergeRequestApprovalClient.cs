@@ -14,6 +14,7 @@ public class MergeRequestApprovalClient : IMergeRequestApprovalClient
     private readonly string _approversPath;
     private readonly string _approvePath;
     private readonly string _resetApprovalsPath;
+    private readonly string _approvalStatePath;
 
     public MergeRequestApprovalClient(API api, string projectPath, long mergeRequestIid)
     {
@@ -23,6 +24,7 @@ public class MergeRequestApprovalClient : IMergeRequestApprovalClient
         _approversPath = projectPath + "/merge_requests/" + iid + "/approvers";
         _approvePath = projectPath + "/merge_requests/" + iid + "/approve";
         _resetApprovalsPath = projectPath + "/merge_requests/" + iid + "/reset_approvals";
+        _approvalStatePath = projectPath + "/merge_requests/" + iid + "/approval_state";
     }
 
     public MergeRequestApprovals Approvals => _api.Get().To<MergeRequestApprovals>(_approvalsPath);
@@ -33,4 +35,6 @@ public class MergeRequestApprovalClient : IMergeRequestApprovalClient
     public void ChangeApprovers(MergeRequestApproversChange approversChange) => _api.Put().With(approversChange).To<MergeRequestApproversChange>(_approversPath);
 
     public void ResetApprovals() => _api.Put().Execute(_resetApprovalsPath);
+
+    public MergeRequestApprovalState GetApprovalState() => _api.Get().To<MergeRequestApprovalState>(_approvalStatePath);
 }

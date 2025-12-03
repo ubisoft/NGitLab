@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using NGitLab.Models;
 
 namespace NGitLab.Mock.Clients;
@@ -22,17 +23,6 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Models.Label Create(LabelCreate label)
-    {
-        return CreateProjectLabel(label.Id, new ProjectLabelCreate
-        {
-            Name = label.Name,
-            Color = label.Color,
-            Description = label.Description,
-        });
-    }
-
     public Models.Label CreateGroupLabel(long groupId, GroupLabelCreate label)
     {
         using (Context.BeginOperationScope())
@@ -42,7 +32,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other CreateGroupLabel instead")]
     public Models.Label CreateGroupLabel(LabelCreate label)
     {
         return CreateGroupLabel(label.Id, new GroupLabelCreate
@@ -53,6 +43,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         });
     }
 
+    [Obsolete("Use DeleteProjectLabelAsync instead")]
     public Models.Label DeleteProjectLabel(long projectId, ProjectLabelDelete label)
     {
         using (Context.BeginOperationScope())
@@ -62,16 +53,6 @@ internal sealed class LabelClient : ClientBase, ILabelClient
             project.Labels.Remove(l);
             return l.ToClientLabel();
         }
-    }
-
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Models.Label Delete(LabelDelete label)
-    {
-        return DeleteProjectLabel(label.Id, new ProjectLabelDelete
-        {
-            Id = label.Id,
-            Name = label.Name,
-        });
     }
 
     public Models.Label EditProjectLabel(long projectId, ProjectLabelEdit label)
@@ -100,18 +81,6 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Models.Label Edit(LabelEdit label)
-    {
-        return EditProjectLabel(label.Id, new ProjectLabelEdit
-        {
-            Name = label.Name,
-            NewName = label.NewName,
-            Color = label.Color,
-            Description = label.Description,
-        });
-    }
-
     public Models.Label EditGroupLabel(long groupId, GroupLabelEdit label)
     {
         using (Context.BeginOperationScope())
@@ -138,7 +107,7 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("Use other EditGroupLabel instead")]
     public Models.Label EditGroupLabel(LabelEdit label)
     {
         return EditGroupLabel(label.Id, new GroupLabelEdit
@@ -196,14 +165,35 @@ internal sealed class LabelClient : ClientBase, ILabelClient
         }
     }
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Models.Label GetLabel(long projectId, string name)
-    {
-        return GetProjectLabel(projectId, name);
-    }
-
     private static Label FindLabel(LabelsCollection collection, string name)
     {
         return collection.FirstOrDefault(x => x.Name.Equals(name, StringComparison.Ordinal));
+    }
+
+    private static Label FindLabel(LabelsCollection collection, long id)
+    {
+        return collection.FirstOrDefault(x => x.Id == id);
+    }
+
+    public async Task DeleteProjectLabelAsync(long projectId, long labelId, CancellationToken cancellation = default)
+    {
+        await Task.Yield();
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(projectId, ProjectPermission.Edit);
+            var l = FindLabel(project.Labels, labelId) ?? throw GitLabException.NotFound($"Cannot find label with ID {labelId}");
+            project.Labels.Remove(l);
+        }
+    }
+
+    public async Task DeleteProjectLabelAsync(long projectId, string labelName, CancellationToken cancellation = default)
+    {
+        await Task.Yield();
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(projectId, ProjectPermission.Edit);
+            var l = FindLabel(project.Labels, labelName) ?? throw GitLabException.NotFound($"Cannot find label '{labelName}'");
+            project.Labels.Remove(l);
+        }
     }
 }

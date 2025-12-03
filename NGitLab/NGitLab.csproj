@@ -1,5 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFrameworks>net472;netstandard2.0;net8.0</TargetFrameworks>
+    <!-- Keep "WebRequest is obsolete" as a warning -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);SYSLIB0014</WarningsNotAsErrors>
     <TargetFrameworks>net472;net8.0;net10.0</TargetFrameworks>
     <PublishAot Condition="$(TargetFramework) == 'net10.0'">true</PublishAot>
     <PublishAot Condition="$(TargetFramework) == 'net8.0'">true</PublishAot>
@@ -14,6 +17,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net8.0'">
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
     <PackageReference Include="PolySharp" Version="1.15.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -32,6 +39,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net472'" />
   </ItemGroup>
 
   
@@ -44,12 +52,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
+    <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <InternalsVisibleTo Include="NGitLab.Mock" />
     <InternalsVisibleTo Include="NGitLab.Tests" />
   </ItemGroup>
-
- 
-  
-  
-
 </Project>

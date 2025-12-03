@@ -224,4 +224,7 @@ public class Project
 
     [JsonPropertyName("mr_default_target_self")]
     public bool? MrDefaultTargetSelf { get; set; }
+
+    [JsonPropertyName("ci_default_git_depth")]
+    public int? CiDefaultGitDepth { get; set; }
 }

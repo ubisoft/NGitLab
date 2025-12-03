@@ -17,7 +17,7 @@ public class SearchBlob
     public string FileName { get; set; }
 
     [JsonPropertyName("ref")]
-    public Sha1 Ref { get; set; }
+    public string Ref { get; set; }
 
     [JsonPropertyName("startline")]
     public int StartLine { get; set; }

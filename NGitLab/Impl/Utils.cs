@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace NGitLab.Impl;
@@ -27,10 +28,7 @@ internal static class Utils
         if (enumField is null)
             return valueString;
 
-        var enumMemberValue = enumField.GetCustomAttributes(typeof(EnumMemberAttribute), inherit: true)
-            .Cast<EnumMemberAttribute>()
-            .FirstOrDefault()?
-            .Value;
+        var enumMemberValue = enumField.GetCustomAttribute<EnumMemberAttribute>()?.Value;
         return enumMemberValue ?? valueString;
     }
 
@@ -45,6 +43,11 @@ internal static class Utils
     }
 
     public static string AddParameter(string url, string parameterName, DateTime? date)
+    {
+        return !date.HasValue ? url : AddParameterInternal(url, parameterName, date.Value.ToString("O"));
+    }
+
+    public static string AddParameter(string url, string parameterName, DateTimeOffset? date)
     {
         return !date.HasValue ? url : AddParameterInternal(url, parameterName, date.Value.ToString("O"));
     }

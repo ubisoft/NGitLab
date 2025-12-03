@@ -84,7 +84,6 @@ NGitLab.Mock.CommitStatus.Status.set -> void
 NGitLab.Mock.CommitStatus.TargetUrl.get -> string
 NGitLab.Mock.CommitStatus.TargetUrl.set -> void
 NGitLab.Mock.CommitStatus.ToClientCommitStatus() -> NGitLab.Models.CommitStatus
-NGitLab.Mock.CommitStatus.ToClientCommitStatusCreate() -> NGitLab.Models.CommitStatusCreate
 NGitLab.Mock.CommitStatusCollection
 NGitLab.Mock.CommitStatusCollection.CommitStatusCollection(NGitLab.Mock.GitLabObject parent) -> void
 NGitLab.Mock.Config.GitLabCollection<TItem, TParent>
@@ -550,8 +549,10 @@ NGitLab.Mock.IssueState.opened = 0 -> NGitLab.Mock.IssueState
 NGitLab.Mock.Job
 NGitLab.Mock.Job.AllowFailure.get -> bool
 NGitLab.Mock.Job.AllowFailure.set -> void
-NGitLab.Mock.Job.Artifacts.get -> NGitLab.Models.Job.JobArtifact
+NGitLab.Mock.Job.Artifacts.get -> NGitLab.Mock.JobArtifactCollection
 NGitLab.Mock.Job.Artifacts.set -> void
+NGitLab.Mock.Job.ArtifactsFile.get -> NGitLab.Models.Job.JobArtifact
+NGitLab.Mock.Job.ArtifactsFile.set -> void
 NGitLab.Mock.Job.Commit.get -> NGitLab.Models.Commit
 NGitLab.Mock.Job.Commit.set -> void
 NGitLab.Mock.Job.Coverage.get -> double?
@@ -597,6 +598,15 @@ NGitLab.Mock.Job.Trace.set -> void
 NGitLab.Mock.Job.User.get -> NGitLab.Mock.User
 NGitLab.Mock.Job.User.set -> void
 NGitLab.Mock.Job.WebUrl.get -> string
+NGitLab.Mock.JobArtifact
+NGitLab.Mock.JobArtifact.Filename.get -> string
+NGitLab.Mock.JobArtifact.Filename.set -> void
+NGitLab.Mock.JobArtifact.JobArtifact() -> void
+NGitLab.Mock.JobArtifact.Size.get -> long
+NGitLab.Mock.JobArtifact.Size.set -> void
+NGitLab.Mock.JobArtifactCollection
+NGitLab.Mock.JobArtifactCollection.Clear() -> void
+NGitLab.Mock.JobArtifactCollection.JobArtifactCollection(NGitLab.Mock.GitLabObject container) -> void
 NGitLab.Mock.JobCollection
 NGitLab.Mock.JobCollection.Add(NGitLab.Mock.Job job, NGitLab.Mock.Pipeline pipeline) -> NGitLab.Mock.Job
 NGitLab.Mock.JobCollection.AddNew() -> NGitLab.Mock.Job
@@ -827,6 +837,7 @@ NGitLab.Mock.Pipeline.YamlError.set -> void
 NGitLab.Mock.PipelineCollection
 NGitLab.Mock.PipelineCollection.Add(string ref, NGitLab.JobStatus status, NGitLab.Mock.User user) -> NGitLab.Mock.Pipeline
 NGitLab.Mock.PipelineCollection.GetById(long id) -> NGitLab.Mock.Pipeline
+NGitLab.Mock.PipelineCollection.GetLatest(string ref) -> NGitLab.Mock.Pipeline
 NGitLab.Mock.PipelineCollection.PipelineCollection(NGitLab.Mock.GitLabObject parent) -> void
 NGitLab.Mock.PipelineSchedule
 NGitLab.Mock.PipelineSchedule.Active.get -> bool
@@ -1071,6 +1082,7 @@ NGitLab.Mock.Repository.GetCommits() -> System.Collections.Generic.IEnumerable<L
 NGitLab.Mock.Repository.GetCommits(NGitLab.GetCommitsRequest request) -> System.Collections.Generic.IEnumerable<LibGit2Sharp.Commit>
 NGitLab.Mock.Repository.GetCommits(string ref) -> System.Collections.Generic.IEnumerable<LibGit2Sharp.Commit>
 NGitLab.Mock.Repository.GetFile(string filePath, string ref) -> NGitLab.Models.FileData
+NGitLab.Mock.Repository.GetRawFileAsync(string filePath, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, NGitLab.GetRawFileRequest request) -> System.Threading.Tasks.Task
 NGitLab.Mock.Repository.GetReleaseTag(string tagName) -> NGitLab.Mock.ReleaseTag
 NGitLab.Mock.Repository.GetTags() -> LibGit2Sharp.TagCollection
 NGitLab.Mock.Repository.IsEmpty.get -> bool
@@ -1263,6 +1275,7 @@ override NGitLab.Mock.EventCollection.Add(NGitLab.Mock.Event item) -> void
 override NGitLab.Mock.GroupCollection.Add(NGitLab.Mock.Group group) -> void
 override NGitLab.Mock.GroupHookCollection.Add(NGitLab.Mock.GroupHook item) -> void
 override NGitLab.Mock.IssueCollection.Add(NGitLab.Mock.Issue item) -> void
+override NGitLab.Mock.JobArtifactCollection.Add(NGitLab.Mock.JobArtifact artifact) -> void
 override NGitLab.Mock.JobCollection.Add(NGitLab.Mock.Job job) -> void
 override NGitLab.Mock.LabelsCollection.Add(NGitLab.Mock.Label label) -> void
 override NGitLab.Mock.MergeRequestCollection.Add(NGitLab.Mock.MergeRequest mergeRequest) -> void

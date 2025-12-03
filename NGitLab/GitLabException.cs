@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+#if !NET8_0_OR_GREATER
 using System.Runtime.Serialization;
+#endif
 using NGitLab.Impl;
 
 namespace NGitLab;
@@ -26,7 +28,7 @@ public class GitLabException : Exception
     {
     }
 
-#if NET472
+#if !NET8_0_OR_GREATER
     protected GitLabException(
         SerializationInfo info,
         StreamingContext context)
@@ -34,6 +36,7 @@ public class GitLabException : Exception
     {
     }
 #endif
+
     /// <summary>
     /// The error code returned from the server.
     /// </summary>

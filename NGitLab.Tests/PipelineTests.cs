@@ -11,7 +11,7 @@ using Polly;
 
 namespace NGitLab.Tests;
 
-[Timeout(240_000)]
+[CancelAfter(240_000)]
 public class PipelineTests
 {
     [Test]
@@ -29,6 +29,52 @@ public class PipelineTests
         {
             Assert.That(pipeline.ProjectId, Is.EqualTo(project.Id));
         }
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_can_get_latest_pipeline()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var pipelineClient = context.Client.GetPipelines(project.Id);
+        JobTests.AddGitLabCiFile(context.Client, project);
+        Pipeline latestPipeline;
+        using (await context.StartRunnerForOneJobAsync(project.Id))
+        {
+            latestPipeline = await GitLabTestContext.RetryUntilAsync(
+                () => pipelineClient.GetLatestAsync(project.DefaultBranch),
+                p => Task.FromResult(p != null),
+                TimeSpan.FromSeconds(120));
+        }
+
+        Assert.That(latestPipeline, Is.Not.Null);
+        Assert.That(latestPipeline.ProjectId, Is.EqualTo(project.Id));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_get_latest_pipeline_for_non_existing_ref_returns_forbidden()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+        var pipelineClient = context.Client.GetPipelines(project.Id);
+        JobTests.AddGitLabCiFile(context.Client, project);
+
+        const string nonExistingRef = "non-existing-branch";
+
+        GitLabException exception = null;
+        try
+        {
+            await pipelineClient.GetLatestAsync(nonExistingRef);
+        }
+        catch (GitLabException ex) when (ex.StatusCode == HttpStatusCode.Forbidden)
+        {
+            exception = ex;
+        }
+
+        Assert.That(exception, Is.Not.Null, "Expected a Forbidden exception when retrieving the latest pipeline for a non-existing ref.");
+        Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
     }
 
     [Test]
@@ -257,7 +303,6 @@ public class PipelineTests
         }
     }
 
-
     [Test]
     [NGitLabRetry]
     public async Task Test_update_pipeline_metadata()
@@ -265,18 +310,16 @@ public class PipelineTests
         using var context = await GitLabTestContext.CreateAsync();
 
         // The "Update pipeline metadata" was added in GitLab 16, the earliest available docs that include the API is for version 16.11
-        context.ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange.Parse("[16.11,)"));
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[16.11,)"));
 
         var project = context.CreateProject();
         var pipelineClient = context.Client.GetPipelines(project.Id);
         JobTests.AddGitLabCiFile(context.Client, project);
 
-
         var pipeline = await pipelineClient.CreateAsync(new PipelineCreate
         {
             Ref = project.DefaultBranch,
         });
-
 
         var updatedPipeline = await pipelineClient.UpdateMetadataAsync(pipeline.Id, new PipelineMetadataUpdate() { Name = "Updated Name" });
 

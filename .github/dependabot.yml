@@ -1,7 +1,5 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+# See documentation for all configuration options:
+# https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference
 
 version: 2
 updates:
@@ -19,12 +17,19 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:
-      interval: weekly
+      interval: "weekly"
+      day: "monday"
+      time: "05:00"
+      timezone: "America/Montreal"
     ignore:
       # Don't bump these to 9.x.y, as those versions may not be totally compatible with .NET 6 or 8
       - dependency-name: "Microsoft.AspNetCore.WebUtilities"
       - dependency-name: "Microsoft.Bcl.AsyncInterfaces"
       - dependency-name: "System.Text.Json"
+      # The following should not be bumped until we use .NET 9+, otherwise we'll get
+      #   error CS8032: Could not load file or assembly 'System.Collections.Immutable, Version=9.0.0.0
+      - dependency-name: "Microsoft.CodeAnalysis.BannedApiAnalyzers"
+      - dependency-name: "Microsoft.CodeAnalysis.PublicApiAnalyzers"
       # LibGit2Sharp 0.31.0+ no longer targets net6.0
       - dependency-name: "LibGit2Sharp"
     rebase-strategy: auto
@@ -38,10 +43,26 @@ updates:
           - "Microsoft.*"
           - "System.*"
         exclude-patterns:
+          - "Microsoft.NET.Test.Sdk"
           - "Microsoft.Playwright"
       test-dependencies:
         patterns:
           - "coverlet.collector"
+          - "Microsoft.NET.Test.Sdk"
+          - "Microsoft.Playwright"
+          - "NSubstitute"
+          - "*NUnit*"
+        exclude-patterns:
+          - "NUnit.Analyzers"
+      misc-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "*Analyzer*"
+          - "Microsoft.*"
+          - "System.*"
+          - "coverlet.collector"
+          - "Microsoft.NET.Test.Sdk"
           - "Microsoft.Playwright"
           - "NSubstitute"
           - "*NUnit*"

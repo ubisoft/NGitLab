@@ -1,21 +1,19 @@
-﻿using System.Text.Json.Serialization;
-
-namespace NGitLab.Models;
+﻿namespace NGitLab.Models;
 
 /// <summary>
 /// Query details for comparison of branches/tags/commit hashes
 /// </summary>
-public class CompareQuery
+public class CompareQuery(string from, string to)
 {
     /// <summary>
-    /// The source for comparison, can be a branch, tag or a commit hash.
+    /// The most recent reference for comparison, can be a branch, tag or a commit hash.
     /// </summary>
-    public string Source { get; set; }
+    public string From { get; set; } = from;
 
     /// <summary>
-    /// The target for comparison, can be a branch, tag or a commit hash.
+    /// The reference to compare against, can be a branch, tag or a commit hash.
     /// </summary>
-    public string Target { get; set; }
+    public string To { get; set; } = to;
 
     /// <summary>
     /// Comparison method: true for direct comparison between from and to (from..to), false to compare using merge base (from…to)’. Default is false.
@@ -31,10 +29,4 @@ public class CompareQuery
     /// The ID to compare from.
     /// </summary>
     public long? FromProjectId { get; set; }
-
-    public CompareQuery(string source, string target)
-    {
-        Source = source;
-        Target = target;
-    }
 }

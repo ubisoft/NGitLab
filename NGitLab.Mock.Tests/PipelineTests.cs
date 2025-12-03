@@ -34,7 +34,7 @@ public class PipelineTests
         var pipeline = project.Pipelines.Add(commit.Sha, JobStatus.Success, user);
         pipeline.TestReportsSummary = new TestReportSummary
         {
-            Total = new TestReportSummaryTotals
+            Total = new TestReportSummary.Totals
             {
                 Time = 60,
                 Count = 1157,

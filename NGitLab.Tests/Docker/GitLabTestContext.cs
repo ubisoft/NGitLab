@@ -315,10 +315,10 @@ public sealed class GitLabTestContext : IDisposable
         return NuGetVersion.TryParse(gitLabVersion, out var nuGetVersion) && nuGetVersion.Major == major;
     }
 
-    public void ReportTestAsInconclusiveIfGitLabVersionOutOfRange(VersionRange versionRange)
+    public void IgnoreTestIfGitLabVersionOutOfRange(VersionRange versionRange)
     {
         if (!IsGitLabVersionInRange(versionRange, out var gitLabVersion))
-            Assert.Inconclusive($"Test supported by GitLab '{versionRange}', but currently running against '{gitLabVersion}'");
+            Assert.Ignore($"Test supported by GitLab '{versionRange}', but currently running against '{gitLabVersion}'");
     }
 
     private IGitLabClient CreateClient(string token)
@@ -463,6 +463,24 @@ public sealed class GitLabTestContext : IDisposable
     {
         using var cts = new CancellationTokenSource(timeSpan);
         return await RetryUntilAsync(action, predicate, cts.Token).ConfigureAwait(false);
+    }
+
+    public static async Task<T> RetryUntilAsync<T>(Func<Task<T>> action, Func<T, Task<bool>> predicate, TimeSpan timeSpan)
+    {
+        using var cts = new CancellationTokenSource(timeSpan);
+        return await RetryUntilAsync(action, predicate, cts.Token).ConfigureAwait(false);
+    }
+
+    public static async Task<T> RetryUntilAsync<T>(Func<Task<T>> action, Func<T, Task<bool>> predicate, CancellationToken cancellationToken)
+    {
+        while (true)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var result = await action().ConfigureAwait(false);
+            if (await predicate(result).ConfigureAwait(false))
+                return result;
+            await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
+        }
     }
 
     public static async Task<T> RetryUntilAsync<T>(Func<T> action, Func<T, bool> predicate, CancellationToken cancellationToken)
