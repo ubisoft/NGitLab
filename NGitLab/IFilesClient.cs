@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 
@@ -21,6 +23,8 @@ public interface IFilesClient
     FileData Get(string filePath, string @ref);
 
     Task<FileData> GetAsync(string filePath, string @ref, CancellationToken cancellationToken = default);
+
+    Task GetRawAsync(string filePath, Func<Stream, Task> parser, GetRawFileRequest request = null, CancellationToken cancellationToken = default);
 
     bool FileExists(string filePath, string @ref);
 

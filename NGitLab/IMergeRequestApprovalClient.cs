@@ -14,4 +14,6 @@ public interface IMergeRequestApprovalClient
     /// Available only for bot users based on project or group tokens.
     /// </summary>
     void ResetApprovals();
+
+    MergeRequestApprovalState GetApprovalState();
 }

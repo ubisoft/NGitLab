@@ -17,7 +17,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         {
             using (Context.BeginOperationScope())
             {
-                return GetOwnedRunners().Select(r => r.ToClientRunner(Context.User));
+                return GetAccessibleLockless();
             }
         }
     }
@@ -51,10 +51,20 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         {
             using (Context.BeginOperationScope())
             {
-                var runner = Accessible.FirstOrDefault(r => r.Id == id) ?? throw GitLabException.NotFound();
-                return runner;
+                return GetRunnerLockless(id);
             }
         }
+    }
+
+    internal Models.Runner GetRunnerLockless(long id)
+    {
+        var runner = GetAccessibleLockless().FirstOrDefault(r => r.Id == id) ?? throw GitLabException.NotFound();
+        return runner;
+    }
+
+    internal IEnumerable<Models.Runner> GetAccessibleLockless()
+    {
+        return GetOwnedRunners().Select(r => r.ToClientRunner(Context.User)).ToList();
     }
 
     public void Delete(Models.Runner runner) => Delete(runner.Id);
@@ -70,6 +80,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
                 {
                     throw GitLabException.BadRequest("Runner is enabled in multiple projects");
                 }
+
                 var project = GetProject(projects.Single().Id, ProjectPermission.Edit);
                 project.RemoveRunner(runnerId);
                 return;
@@ -123,7 +134,7 @@ internal sealed class RunnerClient : ClientBase, IRunnerClient
         using (Context.BeginOperationScope())
         {
             var runnerRefs = GetProject(projectId, ProjectPermission.Edit).EnabledRunners;
-            return runnerRefs.Select(r => this[r.Id]).ToList();
+            return runnerRefs.Select(r => GetRunnerLockless(r.Id)).ToList();
         }
     }
 

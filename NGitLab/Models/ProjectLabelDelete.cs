@@ -1,7 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
+[Obsolete]
 public sealed class ProjectLabelDelete
 {
     [JsonPropertyName("id")]

@@ -34,7 +34,7 @@ public class GitLabDockerContainer
     /// <para>Keep in sync with .github/workflows/ci.yml, use the lowest supported version</para>
     /// <para>List of available versions: https://hub.docker.com/r/gitlab/gitlab-ee/tags/</para>
     /// </remarks>
-    private const string LocalGitLabDockerVersion = "15.11.9-ee.0";
+    private const string LocalGitLabDockerVersion = "17.1.8-ee.0";
 
     /// <summary>
     /// Resolved GitLab version taken from the help page once logged in
@@ -206,7 +206,7 @@ public class GitLabDockerContainer
             {
                 PortBindings = new Dictionary<string, IList<PortBinding>>(StringComparer.Ordinal)
                 {
-                    {  HttpPort.ToString(CultureInfo.InvariantCulture) + "/tcp", new List<PortBinding> { new PortBinding { HostPort = HttpPort.ToString(CultureInfo.InvariantCulture) } } },
+                    { HttpPort.ToString(CultureInfo.InvariantCulture) + "/tcp", new List<PortBinding> { new PortBinding { HostPort = HttpPort.ToString(CultureInfo.InvariantCulture) } } },
                 },
             };
 

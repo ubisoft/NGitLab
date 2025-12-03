@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -36,9 +35,6 @@ public interface IMembersClient
     Task<Membership> UpdateMemberOfProjectAsync(ProjectId projectId, ProjectMemberUpdate user, CancellationToken cancellationToken = default);
 
     Task RemoveMemberFromProjectAsync(ProjectId projectId, long userId, CancellationToken cancellationToken = default);
-
-    [Obsolete("Use OfGroup")]
-    IEnumerable<Membership> OfNamespace(string groupId);
 
     IEnumerable<Membership> OfGroup(string groupId);
 

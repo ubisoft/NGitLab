@@ -27,4 +27,6 @@ public class PipelineQuery
     public PipelineSort? Sort { get; set; }
 
     public int? PerPage { get; set; }
+
+    public PipelineSource? Source { get; set; }
 }

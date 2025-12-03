@@ -566,6 +566,11 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         }
     }
 
+    public Task<VersionedDiffResult> GetDiffsAsync(long mergeRequestIid, long versionId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public IEnumerable<PipelineBasic> GetPipelines(long mergeRequestIid)
     {
         AssertProjectId();
@@ -713,6 +718,11 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
     }
 
     public GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(long mergeRequestIid)
+    {
+        throw new NotImplementedException();
+    }
+
+    public GitLabCollectionResponse<Diff> GetDiffsAsync(long mergeRequestIid)
     {
         throw new NotImplementedException();
     }

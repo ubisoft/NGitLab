@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using LibGit2Sharp;
 using NGitLab.Mock.Clients;
 using NGitLab.Models;
@@ -538,6 +539,32 @@ public sealed class Repository : GitLabObject, IDisposable
         };
     }
 
+    public async Task GetRawFileAsync(string filePath, Func<Stream, Task> parser, GetRawFileRequest request)
+    {
+        var repo = GetGitRepository();
+        try
+        {
+            var @ref = request?.Ref ?? repo.Head.FriendlyName;
+            Commands.Checkout(repo, @ref);
+        }
+        catch (LibGit2Sharp.NotFoundException)
+        {
+            throw GitLabException.NotFound("Revision not found");
+        }
+
+        var fileCompletePath = Path.Combine(FullPath, filePath);
+
+        if (!System.IO.File.Exists(fileCompletePath))
+        {
+            throw GitLabException.NotFound("File not found");
+        }
+
+        using (var fileStream = System.IO.File.OpenRead(fileCompletePath))
+        {
+            await parser(fileStream).ConfigureAwait(false);
+        }
+    }
+
     internal IEnumerable<Tree> GetTree() => GetTree(new());
 
     internal IEnumerable<Tree> GetTree(RepositoryGetTreeOptions repositoryGetTreeOptions)
@@ -781,6 +808,21 @@ public sealed class Repository : GitLabObject, IDisposable
             divergence += historyDivergence.BehindBy.Value;
 
         return divergence;
+    }
+
+    internal TreeChanges Compare(string fromRef, string toRef)
+    {
+        var repository = GetGitRepository();
+        var fromCommit = repository.Lookup<Commit>(fromRef);
+        var toCommit = repository.Lookup<Commit>(toRef);
+
+        var mergeBase = repository.ObjectDatabase.FindMergeBase(fromCommit, toCommit);
+
+        if (fromCommit is null || toCommit is null)
+            throw GitLabException.NotFound("One of the commits does not exist");
+
+        var changes = repository.Diff.Compare<TreeChanges>(mergeBase.Tree, toCommit.Tree);
+        return changes;
     }
 
     internal void GetRawBlob(string sha, Action<Stream> parser)

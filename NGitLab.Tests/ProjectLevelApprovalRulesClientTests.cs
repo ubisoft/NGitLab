@@ -16,7 +16,7 @@ public class ProjectLevelApprovalRulesClientTests
     public async Task SetUp()
     {
         context = await GitLabTestContext.CreateAsync();
-        context.ReportTestAsInconclusiveIfGitLabVersionOutOfRange(SupportedVersionRange);
+        context.IgnoreTestIfGitLabVersionOutOfRange(SupportedVersionRange);
     }
 
     [TearDown]

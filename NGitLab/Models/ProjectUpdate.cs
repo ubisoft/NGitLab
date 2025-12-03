@@ -22,10 +22,6 @@ public sealed class ProjectUpdate
     [Obsolete("Deprecated by GitLab. Use IssuesAccessLevel instead")]
     public bool? IssuesEnabled { get; set; }
 
-    [JsonIgnore]
-    [Obsolete("Use IssuesAccessLevel instead")]
-    public string IssuesAccessLeve { get => IssuesAccessLevel; set => IssuesAccessLevel = value; }
-
     [JsonPropertyName("issues_access_level")]
     public string IssuesAccessLevel { get; set; }
 
@@ -111,4 +107,7 @@ public sealed class ProjectUpdate
 
     [JsonPropertyName("topics")]
     public List<string> Topics { get; set; }
+
+    [JsonPropertyName("ci_default_git_depth")]
+    public int? CiDefaultGitDepth { get; set; }
 }

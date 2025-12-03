@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,6 +56,23 @@ public class FilesClient : IFilesClient
     public Task<FileData> GetAsync(string filePath, string @ref, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<FileData>(_repoPath + $"/files/{EncodeFilePath(filePath)}?ref={Uri.EscapeDataString(@ref)}", cancellationToken);
+    }
+
+    public Task GetRawAsync(string filePath, Func<Stream, Task> parser, GetRawFileRequest request = null, CancellationToken cancellationToken = default)
+    {
+        var url = _repoPath + $"/files/{EncodeFilePath(filePath)}/raw";
+
+        if (!string.IsNullOrWhiteSpace(request?.Ref))
+        {
+            url = Utils.AddParameter(url, "ref", Uri.EscapeDataString(request.Ref));
+        }
+
+        if (request is not null && request.Lfs.HasValue)
+        {
+            url = Utils.AddParameter(url, "lfs", request.Lfs.Value);
+        }
+
+        return _api.Get().StreamAsync(url, parser, cancellationToken);
     }
 
     public bool FileExists(string filePath, string @ref)
