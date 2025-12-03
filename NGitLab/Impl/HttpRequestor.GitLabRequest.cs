@@ -115,8 +115,23 @@ public partial class HttpRequestor
         private HttpRequestMessage CreateRequest(RequestOptions options)
         {
             var request = new HttpRequestMessage(new HttpMethod(Method.ToString().ToUpperInvariant()), Url);
-            if (HasOutput)
+            // Copy headers from Headers property to request
+            if (Headers != null)
             {
+                foreach (var key in Headers.AllKeys)
+                {
+                    var values = Headers.GetValues(key);
+                    if (!request.Headers.TryAddWithoutValidation(key, values))
+                    {
+                        // If it fails to add as a request header, it might be a content header
+                        if (request.Content != null)
+                        {
+                            request.Content.Headers.TryAddWithoutValidation(key, values);
+                        }
+                    }
+                }
+            }
+            if (HasOutput)
                 if (FormData != null)
                 {
                     AddFileData(request, options);
