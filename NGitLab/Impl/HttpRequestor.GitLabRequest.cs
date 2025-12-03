@@ -155,11 +155,7 @@ public partial class HttpRequestor
 
         private void AddJsonData(HttpRequestMessage request, RequestOptions options)
         {
-            request.Content.Headers.ContentType.MediaType = "application/json";
-            using var writer = new StreamWriter(options.GetRequestStream(request));
-            writer.Write(JsonData);
-            writer.Flush();
-            writer.Close();
+            request.Content = new StringContent(JsonData, System.Text.Encoding.UTF8, "application/json");
         }
 
         public void AddFileData(HttpRequestMessage request, RequestOptions options)
