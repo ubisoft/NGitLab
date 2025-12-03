@@ -128,9 +128,9 @@ NGitLab.GitLabRequestResult
 NGitLab.GitLabRequestResult.Exception.get -> System.Exception
 NGitLab.GitLabRequestResult.Exception.set -> void
 NGitLab.GitLabRequestResult.GitLabRequestResult() -> void
-NGitLab.GitLabRequestResult.Request.get -> System.Net.HttpWebRequest
+NGitLab.GitLabRequestResult.Request.get -> System.Net.Http.HttpRequestMessage
 NGitLab.GitLabRequestResult.Request.set -> void
-NGitLab.GitLabRequestResult.Response.get -> System.Net.WebResponse
+NGitLab.GitLabRequestResult.Response.get -> System.Net.Http.HttpResponseMessage
 NGitLab.GitLabRequestResult.Response.set -> void
 NGitLab.IBranchClient
 NGitLab.IBranchClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Branch>

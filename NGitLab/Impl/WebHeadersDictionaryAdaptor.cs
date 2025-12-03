@@ -21,15 +21,15 @@ internal sealed class WebHeadersDictionaryAdaptor : IReadOnlyDictionary<string, 
         _headers = headers ?? throw new ArgumentNullException(nameof(headers));
     }
 
-    public WebHeadersDictionaryAdaptor(HttpResponseHeaders _headers)
+    public WebHeadersDictionaryAdaptor(HttpResponseHeaders headers)
     {
-        var _tmp = _headers ?? throw new ArgumentNullException(nameof(_headers));
-         _headers.Clear();
-        _tmp.ToList().ForEach(header =>
+        var tmp = headers ?? throw new ArgumentNullException(nameof(headers));
+        _headers.Clear();
+        tmp.ToList().ForEach(header =>
         {
             foreach (var value in header.Value)
             {
-                this._headers.Add(header.Key, value);
+                _headers.Add(header.Key, value);
             }
         });
     }

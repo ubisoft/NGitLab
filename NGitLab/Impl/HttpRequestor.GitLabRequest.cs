@@ -180,6 +180,7 @@ public partial class HttpRequestor
                 _httpClient = new HttpClient(handler);
                 _httpClient.Timeout = options.HttpClientTimeout;
             }
+
             var request = new HttpRequestMessage(new HttpMethod(Method.ToString().ToUpperInvariant()), Url);
             if (HasOutput)
             {
@@ -198,7 +199,7 @@ public partial class HttpRequestor
             }
             else if (Method == MethodType.Put)
             {
-                //request.ContentLength = 0;
+                // request.ContentLength = 0;
             }
 
             return request;

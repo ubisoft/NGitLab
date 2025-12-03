@@ -247,7 +247,7 @@ public partial class HttpRequestor : IHttpRequestor
         private static Uri GetNextPageUrl(HttpResponseMessage response)
         {
             // <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="next", <http://localhost:1080/api/v3/projects?page=1&per_page=0>; rel="first", <http://localhost:1080/api/v3/projects?page=2&per_page=0>; rel="last"
-            var link = response.Headers.FirstOrDefault(f => f.Key == "Link").Value.FirstOrDefault();
+            var link = response.Headers.FirstOrDefault(f => string.Equals(f.Key, "Link", StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
             string[] nextLink = null;
             if (!string.IsNullOrEmpty(link))
             {
@@ -255,6 +255,7 @@ public partial class HttpRequestor : IHttpRequestor
                    .Select(l => l.Split(';'))
                    .FirstOrDefault(pair => pair[1].Contains("next"));
             }
+
             return nextLink != null ? new Uri(nextLink[0].Trim('<', '>', ' ')) : null;
         }
     }
