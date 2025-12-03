@@ -99,88 +99,21 @@ public partial class HttpRequestor
         private HttpResponseMessage GetResponseImpl(RequestOptions options)
         {
             var result = new GitLabRequestResult();
-            try
-            {
-                result.Request = CreateRequest(options);
-                result.Response = _httpClient.SendAsync(result.Request).GetAwaiter().GetResult();
-            }
-            catch (Exception ex)
-            {
-                result.Exception = ex is WebException wex && wex.Response is not null ?
-                                   HandleWebException(wex) :
-                                   ex;
-            }
-
-            options.ProcessGitLabRequestResult(result);
-
+            result.Request = CreateRequest(options);
+            options.ProcessGitLabRequestResult(result).GetAwaiter().GetResult();
             return result.Exception is not null ? throw result.Exception : result.Response;
         }
 
         private async Task<HttpResponseMessage> GetResponseImplAsync(RequestOptions options, CancellationToken cancellationToken)
         {
             var result = new GitLabRequestResult();
-            try
-            {
-                result.Request = CreateRequest(options);
-                result.Response = await _httpClient.SendAsync(result.Request, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                result.Exception = ex is WebException wex && wex.Response is not null ?
-                                   HandleWebException(wex) :
-                                   ex;
-            }
-
-            options.ProcessGitLabRequestResult(result);
-
+            result.Request = CreateRequest(options);
+            await options.ProcessGitLabRequestResult(result).ConfigureAwait(false);
             return result.Exception is not null ? throw result.Exception : result.Response;
         }
 
-        private GitLabException HandleWebException(WebException ex)
-        {
-            using var errorResponse = (HttpWebResponse)ex.Response;
-            string jsonString;
-            using (var reader = new StreamReader(errorResponse.GetResponseStream()))
-            {
-                jsonString = reader.ReadToEnd();
-            }
-
-            var errorMessage = ExtractErrorMessage(jsonString, out var errorDetails);
-            var exceptionMessage =
-                $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
-                $"Original call: {Method} {Url}";
-
-            if (JsonData != null)
-            {
-                exceptionMessage += $". With data {JsonData}";
-            }
-
-            return new GitLabException(exceptionMessage)
-            {
-                OriginalCall = Url,
-                ErrorObject = errorDetails,
-                StatusCode = errorResponse.StatusCode,
-                ErrorMessage = errorMessage,
-                MethodType = Method,
-            };
-        }
-
-        private static HttpClient _httpClient = null;
-
         private HttpRequestMessage CreateRequest(RequestOptions options)
         {
-            if (_httpClient == null)
-            {
-                var handler = new HttpClientHandler
-                {
-                    AutomaticDecompression = DecompressionMethods.GZip,
-                    Proxy = options.Proxy,
-                    UseProxy = options.Proxy != null,
-                };
-                _httpClient = new HttpClient(handler);
-                _httpClient.Timeout = options.HttpClientTimeout;
-            }
-
             var request = new HttpRequestMessage(new HttpMethod(Method.ToString().ToUpperInvariant()), Url);
             if (HasOutput)
             {

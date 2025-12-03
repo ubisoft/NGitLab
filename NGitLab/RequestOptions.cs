@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using NGitLab.Impl;
 
 namespace NGitLab;
@@ -34,11 +35,23 @@ public class RequestOptions
 
     public WebProxy Proxy { get; set; }
 
+    private readonly HttpClient _httpClient = null;
+
     public RequestOptions(int retryCount, TimeSpan retryInterval, bool isIncremental = true)
     {
         RetryCount = retryCount;
         RetryInterval = retryInterval;
         IsIncremental = isIncremental;
+        var handler = new HttpClientHandler
+        {
+            AutomaticDecompression = DecompressionMethods.GZip,
+            Proxy = Proxy,
+            UseProxy = Proxy != null,
+        };
+        _httpClient = new HttpClient(handler)
+        {
+            Timeout = HttpClientTimeout,
+        };
     }
 
     /// <summary>
@@ -74,17 +87,50 @@ public class RequestOptions
     /// <summary>
     /// Allows to monitor GitLab requests from the caller library
     /// </summary>
-    public virtual void ProcessGitLabRequestResult(GitLabRequestResult e)
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public virtual async Task ProcessGitLabRequestResult(GitLabRequestResult e)
     {
+        try
+        {
+            e.Response = await _httpClient.SendAsync(e.Request).ConfigureAwait(false);
+        }
+        catch (HttpRequestException hre)
+        {
+            e.Exception = new GitLabException()
+            {
+                OriginalCall = e.Request.RequestUri,
+                ErrorObject = null,
+                ErrorMessage = hre.Message,
+            };
+        }
+#if NET8_0_OR_GREATER
+        catch (HttpIOException io)
+        {
+            e.Exception = new GitLabException()
+            {
+                OriginalCall = e.Request.RequestUri,
+                ErrorObject = null,
+                ErrorMessage = io.Message,
+            };
+        }
+#endif
+        catch (Exception ex)
+        {
+            e.Exception = new GitLabException()
+            {
+                OriginalCall = e.Request.RequestUri,
+                ErrorObject = null,
+                ErrorMessage = ex.Message,
+            };
+        }
     }
 
     internal virtual Stream GetRequestStream(HttpRequestMessage request)
     {
-#if NET472  || NETSTANDARD2_0
+#if NET472 || NETSTANDARD2_0
         return request.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
 #else
         return request.Content.ReadAsStream();
 #endif
-
     }
 }

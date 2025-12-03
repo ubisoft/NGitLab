@@ -5134,6 +5134,7 @@ static NGitLab.DynamicEnum<TEnum>.operator !=(NGitLab.DynamicEnum<TEnum> obj1, N
 static NGitLab.DynamicEnum<TEnum>.operator !=(NGitLab.DynamicEnum<TEnum> obj1, TEnum obj2) -> bool
 static NGitLab.DynamicEnum<TEnum>.operator ==(NGitLab.DynamicEnum<TEnum> obj1, NGitLab.DynamicEnum<TEnum> obj2) -> bool
 static NGitLab.DynamicEnum<TEnum>.operator ==(NGitLab.DynamicEnum<TEnum> obj1, TEnum obj2) -> bool
+static NGitLab.Extensions.HttpExtensions.GetRequestStream(this System.Net.Http.HttpRequestMessage request) -> System.IO.Stream
 static NGitLab.Extensions.HttpExtensions.GetResponseStream(this System.Net.Http.HttpResponseMessage response) -> System.IO.Stream
 static NGitLab.Models.FileData.Base64Decode(string base64EncodedData) -> string
 static NGitLab.Models.FileUpsert.Base64Encode(string plainText) -> string
@@ -5174,5 +5175,5 @@ virtual NGitLab.Impl.HttpRequestor.StreamAndHeadersAsync(string tailAPIUrl, Syst
 virtual NGitLab.Impl.HttpRequestor.StreamAsync(string tailAPIUrl, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task
 virtual NGitLab.Impl.HttpRequestor.To<T>(string tailAPIUrl) -> T
 virtual NGitLab.Impl.HttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<T>
-virtual NGitLab.RequestOptions.ProcessGitLabRequestResult(NGitLab.GitLabRequestResult e) -> void
+virtual NGitLab.RequestOptions.ProcessGitLabRequestResult(NGitLab.GitLabRequestResult e) -> System.Threading.Tasks.Task
 virtual NGitLab.RequestOptions.ShouldRetry(System.Exception ex, int retryNumber) -> bool
