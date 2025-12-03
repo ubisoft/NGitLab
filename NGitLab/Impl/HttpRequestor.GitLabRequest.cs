@@ -131,7 +131,9 @@ public partial class HttpRequestor
                     }
                 }
             }
+
             if (HasOutput)
+            {
                 if (FormData != null)
                 {
                     AddFileData(request, options);
