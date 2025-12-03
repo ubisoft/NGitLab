@@ -169,7 +169,7 @@ public partial class HttpRequestor
 
         private HttpRequestMessage CreateRequest(RequestOptions options)
         {
-            if (_httpClient != null)
+            if (_httpClient == null)
             {
                 var handler = new HttpClientHandler
                 {

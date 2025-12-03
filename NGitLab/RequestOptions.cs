@@ -81,7 +81,7 @@ public class RequestOptions
     internal virtual Stream GetRequestStream(HttpRequestMessage request)
     {
 #if NET472  || NETSTANDARD2_0
-  return request.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
+        return request.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
 #else
         return request.Content.ReadAsStream();
 #endif

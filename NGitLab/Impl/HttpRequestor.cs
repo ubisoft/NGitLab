@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Extensions;
 using NGitLab.Impl.Json;
 using NGitLab.Models;
 
@@ -145,7 +146,7 @@ public partial class HttpRequestor : IHttpRequestor
         using var response = request.GetResponse(_options);
         if (parser != null)
         {
-            using var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
+            using var stream = response.GetResponseStream();
             parser(stream, new WebHeadersDictionaryAdaptor(response.Headers));
         }
     }
@@ -160,7 +161,7 @@ public partial class HttpRequestor : IHttpRequestor
         using var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false);
         if (parser != null)
         {
-            using var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult();
+            using var stream = response.GetResponseStream();
             await parser(stream, new WebHeadersDictionaryAdaptor(response.Headers)).ConfigureAwait(false);
         }
     }
