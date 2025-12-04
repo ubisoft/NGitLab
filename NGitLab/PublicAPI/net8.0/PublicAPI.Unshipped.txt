@@ -1734,6 +1734,8 @@ NGitLab.Models.Deployable.Commit.set -> void
 NGitLab.Models.Deployable.CreatedAt.get -> System.DateTime
 NGitLab.Models.Deployable.CreatedAt.set -> void
 NGitLab.Models.Deployable.Deployable() -> void
+NGitLab.Models.Deployable.FinishedAt.get -> System.DateTime?
+NGitLab.Models.Deployable.FinishedAt.set -> void
 NGitLab.Models.Deployable.Id.get -> long
 NGitLab.Models.Deployable.Id.set -> void
 NGitLab.Models.Deployable.Name.get -> string
@@ -1742,6 +1744,8 @@ NGitLab.Models.Deployable.Pipeline.get -> NGitLab.Models.Pipeline
 NGitLab.Models.Deployable.Pipeline.set -> void
 NGitLab.Models.Deployable.Stage.get -> string
 NGitLab.Models.Deployable.Stage.set -> void
+NGitLab.Models.Deployable.StartedAt.get -> System.DateTime?
+NGitLab.Models.Deployable.StartedAt.set -> void
 NGitLab.Models.Deployable.Status.get -> string
 NGitLab.Models.Deployable.Status.set -> void
 NGitLab.Models.Deployment
