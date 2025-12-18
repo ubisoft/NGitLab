@@ -35,13 +35,13 @@ jobs:
         with:
           dotnet-version: '10.0.x'
       - run: dotnet pack NGitLab.sln --configuration Release --output ${{env.NuGetDirectory}} /bl
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: nuget
           if-no-files-found: error
           retention-days: 7
           path: ${{env.NuGetDirectory}}/**/*
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: binlogs
           if-no-files-found: error
@@ -84,7 +84,7 @@ jobs:
       - name: Run tests
         run: dotnet test --configuration ${{matrix.configuration}} --logger trx --results-directory "${{env.TestResultsDirectory}}" --collect:"XPlat Code Coverage" /p:RunAnalyzers=false
       - name: Upload test results
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: ${{steps.set-artifact-name.outputs.artifact_name}}
@@ -107,7 +107,7 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: nuget
           path: ${{env.NuGetDirectory}}
