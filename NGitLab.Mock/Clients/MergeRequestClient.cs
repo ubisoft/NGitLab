@@ -491,7 +491,9 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
 
             if (query.Search != null)
             {
-                throw new NotImplementedException();
+                mergeRequests = mergeRequests.Where(m =>
+                                                m.Title.Contains(query.Search, StringComparison.OrdinalIgnoreCase)
+                                                || m.Description.Contains(query.Search, StringComparison.OrdinalIgnoreCase));
             }
 
             if (query.SourceBranch != null)
