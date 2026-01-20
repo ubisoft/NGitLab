@@ -4,5 +4,6 @@ public enum RepositoryAccessLevel
 {
     Disabled,
     Private,
-    Enabled,
+    Enabled,    
+    Public // Only valid for pages_access_level
 }
