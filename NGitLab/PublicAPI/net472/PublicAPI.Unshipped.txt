@@ -108,6 +108,8 @@ NGitLab.GitLabClient.SystemHooks.get -> NGitLab.ISystemHookClient
 NGitLab.GitLabClient.Users.get -> NGitLab.IUserClient
 NGitLab.GitLabClient.Version.get -> NGitLab.IVersionClient
 NGitLab.GitLabCollectionResponse<T>
+NGitLab.GitLabCollectionResponse<T>.AsAsyncEnumerable() -> System.Collections.Generic.IAsyncEnumerable<T>
+NGitLab.GitLabCollectionResponse<T>.AsEnumerable() -> System.Collections.Generic.IEnumerable<T>
 NGitLab.GitLabCollectionResponse<T>.GitLabCollectionResponse() -> void
 NGitLab.GitLabException
 NGitLab.GitLabException.ErrorMessage.get -> string
