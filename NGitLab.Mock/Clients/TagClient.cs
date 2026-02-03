@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Mock.Internals;
 using NGitLab.Models;
+using NuGet.Versioning;
 using Commit = LibGit2Sharp.Commit;
 
 namespace NGitLab.Mock.Clients;
@@ -85,17 +86,36 @@ internal sealed class TagClient : ClientBase, ITagClient
     {
         using (Context.BeginOperationScope())
         {
-            var result = GetProject(_projectId, ProjectPermission.View).Repository.GetTags();
+            IEnumerable<LibGit2Sharp.Tag> result = GetProject(_projectId, ProjectPermission.View).Repository.GetTags();
             if (query != null)
             {
-                if (!string.IsNullOrEmpty(query.Sort))
-                    throw new NotImplementedException();
-
-                if (!string.IsNullOrEmpty(query.OrderBy))
-                    throw new NotImplementedException();
+                result = ApplyQuery(result, query.OrderBy, query.Sort);
             }
 
-            return GitLabCollectionResponse.Create(result.Select(tag => ToTagClient(tag)).ToArray());
+            return GitLabCollectionResponse.Create(result.Select(ToTagClient).ToArray());
+        }
+
+        static IEnumerable<LibGit2Sharp.Tag> ApplyQuery(IEnumerable<LibGit2Sharp.Tag> tags, string? orderBy, string? direction)
+        {
+            if (string.IsNullOrEmpty(direction))
+                direction = "desc";
+
+            // LibGitSharp does not really expose tag creation time, so hard to sort using that annotation,
+            // we'll skip sorting in that case (which should be functionnaly similar to "name" sorting)
+            tags = orderBy switch
+            {
+                "name" => tags.OrderBy(t => t.FriendlyName, StringComparer.Ordinal),
+                "updated" or null => tags,
+                "version" => tags.OrderBy(t => SemanticVersion.TryParse(t.FriendlyName, out var s) ? s : null),
+                _ => throw new NotImplementedException(),
+            };
+
+            return direction switch
+            {
+                null or "desc" => tags.Reverse(),
+                "asc" => tags,
+                _ => throw new NotImplementedException(),
+            };
         }
     }
 }
