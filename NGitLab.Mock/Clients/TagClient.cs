@@ -95,7 +95,7 @@ internal sealed class TagClient : ClientBase, ITagClient
             return GitLabCollectionResponse.Create(result.Select(ToTagClient).ToArray());
         }
 
-        static IEnumerable<LibGit2Sharp.Tag> ApplyQuery(IEnumerable<LibGit2Sharp.Tag> tags, string? orderBy, string? direction)
+        static IEnumerable<LibGit2Sharp.Tag> ApplyQuery(IEnumerable<LibGit2Sharp.Tag> tags, string orderBy, string direction)
         {
             if (string.IsNullOrEmpty(direction))
                 direction = "desc";
