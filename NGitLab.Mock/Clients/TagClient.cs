@@ -85,17 +85,78 @@ internal sealed class TagClient : ClientBase, ITagClient
     {
         using (Context.BeginOperationScope())
         {
-            var result = GetProject(_projectId, ProjectPermission.View).Repository.GetTags();
+            IEnumerable<LibGit2Sharp.Tag> result = GetProject(_projectId, ProjectPermission.View).Repository.GetTags();
             if (query != null)
             {
-                if (!string.IsNullOrEmpty(query.Sort))
-                    throw new NotImplementedException();
-
-                if (!string.IsNullOrEmpty(query.OrderBy))
-                    throw new NotImplementedException();
+                result = ApplyQuery(result, query.OrderBy, query.Sort);
             }
 
-            return GitLabCollectionResponse.Create(result.Select(tag => ToTagClient(tag)).ToArray());
+            return GitLabCollectionResponse.Create(result.Select(ToTagClient).ToArray());
+        }
+
+        static IEnumerable<LibGit2Sharp.Tag> ApplyQuery(IEnumerable<LibGit2Sharp.Tag> tags, string orderBy, string direction)
+        {
+            tags = orderBy switch
+            {
+                "name" => tags.OrderBy(t => t.FriendlyName, StringComparer.Ordinal),
+                "version" => tags.OrderBy(t => t.FriendlyName, SemanticVersionComparer.Instance),
+                null => tags,
+
+                // LibGitSharp does not really expose tag creation time, so hard to sort using that annotation,
+                "updated" => throw new NotSupportedException("Sorting by 'updated' is not supported since the info is not available in LibGit2Sharp."),
+                _ => throw new NotSupportedException($"Sorting by '{orderBy}' is not supported."),
+            };
+
+            if (string.IsNullOrEmpty(direction))
+                direction = "desc";
+
+            return direction switch
+            {
+                "desc" => tags.Reverse(),
+                "asc" => tags,
+                _ => throw new NotSupportedException($"Sort direction must be 'asc' or 'desc', got '{direction}' instead"),
+            };
+        }
+    }
+
+    private sealed class SemanticVersionComparer : IComparer<string>
+    {
+        public static SemanticVersionComparer Instance { get; } = new();
+
+        public int Compare(string x, string y)
+        {
+            var versionX = ParseVersion(x);
+            var versionY = ParseVersion(y);
+
+            var majorCmp = versionX.Major.CompareTo(versionY.Major);
+            if (majorCmp != 0)
+                return majorCmp;
+
+            var minorCmp = versionX.Minor.CompareTo(versionY.Minor);
+            if (minorCmp != 0)
+                return minorCmp;
+
+            return versionX.Patch.CompareTo(versionY.Patch);
+        }
+
+        private static (int Major, int Minor, int Patch) ParseVersion(string version)
+        {
+            if (string.IsNullOrEmpty(version))
+                return (0, 0, 0);
+
+            // Strip leading 'v' or 'V' if present
+            if (version.StartsWith("v", StringComparison.OrdinalIgnoreCase))
+                version = version[1..];
+
+            if (version.IndexOf('-') is int dashIndex and not -1)
+                version = version[..dashIndex];
+
+            var parts = version.Split('.');
+            var major = parts.Length > 0 && int.TryParse(parts[0], out var m) ? m : 0;
+            var minor = parts.Length > 1 && int.TryParse(parts[1], out var n) ? n : 0;
+            var patch = parts.Length > 2 && int.TryParse(parts[2], out var p) ? p : 0;
+
+            return (major, minor, patch);
         }
     }
 }
