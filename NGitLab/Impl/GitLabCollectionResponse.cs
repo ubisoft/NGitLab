@@ -11,4 +11,6 @@ public abstract class GitLabCollectionResponse<T> : IEnumerable<T>, IAsyncEnumer
     public abstract IEnumerator<T> GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public IAsyncEnumerable<T> AsAsyncEnumerable() => this;
 }
