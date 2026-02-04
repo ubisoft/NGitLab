@@ -303,21 +303,28 @@ public class GitLabDockerContainer
             var gitLabVersionAsNuGetVersion = NuGetVersion.Parse(ResolvedGitLabVersion);
             var isMajorVersion15 = VersionRange.Parse("[15.0,16.0)").Satisfies(gitLabVersionAsNuGetVersion);
             var isMajorVersionAtLeast16 = VersionRange.Parse("[16.0,)").Satisfies(gitLabVersionAsNuGetVersion);
+            var isMajorVersionAtLeast18 = VersionRange.Parse("[18.0,)").Satisfies(gitLabVersionAsNuGetVersion);
 
             TestContext.Progress.WriteLine("Creating root token");
 
+            var accessTokenRelativeUri = "/-/profile/personal_access_tokens";
+            if (isMajorVersionAtLeast18)
+            {
+                accessTokenRelativeUri = "/-/user_settings/personal_access_tokens";
+            }
+
             var page = await browserContext.NewPageAsync();
-            await page.GotoAsync(GitLabUrl + "/-/profile/personal_access_tokens");
+            await page.GotoAsync(new Uri(GitLabUrl, accessTokenRelativeUri).ToString());
 
             var formLocator = page.Locator("main#content-body form");
 
             var tokenName = "GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
 
-            if (isMajorVersion15)
+            if (isMajorVersionAtLeast18)
             {
-                // Try the "old" 15.x.y way
-                formLocator = page.Locator("main#content-body form");
-                await formLocator.GetByLabel("Token name").FillAsync(tokenName);
+                await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync(new LocatorClickOptions { Timeout = 5_000 });
+                formLocator = page.Locator("form[id='token-create-form']");
+                await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
             }
             else if (isMajorVersionAtLeast16)
             {
@@ -326,6 +333,12 @@ public class GitLabDockerContainer
                 await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync(new LocatorClickOptions { Timeout = 5_000 });
                 formLocator = page.Locator("main[id='content-body'] form[id='js-new-access-token-form']");
                 await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
+            }
+            else if (isMajorVersion15)
+            {
+                // Try the "old" 15.x.y way
+                formLocator = page.Locator("main#content-body form");
+                await formLocator.GetByLabel("Token name").FillAsync(tokenName);
             }
             else
             {
@@ -338,7 +351,14 @@ public class GitLabDockerContainer
                 await checkbox.CheckAsync(new LocatorCheckOptions { Force = true });
             }
 
-            await formLocator.GetByRole(AriaRole.Button, new() { Name = "Create personal access token" }).ClickAsync();
+            if (isMajorVersionAtLeast18)
+            {
+                await formLocator.GetByTestId("create-token-button").ClickAsync();
+            }
+            else
+            {
+                await formLocator.GetByRole(AriaRole.Button, new() { Name = "Create personal access token" }).ClickAsync();
+            }
 
             var token = await page.Locator("button[title='Copy personal access token']").GetAttributeAsync("data-clipboard-text");
             credentials.AdminUserToken = token;
