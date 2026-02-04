@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Extensions;
+using NGitLab.Http;
 using NGitLab.Impl.Json;
 using NGitLab.Models;
 
@@ -31,21 +33,29 @@ public partial class HttpRequestor
 
         private MethodType Method { get; }
 
-        public WebHeaderCollection Headers { get; } = [];
+        private readonly Dictionary<string, string> _headers = new(StringComparer.OrdinalIgnoreCase);
+
+        private readonly IHttpMessageHandler _messageHandler;
+        private readonly RequestOptions _options;
 
         private bool HasOutput
             => (Method == MethodType.Delete || Method == MethodType.Post || Method == MethodType.Put || Method == MethodType.Patch)
                 && Data != null;
 
-        public GitLabRequest(Uri url, MethodType method, object data, string apiToken, RequestOptions options = null)
+        public GitLabRequest(Uri url, MethodType method, object data, string apiToken, RequestOptions options, IHttpMessageHandler messageHandler)
         {
             Method = method;
             Url = url;
             Data = data;
-            Headers.Add("Accept-Encoding", "gzip");
+            _messageHandler = messageHandler;
+            _options = options ?? RequestOptions.Default;
+
+            // Add headers
+            _headers.Add("Accept-Encoding", "gzip");
+
             if (!string.IsNullOrEmpty(options?.Sudo))
             {
-                Headers.Add("Sudo", options.Sudo);
+                _headers.Add("Sudo", options.Sudo);
             }
 
             if (apiToken != null)
@@ -54,12 +64,13 @@ public partial class HttpRequestor
                 // personal, project, group and OAuth tokens. The 'PRIVATE-TOKEN' header does not
                 // provide OAuth token support.
                 // Reference: https://docs.gitlab.com/ee/api/rest/#personalprojectgroup-access-tokens
-                Headers.Add(HttpRequestHeader.Authorization, string.Concat("Bearer ", apiToken));
+                var authValue = string.Concat("Bearer ", apiToken);
+                _headers.Add("Authorization", authValue);
             }
 
             if (!string.IsNullOrEmpty(options?.UserAgent))
             {
-                Headers.Add("User-Agent", options.UserAgent);
+                _headers.Add("User-Agent", options.UserAgent);
             }
 
             if (data is FormDataContent formData)
@@ -100,15 +111,19 @@ public partial class HttpRequestor
         {
             try
             {
-                var request = CreateRequest(options);
-                return options.GetResponse(request);
-            }
-            catch (WebException wex)
-            {
-                if (wex.Response == null)
-                    throw;
+                var request = CreateHttpRequestMessage();
+                var response = _messageHandler.Send(request);
 
-                HandleWebException(wex);
+                if (!response.IsSuccessStatusCode)
+                {
+                    HandleHttpResponseError(response);
+                }
+
+                return new HttpResponseMessageWrapper(response);
+            }
+            catch (HttpRequestException ex)
+            {
+                HandleHttpRequestException(ex);
                 throw;
             }
         }
@@ -117,31 +132,102 @@ public partial class HttpRequestor
         {
             try
             {
-                var request = CreateRequest(options);
-                return await options.GetResponseAsync(request, cancellationToken).ConfigureAwait(false);
-            }
-            catch (WebException wex)
-            {
-                if (wex.Response == null)
-                    throw;
+                var request = CreateHttpRequestMessage();
+                var response = await _messageHandler.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-                HandleWebException(wex);
+                if (!response.IsSuccessStatusCode)
+                {
+                    await HandleHttpResponseErrorAsync(response).ConfigureAwait(false);
+                }
+
+                return new HttpResponseMessageWrapper(response);
+            }
+            catch (HttpRequestException ex)
+            {
+                HandleHttpRequestException(ex);
                 throw;
             }
         }
 
-        private void HandleWebException(WebException ex)
+        private HttpRequestMessage CreateHttpRequestMessage()
         {
-            using var errorResponse = (HttpWebResponse)ex.Response;
+            var request = new HttpRequestMessage(GetHttpMethod(), Url);
+
+            // Add headers
+            foreach (var header in _headers)
+            {
+                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+
+            request.Headers.Accept.Clear();
+            request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+            // Add content
+            if (HasOutput)
+            {
+                if (FormData != null)
+                {
+                    request.Content = CreateFileContent();
+                }
+                else if (UrlEncodedData != null)
+                {
+                    request.Content = new FormUrlEncodedContent(UrlEncodedData.Values);
+                }
+                else if (JsonData != null)
+                {
+                    request.Content = new StringContent(JsonData, Encoding.UTF8, "application/json");
+                }
+            }
+            else if (Method == MethodType.Put)
+            {
+                request.Content = new StringContent(string.Empty);
+            }
+
+            return request;
+        }
+
+        private HttpMethod GetHttpMethod()
+        {
+            return Method switch
+            {
+                MethodType.Get => HttpMethod.Get,
+                MethodType.Post => HttpMethod.Post,
+                MethodType.Put => HttpMethod.Put,
+                MethodType.Delete => HttpMethod.Delete,
+                MethodType.Head => HttpMethod.Head,
+                MethodType.Options => HttpMethod.Options,
+#if NET8_0_OR_GREATER
+                MethodType.Patch => HttpMethod.Patch,
+#else
+                MethodType.Patch => new HttpMethod("PATCH"),
+#endif
+                _ => throw new NotSupportedException($"HTTP method {Method} is not supported."),
+            };
+        }
+
+        private MultipartFormDataContent CreateFileContent()
+        {
+            if (Data is not FormDataContent formData)
+                return null;
+
+            var boundary = $"--------------------------{DateTime.UtcNow.Ticks.ToStringInvariant()}";
+            var content = new MultipartFormDataContent(boundary);
+            content.Add(new StreamContent(formData.Stream), "file", formData.Name);
+            return content;
+        }
+
+        private void HandleHttpResponseError(HttpResponseMessage response)
+        {
             string jsonString;
-            using (var reader = new StreamReader(errorResponse.GetResponseStream()))
+            using (var stream = response.Content.ReadAsStreamAsync().GetAwaiter().GetResult())
+            using (var reader = new StreamReader(stream))
             {
                 jsonString = reader.ReadToEnd();
             }
 
             var errorMessage = ExtractErrorMessage(jsonString, out var errorDetails);
             var exceptionMessage =
-                $"GitLab server returned an error ({errorResponse.StatusCode}): {errorMessage}. " +
+                $"GitLab server returned an error ({response.StatusCode}): {errorMessage}. " +
                 $"Original call: {Method} {Url}";
 
             if (JsonData != null)
@@ -149,84 +235,79 @@ public partial class HttpRequestor
                 exceptionMessage += $". With data {JsonData}";
             }
 
+            response.Dispose();
+
             throw new GitLabException(exceptionMessage)
             {
                 OriginalCall = Url,
                 ErrorObject = errorDetails,
-                StatusCode = errorResponse.StatusCode,
+                StatusCode = response.StatusCode,
                 ErrorMessage = errorMessage,
                 MethodType = Method,
             };
         }
 
-        private HttpWebRequest CreateRequest(RequestOptions options)
+        private async Task HandleHttpResponseErrorAsync(HttpResponseMessage response)
         {
-            var request = WebRequest.CreateHttp(Url);
-            request.Method = Method.ToString().ToUpperInvariant();
-            request.Accept = "application/json";
-            request.Headers = Headers;
-            request.AutomaticDecompression = DecompressionMethods.GZip;
-            request.Timeout = (int)options.HttpClientTimeout.TotalMilliseconds;
-            request.ReadWriteTimeout = (int)options.HttpClientTimeout.TotalMilliseconds;
-            if (options.Proxy != null)
+            string jsonString;
+            using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+            using (var reader = new StreamReader(stream))
             {
-                request.Proxy = options.Proxy;
+                jsonString = await reader.ReadToEndAsync().ConfigureAwait(false);
             }
 
-            if (HasOutput)
+            var errorMessage = ExtractErrorMessage(jsonString, out var errorDetails);
+            var exceptionMessage =
+                $"GitLab server returned an error ({response.StatusCode}): {errorMessage}. " +
+                $"Original call: {Method} {Url}";
+
+            if (JsonData != null)
             {
-                if (FormData != null)
-                {
-                    AddFileData(request, options);
-                }
-                else if (UrlEncodedData != null)
-                {
-                    AddUrlEncodedData(request, options);
-                }
-                else if (JsonData != null)
-                {
-                    AddJsonData(request, options);
-                }
-            }
-            else if (Method == MethodType.Put)
-            {
-                request.ContentLength = 0;
+                exceptionMessage += $". With data {JsonData}";
             }
 
-            return request;
-        }
+            response.Dispose();
 
-        private void AddJsonData(HttpWebRequest request, RequestOptions options)
-        {
-            request.ContentType = "application/json";
-
-            using var writer = new StreamWriter(options.GetRequestStream(request));
-            writer.Write(JsonData);
-            writer.Flush();
-            writer.Close();
-        }
-
-        public void AddFileData(HttpWebRequest request, RequestOptions options)
-        {
-            var boundary = $"--------------------------{DateTime.UtcNow.Ticks.ToStringInvariant()}";
-            if (Data is not FormDataContent formData)
-                return;
-            request.ContentType = "multipart/form-data; boundary=" + boundary;
-
-            using var uploadContent = new MultipartFormDataContent(boundary)
+            throw new GitLabException(exceptionMessage)
             {
-                { new StreamContent(formData.Stream), "file", formData.Name },
+                OriginalCall = Url,
+                ErrorObject = errorDetails,
+                StatusCode = response.StatusCode,
+                ErrorMessage = errorMessage,
+                MethodType = Method,
             };
-
-            uploadContent.CopyToAsync(options.GetRequestStream(request)).Wait();
         }
 
-        public void AddUrlEncodedData(HttpWebRequest request, RequestOptions options)
+        private void HandleHttpRequestException(HttpRequestException ex)
         {
-            request.ContentType = "application/x-www-form-urlencoded";
+            // Handle connection-level errors (no response received)
+            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
 
-            using var content = new FormUrlEncodedContent(UrlEncodedData.Values);
-            content.CopyToAsync(options.GetRequestStream(request)).Wait();
+#if NET8_0_OR_GREATER
+            // HttpRequestException in .NET 5+ includes StatusCode
+            if (ex.StatusCode.HasValue)
+            {
+                statusCode = ex.StatusCode.Value;
+            }
+#endif
+
+            var exceptionMessage =
+                $"GitLab server returned an error ({statusCode}): {ex.Message}. " +
+                $"Original call: {Method} {Url}";
+
+            if (JsonData != null)
+            {
+                exceptionMessage += $". With data {JsonData}";
+            }
+
+            throw new GitLabException(exceptionMessage, ex)
+            {
+                OriginalCall = Url,
+                ErrorObject = null,
+                StatusCode = statusCode,
+                ErrorMessage = ex.Message,
+                MethodType = Method,
+            };
         }
 
         /// <summary>
@@ -265,6 +346,63 @@ public partial class HttpRequestor
             }
 
             return message ?? $"Error message cannot be parsed ({json})";
+        }
+
+        /// <summary>
+        /// Wrapper to make HttpResponseMessage compatible with WebResponse API
+        /// </summary>
+        private sealed class HttpResponseMessageWrapper : WebResponse
+        {
+            private readonly HttpResponseMessage _response;
+
+            public HttpResponseMessageWrapper(HttpResponseMessage response)
+            {
+                _response = response ?? throw new ArgumentNullException(nameof(response));
+            }
+
+            public override WebHeaderCollection Headers
+            {
+                get
+                {
+                    var headers = new WebHeaderCollection();
+                    foreach (var header in _response.Headers)
+                    {
+                        foreach (var value in header.Value)
+                        {
+                            headers.Add(header.Key, value);
+                        }
+                    }
+
+                    if (_response.Content?.Headers != null)
+                    {
+                        foreach (var header in _response.Content.Headers)
+                        {
+                            foreach (var value in header.Value)
+                            {
+                                headers.Add(header.Key, value);
+                            }
+                        }
+                    }
+
+                    return headers;
+                }
+            }
+
+            public override Stream GetResponseStream()
+            {
+                // ReadAsStreamAsync returns a stream that can be read synchronously
+                return _response.Content?.ReadAsStreamAsync().GetAwaiter().GetResult();
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    _response?.Dispose();
+                }
+
+                base.Dispose(disposing);
+            }
         }
     }
 }

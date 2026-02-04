@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -74,7 +73,7 @@ public sealed class GitLabTestContext : IDisposable
 
     public IGitLabClient Client { get; }
 
-    public WebRequest LastRequest => _customRequestOptions.AllRequests[_customRequestOptions.AllRequests.Count - 1];
+    public HttpRequestMessage LastRequest => _customRequestOptions.AllRequests[_customRequestOptions.AllRequests.Count - 1];
 
     private static bool IsUnique(string str)
     {

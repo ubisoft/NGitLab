@@ -1,13 +1,11 @@
-#pragma warning disable CS0672  // Member overrides obsolete member
-#pragma warning disable SYSLIB0010 // Member overrides obsolete member
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Http;
 using NUnit.Framework;
 
 namespace NGitLab.Tests.Docker;
@@ -17,377 +15,273 @@ namespace NGitLab.Tests.Docker;
 /// </summary>
 internal sealed class GitLabTestContextRequestOptions : RequestOptions
 {
-    private readonly List<WebRequest> _allRequests = [];
+    private readonly List<HttpRequestMessage> _allRequests = new();
     private static readonly SemaphoreSlim s_semaphoreSlim = new(1, 1);
 
-    private readonly ConcurrentDictionary<WebRequest, LoggableRequestStream> _pendingRequest = new();
+    private readonly ConcurrentDictionary<HttpRequestMessage, byte[]> _requestContents = new();
 
-    public IReadOnlyList<WebRequest> AllRequests => _allRequests;
+    public IReadOnlyList<HttpRequestMessage> AllRequests => _allRequests;
 
     public GitLabTestContextRequestOptions()
         : base(retryCount: 0, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
     {
         UserAgent = "NGitLab.Tests/1.0.0";
+        MessageHandler = new TestHttpMessageHandler(this);
     }
 
-    public override WebResponse GetResponse(HttpWebRequest request)
+    private sealed class TestHttpMessageHandler : IHttpMessageHandler
     {
-        lock (_allRequests)
+        private readonly GitLabTestContextRequestOptions _options;
+        private readonly HttpClient _httpClient;
+
+        public TestHttpMessageHandler(GitLabTestContextRequestOptions options)
         {
-            _allRequests.Add(request);
+            _options = options;
+            _httpClient = HttpClientManager.GetOrCreateHttpClient(options);
         }
 
-        WebResponse response = null;
-
-        // GitLab is unstable, so let's make sure we don't overload it with many concurrent requests
-        s_semaphoreSlim.Wait();
-        try
+        public HttpResponseMessage Send(HttpRequestMessage request)
         {
+            lock (_options._allRequests)
+            {
+                _options._allRequests.Add(request);
+            }
+
+            HttpResponseMessage response = null;
+
+            // GitLab is unstable, so let's make sure we don't overload it with many concurrent requests
+            s_semaphoreSlim.Wait();
             try
             {
-                response = base.GetResponse(request);
-            }
-            catch (WebException exception)
-            {
-                response = exception.Response;
-                if (response is HttpWebResponse webResponse)
+                try
                 {
-                    response = new LoggableHttpWebResponse(webResponse);
-                    throw new WebException(exception.Message, exception, exception.Status, response);
+                    response = _httpClient.Send(request);
+                }
+                catch (HttpRequestException)
+                {
+                    // Log the request even if it fails
+                    _options.LogRequest(request, response);
+                    throw;
                 }
 
-                throw;
+                _options.LogRequest(request, response);
             }
             finally
             {
-                response = LogRequest(request, response);
+                s_semaphoreSlim.Release();
             }
-        }
-        finally
-        {
-            s_semaphoreSlim.Release();
+
+            return response;
         }
 
-        return response;
-    }
-
-    public override async Task<WebResponse> GetResponseAsync(HttpWebRequest request, CancellationToken cancellationToken)
-    {
-        lock (_allRequests)
+        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
         {
-            _allRequests.Add(request);
-        }
+            lock (_options._allRequests)
+            {
+                _options._allRequests.Add(request);
+            }
 
-        WebResponse response = null;
+            HttpResponseMessage response = null;
 
-        // GitLab is unstable, so let's make sure we don't overload it with many concurrent requests
-        await s_semaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
-        try
-        {
+            // GitLab is unstable, so let's make sure we don't overload it with many concurrent requests
+            await s_semaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
-                response = await base.GetResponseAsync(request, cancellationToken).ConfigureAwait(false);
-            }
-            catch (WebException exception)
-            {
-                response = exception.Response;
-                if (response is HttpWebResponse webResponse)
+                try
                 {
-                    response = new LoggableHttpWebResponse(webResponse);
-                    throw new WebException(exception.Message, exception, exception.Status, response);
+                    response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+                }
+                catch (HttpRequestException)
+                {
+                    // Log the request even if it fails
+                    await _options.LogRequestAsync(request, response).ConfigureAwait(false);
+                    throw;
                 }
 
-                throw;
+                await _options.LogRequestAsync(request, response).ConfigureAwait(false);
             }
             finally
             {
-                response = LogRequest(request, response);
+                s_semaphoreSlim.Release();
             }
-        }
-        finally
-        {
-            s_semaphoreSlim.Release();
-        }
 
-        return response;
+            return response;
+        }
     }
 
-    private WebResponse LogRequest(HttpWebRequest request, WebResponse response)
+    private void LogRequest(HttpRequestMessage request, HttpResponseMessage response)
     {
-        byte[] requestContent = null;
-        if (_pendingRequest.TryRemove(request, out var requestStream))
-        {
-            requestContent = requestStream.GetRequestContent();
-        }
-
         var sb = new StringBuilder();
         sb.Append(request.Method);
         sb.Append(' ');
         sb.Append(request.RequestUri);
         sb.AppendLine();
         LogHeaders(sb, request.Headers);
-        if (requestContent != null)
+
+        if (request.Content != null)
         {
-            sb.AppendLine();
-
-            if (string.Equals(request.ContentType, "application/json", StringComparison.OrdinalIgnoreCase))
+            byte[] requestContent = null;
+            if (_requestContents.TryGetValue(request, out requestContent) || TryReadRequestContent(request, out requestContent))
             {
-                sb.AppendLine(Encoding.UTF8.GetString(requestContent));
-            }
-            else
-            {
-                sb.Append("Binary data: ").Append(requestContent.Length).AppendLine(" bytes");
-            }
+                sb.AppendLine();
 
-            sb.AppendLine();
+                if (string.Equals(request.Content.Headers.ContentType?.MediaType, "application/json", StringComparison.Ordinal))
+                {
+                    sb.AppendLine(Encoding.UTF8.GetString(requestContent));
+                }
+                else
+                {
+                    sb.Append("Binary data: ").Append(requestContent.Length).AppendLine(" bytes");
+                }
+
+                sb.AppendLine();
+            }
         }
 
         if (response != null)
         {
             sb.AppendLine("----------");
 
-            if (response.ResponseUri != request.RequestUri)
+            if (response.RequestMessage?.RequestUri != request.RequestUri)
             {
                 sb.Append(request.RequestUri).AppendLine();
             }
 
-            if (response is HttpWebResponse webResponse)
+            sb.Append((int)response.StatusCode).Append(' ').AppendLine(response.StatusCode.ToString());
+            LogHeaders(sb, response.Headers);
+
+            if (string.Equals(response.Content?.Headers.ContentType?.MediaType, "application/json", StringComparison.Ordinal))
             {
-                sb.Append((int)webResponse.StatusCode).Append(' ').AppendLine(webResponse.StatusCode.ToString());
-                LogHeaders(sb, response.Headers);
-                if (string.Equals(webResponse.ContentType, "application/json", StringComparison.OrdinalIgnoreCase))
+                sb.AppendLine();
+                try
                 {
-                    // This response allows multiple reads, so NGitLab can also read the response
-                    // AllowResponseBuffering does not seem to work for WebException.Response
-                    response = new LoggableHttpWebResponse(webResponse);
-                    sb.AppendLine();
-                    using var responseStream = response.GetResponseStream();
-                    using var sr = new StreamReader(responseStream);
-                    var responseText = sr.ReadToEnd();
+                    var responseText = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                     sb.AppendLine(responseText);
                 }
-                else
+                catch
                 {
-                    sb.Append("Binary data: ").Append(response.ContentLength).AppendLine(" bytes");
+                    sb.AppendLine("(unable to read response content)");
                 }
+            }
+            else if (response.Content != null)
+            {
+                var contentLength = response.Content.Headers.ContentLength ?? -1;
+                sb.Append("Binary data: ").Append(contentLength).AppendLine(" bytes");
             }
         }
 
         var logs = sb.ToString();
         TestContext.Out.WriteLine(new string('-', 100) + "\nGitLab request: " + logs);
-        return response;
     }
 
-    internal override Stream GetRequestStream(HttpWebRequest request)
+    private async Task LogRequestAsync(HttpRequestMessage request, HttpResponseMessage response)
     {
-        var stream = new LoggableRequestStream(request.GetRequestStream());
-        _pendingRequest.AddOrUpdate(request, stream, (_, _) => stream);
-        return stream;
-    }
+        var sb = new StringBuilder();
+        sb.Append(request.Method);
+        sb.Append(' ');
+        sb.Append(request.RequestUri);
+        sb.AppendLine();
+        LogHeaders(sb, request.Headers);
 
-    private static void LogHeaders(StringBuilder sb, WebHeaderCollection headers)
-    {
-        for (var i = 0; i < headers.Count; i++)
+        if (request.Content != null)
         {
-            var headerName = headers.GetKey(i);
-            if (headerName == null)
-                continue;
-
-            var headerValues = headers.GetValues(i);
-            if (headerValues == null)
-                continue;
-
-            foreach (var headerValue in headerValues)
+            byte[] requestContent = null;
+            if (_requestContents.TryGetValue(request, out requestContent) || TryReadRequestContent(request, out requestContent))
             {
-                sb.Append(headerName).Append(": ");
-                if (string.Equals(headerName, "Private-Token", StringComparison.OrdinalIgnoreCase))
+                sb.AppendLine();
+
+                if (string.Equals(request.Content.Headers.ContentType?.MediaType, "application/json", StringComparison.Ordinal))
+                {
+                    sb.AppendLine(Encoding.UTF8.GetString(requestContent));
+                }
+                else
+                {
+                    sb.Append("Binary data: ").Append(requestContent.Length).AppendLine(" bytes");
+                }
+
+                sb.AppendLine();
+            }
+        }
+
+        if (response != null)
+        {
+            sb.AppendLine("----------");
+
+            if (response.RequestMessage?.RequestUri != request.RequestUri)
+            {
+                sb.Append(request.RequestUri).AppendLine();
+            }
+
+            sb.Append((int)response.StatusCode).Append(' ').AppendLine(response.StatusCode.ToString());
+            LogHeaders(sb, response.Headers);
+
+            if (string.Equals(response.Content?.Headers.ContentType?.MediaType, "application/json", StringComparison.Ordinal))
+            {
+                sb.AppendLine();
+                try
+                {
+                    var responseText = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    sb.AppendLine(responseText);
+                }
+                catch
+                {
+                    sb.AppendLine("(unable to read response content)");
+                }
+            }
+            else if (response.Content != null)
+            {
+                var contentLength = response.Content.Headers.ContentLength ?? -1;
+                sb.Append("Binary data: ").Append(contentLength).AppendLine(" bytes");
+            }
+        }
+
+        var logs = sb.ToString();
+        TestContext.Out.WriteLine(new string('-', 100) + "\nGitLab request: " + logs);
+    }
+
+    private bool TryReadRequestContent(HttpRequestMessage request, out byte[] content)
+    {
+        try
+        {
+            if (request.Content != null)
+            {
+                // Try to read the content - this may fail if the stream has already been consumed
+                content = request.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                return true;
+            }
+        }
+        catch
+        {
+            // Content stream may have been consumed already
+        }
+
+        content = null;
+        return false;
+    }
+
+    private static void LogHeaders(StringBuilder sb, System.Net.Http.Headers.HttpHeaders headers)
+    {
+        foreach (var header in headers)
+        {
+            foreach (var value in header.Value)
+            {
+                sb.Append(header.Key).Append(": ");
+                if (string.Equals(header.Key, "Private-Token", StringComparison.OrdinalIgnoreCase))
                 {
                     sb.AppendLine("******");
                 }
-                else if (string.Equals(headerName, "Authorization", StringComparison.OrdinalIgnoreCase))
+                else if (string.Equals(header.Key, "Authorization", StringComparison.OrdinalIgnoreCase))
                 {
                     const string BearerTokenPrefix = "Bearer ";
-                    if (headerValue.StartsWith(BearerTokenPrefix, StringComparison.Ordinal))
+                    if (value.StartsWith(BearerTokenPrefix, StringComparison.Ordinal))
                         sb.Append(BearerTokenPrefix);
                     sb.AppendLine("******");
                 }
                 else
                 {
-                    sb.AppendLine(headerValue);
+                    sb.AppendLine(value);
                 }
             }
-        }
-    }
-
-    private sealed class LoggableHttpWebResponse : HttpWebResponse
-    {
-        private readonly HttpWebResponse _innerWebResponse;
-        private byte[] _stream;
-
-        [Obsolete("We have to use it")]
-        public LoggableHttpWebResponse(HttpWebResponse innerWebResponse)
-        {
-            _innerWebResponse = innerWebResponse;
-        }
-
-        public override long ContentLength => _innerWebResponse.ContentLength;
-
-        public override string ContentType => _innerWebResponse.ContentType;
-
-        public override CookieCollection Cookies
-        {
-            get => _innerWebResponse.Cookies;
-            set => _innerWebResponse.Cookies = value;
-        }
-
-        public override WebHeaderCollection Headers => _innerWebResponse.Headers;
-
-        public override bool IsFromCache => _innerWebResponse.IsFromCache;
-
-        public override bool IsMutuallyAuthenticated => _innerWebResponse.IsMutuallyAuthenticated;
-
-        public override string Method => _innerWebResponse.Method;
-
-        public override Uri ResponseUri => _innerWebResponse.ResponseUri;
-
-        public override HttpStatusCode StatusCode => _innerWebResponse.StatusCode;
-
-        public override string StatusDescription => _innerWebResponse.StatusDescription;
-
-        public override bool SupportsHeaders => _innerWebResponse.SupportsHeaders;
-
-        public override bool Equals(object obj)
-        {
-            return _innerWebResponse.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return _innerWebResponse.GetHashCode();
-        }
-
-        public override void Close()
-        {
-            _innerWebResponse.Close();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _innerWebResponse.Dispose();
-            }
-
-            base.Dispose(disposing);
-        }
-
-        public override string ToString()
-        {
-            return _innerWebResponse.ToString();
-        }
-
-        public override object InitializeLifetimeService()
-        {
-            return _innerWebResponse.InitializeLifetimeService();
-        }
-
-        public override Stream GetResponseStream()
-        {
-            if (_stream == null)
-            {
-                using var ms = new MemoryStream();
-                using var responseStream = _innerWebResponse.GetResponseStream();
-                responseStream.CopyTo(ms);
-
-                _stream = ms.ToArray();
-            }
-
-            var result = new MemoryStream(_stream);
-            return result;
-        }
-    }
-
-    private sealed class LoggableRequestStream : Stream
-    {
-        private readonly Stream _innerStream;
-        private readonly MemoryStream _memoryStream = new();
-
-        public override bool CanRead => _innerStream.CanRead;
-
-        public override bool CanSeek => _innerStream.CanSeek;
-
-        public override bool CanWrite => _innerStream.CanWrite;
-
-        public override long Length => _innerStream.Length;
-
-        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
-
-        public LoggableRequestStream(Stream innerStream)
-        {
-            _innerStream = innerStream;
-        }
-
-        public byte[] GetRequestContent()
-        {
-            return _memoryStream.ToArray();
-        }
-
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            _innerStream.Write(buffer, offset, count);
-            _memoryStream.Write(buffer, offset, count);
-        }
-
-        public override void Write(ReadOnlySpan<byte> buffer)
-        {
-            _innerStream.Write(buffer);
-            _memoryStream.Write(buffer);
-        }
-
-        public override void WriteByte(byte value)
-        {
-            _innerStream.WriteByte(value);
-            _memoryStream.WriteByte(value);
-        }
-
-        public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            await WriteAsync(buffer.AsMemory(offset, count), cancellationToken).ConfigureAwait(false);
-        }
-
-        public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
-        {
-            await _innerStream.WriteAsync(buffer, cancellationToken).ConfigureAwait(false);
-            await _memoryStream.WriteAsync(buffer, cancellationToken).ConfigureAwait(false);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _innerStream.Dispose();
-            _memoryStream.Dispose();
-            base.Dispose(disposing);
-        }
-
-        public override void Flush()
-        {
-            _innerStream.Flush();
-            _memoryStream.Flush();
-        }
-
-        public override int Read(byte[] buffer, int offset, int count)
-        {
-            throw new NotSupportedException();
-        }
-
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            throw new NotSupportedException();
-        }
-
-        public override void SetLength(long value)
-        {
-            _innerStream.SetLength(value);
-            _memoryStream.SetLength(value);
         }
     }
 }

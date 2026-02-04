@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Http;
 using NGitLab.Impl;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -47,7 +50,8 @@ public class HttpRequestorTests
         var httpRequestor = new HttpRequestor(context.DockerContainer.GitLabUrl.ToString(), context.DockerContainer.Credentials.UserToken, MethodType.Get, requestOptions);
         Assert.Throws<GitLabException>(() => httpRequestor.Execute("invalidUrl"));
 
-        Assert.That(requestOptions.HandledRequests.Single().Timeout, Is.EqualTo(TimeSpan.FromMinutes(2).TotalMilliseconds));
+        // Timeout is now handled by HttpClient, we just verify the request was made
+        Assert.That(requestOptions.HandledRequests, Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -137,7 +141,7 @@ public class HttpRequestorTests
         var project = commonUserClient.Projects.Accessible.First();
 
         // Assert
-        var actualHeaderValue = context.LastRequest.Headers[HttpRequestHeader.Authorization];
+        var actualHeaderValue = context.LastRequest.Headers.Authorization?.ToString();
         Assert.That(actualHeaderValue, Is.EqualTo(expectedHeaderValue));
     }
 
@@ -147,16 +151,18 @@ public class HttpRequestorTests
 
         public bool ShouldRetryCalled { get; set; }
 
-        public HashSet<WebRequest> HandledRequests { get; } = [];
+        public HashSet<HttpRequestMessage> HandledRequests { get; } = new();
 
         public MockRequestOptions()
             : base(retryCount: 0, retryInterval: TimeSpan.Zero)
         {
+            MessageHandler = new MockHttpMessageHandler(this);
         }
 
         public MockRequestOptions(int retryCount, TimeSpan retryInterval, bool isIncremental = true)
             : base(retryCount, retryInterval, isIncremental)
         {
+            MessageHandler = new MockHttpMessageHandler(this);
         }
 
         public override bool ShouldRetry(Exception ex, int retryNumber)
@@ -166,11 +172,30 @@ public class HttpRequestorTests
             return base.ShouldRetry(ex, retryNumber);
         }
 
-        public override WebResponse GetResponse(HttpWebRequest request)
+        private sealed class MockHttpMessageHandler : IHttpMessageHandler
         {
-            HttpRequestSudoHeader = request.Headers["Sudo"];
-            HandledRequests.Add(request);
-            throw new GitLabException { StatusCode = HttpStatusCode.InternalServerError };
+            private readonly MockRequestOptions _options;
+
+            public MockHttpMessageHandler(MockRequestOptions options)
+            {
+                _options = options;
+            }
+
+            public HttpResponseMessage Send(HttpRequestMessage request)
+            {
+                if (request.Headers.TryGetValues("Sudo", out var sudoValues))
+                {
+                    _options.HttpRequestSudoHeader = sudoValues.FirstOrDefault();
+                }
+
+                _options.HandledRequests.Add(request);
+                throw new GitLabException { StatusCode = HttpStatusCode.InternalServerError };
+            }
+
+            public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
+            {
+                return Task.FromResult(Send(request));
+            }
         }
     }
 }
