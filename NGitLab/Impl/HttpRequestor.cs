@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using NGitLab.Http;
 using NGitLab.Impl.Json;
 using NGitLab.Models;
 
@@ -21,14 +22,7 @@ public partial class HttpRequestor : IHttpRequestor
 
     private readonly string _apiToken;
     private readonly string _hostUrl;
-
-    static HttpRequestor()
-    {
-        // By default only Sssl and Tls 1.0 is enabled with .NET 4.5
-        // We add Tls 1.2 and Tls 1.2 without affecting the other values in case new protocols are added in the future
-        // (see https://stackoverflow.com/questions/28286086/default-securityprotocol-in-net-4-5)
-        ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-    }
+    private readonly IHttpMessageHandler _messageHandler;
 
     public HttpRequestor(string hostUrl, string apiToken, MethodType methodType)
         : this(hostUrl, apiToken, methodType, RequestOptions.Default)
@@ -41,6 +35,19 @@ public partial class HttpRequestor : IHttpRequestor
         _apiToken = apiToken;
         _methodType = methodType;
         _options = options;
+
+        // Initialize message handler
+        if (options.MessageHandler != null)
+        {
+            // User provided custom message handler
+            _messageHandler = options.MessageHandler;
+        }
+        else
+        {
+            // Use default HttpClient-based handler
+            var httpClient = HttpClientManager.GetOrCreateHttpClient(options);
+            _messageHandler = new DefaultHttpMessageHandler(httpClient);
+        }
     }
 
     public IHttpRequestor With(object data)
@@ -139,13 +146,13 @@ public partial class HttpRequestor : IHttpRequestor
 
     public virtual void StreamAndHeaders(string tailAPIUrl, Action<Stream, IReadOnlyDictionary<string, IEnumerable<string>>> parser)
     {
-        var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options);
+        var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options, _messageHandler);
 
         using var response = request.GetResponse(_options);
         if (parser != null)
         {
             using var stream = response.GetResponseStream();
-            parser(stream, new WebHeadersDictionaryAdaptor(response.Headers));
+            parser(stream, ConvertHeaders(response.Headers));
         }
     }
 
@@ -154,24 +161,35 @@ public partial class HttpRequestor : IHttpRequestor
 
     public virtual async Task StreamAndHeadersAsync(string tailAPIUrl, Func<Stream, IReadOnlyDictionary<string, IEnumerable<string>>, Task> parser, CancellationToken cancellationToken)
     {
-        var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options);
+        var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options, _messageHandler);
 
         using var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false);
         if (parser != null)
         {
             using var stream = response.GetResponseStream();
-            await parser(stream, new WebHeadersDictionaryAdaptor(response.Headers)).ConfigureAwait(false);
+            await parser(stream, ConvertHeaders(response.Headers)).ConfigureAwait(false);
         }
+    }
+
+    private static IReadOnlyDictionary<string, IEnumerable<string>> ConvertHeaders(WebHeaderCollection headers)
+    {
+        var result = new Dictionary<string, IEnumerable<string>>(StringComparer.OrdinalIgnoreCase);
+        foreach (string key in headers.AllKeys)
+        {
+            result[key] = headers.GetValues(key) ?? Array.Empty<string>();
+        }
+
+        return result;
     }
 
     public virtual IEnumerable<T> GetAll<T>(string tailUrl)
     {
-        return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options);
+        return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options, _messageHandler);
     }
 
     public virtual GitLabCollectionResponse<T> GetAllAsync<T>(string tailUrl)
     {
-        return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options);
+        return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options, _messageHandler);
     }
 
     private static string ReadText(Stream s)
@@ -196,11 +214,14 @@ public partial class HttpRequestor : IHttpRequestor
         private readonly RequestOptions _options;
         private readonly Uri _startUrl;
 
-        internal Enumerable(string apiToken, Uri startUrl, RequestOptions options)
+        private readonly IHttpMessageHandler _messageHandler;
+
+        internal Enumerable(string apiToken, Uri startUrl, RequestOptions options, IHttpMessageHandler messageHandler)
         {
             _apiToken = apiToken;
             _startUrl = startUrl;
             _options = options;
+            _messageHandler = messageHandler;
         }
 
         public override async IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
@@ -209,7 +230,7 @@ public partial class HttpRequestor : IHttpRequestor
             while (nextUrlToLoad != null)
             {
                 string responseText;
-                var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options);
+                var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options, _messageHandler);
                 using (var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false))
                 {
                     nextUrlToLoad = GetNextPageUrl(response);
@@ -230,7 +251,7 @@ public partial class HttpRequestor : IHttpRequestor
             while (nextUrlToLoad != null)
             {
                 string responseText;
-                var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options);
+                var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options, _messageHandler);
                 using (var response = request.GetResponse(_options))
                 {
                     nextUrlToLoad = GetNextPageUrl(response);
