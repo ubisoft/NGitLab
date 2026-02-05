@@ -1,4 +1,6 @@
-﻿using NGitLab.Models;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using NGitLab.Models;
 using NUnit.Framework;
 
 namespace NGitLab.Mock.Tests;
@@ -218,5 +220,52 @@ public class RepositoryMockTests
             ],
         });
         Assert.That(newCommit.Message.Trim(), Is.EqualTo(commitMessage));
+    }
+
+    [Test]
+    public async Task Test_commit_diff_returns_diff_information()
+    {
+        // Arrange
+        using var server = new GitLabServer();
+        var user = server.Users.AddNew();
+        var project = user.Namespace.Projects.AddNew(project => project.Visibility = VisibilityLevel.Internal);
+        var initCommit = project.Repository.Commit(user, "Initial commit");
+
+        var mainCommit = project.Repository.Commit(user, "Main commit");
+
+        project.Repository.CreateAndCheckoutBranch("to-be-merged");
+        project.Repository.Commit(user, "branch commit");
+        var mr = project.CreateMergeRequest(user, "Merge request commit", "mr description", project.DefaultBranch, "to-be-merged");
+        mr.Accept(user);
+
+        // Act
+        var client = server.CreateClient(user);
+        var diff = await client.GetRepository(project.Id).CompareAsync(new(initCommit.Sha, mr.MergeCommitSha!.ToString()));
+
+        using (Assert.EnterMultipleScope())
+        {
+            // Assert
+            Assert.That(diff.Diff, Is.Not.Empty);
+            Assert.That(diff.Commits.Select(c => c.Id), Is.EqualTo([new Sha1(mainCommit.Sha), mr.MergeCommitSha]));
+            Assert.That(diff.Commit?.Id, Is.EqualTo(mr.MergeCommitSha));
+        }
+    }
+
+    [Test]
+    public async Task Test_commit_diff_same_commit_returns_empty_diff()
+    {
+        // Arrange
+        using var server = new GitLabServer();
+        var user = server.Users.AddNew();
+        var project = user.Namespace.Projects.AddNew(project => project.Visibility = VisibilityLevel.Internal);
+        var initCommit = project.Repository.Commit(user, "Initial commit");
+
+        // Act & assert
+        var client = server.CreateClient(user);
+        var diff = await client.GetRepository(project.Id).CompareAsync(new(initCommit.Sha, initCommit.Sha));
+
+        Assert.That(diff.Diff, Is.Empty);
+        Assert.That(diff.Commits, Is.Empty);
+        Assert.That(diff.Commit, Is.Null);
     }
 }
