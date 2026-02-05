@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net472;netstandard2.0;net8.0</TargetFrameworks>
-    <!-- Keep "WebRequest is obsolete" as a warning -->
-    <WarningsNotAsErrors>$(WarningsNotAsErrors);SYSLIB0014</WarningsNotAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
