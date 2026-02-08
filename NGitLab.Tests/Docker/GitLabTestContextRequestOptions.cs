@@ -120,7 +120,7 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
 
         if (request.Content != null)
         {
-            byte[] requestContent = null;
+            byte[] requestContent;
             if (_requestContents.TryGetValue(request, out requestContent) || TryReadRequestContent(request, out requestContent))
             {
                 sb.AppendLine();
@@ -185,7 +185,7 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
 
         if (request.Content != null)
         {
-            byte[] requestContent = null;
+            byte[] requestContent;
             if (_requestContents.TryGetValue(request, out requestContent) || TryReadRequestContent(request, out requestContent))
             {
                 sb.AppendLine();
