@@ -11,7 +11,14 @@ namespace NGitLab.Http;
 /// </summary>
 internal static class HttpClientManager
 {
-    private static readonly Lazy<HttpClient> s_defaultClient = new(() => CreateHttpClient(null, null));
+    /// <summary>
+    /// Configure the default client-side timeout when calling GitLab.
+    /// Some GitLab endpoints are really slow, so use a much larger value
+    /// than .NET's 100-second default.
+    /// </summary>
+    private static readonly TimeSpan s_defaultHttpClientTimeout = TimeSpan.FromMinutes(5);
+
+    private static readonly Lazy<HttpClient> s_defaultClient = new(() => CreateHttpClient(proxy: null, timeout: null));
 
     /// <summary>
     /// Gets the singleton HttpClient instance for default scenarios.
@@ -31,18 +38,16 @@ internal static class HttpClientManager
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
         };
 
-        if (proxy != null)
+        if (proxy is not null)
         {
             handler.Proxy = proxy;
             handler.UseProxy = true;
         }
 
-        var client = new HttpClient(handler);
-
-        if (timeout.HasValue)
+        var client = new HttpClient(handler)
         {
-            client.Timeout = timeout.Value;
-        }
+            Timeout = timeout ?? s_defaultHttpClientTimeout,
+        };
 
         return client;
     }
@@ -55,13 +60,13 @@ internal static class HttpClientManager
     /// <returns>An HttpClient instance.</returns>
     public static HttpClient GetOrCreateHttpClient(RequestOptions options)
     {
-        if (options.HttpClientFactory != null)
+        if (options.HttpClientFactory is not null)
         {
             return options.HttpClientFactory(options);
         }
 
         // Use singleton if no custom proxy or timeout
-        if (options.Proxy == null && !options.HttpClientTimeout.HasValue)
+        if (options.Proxy is null && !options.HttpClientTimeout.HasValue)
         {
             return DefaultClient;
         }
