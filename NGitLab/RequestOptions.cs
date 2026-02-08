@@ -24,11 +24,9 @@ public class RequestOptions
     public string Sudo { get; set; }
 
     /// <summary>
-    /// Configure the default client side timeout when calling GitLab.
-    /// GitLab exposes some end points which are really slow so
-    /// the default we use is larger than the default 100 seconds of .net
+    /// Overrides the default client-side timeout when calling GitLab.
     /// </summary>
-    public TimeSpan? HttpClientTimeout { get; set; } = TimeSpan.FromMinutes(5);
+    public TimeSpan? HttpClientTimeout { get; set; }
 
     public string UserAgent { get; set; }
 
