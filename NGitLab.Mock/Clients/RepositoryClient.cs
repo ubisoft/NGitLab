@@ -150,6 +150,11 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
     {
         var project = GetProject(_projectId, ProjectPermission.View);
         var treeChanges = project.Repository.Compare(query.From, query.To);
+        var commits = project.Repository.GetCommits($"{query.From}..{query.To}")
+            .Select(c => c.ToCommitClient(project))
+            .Reverse()
+            .ToArray();
+
         return new CompareResults()
         {
             Diff = treeChanges.Select(change
@@ -161,6 +166,8 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
                     IsDeletedFile = change.Status is ChangeKind.Deleted,
                     IsRenamedFile = change.Status is ChangeKind.Renamed,
                 }).ToArray(),
+            Commit = commits.LastOrDefault(),
+            Commits = commits,
         };
     }
 
