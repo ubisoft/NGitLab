@@ -5,9 +5,11 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
+using NuGet.Versioning;
 using NUnit.Framework;
 
 namespace NGitLab.Tests.RepositoryClient;
@@ -268,14 +270,32 @@ public class RepositoryClientTests
         Assert.That(treeObjects, Is.Not.Empty);
     }
 
+    /// <remarks>
+    /// See <see href="https://docs.gitlab.com/update/deprecations/#gitlab-177"/>.
+    /// </remarks>
     [Test]
     [NGitLabRetry]
-    public async Task GetAllTreeObjectsAtInvalidPath()
+    public async Task GetAllTreeObjectsAtInvalidPathReturnsEmpty()
     {
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+        context.Context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[,17.7)"));
 
-        var treeObjects = context.RepositoryClient.GetTree("Fakepath");
+        var treeObjects = context.RepositoryClient.GetTree("Fakepath").ToArray();
         Assert.That(treeObjects, Is.Empty);
+    }
+
+    /// <remarks>
+    /// See <see href="https://docs.gitlab.com/update/deprecations/#gitlab-177"/>.
+    /// </remarks>
+    [Test]
+    [NGitLabRetry]
+    public async Task GetAllTreeObjectsAtInvalidPathReturnsNotFound()
+    {
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
+        context.Context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[17.7,)"));
+
+        var exception = Assert.Throws<GitLabException>(() => context.RepositoryClient.GetTree("Fakepath").ToArray());
+        Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
     [TestCase(CommitRefType.All)]
