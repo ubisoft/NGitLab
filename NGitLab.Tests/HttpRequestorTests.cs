@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Http;
 using NGitLab.Impl;
@@ -156,13 +155,13 @@ public class HttpRequestorTests
         public MockRequestOptions()
             : base(retryCount: 0, retryInterval: TimeSpan.Zero)
         {
-            MessageHandler = new MockHttpMessageHandler(this);
+            MessageHook = new MockHttpMessageHook(this);
         }
 
         public MockRequestOptions(int retryCount, TimeSpan retryInterval, bool isIncremental = true)
             : base(retryCount, retryInterval, isIncremental)
         {
-            MessageHandler = new MockHttpMessageHandler(this);
+            MessageHook = new MockHttpMessageHook(this);
         }
 
         public override bool ShouldRetry(Exception ex, int retryNumber)
@@ -172,16 +171,16 @@ public class HttpRequestorTests
             return base.ShouldRetry(ex, retryNumber);
         }
 
-        private sealed class MockHttpMessageHandler : IHttpMessageHandler
+        private sealed class MockHttpMessageHook : IHttpMessageHook
         {
             private readonly MockRequestOptions _options;
 
-            public MockHttpMessageHandler(MockRequestOptions options)
+            public MockHttpMessageHook(MockRequestOptions options)
             {
                 _options = options;
             }
 
-            public HttpResponseMessage Send(HttpRequestMessage request)
+            public void BeforeSending(HttpRequestMessage request)
             {
                 if (request.Headers.TryGetValues("Sudo", out var sudoValues))
                 {
@@ -192,9 +191,8 @@ public class HttpRequestorTests
                 throw new GitLabException { StatusCode = HttpStatusCode.InternalServerError };
             }
 
-            public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
+            public void AfterReceived(HttpResponseMessage response)
             {
-                return Task.FromResult(Send(request));
             }
         }
     }
