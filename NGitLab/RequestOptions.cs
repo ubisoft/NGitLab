@@ -37,13 +37,7 @@ public class RequestOptions
     /// Set this property to customize HTTP request behavior (e.g., logging, throttling).
     /// This replaces the obsolete virtual methods GetResponse and GetResponseAsync.
     /// </summary>
-    public IHttpMessageHandler MessageHandler { get; set; }
-
-    /// <summary>
-    /// Custom factory for creating HttpClient instances.
-    /// If set, this factory will be used instead of the default HttpClient management.
-    /// </summary>
-    public Func<RequestOptions, HttpClient> HttpClientFactory { get; set; }
+    public IHttpMessageHook MessageHook { get; set; }
 
     public RequestOptions(int retryCount, TimeSpan retryInterval, bool isIncremental = true)
     {

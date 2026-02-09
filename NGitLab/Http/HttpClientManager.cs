@@ -18,7 +18,7 @@ internal static class HttpClientManager
     /// </summary>
     private static readonly TimeSpan s_defaultHttpClientTimeout = TimeSpan.FromMinutes(5);
 
-    private static readonly Lazy<HttpClient> s_defaultClient = new(() => CreateHttpClient(proxy: null, timeout: null));
+    private static readonly Lazy<HttpClient> s_defaultClient = new(() => CreateHttpClient(proxy: null, timeout: null, msgHook: null));
 
     /// <summary>
     /// Gets the singleton HttpClient instance for default scenarios.
@@ -31,7 +31,7 @@ internal static class HttpClientManager
     /// <param name="proxy">Optional proxy configuration.</param>
     /// <param name="timeout">Optional timeout value.</param>
     /// <returns>A configured HttpClient instance.</returns>
-    public static HttpClient CreateHttpClient(IWebProxy proxy, TimeSpan? timeout)
+    private static HttpClient CreateHttpClient(IWebProxy proxy, TimeSpan? timeout, IHttpMessageHook msgHook)
     {
         var handler = new HttpClientHandler
         {
@@ -44,7 +44,17 @@ internal static class HttpClientManager
             handler.UseProxy = true;
         }
 
-        var client = new HttpClient(handler)
+        HttpMessageHandler handlerChain;
+        if (msgHook is null)
+        {
+            handlerChain = handler;
+        }
+        else
+        {
+            handlerChain = new CustomHttpMessageHandler(handler, msgHook);
+        }
+
+        var client = new HttpClient(handlerChain)
         {
             Timeout = timeout ?? s_defaultHttpClientTimeout,
         };
@@ -60,18 +70,13 @@ internal static class HttpClientManager
     /// <returns>An HttpClient instance.</returns>
     public static HttpClient GetOrCreateHttpClient(RequestOptions options)
     {
-        if (options.HttpClientFactory is not null)
-        {
-            return options.HttpClientFactory(options);
-        }
-
         // Use singleton if no custom proxy or timeout
-        if (options.Proxy is null && !options.HttpClientTimeout.HasValue)
+        if (options.Proxy is null && options.HttpClientTimeout is null && options.MessageHook is null)
         {
             return DefaultClient;
         }
 
         // Create new instance for custom configuration
-        return CreateHttpClient(options.Proxy, options.HttpClientTimeout);
+        return CreateHttpClient(options.Proxy, options.HttpClientTimeout, options.MessageHook);
     }
 }

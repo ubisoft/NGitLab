@@ -26,13 +26,14 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
         : base(retryCount: 0, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
     {
         UserAgent = "NGitLab.Tests/1.0.0";
-        MessageHandler = new TestHttpMessageHandler(this);
+        MessageHook = new TestHttpMessageHandler(this);
     }
 
-    private sealed class TestHttpMessageHandler : IHttpMessageHandler
+    private sealed class TestHttpMessageHandler : IHttpMessageHook
     {
         private readonly GitLabTestContextRequestOptions _options;
         private readonly HttpClient _httpClient;
+        private HttpRequestMessage _currentRequest;
 
         public TestHttpMessageHandler(GitLabTestContextRequestOptions options)
         {
@@ -40,72 +41,29 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
             _httpClient = HttpClientManager.GetOrCreateHttpClient(options);
         }
 
-        public HttpResponseMessage Send(HttpRequestMessage request)
+        public void PrepareRequest(HttpRequestMessage request)
         {
+            _currentRequest = request;
+
             lock (_options._allRequests)
             {
                 _options._allRequests.Add(request);
             }
-
-            HttpResponseMessage response = null;
 
             // GitLab is unstable, so let's make sure we don't overload it with many concurrent requests
             s_semaphoreSlim.Wait();
-            try
-            {
-                try
-                {
-                    response = _httpClient.Send(request);
-                }
-                catch (HttpRequestException)
-                {
-                    // Log the request even if it fails
-                    _options.LogRequest(request, response);
-                    throw;
-                }
-
-                _options.LogRequest(request, response);
-            }
-            finally
-            {
-                s_semaphoreSlim.Release();
-            }
-
-            return response;
         }
 
-        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default)
+        public void ProcessResponse(HttpResponseMessage response)
         {
-            lock (_options._allRequests)
-            {
-                _options._allRequests.Add(request);
-            }
-
-            HttpResponseMessage response = null;
-
-            // GitLab is unstable, so let's make sure we don't overload it with many concurrent requests
-            await s_semaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
-                try
-                {
-                    response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                }
-                catch (HttpRequestException)
-                {
-                    // Log the request even if it fails
-                    await _options.LogRequestAsync(request, response).ConfigureAwait(false);
-                    throw;
-                }
-
-                await _options.LogRequestAsync(request, response).ConfigureAwait(false);
+                _options.LogRequest(_currentRequest, response);
             }
             finally
             {
                 s_semaphoreSlim.Release();
             }
-
-            return response;
         }
     }
 

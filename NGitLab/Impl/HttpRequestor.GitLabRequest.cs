@@ -35,19 +35,19 @@ public partial class HttpRequestor
 
         private readonly Dictionary<string, string> _headers = new(StringComparer.OrdinalIgnoreCase);
 
-        private readonly IHttpMessageHandler _messageHandler;
+        private readonly HttpClient _httpClient;
         private readonly RequestOptions _options;
 
         private bool HasOutput
             => (Method == MethodType.Delete || Method == MethodType.Post || Method == MethodType.Put || Method == MethodType.Patch)
                 && Data != null;
 
-        public GitLabRequest(Uri url, MethodType method, object data, string apiToken, RequestOptions options, IHttpMessageHandler messageHandler)
+        public GitLabRequest(Uri url, MethodType method, object data, string apiToken, RequestOptions options, HttpClient httpClient)
         {
             Method = method;
             Url = url;
             Data = data;
-            _messageHandler = messageHandler;
+            _httpClient = httpClient;
             _options = options ?? RequestOptions.Default;
 
             // Add headers
@@ -112,8 +112,11 @@ public partial class HttpRequestor
             try
             {
                 var request = CreateHttpRequestMessage();
-                var response = _messageHandler.Send(request);
-
+#if NET8_0_OR_GREATER
+                var response = _httpClient.Send(request);
+#else
+                var response = _httpClient.SendAsync(request).GetAwaiter().GetResult();
+#endif
                 if (!response.IsSuccessStatusCode)
                 {
                     HandleHttpResponseError(response);
@@ -133,7 +136,7 @@ public partial class HttpRequestor
             try
             {
                 var request = CreateHttpRequestMessage();
-                var response = await _messageHandler.SendAsync(request, cancellationToken).ConfigureAwait(false);
+                var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
                 if (!response.IsSuccessStatusCode)
                 {
