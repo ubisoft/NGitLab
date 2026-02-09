@@ -1,4 +1,4 @@
-#pragma warning disable MA0004
+﻿#pragma warning disable MA0004
 #pragma warning disable MA0006
 using System;
 using System.Collections.Generic;

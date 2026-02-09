@@ -536,7 +536,7 @@ public class ProjectsTests
     }
 
     /// <remarks>
-    /// <para>On versions prior v18, projects where deleted immediately.</para>
+    /// <para>On versions prior to v18, projects where deleted immediately.</para>
     /// <para>On v18 and above, it is by default "marked for deletion" and deleted after 7 days.</para>
     /// <para>Although the default behavior can be changed (admin settings), a new test has been created to validate the "mark for deletion behavior". See <see cref="DeleteAsync_WhenProjectExists_ItIsMarkedForDeletion"/>.</para>
     /// </remarks>
@@ -819,8 +819,8 @@ public class ProjectsTests
     }
 
     /// <remarks>
-    /// <para>On v18 and above, Job Token Permissions are enforced by default</para>
-    /// <para>Although the default behavior can be changed (admin settings), we should create a new test to toggle the job token allow list on admin section to validate the old behavior.</para>
+    /// <para>On v18 and above, Job Token Permissions are enforced by default.</para>
+    /// <para>Although the default behavior can be changed (admin settings), we should create a new test to toggle the job token allow list on admin section to validate the old behavior (<see href="https://github.com/ubisoft/NGitLab/issues/1051")/>.</para>
     /// </remarks>
     [Test]
     [NGitLabRetry]
