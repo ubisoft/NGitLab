@@ -210,7 +210,7 @@ public class GitLabDockerContainer
                 },
 
                 // Update size of /dev/shm to to 512mb (default: 64mb)
-                // Avoids intermitent crashes of GitLab
+                // Avoids intermittent crashes of GitLab
                 ShmSize = 512 * 1024 * 1024,
             };
 
