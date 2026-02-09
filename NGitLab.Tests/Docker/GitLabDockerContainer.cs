@@ -34,7 +34,7 @@ public class GitLabDockerContainer
     /// <para>Keep in sync with .github/workflows/ci.yml, use the lowest supported version</para>
     /// <para>List of available versions: https://hub.docker.com/r/gitlab/gitlab-ee/tags/</para>
     /// </remarks>
-    private const string LocalGitLabDockerVersion = "18.6.5-ee.0";
+    private const string LocalGitLabDockerVersion = "18.1.6-ee.0";
 
     /// <summary>
     /// Resolved GitLab version taken from the help page once logged in
@@ -208,9 +208,13 @@ public class GitLabDockerContainer
                 {
                     { HttpPort.ToString(CultureInfo.InvariantCulture) + "/tcp", new List<PortBinding> { new PortBinding { HostPort = HttpPort.ToString(CultureInfo.InvariantCulture) } } },
                 },
+
+                // Update size of /dev/shm to to 512mb (default: 64mb)
+                // Avoids intermitent crashes of GitLab
                 ShmSize = 512 * 1024 * 1024,
             };
 
+            // Disables non-useful features
             // See https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template
             string[] omnibusConfig =
             [
@@ -237,9 +241,6 @@ public class GitLabDockerContainer
                 "gitlab_rails['kerberos_enabled'] = false",
                 "gitlab_rails['packages_enabled'] = false",
                 "gitlab_rails['dependency_proxy_enabled'] = false",
-
-                "gitlab_shell['log_level'] = 'WARN'",
-                "patroni['log_level'] = 'WARN'",
             ];
 
             var response = await client.Containers.CreateContainerAsync(new CreateContainerParameters
@@ -257,7 +258,6 @@ public class GitLabDockerContainer
                 [
                     $"GITLAB_ROOT_PASSWORD={AdminPassword}",
                     $"GITLAB_OMNIBUS_CONFIG={string.Join("; ", omnibusConfig)}",
-                    "GITLAB_LOG_LEVEL=WARN",
                 ],
             }).ConfigureAwait(false);
 
