@@ -125,8 +125,9 @@ NGitLab.GitLabException.OriginalCall.get -> System.Uri
 NGitLab.GitLabException.OriginalCall.set -> void
 NGitLab.GitLabException.StatusCode.get -> System.Net.HttpStatusCode
 NGitLab.GitLabException.StatusCode.set -> void
-NGitLab.Http.IHttpMessageHandler.Send(System.Net.Http.HttpRequestMessage request) -> System.Net.Http.HttpResponseMessage
-NGitLab.Http.IHttpMessageHandler.SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage>
+NGitLab.Http.IHttpMessageHook
+NGitLab.Http.IHttpMessageHook.PrepareRequest(System.Net.Http.HttpRequestMessage request) -> void
+NGitLab.Http.IHttpMessageHook.ProcessResponse(System.Net.Http.HttpResponseMessage response) -> void
 NGitLab.IBranchClient
 NGitLab.IBranchClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Branch>
 NGitLab.IBranchClient.Create(NGitLab.Models.BranchCreate branch) -> NGitLab.Models.Branch
@@ -5079,6 +5080,8 @@ NGitLab.RequestOptions.HttpClientTimeout.get -> System.TimeSpan?
 NGitLab.RequestOptions.HttpClientTimeout.set -> void
 NGitLab.RequestOptions.IsIncremental.get -> bool
 NGitLab.RequestOptions.IsIncremental.set -> void
+NGitLab.RequestOptions.MessageHook.get -> NGitLab.Http.IHttpMessageHook
+NGitLab.RequestOptions.MessageHook.set -> void
 NGitLab.RequestOptions.Proxy.get -> System.Net.WebProxy
 NGitLab.RequestOptions.Proxy.set -> void
 NGitLab.RequestOptions.RequestOptions(int retryCount, System.TimeSpan retryInterval, bool isIncremental = true) -> void
@@ -5219,8 +5222,3 @@ virtual NGitLab.Impl.HttpRequestor.StreamAsync(string tailAPIUrl, System.Func<Sy
 virtual NGitLab.Impl.HttpRequestor.To<T>(string tailAPIUrl) -> T
 virtual NGitLab.Impl.HttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<T>
 virtual NGitLab.RequestOptions.ShouldRetry(System.Exception ex, int retryNumber) -> bool
-NGitLab.Http.IHttpMessageHandler
-NGitLab.RequestOptions.MessageHandler.get -> NGitLab.Http.IHttpMessageHandler
-NGitLab.RequestOptions.MessageHandler.set -> void
-NGitLab.RequestOptions.HttpClientFactory.get -> System.Func<NGitLab.RequestOptions, System.Net.Http.HttpClient>
-NGitLab.RequestOptions.HttpClientFactory.set -> void

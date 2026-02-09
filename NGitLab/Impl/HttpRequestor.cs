@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Http;
@@ -22,7 +23,7 @@ public partial class HttpRequestor : IHttpRequestor
 
     private readonly string _apiToken;
     private readonly string _hostUrl;
-    private readonly IHttpMessageHandler _messageHandler;
+    private readonly HttpClient _httpClient;
 
     public HttpRequestor(string hostUrl, string apiToken, MethodType methodType)
         : this(hostUrl, apiToken, methodType, RequestOptions.Default)
@@ -35,19 +36,7 @@ public partial class HttpRequestor : IHttpRequestor
         _apiToken = apiToken;
         _methodType = methodType;
         _options = options;
-
-        // Initialize message handler
-        if (options.MessageHandler != null)
-        {
-            // User provided custom message handler
-            _messageHandler = options.MessageHandler;
-        }
-        else
-        {
-            // Use default HttpClient-based handler
-            var httpClient = HttpClientManager.GetOrCreateHttpClient(options);
-            _messageHandler = new DefaultHttpMessageHandler(httpClient);
-        }
+        _httpClient = HttpClientManager.GetOrCreateHttpClient(options);
     }
 
     public IHttpRequestor With(object data)
@@ -146,7 +135,7 @@ public partial class HttpRequestor : IHttpRequestor
 
     public virtual void StreamAndHeaders(string tailAPIUrl, Action<Stream, IReadOnlyDictionary<string, IEnumerable<string>>> parser)
     {
-        var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options, _messageHandler);
+        var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options, _httpClient);
 
         using var response = request.GetResponse(_options);
         if (parser != null)
@@ -161,7 +150,7 @@ public partial class HttpRequestor : IHttpRequestor
 
     public virtual async Task StreamAndHeadersAsync(string tailAPIUrl, Func<Stream, IReadOnlyDictionary<string, IEnumerable<string>>, Task> parser, CancellationToken cancellationToken)
     {
-        var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options, _messageHandler);
+        var request = new GitLabRequest(GetAPIUrl(tailAPIUrl), _methodType, _data, _apiToken, _options, _httpClient);
 
         using var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false);
         if (parser != null)
@@ -184,12 +173,12 @@ public partial class HttpRequestor : IHttpRequestor
 
     public virtual IEnumerable<T> GetAll<T>(string tailUrl)
     {
-        return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options, _messageHandler);
+        return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options, _httpClient);
     }
 
     public virtual GitLabCollectionResponse<T> GetAllAsync<T>(string tailUrl)
     {
-        return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options, _messageHandler);
+        return new Enumerable<T>(_apiToken, GetAPIUrl(tailUrl), _options, _httpClient);
     }
 
     private static string ReadText(Stream s)
@@ -214,14 +203,14 @@ public partial class HttpRequestor : IHttpRequestor
         private readonly RequestOptions _options;
         private readonly Uri _startUrl;
 
-        private readonly IHttpMessageHandler _messageHandler;
+        private readonly HttpClient _httpClient;
 
-        internal Enumerable(string apiToken, Uri startUrl, RequestOptions options, IHttpMessageHandler messageHandler)
+        internal Enumerable(string apiToken, Uri startUrl, RequestOptions options, HttpClient httpClient)
         {
             _apiToken = apiToken;
             _startUrl = startUrl;
             _options = options;
-            _messageHandler = messageHandler;
+            _httpClient = httpClient;
         }
 
         public override async IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
@@ -230,7 +219,7 @@ public partial class HttpRequestor : IHttpRequestor
             while (nextUrlToLoad != null)
             {
                 string responseText;
-                var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options, _messageHandler);
+                var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options, _httpClient);
                 using (var response = await request.GetResponseAsync(_options, cancellationToken).ConfigureAwait(false))
                 {
                     nextUrlToLoad = GetNextPageUrl(response);
@@ -251,7 +240,7 @@ public partial class HttpRequestor : IHttpRequestor
             while (nextUrlToLoad != null)
             {
                 string responseText;
-                var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options, _messageHandler);
+                var request = new GitLabRequest(nextUrlToLoad, MethodType.Get, data: null, _apiToken, _options, _httpClient);
                 using (var response = request.GetResponse(_options))
                 {
                     nextUrlToLoad = GetNextPageUrl(response);
