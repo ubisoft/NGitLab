@@ -227,4 +227,7 @@ public class Project
 
     [JsonPropertyName("ci_default_git_depth")]
     public int? CiDefaultGitDepth { get; set; }
+
+    [JsonPropertyName("marked_for_deletion_on")]
+    public DateTime? MarkedForDeletionOn { get; set; }
 }

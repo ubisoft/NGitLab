@@ -3629,6 +3629,8 @@ NGitLab.Models.Project.LfsEnabled.get -> bool
 NGitLab.Models.Project.LfsEnabled.set -> void
 NGitLab.Models.Project.Links.get -> NGitLab.Models.ProjectLinks
 NGitLab.Models.Project.Links.set -> void
+NGitLab.Models.Project.MarkedForDeletionOn.get -> System.DateTime?
+NGitLab.Models.Project.MarkedForDeletionOn.set -> void
 NGitLab.Models.Project.MergeMethod.get -> string
 NGitLab.Models.Project.MergeMethod.set -> void
 NGitLab.Models.Project.MergePipelinesEnabled.get -> bool

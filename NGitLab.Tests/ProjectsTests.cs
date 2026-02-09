@@ -535,11 +535,18 @@ public class ProjectsTests
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
+    /// <remarks>
+    /// <para>On versions prior to v18, projects where deleted immediately.</para>
+    /// <para>On v18 and above, it is by default "marked for deletion" and deleted after 7 days.</para>
+    /// <para>Although the default behavior can be changed (admin settings), a new test has been created to validate the "mark for deletion behavior". See <see cref="DeleteAsync_WhenProjectExists_ItIsMarkedForDeletion"/>.</para>
+    /// </remarks>
     [Test]
     [NGitLabRetry]
     public async Task DeleteAsync_WhenProjectExists_ItIsDeleted()
     {
         using var context = await GitLabTestContext.CreateAsync();
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[,18.0)"));
+
         var group = context.CreateGroup();
         var project = context.CreateProject(group.Id);
         var projectClient = context.Client.Projects;
@@ -549,6 +556,26 @@ public class ProjectsTests
 
         // Assert
         Assert.ThrowsAsync<GitLabException>(() => projectClient.GetAsync(project.Id));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task DeleteAsync_WhenProjectExists_ItIsMarkedForDeletion()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[18.0,)"));
+
+        var group = context.CreateGroup();
+        var project = context.CreateProject(group.Id);
+        var projectClient = context.Client.Projects;
+
+        // Act
+        await projectClient.DeleteAsync(project.Id);
+
+        // Assert
+        var projectMarkedForDeletion = await projectClient.GetAsync(project.Id);
+        Assert.That(projectMarkedForDeletion.MarkedForDeletionOn, Is.Not.Null);
+        Assert.That(projectMarkedForDeletion.MarkedForDeletionOn.Value.Date, Is.EqualTo(DateTime.UtcNow.Date));
     }
 
     [Test]
@@ -791,14 +818,17 @@ public class ProjectsTests
         Assert.That(groups.Select(g => g.Id), Is.EquivalentTo(new[] { group.Id, subgroup.Id }));
     }
 
+    /// <remarks>
+    /// <para>On v18 and above, Job Token Permissions are enforced by default.</para>
+    /// <para>Although the default behavior can be changed (admin settings), we should create a new test to toggle the job token allow list on admin section to validate the old behavior (<see href="https://github.com/ubisoft/NGitLab/issues/1051")/>.</para>
+    /// </remarks>
     [Test]
     [NGitLabRetry]
     public async Task GetAndSetProjectJobTokenScope()
     {
         // Arrange
         using var context = await GitLabTestContext.CreateAsync();
-
-        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[16.1,)"));
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[16.1,18.0)"));
 
         var project = context.CreateProject();
         var gitLabClient = context.Client;

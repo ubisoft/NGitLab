@@ -34,7 +34,7 @@ public class GitLabDockerContainer
     /// <para>Keep in sync with .github/workflows/ci.yml, use the lowest supported version</para>
     /// <para>List of available versions: https://hub.docker.com/r/gitlab/gitlab-ee/tags/</para>
     /// </remarks>
-    private const string LocalGitLabDockerVersion = "17.1.8-ee.0";
+    private const string LocalGitLabDockerVersion = "18.1.6-ee.0";
 
     /// <summary>
     /// Resolved GitLab version taken from the help page once logged in
@@ -208,7 +208,40 @@ public class GitLabDockerContainer
                 {
                     { HttpPort.ToString(CultureInfo.InvariantCulture) + "/tcp", new List<PortBinding> { new PortBinding { HostPort = HttpPort.ToString(CultureInfo.InvariantCulture) } } },
                 },
+
+                // Update size of /dev/shm to to 512mb (default: 64mb)
+                // Avoids intermittent crashes of GitLab
+                ShmSize = 512 * 1024 * 1024,
             };
+
+            // Disables non-useful features
+            // See https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template
+            string[] omnibusConfig =
+            [
+                $"external_url 'http://localhost:{HttpPort.ToString(CultureInfo.InvariantCulture)}/'",
+                "gitlab_rails['gitlab_email_enabled'] = false",
+                "gitlab_rails['incoming_email_enabled'] = false",
+                "gitlab_rails['lfs_enabled'] = false",
+                "gitlab_rails['terraform_state_enabled'] = false",
+                "gitlab_rails['pages_object_store_enabled'] = false",
+                "gitlab_rails['usage_ping_enabled'] = false",
+                "gitlab_rails['registry_enabled'] = false",
+                "registry['enable'] = false",
+                "sidekiq['metrics_enabled'] = false",
+                "logrotate['enable'] = false",
+                "gitlab_pages['enable'] = false",
+                "gitlab_rails['gitlab_kas_enabled'] = false",
+                "mattermost['enable'] = false",
+                "alertmanager['enable'] = false",
+                "node_exporter['enable'] = false",
+                "redis_exporter['enable'] = false",
+                "postgres_exporter['enable'] = false",
+                "pgbouncer_exporter['enable'] = false",
+                "gitlab_exporter['enable'] = false",
+                "gitlab_rails['kerberos_enabled'] = false",
+                "gitlab_rails['packages_enabled'] = false",
+                "gitlab_rails['dependency_proxy_enabled'] = false",
+            ];
 
             var response = await client.Containers.CreateContainerAsync(new CreateContainerParameters
             {
@@ -223,8 +256,8 @@ public class GitLabDockerContainer
                 },
                 Env =
                 [
-                    "GITLAB_OMNIBUS_CONFIG=external_url 'http://localhost:" + HttpPort.ToString(CultureInfo.InvariantCulture) + "/'",
-                    "GITLAB_ROOT_PASSWORD=" + AdminPassword,
+                    $"GITLAB_ROOT_PASSWORD={AdminPassword}",
+                    $"GITLAB_OMNIBUS_CONFIG={string.Join("; ", omnibusConfig)}",
                 ],
             }).ConfigureAwait(false);
 
@@ -303,21 +336,28 @@ public class GitLabDockerContainer
             var gitLabVersionAsNuGetVersion = NuGetVersion.Parse(ResolvedGitLabVersion);
             var isMajorVersion15 = VersionRange.Parse("[15.0,16.0)").Satisfies(gitLabVersionAsNuGetVersion);
             var isMajorVersionAtLeast16 = VersionRange.Parse("[16.0,)").Satisfies(gitLabVersionAsNuGetVersion);
+            var isMajorVersionAtLeast18 = VersionRange.Parse("[18.0,)").Satisfies(gitLabVersionAsNuGetVersion);
 
             TestContext.Progress.WriteLine("Creating root token");
 
+            var accessTokenRelativeUri = "/-/profile/personal_access_tokens";
+            if (isMajorVersionAtLeast18)
+            {
+                accessTokenRelativeUri = "/-/user_settings/personal_access_tokens";
+            }
+
             var page = await browserContext.NewPageAsync();
-            await page.GotoAsync(GitLabUrl + "/-/profile/personal_access_tokens");
+            await page.GotoAsync(new Uri(GitLabUrl, accessTokenRelativeUri).ToString());
 
             var formLocator = page.Locator("main#content-body form");
 
             var tokenName = "GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
 
-            if (isMajorVersion15)
+            if (isMajorVersionAtLeast18)
             {
-                // Try the "old" 15.x.y way
-                formLocator = page.Locator("main#content-body form");
-                await formLocator.GetByLabel("Token name").FillAsync(tokenName);
+                await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync(new LocatorClickOptions { Timeout = 5_000 });
+                formLocator = page.Locator("form[id='token-create-form']");
+                await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
             }
             else if (isMajorVersionAtLeast16)
             {
@@ -326,6 +366,12 @@ public class GitLabDockerContainer
                 await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync(new LocatorClickOptions { Timeout = 5_000 });
                 formLocator = page.Locator("main[id='content-body'] form[id='js-new-access-token-form']");
                 await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
+            }
+            else if (isMajorVersion15)
+            {
+                // Try the "old" 15.x.y way
+                formLocator = page.Locator("main#content-body form");
+                await formLocator.GetByLabel("Token name").FillAsync(tokenName);
             }
             else
             {
@@ -338,9 +384,19 @@ public class GitLabDockerContainer
                 await checkbox.CheckAsync(new LocatorCheckOptions { Force = true });
             }
 
-            await formLocator.GetByRole(AriaRole.Button, new() { Name = "Create personal access token" }).ClickAsync();
+            string token = null;
+            if (isMajorVersionAtLeast18)
+            {
+                await formLocator.GetByTestId("create-token-button").ClickAsync();
+                await page.GetByRole(AriaRole.Alert).GetByLabel("Click to reveal").ClickAsync();
+                token = await page.GetByTestId("created-access-token-field").InputValueAsync();
+            }
+            else
+            {
+                await formLocator.GetByRole(AriaRole.Button, new() { Name = "Create personal access token" }).ClickAsync();
+                token = await page.Locator("button[title='Copy personal access token']").GetAttributeAsync("data-clipboard-text");
+            }
 
-            var token = await page.Locator("button[title='Copy personal access token']").GetAttributeAsync("data-clipboard-text");
             credentials.AdminUserToken = token;
 
             // Get admin login cookie
@@ -508,6 +564,8 @@ public class GitLabDockerContainer
 
         ResolvedGitLabVersion = version.Trim().TrimStart('v');
         Console.WriteLine($"GitLab resolved version is '{ResolvedGitLabVersion}'");
+
+        await CloseRedesignModal(page);
     }
 
     private async Task LoginAsync(IBrowserContext browserContext)
@@ -550,6 +608,15 @@ public class GitLabDockerContainer
         {
             await page.EvalOnSelectorAsync("form[data-testid='sign-in-form']", "form => form.submit()");
         }, response => response.Status == 200);
+    }
+
+    private async Task CloseRedesignModal(IPage page)
+    {
+        var isModalVisible = await page.IsVisibleAsync("div#dap_welcome_modal button[aria-label='Close']");
+        if (isModalVisible)
+        {
+            await page.Locator("div#dap_welcome_modal button[aria-label='Close']").ClickAsync();
+        }
     }
 
     private static Task<string> GetCurrentUrl(IPage page) => page.EvaluateAsync<string>("window.location.pathname");
