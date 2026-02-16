@@ -43,6 +43,7 @@ updates:
           - "Microsoft.*"
           - "System.*"
         exclude-patterns:
+          - "Microsoft.CodeAnalysis.NetAnalyzers"
           - "Microsoft.NET.Test.Sdk"
           - "Microsoft.Playwright"
       test-dependencies:
