@@ -32,7 +32,4 @@
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework) == 'net472'">
-    <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
-  </ItemGroup>
 </Project>

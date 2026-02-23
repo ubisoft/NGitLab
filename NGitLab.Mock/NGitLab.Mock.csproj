@@ -15,11 +15,4 @@
     <PackageReference Include="NeoSmart.AsyncLock" />
     <PackageReference Include="YamlDotNet" />
   </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework) == 'net472'">
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 </Project>
