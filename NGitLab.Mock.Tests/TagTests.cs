@@ -57,7 +57,7 @@ public class TagTests
         var tags = tagClient.GetAsync(query);
 
         // Assert
-        Assert.That(tags.Select(t => t.Name), Is.EqualTo(["0.0.1", "0.0.10", "0.0.2", "not-semver"]));
+        Assert.That(tags.AsEnumerable().Select(t => t.Name), Is.EqualTo(["0.0.1", "0.0.10", "0.0.2", "not-semver"]));
     }
 
     [Test]
@@ -86,6 +86,6 @@ public class TagTests
         var tags = tagClient.GetAsync(query);
 
         // Assert
-        Assert.That(tags.Select(t => t.Name), Is.EqualTo(["not-semver", "0.0.1", "0.0.2", "0.0.10"]));
+        Assert.That(tags.AsEnumerable().Select(t => t.Name), Is.EqualTo(["not-semver", "0.0.1", "0.0.2", "0.0.10"]));
     }
 }

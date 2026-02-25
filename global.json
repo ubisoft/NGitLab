@@ -1,6 +1,6 @@
 {
   "sdk": {
-    "version": "9.0.200", // Minimum SDK version that supports the .slnx solution file format
+    "version": "10.0.103",
     "rollForward": "major"
   }
 }
