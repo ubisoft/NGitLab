@@ -118,14 +118,14 @@ public class MembersMockTests
         // Does NOT search inherited permission by default...
         AssertThrowsGitLabException(() => client.Members.GetMemberOfProjectAsync(projectId, user1.Id), System.Net.HttpStatusCode.NotFound);
         AssertThrowsGitLabException(() => client.Members.GetMemberOfGroupAsync(groupId, user1.Id), System.Net.HttpStatusCode.NotFound);
-        Assert.That(client.Members.OfProjectAsync(projectId).Select(m => m.UserName), Is.Empty);
-        Assert.That(client.Members.OfGroupAsync(groupId).Select(m => m.UserName), Is.EquivalentTo([ownerName]));
+        Assert.That(client.Members.OfProjectAsync(projectId).AsEnumerable().Select(m => m.UserName), Is.Empty);
+        Assert.That(client.Members.OfGroupAsync(groupId).AsEnumerable().Select(m => m.UserName), Is.EquivalentTo([ownerName]));
 
         // Does search inherited permission when asked...
         Assert.That((await client.Members.GetMemberOfProjectAsync(projectId, user1.Id, includeInheritedMembers: true)).UserName, Is.EqualTo(user1Name));
         Assert.That((await client.Members.GetMemberOfGroupAsync(groupId, user1.Id, includeInheritedMembers: true)).UserName, Is.EqualTo(user1Name));
-        Assert.That(client.Members.OfProjectAsync(projectId, includeInheritedMembers: true).Select(m => m.UserName), Is.EquivalentTo([ownerName, user1Name]));
-        Assert.That(client.Members.OfGroupAsync(groupId, includeInheritedMembers: true).Select(m => m.UserName), Is.EquivalentTo([ownerName, user1Name]));
+        Assert.That(client.Members.OfProjectAsync(projectId, includeInheritedMembers: true).AsEnumerable().Select(m => m.UserName), Is.EquivalentTo([ownerName, user1Name]));
+        Assert.That(client.Members.OfGroupAsync(groupId, includeInheritedMembers: true).AsEnumerable().Select(m => m.UserName), Is.EquivalentTo([ownerName, user1Name]));
 
         // Cannot update non-existent membership...
         AssertThrowsGitLabException(() => client.Members.UpdateMemberOfProjectAsync(projectId, new() { UserId = user1Id, AccessLevel = Models.AccessLevel.Owner }), System.Net.HttpStatusCode.NotFound);

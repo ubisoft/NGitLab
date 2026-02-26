@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net472</TargetFrameworks>
+    <TargetFrameworks>net472;net10.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
+    <!-- Don't promote to errors assessments such as: Package 'System.Net.Http' 4.3.0 has a known high severity vulnerability -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1903</WarningsNotAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\NGitLab.Mock\NGitLab.Mock.csproj" />

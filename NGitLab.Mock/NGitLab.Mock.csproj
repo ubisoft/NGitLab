@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net472;net6.0</TargetFrameworks>
+    <TargetFrameworks>net472;net6.0;net10.0</TargetFrameworks>
     <Description>GitLab REST API .NET Client Mock Library</Description>
+    <!-- Don't promote to errors assessments such as: Package 'System.Net.Http' 4.3.0 has a known high severity vulnerability -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1903</WarningsNotAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\NGitLab\NGitLab.csproj" />

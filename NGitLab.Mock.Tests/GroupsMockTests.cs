@@ -73,7 +73,7 @@ public class GroupsMockTests
         var groups = client.Groups.GetAsync(new Models.GroupQuery { TopLevelOnly = true });
 
         var expected = new string[] { "user1", "tlg" };
-        Assert.That(groups.Select(g => g.FullPath), Is.EquivalentTo(expected));
+        Assert.That(groups.AsEnumerable().Select(g => g.FullPath), Is.EquivalentTo(expected));
     }
 
     [Test]
@@ -174,7 +174,7 @@ public class GroupsMockTests
         var group = client.Groups.GetSubgroupsByFullPathAsync("tlg", new Models.SubgroupQuery { IncludeDescendants = true });
 
         var expected = new string[] { "tlg/sg1", "tlg/sg1/sg1_1", "tlg/sg2", "tlg/sg2/sg2_1" };
-        Assert.That(group.Select(g => g.FullPath), Is.EquivalentTo(expected));
+        Assert.That(group.AsEnumerable().Select(g => g.FullPath), Is.EquivalentTo(expected));
     }
 
     [Test]
@@ -186,7 +186,7 @@ public class GroupsMockTests
         var group = client.Groups.GetSubgroupsByIdAsync(1, new Models.SubgroupQuery { IncludeDescendants = true });
 
         var expected = new string[] { "tlg/sg1", "tlg/sg1/sg1_1", "tlg/sg2", "tlg/sg2/sg2_1" };
-        Assert.That(group.Select(g => g.FullPath), Is.EquivalentTo(expected));
+        Assert.That(group.AsEnumerable().Select(g => g.FullPath), Is.EquivalentTo(expected));
     }
 
     [Test]
@@ -198,7 +198,7 @@ public class GroupsMockTests
         var group = client.Groups.GetSubgroupsAsync("tlg/sg2", new Models.SubgroupQuery { IncludeDescendants = true });
 
         var expected = new string[] { "tlg/sg2/sg2_1" };
-        Assert.That(group.Select(g => g.FullPath), Is.EquivalentTo(expected));
+        Assert.That(group.AsEnumerable().Select(g => g.FullPath), Is.EquivalentTo(expected));
     }
 
     [Test]
@@ -210,7 +210,7 @@ public class GroupsMockTests
         var group = client.Groups.GetSubgroupsAsync(2, new Models.SubgroupQuery { IncludeDescendants = true });
 
         var expected = new string[] { "tlg/sg1/sg1_1" };
-        Assert.That(group.Select(g => g.FullPath), Is.EquivalentTo(expected));
+        Assert.That(group.AsEnumerable().Select(g => g.FullPath), Is.EquivalentTo(expected));
     }
 
     [Test]
