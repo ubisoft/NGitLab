@@ -8,7 +8,7 @@
     <PackageVersion Include="Docker.DotNet" Version="3.125.15" />
     <PackageVersion Include="DotNet.ReproducibleBuilds" Version="2.0.2" />
     <PackageVersion Include="LibGit2Sharp" Version="0.30.0" />
-    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.23" />
+    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.26" />
     <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" />
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.201" />
     <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4" />
