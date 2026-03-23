@@ -86,16 +86,30 @@ internal sealed class TagClient : ClientBase, ITagClient
         using (Context.BeginOperationScope())
         {
             IEnumerable<LibGit2Sharp.Tag> result = GetProject(_projectId, ProjectPermission.View).Repository.GetTags();
-            if (query != null)
+            if (query is not null)
             {
-                result = ApplyQuery(result, query.OrderBy, query.Sort);
+                result = ApplyQuery(result, query);
             }
 
             return GitLabCollectionResponse.Create(result.Select(ToTagClient).ToArray());
         }
 
-        static IEnumerable<LibGit2Sharp.Tag> ApplyQuery(IEnumerable<LibGit2Sharp.Tag> tags, string orderBy, string direction)
+        static IEnumerable<LibGit2Sharp.Tag> ApplyQuery(IEnumerable<LibGit2Sharp.Tag> tags, TagQuery query)
         {
+            // First, filter by search term if provided
+            if (!string.IsNullOrEmpty(query.Search))
+            {
+                tags = query.Search switch
+                {
+                    string search when search.StartsWith("^", StringComparison.Ordinal) =>
+                        tags.Where(t => t.FriendlyName.StartsWith(search[1..], StringComparison.OrdinalIgnoreCase)),
+                    string search when search.EndsWith("$", StringComparison.Ordinal) =>
+                        tags.Where(t => t.FriendlyName.EndsWith(search[..^1], StringComparison.OrdinalIgnoreCase)),
+                    _ => tags.Where(t => t.FriendlyName.Contains(query.Search, StringComparison.OrdinalIgnoreCase)),
+                };
+            }
+
+            var orderBy = query.OrderBy?.ToLowerInvariant();
             tags = orderBy switch
             {
                 "name" => tags.OrderBy(t => t.FriendlyName, StringComparer.Ordinal),
@@ -103,10 +117,11 @@ internal sealed class TagClient : ClientBase, ITagClient
                 null => tags,
 
                 // LibGitSharp does not really expose tag creation time, so hard to sort using that annotation,
-                "updated" => throw new NotSupportedException("Sorting by 'updated' is not supported since the info is not available in LibGit2Sharp."),
+                "updated" => throw new NotSupportedException("Sorting by 'updated' is not supported by mock, since the info is not available in LibGit2Sharp."),
                 _ => throw new NotSupportedException($"Sorting by '{orderBy}' is not supported."),
             };
 
+            var direction = query.Sort;
             if (string.IsNullOrEmpty(direction))
                 direction = "desc";
 

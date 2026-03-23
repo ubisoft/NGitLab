@@ -17,7 +17,7 @@ public class TagTests
             .WithUser("user1", isDefault: true)
             .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
                 .WithCommit("Initial commit")
-                .WithCommit("Changes with tag", tags: new[] { "1.0.0" }))
+                .WithCommit("Changes with tag", tags: ["1.0.0"]))
             .BuildServer();
 
         var client = server.CreateClient();
@@ -32,7 +32,7 @@ public class TagTests
     }
 
     [Theory]
-    public void GetTaskAsync_CanSortByName([Values] bool useDefault)
+    public void GetTagsAsync_CanSortByName([Values] bool useDefault)
     {
         // Arrange
         using var server = new GitLabConfig()
@@ -61,7 +61,7 @@ public class TagTests
     }
 
     [Test]
-    public void GetTagAsync_CanSortByVersion()
+    public void GetTagsAsync_CanSortByVersion()
     {
         // Arrange
         using var server = new GitLabConfig()
@@ -87,5 +87,50 @@ public class TagTests
 
         // Assert
         Assert.That(tags.AsEnumerable().Select(t => t.Name), Is.EqualTo(["not-semver", "0.0.1", "0.0.2", "0.0.10"]));
+    }
+
+    [Test]
+    public async Task SearchTags()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("user1", isDefault: true)
+            .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
+                .WithCommit("First Tag", tags: ["v0.5"])
+                .WithCommit("Second Tag", tags: ["v0.6"]))
+            .BuildServer();
+
+        var client = server.CreateClient();
+        var tagClient = client.GetRepository(1).Tags;
+
+        (string, int)[] testCases =
+        [
+            // You can use "^term" and "term$" to find tags that begin and end with "term". No other regular expressions are supported.
+            // The search expression is case-insensitive.
+            // https://docs.gitlab.com/api/tags/#list-all-project-repository-tags
+            ("^v0.5", 1),
+            ("^v0", 2),
+            ("^v", 2),
+            ("^V", 2),
+            ("^v1", 0),
+            ("0.5", 1),
+            ("0", 2),
+            ("6", 1),
+            ("V", 2),
+            ("0.5$", 1),
+            (".5$", 1),
+            ("\\.5$", 0),
+            (".[0-9]$", 0),
+            ("0\\.", 0),
+        ];
+
+        foreach (var (searchExpression, expectedCount) in testCases)
+        {
+            // Act
+            var tags = tagClient.GetAsync(new TagQuery { Search = searchExpression });
+
+            // Assert
+            Assert.That(tags.Count(), Is.EqualTo(expectedCount), $"Expected search expression '{searchExpression}' to return {expectedCount} results.");
+        }
     }
 }

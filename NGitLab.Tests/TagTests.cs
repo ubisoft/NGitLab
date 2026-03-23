@@ -34,16 +34,8 @@ public class TagTests
     }
 
     [NGitLabRetry]
-    [TestCase("^v0.5", 1)]
-    [TestCase("^v0", 2)]
-    [TestCase("^v1", 0)]
-    [TestCase("v1", 0)]
-    [TestCase("0.5$", 1)]
-    [TestCase("0\\.", 0)]
-    [TestCase(".5$", 1)]
-    [TestCase("\\.5$", 0)]
-    [TestCase(".[0-9]$", 0)]
-    public async Task SearchTags(string search, int expectedCount)
+    [Test]
+    public async Task SearchTags()
     {
         // Arrange
         using var context = await GitLabTestContext.CreateAsync();
@@ -64,8 +56,35 @@ public class TagTests
             Ref = project.DefaultBranch,
         });
 
-        var tagFetched = tagClient.GetAsync(new TagQuery { Search = search });
-        Assert.That(tagFetched.Count(), Is.EqualTo(expectedCount));
+        (string, int)[] testCases =
+        [
+            // You can use "^term" and "term$" to find tags that begin and end with "term". No other regular expressions are supported.
+            // The search expression is case-insensitive.
+            // https://docs.gitlab.com/api/tags/#list-all-project-repository-tags
+            ("^v0.5", 1),
+            ("^v0", 2),
+            ("^v", 2),
+            ("^V", 2),
+            ("^v1", 0),
+            ("0.5", 1),
+            ("0", 2),
+            ("6", 1),
+            ("V", 2),
+            ("0.5$", 1),
+            (".5$", 1),
+            ("\\.5$", 0),
+            (".[0-9]$", 0),
+            ("0\\.", 0),
+        ];
+
+        foreach (var (searchExpression, expectedCount) in testCases)
+        {
+            // Act
+            var tags = tagClient.GetAsync(new TagQuery { Search = searchExpression });
+
+            // Assert
+            Assert.That(tags.Count(), Is.EqualTo(expectedCount), $"Expected search expression '{searchExpression}' to return {expectedCount} results.");
+        }
     }
 
     [NGitLabRetry]
