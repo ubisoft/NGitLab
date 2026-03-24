@@ -99,14 +99,30 @@ internal sealed class TagClient : ClientBase, ITagClient
             // First, filter by search term if provided
             if (!string.IsNullOrEmpty(query.Search))
             {
-                tags = query.Search switch
+                var search = query.Search;
+                var startsWithCaret = search.StartsWith("^", StringComparison.Ordinal);
+                var endsWithDollar = search.EndsWith("$", StringComparison.Ordinal);
+
+                if (!startsWithCaret && !endsWithDollar)
                 {
-                    string search when search.StartsWith("^", StringComparison.Ordinal) =>
-                        tags.Where(t => t.FriendlyName.StartsWith(search[1..], StringComparison.OrdinalIgnoreCase)),
-                    string search when search.EndsWith("$", StringComparison.Ordinal) =>
-                        tags.Where(t => t.FriendlyName.EndsWith(search[..^1], StringComparison.OrdinalIgnoreCase)),
-                    _ => tags.Where(t => t.FriendlyName.Contains(query.Search, StringComparison.OrdinalIgnoreCase)),
-                };
+                    tags = tags.Where(t => t.FriendlyName.Contains(search, StringComparison.OrdinalIgnoreCase));
+                }
+                else
+                {
+                    // Remove the special characters for the actual search term
+                    if (startsWithCaret)
+                        search = search[1..];
+
+                    if (endsWithDollar)
+                        search = search[..^1];
+
+                    // Search with the appropriate conditions based on the presence of ^ and $
+                    if (startsWithCaret)
+                        tags = tags.Where(t => t.FriendlyName.StartsWith(search, StringComparison.OrdinalIgnoreCase));
+
+                    if (endsWithDollar)
+                        tags = tags.Where(t => t.FriendlyName.EndsWith(search, StringComparison.OrdinalIgnoreCase));
+                }
             }
 
             var orderBy = query.OrderBy?.ToLowerInvariant();
