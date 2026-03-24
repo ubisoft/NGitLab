@@ -97,7 +97,8 @@ public class TagTests
             .WithUser("user1", isDefault: true)
             .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, configure: project => project
                 .WithCommit("First Tag", tags: ["v0.5"])
-                .WithCommit("Second Tag", tags: ["v0.6"]))
+                .WithCommit("Second Tag", tags: ["v0.5.1"])
+                .WithCommit("Third Tag", tags: ["v0.6"]))
             .BuildServer();
 
         var client = server.CreateClient();
@@ -108,20 +109,21 @@ public class TagTests
             // You can use "^term" and "term$" to find tags that begin and end with "term". No other regular expressions are supported.
             // The search expression is case-insensitive.
             // https://docs.gitlab.com/api/tags/#list-all-project-repository-tags
-            ("^v0.5", 1),
-            ("^v0", 2),
-            ("^v", 2),
-            ("^V", 2),
+            ("^v0.5", 2),
+            ("^v0", 3),
+            ("^v", 3),
+            ("^V", 3),
             ("^v1", 0),
-            ("0.5", 1),
-            ("0", 2),
+            ("0.5", 2),
+            ("0", 3),
             ("6", 1),
-            ("V", 2),
+            ("V", 3),
             ("0.5$", 1),
             (".5$", 1),
             ("\\.5$", 0),
             (".[0-9]$", 0),
             ("0\\.", 0),
+            ("^v0.5$", 1),
         ];
 
         foreach (var (searchExpression, expectedCount) in testCases)
