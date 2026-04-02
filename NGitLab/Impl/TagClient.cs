@@ -44,6 +44,8 @@ public class TagClient : ITagClient
             url = Utils.AddParameter(url, "sort", query.Sort);
             url = Utils.AddParameter(url, "per_page", query.PerPage);
             url = Utils.AddParameter(url, "search", query.Search);
+            url = Utils.AddParameter(url, "page", query.Page);
+            url = Utils.AddParameter(url, "page_token", query.PageToken);
         }
 
         return _api.Get().GetAllAsync<Tag>(url);
