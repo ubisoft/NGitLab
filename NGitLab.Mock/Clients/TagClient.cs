@@ -141,12 +141,25 @@ internal sealed class TagClient : ClientBase, ITagClient
             if (string.IsNullOrEmpty(direction))
                 direction = "desc";
 
-            return direction switch
+            tags = direction switch
             {
                 "desc" => tags.Reverse(),
                 "asc" => tags,
                 _ => throw new NotSupportedException($"Sort direction must be 'asc' or 'desc', got '{direction}' instead"),
             };
+
+            if (!string.IsNullOrEmpty(query.PageToken))
+            {
+                tags = tags.SkipWhile(t => !string.Equals(t.FriendlyName, query.PageToken, StringComparison.Ordinal)).Skip(1);
+            }
+
+            if (query.Page.HasValue)
+            {
+                var skip = (query.Page.Value - 1) * (query.PerPage ?? 20);
+                tags = tags.Skip(skip);
+            }
+
+            return tags;
         }
     }
 

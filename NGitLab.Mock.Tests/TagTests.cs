@@ -135,4 +135,71 @@ public class TagTests
             Assert.That(tags.Count(), Is.EqualTo(expectedCount), $"Expected search expression '{searchExpression}' to return {expectedCount} results.");
         }
     }
+
+    [Test]
+    public async Task EnumerateTags_FivePerPageAndWithStartPageSpecified()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("user1", isDefault: true)
+            .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, configure: project =>
+            {
+                project.WithCommit("Commit with tags", tags: Enumerable.Range(0, 20).Select(i => $"1.{i}.0").ToArray());
+            })
+            .BuildServer();
+
+        var client = server.CreateClient();
+        var tagClient = client.GetRepository(1).Tags;
+
+        var perPage = 5;
+
+        (int? StartPage, string[] ExpectedTags)[] testCases =
+        [
+            (null, ["1.19.0", "1.18.0", "1.17.0", "1.16.0", "1.15.0"]),
+            (1, ["1.19.0", "1.18.0", "1.17.0", "1.16.0", "1.15.0"]),
+            (2, ["1.14.0", "1.13.0", "1.12.0", "1.11.0", "1.10.0"]),
+            (4, ["1.4.0", "1.3.0", "1.2.0", "1.1.0", "1.0.0"]),
+            (5, []),
+        ];
+
+        foreach (var (startPage, expectedTags) in testCases)
+        {
+            // Act
+            var tags = tagClient.GetAsync(new TagQuery { OrderBy = "version", PerPage = perPage, Page = startPage }).AsEnumerable().Take(perPage).ToArray();
+
+            // Assert
+            Assert.That(tags.Select(t => t.Name), Is.EqualTo(expectedTags));
+        }
+    }
+
+    [Test]
+    public async Task EnumerateTags_WithPreviousTagSpecified()
+    {
+       // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("user1", isDefault: true)
+            .WithProject("test-project", id: 1, addDefaultUserAsMaintainer: true, configure: project =>
+            {
+                project.WithCommit("Commit with tags", tags: Enumerable.Range(0, 10).Select(i => $"1.{i}.0").ToArray());
+            })
+            .BuildServer();
+
+        var client = server.CreateClient();
+        var tagClient = client.GetRepository(1).Tags;
+
+        (string PreviousTag, string[] ExpectedTags)[] testCases =
+        [
+            (null, ["1.9.0", "1.8.0", "1.7.0", "1.6.0", "1.5.0", "1.4.0", "1.3.0", "1.2.0", "1.1.0", "1.0.0"]),
+            ("1.3.0", ["1.2.0", "1.1.0", "1.0.0"]),
+        ];
+
+        foreach (var (previousTag, expectedTags) in testCases)
+        {
+            // Act
+            var tags = tagClient.GetAsync(new TagQuery { OrderBy = "version", PageToken = previousTag }).AsEnumerable().ToArray();
+
+            // Assert
+            Assert.That(tags.Select(t => t.Name), Is.EqualTo(expectedTags));
+        }
+    }
 }

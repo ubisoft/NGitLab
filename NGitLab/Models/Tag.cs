@@ -1,7 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
+[DebuggerDisplay("{Name,nq}")]
 public class Tag
 {
     [JsonPropertyName("name")]

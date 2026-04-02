@@ -4666,6 +4666,10 @@ NGitLab.Models.TagProtect.TagProtect(string name) -> void
 NGitLab.Models.TagQuery
 NGitLab.Models.TagQuery.OrderBy.get -> string
 NGitLab.Models.TagQuery.OrderBy.set -> void
+NGitLab.Models.TagQuery.Page.get -> int?
+NGitLab.Models.TagQuery.Page.set -> void
+NGitLab.Models.TagQuery.PageToken.get -> string
+NGitLab.Models.TagQuery.PageToken.set -> void
 NGitLab.Models.TagQuery.PerPage.get -> int?
 NGitLab.Models.TagQuery.PerPage.set -> void
 NGitLab.Models.TagQuery.Search.get -> string
