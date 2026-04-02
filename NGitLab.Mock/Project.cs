@@ -165,6 +165,8 @@ public sealed class Project : GitLabObject
 
     public string RunnersToken { get; internal set; }
 
+    public SquashOption SquashOption { get; set; }
+
     public void Remove()
     {
         Group.Projects.Remove(this);
@@ -483,6 +485,7 @@ public sealed class Project : GitLabObject
             Statistics = Statistics,
             TagList = Tags,
             Topics = Topics,
+            SquashOption = new DynamicEnum<SquashOption>(SquashOption),
             Mirror = Mirror,
             MirrorUserId = MirrorUserId,
             MirrorTriggerBuilds = MirrorTriggerBuilds,

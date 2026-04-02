@@ -383,6 +383,11 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
                 project.Topics = projectUpdate.Topics.Where(t => !string.IsNullOrEmpty(t)).Distinct(StringComparer.Ordinal).ToArray();
             }
 
+            if (projectUpdate.SquashOption.HasValue)
+            {
+                project.SquashOption = projectUpdate.SquashOption.Value;
+            }
+
             return project.ToClientProject(Context.User);
         }
     }

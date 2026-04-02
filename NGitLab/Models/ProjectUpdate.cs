@@ -110,4 +110,7 @@ public sealed class ProjectUpdate
 
     [JsonPropertyName("ci_default_git_depth")]
     public int? CiDefaultGitDepth { get; set; }
+
+    [JsonPropertyName("squash_option")]
+    public SquashOption? SquashOption { get; set; }
 }
