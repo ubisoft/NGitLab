@@ -4066,6 +4066,8 @@ NGitLab.Models.ProjectUpdate.SnippetsAccessLevel.get -> string
 NGitLab.Models.ProjectUpdate.SnippetsAccessLevel.set -> void
 NGitLab.Models.ProjectUpdate.SnippetsEnabled.get -> bool?
 NGitLab.Models.ProjectUpdate.SnippetsEnabled.set -> void
+NGitLab.Models.ProjectUpdate.SquashOption.get -> NGitLab.Models.SquashOption?
+NGitLab.Models.ProjectUpdate.SquashOption.set -> void
 NGitLab.Models.ProjectUpdate.TagList.get -> string[]
 NGitLab.Models.ProjectUpdate.TagList.set -> void
 NGitLab.Models.ProjectUpdate.Topics.get -> System.Collections.Generic.List<string>

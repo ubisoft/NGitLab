@@ -372,6 +372,55 @@ public class ProjectsMockTests
     }
 
     [Test]
+    public async Task UpdateAsync_WhenSquashOptionIsProvided_ItIsUpdated()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath("Test/MyProject")
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+        var project = await projectClient.GetAsync("Test/MyProject");
+
+        // Act
+        var updated = await projectClient.UpdateAsync(project.Id, new ProjectUpdate
+        {
+            SquashOption = SquashOption.Always,
+        });
+
+        // Assert
+        Assert.That(updated.SquashOption, Is.EqualTo(SquashOption.Always));
+    }
+
+    [Test]
+    public async Task UpdateAsync_WhenSquashOptionIsNotProvided_ItRetainsExistingValue()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath("Test/MyProject")
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+        var project = await projectClient.GetAsync("Test/MyProject");
+
+        await projectClient.UpdateAsync(project.Id, new ProjectUpdate
+        {
+            SquashOption = SquashOption.Never,
+        });
+
+        // Act — update without specifying SquashOption
+        var updated = await projectClient.UpdateAsync(project.Id, new ProjectUpdate
+        {
+            Description = "updated",
+        });
+
+        // Assert
+        Assert.That(updated.SquashOption, Is.EqualTo(SquashOption.Never));
+    }
+
+    [Test]
     public void UpdateAsync_WhenProjectNotFound_ItThrows()
     {
         // Arrange
