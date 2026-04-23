@@ -1,8 +1,7 @@
 using System;
-using System.IO;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Net.Http;
+using NGitLab.Http;
 using NGitLab.Impl;
 
 namespace NGitLab;
@@ -25,15 +24,20 @@ public class RequestOptions
     public string Sudo { get; set; }
 
     /// <summary>
-    /// Configure the default client side timeout when calling GitLab.
-    /// GitLab exposes some end points which are really slow so
-    /// the default we use is larger than the default 100 seconds of .net
+    /// Overrides the default client-side timeout when calling GitLab.
     /// </summary>
-    public TimeSpan HttpClientTimeout { get; set; } = TimeSpan.FromMinutes(5);
+    public TimeSpan? HttpClientTimeout { get; set; }
 
     public string UserAgent { get; set; }
 
     public WebProxy Proxy { get; set; }
+
+    /// <summary>
+    /// Custom HTTP message handler for extensibility.
+    /// Set this property to customize HTTP request behavior (e.g., logging, throttling).
+    /// This replaces the obsolete virtual methods GetResponse and GetResponseAsync.
+    /// </summary>
+    public IHttpMessageHook MessageHook { get; set; }
 
     public RequestOptions(int retryCount, TimeSpan retryInterval, bool isIncremental = true)
     {
@@ -71,28 +75,4 @@ public class RequestOptions
     }
 
     public static RequestOptions Default => new(retryCount: 0, retryInterval: TimeSpan.Zero);
-
-    /// <summary>
-    /// Allows to monitor the web requests from the caller library, for example
-    /// to log the request duration and debug the library.
-    /// </summary>
-    public virtual WebResponse GetResponse(HttpWebRequest request)
-    {
-        return request.GetResponse();
-    }
-
-    public virtual async Task<WebResponse> GetResponseAsync(HttpWebRequest request, CancellationToken cancellationToken)
-    {
-        using var cancellationTokenRegistration =
-            cancellationToken.CanBeCanceled
-            ? cancellationToken.Register(request.Abort)
-            : default;
-
-        return await request.GetResponseAsync().ConfigureAwait(false);
-    }
-
-    internal virtual Stream GetRequestStream(HttpWebRequest request)
-    {
-        return request.GetRequestStream();
-    }
 }
