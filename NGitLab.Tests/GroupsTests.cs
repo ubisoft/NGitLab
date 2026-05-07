@@ -456,6 +456,28 @@ public class GroupsTests
         Assert.That(projectResult.Id, Is.EqualTo(project.Id));
         Assert.That(projectResult.Archived, Is.True);
     }
+    
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_group_projects_query_page()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var groupClient = context.Client.Groups;
+
+        var group = context.CreateGroup();
+        var project1 = context.CreateProject(group.Id);
+        var project2 = context.CreateProject(group.Id);
+
+        var projects = groupClient.GetProjectsAsync(group.Id, new GroupProjectsQuery
+        {
+            Page = 2,
+            PerPage = 1,
+            Sort = "asc",
+        }).ToArray();
+
+        Assert.That(projects, Has.Length.EqualTo(1));
+        Assert.That(projects[0].Id, Is.EqualTo(project2.Id));
+    }
 
     [Test]
     [NGitLabRetry]
@@ -1192,5 +1214,3 @@ public class GroupsTests
         });
     }
 }
-
-// test
