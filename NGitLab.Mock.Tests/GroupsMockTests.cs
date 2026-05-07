@@ -427,4 +427,21 @@ public class GroupsMockTests
         Assert.That(group.CreatedAt, Is.GreaterThanOrEqualTo(t1));
         Assert.That(group.CreatedAt, Is.LessThanOrEqualTo(t2));
     }
+
+    [Test]
+    public async Task Test_group_page()
+    {
+        using var server = CreateProjectHierarchy();
+        var client = server.CreateClient("user1");
+
+        var result = client.Groups.SearchProjectsAsync("tlg", new GroupProjectsQuery
+        {
+            Page = 3,
+            PerPage = 1,
+            IncludeSubGroups = true,
+        }).ToArray();
+
+        Assert.That(result, Has.Length.EqualTo(1));
+        Assert.That(result[0].Name, Is.EqualTo("p3"));
+    }
 }

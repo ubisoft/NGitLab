@@ -214,7 +214,7 @@ public class GroupsClient : IGroupsClient
 
     public GitLabCollectionResponse<Project> SearchProjectsAsync(GroupId groupId, GroupProjectsQuery query)
     {
-        var url = CreateGetProjectsUrl(groupId, query);
+        var url = CreateGetProjectsUrl(groupId, query, page: query?.Page, perPage: query?.PerPage);
         return _api.Get().GetAllAsync<Project>(url);
     }
 
@@ -257,7 +257,6 @@ public class GroupsClient : IGroupsClient
         url = Utils.AddParameter(url, "include_subgroups", query.IncludeSubGroups);
         url = Utils.AddParameter(url, "with_custom_attributes", query.WithCustomAttributes);
         url = Utils.AddParameter(url, "with_security_reports", query.WithSecurityReports);
-        url = Utils.AddParameter(url, "per_page", query.PerPage);
         url = Utils.AddOrderBy(url, query.OrderBy, supportKeysetPagination: page is null);
 
         return url;
