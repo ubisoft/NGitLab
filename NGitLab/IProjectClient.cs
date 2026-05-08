@@ -89,4 +89,6 @@ public interface IProjectClient
     Task<ProjectMergeRequestTemplate> GetProjectMergeRequestTemplateAsync(ProjectId projectId, string name, CancellationToken cancellationToken = default);
 
     Dictionary<string, double> GetLanguages(string id);
+
+    Task TransferAsync(ProjectId id, GroupId namespaceId, CancellationToken cancellationToken = default);
 }

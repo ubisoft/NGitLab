@@ -842,4 +842,20 @@ public class ProjectsTests
         scope = await jobTokenScopeClient.GetProjectJobTokenScopeAsync(CancellationToken.None);
         Assert.That(scope.InboundEnabled, Is.False);
     }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task TransferProject()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var group1 = context.CreateGroup();
+        var group2 = context.CreateGroup();
+        var project = context.CreateProject(group1.Id);
+        var projectClient = context.Client.Projects;
+
+        await projectClient.TransferAsync(project.Id, new GroupId(group2.Id), CancellationToken.None);
+        var movedProject = await projectClient.GetByIdAsync(project.Id, new SingleProjectQuery(), CancellationToken.None);
+
+        Assert.That(movedProject.Namespace.Id, Is.EqualTo(group2.Id));
+    }
 }

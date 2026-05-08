@@ -852,6 +852,7 @@ NGitLab.Impl.ProjectClient.Owned.get -> System.Collections.Generic.IEnumerable<N
 NGitLab.Impl.ProjectClient.ProjectClient(NGitLab.Impl.API api) -> void
 NGitLab.Impl.ProjectClient.this[long id].get -> NGitLab.Models.Project
 NGitLab.Impl.ProjectClient.this[string fullName].get -> NGitLab.Models.Project
+NGitLab.Impl.ProjectClient.TransferAsync(NGitLab.Models.ProjectId id, NGitLab.Models.GroupId namespaceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Impl.ProjectClient.Unarchive(long id) -> void
 NGitLab.Impl.ProjectClient.Update(string id, NGitLab.Models.ProjectUpdate projectUpdate) -> NGitLab.Models.Project
 NGitLab.Impl.ProjectClient.UpdateAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectUpdate projectUpdate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
@@ -1065,6 +1066,7 @@ NGitLab.IProjectClient.GetProjectTemplatesAsync(NGitLab.Models.ProjectId project
 NGitLab.IProjectClient.Owned.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.Project>
 NGitLab.IProjectClient.this[long id].get -> NGitLab.Models.Project
 NGitLab.IProjectClient.this[string fullName].get -> NGitLab.Models.Project
+NGitLab.IProjectClient.TransferAsync(NGitLab.Models.ProjectId id, NGitLab.Models.GroupId namespaceId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.IProjectClient.Unarchive(long id) -> void
 NGitLab.IProjectClient.Update(string id, NGitLab.Models.ProjectUpdate projectUpdate) -> NGitLab.Models.Project
 NGitLab.IProjectClient.UpdateAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectUpdate projectUpdate, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.Project>
