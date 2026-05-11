@@ -273,4 +273,7 @@ public class ProjectClient : IProjectClient
 
     public UploadedProjectFile UploadFile(string id, FormDataContent data)
         => _api.Post().With(data).To<UploadedProjectFile>($"{Project.Url}/{Uri.EscapeDataString(id)}/uploads");
+
+    public Task TransferAsync(ProjectId id, GroupId namespaceId, CancellationToken cancellationToken = default)
+        => _api.Put().ExecuteAsync($"{Project.Url}/{id.ValueAsUriParameter()}/transfer?namespace={namespaceId.ValueAsUriParameter()}", cancellationToken);
 }

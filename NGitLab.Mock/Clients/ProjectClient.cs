@@ -429,4 +429,9 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
     {
         throw new NotImplementedException();
     }
+
+    public Task TransferAsync(ProjectId id, GroupId namespaceId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }
