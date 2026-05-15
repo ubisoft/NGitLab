@@ -2290,6 +2290,10 @@ NGitLab.Models.GroupProjectsQuery.OrderBy.get -> string
 NGitLab.Models.GroupProjectsQuery.OrderBy.set -> void
 NGitLab.Models.GroupProjectsQuery.Owned.get -> bool?
 NGitLab.Models.GroupProjectsQuery.Owned.set -> void
+NGitLab.Models.GroupProjectsQuery.Page.get -> int?
+NGitLab.Models.GroupProjectsQuery.Page.set -> void
+NGitLab.Models.GroupProjectsQuery.PerPage.get -> int?
+NGitLab.Models.GroupProjectsQuery.PerPage.set -> void
 NGitLab.Models.GroupProjectsQuery.Search.get -> string
 NGitLab.Models.GroupProjectsQuery.Search.set -> void
 NGitLab.Models.GroupProjectsQuery.Simple.get -> bool?

@@ -221,6 +221,9 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
 
             var projects = query?.IncludeSubGroups is true ? group.AllProjects : group.Projects;
 
+            var pageIndex = 0;
+            var perPage = query?.PerPage ?? 20;
+
             if (query != null)
             {
                 if (query.Archived != null)
@@ -238,6 +241,11 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
                     projects = projects.Where(project => project.Visibility >= query.Visibility.Value);
                 }
 
+                if (query.Page.HasValue)
+                {
+                    pageIndex = query.Page.Value - 1;
+                }
+
                 if (!string.IsNullOrEmpty(query.Search))
                     throw new NotImplementedException();
 
@@ -246,6 +254,9 @@ internal sealed class GroupClient : ClientBase, IGroupsClient
             }
 
             projects = projects.Where(project => project.CanUserViewProject(Context.User));
+            var lowerBound = pageIndex * perPage;
+
+            projects = projects.Skip(lowerBound);
             return GitLabCollectionResponse.Create(projects.Select(project => project.ToClientProject(Context.User)).ToArray());
         }
     }

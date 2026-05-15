@@ -214,7 +214,7 @@ public class GroupsClient : IGroupsClient
 
     public GitLabCollectionResponse<Project> SearchProjectsAsync(GroupId groupId, GroupProjectsQuery query)
     {
-        var url = CreateGetProjectsUrl(groupId, query);
+        var url = CreateGetProjectsUrl(groupId, query, page: query?.Page, perPage: query?.PerPage);
         return _api.Get().GetAllAsync<Project>(url);
     }
 

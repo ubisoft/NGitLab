@@ -76,4 +76,14 @@ public sealed class GroupProjectsQuery
     /// Return only projects that have security reports artifacts present in any of their builds. This means “projects with security reports enabled”. Default is false
     /// </summary>
     public bool? WithSecurityReports { get; set; }
+
+    /// <summary>
+    /// Specifies how many records per page (GitLab supports a maximum of 100 items per page and defaults to 20).
+    /// </summary>
+    public int? PerPage { get; set; }
+
+    /// <summary>
+    /// Specifies the start page.
+    /// </summary>
+    public int? Page { get; set; }
 }
