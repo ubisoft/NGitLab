@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -194,7 +194,7 @@ public class UsersTests
             Scopes = new[] { "write_repository" },
         };
 
-        var ex = Assert.ThrowsAsync<GitLabException>(() => users.CreateTokenAsync(tokenRequest));
+        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => users.CreateTokenAsync(tokenRequest)));
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         Assert.That(ex.ErrorMessage, Is.EqualTo("404 User Not Found"));
     }
@@ -237,7 +237,7 @@ public class UsersTests
 
         if (context.IsGitLabMajorVersion(15))
         {
-            var exception = Assert.Throws<GitLabException>(() => context.Client.Users.GetLastActivityDatesAsync().ToArray());
+            var exception = Assert.Throws<GitLabException>((Action)(() => context.Client.Users.GetLastActivityDatesAsync().ToArray()));
             Assert.That(exception?.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
         }
         else

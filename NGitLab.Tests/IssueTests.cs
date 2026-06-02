@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -165,8 +165,8 @@ public class IssueTests
         using var context = await GitLabTestContext.CreateAsync();
         var issuesClient = context.Client.Issues;
 
-        Assert.Throws(Is.InstanceOf<GitLabException>(), () => issuesClient.ForProject(int.MaxValue).ToList());
-        Assert.Throws(Is.InstanceOf<GitLabException>(), () => issuesClient.Get(int.MaxValue, new IssueQuery()).ToList());
+        Assert.Throws(Is.InstanceOf<GitLabException>(), (Action)(() => issuesClient.ForProject(int.MaxValue).ToList()));
+        Assert.Throws(Is.InstanceOf<GitLabException>(), (Action)(() => issuesClient.Get(int.MaxValue, new IssueQuery()).ToList()));
     }
 
     [Test]
@@ -323,7 +323,7 @@ public class IssueTests
 
         var participant = issuesClient.GetParticipants(project.Id, issue1.IssueId);
 
-        Assert.That(participant.Count, Is.EqualTo(1));
+        Assert.That(participant.Count(), Is.EqualTo(1));
     }
 
     [Test]

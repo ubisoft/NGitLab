@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -102,7 +103,7 @@ public class GroupVariableClientTests
         Assert.That(variable.Protected, Is.EqualTo(false));
 
         // Delete
-        var ex = Assert.Throws<GitLabException>(() => groupVariableClient.Delete(variable.Key, "wrongScope"));
+        var ex = Assert.Throws<GitLabException>((Action)(() => groupVariableClient.Delete(variable.Key, "wrongScope")));
         Assert.That(ex!.StatusCode == HttpStatusCode.NotFound);
 
         groupVariableClient.Delete(variable.Key);

@@ -70,7 +70,7 @@ public class GroupsMockTests
         using var server = CreateGroupHierarchy();
 
         var client = server.CreateClient("user1");
-        var groups = client.Groups.GetAsync(new Models.GroupQuery { TopLevelOnly = true });
+        var groups = client.Groups.GetAsync(new GroupQuery { TopLevelOnly = true });
 
         var expected = new string[] { "user1", "tlg" };
         Assert.That(groups.AsEnumerable().Select(g => g.FullPath), Is.EquivalentTo(expected));
@@ -85,11 +85,11 @@ public class GroupsMockTests
         (var page, var total) = await client.Groups.PageAsync(new(page: 1, perPage: 3));
 
         var expected = new string[] { "user1", "tlg", "tlg/sg1" };
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(page.Select(g => g.FullPath), Is.EquivalentTo(expected));
             Assert.That(total, Is.EqualTo(6));
-        });
+        }));
     }
 
     [Test]
@@ -101,11 +101,11 @@ public class GroupsMockTests
         (var page, var total) = await client.Groups.PageAsync(new(page: 2, perPage: 4));
 
         var expected = new string[] { "tlg/sg2", "tlg/sg2/sg2_1" };
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(page.Select(g => g.FullPath), Is.EquivalentTo(expected));
             Assert.That(total, Is.EqualTo(6));
-        });
+        }));
     }
 
     [Test]
@@ -124,7 +124,7 @@ public class GroupsMockTests
     {
         using var server = CreateGroupHierarchy();
         var client = server.CreateClient("user1");
-        Assert.ThrowsAsync<GitLabException>(() => client.Groups.PageAsync(new(perPage: 0)));
+        Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => client.Groups.PageAsync(new(perPage: 0))));
     }
 
     [Test]
@@ -141,7 +141,7 @@ public class GroupsMockTests
             .BuildServer();
 
         var client = server.CreateClient("user1");
-        var group = client.Groups.GetSubgroupsByIdAsync(12, new Models.SubgroupQuery { });
+        var group = client.Groups.GetSubgroupsByIdAsync(12, new SubgroupQuery { });
 
         Assert.That(group.Count(), Is.EqualTo(2), "Subgroups found are invalid");
     }
@@ -160,7 +160,7 @@ public class GroupsMockTests
            .BuildServer();
 
         var client = server.CreateClient("user1");
-        var group = client.Groups.GetSubgroupsByFullPathAsync("parentgroup1", new Models.SubgroupQuery { });
+        var group = client.Groups.GetSubgroupsByFullPathAsync("parentgroup1", new SubgroupQuery { });
 
         Assert.That(group.Count(), Is.EqualTo(2), "Subgroups found are invalid");
     }
@@ -171,7 +171,7 @@ public class GroupsMockTests
         using var server = CreateGroupHierarchy();
 
         var client = server.CreateClient("user1");
-        var group = client.Groups.GetSubgroupsByFullPathAsync("tlg", new Models.SubgroupQuery { IncludeDescendants = true });
+        var group = client.Groups.GetSubgroupsByFullPathAsync("tlg", new SubgroupQuery { IncludeDescendants = true });
 
         var expected = new string[] { "tlg/sg1", "tlg/sg1/sg1_1", "tlg/sg2", "tlg/sg2/sg2_1" };
         Assert.That(group.AsEnumerable().Select(g => g.FullPath), Is.EquivalentTo(expected));
@@ -183,7 +183,7 @@ public class GroupsMockTests
         using var server = CreateGroupHierarchy();
 
         var client = server.CreateClient("user1");
-        var group = client.Groups.GetSubgroupsByIdAsync(1, new Models.SubgroupQuery { IncludeDescendants = true });
+        var group = client.Groups.GetSubgroupsByIdAsync(1, new SubgroupQuery { IncludeDescendants = true });
 
         var expected = new string[] { "tlg/sg1", "tlg/sg1/sg1_1", "tlg/sg2", "tlg/sg2/sg2_1" };
         Assert.That(group.AsEnumerable().Select(g => g.FullPath), Is.EquivalentTo(expected));
@@ -195,7 +195,7 @@ public class GroupsMockTests
         using var server = CreateGroupHierarchy();
 
         var client = server.CreateClient("user1");
-        var group = client.Groups.GetSubgroupsAsync("tlg/sg2", new Models.SubgroupQuery { IncludeDescendants = true });
+        var group = client.Groups.GetSubgroupsAsync("tlg/sg2", new SubgroupQuery { IncludeDescendants = true });
 
         var expected = new string[] { "tlg/sg2/sg2_1" };
         Assert.That(group.AsEnumerable().Select(g => g.FullPath), Is.EquivalentTo(expected));
@@ -207,7 +207,7 @@ public class GroupsMockTests
         using var server = CreateGroupHierarchy();
 
         var client = server.CreateClient("user1");
-        var group = client.Groups.GetSubgroupsAsync(2, new Models.SubgroupQuery { IncludeDescendants = true });
+        var group = client.Groups.GetSubgroupsAsync(2, new SubgroupQuery { IncludeDescendants = true });
 
         var expected = new string[] { "tlg/sg1/sg1_1" };
         Assert.That(group.AsEnumerable().Select(g => g.FullPath), Is.EquivalentTo(expected));
@@ -219,14 +219,14 @@ public class GroupsMockTests
         using var server = CreateGroupHierarchy();
 
         var client = server.CreateClient("user1");
-        (var page, var total) = await client.Groups.PageSubgroupsAsync("tlg", new(page: 1, perPage: 3, new Models.SubgroupQuery { IncludeDescendants = true }));
+        (var page, var total) = await client.Groups.PageSubgroupsAsync("tlg", new(page: 1, perPage: 3, new SubgroupQuery { IncludeDescendants = true }));
 
         var expected = new string[] { "tlg/sg1", "tlg/sg1/sg1_1", "tlg/sg2" };
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(page.Select(g => g.FullPath), Is.EquivalentTo(expected));
             Assert.That(total, Is.EqualTo(4));
-        });
+        }));
     }
 
     [Test]
@@ -235,14 +235,14 @@ public class GroupsMockTests
         using var server = CreateGroupHierarchy();
 
         var client = server.CreateClient("user1");
-        (var page, var total) = await client.Groups.PageSubgroupsAsync(1, new(page: 2, perPage: 3, new Models.SubgroupQuery { IncludeDescendants = true }));
+        (var page, var total) = await client.Groups.PageSubgroupsAsync(1, new(page: 2, perPage: 3, new SubgroupQuery { IncludeDescendants = true }));
 
         var expected = new string[] { "tlg/sg2/sg2_1" };
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(page.Select(g => g.FullPath), Is.EquivalentTo(expected));
             Assert.That(total, Is.EqualTo(4));
-        });
+        }));
     }
 
     [Test]
@@ -251,13 +251,13 @@ public class GroupsMockTests
         using var server = CreateGroupHierarchy();
 
         var client = server.CreateClient("user1");
-        (var page, var total) = await client.Groups.PageSubgroupsAsync(1, new(page: 100, perPage: 3, new Models.SubgroupQuery { IncludeDescendants = true }));
+        (var page, var total) = await client.Groups.PageSubgroupsAsync(1, new(page: 100, perPage: 3, new SubgroupQuery { IncludeDescendants = true }));
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(page.Select(g => g.FullPath), Is.Empty);
             Assert.That(total, Is.EqualTo(4));
-        });
+        }));
     }
 
     [Test]
@@ -276,7 +276,7 @@ public class GroupsMockTests
     {
         using var server = CreateGroupHierarchy();
         var client = server.CreateClient("user1");
-        Assert.ThrowsAsync<GitLabException>(() => client.Groups.PageSubgroupsAsync(1, new(page: 1, perPage: 0)));
+        Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => client.Groups.PageSubgroupsAsync(1, new(page: 1, perPage: 0))));
     }
 
     [Test]
@@ -288,11 +288,11 @@ public class GroupsMockTests
         (var page, var total) = await client.Groups.PageProjectsAsync("tlg", new(page: 1, perPage: 1000));
 
         var expected = new string[] { "tlg/p1" };
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(page.Select(p => p.PathWithNamespace), Is.EquivalentTo(expected));
             Assert.That(total, Is.EqualTo(1));
-        });
+        }));
     }
 
     [Test]
@@ -304,11 +304,11 @@ public class GroupsMockTests
         (var page, var total) = await client.Groups.PageProjectsAsync("tlg/sg1", new(page: 2, perPage: 1));
 
         var expected = new string[] { "tlg/sg1/p3" };
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(page.Select(p => p.PathWithNamespace), Is.EquivalentTo(expected));
             Assert.That(total, Is.EqualTo(2));
-        });
+        }));
     }
 
     [Test]
@@ -319,11 +319,11 @@ public class GroupsMockTests
         var client = server.CreateClient("user1");
         (var page, var total) = await client.Groups.PageProjectsAsync("tlg/sg2", new());
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(page.Select(p => p.PathWithNamespace), Is.Empty);
             Assert.That(total, Is.EqualTo(0));
-        });
+        }));
     }
 
     [Test]
@@ -335,11 +335,11 @@ public class GroupsMockTests
         (var page, var total) = await client.Groups.PageProjectsAsync("tlg", new(query: new() { IncludeSubGroups = true }));
 
         var expected = new string[] { "p1", "p2", "p3" };
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(page.Select(p => p.Name), Is.EquivalentTo(expected));
             Assert.That(total, Is.EqualTo(3));
-        });
+        }));
     }
 
     [Test]
@@ -417,7 +417,7 @@ public class GroupsMockTests
         var client = server.CreateClient("user1");
 
         var t1 = DateTime.UtcNow;
-        var group = await client.Groups.CreateAsync(new Models.GroupCreate
+        var group = await client.Groups.CreateAsync(new GroupCreate
         {
             Name = "Foo",
             Path = "foo",

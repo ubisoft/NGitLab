@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -18,7 +19,7 @@ public class RepositoryMockTests
 
         var startBranch = project.DefaultBranch;
 
-        Assert.That(() => project.Repository.Commit(new()
+        Assert.That((Action)(() => project.Repository.Commit(new()
         {
             Branch = "new-branch",
             StartBranch = startBranch,
@@ -33,7 +34,7 @@ public class RepositoryMockTests
                     FilePath = "README.md",
                 },
             ],
-        }), Throws.TypeOf<GitLabException>()
+        })), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains("GitLab server returned an error (BadRequest): start_branch, start_sha are mutually exclusive."));
     }
 
@@ -52,7 +53,7 @@ public class RepositoryMockTests
         var newBranch = "new-branch";
 
         // Act & Assert
-        Assert.That(() => project.Repository.Commit(new()
+        Assert.That((Action)(() => project.Repository.Commit(new()
         {
             Branch = newBranch,
             StartBranch = startBranch,
@@ -66,7 +67,7 @@ public class RepositoryMockTests
                     FilePath = "README.md",
                 },
             ],
-        }), Throws.TypeOf<GitLabException>()
+        })), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains($"A branch called '{newBranch}' already exists."));
     }
 
@@ -85,7 +86,7 @@ public class RepositoryMockTests
         var newBranch = "new-branch";
 
         // Act & Assert
-        Assert.That(() => project.Repository.Commit(new()
+        Assert.That((Action)(() => project.Repository.Commit(new()
         {
             Branch = newBranch,
             StartSha = initCommit.Sha,
@@ -99,7 +100,7 @@ public class RepositoryMockTests
                     FilePath = "README.md",
                 },
             ],
-        }), Throws.TypeOf<GitLabException>()
+        })), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains($"A branch called '{newBranch}' already exists."));
     }
 
@@ -177,7 +178,7 @@ public class RepositoryMockTests
 
         // Act & Assert
         var commitMessage = "First commit in non existing branch";
-        Assert.That(() => project.Repository.Commit(new()
+        Assert.That((Action)(() => project.Repository.Commit(new()
         {
             Branch = "new-branch",
             CommitMessage = commitMessage,
@@ -190,7 +191,7 @@ public class RepositoryMockTests
                     FilePath = "README.md",
                 },
             ],
-        }), Throws.TypeOf<GitLabException>()
+        })), Throws.TypeOf<GitLabException>()
                   .With.Message.Contains("You can only create or edit files when you are on a branch."));
     }
 

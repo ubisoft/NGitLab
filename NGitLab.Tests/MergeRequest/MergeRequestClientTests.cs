@@ -156,7 +156,7 @@ public class MergeRequestClientTests
         var project = context.CreateProject(initializeWithCommits: true);
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
-        var exception = Assert.Throws<GitLabException>(() =>
+        var exception = Assert.Throws<GitLabException>((Action)(() =>
         {
             mergeRequestClient.Create(new MergeRequestCreate
             {
@@ -164,7 +164,7 @@ public class MergeRequestClientTests
                 SourceBranch = project.DefaultBranch,
                 TargetBranch = project.DefaultBranch,
             });
-        });
+        }));
 
         Assert.That(exception.ErrorMessage, Is.EqualTo("[\"You can't use same project/branch for source and target\"]"));
     }
@@ -179,10 +179,10 @@ public class MergeRequestClientTests
 
         mergeRequestClient.Delete(mergeRequest.Iid);
 
-        Assert.Throws<GitLabException>(() =>
+        Assert.Throws<GitLabException>((Action)(() =>
         {
             _ = mergeRequestClient[mergeRequest.Iid];
-        });
+        }));
     }
 
     [Test]

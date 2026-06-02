@@ -197,11 +197,11 @@ public class MergeRequestsMockTests
         var maintainerClient = server.CreateClient("maintainer");
 
         // Act/Assert
-        var exception = Assert.Throws<GitLabException>(() => maintainerClient.GetMergeRequest(mr.Project.Id).Accept(mr.Iid, new MergeRequestMerge
+        var exception = Assert.Throws<GitLabException>((Action)(() => maintainerClient.GetMergeRequest(mr.Project.Id).Accept(mr.Iid, new MergeRequestMerge
         {
             MergeWhenPipelineSucceeds = mr.HeadPipeline != null,
             ShouldRemoveSourceBranch = true,
-        }));
+        })));
         Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.MethodNotAllowed));
         Assert.That(exception.Message.Equals("The MR cannot be merged with method 'ff': the source branch must first be rebased", StringComparison.Ordinal), Is.True);
 
@@ -253,11 +253,11 @@ public class MergeRequestsMockTests
         var maintainerClient = server.CreateClient("maintainer");
 
         // Act/Assert
-        var exception = Assert.Throws<GitLabException>(() => maintainerClient.GetMergeRequest(mr.Project.Id).Accept(mr.Iid, new MergeRequestMerge
+        var exception = Assert.Throws<GitLabException>((Action)(() => maintainerClient.GetMergeRequest(mr.Project.Id).Accept(mr.Iid, new MergeRequestMerge
         {
             MergeWhenPipelineSucceeds = mr.HeadPipeline != null,
             ShouldRemoveSourceBranch = true,
-        }));
+        })));
         Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.NotAcceptable));
         Assert.That(exception.Message.Equals("The merge request has some conflicts and cannot be merged", StringComparison.Ordinal), Is.True);
 

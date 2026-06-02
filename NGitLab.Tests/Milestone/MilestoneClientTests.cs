@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Impl;
 using NGitLab.Models;
@@ -200,9 +201,9 @@ public class MilestoneClientTests
         var milestoneClient = scope == MilestoneScope.Projects ? context.Client.GetMilestone(id) : context.Client.GetGroupMilestone(id);
         milestoneClient.Delete(milestone.Id);
 
-        Assert.Throws<GitLabException>(() =>
+        Assert.Throws<GitLabException>((Action)(() =>
         {
             var ms = milestoneClient[milestone.Id];
-        });
+        }));
     }
 }

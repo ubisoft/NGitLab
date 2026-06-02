@@ -511,7 +511,7 @@ public sealed class Repository : GitLabObject, IDisposable
         {
             Commands.Checkout(repo, @ref);
         }
-        catch (LibGit2Sharp.NotFoundException)
+        catch (NotFoundException)
         {
             throw GitLabException.NotFound("File not found");
         }
@@ -547,7 +547,7 @@ public sealed class Repository : GitLabObject, IDisposable
             var @ref = request?.Ref ?? repo.Head.FriendlyName;
             Commands.Checkout(repo, @ref);
         }
-        catch (LibGit2Sharp.NotFoundException)
+        catch (NotFoundException)
         {
             throw GitLabException.NotFound("Revision not found");
         }

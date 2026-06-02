@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Formats.Tar;
 using System.Globalization;
@@ -294,7 +294,7 @@ public class RepositoryClientTests
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
         context.Context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[17.7,)"));
 
-        var exception = Assert.Throws<GitLabException>(() => context.RepositoryClient.GetTree("Fakepath").ToArray());
+        var exception = Assert.Throws<GitLabException>((Action)(() => context.RepositoryClient.GetTree("Fakepath").ToArray()));
         Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 

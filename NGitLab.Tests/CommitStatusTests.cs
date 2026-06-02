@@ -42,7 +42,7 @@ public class CommitStatusTests
         _ = context.CommitStatusClient.AddOrUpdate(commitStatusCreate);
 
         // Act/Assert
-        var ex = Assert.Throws<GitLabException>(() => _ = context.CommitStatusClient.AddOrUpdate(commitStatusCreate));
+        var ex = Assert.Throws<GitLabException>((Action)(() => _ = context.CommitStatusClient.AddOrUpdate(commitStatusCreate)));
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         Assert.That(ex.ErrorMessage, Is.EqualTo("Cannot transition status via :run from :running (Reason(s): Status cannot transition via \"run\")"));
     }
@@ -129,7 +129,7 @@ public class CommitStatusTests
         var invalidState = successiveStates[successiveStates.Length - 1];
         commitStatusCreate.State = invalidState;
 
-        var ex = Assert.Throws<GitLabException>(() => _ = context.CommitStatusClient.AddOrUpdate(commitStatusCreate));
+        var ex = Assert.Throws<GitLabException>((Action)(() => _ = context.CommitStatusClient.AddOrUpdate(commitStatusCreate)));
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         Assert.That(ex.ErrorMessage, Does.StartWith("state does not have a valid value").Or
                                          .StartWith("Cannot transition status via"));
@@ -161,7 +161,7 @@ public class CommitStatusTests
         }).ToArray();
 
         // Assert
-        Assert.That(statuses.Count, Is.EqualTo(expectToFind ? 1 : 0));
+        Assert.That(statuses.Length, Is.EqualTo(expectToFind ? 1 : 0));
     }
 
     private sealed class CommitStatusTestContext : IDisposable

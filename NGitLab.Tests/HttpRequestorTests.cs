@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -30,7 +30,7 @@ public class HttpRequestorTests
         var requestOptions = new MockRequestOptions(1, TimeSpan.FromMilliseconds(10), isIncremental: false);
         var httpRequestor = new HttpRequestor(context.DockerContainer.GitLabUrl.ToString(), context.DockerContainer.Credentials.UserToken, MethodType.Get, requestOptions);
 
-        Assert.Throws<GitLabException>(() => httpRequestor.Execute("invalidUrl"));
+        Assert.Throws<GitLabException>((Action)(() => httpRequestor.Execute("invalidUrl")));
         Assert.That(requestOptions.ShouldRetryCalled, Is.True);
         Assert.That(requestOptions.HandledRequests, Has.Count.EqualTo(2));
         Assert.That(requestOptions.HttpRequestSudoHeader, Is.Null);
@@ -45,7 +45,7 @@ public class HttpRequestorTests
         var requestOptions = new MockRequestOptions { HttpClientTimeout = TimeSpan.FromMinutes(2) };
 
         var httpRequestor = new HttpRequestor(context.DockerContainer.GitLabUrl.ToString(), context.DockerContainer.Credentials.UserToken, MethodType.Get, requestOptions);
-        Assert.Throws<GitLabException>(() => httpRequestor.Execute("invalidUrl"));
+        Assert.Throws<GitLabException>((Action)(() => httpRequestor.Execute("invalidUrl")));
 
         Assert.That(requestOptions.HandledRequests.Single().Timeout, Is.EqualTo(TimeSpan.FromMinutes(2).TotalMilliseconds));
     }
@@ -58,7 +58,7 @@ public class HttpRequestorTests
         var requestOptions = new MockRequestOptions(1, TimeSpan.FromMilliseconds(10), isIncremental: false) { Sudo = "UserToImpersonate" };
         var httpRequestor = new HttpRequestor(context.DockerContainer.GitLabUrl.ToString(), context.DockerContainer.Credentials.UserToken, MethodType.Get, requestOptions);
 
-        Assert.Throws<GitLabException>(() => httpRequestor.Execute("invalidUrl"));
+        Assert.Throws<GitLabException>((Action)(() => httpRequestor.Execute("invalidUrl")));
         Assert.That(requestOptions.HttpRequestSudoHeader, Is.EqualTo("UserToImpersonate"));
     }
 

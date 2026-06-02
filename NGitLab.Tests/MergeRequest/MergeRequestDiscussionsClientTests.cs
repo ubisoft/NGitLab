@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -103,7 +103,7 @@ public class MergeRequestDiscussionsClientTests
 
         var projectClient = context.Client.Projects;
         projectClient.Archive(project.Id);
-        var ex = Assert.Throws<GitLabException>(() => mergeRequestDiscussions.Add(newDiscussion));
+        var ex = Assert.Throws<GitLabException>((Action)(() => mergeRequestDiscussions.Add(newDiscussion)));
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
     }
 

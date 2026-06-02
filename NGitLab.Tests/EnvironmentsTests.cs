@@ -128,7 +128,7 @@ public class EnvironmentsTests
         Assert.That(env.State, Is.EqualTo("available").IgnoreCase);
 
         // Trying to delete without stopping beforehand will throw...
-        Assert.Throws<GitLabException>(() => envClient.Delete(initialEnvId));
+        Assert.Throws<GitLabException>((Action)(() => envClient.Delete(initialEnvId)));
 
         // Stop
         envClient.Stop(initialEnvId);

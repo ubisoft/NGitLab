@@ -359,12 +359,12 @@ public class GroupsTests
         (var firstPage, var total1) = await groupClient.PageAsync(new(page: 1, perPage: perPage));
 
         // Assert
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(firstPage, Has.Count.AtLeast(1));
             Assert.That(firstPage, Has.Count.AtMost(perPage));
             Assert.That(total1, Is.AtLeast(firstPage.Count));
-        });
+        }));
 
         // Act - Read last page
         var totalPages = ((total1.Value - 1) / perPage) + 1;
@@ -376,21 +376,21 @@ public class GroupsTests
         (var lastPage, var total2) = await groupClient.PageAsync(new(page: totalPages, perPage: perPage));
 
         // Assert
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(lastPage, Has.Count.EqualTo(expectedLastPageCount));
             Assert.That(total2, Is.EqualTo(total1));
-        });
+        }));
 
         // Act - Read past last page
         (var pastLastPage, var total3) = await groupClient.PageAsync(new(page: totalPages + 1, perPage: perPage));
 
         // Assert
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(pastLastPage, Is.Empty);
             Assert.That(total3, Is.EqualTo(total1));
-        });
+        }));
     }
 
     [Test]
@@ -407,11 +407,11 @@ public class GroupsTests
         var topLevelOnly = await PageAll(groupClient, new(perPage: 100, query: new() { TopLevelOnly = true }));
 
         // Assert
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(child1.ParentId, Is.Not.Null);
             Assert.That(topLevelOnly.Where(g => g.ParentId != null), Is.Empty);
-        });
+        }));
 
         static async Task<List<Group>> PageAll(IGroupsClient groupClient, PageQuery<GroupQuery> query)
         {
@@ -456,7 +456,7 @@ public class GroupsTests
         Assert.That(projectResult.Id, Is.EqualTo(project.Id));
         Assert.That(projectResult.Archived, Is.True);
     }
-    
+
     [Test]
     [NGitLabRetry]
     public async Task Test_group_projects_query_page()
@@ -517,7 +517,7 @@ public class GroupsTests
         (var page2, var total2) = await groupClient.PageProjectsAsync(group.Id, new(page: 2, perPage: 2, new() { OrderBy = "name", Sort = "asc" }));
         (var page3, var total3) = await groupClient.PageProjectsAsync(group.Id, new(page: 3, perPage: 2, new() { OrderBy = "name", Sort = "asc" }));
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(page1.Select(p => p.Name), Is.EquivalentTo(allProjects.Take(2)));
             Assert.That(total1, Is.EqualTo(3));
@@ -525,7 +525,7 @@ public class GroupsTests
             Assert.That(total3, Is.EqualTo(3));
             Assert.That(page3.Select(p => p.Name), Is.Empty);
             Assert.That(total3, Is.EqualTo(3));
-        });
+        }));
     }
 
     [Test]
@@ -1119,35 +1119,35 @@ public class GroupsTests
         (var defaultPage, var total5) = await groupClient.PageSubgroupsAsync(parent.Id, defaultQuery);
 
         // Assert
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(firstPage.Select(g => g.Name), Is.EquivalentTo(allChildren.Skip(0).Take(2)));
             Assert.That(total1, Is.EqualTo(allChildren.Length));
-        });
+        }));
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(lastPage.Select(g => g.Name), Is.EquivalentTo(allChildren.Skip(2).Take(2)));
             Assert.That(total2, Is.EqualTo(allChildren.Length));
-        });
+        }));
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(allInOnePage.Select(g => g.Name), Is.EquivalentTo(allChildren));
             Assert.That(total3, Is.EqualTo(allChildren.Length));
-        });
+        }));
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(pageZero.Select(g => g.Name), Is.EquivalentTo(allChildren));
             Assert.That(total4, Is.EqualTo(allChildren.Length));
-        });
+        }));
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(defaultPage.Select(g => g.Name), Is.EquivalentTo(allChildren));
             Assert.That(total5, Is.EqualTo(allChildren.Length));
-        });
+        }));
     }
 
     [Test]
@@ -1183,34 +1183,34 @@ public class GroupsTests
         (var defaultPage, var total5) = await groupClient.PageSubgroupsAsync(parent.Id, defaultQuery);
 
         // Assert
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(firstPage.Select(g => g.Name), Is.EquivalentTo(allDescendants.Skip(0).Take(3)));
             Assert.That(total1, Is.EqualTo(allDescendants.Length));
-        });
+        }));
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(lastPage.Select(g => g.Name), Is.EquivalentTo(allDescendants.Skip(3).Take(3)));
             Assert.That(total2, Is.EqualTo(allDescendants.Length));
-        });
+        }));
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(allInOnePage.Select(g => g.Name), Is.EquivalentTo(allDescendants));
             Assert.That(total3, Is.EqualTo(allDescendants.Length));
-        });
+        }));
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(pageZero.Select(g => g.Name), Is.EquivalentTo(allDescendants));
             Assert.That(total4, Is.EqualTo(allDescendants.Length));
-        });
+        }));
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(defaultPage.Select(g => g.Name), Is.EquivalentTo(allDescendants));
             Assert.That(total5, Is.EqualTo(allDescendants.Length));
-        });
+        }));
     }
 }

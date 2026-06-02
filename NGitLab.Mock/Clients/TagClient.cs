@@ -81,7 +81,7 @@ internal sealed class TagClient : ClientBase, ITagClient
         };
     }
 
-    public GitLabCollectionResponse<Models.Tag> GetAsync(TagQuery query)
+    public GitLabCollectionResponse<Tag> GetAsync(TagQuery query)
     {
         using (Context.BeginOperationScope())
         {
