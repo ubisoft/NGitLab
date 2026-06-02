@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -82,7 +82,7 @@ public class ProjectsTests
 
         // Act
         // Assert
-        var ex = Assert.ThrowsAsync<GitLabException>(() => projectClient.GetAsync("baz1234"));
+        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync("baz1234")));
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
@@ -104,7 +104,7 @@ public class ProjectsTests
         });
 
         // Act/Assert
-        var ex = Assert.ThrowsAsync<GitLabException>(() => userProjectClient.GetAsync(adminProject.Id));
+        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => userProjectClient.GetAsync(adminProject.Id)));
 
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
@@ -386,7 +386,7 @@ public class ProjectsTests
         var actual = await projectClient.CreateAsync(expected);
 
         // Assert
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(actual.Name, Is.EqualTo(expected.Name));
             Assert.That(actual.Path, Is.EqualTo(expected.Path));
@@ -400,7 +400,7 @@ public class ProjectsTests
             Assert.That(actual.Topics, Is.EquivalentTo(expected.Topics));
             Assert.That(actual.RepositoryAccessLevel, Is.EqualTo(RepositoryAccessLevel.Enabled));
             Assert.That(actual.BuildTimeout, Is.EqualTo(expected.BuildTimeout));
-        });
+        }));
     }
 
     [Test]
@@ -435,11 +435,11 @@ public class ProjectsTests
         var projectClient = context.Client.Projects;
 
         // Act
-        var ex = Assert.ThrowsAsync<GitLabException>(() =>
+        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() =>
             projectClient.CreateAsync(new()
             {
                 Path = existingProject.Path,
-            }));
+            })));
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -509,11 +509,11 @@ public class ProjectsTests
         });
 
         // Assert
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(updatedProject.VisibilityLevel, Is.EqualTo(VisibilityLevel.Private));
             Assert.That(updatedProject.Topics, Is.EquivalentTo(expectedTopics));
-        });
+        }));
     }
 
     [Test]
@@ -525,11 +525,11 @@ public class ProjectsTests
         var projectClient = context.Client.Projects;
 
         // Act
-        var ex = Assert.ThrowsAsync<GitLabException>(() =>
+        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() =>
             projectClient.UpdateAsync(int.MaxValue, new()
             {
                 Visibility = VisibilityLevel.Private,
-            }));
+            })));
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
@@ -555,7 +555,7 @@ public class ProjectsTests
         await projectClient.DeleteAsync(project.Id);
 
         // Assert
-        Assert.ThrowsAsync<GitLabException>(() => projectClient.GetAsync(project.Id));
+        Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
     }
 
     [Test]
@@ -588,7 +588,7 @@ public class ProjectsTests
         var projectClient = context.Client.Projects;
 
         // Act
-        var ex = Assert.ThrowsAsync<GitLabException>(() => projectClient.DeleteAsync(int.MaxValue));
+        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.DeleteAsync(int.MaxValue)));
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));

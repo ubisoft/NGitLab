@@ -58,11 +58,11 @@ public class GitLabClientMockTest
 
         var client = server.CreateClient();
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(getClient(client, 1), Is.Not.Null);
             Assert.That(getClient(client, "test-group/test-project"), Is.Not.Null);
-        });
+        }));
     }
 
     [TestCaseSource(nameof(GroupClientTestCases))]
@@ -79,11 +79,11 @@ public class GitLabClientMockTest
 
         var client = server.CreateClient();
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(getClient(client, 1), Is.Not.Null);
             Assert.That(getClient(client, "parent-group/test-group"), Is.Not.Null);
-        });
+        }));
     }
 
     [Test]
@@ -106,11 +106,11 @@ public class GitLabClientMockTest
 
         var client = server.CreateClient();
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
-            Assert.Throws<NotImplementedException>(() => client.GetGroupMergeRequest(1));
-            Assert.Throws<NotImplementedException>(() => client.GetGroupMergeRequest("parent-group/test-group"));
-        });
+            Assert.Throws<NotImplementedException>((Action)(() => client.GetGroupMergeRequest(1)));
+            Assert.Throws<NotImplementedException>((Action)(() => client.GetGroupMergeRequest("parent-group/test-group")));
+        }));
     }
 
     private static IEnumerable<MethodInfo> GetMethods<TParameter>()

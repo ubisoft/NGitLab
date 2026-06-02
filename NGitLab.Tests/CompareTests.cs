@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -63,9 +64,9 @@ public class CompareTests
         using var context = await GitLabTestContext.CreateAsync();
         var project = context.CreateProject(initializeWithCommits: true);
 
-        Assert.Catch<GitLabException>(() =>
+        Assert.Catch<GitLabException>((Action)(() =>
         {
             context.Client.GetRepository(project.Id).Compare(new CompareQuery(project.DefaultBranch, "testblub"));
-        }, "404 Ref Not Found", null);
+        }), "404 Ref Not Found", null);
     }
 }

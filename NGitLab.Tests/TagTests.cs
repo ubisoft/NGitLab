@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -121,7 +121,7 @@ public class TagTests
         }
         else
         {
-            var ex = Assert.ThrowsAsync<GitLabException>(() => tagClient.GetByNameAsync(tagNameSought));
+            var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => tagClient.GetByNameAsync(tagNameSought)));
             Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
     }

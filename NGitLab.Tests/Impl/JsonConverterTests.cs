@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using NGitLab.Impl.Json;
@@ -34,7 +34,7 @@ public class JsonConverterTests
     public void Test_DeserializeNullToUnsupportedValueType_Throws()
     {
         var json = @"{ ""a_uint32"": null }";
-        var ex = Assert.Throws<JsonException>(() => Serializer.Deserialize<MyDataContract>(json));
+        var ex = Assert.Throws<JsonException>((Action)(() => Serializer.Deserialize<MyDataContract>(json)));
         Assert.That(ex.Message, Does.StartWith("The JSON value could not be converted to System.UInt32."));
     }
 

@@ -236,7 +236,7 @@ public class CommitsTests
         var startCommit = commitClient.GetCommit(startBranch);
 
         // Act/Assert
-        Assert.That(() => commitClient.Create(new CommitCreate
+        Assert.That((Func<Commit>)(() => commitClient.Create(new CommitCreate
         {
             Branch = "new-branch",
             StartBranch = startBranch,
@@ -251,7 +251,7 @@ public class CommitsTests
                     FilePath = "README.md",
                 },
             ],
-        }), Throws.TypeOf<GitLabException>()
+        })), Throws.TypeOf<GitLabException>()
                   .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
                   .With.Message.Contains("start_branch, start_sha are mutually exclusive."));
     }
@@ -272,7 +272,7 @@ public class CommitsTests
         repoClient.Branches.Create(new BranchCreate { Name = "new-branch", Ref = startBranch });
 
         // Act/Assert
-        Assert.That(() => commitClient.Create(new CommitCreate
+        Assert.That((Func<Commit>)(() => commitClient.Create(new CommitCreate
         {
             Branch = "new-branch",
             StartBranch = startBranch,
@@ -286,7 +286,7 @@ public class CommitsTests
                     FilePath = "README.md",
                 },
             ],
-        }), Throws.TypeOf<GitLabException>()
+        })), Throws.TypeOf<GitLabException>()
                   .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
                   .With.Message.Contains("A branch called 'new-branch' already exists."));
     }
@@ -309,7 +309,7 @@ public class CommitsTests
         repoClient.Branches.Create(new BranchCreate { Name = "new-branch", Ref = startBranch });
 
         // Act/Assert
-        Assert.That(() => commitClient.Create(new CommitCreate
+        Assert.That((Func<Commit>)(() => commitClient.Create(new CommitCreate
         {
             Branch = "new-branch",
             StartSha = startSha.ToString().ToLowerInvariant(),
@@ -323,7 +323,7 @@ public class CommitsTests
                     FilePath = "README.md",
                 },
             ],
-        }), Throws.TypeOf<GitLabException>()
+        })), Throws.TypeOf<GitLabException>()
                   .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
                   .With.Message.Contains("A branch called 'new-branch' already exists."));
     }
@@ -338,7 +338,7 @@ public class CommitsTests
         var commitClient = context.Client.GetCommits(project.Id);
 
         // Act/Assert
-        Assert.That(() => commitClient.Create(new CommitCreate
+        Assert.That((Func<Commit>)(() => commitClient.Create(new CommitCreate
         {
             Branch = "new-branch",
             CommitMessage = "First commit in new branch",
@@ -351,7 +351,7 @@ public class CommitsTests
                     FilePath = "README.md",
                 },
             ],
-        }), Throws.TypeOf<GitLabException>()
+        })), Throws.TypeOf<GitLabException>()
                   .With.Property(nameof(GitLabException.StatusCode)).EqualTo(HttpStatusCode.BadRequest)
                   .With.Message.Contains("You can only create or edit files when you are on a branch"));
     }

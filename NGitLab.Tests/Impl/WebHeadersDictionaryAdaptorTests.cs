@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net;
 using NGitLab.Impl;
@@ -11,12 +12,12 @@ public class WebHeadersDictionaryAdaptorTests
     {
         var sut = new WebHeadersDictionaryAdaptor(headers);
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(sut, Has.Count.EqualTo(headers.Count));
             Assert.That(sut.Keys.Count(), Is.EqualTo(headers.Count));
             Assert.That(sut.Values.Count(), Is.EqualTo(headers.Count));
-        });
+        }));
 
         foreach ((var k, var v) in sut)
         {

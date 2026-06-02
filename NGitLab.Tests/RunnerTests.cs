@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -70,7 +70,7 @@ public class RunnerTests
 
         // And the only way to unregister it from the owner project is to delete it
         runnersClient.Delete(runner.Id);
-        var ex = Assert.Throws<GitLabException>(() => IsRegistered(runner.Id));
+        var ex = Assert.Throws<GitLabException>((Action)(() => IsRegistered(runner.Id)));
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
 
         bool IsEnabledOnProject(Project project) => runnersClient[runner.Id].Projects.Any(x => x.Id == project.Id);
@@ -90,7 +90,7 @@ public class RunnerTests
         var runner = runnersClient.Register(new RunnerRegister { Token = project.RunnersToken });
         Assert.That(IsEnabledOnProject(project), Is.True);
 
-        var exception = Assert.Throws<GitLabException>(() => runnersClient.DisableRunner(project.Id, new RunnerId(runner.Id)));
+        var exception = Assert.Throws<GitLabException>((Action)(() => runnersClient.DisableRunner(project.Id, new RunnerId(runner.Id))));
         Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.Forbidden));
         bool IsEnabledOnProject(Project project) => runnersClient[runner.Id].Projects.Any(x => x.Id == project.Id);
     }
@@ -111,7 +111,7 @@ public class RunnerTests
         Assert.That(IsRegistered(), Is.True);
 
         GetRetryPolicy().Execute(() => { runnersClient.Delete(runner.Id); });
-        var ex = Assert.Throws<GitLabException>(() => IsRegistered());
+        var ex = Assert.Throws<GitLabException>((Action)(() => IsRegistered()));
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
 
         bool IsRegistered() => GetRetryPolicy().Execute(() => runnersClient[runner.Id].Groups.Any(x => x.Id == createdGroup1.Id));

@@ -18,7 +18,7 @@ public class FunctionRetryExtensionsTests
         mockClass.TestRetryMethod(Arg.Any<bool>()).Throws(new GitLabException { StatusCode = HttpStatusCode.InternalServerError });
 
         // act
-        Assert.Throws<GitLabException>(() => ((Func<string>)(() => mockClass.TestRetryMethod(isFailed: true))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental));
+        Assert.Throws<GitLabException>((Action)(() => ((Func<string>)(() => mockClass.TestRetryMethod(isFailed: true))).Retry(options.ShouldRetry, options.RetryInterval, options.RetryCount, options.IsIncremental)));
 
         // assert
         mockClass.ReceivedWithAnyArgs(options.RetryCount + 1).TestRetryMethod(Arg.Any<bool>());

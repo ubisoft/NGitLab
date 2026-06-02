@@ -55,7 +55,7 @@ public class FilesTests
         exists = filesClient.FileExists(fileName, project.DefaultBranch);
         Assert.That(exists, Is.False);
 
-        Assert.Throws(Is.InstanceOf<GitLabException>(), () => filesClient.Get("testDelete.md", project.DefaultBranch));
+        Assert.Throws(Is.InstanceOf<GitLabException>(), (Action)(() => filesClient.Get("testDelete.md", project.DefaultBranch)));
     }
 
     [Test]
@@ -104,7 +104,7 @@ public class FilesTests
         exists = await filesClient.FileExistsAsync(fileName, project.DefaultBranch);
         Assert.That(exists, Is.False);
 
-        Assert.ThrowsAsync(Is.InstanceOf<GitLabException>(), () => filesClient.GetAsync("testDelete.md", project.DefaultBranch));
+        Assert.ThrowsAsync(Is.InstanceOf<GitLabException>(), (Func<Task>)(() => filesClient.GetAsync("testDelete.md", project.DefaultBranch)));
     }
 
     [Test]
@@ -136,7 +136,7 @@ public class FilesTests
         Assert.That(downloadedContent, Is.Not.Null);
         Assert.That(downloadedContent, Is.EqualTo("test"));
 
-        Assert.ThrowsAsync(Is.InstanceOf<GitLabException>(), () => filesClient.GetRawAsync("does-not-exist.md", _ => Task.CompletedTask));
+        Assert.ThrowsAsync(Is.InstanceOf<GitLabException>(), (Func<Task>)(() => filesClient.GetRawAsync("does-not-exist.md", _ => Task.CompletedTask)));
     }
 
     [Test]

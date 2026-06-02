@@ -1,4 +1,5 @@
-﻿using System.Threading;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
@@ -48,12 +49,12 @@ public class LintClientTests
 
         var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), ValidCIYaml, new(), CancellationToken.None);
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(result.Valid, Is.True);
             Assert.That(result.Errors, Is.Empty);
             Assert.That(result.Warnings, Is.Empty);
-        });
+        }));
     }
 
     [Test]
@@ -68,7 +69,7 @@ public class LintClientTests
 
         Assert.That(result.Jobs, Has.Length.EqualTo(1));
         var job = result.Jobs[0];
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(job.Name, Is.EqualTo("build-job"));
             Assert.That(job.Stage, Is.EqualTo("build"));
@@ -79,7 +80,7 @@ public class LintClientTests
             Assert.That(job.Environment, Is.Null);
             Assert.That(job.When, Is.EqualTo("always"));
             Assert.That(job.AllowFailure, Is.True);
-        });
+        }));
     }
 
     [Test]
@@ -92,12 +93,12 @@ public class LintClientTests
 
         var result = await context.Client.Lint.ValidateCIYamlContentAsync(project.Id.ToString(), InvalidCIYaml, new(), CancellationToken.None);
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(result.Valid, Is.False);
             Assert.That(result.Errors, Is.Not.Empty);
             Assert.That(result.Warnings, Is.Empty);
-        });
+        }));
     }
 
     [Test]
@@ -118,12 +119,12 @@ public class LintClientTests
 
         var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(result.Valid, Is.True);
             Assert.That(result.Errors, Is.Empty);
             Assert.That(result.Warnings, Is.Empty);
-        });
+        }));
     }
 
     [Test]
@@ -144,11 +145,11 @@ public class LintClientTests
 
         var result = await context.Client.Lint.ValidateProjectCIConfigurationAsync(project.Id.ToString(), new(), CancellationToken.None);
 
-        Assert.Multiple(() =>
+        Assert.Multiple((Action)(() =>
         {
             Assert.That(result.Valid, Is.False);
             Assert.That(result.Errors, Is.Not.Empty);
             Assert.That(result.Warnings, Is.Empty);
-        });
+        }));
     }
 }

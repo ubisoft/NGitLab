@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -16,7 +17,7 @@ public class GraphQLTests
         using var context = await GitLabTestContext.CreateAsync();
         var project = context.CreateProject();
 
-        var exception = Assert.ThrowsAsync<GitLabException>(() => context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
+        var exception = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
         {
             Query = """
                 {
@@ -25,7 +26,7 @@ public class GraphQLTests
                   }
                 }
                 """,
-        }));
+        })));
 
         Assert.That(exception.Message, Does.Contain("Field 'unknownProperty' doesn't exist on type 'Project'"));
     }

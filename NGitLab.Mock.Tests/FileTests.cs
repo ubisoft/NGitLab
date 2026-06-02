@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -37,7 +38,7 @@ public class FileTests
         }
         else
         {
-            Assert.ThrowsAsync<GitLabException>(async () => await filesClient.GetRawAsync(fileToLookUp, _ => Task.CompletedTask).ConfigureAwait(false));
+            Assert.ThrowsAsync<GitLabException>((Func<Task>)(async () => await filesClient.GetRawAsync(fileToLookUp, _ => Task.CompletedTask).ConfigureAwait(false)));
         }
     }
 }

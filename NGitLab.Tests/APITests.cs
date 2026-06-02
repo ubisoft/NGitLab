@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using NGitLab.Impl;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
@@ -14,7 +15,7 @@ public class APITests
         using var context = await GitLabTestContext.CreateAsync();
         var credentials = new GitLabCredentials(context.DockerContainer.GitLabUrl.ToString(), "invalidUser", "myInvalidPassword");
         var api = new API(credentials);
-        var exception = Assert.Throws<GitLabException>(() => api.Get());
+        var exception = Assert.Throws<GitLabException>((Action)(() => api.Get()));
 
         Assert.That(exception.Message, Does.Not.Contain(credentials.Password));
         Assert.That(exception.OriginalCall.ToString(), Does.Not.Contain(credentials.Password));

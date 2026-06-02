@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NGitLab.Impl;
 using NUnit.Framework;
 
@@ -10,7 +10,7 @@ public class GitLabCredentialsTests
     [TestCase("https://test/api/v3/")]
     public void Constructor_should_reject_apiv3(string url)
     {
-        Assert.Throws<ArgumentException>(() => new GitLabCredentials(url, "my_token"));
+        Assert.Throws<ArgumentException>((Action)(() => new GitLabCredentials(url, "my_token")));
     }
 
     [TestCase("https://test", "https://test")]

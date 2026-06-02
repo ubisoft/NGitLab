@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NGitLab.Mock.Config;
 using NGitLab.Models;
 using NUnit.Framework;
@@ -53,7 +54,7 @@ public class IssuesMockTests
             .BuildServer();
 
         var client = server.CreateClient();
-        Assert.DoesNotThrow(() => client.Issues.Get(new IssueQuery { Scope = "assigned_to_me" }).ToArray());
+        Assert.DoesNotThrow((Action)(() => client.Issues.Get(new IssueQuery { Scope = "assigned_to_me" }).ToArray()));
     }
 
     [Test]

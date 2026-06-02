@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -107,10 +108,10 @@ public class ProjectVariableClientTests
         // Check single access with scoped variables
         Assert.That(projectVariableClient[changingScopeVariable.Key, changingScopeVariable.EnvironmentScope], Is.Not.Null);
 
-        var exMultipleVariables = Assert.Throws<GitLabException>(() =>
+        var exMultipleVariables = Assert.Throws<GitLabException>((Action)(() =>
         {
             var dummy = projectVariableClient[changingScopeVariable.Key];
-        });
+        }));
         Assert.That(exMultipleVariables?.ErrorMessage, Is.EqualTo("There are multiple variables with provided parameters. Please use 'filter[environment_scope]'"));
 
         // Update
@@ -128,7 +129,7 @@ public class ProjectVariableClientTests
         Assert.That(changingScopeVariable.EnvironmentScope, Is.EqualTo(newScope));
 
         // Delete
-        var ex = Assert.Throws<GitLabException>(() => projectVariableClient.Delete(changingScopeVariable.Key, "wrongScope"));
+        var ex = Assert.Throws<GitLabException>((Action)(() => projectVariableClient.Delete(changingScopeVariable.Key, "wrongScope")));
         Assert.That(ex!.StatusCode == HttpStatusCode.NotFound);
 
         projectVariableClient.Delete(changingScopeVariable.Key, newScope);

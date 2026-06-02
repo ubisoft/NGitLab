@@ -59,7 +59,7 @@ public class ProjectsMockTests
         var projectClient = gitLabClient.Projects;
 
         // Act/Assert
-        var ex = Assert.ThrowsAsync<GitLabException>(() => projectClient.GetAsync("baz1234"));
+        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync("baz1234")));
 
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
@@ -82,7 +82,7 @@ public class ProjectsMockTests
         });
 
         // Act/Assert
-        var ex = Assert.ThrowsAsync<GitLabException>(() => testUser1ProjectClient.GetAsync(testUser2Project.Id));
+        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => testUser1ProjectClient.GetAsync(testUser2Project.Id)));
 
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
@@ -313,12 +313,12 @@ public class ProjectsMockTests
         var projectClient = server.CreateClient().Projects;
 
         // Act
-        var ex = Assert.CatchAsync<GitLabException>(() =>
+        var ex = Assert.CatchAsync<GitLabException>((Func<Task>)(() =>
             projectClient.CreateAsync(new()
             {
                 Path = "DUPLICATE", // GitLab path is case-INsensitive
                 Name = "project2",
-            }));
+            })));
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -337,12 +337,12 @@ public class ProjectsMockTests
         var projectClient = server.CreateClient().Projects;
 
         // Act
-        var ex = Assert.ThrowsAsync<GitLabException>(() =>
+        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() =>
             projectClient.CreateAsync(new()
             {
                 Path = "project2",
                 Name = "duplicate", // GitLab name is case-Sensitive
-            }));
+            })));
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -431,11 +431,11 @@ public class ProjectsMockTests
         var projectClient = server.CreateClient().Projects;
 
         // Act
-        var ex = Assert.CatchAsync<GitLabException>(() =>
+        var ex = Assert.CatchAsync<GitLabException>((Func<Task>)(() =>
             projectClient.UpdateAsync(int.MaxValue, new()
             {
                 Visibility = VisibilityLevel.Private,
-            }));
+            })));
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
@@ -456,7 +456,7 @@ public class ProjectsMockTests
         await projectClient.DeleteAsync(projectFullPath);
 
         // Assert
-        Assert.CatchAsync<GitLabException>(() => projectClient.GetAsync(projectFullPath));
+        Assert.CatchAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(projectFullPath)));
     }
 
     [Test]
@@ -469,7 +469,7 @@ public class ProjectsMockTests
         var projectClient = server.CreateClient().Projects;
 
         // Act
-        var ex = Assert.CatchAsync<GitLabException>(() => projectClient.DeleteAsync(int.MaxValue));
+        var ex = Assert.CatchAsync<GitLabException>((Func<Task>)(() => projectClient.DeleteAsync(int.MaxValue)));
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
