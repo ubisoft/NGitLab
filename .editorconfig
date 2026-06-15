@@ -272,6 +272,9 @@ MA0051.maximum_statements_per_method = 100
 
 MA0053.public_class_should_be_sealed = false
 
+# MA0074: Avoid implicit culture-sensitive methods
+dotnet_diagnostic.MA0074.severity = suggestion
+
 # SA0001: XML comment analysis is disabled due to project configuration
 dotnet_diagnostic.SA0001.severity = none
 
