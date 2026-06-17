@@ -1,5 +1,13 @@
 abstract NGitLab.GitLabCollectionResponse<T>.GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerator<T>
 abstract NGitLab.GitLabCollectionResponse<T>.GetEnumerator() -> System.Collections.Generic.IEnumerator<T>
+const NGitLab.ArchiveFormats.Bz2 = "bz2" -> string
+const NGitLab.ArchiveFormats.Tar = "tar" -> string
+const NGitLab.ArchiveFormats.TarBz2 = "tar.bz2" -> string
+const NGitLab.ArchiveFormats.TarGz = "tar.gz" -> string
+const NGitLab.ArchiveFormats.Tb2 = "tb2" -> string
+const NGitLab.ArchiveFormats.Tbz = "tbz" -> string
+const NGitLab.ArchiveFormats.Tbz2 = "tbz2" -> string
+const NGitLab.ArchiveFormats.Zip = "zip" -> string
 const NGitLab.Impl.GroupsClient.Url = "/groups" -> string
 const NGitLab.Impl.LabelClient.GroupLabelUrl = "/groups/{0}/labels" -> string
 const NGitLab.Impl.LabelClient.ProjectLabelUrl = "/projects/{0}/labels" -> string
@@ -20,6 +28,7 @@ const NGitLab.Models.Project.Url = "/projects" -> string
 const NGitLab.Models.Runner.Url = "/runners" -> string
 const NGitLab.Models.Session.Url = "/session" -> string
 const NGitLab.Models.User.Url = "/users" -> string
+NGitLab.ArchiveFormats
 NGitLab.DynamicEnum<TEnum>
 NGitLab.DynamicEnum<TEnum>.DynamicEnum() -> void
 NGitLab.DynamicEnum<TEnum>.DynamicEnum(string stringValue) -> void
@@ -28,6 +37,16 @@ NGitLab.DynamicEnum<TEnum>.EnumValue.get -> TEnum?
 NGitLab.DynamicEnum<TEnum>.Equals(NGitLab.DynamicEnum<TEnum> other) -> bool
 NGitLab.DynamicEnum<TEnum>.Equals(TEnum other) -> bool
 NGitLab.DynamicEnum<TEnum>.StringValue.get -> string
+NGitLab.GetArchiveRequest
+NGitLab.GetArchiveRequest.Format.get -> string
+NGitLab.GetArchiveRequest.Format.init -> void
+NGitLab.GetArchiveRequest.GetArchiveRequest() -> void
+NGitLab.GetArchiveRequest.IncludeLfsBlobs.get -> bool?
+NGitLab.GetArchiveRequest.IncludeLfsBlobs.init -> void
+NGitLab.GetArchiveRequest.Path.get -> string
+NGitLab.GetArchiveRequest.Path.init -> void
+NGitLab.GetArchiveRequest.Sha.get -> string
+NGitLab.GetArchiveRequest.Sha.init -> void
 NGitLab.GetCommitsRequest
 NGitLab.GetCommitsRequest.FirstParent.get -> bool?
 NGitLab.GetCommitsRequest.FirstParent.set -> void
@@ -897,6 +916,7 @@ NGitLab.Impl.RepositoryClient.Compare(NGitLab.Models.CompareQuery query) -> NGit
 NGitLab.Impl.RepositoryClient.CompareAsync(NGitLab.Models.CompareQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.CompareResults>
 NGitLab.Impl.RepositoryClient.Contributors.get -> NGitLab.IContributorClient
 NGitLab.Impl.RepositoryClient.Files.get -> NGitLab.IFilesClient
+NGitLab.Impl.RepositoryClient.GetArchive(NGitLab.GetArchiveRequest request, System.Action<System.IO.Stream> parser) -> void
 NGitLab.Impl.RepositoryClient.GetArchive(System.Action<System.IO.Stream> parser) -> void
 NGitLab.Impl.RepositoryClient.GetCommit(NGitLab.Sha1 sha) -> NGitLab.Models.Commit
 NGitLab.Impl.RepositoryClient.GetCommitDiff(NGitLab.Sha1 sha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Diff>
@@ -1137,6 +1157,7 @@ NGitLab.IRepositoryClient.Compare(NGitLab.Models.CompareQuery query) -> NGitLab.
 NGitLab.IRepositoryClient.CompareAsync(NGitLab.Models.CompareQuery query, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.CompareResults>
 NGitLab.IRepositoryClient.Contributors.get -> NGitLab.IContributorClient
 NGitLab.IRepositoryClient.Files.get -> NGitLab.IFilesClient
+NGitLab.IRepositoryClient.GetArchive(NGitLab.GetArchiveRequest request, System.Action<System.IO.Stream> parser) -> void
 NGitLab.IRepositoryClient.GetArchive(System.Action<System.IO.Stream> parser) -> void
 NGitLab.IRepositoryClient.GetCommit(NGitLab.Sha1 sha) -> NGitLab.Models.Commit
 NGitLab.IRepositoryClient.GetCommitDiff(NGitLab.Sha1 sha) -> System.Collections.Generic.IEnumerable<NGitLab.Models.Diff>

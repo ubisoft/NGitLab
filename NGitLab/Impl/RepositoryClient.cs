@@ -55,6 +55,33 @@ public class RepositoryClient : IRepositoryClient
         _api.Get().Stream(_repoPath + "/archive", parser);
     }
 
+    public void GetArchive(GetArchiveRequest request, Action<Stream> parser)
+    {
+        var url = _repoPath + "/archive";
+
+        if (!string.IsNullOrWhiteSpace(request?.Format))
+        {
+            url += $".{request.Format}";
+        }
+
+        if (!string.IsNullOrWhiteSpace(request?.Path))
+        {
+            url = Utils.AddParameter(url, "path", request.Path);
+        }
+
+        if (!string.IsNullOrWhiteSpace(request?.Sha))
+        {
+            url = Utils.AddParameter(url, "sha", request.Sha);
+        }
+
+        if (request?.IncludeLfsBlobs.HasValue == true)
+        {
+            url = Utils.AddParameter(url, "include_lfs_blobs", request.IncludeLfsBlobs.Value);
+        }
+
+        _api.Get().Stream(url, parser);
+    }
+
     public IEnumerable<Commit> Commits => _api.Get().GetAll<Commit>(_repoPath + $"/commits?per_page={GetCommitsRequest.DefaultPerPage}");
 
     /// <summary>
