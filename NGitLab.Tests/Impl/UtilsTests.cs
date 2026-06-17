@@ -1,3 +1,4 @@
+using System;
 using NGitLab.Models;
 using NUnit.Framework;
 
@@ -54,9 +55,10 @@ public class UtilsTests
         var url = basePath;
 
         url = NGitLab.Impl.Utils.AddParameter(url, "param1", "one");
+        var action = new Action(() => NGitLab.Impl.Utils.AppendSegmentToUrl(url, "segment"));
 
         // Act and Assert
-        Assert.That(() => NGitLab.Impl.Utils.AppendSegmentToUrl(url, "segment"), Throws.InvalidOperationException);
+        Assert.Throws<InvalidOperationException>(action);
     }
 
     [TestCase("https://gitlab.org/api/v4/stuff/", "/segment")]

@@ -362,11 +362,11 @@ public class RepositoryClientTests
         // Assert
         var requestPathAndQuery = context.Context.LastRequest.RequestUri.PathAndQuery;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(requestPathAndQuery, Is.Not.Null);
             Assert.That(requestPathAndQuery.EndsWith("/archive", StringComparison.OrdinalIgnoreCase), Is.True);
-        });
+        }
     }
 
     [Test]
@@ -383,11 +383,11 @@ public class RepositoryClientTests
         // Assert
         var requestPathAndQuery = context.Context.LastRequest.RequestUri.PathAndQuery;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(requestPathAndQuery, Is.Not.Null);
             Assert.That(requestPathAndQuery.EndsWith("/archive", StringComparison.OrdinalIgnoreCase), Is.True);
-        });
+        }
     }
 
     [TestCase(null, "")]
@@ -416,12 +416,11 @@ public class RepositoryClientTests
         // Assert
         var requestPathAndQuery = context.Context.LastRequest.RequestUri.PathAndQuery;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(requestPathAndQuery, Is.Not.Null);
-            Assert.That(requestPathAndQuery.EndsWith($"/archive{expectedExtension}",
-                StringComparison.OrdinalIgnoreCase), Is.True);
-        });
+            Assert.That(requestPathAndQuery.EndsWith($"/archive{expectedExtension}", StringComparison.OrdinalIgnoreCase), Is.True);
+        }
     }
 
     [Test]
@@ -442,12 +441,11 @@ public class RepositoryClientTests
         // Assert
         var requestPathAndQuery = context.Context.LastRequest.RequestUri.PathAndQuery;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(requestPathAndQuery, Is.Not.Null);
-            Assert.That(requestPathAndQuery.Contains($"sha={firstCommitId}",
-                StringComparison.OrdinalIgnoreCase), Is.True);
-        });
+            Assert.That(requestPathAndQuery.Contains($"sha={firstCommitId}", StringComparison.OrdinalIgnoreCase), Is.True);
+        }
     }
 
     [Test]
@@ -468,11 +466,11 @@ public class RepositoryClientTests
         // Assert
         var requestPathAndQuery = context.Context.LastRequest.RequestUri.PathAndQuery;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(requestPathAndQuery, Is.Not.Null);
             Assert.That(requestPathAndQuery.Contains($"path={path}", StringComparison.OrdinalIgnoreCase), Is.True);
-        });
+        }
     }
 
     [Test]
@@ -496,13 +494,13 @@ public class RepositoryClientTests
         // Assert
         var requestPathAndQuery = context.Context.LastRequest.RequestUri.PathAndQuery;
 
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(requestPathAndQuery, Is.Not.Null);
             Assert.That(requestPathAndQuery.Contains($"/archive.zip", StringComparison.OrdinalIgnoreCase), Is.True);
             Assert.That(requestPathAndQuery.Contains($"path={path}", StringComparison.OrdinalIgnoreCase), Is.True);
             Assert.That(requestPathAndQuery.Contains($"sha={firstCommitId}", StringComparison.OrdinalIgnoreCase), Is.True);
-        });
+        }
     }
 
     [Test]
