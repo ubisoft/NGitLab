@@ -107,4 +107,6 @@ internal sealed class GitLabClient(ClientContext context) : ClientBase(context),
     public IGroupHooksClient GetGroupHooksClient(GroupId groupId) => new GroupHooksClient(Context, groupId);
 
     public IProjectJobTokenScopeClient GetProjectJobTokenScopeClient(ProjectId projectId) => new ProjectJobTokenScopeClient(Context, projectId);
+
+    public IContainerRegistryClient GetContainerRegistry(ProjectId projectId) => new ContainerRegistryClient(Context, projectId);
 }

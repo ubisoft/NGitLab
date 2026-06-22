@@ -1381,3 +1381,21 @@ static NGitLab.Mock.TemporaryDirectory.DeleteDirectory(string path) -> void
 static NGitLab.Mock.TemporaryDirectory.DeleteFile(string path) -> void
 static NGitLab.Mock.UserRef.implicit operator NGitLab.Mock.UserRef(NGitLab.Mock.User user) -> NGitLab.Mock.UserRef
 virtual NGitLab.Mock.Collection<T>.Add(T item) -> void
+
+NGitLab.Mock.ContainerRepository
+NGitLab.Mock.ContainerRepository.ContainerRepository() -> void
+NGitLab.Mock.ContainerRepository.Id.get -> long
+NGitLab.Mock.ContainerRepository.Id.set -> void
+NGitLab.Mock.ContainerRepository.Name.get -> string
+NGitLab.Mock.ContainerRepository.Name.set -> void
+NGitLab.Mock.ContainerRepository.Parent.get -> NGitLab.Mock.Project
+NGitLab.Mock.ContainerRepository.Tags.get -> System.Collections.Generic.List<NGitLab.Mock.ContainerRegistryTagEntry>
+NGitLab.Mock.ContainerRepository.ToClientContainerRepository() -> NGitLab.Models.ContainerRepository
+NGitLab.Mock.ContainerRegistryTagEntry
+NGitLab.Mock.ContainerRegistryTagEntry.ContainerRegistryTagEntry() -> void
+NGitLab.Mock.ContainerRegistryTagEntry.Name.get -> string
+NGitLab.Mock.ContainerRegistryTagEntry.Name.set -> void
+NGitLab.Mock.ContainerRegistryTagEntry.ToClientContainerRegistryTag() -> NGitLab.Models.ContainerRegistryTag
+NGitLab.Mock.ContainerRepositoryCollection
+NGitLab.Mock.ContainerRepositoryCollection.ContainerRepositoryCollection(NGitLab.Mock.GitLabObject parent) -> void
+NGitLab.Mock.Project.ContainerRepositories.get -> NGitLab.Mock.ContainerRepositoryCollection

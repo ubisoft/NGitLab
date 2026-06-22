@@ -228,4 +228,7 @@ public class GitLabClient : IGitLabClient
 
     public IProjectJobTokenScopeClient GetProjectJobTokenScopeClient(ProjectId projectId)
         => new ProjectJobTokenScopeClient(_api, projectId);
+
+    public IContainerRegistryClient GetContainerRegistry(ProjectId projectId)
+        => new ContainerRegistryClient(_api, projectId);
 }
