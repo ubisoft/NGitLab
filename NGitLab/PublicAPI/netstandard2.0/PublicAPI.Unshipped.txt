@@ -5231,3 +5231,51 @@ virtual NGitLab.Impl.HttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threadin
 virtual NGitLab.RequestOptions.GetResponse(System.Net.HttpWebRequest request) -> System.Net.WebResponse
 virtual NGitLab.RequestOptions.GetResponseAsync(System.Net.HttpWebRequest request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.WebResponse>
 virtual NGitLab.RequestOptions.ShouldRetry(System.Exception ex, int retryNumber) -> bool
+
+NGitLab.GitLabClient.GetContainerRegistry(NGitLab.Models.ProjectId projectId) -> NGitLab.IContainerRegistryClient
+NGitLab.IContainerRegistryClient
+NGitLab.IContainerRegistryClient.DeleteRepositoryAsync(long repositoryId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.IContainerRegistryClient.DeleteTagAsync(long repositoryId, string tagName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.IContainerRegistryClient.GetRepositoriesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ContainerRepository>
+NGitLab.IContainerRegistryClient.GetTagsAsync(long repositoryId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ContainerRegistryTag>
+NGitLab.IGitLabClient.GetContainerRegistry(NGitLab.Models.ProjectId projectId) -> NGitLab.IContainerRegistryClient
+NGitLab.Impl.ContainerRegistryClient
+NGitLab.Impl.ContainerRegistryClient.ContainerRegistryClient(NGitLab.Impl.API api, NGitLab.Models.ProjectId projectId) -> void
+NGitLab.Impl.ContainerRegistryClient.DeleteRepositoryAsync(long repositoryId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.Impl.ContainerRegistryClient.DeleteTagAsync(long repositoryId, string tagName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.Impl.ContainerRegistryClient.GetRepositoriesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ContainerRepository>
+NGitLab.Impl.ContainerRegistryClient.GetTagsAsync(long repositoryId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.ContainerRegistryTag>
+NGitLab.Models.ContainerRepository
+NGitLab.Models.ContainerRepository.ContainerRepository() -> void
+NGitLab.Models.ContainerRepository.CreatedAt.get -> System.DateTime
+NGitLab.Models.ContainerRepository.CreatedAt.set -> void
+NGitLab.Models.ContainerRepository.Id.get -> long
+NGitLab.Models.ContainerRepository.Id.set -> void
+NGitLab.Models.ContainerRepository.Location.get -> string
+NGitLab.Models.ContainerRepository.Location.set -> void
+NGitLab.Models.ContainerRepository.Name.get -> string
+NGitLab.Models.ContainerRepository.Name.set -> void
+NGitLab.Models.ContainerRepository.Path.get -> string
+NGitLab.Models.ContainerRepository.Path.set -> void
+NGitLab.Models.ContainerRepository.ProjectId.get -> long
+NGitLab.Models.ContainerRepository.ProjectId.set -> void
+NGitLab.Models.ContainerRepository.TagsCount.get -> int
+NGitLab.Models.ContainerRepository.TagsCount.set -> void
+NGitLab.Models.ContainerRegistryTag
+NGitLab.Models.ContainerRegistryTag.ContainerRegistryTag() -> void
+NGitLab.Models.ContainerRegistryTag.CreatedAt.get -> System.DateTime
+NGitLab.Models.ContainerRegistryTag.CreatedAt.set -> void
+NGitLab.Models.ContainerRegistryTag.Digest.get -> string
+NGitLab.Models.ContainerRegistryTag.Digest.set -> void
+NGitLab.Models.ContainerRegistryTag.Location.get -> string
+NGitLab.Models.ContainerRegistryTag.Location.set -> void
+NGitLab.Models.ContainerRegistryTag.Name.get -> string
+NGitLab.Models.ContainerRegistryTag.Name.set -> void
+NGitLab.Models.ContainerRegistryTag.Path.get -> string
+NGitLab.Models.ContainerRegistryTag.Path.set -> void
+NGitLab.Models.ContainerRegistryTag.Revision.get -> string
+NGitLab.Models.ContainerRegistryTag.Revision.set -> void
+NGitLab.Models.ContainerRegistryTag.ShortRevision.get -> string
+NGitLab.Models.ContainerRegistryTag.ShortRevision.set -> void
+NGitLab.Models.ContainerRegistryTag.TotalSize.get -> long
+NGitLab.Models.ContainerRegistryTag.TotalSize.set -> void

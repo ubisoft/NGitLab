@@ -40,6 +40,7 @@ public sealed class Project : GitLabObject
         CommitStatuses = new CommitStatusCollection(this);
         Releases = new ReleaseCollection(this);
         ProtectedBranches = new ProtectedBranchCollection(this);
+        ContainerRepositories = new ContainerRepositoryCollection(this);
         ApprovalsBeforeMerge = 0;
     }
 
@@ -162,6 +163,8 @@ public sealed class Project : GitLabObject
     public ProjectStatistics Statistics { get; set; }
 
     public ProtectedBranchCollection ProtectedBranches { get; }
+
+    public ContainerRepositoryCollection ContainerRepositories { get; }
 
     public string RunnersToken { get; internal set; }
 

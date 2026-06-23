@@ -108,4 +108,6 @@ public interface IGitLabClient
     IGroupHooksClient GetGroupHooksClient(GroupId groupId);
 
     IProjectJobTokenScopeClient GetProjectJobTokenScopeClient(ProjectId projectId);
+
+    IContainerRegistryClient GetContainerRegistry(ProjectId projectId);
 }

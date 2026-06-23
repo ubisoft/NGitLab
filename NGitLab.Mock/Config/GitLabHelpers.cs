@@ -618,6 +618,33 @@ public static class GitLabHelpers
     }
 
     /// <summary>
+    /// Add a container repository in project
+    /// </summary>
+    /// <param name="project">Project.</param>
+    /// <param name="name">Repository name.</param>
+    /// <param name="tags">Tag names.</param>
+    public static GitLabProject WithContainerRepository(this GitLabProject project, string name, IEnumerable<string>? tags = null)
+    {
+        return Configure(project, _ =>
+        {
+            var repo = new GitLabContainerRepository
+            {
+                Name = name ?? throw new ArgumentNullException(nameof(name)),
+            };
+
+            if (tags != null)
+            {
+                foreach (var tag in tags)
+                {
+                    repo.Tags.Add(tag);
+                }
+            }
+
+            project.ContainerRepositories.Add(repo);
+        });
+    }
+
+    /// <summary>
     /// Add label in issue (create it if not exists)
     /// </summary>
     /// <param name="issue">Issue.</param>
@@ -1314,6 +1341,11 @@ public static class GitLabHelpers
             CreatePipeline(server, prj, pipeline, aliases);
         }
 
+        foreach (var containerRepository in project.ContainerRepositories)
+        {
+            CreateContainerRepository(prj, containerRepository);
+        }
+
         if (!string.IsNullOrEmpty(project.ClonePath))
         {
             var folderPath = Path.GetDirectoryName(Path.GetFullPath(project.ClonePath));
@@ -1355,6 +1387,21 @@ public static class GitLabHelpers
         };
 
         project.Releases.Add(release);
+    }
+
+    private static void CreateContainerRepository(Project project, GitLabContainerRepository containerRepository)
+    {
+        var repo = new ContainerRepository
+        {
+            Name = containerRepository.Name,
+        };
+
+        foreach (var tag in containerRepository.Tags)
+        {
+            repo.Tags.Add(new ContainerRegistryTagEntry { Name = tag, });
+        }
+
+        project.ContainerRepositories.Add(repo);
     }
 
     private static Commit CreateCommit(GitLabServer server, Project prj, GitLabCommit commit)
