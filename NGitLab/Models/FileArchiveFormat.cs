@@ -7,9 +7,6 @@ public enum FileArchiveFormat
     [EnumMember(Value = ".bz2")]
     Bz2,
 
-    [EnumMember(Value = ".gz")]
-    Gz,
-
     [EnumMember(Value = ".tar")]
     Tar,
 

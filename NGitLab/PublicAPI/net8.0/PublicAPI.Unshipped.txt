@@ -2035,14 +2035,13 @@ NGitLab.Models.EventTargetType.User = 7 -> NGitLab.Models.EventTargetType
 NGitLab.Models.EventTargetType.WorkItem = 11 -> NGitLab.Models.EventTargetType
 NGitLab.Models.FileArchiveFormat
 NGitLab.Models.FileArchiveFormat.Bz2 = 0 -> NGitLab.Models.FileArchiveFormat
-NGitLab.Models.FileArchiveFormat.Gz = 1 -> NGitLab.Models.FileArchiveFormat
-NGitLab.Models.FileArchiveFormat.Tar = 2 -> NGitLab.Models.FileArchiveFormat
-NGitLab.Models.FileArchiveFormat.TarBz2 = 3 -> NGitLab.Models.FileArchiveFormat
-NGitLab.Models.FileArchiveFormat.TarGz = 4 -> NGitLab.Models.FileArchiveFormat
-NGitLab.Models.FileArchiveFormat.Tb2 = 5 -> NGitLab.Models.FileArchiveFormat
-NGitLab.Models.FileArchiveFormat.Tbz = 6 -> NGitLab.Models.FileArchiveFormat
-NGitLab.Models.FileArchiveFormat.Tbz2 = 7 -> NGitLab.Models.FileArchiveFormat
-NGitLab.Models.FileArchiveFormat.Zip = 8 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Tar = 1 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.TarBz2 = 2 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.TarGz = 3 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Tb2 = 4 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Tbz = 5 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Tbz2 = 6 -> NGitLab.Models.FileArchiveFormat
+NGitLab.Models.FileArchiveFormat.Zip = 7 -> NGitLab.Models.FileArchiveFormat
 NGitLab.Models.FileArchiveQuery
 NGitLab.Models.FileArchiveQuery.FileArchiveQuery() -> void
 NGitLab.Models.FileArchiveQuery.Format.get -> NGitLab.Models.FileArchiveFormat?
