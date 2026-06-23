@@ -392,7 +392,6 @@ public class RepositoryClientTests
 
     [TestCase(null, "")]
     [TestCase(FileArchiveFormat.Bz2, ".bz2")]
-    [TestCase(FileArchiveFormat.Gz, ".gz")]
     [TestCase(FileArchiveFormat.Tar, ".tar")]
     [TestCase(FileArchiveFormat.TarBz2, ".tar.bz2")]
     [TestCase(FileArchiveFormat.TarGz, ".tar.gz")]

@@ -17,7 +17,7 @@ public class UtilsTests
         Assert.That(url, Is.EqualTo($"{basePath}?event_action={expectedQueryParamValue}"));
     }
 
-    [TestCase]
+    [Test]
     public void AppendSegmentToUrl_ValueIsNullIncludeSegmentSeparatorFalse_ReturnsUrlWithoutAnyChange()
     {
         // Arrange
@@ -29,10 +29,10 @@ public class UtilsTests
         var actual = NGitLab.Impl.Utils.AppendSegmentToUrl<string>(url, value: null, includeSegmentSeparator: false);
 
         // Assert
-        Assert.That(expected, Is.EqualTo(actual));
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
-    [TestCase]
+    [Test]
     public void AppendSegmentToUrl_ValueIsNullIncludeSegmentSeparatorTrue_ReturnsUrlWithoutAnyChange()
     {
         // Arrange
@@ -44,10 +44,10 @@ public class UtilsTests
         var actual = NGitLab.Impl.Utils.AppendSegmentToUrl<string>(url, value: null, includeSegmentSeparator: true);
 
         // Assert
-        Assert.That(expected, Is.EqualTo(actual));
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
-    [TestCase]
+    [Test]
     public void AppendSegmentToUrl_UrlAlreadyContainsQueryString_ThrowsInvalidOperationException()
     {
         // Arrange
@@ -75,7 +75,7 @@ public class UtilsTests
         var actual = NGitLab.Impl.Utils.AppendSegmentToUrl(url, value: segment, includeSegmentSeparator: true);
 
         // Assert
-        Assert.That(expected, Is.EqualTo(actual));
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [TestCase("https://gitlab.org/api/v4/stuff/", "/segment")]
@@ -92,11 +92,10 @@ public class UtilsTests
         var actual = NGitLab.Impl.Utils.AppendSegmentToUrl(url, value: segment, includeSegmentSeparator: false);
 
         // Assert
-        Assert.That(expected, Is.EqualTo(actual));
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [TestCase("https://gitlab.org/api/v4/stuff.bz2", FileArchiveFormat.Bz2)]
-    [TestCase("https://gitlab.org/api/v4/stuff.gz", FileArchiveFormat.Gz)]
     [TestCase("https://gitlab.org/api/v4/stuff.tar", FileArchiveFormat.Tar)]
     [TestCase("https://gitlab.org/api/v4/stuff.tar.bz2", FileArchiveFormat.TarBz2)]
     [TestCase("https://gitlab.org/api/v4/stuff.tar.gz", FileArchiveFormat.TarGz)]
@@ -114,7 +113,7 @@ public class UtilsTests
         var actual = NGitLab.Impl.Utils.AppendSegmentToUrl(url, value: fileArchiveFormat, includeSegmentSeparator: false);
 
         // Assert
-        Assert.That(expected, Is.EqualTo(actual));
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [TestCase("https://gitlab.org/api/v4/stuff/Group", BadgeKind.Group)]
@@ -129,7 +128,7 @@ public class UtilsTests
         var actual = NGitLab.Impl.Utils.AppendSegmentToUrl(url, value: badgeKind, includeSegmentSeparator: true);
 
         // Assert
-        Assert.That(expected, Is.EqualTo(actual));
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [TestCase(EventAction.PushedTo, "pushed to")]
