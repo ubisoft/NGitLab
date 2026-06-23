@@ -110,17 +110,13 @@ internal static class Utils
         if (value is null)
             return url;
 
-        // Don't allow segments to a url which already has parameters present
+        // Don't allow appending segments to a url which already has parameters present
         if (url.Contains('?'))
             throw new InvalidOperationException("Cannot append segment to url which already has parameters present");
 
-        var valueString = value.ToString();
-        var enumMemberValue = GetEnumMemberValue<T>(valueString);
-
-        if (enumMemberValue is not null)
-            valueString = enumMemberValue;
-
         url = url.TrimEnd(UrlSegmentSeparatorChar);
+
+        var valueString = ToValueString<T>(value);
         valueString = valueString.TrimStart(UrlSegmentSeparatorChar);
         valueString = WebUtility.UrlEncode(valueString);
 
@@ -136,24 +132,5 @@ internal static class Utils
         var formattedValue = WebUtility.UrlEncode(stringValue);
         var parameter = $"{@operator}{parameterName}={formattedValue}";
         return url + parameter;
-    }
-
-    private static string GetEnumMemberValue<T>(string valueString)
-    {
-        string enumMemberValue = null;
-        var type = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
-        if (type.IsEnum)
-        {
-            var enumField = type.GetFields().FirstOrDefault(f => string.Equals(f.Name, valueString, StringComparison.Ordinal));
-            if (enumField is not null)
-            {
-                enumMemberValue = enumField.GetCustomAttributes(typeof(EnumMemberAttribute), inherit: true)
-                    .Cast<EnumMemberAttribute>()
-                    .FirstOrDefault()?
-                    .Value;
-            }
-        }
-
-        return enumMemberValue;
     }
 }
