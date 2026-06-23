@@ -1399,3 +1399,12 @@ NGitLab.Mock.ContainerRegistryTagEntry.ToClientContainerRegistryTag() -> NGitLab
 NGitLab.Mock.ContainerRepositoryCollection
 NGitLab.Mock.ContainerRepositoryCollection.ContainerRepositoryCollection(NGitLab.Mock.GitLabObject parent) -> void
 NGitLab.Mock.Project.ContainerRepositories.get -> NGitLab.Mock.ContainerRepositoryCollection
+
+NGitLab.Mock.Config.GitLabContainerRepository
+NGitLab.Mock.Config.GitLabContainerRepository.GitLabContainerRepository() -> void
+NGitLab.Mock.Config.GitLabContainerRepository.Name.get -> string
+NGitLab.Mock.Config.GitLabContainerRepository.Name.set -> void
+NGitLab.Mock.Config.GitLabContainerRepository.Tags.get -> System.Collections.Generic.List<string>
+NGitLab.Mock.Config.GitLabContainerRepositoriesCollection
+NGitLab.Mock.Config.GitLabProject.ContainerRepositories.get -> NGitLab.Mock.Config.GitLabContainerRepositoriesCollection
+static NGitLab.Mock.Config.GitLabHelpers.WithContainerRepository(this NGitLab.Mock.Config.GitLabProject project, string name, System.Collections.Generic.IEnumerable<string> tags = null) -> NGitLab.Mock.Config.GitLabProject

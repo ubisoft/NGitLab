@@ -17,6 +17,7 @@ public class GitLabProject : GitLabObject<GitLabConfig>
         Milestones = new GitLabMilestonesCollection(this);
         Pipelines = new GitLabPipelinesCollection(this);
         Releases = new GitLabReleaseInfoCollection(this);
+        ContainerRepositories = new GitLabContainerRepositoriesCollection(this);
     }
 
     /// <summary>
@@ -64,6 +65,8 @@ public class GitLabProject : GitLabObject<GitLabConfig>
     public GitLabPipelinesCollection Pipelines { get; }
 
     public GitLabReleaseInfoCollection Releases { get; }
+
+    public GitLabContainerRepositoriesCollection ContainerRepositories { get; }
 }
 
 public class GitLabProjectsCollection : GitLabCollection<GitLabProject, GitLabConfig>
