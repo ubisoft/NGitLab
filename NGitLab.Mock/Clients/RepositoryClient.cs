@@ -95,6 +95,11 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
         throw new NotImplementedException();
     }
 
+    public void GetArchive(GetArchiveRequest request, Action<Stream> parser)
+    {
+        throw new NotImplementedException();
+    }
+
     public IEnumerable<Commit> GetCommits(string refName, int maxResults = 0)
     {
         using (Context.BeginOperationScope())

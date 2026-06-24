@@ -349,6 +349,83 @@ public class RepositoryClientTests
         Assert.That(archiveItems.Where(item => item.Value is TarEntryType.RegularFile).ToList(), Has.Count.EqualTo(commitCount));
     }
 
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(3)]
+    [NGitLabRetry]
+    public async Task GetArchiveBySha(int commitToDownload)
+    {
+        // Arrange
+        const int commitCount = 4;
+        int expectedFilesInCommit = commitToDownload + 1;
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount);
+
+        var archiveItems = new List<KeyValuePair<string, TarEntryType>>();
+
+        var commit = context.RepositoryClient.Commits.ElementAt(commitCount - commitToDownload - 1);
+        var request = new GetArchiveRequest
+        {
+            Sha = commit.Id.ToString(),
+        };
+
+        // Act
+        context.RepositoryClient.GetArchive(request, tgzStream =>
+        {
+            using var gzipDecompressor = new GZipStream(tgzStream, CompressionMode.Decompress);
+            using var unzippedStream = new MemoryStream();
+
+            gzipDecompressor.CopyTo(unzippedStream);
+            unzippedStream.Seek(0, SeekOrigin.Begin);
+
+            using var reader = new TarReader(unzippedStream);
+
+            while (reader.GetNextEntry() is TarEntry entry)
+            {
+                archiveItems.Add(new KeyValuePair<string, TarEntryType>(entry.Name, entry.EntryType));
+            }
+        });
+
+        // Assert
+        Assert.That(
+            archiveItems.Where(item => item.Value is TarEntryType.RegularFile).ToList(),
+            Has.Count.EqualTo(expectedFilesInCommit));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetZipArchive()
+    {
+        // Arrange
+        const int commitCount = 4;
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount);
+
+        var archiveItems = new List<string>();
+
+        var request = new GetArchiveRequest
+        {
+            Format = ArchiveFormats.Zip,
+        };
+
+        static bool IsFile(ZipArchiveEntry entry) => !string.IsNullOrEmpty(entry.Name);
+
+        // Act
+        context.RepositoryClient.GetArchive(request, zipStream =>
+        {
+            using var archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
+
+            foreach (var entry in archive.Entries)
+            {
+                if (IsFile(entry))
+                {
+                    archiveItems.Add(entry.FullName);
+                }
+            }
+        });
+
+        // Assert
+        Assert.That(archiveItems, Has.Count.EqualTo(commitCount));
+    }
+
     [Test]
     [NGitLabRetry]
     public async Task GetRawBlob()

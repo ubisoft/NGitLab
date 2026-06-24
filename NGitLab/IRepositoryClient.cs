@@ -25,6 +25,8 @@ public interface IRepositoryClient
 
     void GetArchive(Action<Stream> parser);
 
+    void GetArchive(GetArchiveRequest request, Action<Stream> parser);
+
     IEnumerable<Commit> Commits { get; }
 
     IContributorClient Contributors { get; }
