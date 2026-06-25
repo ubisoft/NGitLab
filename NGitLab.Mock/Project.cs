@@ -170,6 +170,8 @@ public sealed class Project : GitLabObject
 
     public SquashOption SquashOption { get; set; }
 
+    public DateTime? MarkedForDeletionOn { get; set; }
+
     public void Remove()
     {
         Group.Projects.Remove(this);
@@ -495,6 +497,7 @@ public sealed class Project : GitLabObject
             OnlyMirrorProtectedBranch = OnlyMirrorProtectedBranch,
             MirrorOverwritesDivergedBranches = MirrorOverwritesDivergedBranches,
             Permissions = GetProjectPermissions(currentUser),
+            MarkedForDeletionOn = MarkedForDeletionOn,
         };
 #pragma warning restore CS0618 // Type or member is obsolete
     }

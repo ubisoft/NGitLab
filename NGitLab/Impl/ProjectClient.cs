@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -39,8 +40,22 @@ public class ProjectClient : IProjectClient
     public void Delete(long id) =>
         _api.Delete().Execute($"{Project.Url}/{id.ToString(CultureInfo.InvariantCulture)}");
 
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
     public Task DeleteAsync(ProjectId projectId, CancellationToken cancellationToken = default) =>
-        _api.Delete().ExecuteAsync($"{Project.Url}/{projectId.ValueAsUriParameter()}", cancellationToken);
+        DeleteAsync(projectId, options: null, cancellationToken);
+
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
+    public Task DeleteAsync(ProjectId projectId, ProjectDelete options, CancellationToken cancellationToken = default)
+    {
+        var url = $"{Project.Url}/{projectId.ValueAsUriParameter()}";
+        if (options is not null)
+        {
+            url = Utils.AddParameter(url, "permanently_remove", options.PermanentlyRemove);
+            url = Utils.AddParameter(url, "full_path", options.FullPath);
+        }
+
+        return _api.Delete().ExecuteAsync(url, cancellationToken);
+    }
 
     public void Archive(long id) => _api.Post().Execute($"{Project.Url}/{id.ToString(CultureInfo.InvariantCulture)}/archive");
 

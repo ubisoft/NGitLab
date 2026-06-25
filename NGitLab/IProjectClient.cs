@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -48,7 +49,11 @@ public interface IProjectClient
 
     void Delete(long id);
 
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
     Task DeleteAsync(ProjectId projectId, CancellationToken cancellationToken = default);
+
+    [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
+    Task DeleteAsync(ProjectId projectId, ProjectDelete options, CancellationToken cancellationToken = default);
 
     void Archive(long id);
 

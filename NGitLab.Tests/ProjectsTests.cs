@@ -594,6 +594,34 @@ public class ProjectsTests
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
+    [Test]
+    [NGitLabRetry]
+    public async Task DeleteAsync_WhenPermanentlyRemoveOnMarkedProject_ItIsDeleted()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[18.0,)"));
+
+        var group = context.CreateGroup();
+        var project = context.CreateProject(group.Id);
+        var projectClient = context.Client.Projects;
+
+        // Soft-mark first
+        await projectClient.DeleteAsync(project.Id);
+
+        var markedProject = await projectClient.GetAsync(project.Id);
+        Assert.That(markedProject.MarkedForDeletionOn, Is.Not.Null, "Project should be marked for deletion before permanently removing");
+
+        // Act: permanently remove
+        await projectClient.DeleteAsync(project.Id, new ProjectDelete
+        {
+            PermanentlyRemove = true,
+            FullPath = project.PathWithNamespace,
+        });
+
+        // Assert: project no longer accessible
+        Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
+    }
+
     // No owner level (50) for project! See https://docs.gitlab.com/ee/api/members.html
     [TestCase(AccessLevel.Guest)]
     [TestCase(AccessLevel.Reporter)]

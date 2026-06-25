@@ -139,7 +139,7 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         using (Context.BeginOperationScope())
         {
             var project = GetProject(id, ProjectPermission.Delete);
-            project.Remove();
+            DeleteCore(project, options: null);
         }
     }
 
@@ -149,7 +149,35 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         using (Context.BeginOperationScope())
         {
             var project = GetProject(projectId, ProjectPermission.Delete);
+            DeleteCore(project, options: null);
+        }
+    }
+
+    public async Task DeleteAsync(ProjectId projectId, ProjectDelete options, CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        using (Context.BeginOperationScope())
+        {
+            var project = GetProject(projectId, ProjectPermission.Delete);
+            DeleteCore(project, options);
+        }
+    }
+
+    private static void DeleteCore(Project project, ProjectDelete options)
+    {
+        if (options?.PermanentlyRemove == true)
+        {
+            if (!string.Equals(options.FullPath, project.PathWithNamespace, StringComparison.Ordinal))
+                throw GitLabException.BadRequest("Project full_path does not match");
+
+            if (project.MarkedForDeletionOn is null)
+                throw GitLabException.BadRequest("Project is not marked for deletion");
+
             project.Remove();
+        }
+        else
+        {
+            project.MarkedForDeletionOn ??= DateTime.UtcNow;
         }
     }
 
