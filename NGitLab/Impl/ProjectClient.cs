@@ -51,7 +51,11 @@ public class ProjectClient : IProjectClient
         if (options is not null)
         {
             url = Utils.AddParameter(url, "permanently_remove", options.PermanentlyRemove);
-            url = Utils.AddParameter(url, "full_path", options.FullPath);
+            if (options.FullPath is not null)
+            {
+                var @operator = url.Contains('?') ? "&" : "?";
+                url += $"{@operator}full_path={options.FullPath}";
+            }
         }
 
         return _api.Delete().ExecuteAsync(url, cancellationToken);
