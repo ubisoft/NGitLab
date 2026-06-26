@@ -615,7 +615,7 @@ public class ProjectsTests
         await projectClient.DeleteAsync(project.Id, new ProjectDelete
         {
             PermanentlyRemove = true,
-            FullPath = project.PathWithNamespace,
+            FullPath = markedProject.PathWithNamespace,
         });
 
         // Assert: project no longer accessible
