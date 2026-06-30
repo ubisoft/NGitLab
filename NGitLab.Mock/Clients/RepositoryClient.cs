@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -91,6 +91,11 @@ internal sealed class RepositoryClient : ClientBase, IRepositoryClient
     }
 
     public void GetArchive(Action<Stream> parser)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void GetArchive(Action<Stream> parser, FileArchiveQuery fileArchiveQuery)
     {
         throw new NotImplementedException();
     }

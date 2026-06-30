@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -9,6 +9,8 @@ namespace NGitLab.Impl;
 
 internal static class Utils
 {
+    private const char UrlSegmentSeparatorChar = '/';
+
     public static string AddParameter<T>(string url, string parameterName, T value)
     {
         return value is not null ? AddParameterInternal(url, parameterName, ToValueString(value)) : url;
@@ -101,6 +103,27 @@ internal static class Utils
         }
 
         return url;
+    }
+
+    public static string AppendSegmentToUrl<T>(string url, T value, bool includeSegmentSeparator = true)
+    {
+        if (value is null)
+            return url;
+
+        // Don't allow appending segments to a url which already has parameters present
+        if (url.Contains('?'))
+            throw new InvalidOperationException("Cannot append segment to url which already has parameters present");
+
+        url = url.TrimEnd(UrlSegmentSeparatorChar);
+
+        var valueString = ToValueString<T>(value);
+        valueString = valueString.TrimStart(UrlSegmentSeparatorChar);
+        valueString = WebUtility.UrlEncode(valueString);
+
+        if (includeSegmentSeparator)
+            return $"{url}{UrlSegmentSeparatorChar}{valueString}";
+
+        return $"{url}{valueString}";
     }
 
     private static string AddParameterInternal(string url, string parameterName, string stringValue)
