@@ -55,6 +55,13 @@ public interface IProjectClient
     [SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "Internal requirement to have the CancellationToken optional")]
     Task DeleteAsync(ProjectId projectId, ProjectDelete options, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Permanently deletes a project. Soft-deletes it first (if not already marked for deletion),
+    /// then fetches the post-deletion path (GitLab renames the project on soft-delete) and issues
+    /// the permanent removal.
+    /// </summary>
+    Task PermanentlyDeleteAsync(ProjectId projectId, CancellationToken cancellationToken = default);
+
     void Archive(long id);
 
     void Unarchive(long id);

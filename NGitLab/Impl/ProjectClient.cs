@@ -53,12 +53,20 @@ public class ProjectClient : IProjectClient
             url = Utils.AddParameter(url, "permanently_remove", options.PermanentlyRemove);
             if (options.FullPath is not null)
             {
-                var @operator = url.Contains('?') ? "&" : "?";
-                url += $"{@operator}full_path={options.FullPath}";
+                url = Utils.AddParameter(url, "full_path", options.FullPath);
             }
         }
 
         return _api.Delete().ExecuteAsync(url, cancellationToken);
+    }
+
+    public async Task PermanentlyDeleteAsync(ProjectId projectId, CancellationToken cancellationToken = default)
+    {
+        await DeleteAsync(projectId, cancellationToken).ConfigureAwait(false);
+        // After soft-delete GitLab renames the project (appends a deletion-schedule suffix),
+        // so we must re-fetch PathWithNamespace rather than using the pre-deletion path.
+        var markedProject = await GetAsync(projectId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await DeleteAsync(projectId, new ProjectDelete { PermanentlyRemove = true, FullPath = markedProject.PathWithNamespace, }, cancellationToken).ConfigureAwait(false);
     }
 
     public void Archive(long id) => _api.Post().Execute($"{Project.Url}/{id.ToString(CultureInfo.InvariantCulture)}/archive");

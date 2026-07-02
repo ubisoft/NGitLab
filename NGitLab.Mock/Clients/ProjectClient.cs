@@ -163,6 +163,13 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         }
     }
 
+    public async Task PermanentlyDeleteAsync(ProjectId projectId, CancellationToken cancellationToken = default)
+    {
+        await DeleteAsync(projectId, cancellationToken).ConfigureAwait(false);
+        var markedProject = await GetAsync(projectId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        await DeleteAsync(projectId, new ProjectDelete { PermanentlyRemove = true, FullPath = markedProject.PathWithNamespace, }, cancellationToken).ConfigureAwait(false);
+    }
+
     private static void DeleteCore(Project project, ProjectDelete options)
     {
         if (options?.PermanentlyRemove == true)

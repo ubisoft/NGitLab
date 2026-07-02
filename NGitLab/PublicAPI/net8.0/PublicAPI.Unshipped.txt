@@ -5298,6 +5298,8 @@ NGitLab.Models.ContainerRegistryTag.ShortRevision.set -> void
 NGitLab.Models.ContainerRegistryTag.TotalSize.get -> long
 NGitLab.Models.ContainerRegistryTag.TotalSize.set -> void
 NGitLab.IProjectClient.DeleteAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectDelete options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.IProjectClient.PermanentlyDeleteAsync(NGitLab.Models.ProjectId projectId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.Impl.ProjectClient.PermanentlyDeleteAsync(NGitLab.Models.ProjectId projectId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
 NGitLab.Models.ProjectDelete
 NGitLab.Models.ProjectDelete.FullPath.get -> string
 NGitLab.Models.ProjectDelete.FullPath.set -> void
