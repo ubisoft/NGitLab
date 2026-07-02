@@ -442,9 +442,9 @@ public class ProjectsMockTests
     }
 
     [Test]
-    public async Task DeleteAsync_WhenProjectExists_ItIsDeleted()
+    public async Task DeleteAsync_WhenProjectExists_MarksProjectForDeletion()
     {
-        var projectFullPath = $"Test/{nameof(DeleteAsync_WhenProjectExists_ItIsDeleted)}";
+        var projectFullPath = $"Test/{nameof(DeleteAsync_WhenProjectExists_MarksProjectForDeletion)}";
         using var server = new GitLabConfig()
             .WithUser("Test", isDefault: true)
             .WithProjectOfFullPath(projectFullPath)
@@ -455,8 +455,9 @@ public class ProjectsMockTests
         // Act
         await projectClient.DeleteAsync(projectFullPath);
 
-        // Assert
-        Assert.CatchAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(projectFullPath)));
+        // Assert: project is still accessible but marked for deletion
+        var markedProject = await projectClient.GetAsync(projectFullPath);
+        Assert.That(markedProject.MarkedForDeletionOn, Is.Not.Null);
     }
 
     [Test]
@@ -473,6 +474,100 @@ public class ProjectsMockTests
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task DeleteAsync_WithoutPermanentlyRemove_MarksProjectForDeletion()
+    {
+        var projectFullPath = $"Test/{nameof(DeleteAsync_WithoutPermanentlyRemove_MarksProjectForDeletion)}";
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath(projectFullPath)
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+        var project = await projectClient.GetAsync(projectFullPath);
+
+        // Act
+        await projectClient.DeleteAsync(project.Id);
+
+        // Assert
+        var markedProject = await projectClient.GetAsync(project.Id);
+        Assert.That(markedProject.MarkedForDeletionOn, Is.Not.Null);
+        // The mock sets MarkedForDeletionOn to UtcNow at the time of soft-deletion.
+        Assert.That(markedProject.MarkedForDeletionOn!.Value.Date, Is.EqualTo(DateTime.UtcNow.Date));
+    }
+
+    [Test]
+    public async Task DeleteAsync_WithPermanentlyRemove_AndMatchingFullPath_HardDeletes()
+    {
+        var projectFullPath = $"Test/{nameof(DeleteAsync_WithPermanentlyRemove_AndMatchingFullPath_HardDeletes)}";
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath(projectFullPath)
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+        var project = await projectClient.GetAsync(projectFullPath);
+
+        // GitLab requires the project to be soft-deleted before permanently_remove can be used.
+        await projectClient.DeleteAsync(project.Id);
+
+        // Second call: permanently remove
+        await projectClient.DeleteAsync(project.Id, new ProjectDelete
+        {
+            PermanentlyRemove = true,
+            FullPath = projectFullPath,
+        });
+
+        // Assert: project is now gone
+        Assert.CatchAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
+    }
+
+    [Test]
+    public async Task DeleteAsync_WithPermanentlyRemove_AndMismatchedFullPath_Throws()
+    {
+        var projectFullPath = $"Test/{nameof(DeleteAsync_WithPermanentlyRemove_AndMismatchedFullPath_Throws)}";
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath(projectFullPath)
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+        var project = await projectClient.GetAsync(projectFullPath);
+
+        // GitLab requires the project to be soft-deleted before permanently_remove can be used.
+        await projectClient.DeleteAsync(project.Id);
+
+        // Act: wrong full_path
+        var ex = Assert.CatchAsync<GitLabException>((Func<Task>)(() =>
+            projectClient.DeleteAsync(project.Id, new ProjectDelete
+            {
+                PermanentlyRemove = true,
+                FullPath = "wrong/path",
+            })));
+
+        // Assert
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
+
+    [Test]
+    public async Task PermanentlyDeleteAsync_HardDeletesProjectInOneCall()
+    {
+        var projectFullPath = $"Test/{nameof(PermanentlyDeleteAsync_HardDeletesProjectInOneCall)}";
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath(projectFullPath)
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+        var project = await projectClient.GetAsync(projectFullPath);
+
+        // Act
+        await projectClient.PermanentlyDeleteAsync(project.Id);
+
+        // Assert: project is gone
+        Assert.CatchAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
     }
 
     [Test]

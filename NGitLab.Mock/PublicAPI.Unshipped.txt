@@ -1408,3 +1408,5 @@ NGitLab.Mock.Config.GitLabContainerRepository.Tags.get -> System.Collections.Gen
 NGitLab.Mock.Config.GitLabContainerRepositoriesCollection
 NGitLab.Mock.Config.GitLabProject.ContainerRepositories.get -> NGitLab.Mock.Config.GitLabContainerRepositoriesCollection
 static NGitLab.Mock.Config.GitLabHelpers.WithContainerRepository(this NGitLab.Mock.Config.GitLabProject project, string name, System.Collections.Generic.IEnumerable<string> tags = null) -> NGitLab.Mock.Config.GitLabProject
+NGitLab.Mock.Project.MarkedForDeletionOn.get -> System.DateTime?
+NGitLab.Mock.Project.MarkedForDeletionOn.set -> void
