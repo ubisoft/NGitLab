@@ -31,7 +31,7 @@ jobs:
         with:
           fetch-depth: 0 # Get all the history so MinGit can compute the version
       - name: Set up latest .NET 10.0
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "10.0.x"
       - run: dotnet pack NGitLab.slnx --configuration Release --output ${{env.NuGetDirectory}} /bl
@@ -73,7 +73,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v7
       - name: Set up latest .NET 10.0
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "10.0.x"
       - name: Set artifact name
@@ -112,7 +112,7 @@ jobs:
           name: nuget
           path: ${{env.NuGetDirectory}}
       - name: Set up latest .NET 10.0
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "10.0.x"
       - name: Publish NuGet packages
