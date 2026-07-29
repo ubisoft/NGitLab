@@ -51,6 +51,8 @@ public interface IMergeRequestClient
 
     GitLabCollectionResponse<Diff> GetDiffsAsync(long mergeRequestIid);
 
+    GitLabCollectionResponse<Diff> GetDiffsAsync(long mergeRequestIid, MergeRequestDiffQuery query);
+
     IMergeRequestCommentClient Comments(long mergeRequestIid);
 
     IMergeRequestDiscussionClient Discussions(long mergeRequestIid);
@@ -60,6 +62,8 @@ public interface IMergeRequestClient
     IMergeRequestChangeClient Changes(long mergeRequestIid);
 
     IMergeRequestApprovalClient ApprovalClient(long mergeRequestIid);
+
+    IMergeRequestDraftNoteClient DraftNotes(long mergeRequestIid);
 
     IEnumerable<Issue> ClosesIssues(long mergeRequestIid);
 

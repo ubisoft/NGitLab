@@ -256,6 +256,13 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
         return new MergeRequestApprovalClient(Context, _projectId.GetValueOrDefault(), mergeRequestIid);
     }
 
+    public IMergeRequestDraftNoteClient DraftNotes(long mergeRequestIid)
+    {
+        AssertProjectId();
+
+        return new MergeRequestDraftNoteClient(Context);
+    }
+
     public Models.MergeRequest Close(long mergeRequestIid)
     {
         AssertProjectId();
@@ -725,6 +732,11 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
     }
 
     public GitLabCollectionResponse<Diff> GetDiffsAsync(long mergeRequestIid)
+    {
+        throw new NotImplementedException();
+    }
+
+    public GitLabCollectionResponse<Diff> GetDiffsAsync(long mergeRequestIid, MergeRequestDiffQuery query)
     {
         throw new NotImplementedException();
     }
