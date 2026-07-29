@@ -240,6 +240,11 @@ public sealed class GitLabTestContext : IDisposable
 
     public (Project Project, MergeRequest MergeRequest) CreateMergeRequest(Action<MergeRequestCreate> configure = null, Action<ProjectCreate> configureProject = null)
     {
+        return CreateMergeRequestAsync(configure, configureProject).GetAwaiter().GetResult();
+    }
+
+    public async Task<(Project Project, MergeRequest MergeRequest)> CreateMergeRequestAsync(Action<MergeRequestCreate> configure = null, Action<ProjectCreate> configureProject = null)
+    {
         var client = Client;
         var project = CreateProject(configureProject, initializeWithCommits: true);
 
@@ -272,6 +277,16 @@ public sealed class GitLabTestContext : IDisposable
 
         configure?.Invoke(mergeRequestCreate);
         var mr = client.GetMergeRequest(project.Id).Create(mergeRequestCreate);
+
+        // GitLab computes diff data and merge status asynchronously after MR creation.
+        // Wait until the transient states resolve so callers can immediately query diffs or approvals.
+        var mrClient = client.GetMergeRequest(project.Id);
+        mr = await RetryUntilAsync(
+            () => mrClient[mr.Iid],
+            result => result.DetailedMergeStatus != DetailedMergeStatus.Checking &&
+                      result.DetailedMergeStatus != DetailedMergeStatus.Unchecked &&
+                      result.DetailedMergeStatus != DetailedMergeStatus.Preparing,
+            TimeSpan.FromSeconds(60)).ConfigureAwait(false);
 
         return (project, mr);
     }
