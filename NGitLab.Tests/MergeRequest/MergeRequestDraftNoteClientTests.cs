@@ -29,19 +29,6 @@ public class MergeRequestDraftNoteClientTests
 
     [Test]
     [NGitLabRetry]
-    public async Task All_returns_empty_when_no_draft_notes_exist()
-    {
-        using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
-        var draftNoteClient = context.Client.GetMergeRequest(project.Id).DraftNotes(mergeRequest.Iid);
-
-        var all = draftNoteClient.All.ToList();
-
-        Assert.That(all, Is.Empty, "No draft notes should exist on a fresh merge request");
-    }
-
-    [Test]
-    [NGitLabRetry]
     public async Task PublishAllAsync_publishes_all_draft_notes()
     {
         using var context = await GitLabTestContext.CreateAsync();

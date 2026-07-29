@@ -1,5 +1,5 @@
+using System;
 using System.Threading.Tasks;
-using NGitLab.Models;
 using NGitLab.Tests.Docker;
 using NUnit.Framework;
 
@@ -22,7 +22,7 @@ public class MergeRequestApprovalClientTests
         Assert.That(approvals.Approved, Is.True, "MR should be marked as approved after ApproveMergeRequest");
 
         // Unapprove — should not throw
-        Assert.DoesNotThrow((TestDelegate)(() => approvalClient.UnapproveMergeRequest()));
+        Assert.DoesNotThrow((Action)(() => approvalClient.UnapproveMergeRequest()));
 
         // After unapproval the approval state should show no approved-by entries
         var state = approvalClient.Approvals;
@@ -31,21 +31,15 @@ public class MergeRequestApprovalClientTests
 
     [Test]
     [NGitLabRetry]
-    public async Task UnapproveMergeRequest_on_unapproved_mr_does_not_throw()
+    public async Task UnapproveMergeRequest_on_unapproved_mr_throws()
     {
+        // Arrange
         using var context = await GitLabTestContext.CreateAsync();
         var (project, mergeRequest) = context.CreateMergeRequest();
         var approvalClient = context.Client.GetMergeRequest(project.Id).ApprovalClient(mergeRequest.Iid);
 
-        // Calling unapprove on an already-unapproved MR should be idempotent (GitLab returns 401 if already unapproved,
-        // but some versions are lenient). We accept both a silent success and a GitLabException.
-        try
-        {
-            approvalClient.UnapproveMergeRequest();
-        }
-        catch (GitLabException)
-        {
-            // Acceptable: GitLab may return an error when the MR was not approved
-        }
+        // Act/Assert
+        Assert.That((Action)(() => approvalClient.UnapproveMergeRequest()), Throws.TypeOf<GitLabException>(),
+            "Unapproving an unapproved MR should throw a GitLabException");
     }
 }
