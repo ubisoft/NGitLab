@@ -3581,7 +3581,7 @@ NGitLab.Models.PipelineVariable.VariableType.set -> void
 NGitLab.Models.Position
 NGitLab.Models.Position.BaseSha.get -> NGitLab.Sha1?
 NGitLab.Models.Position.BaseSha.set -> void
-NGitLab.Models.Position.HeadSha.get -> NGitLab.Sha1
+NGitLab.Models.Position.HeadSha.get -> NGitLab.Sha1?
 NGitLab.Models.Position.HeadSha.set -> void
 NGitLab.Models.Position.LineRange.get -> NGitLab.Models.LineRange
 NGitLab.Models.Position.LineRange.set -> void
@@ -3596,7 +3596,7 @@ NGitLab.Models.Position.OldPath.set -> void
 NGitLab.Models.Position.Position() -> void
 NGitLab.Models.Position.PositionType.get -> NGitLab.DynamicEnum<NGitLab.Models.PositionType>
 NGitLab.Models.Position.PositionType.set -> void
-NGitLab.Models.Position.StartSha.get -> NGitLab.Sha1
+NGitLab.Models.Position.StartSha.get -> NGitLab.Sha1?
 NGitLab.Models.Position.StartSha.set -> void
 NGitLab.Models.PositionType
 NGitLab.Models.PositionType.Image = 1 -> NGitLab.Models.PositionType
@@ -5250,7 +5250,6 @@ virtual NGitLab.Impl.HttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threadin
 virtual NGitLab.RequestOptions.GetResponse(System.Net.HttpWebRequest request) -> System.Net.WebResponse
 virtual NGitLab.RequestOptions.GetResponseAsync(System.Net.HttpWebRequest request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.WebResponse>
 virtual NGitLab.RequestOptions.ShouldRetry(System.Exception ex, int retryNumber) -> bool
-
 NGitLab.GitLabClient.GetContainerRegistry(NGitLab.Models.ProjectId projectId) -> NGitLab.IContainerRegistryClient
 NGitLab.IContainerRegistryClient
 NGitLab.IContainerRegistryClient.DeleteRepositoryAsync(long repositoryId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
