@@ -10,6 +10,8 @@ public interface IMergeRequestApprovalClient
 
     MergeRequestApprovals ApproveMergeRequest(MergeRequestApproveRequest request = null);
 
+    void UnapproveMergeRequest();
+
     /// <summary>
     /// Available only for bot users based on project or group tokens.
     /// </summary>

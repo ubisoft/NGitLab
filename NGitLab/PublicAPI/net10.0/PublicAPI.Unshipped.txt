@@ -3580,7 +3580,7 @@ NGitLab.Models.PipelineVariable.VariableType.set -> void
 NGitLab.Models.Position
 NGitLab.Models.Position.BaseSha.get -> NGitLab.Sha1?
 NGitLab.Models.Position.BaseSha.set -> void
-NGitLab.Models.Position.HeadSha.get -> NGitLab.Sha1
+NGitLab.Models.Position.HeadSha.get -> NGitLab.Sha1?
 NGitLab.Models.Position.HeadSha.set -> void
 NGitLab.Models.Position.LineRange.get -> NGitLab.Models.LineRange
 NGitLab.Models.Position.LineRange.set -> void
@@ -3595,7 +3595,7 @@ NGitLab.Models.Position.OldPath.set -> void
 NGitLab.Models.Position.Position() -> void
 NGitLab.Models.Position.PositionType.get -> NGitLab.DynamicEnum<NGitLab.Models.PositionType>
 NGitLab.Models.Position.PositionType.set -> void
-NGitLab.Models.Position.StartSha.get -> NGitLab.Sha1
+NGitLab.Models.Position.StartSha.get -> NGitLab.Sha1?
 NGitLab.Models.Position.StartSha.set -> void
 NGitLab.Models.PositionType
 NGitLab.Models.PositionType.Image = 1 -> NGitLab.Models.PositionType
@@ -5249,7 +5249,6 @@ virtual NGitLab.Impl.HttpRequestor.ToAsync<T>(string tailAPIUrl, System.Threadin
 virtual NGitLab.RequestOptions.GetResponse(System.Net.HttpWebRequest request) -> System.Net.WebResponse
 virtual NGitLab.RequestOptions.GetResponseAsync(System.Net.HttpWebRequest request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.WebResponse>
 virtual NGitLab.RequestOptions.ShouldRetry(System.Exception ex, int retryNumber) -> bool
-
 NGitLab.GitLabClient.GetContainerRegistry(NGitLab.Models.ProjectId projectId) -> NGitLab.IContainerRegistryClient
 NGitLab.IContainerRegistryClient
 NGitLab.IContainerRegistryClient.DeleteRepositoryAsync(long repositoryId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
@@ -5307,3 +5306,40 @@ NGitLab.Models.ProjectDelete.PermanentlyRemove.get -> bool?
 NGitLab.Models.ProjectDelete.PermanentlyRemove.set -> void
 NGitLab.Models.ProjectDelete.ProjectDelete() -> void
 NGitLab.Impl.ProjectClient.DeleteAsync(NGitLab.Models.ProjectId projectId, NGitLab.Models.ProjectDelete options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.IMergeRequestApprovalClient.UnapproveMergeRequest() -> void
+NGitLab.IMergeRequestClient.DraftNotes(long mergeRequestIid) -> NGitLab.IMergeRequestDraftNoteClient
+NGitLab.IMergeRequestClient.GetDiffsAsync(long mergeRequestIid, NGitLab.Models.MergeRequestDiffQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Diff>
+NGitLab.IMergeRequestDraftNoteClient
+NGitLab.IMergeRequestDraftNoteClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.DraftNote>
+NGitLab.IMergeRequestDraftNoteClient.CreateAsync(NGitLab.Models.DraftNoteCreate draftNote, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.DraftNote>
+NGitLab.IMergeRequestDraftNoteClient.PublishAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.Impl.MergeRequestApprovalClient.UnapproveMergeRequest() -> void
+NGitLab.Impl.MergeRequestClient.DraftNotes(long mergeRequestIid) -> NGitLab.IMergeRequestDraftNoteClient
+NGitLab.Impl.MergeRequestClient.GetDiffsAsync(long mergeRequestIid, NGitLab.Models.MergeRequestDiffQuery query) -> NGitLab.GitLabCollectionResponse<NGitLab.Models.Diff>
+NGitLab.Impl.MergeRequestDraftNoteClient
+NGitLab.Impl.MergeRequestDraftNoteClient.All.get -> System.Collections.Generic.IEnumerable<NGitLab.Models.DraftNote>
+NGitLab.Impl.MergeRequestDraftNoteClient.CreateAsync(NGitLab.Models.DraftNoteCreate draftNote, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<NGitLab.Models.DraftNote>
+NGitLab.Impl.MergeRequestDraftNoteClient.MergeRequestDraftNoteClient(NGitLab.Impl.API api, string projectPath, long mergeRequestIid) -> void
+NGitLab.Impl.MergeRequestDraftNoteClient.PublishAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task
+NGitLab.Models.DraftNote
+NGitLab.Models.DraftNote.AuthorId.get -> long
+NGitLab.Models.DraftNote.AuthorId.set -> void
+NGitLab.Models.DraftNote.DraftNote() -> void
+NGitLab.Models.DraftNote.Id.get -> long
+NGitLab.Models.DraftNote.Id.set -> void
+NGitLab.Models.DraftNote.MergeRequestId.get -> long
+NGitLab.Models.DraftNote.MergeRequestId.set -> void
+NGitLab.Models.DraftNote.Note.get -> string
+NGitLab.Models.DraftNote.Note.set -> void
+NGitLab.Models.DraftNote.Position.get -> NGitLab.Models.Position
+NGitLab.Models.DraftNote.Position.set -> void
+NGitLab.Models.DraftNoteCreate
+NGitLab.Models.DraftNoteCreate.DraftNoteCreate() -> void
+NGitLab.Models.DraftNoteCreate.Note.get -> string
+NGitLab.Models.DraftNoteCreate.Note.set -> void
+NGitLab.Models.DraftNoteCreate.Position.get -> NGitLab.Models.Position
+NGitLab.Models.DraftNoteCreate.Position.set -> void
+NGitLab.Models.MergeRequestDiffQuery
+NGitLab.Models.MergeRequestDiffQuery.MergeRequestDiffQuery() -> void
+NGitLab.Models.MergeRequestDiffQuery.Unidiff.get -> bool?
+NGitLab.Models.MergeRequestDiffQuery.Unidiff.set -> void

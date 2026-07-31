@@ -17,7 +17,7 @@ public class MergeRequestClientTests
     public async Task Test_merge_request_api()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
         Assert.That(mergeRequestClient[mergeRequest.Iid].Id, Is.EqualTo(mergeRequest.Id), "Test we can get a merge request by IId");
@@ -61,7 +61,7 @@ public class MergeRequestClientTests
     public async Task Test_merge_request_rebase()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
         // Additional commit in default branch, to create divergence
@@ -102,7 +102,7 @@ public class MergeRequestClientTests
     public async Task Test_merge_request_rebaseasync_skip_ci()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
         // Additional commit in default branch, to create divergence
@@ -144,7 +144,7 @@ public class MergeRequestClientTests
     public async Task Test_merge_request_id_is_not_equal_to_iid()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (_, mergeRequest) = context.CreateMergeRequest();
+        var (_, mergeRequest) = await context.CreateMergeRequestAsync();
         Assert.That(mergeRequest.Iid, Is.Not.EqualTo(mergeRequest.Id));
     }
 
@@ -174,7 +174,7 @@ public class MergeRequestClientTests
     public async Task Test_merge_request_delete()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
         mergeRequestClient.Delete(mergeRequest.Iid);
@@ -194,7 +194,7 @@ public class MergeRequestClientTests
         // https://about.gitlab.com/releases/2021/04/22/gitlab-13-11-released/#removal-of-merge-request-approvers-endpoint-in-favor-of-approval-rules-api
         context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[,13.11)"));
 
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
         var approvalClient = mergeRequestClient.ApprovalClient(mergeRequest.Iid);
@@ -223,7 +223,7 @@ public class MergeRequestClientTests
     public async Task Test_get_unassigned_merge_requests()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
         var mergeRequests = mergeRequestClient.Get(new MergeRequestQuery { AssigneeId = QueryAssigneeId.None }).ToList();
@@ -238,7 +238,7 @@ public class MergeRequestClientTests
     public async Task Test_get_assigned_merge_requests()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var userId = context.Client.Users.Current.Id;
         mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { AssigneeId = userId });
@@ -255,8 +255,8 @@ public class MergeRequestClientTests
     public async Task Test_set_reviewers_merge_requests()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
-        context.CreateMergeRequest(); // Second MR to verify filter returns only one
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
+        await context.CreateMergeRequestAsync(); // Second MR to verify filter returns only one
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var userId = context.Client.Users.Current.Id;
         mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { ReviewerIds = new[] { userId } });
@@ -274,7 +274,7 @@ public class MergeRequestClientTests
     public async Task Test_cancel_merge_when_pipeline_succeeds()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
         mergeRequest.MergeWhenPipelineSucceeds = true;
@@ -287,7 +287,7 @@ public class MergeRequestClientTests
     public async Task Test_merge_request_versions()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
 
         var versions = await GitLabTestContext.RetryUntilAsync(
@@ -305,7 +305,7 @@ public class MergeRequestClientTests
     public async Task Test_merge_request_head_pipeline()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var sourceProjectId = await context.Client.Projects.GetByIdAsync(mergeRequest.SourceProjectId, new SingleProjectQuery());
         JobTests.AddGitLabCiFile(context.Client, sourceProjectId, branch: mergeRequest.SourceBranch);
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);

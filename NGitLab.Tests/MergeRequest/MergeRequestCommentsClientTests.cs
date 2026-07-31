@@ -15,7 +15,7 @@ public class MergeRequestCommentsClientTests
     public async Task AddCommentToMergeRequest_DeprecatedApi()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestComments = mergeRequestClient.Comments(mergeRequest.Iid);
 
@@ -33,7 +33,7 @@ public class MergeRequestCommentsClientTests
     public async Task AddEditCommentToMergeRequest()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestComments = mergeRequestClient.Comments(mergeRequest.Iid);
 
@@ -56,13 +56,14 @@ public class MergeRequestCommentsClientTests
         Assert.That(editedComment.Body, Is.EqualTo(commentMessageEdit));
         Assert.That(editedComment.CreatedAt, Is.EqualTo(createdAt));
 
-        // Get all
-        var comments = mergeRequestComments.All.ToArray();
+        // 'All' returns all notes, including system notes that GitLab auto-generates (e.g. "changed the merge status to can be merged" or similar state-change events).
+        // Get all non-system notes
+        var comments = mergeRequestComments.All.Where(c => !c.System).ToArray();
         Assert.That(comments, Is.Not.Empty);
 
         // Delete
         mergeRequestComments.Delete(comment.Id);
-        comments = mergeRequestComments.All.ToArray();
+        comments = mergeRequestComments.All.Where(c => !c.System).ToArray();
         Assert.That(comments, Is.Empty);
     }
 
@@ -71,7 +72,7 @@ public class MergeRequestCommentsClientTests
     public async Task AddCommentToMergeRequestOnArchivedProject()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestComments = mergeRequestClient.Comments(mergeRequest.Iid);
 

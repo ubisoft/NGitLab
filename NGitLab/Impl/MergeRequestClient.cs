@@ -171,6 +171,17 @@ public class MergeRequestClient : IMergeRequestClient
         return _api.Get().GetAllAsync<Diff>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/diffs");
     }
 
+    public GitLabCollectionResponse<Diff> GetDiffsAsync(long mergeRequestIid, MergeRequestDiffQuery query)
+    {
+        var url = _path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/diffs";
+        if (query?.Unidiff == true)
+        {
+            url = Utils.AddParameter(url, "unidiff", "true");
+        }
+
+        return _api.Get().GetAllAsync<Diff>(url);
+    }
+
     public Task<TimeStats> TimeStatsAsync(long mergeRequestIid, CancellationToken cancellationToken = default)
     {
         return _api.Get().ToAsync<TimeStats>(_path + "/merge_requests/" + mergeRequestIid.ToString(CultureInfo.InvariantCulture) + "/time_stats", cancellationToken);
@@ -183,6 +194,8 @@ public class MergeRequestClient : IMergeRequestClient
     public IMergeRequestCommitClient Commits(long mergeRequestIid) => new MergeRequestCommitClient(_api, _path, mergeRequestIid);
 
     public IMergeRequestApprovalClient ApprovalClient(long mergeRequestIid) => new MergeRequestApprovalClient(_api, _path, mergeRequestIid);
+
+    public IMergeRequestDraftNoteClient DraftNotes(long mergeRequestIid) => new MergeRequestDraftNoteClient(_api, _path, mergeRequestIid);
 
     public IMergeRequestChangeClient Changes(long mergeRequestIid) => new MergeRequestChangeClient(_api, _path, mergeRequestIid);
 
