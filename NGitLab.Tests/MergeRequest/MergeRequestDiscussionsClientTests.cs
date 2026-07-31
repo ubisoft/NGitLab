@@ -15,7 +15,7 @@ public class MergeRequestDiscussionsClientTests
     public async Task AddDiscussionToMergeRequest_DiscussionCreated()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
 
@@ -39,7 +39,7 @@ public class MergeRequestDiscussionsClientTests
     public async Task GetDiscussion_DiscussionFound()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
 
@@ -59,7 +59,7 @@ public class MergeRequestDiscussionsClientTests
     public async Task EditCommentFromDiscussion_CommentEdited()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
 
@@ -91,7 +91,7 @@ public class MergeRequestDiscussionsClientTests
     public async Task AddDiscussionToMergeRequestOnArchivedProject()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
 
@@ -112,7 +112,7 @@ public class MergeRequestDiscussionsClientTests
     public async Task ResolveDiscussion_AllNotesResolved()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
 
@@ -138,7 +138,7 @@ public class MergeRequestDiscussionsClientTests
     public async Task DeleteOneNoteFromDiscussion_DiscussionAndNoteDeleted()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
 

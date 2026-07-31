@@ -69,7 +69,7 @@ public class MilestoneClientTests
     public async Task Test_project_milestone_merge_requests()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
 
         var milestoneClient = context.Client.GetMilestone(project.Id);
         var milestone = CreateMilestone(context, MilestoneScope.Projects, project.Id, "my-super-milestone");
@@ -87,7 +87,7 @@ public class MilestoneClientTests
     {
         using var context = await GitLabTestContext.CreateAsync();
         var group = context.CreateGroup();
-        var (project, mergeRequest) = context.CreateMergeRequest(configureProject: project => project.NamespaceId = group.Id);
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync(configureProject: project => project.NamespaceId = group.Id);
 
         var milestoneClient = context.Client.GetGroupMilestone(group.Id);
         var milestone = CreateMilestone(context, MilestoneScope.Groups, group.Id, "my-super-milestone");

@@ -13,7 +13,7 @@ public class MergeRequestDraftNoteClientTests
     public async Task CreateAsync_adds_draft_note_visible_in_All()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var draftNoteClient = context.Client.GetMergeRequest(project.Id).DraftNotes(mergeRequest.Iid);
 
         var created = await draftNoteClient.CreateAsync(new DraftNoteCreate { Note = "Draft review comment" });
@@ -32,7 +32,7 @@ public class MergeRequestDraftNoteClientTests
     public async Task PublishAllAsync_publishes_all_draft_notes()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mrClient = context.Client.GetMergeRequest(project.Id);
         var draftNoteClient = mrClient.DraftNotes(mergeRequest.Iid);
 

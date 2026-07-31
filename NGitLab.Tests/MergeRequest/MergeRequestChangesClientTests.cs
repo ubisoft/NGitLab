@@ -12,7 +12,7 @@ public class MergeRequestChangesClientTests
     public async Task GetChangesOnMergeRequest()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestChanges = mergeRequestClient.Changes(mergeRequest.Iid);
 

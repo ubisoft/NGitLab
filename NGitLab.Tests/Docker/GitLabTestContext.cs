@@ -238,11 +238,6 @@ public sealed class GitLabTestContext : IDisposable
             configure?.Invoke(g);
         });
 
-    public (Project Project, MergeRequest MergeRequest) CreateMergeRequest(Action<MergeRequestCreate> configure = null, Action<ProjectCreate> configureProject = null)
-    {
-        return CreateMergeRequestAsync(configure, configureProject).GetAwaiter().GetResult();
-    }
-
     public async Task<(Project Project, MergeRequest MergeRequest)> CreateMergeRequestAsync(Action<MergeRequestCreate> configure = null, Action<ProjectCreate> configureProject = null)
     {
         var client = Client;

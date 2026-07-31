@@ -12,7 +12,7 @@ public class MergeRequestApprovalClientTests
     public async Task ApproveMergeRequest_and_UnapproveMergeRequest_roundtrip()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mrClient = context.Client.GetMergeRequest(project.Id);
         var approvalClient = mrClient.ApprovalClient(mergeRequest.Iid);
 
@@ -35,7 +35,7 @@ public class MergeRequestApprovalClientTests
     {
         // Arrange
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var approvalClient = context.Client.GetMergeRequest(project.Id).ApprovalClient(mergeRequest.Iid);
 
         // Act/Assert

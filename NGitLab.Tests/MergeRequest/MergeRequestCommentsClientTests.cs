@@ -15,7 +15,7 @@ public class MergeRequestCommentsClientTests
     public async Task AddCommentToMergeRequest_DeprecatedApi()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestComments = mergeRequestClient.Comments(mergeRequest.Iid);
 
@@ -33,7 +33,7 @@ public class MergeRequestCommentsClientTests
     public async Task AddEditCommentToMergeRequest()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestComments = mergeRequestClient.Comments(mergeRequest.Iid);
 
@@ -72,7 +72,7 @@ public class MergeRequestCommentsClientTests
     public async Task AddCommentToMergeRequestOnArchivedProject()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
         var mergeRequestComments = mergeRequestClient.Comments(mergeRequest.Iid);
 

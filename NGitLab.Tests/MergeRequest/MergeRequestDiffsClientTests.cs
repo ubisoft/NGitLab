@@ -13,7 +13,7 @@ public class MergeRequestDiffsClientTests
     public async Task GetDiffsAsync_returns_changed_files()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mrClient = context.Client.GetMergeRequest(project.Id);
 
         var diffs = await mrClient.GetDiffsAsync(mergeRequest.Iid, query: null).ToListAsync();
@@ -28,7 +28,7 @@ public class MergeRequestDiffsClientTests
     public async Task GetDiffsAsync_with_unidiff_returns_changed_files()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mrClient = context.Client.GetMergeRequest(project.Id);
 
         var query = new MergeRequestDiffQuery { Unidiff = true };
@@ -44,7 +44,7 @@ public class MergeRequestDiffsClientTests
     public async Task GetDiffsAsync_unidiff_format_starts_with_unified_diff_header()
     {
         using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = context.CreateMergeRequest();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
         var mrClient = context.Client.GetMergeRequest(project.Id);
 
         var plainDiffs = await mrClient.GetDiffsAsync(mergeRequest.Iid, query: null).ToListAsync();
