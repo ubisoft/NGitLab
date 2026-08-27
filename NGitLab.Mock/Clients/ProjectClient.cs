@@ -423,6 +423,11 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
                 project.SquashOption = projectUpdate.SquashOption.Value;
             }
 
+            if (projectUpdate.MergeMethod is not null)
+            {
+                project.MergeMethod = projectUpdate.MergeMethod;
+            }
+
             return project.ToClientProject(Context.User);
         }
     }

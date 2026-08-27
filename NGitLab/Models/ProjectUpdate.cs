@@ -25,6 +25,9 @@ public sealed class ProjectUpdate
     [JsonPropertyName("issues_access_level")]
     public string IssuesAccessLevel { get; set; }
 
+    [JsonPropertyName("merge_method")]
+    public string MergeMethod { get; set; }
+
     [JsonPropertyName("merge_pipelines_enabled")]
     public bool MergePipelinesEnabled { get; set; }
 

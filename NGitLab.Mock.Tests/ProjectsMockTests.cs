@@ -421,6 +421,61 @@ public class ProjectsMockTests
     }
 
     [Test]
+    public async Task UpdateAsync_WhenMergeMethodIsProvided_ItIsUpdated()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath("Test/MyProject")
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+        var project = await projectClient.GetAsync("Test/MyProject");
+
+        // Act
+        var updated = await projectClient.UpdateAsync(
+            project.Id,
+            new ProjectUpdate
+            {
+                MergeMethod = "ff",
+            });
+
+        // Assert
+        Assert.That(updated.MergeMethod, Is.EqualTo("ff"));
+    }
+
+    [Test]
+    public async Task UpdateAsync_WhenMergeMethodIsNotProvided_ItRetainsExistingValue()
+    {
+        // Arrange
+        using var server = new GitLabConfig()
+            .WithUser("Test", isDefault: true)
+            .WithProjectOfFullPath("Test/MyProject")
+            .BuildServer();
+
+        var projectClient = server.CreateClient().Projects;
+        var project = await projectClient.GetAsync("Test/MyProject");
+
+        await projectClient.UpdateAsync(
+            project.Id,
+            new ProjectUpdate
+            {
+                SquashOption = SquashOption.Never,
+            });
+
+        // Act
+        var updated = await projectClient.UpdateAsync(
+            project.Id,
+            new ProjectUpdate
+            {
+                Description = "updated",
+            });
+
+        // Assert
+        Assert.That(updated.MergeMethod, Is.Null);
+    }
+
+    [Test]
     public void UpdateAsync_WhenProjectNotFound_ItThrows()
     {
         // Arrange
