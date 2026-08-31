@@ -42,4 +42,6 @@ public enum DetailedMergeStatus
     Preparing,
     [EnumMember(Value = "merge_request_blocked")]
     MergeRequestBlocked,
+    [EnumMember(Value = "need_rebase")]
+    NeedRebase,
 }
