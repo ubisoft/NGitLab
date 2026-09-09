@@ -700,6 +700,7 @@ NGitLab.Mock.MergeRequest.Title.get -> string
 NGitLab.Mock.MergeRequest.Title.set -> void
 NGitLab.Mock.MergeRequest.UpdatedAt.get -> System.DateTimeOffset
 NGitLab.Mock.MergeRequest.UpdatedAt.set -> void
+NGitLab.Mock.MergeRequest.Versions.get -> System.Collections.Generic.IReadOnlyList<NGitLab.Models.MergeRequestVersion>
 NGitLab.Mock.MergeRequest.WebUrl.get -> string
 NGitLab.Mock.MergeRequest.WorkInProgress.get -> bool
 NGitLab.Mock.MergeRequestChangeCollection
@@ -715,6 +716,8 @@ NGitLab.Mock.MergeRequestCollection.MergeRequestCollection(NGitLab.Mock.GitLabOb
 NGitLab.Mock.MergeRequestComment
 NGitLab.Mock.MergeRequestComment.MergeRequestComment() -> void
 NGitLab.Mock.MergeRequestComment.Parent.get -> NGitLab.Mock.MergeRequest
+NGitLab.Mock.MergeRequestComment.Position.get -> NGitLab.Models.Position
+NGitLab.Mock.MergeRequestComment.Position.set -> void
 NGitLab.Mock.Milestone
 NGitLab.Mock.Milestone.ClosedAt.get -> System.DateTimeOffset?
 NGitLab.Mock.Milestone.ClosedAt.set -> void
@@ -1381,7 +1384,6 @@ static NGitLab.Mock.TemporaryDirectory.DeleteDirectory(string path) -> void
 static NGitLab.Mock.TemporaryDirectory.DeleteFile(string path) -> void
 static NGitLab.Mock.UserRef.implicit operator NGitLab.Mock.UserRef(NGitLab.Mock.User user) -> NGitLab.Mock.UserRef
 virtual NGitLab.Mock.Collection<T>.Add(T item) -> void
-
 NGitLab.Mock.ContainerRepository
 NGitLab.Mock.ContainerRepository.ContainerRepository() -> void
 NGitLab.Mock.ContainerRepository.Id.get -> long
@@ -1399,7 +1401,6 @@ NGitLab.Mock.ContainerRegistryTagEntry.ToClientContainerRegistryTag() -> NGitLab
 NGitLab.Mock.ContainerRepositoryCollection
 NGitLab.Mock.ContainerRepositoryCollection.ContainerRepositoryCollection(NGitLab.Mock.GitLabObject parent) -> void
 NGitLab.Mock.Project.ContainerRepositories.get -> NGitLab.Mock.ContainerRepositoryCollection
-
 NGitLab.Mock.Config.GitLabContainerRepository
 NGitLab.Mock.Config.GitLabContainerRepository.GitLabContainerRepository() -> void
 NGitLab.Mock.Config.GitLabContainerRepository.Name.get -> string

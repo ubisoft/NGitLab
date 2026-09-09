@@ -53,6 +53,7 @@ internal sealed class MergeRequestDiscussionClient : ClientBase, IMergeRequestDi
         {
             Body = comment.Body,
             CreatedAt = null,
+            Position = comment.Position,
         });
     }
 
@@ -70,6 +71,8 @@ internal sealed class MergeRequestDiscussionClient : ClientBase, IMergeRequestDi
             {
                 Author = Context.User,
                 Body = commentCreate.Body,
+                Position = commentCreate.Position,
+                ThreadId = Guid.NewGuid().ToString("N"),
             };
 
             GetMergeRequest().Comments.Add(comment);

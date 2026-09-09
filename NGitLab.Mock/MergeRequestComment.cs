@@ -10,6 +10,8 @@ public sealed class MergeRequestComment : Note
 
     public override long NoticableIid => Parent.Iid;
 
+    public Models.Position Position { get; set; }
+
     internal Models.MergeRequestComment ToMergeRequestCommentClient()
     {
         return new Models.MergeRequestComment
@@ -23,6 +25,7 @@ public sealed class MergeRequestComment : Note
             System = System,
             Type = NoteableType,
             Author = Author.ToUserClient(),
+            Position = Position,
         };
     }
 }

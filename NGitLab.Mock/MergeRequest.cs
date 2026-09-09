@@ -22,6 +22,7 @@ public sealed class MergeRequest : GitLabObject
     private string _baseSha;
     private bool _hasConflicts;
     private int? _divergedCommitsCount;
+    private readonly List<Models.MergeRequestVersion> _versions = [];
 
     public MergeRequest()
     {
@@ -105,6 +106,15 @@ public sealed class MergeRequest : GitLabObject
         {
             RefreshInternalState();
             return _divergedCommitsCount;
+        }
+    }
+
+    public IReadOnlyList<Models.MergeRequestVersion> Versions
+    {
+        get
+        {
+            RefreshInternalState();
+            return _versions;
         }
     }
 
@@ -400,5 +410,16 @@ public sealed class MergeRequest : GitLabObject
         {
             _hasConflicts = true;
         }
+
+        _versions.Add(new Models.MergeRequestVersion
+        {
+            Id = _versions.Count + 1,
+            MergeRequestId = Id,
+            BaseCommitSha = _baseSha,
+            StartCommitSha = _startSha,
+            HeadCommitSha = _headSha,
+            CreatedAt = DateTime.UtcNow,
+            State = State.ToString(),
+        });
     }
 }
