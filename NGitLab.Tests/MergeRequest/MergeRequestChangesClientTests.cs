@@ -27,6 +27,6 @@ public class MergeRequestChangesClientTests
         Assert.That(changes[0].DeletedFile, Is.False);
         Assert.That(changes[0].NewFile, Is.False);
         Assert.That(changes[0].RenamedFile, Is.False);
-        Assert.That(changes[0].Diff, Is.EqualTo("@@ -1 +1 @@\n-test\n\\ No newline at end of file\n+test2\n\\ No newline at end of file\n"));
+        Assert.That(changes[0].Diff, Is.EqualTo("@@ -1 +1 @@\n-this project should only live during the unit tests, you can delete if you find some\n\\ No newline at end of file\n+test2\n\\ No newline at end of file\n"));
     }
 }

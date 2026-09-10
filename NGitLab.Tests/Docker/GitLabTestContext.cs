@@ -244,14 +244,10 @@ public sealed class GitLabTestContext : IDisposable
         var project = CreateProject(configureProject, initializeWithCommits: true);
 
         const string BranchForMRName = "branch-for-mr";
-        s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Create(new FileUpsert { Branch = project.DefaultBranch, CommitMessage = "test", Content = "test", Path = "test.md" }));
-        s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = BranchForMRName, Ref = project.DefaultBranch }));
+        var defaultBranchBeforeCreation = project.DefaultBranch;
 
-        // Restore the default branch because sometimes GitLab change the default branch to "branch-for-mr"
-        project = client.Projects.Update(project.Id.ToString(CultureInfo.InvariantCulture), new ProjectUpdate
-        {
-            DefaultBranch = project.DefaultBranch,
-        });
+        s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = BranchForMRName, Ref = project.DefaultBranch }));
+        Assert.That(project.DefaultBranch.Equals(defaultBranchBeforeCreation), "Default branch should not change after new branch creation..");
 
         var branch = client.GetRepository(project.Id).Branches.All.FirstOrDefault(b => string.Equals(b.Name, project.DefaultBranch, StringComparison.Ordinal));
         Assert.That(branch, Is.Not.Null, $"Branch '{project.DefaultBranch}' should exist");
@@ -261,7 +257,7 @@ public sealed class GitLabTestContext : IDisposable
         Assert.That(branch, Is.Not.Null, $"Branch '{BranchForMRName}' should exist");
         Assert.That(branch.Protected, Is.False, $"Branch '{BranchForMRName}' should not be protected");
 
-        s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Update(new FileUpsert { Branch = BranchForMRName, CommitMessage = "test", Content = "test2", Path = "test.md" }));
+        s_gitlabRetryPolicy.Execute(() => client.GetRepository(project.Id).Files.Update(new FileUpsert { Branch = BranchForMRName, CommitMessage = "test", Content = "test2", Path = "TestFile0.txt" }));
 
         var mergeRequestCreate = new MergeRequestCreate
         {
@@ -278,9 +274,7 @@ public sealed class GitLabTestContext : IDisposable
         var mrClient = client.GetMergeRequest(project.Id);
         mr = await RetryUntilAsync(
             () => mrClient[mr.Iid],
-            result => result.DetailedMergeStatus != DetailedMergeStatus.Checking &&
-                      result.DetailedMergeStatus != DetailedMergeStatus.Unchecked &&
-                      result.DetailedMergeStatus != DetailedMergeStatus.Preparing,
+            result => result.DetailedMergeStatus == DetailedMergeStatus.Mergeable,
             TimeSpan.FromSeconds(60)).ConfigureAwait(false);
 
         return (project, mr);
@@ -469,10 +463,10 @@ public sealed class GitLabTestContext : IDisposable
         }
     }
 
-    public static async Task<T> RetryUntilAsync<T>(Func<T> action, Func<T, bool> predicate, TimeSpan timeSpan)
+    public static async Task<T> RetryUntilAsync<T>(Func<T> action, Func<T, bool> predicate, TimeSpan timeSpan, string operationName = null)
     {
         using var cts = new CancellationTokenSource(timeSpan);
-        return await RetryUntilAsync(action, predicate, cts.Token).ConfigureAwait(false);
+        return await RetryUntilAsync(action, predicate, cts.Token, operationName).ConfigureAwait(false);
     }
 
     public static async Task<T> RetryUntilAsync<T>(Func<Task<T>> action, Func<T, Task<bool>> predicate, TimeSpan timeSpan)
@@ -493,14 +487,17 @@ public sealed class GitLabTestContext : IDisposable
         }
     }
 
-    public static async Task<T> RetryUntilAsync<T>(Func<T> action, Func<T, bool> predicate, CancellationToken cancellationToken)
+    // INVESTIGATION SCAFFOLDING: `operationName` (optional, so existing call sites are unaffected) identifies
+    // which of the ~30 call sites is retrying, since the shared test output otherwise interleaves indistinguishable
+    // "RetryUntilAsync {n}..." lines from concurrent/sequential polls (e.g. branch-readiness vs. mergeable-status).
+    public static async Task<T> RetryUntilAsync<T>(Func<T> action, Func<T, bool> predicate, CancellationToken cancellationToken, string operationName = null)
     {
         var retryCount = 1;
         var result = action();
         while (!predicate(result))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            TestContext.Out.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] RetryUntilAsync {retryCount++}...");
+            TestContext.Out.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] RetryUntilAsync{(operationName is null ? string.Empty : $" '{operationName}'")} {retryCount++}...");
             await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
 
             result = action();
