@@ -284,24 +284,6 @@ public class MergeRequestClientTests
 
     [Test]
     [NGitLabRetry]
-    public async Task Test_merge_request_versions()
-    {
-        using var context = await GitLabTestContext.CreateAsync();
-        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
-        var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
-
-        var versions = await GitLabTestContext.RetryUntilAsync(
-            () => mergeRequestClient.GetVersionsAsync(mergeRequest.Iid),
-            versions => versions.Any(),
-            TimeSpan.FromSeconds(10));
-
-        var version = versions.First();
-
-        Assert.That(version.HeadCommitSha, Is.EqualTo(mergeRequest.Sha));
-    }
-
-    [Test]
-    [NGitLabRetry]
     public async Task Test_merge_request_head_pipeline()
     {
         using var context = await GitLabTestContext.CreateAsync();
@@ -365,6 +347,38 @@ public class MergeRequestClientTests
         });
 
         Assert.That(updated.Labels, Is.EqualTo(new[] { "a", "c", "d" }).AsCollection);
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_merge_request_versions_match_diff_refs()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
+        var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+
+        var versions = await GitLabTestContext.RetryUntilAsync(
+            () => mergeRequestClient.GetVersionsAsync(mergeRequest.Iid),
+            versions => versions.Any(),
+            TimeSpan.FromSeconds(10));
+
+        var version = versions.First();
+
+        Assert.That(version.HeadCommitSha, Is.EqualTo(mergeRequest.Sha));
+        Assert.That(version.BaseCommitSha, Is.EqualTo(mergeRequest.DiffRefs.BaseSha));
+        Assert.That(version.StartCommitSha, Is.EqualTo(mergeRequest.DiffRefs.StartSha));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_merge_request_versions_throws_for_unknown_merge_request()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
+        var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+
+        var ex = Assert.Throws<GitLabException>((Action)(() => mergeRequestClient.GetVersionsAsync(99999).ToArray()));
+        Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
     public static void AcceptMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest request)
