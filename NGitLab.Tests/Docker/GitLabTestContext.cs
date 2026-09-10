@@ -463,10 +463,10 @@ public sealed class GitLabTestContext : IDisposable
         }
     }
 
-    public static async Task<T> RetryUntilAsync<T>(Func<T> action, Func<T, bool> predicate, TimeSpan timeSpan, string operationName = null)
+    public static async Task<T> RetryUntilAsync<T>(Func<T> action, Func<T, bool> predicate, TimeSpan timeSpan)
     {
         using var cts = new CancellationTokenSource(timeSpan);
-        return await RetryUntilAsync(action, predicate, cts.Token, operationName).ConfigureAwait(false);
+        return await RetryUntilAsync(action, predicate, cts.Token).ConfigureAwait(false);
     }
 
     public static async Task<T> RetryUntilAsync<T>(Func<Task<T>> action, Func<T, Task<bool>> predicate, TimeSpan timeSpan)
@@ -487,17 +487,14 @@ public sealed class GitLabTestContext : IDisposable
         }
     }
 
-    // INVESTIGATION SCAFFOLDING: `operationName` (optional, so existing call sites are unaffected) identifies
-    // which of the ~30 call sites is retrying, since the shared test output otherwise interleaves indistinguishable
-    // "RetryUntilAsync {n}..." lines from concurrent/sequential polls (e.g. branch-readiness vs. mergeable-status).
-    public static async Task<T> RetryUntilAsync<T>(Func<T> action, Func<T, bool> predicate, CancellationToken cancellationToken, string operationName = null)
+    public static async Task<T> RetryUntilAsync<T>(Func<T> action, Func<T, bool> predicate, CancellationToken cancellationToken)
     {
         var retryCount = 1;
         var result = action();
         while (!predicate(result))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            TestContext.Out.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] RetryUntilAsync{(operationName is null ? string.Empty : $" '{operationName}'")} {retryCount++}...");
+            TestContext.Out.WriteLine($"[{TestContext.CurrentContext.Test.FullName}] RetryUntilAsync {retryCount++}...");
             await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
 
             result = action();
