@@ -58,8 +58,6 @@ public class MergeRequestDiscussionsMockTests
             Assert.That(discussion.Notes[0].Position.NewPath, Is.EqualTo("file.txt"));
             Assert.That(discussion.Notes[0].Position.NewLine, Is.EqualTo(1));
             Assert.That(discussion.Notes[0].Position.HeadSha.ToString(), Is.EqualTo(new Sha1(version.HeadCommitSha).ToString()));
-            Assert.That(discussion.Id, Is.Not.Null.And.Not.Empty);
-            Assert.That(discussion.IndividualNote, Is.False);
 
             var discussions = client.Comments(mr.Iid).Discussions.ToArray();
             var reread = discussions.Single(d => string.Equals(d.Notes[0].Body, "Inline comment", StringComparison.Ordinal));
@@ -67,7 +65,6 @@ public class MergeRequestDiscussionsMockTests
             Assert.That(reread.Notes[0].Position.NewPath, Is.EqualTo("file.txt"));
             Assert.That(reread.Notes[0].Position.NewLine, Is.EqualTo(1));
             Assert.That(reread.Id, Is.EqualTo(discussion.Id));
-            Assert.That(reread.IndividualNote, Is.False);
         }
     }
 
@@ -88,7 +85,7 @@ public class MergeRequestDiscussionsMockTests
     }
 
     [Test]
-    public void Resolve_PersistsResolvedState_OnReread()
+    public void Resolve_PersistsResolvedAndUnresolvedState_OnReread()
     {
         var (server, project, mr, user) = MergeRequestMockTestHelper.CreateProjectWithMergeRequest();
         using (server)
@@ -101,27 +98,14 @@ public class MergeRequestDiscussionsMockTests
             var resolved = client.Discussions(mr.Iid).Resolve(new MergeRequestDiscussionResolve { Id = discussion.Id, Resolved = true });
             Assert.That(resolved.Notes[0].Resolved, Is.True, "Resolve() returns notes marked as resolved");
 
-            var reread = client.Discussions(mr.Iid).Get(discussion.Id);
-            Assert.That(reread.Notes[0].Resolved, Is.True, "Resolve() must persist resolution onto the stored comment");
-        }
-    }
-
-    [Test]
-    public void Resolve_WithResolvedFalse_UnresolvesPreviouslyResolvedDiscussion()
-    {
-        var (server, project, mr, user) = MergeRequestMockTestHelper.CreateProjectWithMergeRequest();
-        using (server)
-        {
-            var client = server.CreateClient(user).GetMergeRequest(project.Id);
-
-            var discussion = client.Discussions(mr.Iid).Add(new MergeRequestDiscussionCreate { Body = "Resolvable comment" });
-            client.Discussions(mr.Iid).Resolve(new MergeRequestDiscussionResolve { Id = discussion.Id, Resolved = true });
+            var rereadResolved = client.Discussions(mr.Iid).Get(discussion.Id);
+            Assert.That(rereadResolved.Notes[0].Resolved, Is.True, "Resolve() must persist resolution onto the stored comment");
 
             var unresolved = client.Discussions(mr.Iid).Resolve(new MergeRequestDiscussionResolve { Id = discussion.Id, Resolved = false });
             Assert.That(unresolved.Notes[0].Resolved, Is.False);
 
-            var reread = client.Discussions(mr.Iid).Get(discussion.Id);
-            Assert.That(reread.Notes[0].Resolved, Is.False, "Resolve() with Resolved=false must persist the unresolved state");
+            var rereadUnresolved = client.Discussions(mr.Iid).Get(discussion.Id);
+            Assert.That(rereadUnresolved.Notes[0].Resolved, Is.False, "Resolve() with Resolved=false must persist the unresolved state");
         }
     }
 

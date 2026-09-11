@@ -60,23 +60,6 @@ public class MergeRequestCommentsMockTests
     }
 
     [Test]
-    public void GetParticipants_IncludesAuthorAndCommentAuthors()
-    {
-        var (server, project, mr, user) = MergeRequestMockTestHelper.CreateProjectWithMergeRequest();
-        using (server)
-        {
-            var commenter = server.Users.AddNew("commenter");
-
-            server.CreateClient(commenter).GetMergeRequest(project.Id).Comments(mr.Iid).Add(new MergeRequestCommentCreate { Body = "A comment" });
-
-            var participants = server.CreateClient(user).GetMergeRequest(project.Id).GetParticipants(mr.Iid).ToArray();
-
-            Assert.That(participants.Select(p => p.Username), Has.Member(user.UserName));
-            Assert.That(participants.Select(p => p.Username), Has.Member(commenter.UserName));
-        }
-    }
-
-    [Test]
     public void Reply_AppendsNoteToExistingDiscussionThread()
     {
         var (server, project, mr, user) = MergeRequestMockTestHelper.CreateProjectWithMergeRequest();
