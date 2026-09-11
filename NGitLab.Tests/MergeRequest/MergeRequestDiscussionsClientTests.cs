@@ -36,6 +36,53 @@ public class MergeRequestDiscussionsClientTests
 
     [Test]
     [NGitLabRetry]
+    public async Task AddInlineDiscussionToMergeRequest_PositionRoundtrips()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
+        var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+        var mergeRequestDiscussions = mergeRequestClient.Discussions(mergeRequest.Iid);
+
+        var versions = await GitLabTestContext.RetryUntilAsync(
+            () => mergeRequestClient.GetVersionsAsync(mergeRequest.Iid),
+            versions => versions.Any(),
+            TimeSpan.FromSeconds(10));
+        var version = versions.First();
+
+        const string discussionMessage = "Inline comment";
+        var position = new Position
+        {
+            NewPath = "TestFile0.txt",
+            NewLine = 1,
+            PositionType = new DynamicEnum<PositionType>(PositionType.Text),
+            BaseSha = new Sha1(version.BaseCommitSha),
+            StartSha = new Sha1(version.StartCommitSha),
+            HeadSha = new Sha1(version.HeadCommitSha),
+        };
+
+        var discussion = mergeRequestDiscussions.Add(new MergeRequestDiscussionCreate
+        {
+            Body = discussionMessage,
+            Position = position,
+        });
+
+        Assert.That(discussion.Notes[0].Position, Is.Not.Null);
+        Assert.That(discussion.Notes[0].Position.NewPath, Is.EqualTo("TestFile0.txt"));
+        Assert.That(discussion.Notes[0].Position.NewLine, Is.EqualTo(1));
+        Assert.That(discussion.Notes[0].Position.HeadSha.ToString(), Is.EqualTo(new Sha1(version.HeadCommitSha).ToString()));
+        Assert.That(discussion.IndividualNote, Is.False);
+
+        var rereadDiscussions = mergeRequestClient.Comments(mergeRequest.Iid).Discussions.ToArray();
+        var rereadDiscussion = rereadDiscussions.Single(d => string.Equals(d.Notes[0].Body, discussionMessage, StringComparison.Ordinal));
+        Assert.That(rereadDiscussion.Notes[0].Position, Is.Not.Null);
+        Assert.That(rereadDiscussion.Notes[0].Position.NewPath, Is.EqualTo("TestFile0.txt"));
+        Assert.That(rereadDiscussion.Notes[0].Position.NewLine, Is.EqualTo(1));
+        Assert.That(rereadDiscussion.Id, Is.EqualTo(discussion.Id));
+        Assert.That(rereadDiscussion.IndividualNote, Is.False);
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task GetDiscussion_DiscussionFound()
     {
         using var context = await GitLabTestContext.CreateAsync();

@@ -728,7 +728,15 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
 
     public GitLabCollectionResponse<MergeRequestVersion> GetVersionsAsync(long mergeRequestIid)
     {
-        throw new NotImplementedException();
+        AssertProjectId();
+
+        using (Context.BeginOperationScope())
+        {
+            var mergeRequest = GetMergeRequest(_projectId.GetValueOrDefault(), mergeRequestIid);
+
+            // GitLab returns versions ordered from most recent to oldest.
+            return GitLabCollectionResponse.Create(mergeRequest.Versions.Reverse());
+        }
     }
 
     public GitLabCollectionResponse<Diff> GetDiffsAsync(long mergeRequestIid)
