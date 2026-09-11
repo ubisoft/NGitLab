@@ -81,13 +81,18 @@ internal sealed class MergeRequestCommentClient : ClientBase, IMergeRequestComme
             if (project.Archived)
                 throw GitLabException.Forbidden();
 
+            var mergeRequest = GetMergeRequest();
+            if (!mergeRequest.Comments.Any(c => string.Equals(c.ThreadId, discussionId, StringComparison.Ordinal)))
+                throw GitLabException.NotFound();
+
             var comment = new MergeRequestComment
             {
                 Author = Context.User,
                 Body = commentCreate.Body,
+                ThreadId = discussionId,
             };
 
-            GetMergeRequest().Comments.Add(comment);
+            mergeRequest.Comments.Add(comment);
             return comment.ToMergeRequestCommentClient();
         }
     }

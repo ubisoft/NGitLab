@@ -117,7 +117,7 @@ public class MergeRequestDiscussionsMockTests
             var first = client.Discussions(mr.Iid).Add(new MergeRequestDiscussionCreate { Body = "First reply" });
             var second = client.Discussions(mr.Iid).Add(new MergeRequestDiscussionCreate { Body = "Second reply" });
 
-            Assert.That(first.Id, Is.Not.EqualTo(second.Id), "known limitation: every Add() mints a brand-new thread id, so there is no public way to append a note to an existing thread");
+            Assert.That(first.Id, Is.Not.EqualTo(second.Id), "every Discussions.Add() call starts a new thread; appending to an existing thread is done via Comments().Add(discussionId, ...)");
 
             var discussions = client.Comments(mr.Iid).Discussions.ToArray();
             Assert.That(discussions, Has.Length.EqualTo(2));

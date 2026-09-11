@@ -77,6 +77,39 @@ public class MergeRequestCommentsMockTests
     }
 
     [Test]
+    public void Reply_AppendsNoteToExistingDiscussionThread()
+    {
+        var (server, project, mr, user) = MergeRequestMockTestHelper.CreateProjectWithMergeRequest();
+        using (server)
+        {
+            var client = server.CreateClient(user).GetMergeRequest(project.Id);
+
+            var discussion = client.Discussions(mr.Iid).Add(new MergeRequestDiscussionCreate { Body = "Original" });
+            client.Comments(mr.Iid).Add(discussion.Id, new MergeRequestCommentCreate { Body = "A reply" });
+
+            var reread = client.Discussions(mr.Iid).Get(discussion.Id);
+            Assert.That(reread.IndividualNote, Is.False);
+            Assert.That(reread.Notes.Select(n => n.Body), Is.EqualTo(new[] { "Original", "A reply" }));
+
+            var discussions = client.Comments(mr.Iid).Discussions.ToArray();
+            Assert.That(discussions, Has.Length.EqualTo(1), "the reply should join the existing thread instead of creating a new one");
+            Assert.That(discussions[0].Notes, Has.Length.EqualTo(2));
+        }
+    }
+
+    [Test]
+    public void Reply_UnknownDiscussionId_ThrowsNotFound()
+    {
+        var (server, project, mr, user) = MergeRequestMockTestHelper.CreateProjectWithMergeRequest();
+        using (server)
+        {
+            var client = server.CreateClient(user).GetMergeRequest(project.Id);
+
+            Assert.That(Assert.Throws<GitLabException>((Action)(() => client.Comments(mr.Iid).Add("unknown-id", new MergeRequestCommentCreate { Body = "x" }))).StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        }
+    }
+
+    [Test]
     public void Comments_UnknownId_ThrowNotFound()
     {
         var (server, project, mr, user) = MergeRequestMockTestHelper.CreateProjectWithMergeRequest();
