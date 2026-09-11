@@ -88,7 +88,7 @@ public class MergeRequestDiscussionsMockTests
     }
 
     [Test]
-    public void Resolve_MarksNoteResolvedInResponse_ButRereadStillReportsUnresolved()
+    public void Resolve_PersistsResolvedState_OnReread()
     {
         var (server, project, mr, user) = MergeRequestMockTestHelper.CreateProjectWithMergeRequest();
         using (server)
@@ -102,7 +102,57 @@ public class MergeRequestDiscussionsMockTests
             Assert.That(resolved.Notes[0].Resolved, Is.True, "Resolve() returns notes marked as resolved");
 
             var reread = client.Discussions(mr.Iid).Get(discussion.Id);
-            Assert.That(reread.Notes[0].Resolved, Is.False, "known limitation: Resolve() mutates the returned projection but does not persist resolution onto the stored comment");
+            Assert.That(reread.Notes[0].Resolved, Is.True, "Resolve() must persist resolution onto the stored comment");
+        }
+    }
+
+    [Test]
+    public void Resolve_WithResolvedFalse_UnresolvesPreviouslyResolvedDiscussion()
+    {
+        var (server, project, mr, user) = MergeRequestMockTestHelper.CreateProjectWithMergeRequest();
+        using (server)
+        {
+            var client = server.CreateClient(user).GetMergeRequest(project.Id);
+
+            var discussion = client.Discussions(mr.Iid).Add(new MergeRequestDiscussionCreate { Body = "Resolvable comment" });
+            client.Discussions(mr.Iid).Resolve(new MergeRequestDiscussionResolve { Id = discussion.Id, Resolved = true });
+
+            var unresolved = client.Discussions(mr.Iid).Resolve(new MergeRequestDiscussionResolve { Id = discussion.Id, Resolved = false });
+            Assert.That(unresolved.Notes[0].Resolved, Is.False);
+
+            var reread = client.Discussions(mr.Iid).Get(discussion.Id);
+            Assert.That(reread.Notes[0].Resolved, Is.False, "Resolve() with Resolved=false must persist the unresolved state");
+        }
+    }
+
+    [Test]
+    public void AddDiscussion_MarksNoteAsResolvable()
+    {
+        var (server, project, mr, user) = MergeRequestMockTestHelper.CreateProjectWithMergeRequest();
+        using (server)
+        {
+            var client = server.CreateClient(user).GetMergeRequest(project.Id);
+
+            var discussion = client.Discussions(mr.Iid).Add(new MergeRequestDiscussionCreate { Body = "Resolvable comment" });
+
+            Assert.That(discussion.Notes[0].Resolvable, Is.True, "discussions created via the discussions endpoint are resolvable threads, matching real GitLab");
+        }
+    }
+
+    [Test]
+    public void Resolve_TogglesBlockingDiscussionsResolved()
+    {
+        var (server, project, mr, user) = MergeRequestMockTestHelper.CreateProjectWithMergeRequest();
+        using (server)
+        {
+            project.AllThreadsMustBeResolvedToMerge = true;
+            var client = server.CreateClient(user).GetMergeRequest(project.Id);
+
+            var discussion = client.Discussions(mr.Iid).Add(new MergeRequestDiscussionCreate { Body = "Blocking comment" });
+            Assert.That(client[mr.Iid].BlockingDiscussionsResolved, Is.False, "an unresolved resolvable discussion should block merging");
+
+            client.Discussions(mr.Iid).Resolve(new MergeRequestDiscussionResolve { Id = discussion.Id, Resolved = true });
+            Assert.That(client[mr.Iid].BlockingDiscussionsResolved, Is.True, "resolving the discussion should clear the block");
         }
     }
 

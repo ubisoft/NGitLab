@@ -73,6 +73,7 @@ internal sealed class MergeRequestDiscussionClient : ClientBase, IMergeRequestDi
                 Body = commentCreate.Body,
                 Position = commentCreate.Position,
                 ThreadId = Guid.NewGuid().ToString("N"),
+                Resolvable = true,
             };
 
             GetMergeRequest().Comments.Add(comment);
@@ -90,17 +91,23 @@ internal sealed class MergeRequestDiscussionClient : ClientBase, IMergeRequestDi
     {
         using (Context.BeginOperationScope())
         {
-            var discussions = GetMergeRequest().GetDiscussions();
+            var mergeRequest = GetMergeRequest();
+            var discussions = mergeRequest.GetDiscussions();
             var discussion = discussions.FirstOrDefault(x => string.Equals(x.Id, resolve.Id, StringComparison.Ordinal));
             if (discussion == null)
                 throw GitLabException.NotFound();
 
-            foreach (var note in discussion.Notes)
+            var allComments = mergeRequest.Comments;
+            foreach (var discussionNote in discussion.Notes)
             {
-                note.Resolved = true;
+                var note = allComments.FirstOrDefault(x => x.Id == discussionNote.Id);
+                if (note != null)
+                {
+                    note.Resolved = resolve.Resolved;
+                }
             }
 
-            return discussion;
+            return mergeRequest.GetDiscussions().First(x => string.Equals(x.Id, resolve.Id, StringComparison.Ordinal));
         }
     }
 
