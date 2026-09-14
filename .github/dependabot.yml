@@ -28,6 +28,8 @@ updates:
       - dependency-name: "System.Text.Json"
       # LibGit2Sharp 0.31.0+ no longer targets net6.0
       - dependency-name: "LibGit2Sharp"
+      # Verify 33.0.0+ requires sponsorship
+      - dependency-name: "Verify.NUnit"
     rebase-strategy: auto
     open-pull-requests-limit: 20
     groups:
