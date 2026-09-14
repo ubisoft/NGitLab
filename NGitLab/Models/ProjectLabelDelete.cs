@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
-[Obsolete]
+[Obsolete("Class used in obsolete DeleteProjectLabel method; use DeleteProjectLabelAsync instead.")]
 public sealed class ProjectLabelDelete
 {
     [JsonPropertyName("id")]
