@@ -52,7 +52,7 @@ public sealed class GitLabTestContext : IDisposable
             BaseAddress = DockerContainer.GitLabUrl,
             DefaultRequestHeaders =
             {
-                { "Cookie", "_gitlab_session=" + DockerContainer.Credentials.AdminCookies },
+                { "Authorization", "Bearer " + DockerContainer.Credentials.AdminUserToken },
             },
         };
     }
