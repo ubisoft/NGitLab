@@ -59,6 +59,7 @@ public class ContributorsTests
             Branch = project.DefaultBranch,
             StartBranch = project.DefaultBranch,
             CommitMessage = "test",
+            AllowEmpty = true,
         });
 
         var contributors = await GitLabTestContext.RetryUntilAsync(() => contributorsClient.All.ToList(), c => c.Count >= 2, TimeSpan.FromMinutes(2));

@@ -41,12 +41,10 @@ updates:
         exclude-patterns:
           - "*Analyzer*"
           - "Microsoft.NET.Test.Sdk"
-          - "Microsoft.Playwright"
       test-dependencies:
         patterns:
           - "coverlet.collector"
           - "Microsoft.NET.Test.Sdk"
-          - "Microsoft.Playwright"
           - "NSubstitute"
           - "*NUnit*"
         exclude-patterns:
@@ -60,6 +58,5 @@ updates:
           - "System.*"
           - "coverlet.collector"
           - "Microsoft.NET.Test.Sdk"
-          - "Microsoft.Playwright"
           - "NSubstitute"
           - "*NUnit*"

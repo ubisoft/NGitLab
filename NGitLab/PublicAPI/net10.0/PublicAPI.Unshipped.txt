@@ -1564,6 +1564,8 @@ NGitLab.Models.CommitCherryPick.Sha.set -> void
 NGitLab.Models.CommitCreate
 NGitLab.Models.CommitCreate.Actions.get -> System.Collections.Generic.IList<NGitLab.Models.CreateCommitAction>
 NGitLab.Models.CommitCreate.Actions.set -> void
+NGitLab.Models.CommitCreate.AllowEmpty.get -> bool?
+NGitLab.Models.CommitCreate.AllowEmpty.set -> void
 NGitLab.Models.CommitCreate.AuthorEmail.get -> string
 NGitLab.Models.CommitCreate.AuthorEmail.set -> void
 NGitLab.Models.CommitCreate.AuthorName.get -> string
