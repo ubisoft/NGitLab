@@ -478,13 +478,13 @@ public class RepositoryClientTests
     {
         // Arrange
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
-        var firstCommitId = context.Commits[0].Id.ToString();
+        var lastCommitId = context.Commits[1].Id.ToString();
         var path = RepositoryClientTestsContext.SubfolderName;
         var fileArchiveQuery = new FileArchiveQuery
         {
             Format = FileArchiveFormat.Zip,
             Path = path,
-            Ref = firstCommitId,
+            Ref = lastCommitId,
         };
 
         // Act
@@ -498,7 +498,7 @@ public class RepositoryClientTests
             Assert.That(requestPathAndQuery, Is.Not.Null);
             Assert.That(requestPathAndQuery.Contains($"/archive.zip", StringComparison.OrdinalIgnoreCase), Is.True);
             Assert.That(requestPathAndQuery.Contains($"path={path}", StringComparison.OrdinalIgnoreCase), Is.True);
-            Assert.That(requestPathAndQuery.Contains($"sha={firstCommitId}", StringComparison.OrdinalIgnoreCase), Is.True);
+            Assert.That(requestPathAndQuery.Contains($"sha={lastCommitId}", StringComparison.OrdinalIgnoreCase), Is.True);
         }
     }
 
