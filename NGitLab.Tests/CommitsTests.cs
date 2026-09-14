@@ -81,6 +81,7 @@ public class CommitsTests
         {
             Branch = "test-mr",
             CommitMessage = "Test to retrieve MR from commit sha",
+            AllowEmpty = true,
         });
 
         var mergeRequestTitle = "Test to retrieve MR from commit sha";
