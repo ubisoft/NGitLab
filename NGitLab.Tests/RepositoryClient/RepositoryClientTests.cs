@@ -474,8 +474,8 @@ public class RepositoryClientTests
 
     [Test]
     [NGitLabRetry]
-    [TestCase("", 0)]
-    [TestCase(RepositoryClientTestsContext.SubfolderName, 1)]
+    [TestCase("", 0)] // First commit creates a file on root
+    [TestCase(RepositoryClientTestsContext.SubfolderName, 1)] // Second commit creates a file on a subfolder
     public async Task GetArchive_QuerySpecifiesAllParameters_AllParametersPassedCorrectly(string path, int commitIndex)
     {
         // Arrange

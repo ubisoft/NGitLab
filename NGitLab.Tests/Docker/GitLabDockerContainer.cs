@@ -32,7 +32,7 @@ public class GitLabDockerContainer
     /// <para>Keep in sync with .github/workflows/ci.yml, use the lowest supported version</para>
     /// <para>List of available versions: https://hub.docker.com/r/gitlab/gitlab-ee/tags/</para>
     /// </remarks>
-    private const string LocalGitLabDockerVersion = "18.1.6-ee.0";
+    private const string LocalGitLabDockerVersion = "19.3.1-ee.0";
 
     private static string s_creationErrorMessage;
     private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
