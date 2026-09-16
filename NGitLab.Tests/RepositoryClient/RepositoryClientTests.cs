@@ -474,17 +474,18 @@ public class RepositoryClientTests
 
     [Test]
     [NGitLabRetry]
-    public async Task GetArchive_QuerySpecifiesAllParameters_AllParametersPassedCorrectly()
+    [TestCase("", 0)]
+    [TestCase(RepositoryClientTestsContext.SubfolderName, 1)]
+    public async Task GetArchive_QuerySpecifiesAllParameters_AllParametersPassedCorrectly(string path, int commitIndex)
     {
         // Arrange
         using var context = await RepositoryClientTestsContext.CreateAsync(commitCount: 2);
-        var lastCommitId = context.Commits[1].Id.ToString();
-        var path = RepositoryClientTestsContext.SubfolderName;
+        var commit = context.Commits[commitIndex].Id.ToString();
         var fileArchiveQuery = new FileArchiveQuery
         {
             Format = FileArchiveFormat.Zip,
             Path = path,
-            Ref = lastCommitId,
+            Ref = commit,
         };
 
         // Act
@@ -498,7 +499,7 @@ public class RepositoryClientTests
             Assert.That(requestPathAndQuery, Is.Not.Null);
             Assert.That(requestPathAndQuery.Contains($"/archive.zip", StringComparison.OrdinalIgnoreCase), Is.True);
             Assert.That(requestPathAndQuery.Contains($"path={path}", StringComparison.OrdinalIgnoreCase), Is.True);
-            Assert.That(requestPathAndQuery.Contains($"sha={lastCommitId}", StringComparison.OrdinalIgnoreCase), Is.True);
+            Assert.That(requestPathAndQuery.Contains($"sha={commit}", StringComparison.OrdinalIgnoreCase), Is.True);
         }
     }
 
