@@ -7,8 +7,13 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
+      day: "monday"
+      time: "05:00"
+      timezone: "America/Montreal"
     rebase-strategy: auto
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
     groups:
       github-actions:
         patterns:
@@ -24,13 +29,26 @@ updates:
     ignore:
       # Don't bump these to 9.x.y, as those versions may not be totally compatible with .NET 6 or 8
       - dependency-name: "Microsoft.AspNetCore.WebUtilities"
+        versions: [">= 9.0.0"]
       - dependency-name: "Microsoft.Bcl.AsyncInterfaces"
+        versions: [">= 9.0.0"]
       - dependency-name: "System.Text.Json"
+        versions: [">= 9.0.0"]
       # LibGit2Sharp 0.31.0+ no longer targets net6.0
       - dependency-name: "LibGit2Sharp"
+        versions: [">= 0.31.0"]
+      # Verify 33.0.0+ requires sponsorship
+      - dependency-name: "Verify.NUnit"
+        versions: [">= 33.0.0"]
     rebase-strategy: auto
-    open-pull-requests-limit: 20
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
     groups:
+      # Groups are matched top-down: the first group whose patterns match (and
+      # exclude-patterns don't) wins, so ordering below is significant, e.g.
+      # NUnit.Analyzers matches "*Analyzer*" here before test-dependencies is
+      # ever considered.
       code-analyzers:
         patterns:
           - "*Analyzer*"
