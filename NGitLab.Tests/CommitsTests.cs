@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
+using NuGet.Versioning;
 using NUnit.Framework;
 
 namespace NGitLab.Tests;
@@ -70,9 +71,13 @@ public class CommitsTests
 
     [Test]
     [NGitLabRetry]
-    public async Task Test_can_get_merge_request_associated_to_commit()
+    [TestCase("(,19.0.0)", null)] // v18 allowed empty commits by default
+    [TestCase("[19.0.0,)", true)] // v19 only allow empty commits if specified
+    public async Task Test_can_get_merge_request_associated_to_commit(string versionRange, bool? allowEmpty)
     {
         using var context = await GitLabTestContext.CreateAsync();
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse(versionRange));
+
         var project = context.CreateProject();
 
         context.Client.GetRepository(project.Id).Branches.Create(new BranchCreate { Name = "test-mr", Ref = project.DefaultBranch });
@@ -81,6 +86,7 @@ public class CommitsTests
         {
             Branch = "test-mr",
             CommitMessage = "Test to retrieve MR from commit sha",
+            AllowEmpty = allowEmpty,
         });
 
         var mergeRequestTitle = "Test to retrieve MR from commit sha";

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NGitLab.Models;
 using NGitLab.Tests.Docker;
+using NuGet.Versioning;
 using NUnit.Framework;
 
 namespace NGitLab.Tests;
@@ -25,9 +26,14 @@ public class ContributorsTests
 
     [Test]
     [NGitLabRetry]
-    public async Task Test_can_get_MultipleContributors()
+
+    [TestCase("(,19.0.0)", null)] // v18 allowed empty commits by default
+    [TestCase("[19.0.0,)", true)] // v19 only allow empty commits if specified
+    public async Task Test_can_get_MultipleContributors(string versionRange, bool? allowEmpty)
     {
         using var context = await GitLabTestContext.CreateAsync();
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse(versionRange));
+
         var project = context.CreateProject(initializeWithCommits: true);
         var contributorsClient = context.Client.GetRepository(project.Id).Contributors;
         var currentUser = context.Client.Users.Current;
@@ -59,6 +65,7 @@ public class ContributorsTests
             Branch = project.DefaultBranch,
             StartBranch = project.DefaultBranch,
             CommitMessage = "test",
+            AllowEmpty = allowEmpty,
         });
 
         var contributors = await GitLabTestContext.RetryUntilAsync(() => contributorsClient.All.ToList(), c => c.Count >= 2, TimeSpan.FromMinutes(2));

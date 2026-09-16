@@ -13,9 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Docker.DotNet;
 using Docker.DotNet.Models;
-using Microsoft.Playwright;
 using NGitLab.Models;
-using NuGet.Versioning;
 using NUnit.Framework;
 using Polly;
 
@@ -34,12 +32,7 @@ public class GitLabDockerContainer
     /// <para>Keep in sync with .github/workflows/ci.yml, use the lowest supported version</para>
     /// <para>List of available versions: https://hub.docker.com/r/gitlab/gitlab-ee/tags/</para>
     /// </remarks>
-    private const string LocalGitLabDockerVersion = "18.1.6-ee.0";
-
-    /// <summary>
-    /// Resolved GitLab version taken from the help page once logged in
-    /// </summary>
-    private static string ResolvedGitLabVersion;
+    private const string LocalGitLabDockerVersion = "19.3.1-ee.0";
 
     private static string s_creationErrorMessage;
     private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
@@ -113,21 +106,7 @@ public class GitLabDockerContainer
             await SpawnDockerContainerAsync().ConfigureAwait(false);
         }
 
-        EnsureChromiumIsInstalled();
-
-        // Use Playwright to launch Chromium
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-        {
-            // Headless = false,   // Uncomment to have browser window visible
-            // SlowMo = 1000,      // Slows down Playwright operations by the specified amount of ms.
-        });
-        await using var browserContext = await browser.NewContextAsync();
-
-        await LoginAsync(browserContext);
-        await ResolveGitLabVersionAsync(browserContext).ConfigureAwait(false);
-
-        await LoadCredentialsAsync().ConfigureAwait(false);
+        LoadCredentials();
 
         if (Credentials != null)
         {
@@ -135,19 +114,8 @@ public class GitLabDockerContainer
             return;
         }
 
-        await GenerateCredentialsAsync(browserContext).ConfigureAwait(false);
+        await GenerateCredentialsAsync().ConfigureAwait(false);
         PersistCredentialsAsync();
-
-        static void EnsureChromiumIsInstalled()
-        {
-            TestContext.Progress.WriteLine("Making sure Chromium is installed");
-
-            var exitCode = Microsoft.Playwright.Program.Main(new[] { "install", "--force", "chromium", "--with-deps" });
-            if (exitCode != 0)
-                throw new InvalidOperationException($"Cannot install browser (exit code: {exitCode})");
-
-            TestContext.Progress.WriteLine("Chromium installed");
-        }
     }
 
     private static async Task ValidateDockerIsEnabled(DockerClient client)
@@ -316,7 +284,7 @@ public class GitLabDockerContainer
         TestContext.Progress.WriteLine("GitLab Docker container is ready");
     }
 
-    private async Task GenerateCredentialsAsync(IBrowserContext browserContext)
+    private async Task GenerateCredentialsAsync()
     {
         Console.WriteLine("Requesting credentials from GitLab instance");
 
@@ -333,84 +301,31 @@ public class GitLabDockerContainer
         {
             TestContext.Progress.WriteLine("Generating Credentials");
 
-            var gitLabVersionAsNuGetVersion = NuGetVersion.Parse(ResolvedGitLabVersion);
-            var isMajorVersion15 = VersionRange.Parse("[15.0,16.0)").Satisfies(gitLabVersionAsNuGetVersion);
-            var isMajorVersionAtLeast16 = VersionRange.Parse("[16.0,)").Satisfies(gitLabVersionAsNuGetVersion);
-            var isMajorVersionAtLeast18 = VersionRange.Parse("[18.0,)").Satisfies(gitLabVersionAsNuGetVersion);
+            using var conf = new DockerClientConfiguration(new Uri(OperatingSystem.IsWindows() ? "npipe://./pipe/docker_engine" : "unix:///var/run/docker.sock"));
+            using var client = conf.CreateClient();
+            await ValidateDockerIsEnabled(client).ConfigureAwait(false);
 
-            TestContext.Progress.WriteLine("Creating root token");
+            TestContext.Progress.WriteLine("Creating root token via 'gitlab-rails runner'");
 
-            var accessTokenRelativeUri = "/-/profile/personal_access_tokens";
-            if (isMajorVersionAtLeast18)
+            // Keep only scopes the running GitLab version supports (an unknown scope makes `create!` raise).
+            const string script = """
+                desired_scopes = %w[api read_user read_api read_repository write_repository sudo admin_mode create_runner manage_runner k8s_proxy]
+                available_scopes = Gitlab::Auth.all_available_scopes.map(&:to_s)
+                token = User.find_by_username!('root').personal_access_tokens.create!(
+                  name: 'NGitLabClientTest',
+                  scopes: (desired_scopes & available_scopes),
+                  expires_at: 1.year.from_now)
+                puts token.token
+                """;
+
+            var retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(20, _ => TimeSpan.FromSeconds(3));
+            var token = await retryPolicy.ExecuteAsync(async () =>
             {
-                accessTokenRelativeUri = "/-/user_settings/personal_access_tokens";
-            }
-
-            var page = await browserContext.NewPageAsync();
-            await page.GotoAsync(new Uri(GitLabUrl, accessTokenRelativeUri).ToString());
-
-            var formLocator = page.Locator("main#content-body form");
-
-            var tokenName = "GitLabClientTest-" + DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
-
-            if (isMajorVersionAtLeast18)
-            {
-                await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync(new LocatorClickOptions { Timeout = 5_000 });
-                formLocator = page.Locator("form[id='token-create-form']");
-                await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
-            }
-            else if (isMajorVersionAtLeast16)
-            {
-                await SkipVersionReminder(page);
-
-                await page.Locator("main[id='content-body'] button[data-testid='add-new-token-button']").ClickAsync(new LocatorClickOptions { Timeout = 5_000 });
-                formLocator = page.Locator("main[id='content-body'] form[id='js-new-access-token-form']");
-                await formLocator.Locator("input[data-testid='access-token-name-field']").FillAsync(tokenName);
-            }
-            else if (isMajorVersion15)
-            {
-                // Try the "old" 15.x.y way
-                formLocator = page.Locator("main#content-body form");
-                await formLocator.GetByLabel("Token name").FillAsync(tokenName);
-            }
-            else
-            {
-                s_creationErrorMessage = $"Unable to generate an admin token: resolved GitLab version '{ResolvedGitLabVersion}' doesn't match any supported range in '{nameof(GenerateCredentialsAsync)}'.";
-                Assert.Fail(s_creationErrorMessage);
-            }
-
-            foreach (var checkbox in await formLocator.GetByRole(AriaRole.Checkbox).AllAsync())
-            {
-                await checkbox.CheckAsync(new LocatorCheckOptions { Force = true });
-            }
-
-            string token = null;
-            if (isMajorVersionAtLeast18)
-            {
-                await formLocator.GetByTestId("create-token-button").ClickAsync();
-                await page.GetByRole(AriaRole.Alert).GetByLabel("Click to reveal").ClickAsync();
-                token = await page.GetByTestId("created-access-token-field").InputValueAsync();
-            }
-            else
-            {
-                await formLocator.GetByRole(AriaRole.Button, new() { Name = "Create personal access token" }).ClickAsync();
-                token = await page.Locator("button[title='Copy personal access token']").GetAttributeAsync("data-clipboard-text");
-            }
+                var containerId = await ResolveGitLabContainerIdAsync(client).ConfigureAwait(false);
+                return await RunGitLabRailsRunnerAsync(client, containerId, script).ConfigureAwait(false);
+            }).ConfigureAwait(false);
 
             credentials.AdminUserToken = token;
-
-            // Get admin login cookie
-            // result.Cookie: experimentation_subject_id=XXX; _gitlab_session=XXXX; known_sign_in=XXXX
-            TestContext.Progress.WriteLine("Extracting GitLab session cookie");
-            var cookies = await browserContext.CookiesAsync(new[] { GitLabUrl.AbsoluteUri });
-            foreach (var cookie in cookies)
-            {
-                if (cookie.Name == "_gitlab_session")
-                {
-                    credentials.AdminCookies = cookie.Value;
-                    break;
-                }
-            }
         }
 
         void GenerateUserToken()
@@ -454,15 +369,48 @@ public class GitLabDockerContainer
         }
     }
 
-    private static async Task SkipVersionReminder(IPage page)
+    private static async Task<string> ResolveGitLabContainerIdAsync(DockerClient client)
     {
-        try
+        var containers = await client.Containers.ListContainersAsync(new ContainersListParameters { All = true }).ConfigureAwait(false);
+
+        var container = containers.FirstOrDefault(c => c.Names.Contains("/" + ContainerName, StringComparer.Ordinal))
+            ?? containers.FirstOrDefault(c => c.Image.StartsWith(ImageName, StringComparison.Ordinal));
+
+        if (container == null)
+            throw new InvalidOperationException($"Cannot find a running Docker container for image '{ImageName}' to generate credentials from.");
+
+        return container.ID;
+    }
+
+    private static async Task<string> RunGitLabRailsRunnerAsync(DockerClient client, string containerId, string script)
+    {
+        var execCreateResponse = await client.Exec.ExecCreateContainerAsync(containerId, new ContainerExecCreateParameters
         {
-            await page.Locator("button[data-testid='alert-modal-remind-button']").ClickAsync(new LocatorClickOptions { Timeout = 3_000 });
-        }
-        catch (Exception)
+            AttachStdout = true,
+            AttachStderr = true,
+            Cmd = ["gitlab-rails", "runner", script],
+        }).ConfigureAwait(false);
+
+        string stdout;
+        string stderr;
+        using (var stream = await client.Exec.StartAndAttachContainerExecAsync(execCreateResponse.ID, tty: false).ConfigureAwait(false))
         {
+            (stdout, stderr) = await stream.ReadOutputToEndAsync(CancellationToken.None).ConfigureAwait(false);
         }
+
+        var inspectResponse = await client.Exec.InspectContainerExecAsync(execCreateResponse.ID).ConfigureAwait(false);
+        if (inspectResponse.ExitCode != 0)
+            throw new InvalidOperationException($"'gitlab-rails runner' failed with exit code {inspectResponse.ExitCode}.\nStdout: {stdout}\nStderr: {stderr}");
+
+        var token = stdout
+            .Split('\n')
+            .Select(line => line.Trim())
+            .LastOrDefault(line => line.Length > 0);
+
+        if (string.IsNullOrEmpty(token))
+            throw new InvalidOperationException($"'gitlab-rails runner' did not output a token.\nStdout: {stdout}\nStderr: {stderr}");
+
+        return token;
     }
 
     private void PersistCredentialsAsync()
@@ -473,40 +421,26 @@ public class GitLabDockerContainer
         File.WriteAllText(path, json);
     }
 
-    private async Task LoadCredentialsAsync()
+    private void LoadCredentials()
     {
         var file = GetCredentialsFilePath();
-        if (File.Exists(file))
+        if (!File.Exists(file))
+            return;
+
+        var json = File.ReadAllText(file);
+        var credentials = JsonSerializer.Deserialize<GitLabCredential>(json);
+        if (credentials.AdminUserToken == null || credentials.UserToken == null)
+            return;
+
+        var client = new GitLabClient(GitLabUrl.ToString(), credentials.AdminUserToken);
+        try
         {
-            var json = File.ReadAllText(file);
-            var credentials = JsonSerializer.Deserialize<GitLabCredential>(json);
-            if (credentials.AdminUserToken == null || credentials.UserToken == null)
-                return;
-
-            var client = new GitLabClient(GitLabUrl.ToString(), credentials.AdminUserToken);
-            try
-            {
-                // Validate token
-                var user = client.Users.Current;
-
-                using var httpClient = new HttpClient
-                {
-                    BaseAddress = GitLabUrl,
-                    DefaultRequestHeaders =
-                    {
-                        { "Cookie", "_gitlab_session=" + credentials.AdminCookies },
-                    },
-                };
-                var response = await httpClient.GetAsync(new Uri("/", UriKind.RelativeOrAbsolute));
-                if (response.RequestMessage.RequestUri.PathAndQuery == "/users/sign_in")
-                    return;
-
-                // Validate cookie
-                Credentials = credentials;
-            }
-            catch (GitLabException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
-            {
-            }
+            // Validate token
+            _ = client.Users.Current;
+            Credentials = credentials;
+        }
+        catch (GitLabException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+        {
         }
     }
 
@@ -540,84 +474,4 @@ public class GitLabDockerContainer
         s_creationErrorMessage = "GitLab is not well configured in CI";
         Assert.Fail(s_creationErrorMessage);
     }
-
-    private async Task ResolveGitLabVersionAsync(IBrowserContext browserContext)
-    {
-        Console.WriteLine("Resolving GitLab version from help page...");
-        var page = await browserContext.NewPageAsync();
-        await page.GotoAsync(new Uri(GitLabUrl, "help").AbsoluteUri);
-        var titleLink = await page.QuerySelectorAsync("h1 a");
-
-        if (titleLink is null)
-        {
-            s_creationErrorMessage = "Cannot find title on the help page to get GitLab version";
-            Assert.Fail(s_creationErrorMessage);
-        }
-
-        var version = await titleLink.TextContentAsync();
-
-        if (string.IsNullOrEmpty(version))
-        {
-            s_creationErrorMessage = "Found title on the help page, but the version is empty";
-            Assert.Fail(s_creationErrorMessage);
-        }
-
-        ResolvedGitLabVersion = version.Trim().TrimStart('v');
-        Console.WriteLine($"GitLab resolved version is '{ResolvedGitLabVersion}'");
-
-        await CloseRedesignModal(page);
-    }
-
-    private async Task LoginAsync(IBrowserContext browserContext)
-    {
-        var page = await browserContext.NewPageAsync();
-        await page.GotoAsync(GitLabUrl.AbsoluteUri);
-        var url = await GetCurrentUrl(page);
-
-        if (url != "/users/sign_in")
-        {
-            Console.WriteLine("Already logged in on GitLab instance");
-            return;
-        }
-
-        Console.WriteLine("Logging in on GitLab instance...");
-
-        var v15LoginInput = "form#new_user input[name='user[login]']";
-        var v16LoginInput = "form[data-testid='sign-in-form'] input[name='user[login]']";
-
-        if (await page.QuerySelectorAsync(v15LoginInput) is not null)
-        {
-            await page.Locator(v15LoginInput).FillAsync(AdminUserName);
-            await page.Locator("form#new_user input[name='user[password]']").FillAsync(AdminPassword);
-        }
-        else if (await page.QuerySelectorAsync(v16LoginInput) is not null)
-        {
-            await page.Locator(v16LoginInput).FillAsync(AdminUserName);
-            await page.Locator("form[data-testid='sign-in-form'] input[name='user[password]']").FillAsync(AdminPassword);
-        }
-        else
-        {
-            s_creationErrorMessage = $"Unable to find the correct login input. Please make sure that login form for the GitLab version you target is supported in '{nameof(LoginAsync)}'";
-            Assert.Fail(s_creationErrorMessage);
-        }
-
-        var checkbox = page.Locator("form[data-testid='sign-in-form'] input[type=checkbox][name='user[remember_me]']");
-        await checkbox.CheckAsync(new LocatorCheckOptions { Force = true });
-
-        await page.RunAndWaitForResponseAsync(async () =>
-        {
-            await page.EvalOnSelectorAsync("form[data-testid='sign-in-form']", "form => form.submit()");
-        }, response => response.Status == 200);
-    }
-
-    private async Task CloseRedesignModal(IPage page)
-    {
-        var isModalVisible = await page.IsVisibleAsync("div#dap_welcome_modal button[aria-label='Close']");
-        if (isModalVisible)
-        {
-            await page.Locator("div#dap_welcome_modal button[aria-label='Close']").ClickAsync();
-        }
-    }
-
-    private static Task<string> GetCurrentUrl(IPage page) => page.EvaluateAsync<string>("window.location.pathname");
 }

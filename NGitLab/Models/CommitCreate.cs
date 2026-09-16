@@ -30,6 +30,9 @@ public class CommitCreate
 
     [JsonPropertyName("force")]
     public bool? Force { get; set; }
+
+    [JsonPropertyName("allow_empty")]
+    public bool? AllowEmpty { get; set; }
 }
 
 public class CreateCommitAction
