@@ -1,7 +1,6 @@
 #pragma warning disable MA0004
 #pragma warning disable MA0006
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -13,6 +12,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Docker.DotNet;
 using Docker.DotNet.Models;
+using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Containers;
 using NGitLab.Models;
 using NUnit.Framework;
 using Polly;
@@ -37,6 +38,13 @@ public class GitLabDockerContainer
     private static string s_creationErrorMessage;
     private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
     private static GitLabDockerContainer s_instance;
+
+    /// <summary>
+    /// Set only when the container was spawned locally via Testcontainers.
+    /// On CI, GitLab already runs as a pre-existing service container, so this stays null
+    /// and credential generation falls back to a raw Docker Engine API exec call.
+    /// </summary>
+    private IContainer _container;
 
     public string Host { get; private set; } = "localhost";
 
@@ -138,148 +146,59 @@ public class GitLabDockerContainer
     private async Task SpawnDockerContainerAsync()
     {
         Console.WriteLine($"Executing tests locally. Spawning GitLab docker image version '{LocalGitLabDockerVersion}'");
-        using var httpClient = new HttpClient();
 
-        // Spawn the container
+        // Disables non-useful features
+        // See https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template
+        string[] omnibusConfig =
+        [
+            $"external_url 'http://localhost:{HttpPort.ToString(CultureInfo.InvariantCulture)}/'",
+            "gitlab_rails['gitlab_email_enabled'] = false",
+            "gitlab_rails['incoming_email_enabled'] = false",
+            "gitlab_rails['lfs_enabled'] = false",
+            "gitlab_rails['terraform_state_enabled'] = false",
+            "gitlab_rails['pages_object_store_enabled'] = false",
+            "gitlab_rails['usage_ping_enabled'] = false",
+            "gitlab_rails['registry_enabled'] = false",
+            "registry['enable'] = false",
+            "sidekiq['metrics_enabled'] = false",
+            "logrotate['enable'] = false",
+            "gitlab_pages['enable'] = false",
+            "gitlab_rails['gitlab_kas_enabled'] = false",
+            "mattermost['enable'] = false",
+            "alertmanager['enable'] = false",
+            "node_exporter['enable'] = false",
+            "redis_exporter['enable'] = false",
+            "postgres_exporter['enable'] = false",
+            "pgbouncer_exporter['enable'] = false",
+            "gitlab_exporter['enable'] = false",
+            "gitlab_rails['kerberos_enabled'] = false",
+            "gitlab_rails['packages_enabled'] = false",
+            "gitlab_rails['dependency_proxy_enabled'] = false",
+        ];
+
         // https://docs.gitlab.com/omnibus/settings/configuration.html
-        using var conf = new DockerClientConfiguration(new Uri(OperatingSystem.IsWindows() ? "npipe://./pipe/docker_engine" : "unix:///var/run/docker.sock"));
-        using var client = conf.CreateClient();
-        await ValidateDockerIsEnabled(client);
+        // GitLab reports "healthy" long before it's actually ready to serve requests, so we wait
+        // on the HTTP endpoint itself rather than on the container's health status.
+        // WithReuse keeps an existing container running across local test runs (GitLab takes
+        // minutes to boot); bumping LocalGitLabDockerVersion requires removing the old container
+        // manually (`docker rm -f NGitLabClientTests`) since reuse matching is name+config based.
+        _container = new ContainerBuilder()
+            .WithImage(ImageName + ":" + LocalGitLabDockerVersion)
+            .WithName(ContainerName)
+            .WithHostname("localhost")
+            .WithPortBinding(HttpPort, HttpPort)
+            .WithEnvironment("GITLAB_ROOT_PASSWORD", AdminPassword)
+            .WithEnvironment("GITLAB_OMNIBUS_CONFIG", string.Join("; ", omnibusConfig))
+            .WithCreateParameterModifier(p => p.HostConfig.ShmSize = 512 * 1024 * 1024) // Default 64mb is too small and causes intermittent GitLab crashes
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                .UntilHttpRequestIsSucceeded(
+                    r => r.ForPort((ushort)HttpPort).ForPath("/"),
+                    o => o.WithTimeout(TimeSpan.FromMinutes(10)).WithInterval(TimeSpan.FromSeconds(5))))
+            .WithReuse(true)
+            .Build();
 
-        TestContext.Progress.WriteLine("Looking up GitLab Docker containers");
-        var containers = await client.Containers.ListContainersAsync(new ContainersListParameters { All = true }).ConfigureAwait(false);
-        var container = containers.FirstOrDefault(c => c.Names.Contains("/" + ContainerName, StringComparer.Ordinal));
-        if (container != null)
-        {
-            TestContext.Progress.WriteLine("Verifying if the GitLab Docker container is using the right image");
-            var inspect = await client.Containers.InspectContainerAsync(container.ID).ConfigureAwait(false);
-            var inspectImage = await client.Images.InspectImageAsync(ImageName + ":" + LocalGitLabDockerVersion).ConfigureAwait(false);
-            if (inspect.Image != inspectImage.ID)
-            {
-                TestContext.Progress.WriteLine("Ending GitLab Docker container, as it's using the wrong image");
-                await client.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters { Force = true }).ConfigureAwait(false);
-                container = null;
-            }
-        }
-
-        if (container == null)
-        {
-            // Download GitLab images
-            TestContext.Progress.WriteLine("Making sure the right GitLab Docker image is available locally");
-            await client.Images.CreateImageAsync(new ImagesCreateParameters { FromImage = ImageName, Tag = LocalGitLabDockerVersion }, new AuthConfig(), new Progress<JSONMessage>()).ConfigureAwait(false);
-
-            // Create the container
-            TestContext.Progress.WriteLine("Creating the GitLab Docker container");
-            var hostConfig = new HostConfig
-            {
-                PortBindings = new Dictionary<string, IList<PortBinding>>(StringComparer.Ordinal)
-                {
-                    { HttpPort.ToString(CultureInfo.InvariantCulture) + "/tcp", new List<PortBinding> { new PortBinding { HostPort = HttpPort.ToString(CultureInfo.InvariantCulture) } } },
-                },
-
-                // Update size of /dev/shm to to 512mb (default: 64mb)
-                // Avoids intermittent crashes of GitLab
-                ShmSize = 512 * 1024 * 1024,
-            };
-
-            // Disables non-useful features
-            // See https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template
-            string[] omnibusConfig =
-            [
-                $"external_url 'http://localhost:{HttpPort.ToString(CultureInfo.InvariantCulture)}/'",
-                "gitlab_rails['gitlab_email_enabled'] = false",
-                "gitlab_rails['incoming_email_enabled'] = false",
-                "gitlab_rails['lfs_enabled'] = false",
-                "gitlab_rails['terraform_state_enabled'] = false",
-                "gitlab_rails['pages_object_store_enabled'] = false",
-                "gitlab_rails['usage_ping_enabled'] = false",
-                "gitlab_rails['registry_enabled'] = false",
-                "registry['enable'] = false",
-                "sidekiq['metrics_enabled'] = false",
-                "logrotate['enable'] = false",
-                "gitlab_pages['enable'] = false",
-                "gitlab_rails['gitlab_kas_enabled'] = false",
-                "mattermost['enable'] = false",
-                "alertmanager['enable'] = false",
-                "node_exporter['enable'] = false",
-                "redis_exporter['enable'] = false",
-                "postgres_exporter['enable'] = false",
-                "pgbouncer_exporter['enable'] = false",
-                "gitlab_exporter['enable'] = false",
-                "gitlab_rails['kerberos_enabled'] = false",
-                "gitlab_rails['packages_enabled'] = false",
-                "gitlab_rails['dependency_proxy_enabled'] = false",
-            ];
-
-            var response = await client.Containers.CreateContainerAsync(new CreateContainerParameters
-            {
-                Hostname = "localhost",
-                Image = ImageName + ":" + LocalGitLabDockerVersion,
-                Name = ContainerName,
-                Tty = false,
-                HostConfig = hostConfig,
-                ExposedPorts = new Dictionary<string, EmptyStruct>(StringComparer.Ordinal)
-                {
-                    { HttpPort.ToString(CultureInfo.InvariantCulture) + "/tcp", default },
-                },
-                Env =
-                [
-                    $"GITLAB_ROOT_PASSWORD={AdminPassword}",
-                    $"GITLAB_OMNIBUS_CONFIG={string.Join("; ", omnibusConfig)}",
-                ],
-            }).ConfigureAwait(false);
-
-            containers = await client.Containers.ListContainersAsync(new ContainersListParameters { All = true }).ConfigureAwait(false);
-            container = containers.First(c => c.ID == response.ID);
-        }
-
-        // Start the container
-        if (container.State != "running")
-        {
-            TestContext.Progress.WriteLine("Starting the GitLab Docker container");
-            var started = await client.Containers.StartContainerAsync(container.ID, new ContainerStartParameters()).ConfigureAwait(false);
-            if (!started)
-            {
-                Assert.Fail("Cannot start the Docker container");
-            }
-        }
-
-        // Wait for the container to be ready.
-        var stopwatch = Stopwatch.StartNew();
-        while (true)
-        {
-            TestContext.Progress.WriteLine($@"Waiting for the GitLab Docker container to be ready ({stopwatch.Elapsed:mm\:ss})");
-            var status = await client.Containers.InspectContainerAsync(container.ID);
-            if (!status.State.Running)
-                throw new InvalidOperationException($"Container '{status.ID}' is not running");
-
-            var healthState = status.State.Health.Status;
-
-            // unhealthy is valid as long as the container is running as it may indicate a slow creation
-            if (healthState is "starting" or "unhealthy")
-            {
-            }
-            else if (healthState is "healthy")
-            {
-                // A healthy container doesn't mean the service is actually running.
-                // GitLab has lots of configuration steps that are still running when the container is healthy.
-                try
-                {
-                    using var response = await httpClient.GetAsync(GitLabUrl).ConfigureAwait(false);
-                    if (response.IsSuccessStatusCode)
-                        break;
-                }
-                catch
-                {
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException($"Container status '{healthState}' is not supported");
-            }
-
-            await Task.Delay(5000);
-        }
+        TestContext.Progress.WriteLine("Starting the GitLab Docker container (this can take several minutes on first run)");
+        await _container.StartAsync().ConfigureAwait(false);
 
         TestContext.Progress.WriteLine("GitLab Docker container is ready");
     }
@@ -300,11 +219,6 @@ public class GitLabDockerContainer
         async Task GenerateAdminToken(GitLabCredential credentials)
         {
             TestContext.Progress.WriteLine("Generating Credentials");
-
-            using var conf = new DockerClientConfiguration(new Uri(OperatingSystem.IsWindows() ? "npipe://./pipe/docker_engine" : "unix:///var/run/docker.sock"));
-            using var client = conf.CreateClient();
-            await ValidateDockerIsEnabled(client).ConfigureAwait(false);
-
             TestContext.Progress.WriteLine("Creating root token via 'gitlab-rails runner'");
 
             // Keep only scopes the running GitLab version supports (an unknown scope makes `create!` raise).
@@ -319,13 +233,7 @@ public class GitLabDockerContainer
                 """;
 
             var retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(20, _ => TimeSpan.FromSeconds(3));
-            var token = await retryPolicy.ExecuteAsync(async () =>
-            {
-                var containerId = await ResolveGitLabContainerIdAsync(client).ConfigureAwait(false);
-                return await RunGitLabRailsRunnerAsync(client, containerId, script).ConfigureAwait(false);
-            }).ConfigureAwait(false);
-
-            credentials.AdminUserToken = token;
+            credentials.AdminUserToken = await retryPolicy.ExecuteAsync(() => RunGitLabRailsRunnerAsync(script)).ConfigureAwait(false);
         }
 
         void GenerateUserToken()
@@ -382,25 +290,46 @@ public class GitLabDockerContainer
         return container.ID;
     }
 
-    private static async Task<string> RunGitLabRailsRunnerAsync(DockerClient client, string containerId, string script)
+    // When we spawned the container ourselves (local dev), Testcontainers already holds a reference to it
+    // and can exec into it directly. On CI, GitLab runs as a pre-existing service container we didn't create,
+    // so we fall back to the raw Docker Engine API to find it and exec into it.
+    private async Task<string> RunGitLabRailsRunnerAsync(string script)
     {
-        var execCreateResponse = await client.Exec.ExecCreateContainerAsync(containerId, new ContainerExecCreateParameters
-        {
-            AttachStdout = true,
-            AttachStderr = true,
-            Cmd = ["gitlab-rails", "runner", script],
-        }).ConfigureAwait(false);
-
         string stdout;
         string stderr;
-        using (var stream = await client.Exec.StartAndAttachContainerExecAsync(execCreateResponse.ID, tty: false).ConfigureAwait(false))
+        long? exitCode;
+
+        if (_container != null)
         {
-            (stdout, stderr) = await stream.ReadOutputToEndAsync(CancellationToken.None).ConfigureAwait(false);
+            var result = await _container.ExecAsync(["gitlab-rails", "runner", script]).ConfigureAwait(false);
+            (stdout, stderr, exitCode) = (result.Stdout, result.Stderr, result.ExitCode);
+        }
+        else
+        {
+            using var client = new DockerClientBuilder()
+                .WithEndpoint(new Uri(OperatingSystem.IsWindows() ? "npipe://./pipe/docker_engine" : "unix:///var/run/docker.sock"))
+                .Build();
+            await ValidateDockerIsEnabled(client).ConfigureAwait(false);
+
+            var containerId = await ResolveGitLabContainerIdAsync(client).ConfigureAwait(false);
+            var execCreateResponse = await client.Exec.CreateContainerExecAsync(containerId, new ContainerExecCreateParameters
+            {
+                AttachStdout = true,
+                AttachStderr = true,
+                Cmd = ["gitlab-rails", "runner", script],
+            }).ConfigureAwait(false);
+
+            using (var stream = await client.Exec.StartContainerExecAsync(execCreateResponse.ID, new ContainerExecStartParameters { TTY = false }).ConfigureAwait(false))
+            {
+                (stdout, stderr) = await stream.ReadOutputToEndAsync(CancellationToken.None).ConfigureAwait(false);
+            }
+
+            var inspectResponse = await client.Exec.InspectContainerExecAsync(execCreateResponse.ID).ConfigureAwait(false);
+            exitCode = inspectResponse.ExitCode;
         }
 
-        var inspectResponse = await client.Exec.InspectContainerExecAsync(execCreateResponse.ID).ConfigureAwait(false);
-        if (inspectResponse.ExitCode != 0)
-            throw new InvalidOperationException($"'gitlab-rails runner' failed with exit code {inspectResponse.ExitCode}.\nStdout: {stdout}\nStderr: {stderr}");
+        if (exitCode != 0)
+            throw new InvalidOperationException($"'gitlab-rails runner' failed with exit code {exitCode}.\nStdout: {stdout}\nStderr: {stderr}");
 
         var token = stdout
             .Split('\n')
