@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -18,6 +19,11 @@ public sealed class NGitLabRetryAttribute : NUnitAttribute, IRepeatTest
 
     public class RetryCommand : DelegatingTestCommand
     {
+        // Some failures are caused by GitLab-side operations still settling asynchronously
+        // (e.g. a Sidekiq deletion job). Retrying instantly gives the server no time to catch up,
+        // so back off between attempts instead of hammering the same not-yet-resolved state.
+        private static readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(3);
+
         private readonly int _tryCount;
 
         public RetryCommand(TestCommand innerCommand, int tryCount)
@@ -46,6 +52,7 @@ public sealed class NGitLabRetryAttribute : NUnitAttribute, IRepeatTest
 
                 if (count > 0)
                 {
+                    Thread.Sleep(RetryDelay);
                     context.CurrentResult = context.CurrentTest.MakeTestResult();
                     context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
                 }
