@@ -21,18 +21,18 @@ namespace NGitLab.Tests.Docker;
 
 public class GitLabDockerContainer
 {
-    public const string ContainerName = "NGitLabClientTests";
+    public const string LocalContainerName = "NGitLabClientTests";
     public const string ImageName = "gitlab/gitlab-ee";
 
     /// <summary>
-    /// GitLab docker image version to spawn.
+    /// GitLab Docker image version to spawn.
     /// Used only on local environment (CI should already have a running GitLab instance from its services)
     /// </summary>
     /// <remarks>
     /// <para>Keep in sync with .github/workflows/ci.yml, use the lowest supported version</para>
     /// <para>List of available versions: https://hub.docker.com/r/gitlab/gitlab-ee/tags/</para>
     /// </remarks>
-    private const string LocalGitLabDockerVersion = "19.3.1-ee.0";
+    private const string LocalGitLabDockerVersion = "18.1.6-ee.0";
 
     private static string s_creationErrorMessage;
     private static readonly SemaphoreSlim s_setupLock = new(initialCount: 1, maxCount: 1);
@@ -45,9 +45,9 @@ public class GitLabDockerContainer
     /// </summary>
     private IContainer _localContainer;
 
-    public string Host { get; private set; } = "localhost";
+    public string Host { get; } = "localhost";
 
-    public int HttpPort { get; private set; } = 48624;
+    public int HttpPort { get; } = 48624;
 
     public string AdminUserName { get; } = "root";
 
@@ -63,13 +63,11 @@ public class GitLabDockerContainer
         }
     }
 
-    public string LicenseFile { get; set; }
-
     public Uri GitLabUrl => new("http://" + Host + ":" + HttpPort.ToString(CultureInfo.InvariantCulture));
 
     public GitLabCredential Credentials { get; set; }
 
-    public static async Task<GitLabDockerContainer> GetOrCreateInstance()
+    public static async Task<GitLabDockerContainer> GetOrCreateInstanceAsync()
     {
         await s_setupLock.WaitAsync().ConfigureAwait(false);
         try
@@ -106,7 +104,7 @@ public class GitLabDockerContainer
     {
         if (GitLabTestContext.IsContinuousIntegration())
         {
-            await WaitForCiGitLabInstance().ConfigureAwait(false);
+            await WaitForCiGitLabInstanceAsync().ConfigureAwait(false);
         }
         else
         {
@@ -122,7 +120,7 @@ public class GitLabDockerContainer
         }
 
         await GenerateCredentialsAsync().ConfigureAwait(false);
-        PersistCredentialsAsync();
+        PersistCredentials();
     }
 
     private static async Task ValidateCiDockerIsEnabled(DockerClient client)
@@ -182,7 +180,7 @@ public class GitLabDockerContainer
         // minutes to boot); bumping LocalGitLabDockerVersion requires removing the old container
         // manually (`docker rm -f NGitLabClientTests`) since reuse matching is name+config based.
         _localContainer = new ContainerBuilder(ImageName + ":" + LocalGitLabDockerVersion)
-            .WithName(ContainerName)
+            .WithName(LocalContainerName)
             .WithHostname("localhost")
             .WithPortBinding(HttpPort, HttpPort)
             .WithEnvironment("GITLAB_ROOT_PASSWORD", AdminPassword)
@@ -207,7 +205,7 @@ public class GitLabDockerContainer
         Console.WriteLine("Requesting credentials from GitLab instance");
 
         var credentials = new GitLabCredential();
-        await GenerateAdminToken(credentials).ConfigureAwait(false);
+        await GenerateAdminToken().ConfigureAwait(false);
         if (credentials.AdminUserToken != null)
         {
             GenerateUserToken();
@@ -215,16 +213,16 @@ public class GitLabDockerContainer
 
         Credentials = credentials;
 
-        async Task GenerateAdminToken(GitLabCredential credentials)
+        async Task GenerateAdminToken()
         {
             TestContext.Progress.WriteLine("Generating Credentials");
             TestContext.Progress.WriteLine("Creating root token via 'gitlab-rails runner'");
 
             // Keep only scopes the running GitLab version supports (an unknown scope makes `create!` raise).
-            const string script = """
+            var script = $"""
                 desired_scopes = %w[api read_user read_api read_repository write_repository sudo admin_mode create_runner manage_runner k8s_proxy]
                 available_scopes = Gitlab::Auth.all_available_scopes.map(&:to_s)
-                token = User.find_by_username!('root').personal_access_tokens.create!(
+                token = User.find_by_username!('{AdminUserName}').personal_access_tokens.create!(
                   name: 'NGitLabClientTest',
                   scopes: (desired_scopes & available_scopes),
                   expires_at: 1.year.from_now)
@@ -280,8 +278,10 @@ public class GitLabDockerContainer
     {
         var containers = await client.Containers.ListContainersAsync(new ContainersListParameters { All = true }).ConfigureAwait(false);
 
-        var container = containers.FirstOrDefault(c => c.Names.Contains("/" + ContainerName, StringComparer.Ordinal))
-            ?? containers.FirstOrDefault(c => c.Image.StartsWith(ImageName, StringComparison.Ordinal));
+        // On CI, GitLab runs as a pre-existing service container, which isn't named LocalContainerName
+        // (that name is only ever assigned by our own Testcontainers-managed local container), so
+        // we locate it by image instead.
+        var container = containers.FirstOrDefault(c => c.Image.StartsWith(ImageName, StringComparison.Ordinal));
 
         if (container == null)
             throw new InvalidOperationException($"Cannot find a running Docker container for image '{ImageName}' to generate credentials from.");
@@ -341,7 +341,7 @@ public class GitLabDockerContainer
         return token;
     }
 
-    private void PersistCredentialsAsync()
+    private void PersistCredentials()
     {
         var path = GetCredentialsFilePath();
         Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -377,7 +377,7 @@ public class GitLabDockerContainer
         return Path.Combine(Path.GetTempPath(), "ngitlab", "credentials.json");
     }
 
-    private async Task WaitForCiGitLabInstance()
+    private async Task WaitForCiGitLabInstanceAsync()
     {
         Console.WriteLine($"Executing tests on CI. Checking GitLab instance...");
 

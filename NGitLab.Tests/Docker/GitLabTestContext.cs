@@ -62,7 +62,7 @@ public sealed class GitLabTestContext : IDisposable
         // Disable proxy
         Environment.SetEnvironmentVariable("http_proxy", "", EnvironmentVariableTarget.Process);
         Environment.SetEnvironmentVariable("https_proxy", "", EnvironmentVariableTarget.Process);
-        var container = await GitLabDockerContainer.GetOrCreateInstance().ConfigureAwait(false);
+        var container = await GitLabDockerContainer.GetOrCreateInstanceAsync().ConfigureAwait(false);
         return new GitLabTestContext(container);
     }
 
