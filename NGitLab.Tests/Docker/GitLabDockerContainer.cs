@@ -1,5 +1,3 @@
-#pragma warning disable MA0004
-#pragma warning disable MA0006
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -14,6 +12,7 @@ using Docker.DotNet;
 using Docker.DotNet.Models;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
+using Microsoft.Extensions.Logging;
 using NGitLab.Models;
 using NUnit.Framework;
 using Polly;
@@ -44,7 +43,7 @@ public class GitLabDockerContainer
     /// On CI, GitLab already runs as a pre-existing service container, so this stays null
     /// and credential generation falls back to a raw Docker Engine API exec call.
     /// </summary>
-    private IContainer _container;
+    private IContainer _localContainer;
 
     public string Host { get; private set; } = "localhost";
 
@@ -111,7 +110,7 @@ public class GitLabDockerContainer
         }
         else
         {
-            await SpawnDockerContainerAsync().ConfigureAwait(false);
+            await SpawnLocalDockerContainerAsync().ConfigureAwait(false);
         }
 
         LoadCredentials();
@@ -126,7 +125,7 @@ public class GitLabDockerContainer
         PersistCredentialsAsync();
     }
 
-    private static async Task ValidateDockerIsEnabled(DockerClient client)
+    private static async Task ValidateCiDockerIsEnabled(DockerClient client)
     {
         try
         {
@@ -143,7 +142,7 @@ public class GitLabDockerContainer
         }
     }
 
-    private async Task SpawnDockerContainerAsync()
+    private async Task SpawnLocalDockerContainerAsync()
     {
         Console.WriteLine($"Executing tests locally. Spawning GitLab docker image version '{LocalGitLabDockerVersion}'");
 
@@ -182,8 +181,7 @@ public class GitLabDockerContainer
         // WithReuse keeps an existing container running across local test runs (GitLab takes
         // minutes to boot); bumping LocalGitLabDockerVersion requires removing the old container
         // manually (`docker rm -f NGitLabClientTests`) since reuse matching is name+config based.
-        _container = new ContainerBuilder()
-            .WithImage(ImageName + ":" + LocalGitLabDockerVersion)
+        _localContainer = new ContainerBuilder(ImageName + ":" + LocalGitLabDockerVersion)
             .WithName(ContainerName)
             .WithHostname("localhost")
             .WithPortBinding(HttpPort, HttpPort)
@@ -195,10 +193,11 @@ public class GitLabDockerContainer
                     r => r.ForPort((ushort)HttpPort).ForPath("/"),
                     o => o.WithTimeout(TimeSpan.FromMinutes(10)).WithInterval(TimeSpan.FromSeconds(5))))
             .WithReuse(true)
+            .WithLogger(TestProgressLogger.Instance)
             .Build();
 
         TestContext.Progress.WriteLine("Starting the GitLab Docker container (this can take several minutes on first run)");
-        await _container.StartAsync().ConfigureAwait(false);
+        await _localContainer.StartAsync().ConfigureAwait(false);
 
         TestContext.Progress.WriteLine("GitLab Docker container is ready");
     }
@@ -269,7 +268,7 @@ public class GitLabDockerContainer
             {
                 UserId = user.Id,
                 Name = "common_user",
-                Scopes = new[] { "api" },
+                Scopes = ["api"],
                 ExpiresAt = DateTime.UtcNow.AddDays(7),
             }));
 
@@ -277,7 +276,7 @@ public class GitLabDockerContainer
         }
     }
 
-    private static async Task<string> ResolveGitLabContainerIdAsync(DockerClient client)
+    private static async Task<string> ResolveCiGitLabContainerIdAsync(DockerClient client)
     {
         var containers = await client.Containers.ListContainersAsync(new ContainersListParameters { All = true }).ConfigureAwait(false);
 
@@ -299,9 +298,9 @@ public class GitLabDockerContainer
         string stderr;
         long? exitCode;
 
-        if (_container != null)
+        if (_localContainer is not null)
         {
-            var result = await _container.ExecAsync(["gitlab-rails", "runner", script]).ConfigureAwait(false);
+            var result = await _localContainer.ExecAsync(["gitlab-rails", "runner", script]).ConfigureAwait(false);
             (stdout, stderr, exitCode) = (result.Stdout, result.Stderr, result.ExitCode);
         }
         else
@@ -309,9 +308,9 @@ public class GitLabDockerContainer
             using var client = new DockerClientBuilder()
                 .WithEndpoint(new Uri(OperatingSystem.IsWindows() ? "npipe://./pipe/docker_engine" : "unix:///var/run/docker.sock"))
                 .Build();
-            await ValidateDockerIsEnabled(client).ConfigureAwait(false);
+            await ValidateCiDockerIsEnabled(client).ConfigureAwait(false);
 
-            var containerId = await ResolveGitLabContainerIdAsync(client).ConfigureAwait(false);
+            var containerId = await ResolveCiGitLabContainerIdAsync(client).ConfigureAwait(false);
             var execCreateResponse = await client.Exec.CreateContainerExecAsync(containerId, new ContainerExecCreateParameters
             {
                 AttachStdout = true,
@@ -397,10 +396,39 @@ public class GitLabDockerContainer
             {
             }
 
-            await Task.Delay(1000);
+            await Task.Delay(1000).ConfigureAwait(false);
         }
 
         s_creationErrorMessage = "GitLab is not well configured in CI";
         Assert.Fail(s_creationErrorMessage);
+    }
+
+    // Testcontainers defaults to ConsoleLogger, but NUnit buffers Console output until the test
+    // finishes, so it doesn't give live feedback while the container is starting. Forwarding to
+    // TestContext.Progress instead surfaces Testcontainers' own lifecycle messages as they happen.
+    private sealed class TestProgressLogger : ILogger
+    {
+        public static readonly TestProgressLogger Instance = new();
+
+        public bool IsEnabled(LogLevel logLevel) => logLevel >= LogLevel.Information;
+
+        public IDisposable BeginScope<TState>(TState state) => NullScope.Instance;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            if (IsEnabled(logLevel))
+            {
+                TestContext.Progress.WriteLine(formatter(state, exception));
+            }
+        }
+
+        private sealed class NullScope : IDisposable
+        {
+            public static readonly NullScope Instance = new();
+
+            public void Dispose()
+            {
+            }
+        }
     }
 }
