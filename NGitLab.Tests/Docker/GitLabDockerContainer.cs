@@ -230,7 +230,20 @@ public class GitLabDockerContainer
                 """;
 
             var retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(20, _ => TimeSpan.FromSeconds(3));
-            credentials.AdminUserToken = await retryPolicy.ExecuteAsync(() => RunGitLabRailsRunnerAsync(script)).ConfigureAwait(false);
+
+            if (_localContainer is not null)
+            {
+                credentials.AdminUserToken = await retryPolicy.ExecuteAsync(() => RunGitLabRailsRunnerAsync(client: null, script)).ConfigureAwait(false);
+            }
+            else
+            {
+                using var client = new DockerClientBuilder()
+                    .WithEndpoint(new Uri(OperatingSystem.IsWindows() ? "npipe://./pipe/docker_engine" : "unix:///var/run/docker.sock"))
+                    .Build();
+                await ValidateCiDockerIsEnabled(client).ConfigureAwait(false);
+
+                credentials.AdminUserToken = await retryPolicy.ExecuteAsync(() => RunGitLabRailsRunnerAsync(client, script)).ConfigureAwait(false);
+            }
         }
 
         void GenerateUserToken()
@@ -292,7 +305,7 @@ public class GitLabDockerContainer
     // When we spawned the container ourselves (local dev), Testcontainers already holds a reference to it
     // and can exec into it directly. On CI, GitLab runs as a pre-existing service container we didn't create,
     // so we fall back to the raw Docker Engine API to find it and exec into it.
-    private async Task<string> RunGitLabRailsRunnerAsync(string script)
+    private async Task<string> RunGitLabRailsRunnerAsync(DockerClient client, string script)
     {
         string stdout;
         string stderr;
@@ -305,11 +318,6 @@ public class GitLabDockerContainer
         }
         else
         {
-            using var client = new DockerClientBuilder()
-                .WithEndpoint(new Uri(OperatingSystem.IsWindows() ? "npipe://./pipe/docker_engine" : "unix:///var/run/docker.sock"))
-                .Build();
-            await ValidateCiDockerIsEnabled(client).ConfigureAwait(false);
-
             var containerId = await ResolveCiGitLabContainerIdAsync(client).ConfigureAwait(false);
             var execCreateResponse = await client.Exec.CreateContainerExecAsync(containerId, new ContainerExecCreateParameters
             {
