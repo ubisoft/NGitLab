@@ -19,7 +19,7 @@ using Polly;
 
 namespace NGitLab.Tests.Docker;
 
-public class GitLabDockerContainer
+public sealed class GitLabDockerContainer : IAsyncDisposable
 {
     public const string LocalContainerName = "NGitLabClientTests";
     public const string ImageName = "gitlab/gitlab-ee";
@@ -100,6 +100,31 @@ public class GitLabDockerContainer
         }
     }
 
+    public static async ValueTask DisposeInstanceAsync()
+    {
+        await s_setupLock.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            if (s_instance != null)
+            {
+                await s_instance.DisposeAsync().ConfigureAwait(false);
+                s_instance = null;
+            }
+        }
+        finally
+        {
+            s_setupLock.Release();
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_localContainer is not null)
+        {
+            await _localContainer.DisposeAsync().ConfigureAwait(false);
+        }
+    }
+
     private async Task SetupAsync()
     {
         if (GitLabTestContext.IsContinuousIntegration())
@@ -123,7 +148,7 @@ public class GitLabDockerContainer
         PersistCredentials();
     }
 
-    private static async Task ValidateCiDockerIsEnabled(DockerClient client)
+    private static async Task ValidateDockerIsEnabled(DockerClient client)
     {
         try
         {
@@ -143,6 +168,13 @@ public class GitLabDockerContainer
     private async Task SpawnLocalDockerContainerAsync()
     {
         Console.WriteLine($"Executing tests locally. Spawning GitLab docker image version '{LocalGitLabDockerVersion}'");
+
+        using (var client = new DockerClientBuilder()
+            .WithEndpoint(new Uri(OperatingSystem.IsWindows() ? "npipe://./pipe/docker_engine" : "unix:///var/run/docker.sock"))
+            .Build())
+        {
+            await ValidateDockerIsEnabled(client).ConfigureAwait(false);
+        }
 
         // Disables non-useful features
         // See https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template
@@ -233,16 +265,16 @@ public class GitLabDockerContainer
 
             if (_localContainer is not null)
             {
-                credentials.AdminUserToken = await retryPolicy.ExecuteAsync(() => RunGitLabRailsRunnerAsync(client: null, script)).ConfigureAwait(false);
+                credentials.AdminUserToken = await retryPolicy.ExecuteAsync(() => RunGitLabRailsRunnerLocallyAsync(script)).ConfigureAwait(false);
             }
             else
             {
                 using var client = new DockerClientBuilder()
                     .WithEndpoint(new Uri(OperatingSystem.IsWindows() ? "npipe://./pipe/docker_engine" : "unix:///var/run/docker.sock"))
                     .Build();
-                await ValidateCiDockerIsEnabled(client).ConfigureAwait(false);
+                await ValidateDockerIsEnabled(client).ConfigureAwait(false);
 
-                credentials.AdminUserToken = await retryPolicy.ExecuteAsync(() => RunGitLabRailsRunnerAsync(client, script)).ConfigureAwait(false);
+                credentials.AdminUserToken = await retryPolicy.ExecuteAsync(() => RunGitLabRailsRunnerOnCiAsync(client, script)).ConfigureAwait(false);
             }
         }
 
@@ -289,7 +321,9 @@ public class GitLabDockerContainer
 
     private static async Task<string> ResolveCiGitLabContainerIdAsync(DockerClient client)
     {
-        var containers = await client.Containers.ListContainersAsync(new ContainersListParameters { All = true }).ConfigureAwait(false);
+        // Deliberately omit All = true: it would also match a stopped/stale container left over
+        // from a previous run, and we only ever want the one GitLab is currently running as.
+        var containers = await client.Containers.ListContainersAsync(new ContainersListParameters()).ConfigureAwait(false);
 
         // On CI, GitLab runs as a pre-existing service container, which isn't named LocalContainerName
         // (that name is only ever assigned by our own Testcontainers-managed local container), so
@@ -302,39 +336,38 @@ public class GitLabDockerContainer
         return container.ID;
     }
 
-    // When we spawned the container ourselves (local dev), Testcontainers already holds a reference to it
-    // and can exec into it directly. On CI, GitLab runs as a pre-existing service container we didn't create,
-    // so we fall back to the raw Docker Engine API to find it and exec into it.
-    private async Task<string> RunGitLabRailsRunnerAsync(DockerClient client, string script)
+    // Testcontainers already holds a reference to the container it spawned, so it can exec into it directly.
+    private async Task<string> RunGitLabRailsRunnerLocallyAsync(string script)
     {
+        var result = await _localContainer.ExecAsync(["gitlab-rails", "runner", script]).ConfigureAwait(false);
+        return ParseRailsRunnerOutput(result.Stdout, result.Stderr, result.ExitCode);
+    }
+
+    // On CI, GitLab runs as a pre-existing service container we didn't create, so we fall back
+    // to the raw Docker Engine API to find it and exec into it.
+    private static async Task<string> RunGitLabRailsRunnerOnCiAsync(DockerClient client, string script)
+    {
+        var containerId = await ResolveCiGitLabContainerIdAsync(client).ConfigureAwait(false);
+        var execCreateResponse = await client.Exec.CreateContainerExecAsync(containerId, new ContainerExecCreateParameters
+        {
+            AttachStdout = true,
+            AttachStderr = true,
+            Cmd = ["gitlab-rails", "runner", script],
+        }).ConfigureAwait(false);
+
         string stdout;
         string stderr;
-        long? exitCode;
-
-        if (_localContainer is not null)
+        using (var stream = await client.Exec.StartContainerExecAsync(execCreateResponse.ID, new ContainerExecStartParameters { TTY = false }).ConfigureAwait(false))
         {
-            var result = await _localContainer.ExecAsync(["gitlab-rails", "runner", script]).ConfigureAwait(false);
-            (stdout, stderr, exitCode) = (result.Stdout, result.Stderr, result.ExitCode);
-        }
-        else
-        {
-            var containerId = await ResolveCiGitLabContainerIdAsync(client).ConfigureAwait(false);
-            var execCreateResponse = await client.Exec.CreateContainerExecAsync(containerId, new ContainerExecCreateParameters
-            {
-                AttachStdout = true,
-                AttachStderr = true,
-                Cmd = ["gitlab-rails", "runner", script],
-            }).ConfigureAwait(false);
-
-            using (var stream = await client.Exec.StartContainerExecAsync(execCreateResponse.ID, new ContainerExecStartParameters { TTY = false }).ConfigureAwait(false))
-            {
-                (stdout, stderr) = await stream.ReadOutputToEndAsync(CancellationToken.None).ConfigureAwait(false);
-            }
-
-            var inspectResponse = await client.Exec.InspectContainerExecAsync(execCreateResponse.ID).ConfigureAwait(false);
-            exitCode = inspectResponse.ExitCode;
+            (stdout, stderr) = await stream.ReadOutputToEndAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
+        var inspectResponse = await client.Exec.InspectContainerExecAsync(execCreateResponse.ID).ConfigureAwait(false);
+        return ParseRailsRunnerOutput(stdout, stderr, inspectResponse.ExitCode);
+    }
+
+    private static string ParseRailsRunnerOutput(string stdout, string stderr, long? exitCode)
+    {
         if (exitCode != 0)
             throw new InvalidOperationException($"'gitlab-rails runner' failed with exit code {exitCode}.\nStdout: {stdout}\nStderr: {stderr}");
 
