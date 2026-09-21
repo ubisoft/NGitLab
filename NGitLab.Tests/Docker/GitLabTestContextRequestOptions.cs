@@ -25,7 +25,10 @@ internal sealed class GitLabTestContextRequestOptions : RequestOptions
     public IReadOnlyList<WebRequest> AllRequests => _allRequests;
 
     public GitLabTestContextRequestOptions()
-        : base(retryCount: 0, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
+        // GitLab occasionally returns a transient 500 right after an async operation (e.g. a project
+        // delete) is accepted, before its Sidekiq job has actually started. The base ShouldRetry already
+        // treats 5xx/408 on idempotent (GET/HEAD/OPTIONS) requests as retryable, so give it retries to work with.
+        : base(retryCount: 5, retryInterval: TimeSpan.FromSeconds(1), isIncremental: true)
     {
         UserAgent = "NGitLab.Tests/1.0.0";
     }
