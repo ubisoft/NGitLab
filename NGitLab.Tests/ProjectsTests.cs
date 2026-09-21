@@ -355,7 +355,7 @@ public class ProjectsTests
         var updatedProject2 = projectClient.Update(createdProject.PathWithNamespace, new ProjectUpdate { Visibility = VisibilityLevel.Internal });
         Assert.That(updatedProject2.VisibilityLevel, Is.EqualTo(VisibilityLevel.Internal));
 
-        projectClient.Delete(createdProject.Id);
+        await projectClient.PermanentlyDeleteAsync(createdProject.Id);
     }
 
     [Test]
@@ -701,8 +701,8 @@ public class ProjectsTests
 
         Assert.That(mr.AllowCollaboration, Is.True);
 
-        projectClient.Delete(forkedProject.Id);
-        projectClient.Delete(createdProject.Id);
+        await projectClient.PermanentlyDeleteAsync(forkedProject.Id);
+        await projectClient.PermanentlyDeleteAsync(createdProject.Id);
     }
 
     [Test]
@@ -810,7 +810,7 @@ public class ProjectsTests
         var expectedSquashOption = inputSquashOption ?? SquashOption.DefaultOff;
         Assert.That(createdProject.SquashOption, Is.EqualTo(expectedSquashOption));
 
-        projectClient.Delete(createdProject.Id);
+        await projectClient.PermanentlyDeleteAsync(createdProject.Id);
     }
 
     [Test]
