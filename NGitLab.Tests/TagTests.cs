@@ -121,7 +121,7 @@ public class TagTests
         }
         else
         {
-            var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => tagClient.GetByNameAsync(tagNameSought)));
+            var ex = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => tagClient.GetByNameAsync(tagNameSought)));
             Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
     }

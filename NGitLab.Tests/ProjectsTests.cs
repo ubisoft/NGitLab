@@ -82,7 +82,7 @@ public class ProjectsTests
 
         // Act
         // Assert
-        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync("baz1234")));
+        var ex = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync("baz1234")));
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
@@ -104,7 +104,7 @@ public class ProjectsTests
         });
 
         // Act/Assert
-        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => userProjectClient.GetAsync(adminProject.Id)));
+        var ex = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => userProjectClient.GetAsync(adminProject.Id)));
 
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
@@ -435,7 +435,7 @@ public class ProjectsTests
         var projectClient = context.Client.Projects;
 
         // Act
-        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() =>
+        var ex = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() =>
             projectClient.CreateAsync(new()
             {
                 Path = existingProject.Path,
@@ -525,7 +525,7 @@ public class ProjectsTests
         var projectClient = context.Client.Projects;
 
         // Act
-        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() =>
+        var ex = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() =>
             projectClient.UpdateAsync(int.MaxValue, new()
             {
                 Visibility = VisibilityLevel.Private,
@@ -555,7 +555,7 @@ public class ProjectsTests
         await projectClient.DeleteAsync(project.Id);
 
         // Assert
-        Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
+        await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
     }
 
     [Test]
@@ -588,7 +588,7 @@ public class ProjectsTests
         var projectClient = context.Client.Projects;
 
         // Act
-        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.DeleteAsync(int.MaxValue)));
+        var ex = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.DeleteAsync(int.MaxValue)));
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
@@ -619,7 +619,7 @@ public class ProjectsTests
         });
 
         // Assert: project no longer accessible
-        Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
+        await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
     }
 
     // No owner level (50) for project! See https://docs.gitlab.com/ee/api/members.html

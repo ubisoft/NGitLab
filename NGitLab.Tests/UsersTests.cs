@@ -194,7 +194,7 @@ public class UsersTests
             Scopes = new[] { "write_repository" },
         };
 
-        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => users.CreateTokenAsync(tokenRequest)));
+        var ex = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => users.CreateTokenAsync(tokenRequest)));
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         Assert.That(ex.ErrorMessage, Is.EqualTo("404 User Not Found"));
     }
