@@ -23,3 +23,10 @@ jobs:
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on major version updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        run: gh pr comment "$PR_URL" --body "This PR bumps a **major** version and will not be auto-merged. Please review breaking changes manually."
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
