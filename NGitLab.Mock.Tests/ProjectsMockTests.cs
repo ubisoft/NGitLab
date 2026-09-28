@@ -49,7 +49,7 @@ public class ProjectsMockTests
     }
 
     [Test]
-    public void GetProjectAsync_WhenProjectDoesNotExist_ShouldThrowNotFound()
+    public async Task GetProjectAsync_WhenProjectDoesNotExist_ShouldThrowNotFound()
     {
         // Arrange
         using var server = new GitLabConfig()
@@ -59,13 +59,13 @@ public class ProjectsMockTests
         var projectClient = gitLabClient.Projects;
 
         // Act/Assert
-        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync("baz1234")));
+        var ex = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync("baz1234")));
 
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 
     [Test]
-    public void GetProjectAsync_WhenProjectInaccessible_ShouldThrowNotFound()
+    public async Task GetProjectAsync_WhenProjectInaccessible_ShouldThrowNotFound()
     {
         // Arrange
         using var server = new GitLabConfig()
@@ -82,7 +82,7 @@ public class ProjectsMockTests
         });
 
         // Act/Assert
-        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => testUser1ProjectClient.GetAsync(testUser2Project.Id)));
+        var ex = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => testUser1ProjectClient.GetAsync(testUser2Project.Id)));
 
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
@@ -302,7 +302,7 @@ public class ProjectsMockTests
     }
 
     [Test]
-    public void CreateAsync_WhenProjectPathAlreadyExists_ItThrows()
+    public async Task CreateAsync_WhenProjectPathAlreadyExists_ItThrows()
     {
         // Arrange
         using var server = new GitLabConfig()
@@ -313,7 +313,7 @@ public class ProjectsMockTests
         var projectClient = server.CreateClient().Projects;
 
         // Act
-        var ex = Assert.CatchAsync<GitLabException>((Func<Task>)(() =>
+        var ex = await Assert.CatchAsync<GitLabException>((Func<Task>)(() =>
             projectClient.CreateAsync(new()
             {
                 Path = "DUPLICATE", // GitLab path is case-INsensitive
@@ -326,7 +326,7 @@ public class ProjectsMockTests
     }
 
     [Test]
-    public void CreateAsync_WhenProjectNameAlreadyExists_ItThrows()
+    public async Task CreateAsync_WhenProjectNameAlreadyExists_ItThrows()
     {
         // Arrange
         using var server = new GitLabConfig()
@@ -337,7 +337,7 @@ public class ProjectsMockTests
         var projectClient = server.CreateClient().Projects;
 
         // Act
-        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() =>
+        var ex = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() =>
             projectClient.CreateAsync(new()
             {
                 Path = "project2",
@@ -476,7 +476,7 @@ public class ProjectsMockTests
     }
 
     [Test]
-    public void UpdateAsync_WhenProjectNotFound_ItThrows()
+    public async Task UpdateAsync_WhenProjectNotFound_ItThrows()
     {
         // Arrange
         using var server = new GitLabConfig()
@@ -486,7 +486,7 @@ public class ProjectsMockTests
         var projectClient = server.CreateClient().Projects;
 
         // Act
-        var ex = Assert.CatchAsync<GitLabException>((Func<Task>)(() =>
+        var ex = await Assert.CatchAsync<GitLabException>((Func<Task>)(() =>
             projectClient.UpdateAsync(int.MaxValue, new()
             {
                 Visibility = VisibilityLevel.Private,
@@ -516,7 +516,7 @@ public class ProjectsMockTests
     }
 
     [Test]
-    public void DeleteAsync_WhenProjectNotFound_ItThrows()
+    public async Task DeleteAsync_WhenProjectNotFound_ItThrows()
     {
         using var server = new GitLabConfig()
             .WithUser("Test", isDefault: true)
@@ -525,7 +525,7 @@ public class ProjectsMockTests
         var projectClient = server.CreateClient().Projects;
 
         // Act
-        var ex = Assert.CatchAsync<GitLabException>((Func<Task>)(() => projectClient.DeleteAsync(int.MaxValue)));
+        var ex = await Assert.CatchAsync<GitLabException>((Func<Task>)(() => projectClient.DeleteAsync(int.MaxValue)));
 
         // Assert
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
@@ -576,7 +576,7 @@ public class ProjectsMockTests
         });
 
         // Assert: project is now gone
-        Assert.CatchAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
+        await Assert.CatchAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
     }
 
     [Test]
@@ -595,7 +595,7 @@ public class ProjectsMockTests
         await projectClient.DeleteAsync(project.Id);
 
         // Act: wrong full_path
-        var ex = Assert.CatchAsync<GitLabException>((Func<Task>)(() =>
+        var ex = await Assert.CatchAsync<GitLabException>((Func<Task>)(() =>
             projectClient.DeleteAsync(project.Id, new ProjectDelete
             {
                 PermanentlyRemove = true,
@@ -622,7 +622,7 @@ public class ProjectsMockTests
         await projectClient.PermanentlyDeleteAsync(project.Id);
 
         // Assert: project is gone
-        Assert.CatchAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
+        await Assert.CatchAsync<GitLabException>((Func<Task>)(() => projectClient.GetAsync(project.Id)));
     }
 
     [Test]

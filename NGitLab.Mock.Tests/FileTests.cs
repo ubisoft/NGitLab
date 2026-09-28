@@ -38,7 +38,7 @@ public class FileTests
         }
         else
         {
-            Assert.ThrowsAsync<GitLabException>((Func<Task>)(async () => await filesClient.GetRawAsync(fileToLookUp, _ => Task.CompletedTask).ConfigureAwait(false)));
+            await Assert.ThrowsAsync<GitLabException>((Func<Task>)(async () => await filesClient.GetRawAsync(fileToLookUp, _ => Task.CompletedTask).ConfigureAwait(false)));
         }
     }
 }

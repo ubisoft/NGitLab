@@ -28,7 +28,7 @@ public class TagTests
         var tag = await tagClient.GetByNameAsync("1.0.0");
         Assert.That(tag.Name, Is.EqualTo("1.0.0"));
 
-        var ex = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => tagClient.GetByNameAsync("1.0.1")));
+        var ex = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => tagClient.GetByNameAsync("1.0.1")));
         Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 

@@ -182,8 +182,8 @@ public class MembersClientTests
         var groupId = group2.FullPath!;
 
         // Does NOT search inherited permission by default...
-        AssertThrowsGitLabException(() => client.Members.GetMemberOfProjectAsync(projectId, user1.Id), System.Net.HttpStatusCode.NotFound);
-        AssertThrowsGitLabException(() => client.Members.GetMemberOfGroupAsync(groupId, user1.Id), System.Net.HttpStatusCode.NotFound);
+        await AssertThrowsGitLabException(() => client.Members.GetMemberOfProjectAsync(projectId, user1.Id), System.Net.HttpStatusCode.NotFound);
+        await AssertThrowsGitLabException(() => client.Members.GetMemberOfGroupAsync(groupId, user1.Id), System.Net.HttpStatusCode.NotFound);
         Assert.That(client.Members.OfProjectAsync(projectId).AsEnumerable().Select(m => m.UserName), Is.Empty);
         Assert.That(client.Members.OfGroupAsync(groupId).AsEnumerable().Select(m => m.UserName), Is.EquivalentTo(new[] { ownerName }));
 
@@ -194,20 +194,20 @@ public class MembersClientTests
         Assert.That(client.Members.OfGroupAsync(groupId, includeInheritedMembers: true).AsEnumerable().Select(m => m.UserName), Is.EquivalentTo(new[] { ownerName, user1Name }));
 
         // Cannot update non-existent membership...
-        AssertThrowsGitLabException(() => client.Members.UpdateMemberOfProjectAsync(projectId, new() { UserId = user1Id, AccessLevel = AccessLevel.Owner }), System.Net.HttpStatusCode.NotFound);
-        AssertThrowsGitLabException(() => client.Members.UpdateMemberOfGroupAsync(groupId, new() { UserId = user1Id, AccessLevel = AccessLevel.Owner }), System.Net.HttpStatusCode.NotFound);
+        await AssertThrowsGitLabException(() => client.Members.UpdateMemberOfProjectAsync(projectId, new() { UserId = user1Id, AccessLevel = AccessLevel.Owner }), System.Net.HttpStatusCode.NotFound);
+        await AssertThrowsGitLabException(() => client.Members.UpdateMemberOfGroupAsync(groupId, new() { UserId = user1Id, AccessLevel = AccessLevel.Owner }), System.Net.HttpStatusCode.NotFound);
 
         // Cannot add membership with an access-level lower than inherited...
-        AssertThrowsGitLabException(() => client.Members.AddMemberToProjectAsync(projectId, new() { UserId = user1Id, AccessLevel = AccessLevel.Reporter }), System.Net.HttpStatusCode.BadRequest);
-        AssertThrowsGitLabException(() => client.Members.AddMemberToGroupAsync(groupId, new() { UserId = user1Id, AccessLevel = AccessLevel.Reporter }), System.Net.HttpStatusCode.BadRequest);
+        await AssertThrowsGitLabException(() => client.Members.AddMemberToProjectAsync(projectId, new() { UserId = user1Id, AccessLevel = AccessLevel.Reporter }), System.Net.HttpStatusCode.BadRequest);
+        await AssertThrowsGitLabException(() => client.Members.AddMemberToGroupAsync(groupId, new() { UserId = user1Id, AccessLevel = AccessLevel.Reporter }), System.Net.HttpStatusCode.BadRequest);
 
         // Can add membership with greater than or equal access-level...
         await AssertReturnsMembership(() => client.Members.AddMemberToProjectAsync(projectId, new() { UserId = user1Id, AccessLevel = AccessLevel.Maintainer }), AccessLevel.Maintainer);
         await AssertReturnsMembership(() => client.Members.AddMemberToGroupAsync(groupId, new() { UserId = user1Id, AccessLevel = AccessLevel.Maintainer }), AccessLevel.Maintainer);
 
         // Cannot add duplicate membership...
-        AssertThrowsGitLabException(() => client.Members.AddMemberToProjectAsync(projectId, new() { UserId = user1Id, AccessLevel = AccessLevel.Owner }), System.Net.HttpStatusCode.Conflict);
-        AssertThrowsGitLabException(() => client.Members.AddMemberToGroupAsync(groupId, new() { UserId = user1Id, AccessLevel = AccessLevel.Owner }), System.Net.HttpStatusCode.Conflict);
+        await AssertThrowsGitLabException(() => client.Members.AddMemberToProjectAsync(projectId, new() { UserId = user1Id, AccessLevel = AccessLevel.Owner }), System.Net.HttpStatusCode.Conflict);
+        await AssertThrowsGitLabException(() => client.Members.AddMemberToGroupAsync(groupId, new() { UserId = user1Id, AccessLevel = AccessLevel.Owner }), System.Net.HttpStatusCode.Conflict);
 
         // Can raise access-level above inherited...
         await AssertReturnsMembership(() => client.Members.UpdateMemberOfProjectAsync(projectId, new() { UserId = user1Id, AccessLevel = AccessLevel.Owner }), AccessLevel.Owner);
@@ -218,16 +218,16 @@ public class MembersClientTests
         await AssertReturnsMembership(() => client.Members.UpdateMemberOfGroupAsync(groupId, new() { UserId = user1Id, AccessLevel = AccessLevel.Maintainer }), AccessLevel.Maintainer);
 
         // Cannot decrease access-level lower than inherited...
-        AssertThrowsGitLabException(() => client.Members.UpdateMemberOfProjectAsync(projectId, new() { UserId = user1Id, AccessLevel = AccessLevel.Reporter }), System.Net.HttpStatusCode.BadRequest);
-        AssertThrowsGitLabException(() => client.Members.UpdateMemberOfGroupAsync(groupId, new() { UserId = user1Id, AccessLevel = AccessLevel.Reporter }), System.Net.HttpStatusCode.BadRequest);
+        await AssertThrowsGitLabException(() => client.Members.UpdateMemberOfProjectAsync(projectId, new() { UserId = user1Id, AccessLevel = AccessLevel.Reporter }), System.Net.HttpStatusCode.BadRequest);
+        await AssertThrowsGitLabException(() => client.Members.UpdateMemberOfGroupAsync(groupId, new() { UserId = user1Id, AccessLevel = AccessLevel.Reporter }), System.Net.HttpStatusCode.BadRequest);
 
         // Can delete...
         await client.Members.RemoveMemberFromProjectAsync(projectId, user1.Id);
         await client.Members.RemoveMemberFromGroupAsync(groupId, user1.Id);
 
         // Delete fails when not exist...
-        AssertThrowsGitLabException(() => client.Members.RemoveMemberFromProjectAsync(projectId, user1.Id), System.Net.HttpStatusCode.NotFound);
-        AssertThrowsGitLabException(() => client.Members.RemoveMemberFromGroupAsync(groupId, user1.Id), System.Net.HttpStatusCode.NotFound);
+        await AssertThrowsGitLabException(() => client.Members.RemoveMemberFromProjectAsync(projectId, user1.Id), System.Net.HttpStatusCode.NotFound);
+        await AssertThrowsGitLabException(() => client.Members.RemoveMemberFromGroupAsync(groupId, user1.Id), System.Net.HttpStatusCode.NotFound);
     }
 
     private static async Task AssertReturnsMembership(Func<Task<Membership>> code, AccessLevel expectedAccessLevel)
@@ -237,9 +237,9 @@ public class MembersClientTests
         Assert.That(membership.AccessLevel, Is.EqualTo((int)expectedAccessLevel));
     }
 
-    private static void AssertThrowsGitLabException(AsyncTestDelegate code, System.Net.HttpStatusCode expectedStatusCode)
+    private static async Task AssertThrowsGitLabException(Func<Task> code, System.Net.HttpStatusCode expectedStatusCode)
     {
-        var ex = Assert.CatchAsync(typeof(GitLabException), code) as GitLabException;
+        var ex = await Assert.CatchAsync(typeof(GitLabException), code).ConfigureAwait(false) as GitLabException;
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex.StatusCode, Is.EqualTo(expectedStatusCode));
     }

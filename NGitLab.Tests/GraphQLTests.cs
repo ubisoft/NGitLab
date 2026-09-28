@@ -17,7 +17,7 @@ public class GraphQLTests
         using var context = await GitLabTestContext.CreateAsync();
         var project = context.CreateProject();
 
-        var exception = Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
+        var exception = await Assert.ThrowsAsync<GitLabException>((Func<Task>)(() => context.Client.GraphQL.ExecuteAsync<ProjectResponse>(new GraphQLQuery
         {
             Query = """
                 {
