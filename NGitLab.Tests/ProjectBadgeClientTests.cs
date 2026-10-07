@@ -26,22 +26,26 @@ public class ProjectBadgeClientTests
         // Create
         var badge = projectBadgeClient.Create(new BadgeCreate
         {
+            Name = "CreatedName",
             ImageUrl = "http://dummy/image.png",
             LinkUrl = "http://dummy/image.html",
         });
 
         Assert.That(badge.Kind, Is.EqualTo(BadgeKind.Project));
+        Assert.That(badge.Name, Is.EqualTo("CreatedName"));
         Assert.That(badge.ImageUrl, Is.EqualTo("http://dummy/image.png"));
         Assert.That(badge.LinkUrl, Is.EqualTo("http://dummy/image.html"));
 
         // Update
         badge = projectBadgeClient.Update(badge.Id, new BadgeUpdate
         {
+            Name = "DummyName",
             ImageUrl = "http://dummy/image_edit.png",
             LinkUrl = "http://dummy/image_edit.html",
         });
 
         Assert.That(badge.Kind, Is.EqualTo(BadgeKind.Project));
+        Assert.That(badge.Name, Is.EqualTo("DummyName"));
         Assert.That(badge.ImageUrl, Is.EqualTo("http://dummy/image_edit.png"));
         Assert.That(badge.LinkUrl, Is.EqualTo("http://dummy/image_edit.html"));
 

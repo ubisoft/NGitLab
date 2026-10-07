@@ -7,6 +7,9 @@ public class Badge
     [JsonPropertyName("id")]
     public long Id { get; set; }
 
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+
     [JsonPropertyName("link_url")]
     public string LinkUrl { get; set; }
 
