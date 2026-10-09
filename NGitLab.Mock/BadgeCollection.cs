@@ -34,8 +34,14 @@ public sealed class BadgeCollection : Collection<Badge>
 
     public Badge Add(string linkUrl, string imageUrl)
     {
+        return Add(name: null, linkUrl, imageUrl);
+    }
+
+    public Badge Add(string name, string linkUrl, string imageUrl)
+    {
         var badge = new Badge
         {
+            Name = name,
             LinkUrl = linkUrl,
             ImageUrl = imageUrl,
         };

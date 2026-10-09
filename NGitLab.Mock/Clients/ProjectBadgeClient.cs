@@ -61,7 +61,7 @@ internal sealed class ProjectBadgeClient : ClientBase, IProjectBadgeClient
 
         using (Context.BeginOperationScope())
         {
-            var createdBadge = GetProject(_projectId, ProjectPermission.Edit).Badges.Add(badge.LinkUrl, badge.ImageUrl);
+            var createdBadge = GetProject(_projectId, ProjectPermission.Edit).Badges.Add(badge.Name, badge.LinkUrl, badge.ImageUrl);
             return createdBadge.ToBadgeModel();
         }
     }
@@ -92,6 +92,7 @@ internal sealed class ProjectBadgeClient : ClientBase, IProjectBadgeClient
                 throw GitLabException.NotFound($"Badge with id '{id}' does not exist in project with id '{_projectId}'");
             }
 
+            badgeToUpdate.Name = badge.Name;
             badgeToUpdate.LinkUrl = badge.LinkUrl;
             badgeToUpdate.ImageUrl = badge.ImageUrl;
             return badgeToUpdate.ToBadgeModel();

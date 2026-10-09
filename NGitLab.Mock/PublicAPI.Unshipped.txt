@@ -11,6 +11,8 @@ NGitLab.Mock.Badge.ImageUrl.set -> void
 NGitLab.Mock.Badge.Kind.get -> NGitLab.Models.BadgeKind
 NGitLab.Mock.Badge.LinkUrl.get -> string
 NGitLab.Mock.Badge.LinkUrl.set -> void
+NGitLab.Mock.Badge.Name.get -> string
+NGitLab.Mock.Badge.Name.set -> void
 NGitLab.Mock.Badge.RenderedImageUrl.get -> string
 NGitLab.Mock.Badge.RenderedImageUrl.set -> void
 NGitLab.Mock.Badge.RenderedLinkUrl.get -> string
@@ -18,6 +20,7 @@ NGitLab.Mock.Badge.RenderedLinkUrl.set -> void
 NGitLab.Mock.Badge.ToBadgeModel() -> NGitLab.Models.Badge
 NGitLab.Mock.BadgeCollection
 NGitLab.Mock.BadgeCollection.Add(string linkUrl, string imageUrl) -> NGitLab.Mock.Badge
+NGitLab.Mock.BadgeCollection.Add(string name, string linkUrl, string imageUrl) -> NGitLab.Mock.Badge
 NGitLab.Mock.BadgeCollection.BadgeCollection(NGitLab.Mock.GitLabObject parent) -> void
 NGitLab.Mock.BadgeCollection.GetById(long id) -> NGitLab.Mock.Badge
 NGitLab.Mock.Change

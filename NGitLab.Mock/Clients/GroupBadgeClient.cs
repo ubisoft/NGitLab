@@ -48,7 +48,7 @@ internal sealed class GroupBadgeClient : ClientBase, IGroupBadgeClient
 
         using (Context.BeginOperationScope())
         {
-            var createdBadge = GetGroup(_groupId, GroupPermission.Edit).Badges.Add(badge.LinkUrl, badge.ImageUrl);
+            var createdBadge = GetGroup(_groupId, GroupPermission.Edit).Badges.Add(badge.Name, badge.LinkUrl, badge.ImageUrl);
             return createdBadge.ToBadgeModel();
         }
     }
@@ -79,6 +79,7 @@ internal sealed class GroupBadgeClient : ClientBase, IGroupBadgeClient
                 throw GitLabException.NotFound($"Badge with id '{id}' does not exist in group with id '{_groupId}'");
             }
 
+            badgeToUpdate.Name = badge.Name;
             badgeToUpdate.LinkUrl = badge.LinkUrl;
             badgeToUpdate.ImageUrl = badge.ImageUrl;
             return badgeToUpdate.ToBadgeModel();

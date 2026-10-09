@@ -6,6 +6,8 @@ public sealed class Badge : GitLabObject
 {
     public long Id { get; set; }
 
+    public string Name { get; set; }
+
     public string LinkUrl { get; set; }
 
     public string ImageUrl { get; set; }
@@ -21,6 +23,7 @@ public sealed class Badge : GitLabObject
         return new Models.Badge
         {
             Id = Id,
+            Name = Name,
             ImageUrl = ImageUrl,
             Kind = Kind,
             LinkUrl = LinkUrl,
