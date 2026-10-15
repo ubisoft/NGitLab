@@ -269,6 +269,12 @@ public sealed class GitLabTestContext : IDisposable
         configure?.Invoke(mergeRequestCreate);
         var mr = client.GetMergeRequest(project.Id).Create(mergeRequestCreate);
 
+        // A merge request with a merge_after date more than a minute away will not become mergeable within the wait below.
+        if (mergeRequestCreate.MergeAfter?.ToUniversalTime() > DateTime.UtcNow.AddMinutes(1))
+        {
+            return (project, mr);
+        }
+
         // GitLab computes diff data and merge status asynchronously after MR creation.
         // Wait until the transient states resolve so callers can immediately query diffs or approvals.
         var mrClient = client.GetMergeRequest(project.Id);

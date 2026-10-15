@@ -284,6 +284,35 @@ public class MergeRequestClientTests
 
     [Test]
     [NGitLabRetry]
+    public async Task Test_create_merge_request_with_merge_after()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[17.8,)"));
+        var mergeAfter = CreateMergeAfter();
+
+        var (_, mergeRequest) = await context.CreateMergeRequestAsync(mr => mr.MergeAfter = mergeAfter);
+
+        Assert.That(mergeRequest.MergeAfter?.ToUniversalTime(), Is.EqualTo(mergeAfter));
+    }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task Test_update_merge_request_with_merge_after()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        context.IgnoreTestIfGitLabVersionOutOfRange(VersionRange.Parse("[17.8,)"));
+        var (project, mergeRequest) = await context.CreateMergeRequestAsync();
+        var mergeRequestClient = context.Client.GetMergeRequest(project.Id);
+        var mergeAfter = CreateMergeAfter();
+
+        var updated = mergeRequestClient.Update(mergeRequest.Iid, new MergeRequestUpdate { MergeAfter = mergeAfter });
+
+        Assert.That(mergeRequest.MergeAfter, Is.Null);
+        Assert.That(updated.MergeAfter?.ToUniversalTime(), Is.EqualTo(mergeAfter));
+    }
+
+    [Test]
+    [NGitLabRetry]
     public async Task Test_merge_request_head_pipeline()
     {
         using var context = await GitLabTestContext.CreateAsync();
@@ -295,6 +324,13 @@ public class MergeRequestClientTests
         mergeRequest = await GitLabTestContext.RetryUntilAsync(() => mergeRequestClient[mergeRequest.Iid], p => p.HeadPipeline != null, TimeSpan.FromSeconds(120));
 
         Assert.That(mergeRequest.HeadPipeline?.ProjectId, Is.EqualTo(project.Id));
+    }
+
+    private static DateTime CreateMergeAfter()
+    {
+        // GitLab returns the timestamp with millisecond precision. Use whole seconds so the value round-trips.
+        var inOneWeek = DateTime.UtcNow.AddDays(7);
+        return new DateTime(inOneWeek.Year, inOneWeek.Month, inOneWeek.Day, inOneWeek.Hour, inOneWeek.Minute, inOneWeek.Second, DateTimeKind.Utc);
     }
 
     private static void ListMergeRequest(IMergeRequestClient mergeRequestClient, MergeRequest mergeRequest)

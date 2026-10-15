@@ -671,6 +671,8 @@ NGitLab.Mock.MergeRequest.HeadSha.get -> string
 NGitLab.Mock.MergeRequest.Id.get -> long
 NGitLab.Mock.MergeRequest.Iid.get -> long
 NGitLab.Mock.MergeRequest.Labels.get -> System.Collections.Generic.IList<string>
+NGitLab.Mock.MergeRequest.MergeAfter.get -> System.DateTimeOffset?
+NGitLab.Mock.MergeRequest.MergeAfter.set -> void
 NGitLab.Mock.MergeRequest.MergeCommitSha.get -> NGitLab.Sha1?
 NGitLab.Mock.MergeRequest.MergeCommitSha.set -> void
 NGitLab.Mock.MergeRequest.MergedAt.get -> System.DateTimeOffset?
