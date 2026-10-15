@@ -148,6 +148,9 @@ public class MergeRequest
     [JsonPropertyName("detailed_merge_status")]
     public DynamicEnum<DetailedMergeStatus> DetailedMergeStatus { get; set; }
 
+    [JsonPropertyName("merge_after")]
+    public DateTime? MergeAfter { get; set; }
+
     [JsonPropertyName("merge_error")]
     public string MergeError { get; set; }
 
