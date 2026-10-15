@@ -2893,6 +2893,8 @@ NGitLab.Models.MergeRequest.Iid.get -> long
 NGitLab.Models.MergeRequest.Iid.set -> void
 NGitLab.Models.MergeRequest.Labels.get -> string[]
 NGitLab.Models.MergeRequest.Labels.set -> void
+NGitLab.Models.MergeRequest.MergeAfter.get -> System.DateTime?
+NGitLab.Models.MergeRequest.MergeAfter.set -> void
 NGitLab.Models.MergeRequest.MergeCommitSha.get -> string
 NGitLab.Models.MergeRequest.MergeCommitSha.set -> void
 NGitLab.Models.MergeRequest.MergedAt.get -> System.DateTime?
@@ -3059,6 +3061,8 @@ NGitLab.Models.MergeRequestCreate.Description.get -> string
 NGitLab.Models.MergeRequestCreate.Description.set -> void
 NGitLab.Models.MergeRequestCreate.Labels.get -> string
 NGitLab.Models.MergeRequestCreate.Labels.set -> void
+NGitLab.Models.MergeRequestCreate.MergeAfter.get -> System.DateTime?
+NGitLab.Models.MergeRequestCreate.MergeAfter.set -> void
 NGitLab.Models.MergeRequestCreate.MergeRequestCreate() -> void
 NGitLab.Models.MergeRequestCreate.MilestoneId.get -> long?
 NGitLab.Models.MergeRequestCreate.MilestoneId.set -> void
@@ -3178,6 +3182,8 @@ NGitLab.Models.MergeRequestUpdate.Description.get -> string
 NGitLab.Models.MergeRequestUpdate.Description.set -> void
 NGitLab.Models.MergeRequestUpdate.Labels.get -> string
 NGitLab.Models.MergeRequestUpdate.Labels.set -> void
+NGitLab.Models.MergeRequestUpdate.MergeAfter.get -> System.DateTime?
+NGitLab.Models.MergeRequestUpdate.MergeAfter.set -> void
 NGitLab.Models.MergeRequestUpdate.MergeRequestUpdate() -> void
 NGitLab.Models.MergeRequestUpdate.MilestoneId.get -> long?
 NGitLab.Models.MergeRequestUpdate.MilestoneId.set -> void

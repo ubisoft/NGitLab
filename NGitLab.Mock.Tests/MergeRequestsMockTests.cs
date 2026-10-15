@@ -437,4 +437,57 @@ public class MergeRequestsMockTests
 
         Assert.That(mergeRequest, Is.Not.Null);
     }
+
+    [Test]
+    public void Test_create_merge_request_with_merge_after()
+    {
+        using var server = new GitLabConfig()
+            .WithUser("User1", isDefault: true)
+            .WithProject("Test", addDefaultUserAsMaintainer: true, configure: project => project
+                .WithCommit("Initial commit")
+                .WithCommit("Second commit", sourceBranch: "feature-branch", configure: commit => commit
+                    .WithFile("file.txt", "content")))
+            .BuildServer();
+
+        var client = server.CreateClient();
+        var mergeAfter = new DateTime(2030, 1, 2, 3, 4, 5, DateTimeKind.Utc);
+
+        var mergeRequest = client
+            .GetMergeRequest(1)
+            .Create(new MergeRequestCreate
+            {
+                SourceBranch = "feature-branch",
+                TargetBranch = "main",
+                Title = "Merge request 1",
+                MergeAfter = mergeAfter,
+            });
+
+        Assert.That(mergeRequest.MergeAfter, Is.EqualTo(mergeAfter));
+    }
+
+    [Test]
+    public void Test_update_merge_request_with_merge_after()
+    {
+        using var server = new GitLabConfig()
+            .WithUser("User1", isDefault: true)
+            .WithProject("Test", addDefaultUserAsMaintainer: true, configure: project => project
+                .WithCommit("Initial commit")
+                .WithCommit("Second commit", sourceBranch: "feature-branch", configure: commit => commit
+                    .WithFile("file.txt", "content")))
+            .BuildServer();
+
+        var mrClient = server.CreateClient().GetMergeRequest(1);
+        var mergeRequest = mrClient.Create(new MergeRequestCreate
+        {
+            SourceBranch = "feature-branch",
+            TargetBranch = "main",
+            Title = "Merge request 1",
+        });
+        var mergeAfter = new DateTime(2030, 1, 2, 3, 4, 5, DateTimeKind.Utc);
+
+        var updated = mrClient.Update(mergeRequest.Iid, new MergeRequestUpdate { MergeAfter = mergeAfter });
+
+        Assert.That(mergeRequest.MergeAfter, Is.Null);
+        Assert.That(updated.MergeAfter, Is.EqualTo(mergeAfter));
+    }
 }

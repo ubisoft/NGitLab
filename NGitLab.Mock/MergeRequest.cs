@@ -124,6 +124,8 @@ public sealed class MergeRequest : GitLabObject
 
     public DateTimeOffset? ClosedAt { get; set; }
 
+    public DateTimeOffset? MergeAfter { get; set; }
+
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     public Sha1 Sha { get; private set; }
@@ -299,6 +301,7 @@ public sealed class MergeRequest : GitLabObject
             UpdatedAt = UpdatedAt.UtcDateTime,
             MergedAt = MergedAt?.UtcDateTime,
             ClosedAt = ClosedAt?.UtcDateTime,
+            MergeAfter = MergeAfter?.UtcDateTime,
             Description = Description,
             Draft = Draft,
             Id = Id,
