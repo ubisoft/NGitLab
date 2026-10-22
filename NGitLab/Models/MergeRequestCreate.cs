@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
@@ -42,4 +43,7 @@ public class MergeRequestCreate
 
     [JsonPropertyName("allow_collaboration")]
     public bool? AllowCollaboration { get; set; }
+
+    [JsonPropertyName("merge_after")]
+    public DateTime? MergeAfter { get; set; }
 }

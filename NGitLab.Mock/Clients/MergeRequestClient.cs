@@ -345,6 +345,7 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             mergeRequest.Description = mergeRequestCreate.Description;
             mergeRequest.ShouldRemoveSourceBranch = mergeRequestCreate.RemoveSourceBranch;
             mergeRequest.Squash = mergeRequestCreate.Squash;
+            mergeRequest.MergeAfter = mergeRequestCreate.MergeAfter;
             SetLabels(mergeRequest, mergeRequestCreate.Labels, labelsToAdd: null, labelsToRemove: null);
 
             return mergeRequest.ToMergeRequestClient();
@@ -712,6 +713,11 @@ internal sealed class MergeRequestClient : ClientBase, IMergeRequestClient
             if (mergeRequestUpdate.Title != null)
             {
                 mergeRequest.Title = mergeRequestUpdate.Title;
+            }
+
+            if (mergeRequestUpdate.MergeAfter != null)
+            {
+                mergeRequest.MergeAfter = mergeRequestUpdate.MergeAfter;
             }
 
             SetLabels(mergeRequest, mergeRequestUpdate.Labels, mergeRequestUpdate.AddLabels, mergeRequestUpdate.RemoveLabels);

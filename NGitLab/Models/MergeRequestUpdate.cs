@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace NGitLab.Models;
 
@@ -51,6 +52,9 @@ public class MergeRequestUpdate
 
     [JsonPropertyName("squash_on_merge")]
     public bool? SquashOnMerge { get; set; }
+
+    [JsonPropertyName("merge_after")]
+    public DateTime? MergeAfter { get; set; }
 }
 
 public class MergeRequestUpdateState
