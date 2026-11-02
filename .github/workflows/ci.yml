@@ -115,6 +115,10 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "10.0.x"
+      # If this is a tag build, log in to NuGet using OIDC. For this to work,
+      # - One of the ubisoft-square organization (https://www.nuget.org/profiles/ubisoft-square) admin user accounts
+      #   was used to set up a Trusted Publishing (https://www.nuget.org/account/trustedpublishing)
+      # - NUGET_USER was set as an Actions repository secret (https://github.com/ubisoft/NGitLab/settings/secrets/actions) to that admin's username
       - name: NuGet login (OIDC)
         id: nuget-login
         if: startsWith(github.ref, 'refs/tags/')
