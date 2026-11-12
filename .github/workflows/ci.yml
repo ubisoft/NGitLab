@@ -82,7 +82,7 @@ jobs:
           $value = "${{matrix.gitlab}}-${{matrix.configuration}}".Replace(':', '-').Replace('/', '-')
           "artifact_name=test-results-$value" >> $env:GITHUB_OUTPUT
       - name: Run tests
-        run: dotnet test --configuration ${{matrix.configuration}} --logger trx --results-directory "${{env.TestResultsDirectory}}" --collect:"XPlat Code Coverage" /p:RunAnalyzers=false
+        run: dotnet test --configuration ${{matrix.configuration}} --framework net10.0 --logger trx --results-directory "${{env.TestResultsDirectory}}" --collect:"XPlat Code Coverage" /p:RunAnalyzers=false
       - name: Upload test results
         uses: actions/upload-artifact@v7
         if: always()
