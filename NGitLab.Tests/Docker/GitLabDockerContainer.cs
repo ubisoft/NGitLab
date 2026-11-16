@@ -299,11 +299,11 @@ public sealed class GitLabDockerContainer : IAsyncDisposable
                         IsPrivateProfile = true, // Set profile to private for LastActivity test cases
                     }));
                 }
-                catch (GitLabException)
+                catch (GitLabException ex)
                 {
                     user = retryPolicy.Execute(() => client.Users.Get("common_user")).FirstOrDefault();
                     if (user == null)
-                        throw new InvalidOperationException("Cannot create the common user");
+                        throw new InvalidOperationException("Cannot create the common user", ex);
                 }
             }
 
