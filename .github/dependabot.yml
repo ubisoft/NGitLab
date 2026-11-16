@@ -37,6 +37,9 @@ updates:
       # LibGit2Sharp 0.31.0+ no longer targets net6.0
       - dependency-name: "LibGit2Sharp"
         versions: [">= 0.31.0"]
+      # Higher versions do not seem to provide a definition for 'System.Runtime.CompilerServices.IsExternalInit'
+      - dependency-name: "PolySharp"
+        versions: [">= 1.16.0"]
       # Verify 33.0.0+ requires sponsorship
       - dependency-name: "Verify.NUnit"
         versions: [">= 33.0.0"]
