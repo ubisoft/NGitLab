@@ -21,8 +21,7 @@ public class BadgesMockTests
                 Name = "created",
                 LinkUrl = "http://dummy/a.html",
                 ImageUrl = "http://dummy/a.png",
-            }
-        );
+            });
         Assert.That(badge.Name, Is.EqualTo("created"));
 
         badge = badgeClient.Update(
@@ -32,8 +31,7 @@ public class BadgesMockTests
                 Name = "updated",
                 LinkUrl = "http://dummy/b.html",
                 ImageUrl = "http://dummy/b.png",
-            }
-        );
+            });
         Assert.That(badge.Name, Is.EqualTo("updated"));
         Assert.That(badgeClient[badge.Id].Name, Is.EqualTo("updated"));
     }
@@ -53,8 +51,7 @@ public class BadgesMockTests
                 Name = "created",
                 LinkUrl = "http://dummy/a.html",
                 ImageUrl = "http://dummy/a.png",
-            }
-        );
+            });
         Assert.That(badge.Name, Is.EqualTo("created"));
 
         badge = badgeClient.Update(
@@ -64,8 +61,7 @@ public class BadgesMockTests
                 Name = "updated",
                 LinkUrl = "http://dummy/b.html",
                 ImageUrl = "http://dummy/b.png",
-            }
-        );
+            });
         Assert.That(badge.Name, Is.EqualTo("updated"));
         Assert.That(badgeClient[badge.Id].Name, Is.EqualTo("updated"));
     }
