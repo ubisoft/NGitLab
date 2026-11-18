@@ -330,7 +330,7 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         throw new NotImplementedException();
     }
 
-    public Task<byte[]> GetAvatarAsync(ProjectId projectId, CancellationToken cancellationToken = default)
+    public Task GetAvatarAsync(ProjectId projectId, Func<Stream, Task> parser, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

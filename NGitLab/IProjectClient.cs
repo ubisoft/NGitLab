@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using NGitLab.Models;
@@ -109,7 +111,7 @@ public interface IProjectClient
     /// See https://docs.gitlab.com/api/projects/#download-a-project-avatar
     /// </summary>
     /// <param name="projectId">The project's id or path.</param>
+    /// <param name="parser">Callback receiving the avatar image stream. The stream is only valid during the callback.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>The raw bytes of the avatar image.</returns>
-    Task<byte[]> GetAvatarAsync(ProjectId projectId, CancellationToken cancellationToken = default);
+    Task GetAvatarAsync(ProjectId projectId, Func<Stream, Task> parser, CancellationToken cancellationToken = default);
 }

@@ -894,7 +894,7 @@ public class ProjectsTests
         using var context = await GitLabTestContext.CreateAsync();
         var project = context.CreateProject();
 
-        var exception = await Assert.ThrowsAsync<GitLabException>(() => context.Client.Projects.GetAvatarAsync(project.Id, CancellationToken.None));
+        var exception = await Assert.ThrowsAsync<GitLabException>(() => context.Client.Projects.GetAvatarAsync(project.Id, _ => Task.CompletedTask, CancellationToken.None));
         Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 }
