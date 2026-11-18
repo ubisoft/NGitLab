@@ -330,6 +330,11 @@ internal sealed class ProjectClient : ClientBase, IProjectClient
         throw new NotImplementedException();
     }
 
+    public Task<byte[]> GetAvatarAsync(ProjectId projectId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public Dictionary<string, double> GetLanguages(string id)
     {
         // Basic implementation, the results are not expected to be accurrate

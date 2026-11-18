@@ -103,4 +103,13 @@ public interface IProjectClient
     Dictionary<string, double> GetLanguages(string id);
 
     Task TransferAsync(ProjectId id, GroupId namespaceId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets the avatar image of a project.
+    /// See https://docs.gitlab.com/api/projects/#download-a-project-avatar
+    /// </summary>
+    /// <param name="projectId">The project's id or path.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The raw bytes of the avatar image.</returns>
+    Task<byte[]> GetAvatarAsync(ProjectId projectId, CancellationToken cancellationToken = default);
 }

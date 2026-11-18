@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -303,4 +304,16 @@ public class ProjectClient : IProjectClient
 
     public Task TransferAsync(ProjectId id, GroupId namespaceId, CancellationToken cancellationToken = default)
         => _api.Put().ExecuteAsync($"{Project.Url}/{id.ValueAsUriParameter()}/transfer?namespace={namespaceId.ValueAsUriParameter()}", cancellationToken);
+
+    public async Task<byte[]> GetAvatarAsync(ProjectId projectId, CancellationToken cancellationToken = default)
+    {
+        byte[] result = null;
+        await _api.Get().StreamAsync($"{Project.Url}/{projectId.ValueAsUriParameter()}/avatar", async s =>
+        {
+            using var ms = new MemoryStream();
+            await s.CopyToAsync(ms).ConfigureAwait(false);
+            result = ms.ToArray();
+        }, cancellationToken).ConfigureAwait(false);
+        return result;
+    }
 }
