@@ -1,5 +1,4 @@
-﻿[assembly: System.Reflection.AssemblyMetadata("RepositoryUrl", "https://github.com/ubisoft/NGitLab.git")]
-namespace NGitLab
+﻿namespace NGitLab
 {
     public readonly struct DynamicEnum<TEnum> : System.IEquatable<NGitLab.DynamicEnum<TEnum>>, System.IEquatable<TEnum>
         where TEnum :  struct, System.Enum

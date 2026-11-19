@@ -29,6 +29,10 @@ public class AssemblyTests
         var verifySettings = new VerifySettings();
         verifySettings.UseDirectory("snapshots");
 
+        // RepositoryUrl is derived from the git remote / CI environment (with or without ".git"),
+        // so it differs between local machines and CI. It is not part of the public API.
+        verifySettings.ScrubLinesContaining("AssemblyMetadata(\"RepositoryUrl\"");
+
         // Act
         var publicApi = assembly.GeneratePublicApi(apiGenOptions);
 
