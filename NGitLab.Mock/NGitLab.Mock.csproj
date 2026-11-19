@@ -10,10 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" />
-    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="NeoSmart.AsyncLock" />
     <PackageReference Include="YamlDotNet" />
   </ItemGroup>
