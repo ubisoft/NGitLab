@@ -305,6 +305,9 @@ dotnet_diagnostic.SA1118.severity = silent
 # SA1122: Use string.Empty for empty strings
 dotnet_diagnostic.SA1122.severity = silent
 
+# SA1143: Conditional expressions must be formatted consistently
+dotnet_diagnostic.SA1143.severity = suggestion
+
 # SA1200: Using directives should be placed correctly
 dotnet_diagnostic.SA1200.severity = none
 
@@ -335,12 +338,18 @@ dotnet_diagnostic.SA1309.severity = none
 # SA1311: Static readonly fields should begin with upper-case letter
 dotnet_diagnostic.SA1311.severity = silent
 
+# SA1315: Parameter names should match inherited names
+dotnet_diagnostic.SA1315.severity = suggestion
+
 # The default VS refactoring works better and MA0048 detects the same pattern
 # SA1402: File may only contain a single type
 dotnet_diagnostic.SA1402.severity = none
 
 # SA1503: Braces should not be omitted
 dotnet_diagnostic.SA1503.severity = silent
+
+# SA1504: All accessors should be single-line or multi-line
+dotnet_diagnostic.SA1504.severity = none
 
 # SA1507: Code should not contain multiple blank lines in a row
 dotnet_diagnostic.SA1507.severity = warning
