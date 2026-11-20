@@ -886,4 +886,15 @@ public class ProjectsTests
 
         Assert.That(movedProject.Namespace.Id, Is.EqualTo(group2.Id));
     }
+
+    [Test]
+    [NGitLabRetry]
+    public async Task GetAvatar_ProjectWithoutAvatar_ThrowsNotFound()
+    {
+        using var context = await GitLabTestContext.CreateAsync();
+        var project = context.CreateProject();
+
+        var exception = await Assert.ThrowsAsync<GitLabException>(() => context.Client.Projects.GetAvatarAsync(project.Id, _ => Task.CompletedTask, CancellationToken.None));
+        Assert.That(exception.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+    }
 }
