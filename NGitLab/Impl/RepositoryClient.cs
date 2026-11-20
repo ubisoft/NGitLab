@@ -27,7 +27,7 @@ public class RepositoryClient : IRepositoryClient
 
     public IContributorClient Contributors => new ContributorClient(_api, _repoPath);
 
-    public IEnumerable<Tree> Tree => _api.Get().GetAll<Tree>(_repoPath + "/tree");
+    public IEnumerable<Tree> Tree => GetTree(new RepositoryGetTreeOptions());
 
     public IEnumerable<Tree> GetTree(string path) => GetTree(new RepositoryGetTreeOptions { Path = path });
 
@@ -158,6 +158,9 @@ public class RepositoryClient : IRepositoryClient
         url = Utils.AddParameter(url, "ref", options.Ref);
         url = Utils.AddParameter(url, "recursive", options.Recursive);
         url = Utils.AddParameter(url, "per_page", options.PerPage);
+
+        // Offset pagination is unsupported on this endpoint since GitLab 15.0
+        url = Utils.AddParameter(url, "pagination", "keyset");
 
         return url;
     }
