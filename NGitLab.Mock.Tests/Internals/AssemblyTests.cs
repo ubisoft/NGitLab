@@ -14,7 +14,7 @@ public class AssemblyTests
     public async Task MakeSurePublicApiHasNotChanged()
     {
         // Arrange
-        var assembly = typeof(GitLabClient).Assembly;
+        var assembly = typeof(GitLabServer).Assembly;
 
         var apiGenOptions = new ApiGeneratorOptions
         {
