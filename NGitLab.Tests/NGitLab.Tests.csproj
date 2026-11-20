@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
@@ -18,7 +18,9 @@
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="Polly" />
+    <PackageReference Include="PublicApiGenerator" />
     <PackageReference Include="Testcontainers" />
+    <PackageReference Include="Verify.NUnit" />
     <PackageReference Include="coverlet.collector">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

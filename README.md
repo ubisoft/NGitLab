@@ -28,7 +28,11 @@ dotnet add package NGitLab
 
 - Install Docker on your machine
 - It's recommended to use WSL version 2 _(see [here](https://learn.microsoft.com/en-us/windows/wsl/install))_
-- Executing tests under Linux requires PowerShell to be installed _(see [here](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux))_
+- Running the Docker-based integration tests (`NGitLab.Tests`) under Linux requires PowerShell (`pwsh`) to be installed, because they start a GitLab runner that uses the PowerShell shell _(see [here](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux))_
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). In particular, changes to the public API are checked by snapshot tests: the page explains how to check them and how to update the snapshots.
 
 ## Thanks
 
