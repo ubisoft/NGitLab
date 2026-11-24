@@ -9,6 +9,7 @@
     <File Path="global.json" />
   </Folder>
   <Project Path="NGitLab.Mock.Tests/NGitLab.Mock.Tests.csproj" />
+  <Project Path="NGitLab.PublicApi.Tests/NGitLab.PublicApi.Tests.csproj" />
   <Project Path="NGitLab.Mock/NGitLab.Mock.csproj" />
   <Project Path="NGitLab.Tests/NGitLab.Tests.csproj" />
   <Project Path="NGitLab/NGitLab.csproj" />

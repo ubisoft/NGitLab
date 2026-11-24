@@ -6,15 +6,15 @@ using PublicApiGenerator;
 using VerifyNUnit;
 using VerifyTests;
 
-namespace NGitLab.Mock.Tests.Internals;
+namespace NGitLab.PublicApi.Tests;
 
-public class AssemblyTests
+public class NGitLabApiTests
 {
     [Test]
     public async Task MakeSurePublicApiHasNotChanged()
     {
         // Arrange
-        var assembly = typeof(GitLabServer).Assembly;
+        var assembly = typeof(GitLabClient).Assembly;
 
         var apiGenOptions = new ApiGeneratorOptions
         {
@@ -28,7 +28,7 @@ public class AssemblyTests
 
         var verifySettings = new VerifySettings();
         verifySettings.UseDirectory("snapshots");
-        verifySettings.UniqueForTargetFrameworkAndVersion(); // The public API differs from one target framework to another
+        verifySettings.UniqueForTargetFrameworkAndVersion(); // The public API differs from one target framework to another (e.g. net6.0 uses the netstandard2.0 build)
 
         // RepositoryUrl is derived from the git remote / CI environment (with or without ".git"),
         // so it differs between local machines and CI. It is not part of the public API.

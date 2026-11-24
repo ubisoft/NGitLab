@@ -1,20 +1,21 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
+using NGitLab.Mock;
 using NUnit.Framework;
 using PublicApiGenerator;
 using VerifyNUnit;
 using VerifyTests;
 
-namespace NGitLab.Tests.Internals;
+namespace NGitLab.PublicApi.Tests;
 
-public class AssemblyTests
+public class NGitLabMockApiTests
 {
     [Test]
     public async Task MakeSurePublicApiHasNotChanged()
     {
         // Arrange
-        var assembly = typeof(GitLabClient).Assembly;
+        var assembly = typeof(GitLabServer).Assembly;
 
         var apiGenOptions = new ApiGeneratorOptions
         {

@@ -12,19 +12,18 @@ snapshot (using [Verify](https://github.com/VerifyTests/Verify)).
 
 | Project | Test | Snapshot(s) |
 | --- | --- | --- |
-| `NGitLab` | `NGitLab.Tests/Internals/AssemblyTests.cs` | `NGitLab.Tests/Internals/snapshots/*.verified.txt` |
-| `NGitLab.Mock` | `NGitLab.Mock.Tests/Internals/AssemblyTests.cs` | `NGitLab.Mock.Tests/Internals/snapshots/*.verified.txt` (one per target framework) |
+| `NGitLab` | `NGitLab.PublicApi.Tests/NGitLabApiTests.cs` | `NGitLab.PublicApi.Tests/snapshots/NGitLabApiTests.*.verified.txt` (one per target framework) |
+| `NGitLab.Mock` | `NGitLab.PublicApi.Tests/NGitLabMockApiTests.cs` | `NGitLab.PublicApi.Tests/snapshots/NGitLabMockApiTests.*.verified.txt` |
 
 ### Checking whether your change affects the public API
 
-Run the `AssemblyTests` of both test projects:
+Run the `NGitLab.PublicApi.Tests` project:
 
 ```PowerShell
-dotnet test NGitLab.Tests --filter "FullyQualifiedName~AssemblyTests"
-dotnet test NGitLab.Mock.Tests --filter "FullyQualifiedName~AssemblyTests"
+dotnet test NGitLab.PublicApi.Tests
 ```
 
-`NGitLab.Mock.Tests` targets several frameworks and each one has its own snapshot, so run the tests for every
+`NGitLab.PublicApi.Tests` targets net6.0, net8.0 and net10.0 (the net6.0 and net8.0 test hosts roll forward to the installed .NET 10 runtime, so no extra runtime is needed). The API of `NGitLab` can differ per framework, so run the tests for every
 target framework (the default `dotnet test` does this).
 These tests do not need Docker.
 
@@ -45,7 +44,7 @@ If the change is intentional, accept the new API by replacing each `*.verified.t
 
 ```PowerShell
 # From the repository root
-Get-ChildItem -Recurse -Filter "AssemblyTests.*.received.txt" | ForEach-Object {
+Get-ChildItem -Recurse -Filter "*ApiTests.*.received.txt" | ForEach-Object {
     Move-Item -Force $_.FullName ($_.FullName -replace '\.received\.txt$', '.verified.txt')
 }
 ```
