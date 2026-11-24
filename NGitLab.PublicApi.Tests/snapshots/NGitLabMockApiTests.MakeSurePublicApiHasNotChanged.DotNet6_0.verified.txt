@@ -1,0 +1,1296 @@
+﻿namespace NGitLab.Mock
+{
+    public sealed class Badge : NGitLab.Mock.GitLabObject
+    {
+        public Badge() { }
+        public long Id { get; set; }
+        public string ImageUrl { get; set; }
+        public NGitLab.Models.BadgeKind Kind { get; }
+        public string LinkUrl { get; set; }
+        public string Name { get; set; }
+        public string RenderedImageUrl { get; set; }
+        public string RenderedLinkUrl { get; set; }
+        public NGitLab.Models.Badge ToBadgeModel() { }
+    }
+    public sealed class BadgeCollection : NGitLab.Mock.Collection<NGitLab.Mock.Badge>
+    {
+        public BadgeCollection(NGitLab.Mock.GitLabObject parent) { }
+        public override void Add(NGitLab.Mock.Badge item) { }
+        public NGitLab.Mock.Badge Add(string linkUrl, string imageUrl) { }
+        public NGitLab.Mock.Badge Add(string name, string linkUrl, string imageUrl) { }
+        public NGitLab.Mock.Badge GetById(long id) { }
+    }
+    public class Change : NGitLab.Mock.GitLabObject
+    {
+        public Change() { }
+        public long AMode { get; set; }
+        public long BMode { get; set; }
+        public bool DeletedFile { get; set; }
+        public string Diff { get; set; }
+        public bool NewFile { get; set; }
+        public string NewPath { get; set; }
+        public string OldPath { get; set; }
+        public bool RenamedFile { get; set; }
+        public NGitLab.Models.Change ToChange() { }
+    }
+    public abstract class Collection<T> : System.Collections.Generic.IEnumerable<T>, System.Collections.Generic.IReadOnlyCollection<T>, System.Collections.IEnumerable, System.Collections.Specialized.INotifyCollectionChanged, System.ComponentModel.INotifyPropertyChanged
+        where T : NGitLab.Mock.GitLabObject
+    {
+        protected Collection(NGitLab.Mock.GitLabObject parent) { }
+        public int Count { get; }
+        protected NGitLab.Mock.GitLabObject Parent { get; }
+        protected NGitLab.Mock.GitLabServer Server { get; }
+        public event System.Collections.Specialized.NotifyCollectionChangedEventHandler CollectionChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public virtual void Add(T item) { }
+        protected void Clear() { }
+        public bool Contains(T item) { }
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator() { }
+        public bool Remove(T item) { }
+    }
+    public enum CommitAction
+    {
+        Create = 0,
+        Delete = 1,
+        Move = 2,
+        Update = 3,
+        chmod = 4,
+    }
+    public sealed class CommitInfo : NGitLab.Mock.GitLabObject
+    {
+        public CommitInfo() { }
+        public string Sha { get; set; }
+        public string Status { get; set; }
+    }
+    public sealed class CommitInfoCollection : NGitLab.Mock.Collection<NGitLab.Mock.CommitInfo>
+    {
+        public CommitInfoCollection(NGitLab.Mock.GitLabObject parent) { }
+        public NGitLab.Mock.CommitInfo GetOrAdd(string sha) { }
+    }
+    public sealed class CommitStatus : NGitLab.Mock.GitLabObject
+    {
+        public CommitStatus() { }
+        public int? Coverage { get; set; }
+        public string Description { get; set; }
+        public string Name { get; set; }
+        public new NGitLab.Mock.Project Parent { get; }
+        public string Ref { get; set; }
+        public string Sha { get; set; }
+        public string Status { get; set; }
+        public string TargetUrl { get; set; }
+        public NGitLab.Models.CommitStatus ToClientCommitStatus() { }
+    }
+    public sealed class CommitStatusCollection : NGitLab.Mock.Collection<NGitLab.Mock.CommitStatus>
+    {
+        public CommitStatusCollection(NGitLab.Mock.GitLabObject parent) { }
+    }
+    public sealed class ContainerRegistryTagEntry
+    {
+        public ContainerRegistryTagEntry() { }
+        public string Name { get; set; }
+        public NGitLab.Models.ContainerRegistryTag ToClientContainerRegistryTag() { }
+    }
+    public sealed class ContainerRepository : NGitLab.Mock.GitLabObject
+    {
+        public ContainerRepository() { }
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public new NGitLab.Mock.Project Parent { get; }
+        public System.Collections.Generic.List<NGitLab.Mock.ContainerRegistryTagEntry> Tags { get; }
+        public NGitLab.Models.ContainerRepository ToClientContainerRepository() { }
+    }
+    public sealed class ContainerRepositoryCollection : NGitLab.Mock.Collection<NGitLab.Mock.ContainerRepository>
+    {
+        public ContainerRepositoryCollection(NGitLab.Mock.GitLabObject parent) { }
+    }
+    public sealed class EffectivePermissions
+    {
+        public System.Collections.Generic.IReadOnlyCollection<NGitLab.Mock.EffectiveUserPermission> Permissions { get; }
+        public NGitLab.Models.AccessLevel? GetAccessLevel(NGitLab.Mock.User user) { }
+        public NGitLab.Mock.EffectiveUserPermission GetEffectivePermission(NGitLab.Mock.User user) { }
+    }
+    public sealed class EffectiveUserPermission
+    {
+        public NGitLab.Models.AccessLevel AccessLevel { get; }
+        public NGitLab.Mock.User User { get; }
+        public NGitLab.Models.Membership ToMembershipClient() { }
+    }
+    public sealed class Event : NGitLab.Mock.GitLabObject
+    {
+        public Event() { }
+        public NGitLab.DynamicEnum<NGitLab.Models.EventAction> Action { get; set; }
+        public long AuthorId { get; set; }
+        public string AuthorUserName { get; set; }
+        public System.DateTime CreatedAt { get; set; }
+        public long Id { get; set; }
+        public NGitLab.Mock.Note Note { get; set; }
+        public long ProjectId { get; set; }
+        public NGitLab.Models.PushData PushData { get; set; }
+        public long? TargetIId { get; set; }
+        public long? TargetId { get; set; }
+        public string TargetTitle { get; set; }
+        public NGitLab.DynamicEnum<NGitLab.Models.EventTargetType> TargetType { get; set; }
+        public string Title { get; set; }
+        public NGitLab.Models.Event ToClientEvent() { }
+    }
+    public sealed class EventCollection : NGitLab.Mock.Collection<NGitLab.Mock.Event>
+    {
+        public EventCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.Event item) { }
+    }
+    public abstract class File
+    {
+        protected File(string path) { }
+        public abstract byte[] Content { get; }
+        public string Path { get; }
+        public static NGitLab.Mock.File CreateFromText(string path, string content) { }
+        public static NGitLab.Mock.File CreateFromText(string path, string content, System.Text.Encoding encoding) { }
+    }
+    public static class GitLabClientMockExtensions
+    {
+        public static NGitLab.IGitLabClient WithGraphQLClient(this NGitLab.IGitLabClient client, NGitLab.IGraphQLClient graphQLClient) { }
+    }
+    public abstract class GitLabObject
+    {
+        protected GitLabObject() { }
+        public NGitLab.Mock.GitLabObject Parent { get; }
+        public NGitLab.Mock.GitLabServer Server { get; }
+    }
+    public sealed class GitLabServer : NGitLab.Mock.GitLabObject, System.IDisposable
+    {
+        public GitLabServer() { }
+        public System.Collections.Generic.IEnumerable<NGitLab.Mock.Group> AllGroups { get; }
+        public System.Collections.Generic.IEnumerable<NGitLab.Mock.Project> AllProjects { get; }
+        public System.Collections.Generic.IEnumerable<NGitLab.Mock.Runner> AllRunners { get; }
+        public string DefaultBranchName { get; set; }
+        public NGitLab.Models.VisibilityLevel DefaultForkVisibilityLevel { get; set; }
+        public NGitLab.IGraphQLClient DefaultGraphQLClient { get; set; }
+        public NGitLab.Mock.EventCollection Events { get; }
+        public NGitLab.Mock.GroupCollection Groups { get; }
+        public NGitLab.Mock.ResourceLabelEventCollection ResourceLabelEvents { get; }
+        public NGitLab.Mock.ResourceMilestoneEventCollection ResourceMilestoneEvents { get; }
+        public NGitLab.Mock.ResourceStateEventCollection ResourceStateEvents { get; }
+        public NGitLab.Mock.SystemHookCollection SystemHooks { get; }
+        public System.Uri Url { get; set; }
+        public NGitLab.Mock.UserCollection Users { get; }
+        public NGitLab.Models.GitLabVersion Version { get; set; }
+        public event System.EventHandler ClientOperation;
+        public NGitLab.IGitLabClient CreateClient(NGitLab.Mock.User user) { }
+        public void Dispose() { }
+    }
+    public sealed class Group : NGitLab.Mock.GitLabObject
+    {
+        public Group() { }
+        public Group(NGitLab.Mock.User user) { }
+        public Group(string name) { }
+        public System.Collections.Generic.IEnumerable<NGitLab.Mock.Project> AllProjects { get; }
+        public NGitLab.Mock.BadgeCollection Badges { get; }
+        public System.DateTime CreatedAt { get; set; }
+        public System.Collections.Generic.IEnumerable<NGitLab.Mock.Group> DescendantGroups { get; }
+        public string Description { get; set; }
+        public System.TimeSpan ExtraSharedRunnersLimit { get; set; }
+        public string FullName { get; }
+        public NGitLab.Mock.GroupCollection Groups { get; }
+        public NGitLab.Mock.GroupHookCollection Hooks { get; }
+        public long Id { get; set; }
+        public bool IsUserNamespace { get; }
+        public NGitLab.Mock.LabelsCollection Labels { get; }
+        public bool LfsEnabled { get; set; }
+        public System.Collections.Generic.IEnumerable<NGitLab.Mock.MergeRequest> MergeRequests { get; }
+        public NGitLab.Mock.MilestoneCollection Milestones { get; }
+        public string Name { get; set; }
+        public new NGitLab.Mock.Group Parent { get; }
+        public string Path { get; set; }
+        public string PathWithNameSpace { get; }
+        public NGitLab.Mock.PermissionCollection Permissions { get; }
+        public NGitLab.Mock.ProjectCollection Projects { get; }
+        public NGitLab.Mock.RunnerCollection RegisteredRunners { get; }
+        public bool RequestAccessEnabled { get; set; }
+        public string RunnersToken { get; }
+        public System.TimeSpan SharedRunnersLimit { get; set; }
+        public NGitLab.Models.VisibilityLevel Visibility { get; set; }
+        public NGitLab.Mock.Runner AddRunner(string description, long id = 0, string name = "gitlab-runner", bool paused = false, bool locked = true, bool isShared = false, bool runUntagged = false, string[] tagList = null) { }
+        public bool CanUserAddGroup(NGitLab.Mock.User user) { }
+        public bool CanUserAddProject(NGitLab.Mock.User user) { }
+        public bool CanUserDeleteGroup(NGitLab.Mock.User user) { }
+        public bool CanUserEditGroup(NGitLab.Mock.User user) { }
+        public bool CanUserViewGroup(NGitLab.Mock.User user) { }
+        public NGitLab.Mock.User CreateBotUser(NGitLab.Models.AccessLevel accessLevel) { }
+        public NGitLab.Mock.EffectivePermissions GetEffectivePermissions() { }
+        public NGitLab.Mock.EffectivePermissions GetEffectivePermissions(bool includeInheritedPermissions) { }
+        public bool IsUserOwner(NGitLab.Mock.User user) { }
+        public bool RemoveRunner(long runnerId) { }
+        public NGitLab.Models.Group ToClientGroup(NGitLab.Mock.User currentUser) { }
+    }
+    public sealed class GroupCollection : NGitLab.Mock.Collection<NGitLab.Mock.Group>
+    {
+        public GroupCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.Group group) { }
+    }
+    public static class GroupExtensions
+    {
+        public static NGitLab.Mock.Group FindById(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Group> groups, long id) { }
+        public static NGitLab.Mock.Group FindByNamespacedPath(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Group> groups, string pathWithNamespace) { }
+        public static NGitLab.Mock.Group FindGroup(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Group> groups, string idOrPathWithNamespace) { }
+    }
+    public sealed class GroupHook : NGitLab.Mock.GitLabObject
+    {
+        public GroupHook() { }
+        public System.DateTime CreatedAt { get; set; }
+        public bool EnableSslVerification { get; set; }
+        public long Id { get; }
+        public bool IssuesEvents { get; set; }
+        public bool JobEvents { get; set; }
+        public bool MergeRequestsEvents { get; set; }
+        public bool NoteEvents { get; set; }
+        public new NGitLab.Mock.Group Parent { get; }
+        public bool PipelineEvents { get; set; }
+        public bool PushEvents { get; set; }
+        public bool TagPushEvents { get; set; }
+        public string Token { get; set; }
+        public System.Uri Url { get; set; }
+        public bool WikiPagesEvents { get; set; }
+        public NGitLab.Models.GroupHook ToClientGroupHook() { }
+    }
+    public class GroupHookCollection : NGitLab.Mock.Collection<NGitLab.Mock.GroupHook>
+    {
+        public GroupHookCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.GroupHook item) { }
+    }
+    public sealed class Issue : NGitLab.Mock.GitLabObject
+    {
+        public Issue() { }
+        public NGitLab.Mock.UserRef Assignee { get; set; }
+        public NGitLab.Mock.UserRef[] Assignees { get; set; }
+        public NGitLab.Mock.UserRef Author { get; set; }
+        public System.DateTimeOffset? ClosedAt { get; set; }
+        public bool Confidential { get; set; }
+        public System.DateTimeOffset CreatedAt { get; set; }
+        public string Description { get; set; }
+        public bool DiscussionLocked { get; set; }
+        public long Id { get; set; }
+        public long Iid { get; set; }
+        public string[] Labels { get; set; }
+        public NGitLab.Mock.Milestone Milestone { get; set; }
+        public System.Collections.Generic.IList<NGitLab.Mock.ProjectIssueNote> Notes { get; set; }
+        public NGitLab.Mock.Project Project { get; }
+        public long ProjectId { get; }
+        public NGitLab.Mock.IssueState State { get; set; }
+        public string Title { get; set; }
+        public System.DateTimeOffset UpdatedAt { get; set; }
+        public string WebUrl { get; }
+        public bool CanUserViewIssue(NGitLab.Mock.User user) { }
+        public NGitLab.Models.Issue ToClientIssue() { }
+    }
+    public sealed class IssueCollection : NGitLab.Mock.Collection<NGitLab.Mock.Issue>
+    {
+        public IssueCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.Issue item) { }
+        public NGitLab.Mock.Issue GetByIid(long issueId) { }
+    }
+    public enum IssueState
+    {
+        opened = 0,
+        closed = 1,
+    }
+    public sealed class Job : NGitLab.Mock.GitLabObject
+    {
+        public Job() { }
+        public bool AllowFailure { get; set; }
+        public NGitLab.Mock.JobArtifactCollection Artifacts { get; set; }
+        public NGitLab.Models.Job.JobArtifact ArtifactsFile { get; set; }
+        public NGitLab.Models.Commit Commit { get; set; }
+        public double? Coverage { get; set; }
+        public System.DateTime CreatedAt { get; set; }
+        public NGitLab.Mock.Pipeline DownstreamPipeline { get; set; }
+        public float? Duration { get; set; }
+        public string FailureReason { get; set; }
+        public System.DateTime FinishedAt { get; set; }
+        public long Id { get; set; }
+        public string JobToken { get; set; }
+        public string Name { get; set; }
+        public NGitLab.Mock.Pipeline Pipeline { get; set; }
+        public NGitLab.Mock.Project Project { get; }
+        public float? QueuedDuration { get; set; }
+        public string Ref { get; set; }
+        public NGitLab.Models.Job.JobRunner Runner { get; set; }
+        public string Stage { get; set; }
+        public System.DateTime StartedAt { get; set; }
+        public NGitLab.JobStatus Status { get; set; }
+        public bool Tag { get; set; }
+        public string[] TagList { get; set; }
+        public string Trace { get; set; }
+        public NGitLab.Mock.User User { get; set; }
+        public string WebUrl { get; }
+    }
+    public sealed class JobArtifact : NGitLab.Mock.GitLabObject
+    {
+        public JobArtifact() { }
+        public string Filename { get; set; }
+        public long Size { get; set; }
+    }
+    public sealed class JobArtifactCollection : NGitLab.Mock.Collection<NGitLab.Mock.JobArtifact>
+    {
+        public JobArtifactCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.JobArtifact artifact) { }
+        public new void Clear() { }
+    }
+    public sealed class JobCollection : NGitLab.Mock.Collection<NGitLab.Mock.Job>
+    {
+        public JobCollection(NGitLab.Mock.GitLabObject parent) { }
+        public override void Add(NGitLab.Mock.Job job) { }
+        public NGitLab.Mock.Job Add(NGitLab.Mock.Job job, NGitLab.Mock.Pipeline pipeline) { }
+        public NGitLab.Mock.Job AddNew() { }
+        public NGitLab.Mock.Job AddNew(NGitLab.Mock.Pipeline pipeline) { }
+        public NGitLab.Mock.Job GetById(long id) { }
+    }
+    public sealed class Label : NGitLab.Mock.GitLabObject
+    {
+        public Label() { }
+        public string Color { get; set; }
+        public string Description { get; set; }
+        public NGitLab.Mock.Group Group { get; }
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public NGitLab.Mock.Project Project { get; }
+        public NGitLab.Models.Label ToClientLabel() { }
+    }
+    public sealed class LabelsCollection : NGitLab.Mock.Collection<NGitLab.Mock.Label>
+    {
+        public LabelsCollection(NGitLab.Mock.GitLabObject parent) { }
+        public override void Add(NGitLab.Mock.Label label) { }
+        public NGitLab.Mock.Label Add(string name = null, string color = null, string description = null) { }
+        public NGitLab.Mock.Label GetById(long id) { }
+        public NGitLab.Mock.Label GetByName(string name) { }
+    }
+    public sealed class LintCI : NGitLab.Mock.GitLabObject
+    {
+        public LintCI(string @ref, bool valid, params string[] errors) { }
+        public string[] Errors { get; }
+        public string Ref { get; }
+        public bool Valid { get; }
+    }
+    public sealed class LintCICollection : NGitLab.Mock.Collection<NGitLab.Mock.LintCI>
+    {
+        public LintCICollection(NGitLab.Mock.GitLabObject container) { }
+    }
+    public sealed class MergeRequest : NGitLab.Mock.GitLabObject
+    {
+        public MergeRequest() { }
+        public System.Collections.Generic.IList<NGitLab.Mock.UserRef> Approvers { get; }
+        public NGitLab.Mock.UserRef Assignee { get; set; }
+        public System.Collections.Generic.IList<NGitLab.Mock.UserRef> Assignees { get; set; }
+        public NGitLab.Mock.UserRef Author { get; set; }
+        public string BaseSha { get; }
+        public NGitLab.Mock.MergeRequestChangeCollection Changes { get; }
+        public System.DateTimeOffset? ClosedAt { get; set; }
+        public NGitLab.Mock.NoteCollection<NGitLab.Mock.MergeRequestComment> Comments { get; }
+        public System.Collections.Generic.IEnumerable<LibGit2Sharp.Commit> Commits { get; }
+        public System.DateTimeOffset CreatedAt { get; set; }
+        public string Description { get; set; }
+        public int? DivergedCommitsCount { get; }
+        public bool Draft { get; }
+        public bool ForceRemoveSourceBranch { get; set; }
+        public bool HasConflicts { get; }
+        public NGitLab.Mock.Pipeline HeadPipeline { get; }
+        public string HeadSha { get; }
+        public long Id { get; }
+        public long Iid { get; }
+        public System.Collections.Generic.IList<string> Labels { get; }
+        public System.DateTimeOffset? MergeAfter { get; set; }
+        public NGitLab.Sha1? MergeCommitSha { get; set; }
+        public bool MergeWhenPipelineSucceeds { get; set; }
+        public System.DateTimeOffset? MergedAt { get; set; }
+        public NGitLab.Mock.Milestone Milestone { get; set; }
+        public NGitLab.Mock.Project Project { get; }
+        public bool RebaseInProgress { get; set; }
+        public System.Collections.Generic.IList<NGitLab.Mock.UserRef> Reviewers { get; set; }
+        public NGitLab.Sha1 Sha { get; }
+        public bool ShouldRemoveSourceBranch { get; set; }
+        public string SourceBranch { get; set; }
+        public NGitLab.Mock.Project SourceProject { get; set; }
+        public bool Squash { get; set; }
+        public string StartSha { get; }
+        public NGitLab.Models.MergeRequestState State { get; }
+        public string TargetBranch { get; set; }
+        public string Title { get; set; }
+        public System.DateTimeOffset UpdatedAt { get; set; }
+        public System.Collections.Generic.IReadOnlyList<NGitLab.Models.MergeRequestVersion> Versions { get; }
+        public string WebUrl { get; }
+        [System.Obsolete("Deprecated by GitLab. Use Draft instead")]
+        public bool WorkInProgress { get; }
+        public void Accept(NGitLab.Mock.User user) { }
+        public System.Collections.Generic.IEnumerable<NGitLab.Models.MergeRequestDiscussion> GetDiscussions() { }
+        public NGitLab.Models.RebaseResult Rebase(NGitLab.Mock.User user) { }
+    }
+    public class MergeRequestChangeCollection : NGitLab.Mock.Collection<NGitLab.Mock.Change>
+    {
+        public MergeRequestChangeCollection(NGitLab.Mock.GitLabObject parent) { }
+        [System.Obsolete("Use Add(string diff, string oldPath, string newPath, ChangeKind? changeKind) inst" +
+            "ead")]
+        public NGitLab.Mock.Change Add(string diff) { }
+        public NGitLab.Mock.Change Add(string diff, string oldPath, string newPath, LibGit2Sharp.ChangeKind? changeKind) { }
+    }
+    public sealed class MergeRequestCollection : NGitLab.Mock.Collection<NGitLab.Mock.MergeRequest>
+    {
+        public MergeRequestCollection(NGitLab.Mock.GitLabObject parent) { }
+        public override void Add(NGitLab.Mock.MergeRequest mergeRequest) { }
+        public NGitLab.Mock.MergeRequest Add(string sourceBranch, string targetBranch, string title, NGitLab.Mock.User user) { }
+        public NGitLab.Mock.MergeRequest Add(NGitLab.Mock.Project sourceProject, string sourceBranch, string targetBranch, string title, NGitLab.Mock.User user) { }
+        public NGitLab.Mock.MergeRequest AddNew(NGitLab.Mock.User author, string title = null, bool addCommit = false) { }
+        public NGitLab.Mock.MergeRequest GetByIid(long iid) { }
+    }
+    public sealed class MergeRequestComment : NGitLab.Mock.Note
+    {
+        public MergeRequestComment() { }
+        public override string NoteableType { get; }
+        public override long NoticableId { get; }
+        public override long NoticableIid { get; }
+        public new NGitLab.Mock.MergeRequest Parent { get; }
+        public NGitLab.Models.Position Position { get; set; }
+    }
+    public sealed class Milestone : NGitLab.Mock.GitLabObject
+    {
+        public Milestone() { }
+        public System.DateTimeOffset? ClosedAt { get; set; }
+        public System.DateTimeOffset CreatedAt { get; }
+        public string Description { get; set; }
+        public System.DateTimeOffset DueDate { get; set; }
+        public NGitLab.Mock.Group Group { get; }
+        public long Id { get; set; }
+        public long Iid { get; set; }
+        public NGitLab.Mock.Project Project { get; }
+        public System.DateTimeOffset StartDate { get; set; }
+        public NGitLab.Mock.MilestoneState State { get; set; }
+        public string Title { get; set; }
+        public System.DateTimeOffset UpdatedAt { get; set; }
+        public NGitLab.Models.Milestone ToClientMilestone() { }
+    }
+    public sealed class MilestoneCollection : NGitLab.Mock.Collection<NGitLab.Mock.Milestone>
+    {
+        public MilestoneCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.Milestone item) { }
+        public NGitLab.Mock.Milestone GetByIid(long iid) { }
+    }
+    public enum MilestoneState
+    {
+        active = 0,
+        closed = 1,
+    }
+    public sealed class NonTextFile : NGitLab.Mock.File
+    {
+        public NonTextFile(string path, byte[] content) { }
+        public override byte[] Content { get; }
+    }
+    public abstract class Note : NGitLab.Mock.GitLabObject
+    {
+        protected Note() { }
+        public NGitLab.Mock.UserRef Author { get; set; }
+        public string Body { get; set; }
+        public bool Confidential { get; set; }
+        public System.DateTimeOffset CreatedAt { get; set; }
+        public long Id { get; set; }
+        public abstract string NoteableType { get; }
+        public abstract long NoticableId { get; }
+        public abstract long NoticableIid { get; }
+        public bool Resolvable { get; set; }
+        public bool Resolved { get; set; }
+        public bool System { get; set; }
+        public string ThreadId { get; set; }
+        public System.DateTimeOffset UpdatedAt { get; set; }
+        public NGitLab.Models.Note ToClientEvent() { }
+    }
+    public sealed class NoteCollection<T> : NGitLab.Mock.Collection<T>
+        where T : NGitLab.Mock.Note
+    {
+        public NoteCollection(NGitLab.Mock.GitLabObject parent) { }
+        public override void Add(T item) { }
+        public T GetById(long id) { }
+    }
+    public sealed class ObjectNotAttachedException : System.Exception
+    {
+        public ObjectNotAttachedException() { }
+    }
+    public sealed class Permission : NGitLab.Mock.GitLabObject
+    {
+        public Permission(NGitLab.Mock.Group group, NGitLab.Models.AccessLevel accessLevel) { }
+        public Permission(NGitLab.Mock.User user, NGitLab.Models.AccessLevel accessLevel) { }
+        public NGitLab.Models.AccessLevel AccessLevel { get; }
+        public NGitLab.Mock.Group Group { get; }
+        public NGitLab.Mock.User User { get; }
+    }
+    public sealed class PermissionCollection : NGitLab.Mock.Collection<NGitLab.Mock.Permission>
+    {
+        public PermissionCollection(NGitLab.Mock.GitLabObject container) { }
+    }
+    public sealed class Pipeline : NGitLab.Mock.GitLabObject
+    {
+        public Pipeline(string @ref) { }
+        public NGitLab.Sha1 BeforeSha { get; set; }
+        public string CiToken { get; set; }
+        public System.DateTimeOffset CommittedAt { get; set; }
+        public double Coverage { get; set; }
+        public System.DateTimeOffset CreatedAt { get; set; }
+        public System.TimeSpan? Duration { get; set; }
+        public System.DateTimeOffset? FinishedAt { get; set; }
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public NGitLab.Mock.Project Project { get; }
+        public long ProjectId { get; }
+        public string Ref { get; set; }
+        public NGitLab.Sha1 Sha { get; set; }
+        public string Source { get; set; }
+        public System.DateTimeOffset? StartedAt { get; set; }
+        public NGitLab.JobStatus Status { get; set; }
+        public bool Tag { get; set; }
+        public NGitLab.Models.TestReport TestReports { get; set; }
+        public NGitLab.Models.TestReportSummary TestReportsSummary { get; set; }
+        public System.DateTimeOffset UpdatedAt { get; set; }
+        public NGitLab.Mock.User User { get; set; }
+        public System.Collections.Generic.IEnumerable<NGitLab.Models.PipelineVariable> Variables { get; set; }
+        public string YamlError { get; set; }
+        public NGitLab.Mock.Job AddJob(NGitLab.Mock.Job job) { }
+        [System.Obsolete("Use other overloads")]
+        public NGitLab.Mock.Job AddJob(NGitLab.Mock.Project project, NGitLab.Mock.Job job) { }
+        public NGitLab.Mock.Job AddNewJob(NGitLab.JobStatus status) { }
+        [System.Obsolete("Use other overloads")]
+        public NGitLab.Mock.Job AddNewJob(NGitLab.Mock.Project project) { }
+        public NGitLab.Mock.Job AddNewJob(string name, NGitLab.JobStatus status, NGitLab.Mock.User user = null) { }
+    }
+    public sealed class PipelineCollection : NGitLab.Mock.Collection<NGitLab.Mock.Pipeline>
+    {
+        public PipelineCollection(NGitLab.Mock.GitLabObject parent) { }
+        public override void Add(NGitLab.Mock.Pipeline pipeline) { }
+        public NGitLab.Mock.Pipeline Add(string @ref, NGitLab.JobStatus status, NGitLab.Mock.User user) { }
+        public NGitLab.Mock.Pipeline GetById(long id) { }
+        public NGitLab.Mock.Pipeline GetLatest(string @ref) { }
+    }
+    public sealed class PipelineSchedule : NGitLab.Mock.GitLabObject
+    {
+        public PipelineSchedule() { }
+        public bool Active { get; set; }
+        public System.DateTime CreatedAt { get; set; }
+        public string Cron { get; set; }
+        public string Description { get; set; }
+        public long Id { get; set; }
+        public System.DateTime NextRunAt { get; set; }
+        public NGitLab.Mock.User Owner { get; set; }
+        public NGitLab.Mock.Project Project { get; }
+        public string Ref { get; set; }
+        public System.DateTime UpdatedAt { get; set; }
+        public System.Collections.Generic.IDictionary<string, string> Variables { get; set; }
+        public NGitLab.Mock.Pipeline AddNewPipeline() { }
+        public NGitLab.Models.PipelineScheduleBasic ToPipelineScheduleBasicClient() { }
+        public NGitLab.Models.PipelineSchedule ToPipelineScheduleClient() { }
+    }
+    public class PipelineScheduleCollection : NGitLab.Mock.Collection<NGitLab.Mock.PipelineSchedule>
+    {
+        public PipelineScheduleCollection(NGitLab.Mock.Project project) { }
+        public override void Add(NGitLab.Mock.PipelineSchedule schedule) { }
+        public NGitLab.Mock.PipelineSchedule GetById(long id) { }
+    }
+    public sealed class Project : NGitLab.Mock.GitLabObject
+    {
+        public Project() { }
+        public Project(string name) { }
+        public Project(string name, string path) { }
+        public bool AccessibleMergeRequests { get; set; }
+        public bool AllThreadsMustBeResolvedToMerge { get; set; }
+        public int ApprovalsBeforeMerge { get; set; }
+        public bool Archived { get; set; }
+        public NGitLab.Mock.BadgeCollection Badges { get; }
+        public System.TimeSpan BuildTimeout { get; set; }
+        public NGitLab.Mock.CommitInfoCollection CommitInfos { get; }
+        public NGitLab.Mock.CommitStatusCollection CommitStatuses { get; }
+        public NGitLab.Mock.ContainerRepositoryCollection ContainerRepositories { get; }
+        public string DefaultBranch { get; set; }
+        public string Description { get; set; }
+        public NGitLab.Mock.RunnerRefCollection EnabledRunners { get; }
+        public NGitLab.Mock.Project ForkedFrom { get; }
+        public NGitLab.Models.RepositoryAccessLevel ForkingAccessLevel { get; set; }
+        public string FullName { get; }
+        public NGitLab.Mock.Group Group { get; }
+        public bool GroupRunnersEnabled { get; set; }
+        public NGitLab.Mock.ProjectHookCollection Hooks { get; }
+        public string HttpUrl { get; }
+        public long Id { get; set; }
+        public string ImportStatus { get; set; }
+        public NGitLab.Mock.IssueCollection Issues { get; }
+        public NGitLab.Mock.JobCollection Jobs { get; }
+        public NGitLab.Mock.LabelsCollection Labels { get; }
+        public bool LfsEnabled { get; set; }
+        public NGitLab.Mock.LintCICollection LintCIs { get; }
+        public System.DateTime? MarkedForDeletionOn { get; set; }
+        public string MergeMethod { get; set; }
+        public NGitLab.Mock.MergeRequestCollection MergeRequests { get; }
+        public NGitLab.Mock.MilestoneCollection Milestones { get; }
+        public bool Mirror { get; set; }
+        public bool MirrorOverwritesDivergedBranches { get; set; }
+        public bool MirrorTriggerBuilds { get; set; }
+        public long MirrorUserId { get; set; }
+        public string Name { get; set; }
+        public bool OnlyMirrorProtectedBranch { get; set; }
+        public string Path { get; }
+        public string PathWithNamespace { get; }
+        public NGitLab.Mock.PermissionCollection Permissions { get; }
+        public NGitLab.Mock.PipelineScheduleCollection PipelineSchedules { get; }
+        public NGitLab.Mock.PipelineCollection Pipelines { get; }
+        public NGitLab.Mock.ProtectedBranchCollection ProtectedBranches { get; }
+        public NGitLab.Mock.RunnerCollection RegisteredRunners { get; }
+        public NGitLab.Mock.ReleaseCollection Releases { get; }
+        public NGitLab.Mock.Repository Repository { get; }
+        public NGitLab.Models.RepositoryAccessLevel RepositoryAccessLevel { get; set; }
+        public string RunnersToken { get; }
+        public NGitLab.Models.SquashOption SquashOption { get; set; }
+        public string SshUrl { get; }
+        public NGitLab.Models.ProjectStatistics Statistics { get; set; }
+        [System.Obsolete("Deprecated by GitLab. Use Topics instead")]
+        public string[] Tags { get; set; }
+        public string[] Topics { get; set; }
+        public NGitLab.Models.VisibilityLevel Visibility { get; set; }
+        public string WebUrl { get; }
+        public NGitLab.Mock.Runner AddRunner(string name, string description, bool paused, bool locked, bool isShared) { }
+        public NGitLab.Mock.Runner AddRunner(string name, string description, bool paused, bool locked, bool isShared, bool runUntagged) { }
+        public NGitLab.Mock.Runner AddRunner(string name, string description, bool paused, bool locked, bool isShared, bool runUntagged, long id) { }
+        public bool CanUserContributeToProject(NGitLab.Mock.User user) { }
+        public bool CanUserDeleteProject(NGitLab.Mock.User user) { }
+        public bool CanUserEditProject(NGitLab.Mock.User user) { }
+        public bool CanUserViewConfidentialIssues(NGitLab.Mock.User user) { }
+        public bool CanUserViewProject(NGitLab.Mock.User user) { }
+        public NGitLab.Mock.User CreateBotUser(string tokenName, NGitLab.Models.AccessLevel accessLevel) { }
+        public NGitLab.Mock.MergeRequest CreateMergeRequest(NGitLab.Mock.User user, string title, string description, string targetBranchName, string sourceBranchName, NGitLab.Mock.Project sourceProject = null) { }
+        public NGitLab.Mock.MergeRequest CreateNewMergeRequest(NGitLab.Mock.User user, string branchName, string targetBranch, string title, string description) { }
+        public NGitLab.Mock.Project Fork(NGitLab.Mock.User user) { }
+        public NGitLab.Mock.Project Fork(NGitLab.Mock.Group group, NGitLab.Mock.User user, string projectName) { }
+        public NGitLab.Mock.EffectivePermissions GetEffectivePermissions() { }
+        public NGitLab.Mock.EffectivePermissions GetEffectivePermissions(bool includeInheritedPermissions) { }
+        public bool IsUserMember(NGitLab.Mock.User user) { }
+        public bool IsUserOwner(NGitLab.Mock.User user) { }
+        public void Remove() { }
+        public bool RemoveRunner(long runnerId) { }
+        public NGitLab.Models.Project ToClientProject(NGitLab.Mock.User currentUser) { }
+    }
+    public sealed class ProjectCollection : NGitLab.Mock.Collection<NGitLab.Mock.Project>
+    {
+        public ProjectCollection(NGitLab.Mock.Group group) { }
+        public override void Add(NGitLab.Mock.Project project) { }
+        public NGitLab.Mock.Project AddNew() { }
+        public NGitLab.Mock.Project AddNew(System.Action<NGitLab.Mock.Project> configure) { }
+    }
+    public static class ProjectExtensions
+    {
+        public static NGitLab.Mock.Project FindById(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Project> projects, long id) { }
+        public static NGitLab.Mock.Project FindByNamespacedPath(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Project> projects, string pathWithNamespace) { }
+        public static NGitLab.Mock.Project FindProject(this System.Collections.Generic.IEnumerable<NGitLab.Mock.Project> projects, string idOrPathWithNamespace) { }
+    }
+    public sealed class ProjectHook : NGitLab.Mock.GitLabObject
+    {
+        public ProjectHook() { }
+        public System.DateTime CreatedAt { get; set; }
+        public bool EnableSslVerification { get; set; }
+        public long Id { get; }
+        public bool IssuesEvents { get; set; }
+        public bool JobEvents { get; set; }
+        public bool MergeRequestsEvents { get; set; }
+        public bool NoteEvents { get; set; }
+        public new NGitLab.Mock.Project Parent { get; }
+        public bool PipelineEvents { get; set; }
+        public bool PushEvents { get; set; }
+        public bool TagPushEvents { get; set; }
+        public System.Uri Url { get; set; }
+        public bool WikiPagesEvents { get; set; }
+        public NGitLab.Models.ProjectHook ToClientProjectHook() { }
+    }
+    public class ProjectHookCollection : NGitLab.Mock.Collection<NGitLab.Mock.ProjectHook>
+    {
+        public ProjectHookCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.ProjectHook item) { }
+    }
+    public sealed class ProjectIssueNote : NGitLab.Mock.Note
+    {
+        public ProjectIssueNote() { }
+        public override string NoteableType { get; }
+        public override long NoticableId { get; }
+        public override long NoticableIid { get; }
+        public new NGitLab.Mock.Issue Parent { get; }
+    }
+    public sealed class ProtectedBranch : NGitLab.Mock.GitLabObject
+    {
+        public ProtectedBranch() { }
+        public bool AllowForcePush { get; set; }
+        public bool CodeOwnerApprovalRequired { get; set; }
+        public long Id { get; set; }
+        public NGitLab.Models.AccessLevelInfo[] MergeAccessLevels { get; set; }
+        public string Name { get; set; }
+        public NGitLab.Models.AccessLevelInfo[] PushAccessLevels { get; set; }
+    }
+    public sealed class ProtectedBranchCollection : NGitLab.Mock.Collection<NGitLab.Mock.ProtectedBranch>
+    {
+        public ProtectedBranchCollection(NGitLab.Mock.GitLabObject parent) { }
+        public override void Add(NGitLab.Mock.ProtectedBranch branch) { }
+        public NGitLab.Mock.ProtectedBranch GetById(long branchId) { }
+    }
+    public class ReleaseCollection : NGitLab.Mock.Collection<NGitLab.Mock.ReleaseInfo>
+    {
+        public ReleaseCollection(NGitLab.Mock.GitLabObject parent) { }
+        public override void Add(NGitLab.Mock.ReleaseInfo release) { }
+        public NGitLab.Mock.ReleaseInfo Add(string tagName, string name, string description, NGitLab.Mock.User user) { }
+        public NGitLab.Mock.ReleaseInfo Add(string tagName, string name, string reference, string description, NGitLab.Mock.User user) { }
+        public NGitLab.Mock.ReleaseInfo GetByTagName(string tagName) { }
+    }
+    public sealed class ReleaseInfo : NGitLab.Mock.GitLabObject
+    {
+        public ReleaseInfo() { }
+        public NGitLab.Mock.UserRef Author { get; set; }
+        public NGitLab.Models.Commit Commit { get; set; }
+        public string CommitPath { get; set; }
+        public System.DateTime CreatedAt { get; set; }
+        public string Description { get; set; }
+        public string Name { get; set; }
+        public NGitLab.Mock.Project Project { get; }
+        public System.DateTime ReleasedAt { get; set; }
+        public string TagName { get; set; }
+        public string TagPath { get; set; }
+    }
+    public sealed class ReleaseTag
+    {
+        public ReleaseTag(string name, string releaseNotes) { }
+        public string Name { get; }
+        public string ReleaseNotes { get; set; }
+    }
+    public sealed class Repository : NGitLab.Mock.GitLabObject, System.IDisposable
+    {
+        public string FullPath { get; }
+        public bool IsEmpty { get; }
+        public NGitLab.Mock.Project Project { get; }
+        public void Checkout(string committishOrBranchNameSpec) { }
+        public LibGit2Sharp.Commit CherryPick(NGitLab.Models.CommitCherryPick commitCherryPick) { }
+        public LibGit2Sharp.Commit Commit(NGitLab.Models.CommitCreate commitCreate) { }
+        public LibGit2Sharp.Commit Commit(NGitLab.Mock.User user, string message) { }
+        public LibGit2Sharp.Commit Commit(NGitLab.Mock.User user, string message, System.Collections.Generic.IEnumerable<NGitLab.Mock.File> files) { }
+        public LibGit2Sharp.Commit Commit(NGitLab.Mock.User user, string message, string targetBranch, System.Collections.Generic.IEnumerable<NGitLab.Mock.File> files) { }
+        public LibGit2Sharp.Commit Commit(NGitLab.Mock.User user, string message, string targetBranch, System.Collections.Generic.IEnumerable<NGitLab.Mock.File> files, System.Collections.Generic.IEnumerable<string> submodules) { }
+        public LibGit2Sharp.Branch CreateAndCheckoutBranch(string branchName) { }
+        public LibGit2Sharp.Branch CreateBranch(string branchName) { }
+        public LibGit2Sharp.Branch CreateBranch(string branchName, string reference) { }
+        public NGitLab.Mock.ReleaseTag CreateReleaseTag(string tagName, string releaseNotes) { }
+        public LibGit2Sharp.Tag CreateTag(string tagName) { }
+        public LibGit2Sharp.Tag CreateTag(string tagName, string reference) { }
+        public LibGit2Sharp.Tag CreateTag(NGitLab.Mock.User user, string tagName, string reference, string message) { }
+        public LibGit2Sharp.Tag CreateTag(NGitLab.Mock.User user, string tagName, string reference, string message, string releaseNotes) { }
+        public void DeleteTag(string tagName) { }
+        public void Dispose() { }
+        public LibGit2Sharp.Commit FindMergeBase(LibGit2Sharp.Commit first, LibGit2Sharp.Commit second) { }
+        public System.Collections.Generic.IReadOnlyCollection<LibGit2Sharp.Branch> GetAllBranches() { }
+        public LibGit2Sharp.Branch GetBranch(string branchName) { }
+        public System.Collections.Generic.IEnumerable<LibGit2Sharp.Commit> GetBranchCommits(string branchName) { }
+        public LibGit2Sharp.Patch GetBranchFullPatch(string branchName) { }
+        public LibGit2Sharp.Commit GetBranchTipCommit(string branchName) { }
+        public LibGit2Sharp.Commit GetCommit(string reference) { }
+        public System.Collections.Generic.IEnumerable<LibGit2Sharp.Commit> GetCommits() { }
+        public System.Collections.Generic.IEnumerable<LibGit2Sharp.Commit> GetCommits(NGitLab.GetCommitsRequest request) { }
+        public System.Collections.Generic.IEnumerable<LibGit2Sharp.Commit> GetCommits(string @ref) { }
+        public NGitLab.Models.FileData GetFile(string filePath, string @ref) { }
+        public System.Threading.Tasks.Task GetRawFileAsync(string filePath, System.Func<System.IO.Stream, System.Threading.Tasks.Task> parser, NGitLab.GetRawFileRequest request) { }
+        public NGitLab.Mock.ReleaseTag GetReleaseTag(string tagName) { }
+        public LibGit2Sharp.TagCollection GetTags() { }
+        public bool IsRebaseNeeded(string branch, string ontoRebaseBranch) { }
+        public LibGit2Sharp.Commit Merge(NGitLab.Mock.User user, string sourceBranch, string targetBranch) { }
+        public LibGit2Sharp.Commit Merge(NGitLab.Mock.User user, string sourceBranch, string targetBranch, NGitLab.Mock.Project targetProject) { }
+        public bool Rebase(NGitLab.Mock.UserRef user, string sourceBranch, string targetBranch) { }
+        public void RemoveBranch(string branchName) { }
+        public void SetRepoConfig<T>(string name, T value) { }
+        public NGitLab.Mock.ReleaseTag UpdateReleaseTag(string tagName, string releaseNotes) { }
+    }
+    public sealed class ResourceLabelEvent : NGitLab.Mock.GitLabObject
+    {
+        public ResourceLabelEvent() { }
+        public NGitLab.Models.ResourceLabelEventAction Action { get; set; }
+        public System.DateTime CreatedAt { get; set; }
+        public long Id { get; set; }
+        public NGitLab.Mock.Label Label { get; set; }
+        public long ResourceId { get; set; }
+        public string ResourceType { get; set; }
+        public NGitLab.Models.Author User { get; set; }
+        public NGitLab.Models.ResourceLabelEvent ToClientResourceLabelEvent() { }
+    }
+    public sealed class ResourceLabelEventCollection : NGitLab.Mock.Collection<NGitLab.Mock.ResourceLabelEvent>
+    {
+        public ResourceLabelEventCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.ResourceLabelEvent item) { }
+    }
+    public sealed class ResourceMilestoneEvent : NGitLab.Mock.GitLabObject
+    {
+        public ResourceMilestoneEvent() { }
+        public NGitLab.Models.ResourceMilestoneEventAction Action { get; set; }
+        public System.DateTime CreatedAt { get; set; }
+        public long Id { get; set; }
+        public NGitLab.Mock.Milestone Milestone { get; set; }
+        public long ResourceId { get; set; }
+        public string ResourceType { get; set; }
+        public NGitLab.Models.Author User { get; set; }
+        public NGitLab.Models.ResourceMilestoneEvent ToClientResourceMilestoneEvent() { }
+    }
+    public sealed class ResourceMilestoneEventCollection : NGitLab.Mock.Collection<NGitLab.Mock.ResourceMilestoneEvent>
+    {
+        public ResourceMilestoneEventCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.ResourceMilestoneEvent item) { }
+    }
+    public sealed class ResourceStateEvent : NGitLab.Mock.GitLabObject
+    {
+        public ResourceStateEvent() { }
+        public System.DateTime CreatedAt { get; set; }
+        public long Id { get; set; }
+        public long ResourceId { get; set; }
+        public string ResourceType { get; set; }
+        public string State { get; set; }
+        public NGitLab.Models.Author User { get; set; }
+        public NGitLab.Models.ResourceStateEvent ToClientResourceStateEvent() { }
+    }
+    public sealed class ResourceStateEventCollection : NGitLab.Mock.Collection<NGitLab.Mock.ResourceStateEvent>
+    {
+        public ResourceStateEventCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.ResourceStateEvent item) { }
+    }
+    public sealed class Runner : NGitLab.Mock.GitLabObject
+    {
+        public Runner() { }
+        public System.DateTime ContactedAt { get; set; }
+        public string Description { get; set; }
+        public long Id { get; set; }
+        public string IpAddress { get; set; }
+        public bool IsShared { get; set; }
+        public bool Locked { get; set; }
+        public string Name { get; set; }
+        public bool? Online { get; set; }
+        public new NGitLab.Mock.Project Parent { get; }
+        public bool Paused { get; set; }
+        public bool RunUntagged { get; set; }
+        public string Status { get; set; }
+        public string[] TagList { get; set; }
+        public string Token { get; set; }
+        public string Version { get; set; }
+    }
+    public sealed class RunnerCollection : NGitLab.Mock.Collection<NGitLab.Mock.Runner>
+    {
+        public RunnerCollection(NGitLab.Mock.GitLabObject parent) { }
+        public override void Add(NGitLab.Mock.Runner item) { }
+        public bool Remove(long id) { }
+    }
+    public sealed class RunnerRef : NGitLab.Mock.GitLabObject
+    {
+        public RunnerRef(NGitLab.Mock.Runner runner) { }
+        public long Id { get; }
+        public override bool Equals(object obj) { }
+        public override int GetHashCode() { }
+    }
+    public class RunnerRefCollection : NGitLab.Mock.Collection<NGitLab.Mock.RunnerRef>
+    {
+        public RunnerRefCollection(NGitLab.Mock.GitLabObject parent) { }
+    }
+    public enum StateEvent
+    {
+        open = 0,
+        close = 1,
+    }
+    public static class StringExtensions
+    {
+        public static bool Contains(this string source, string toCheck, System.StringComparison comparison) { }
+    }
+    public sealed class SystemHook : NGitLab.Mock.GitLabObject
+    {
+        public SystemHook() { }
+        public System.DateTime CreatedAt { get; set; }
+        public bool EnableSslVerification { get; set; }
+        public long Id { get; }
+        public bool MergeRequestsEvents { get; set; }
+        public bool PushEvents { get; set; }
+        public bool RepositoryUpdateEvents { get; set; }
+        public bool TagPushEvents { get; set; }
+        public System.Uri Url { get; set; }
+        public NGitLab.Models.SystemHook ToClientSystemHook() { }
+    }
+    public class SystemHookCollection : NGitLab.Mock.Collection<NGitLab.Mock.SystemHook>
+    {
+        public SystemHookCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.SystemHook item) { }
+    }
+    [System.Diagnostics.DebuggerDisplay("{FullPath}")]
+    public sealed class TemporaryDirectory : System.IDisposable
+    {
+        public string FullPath { get; }
+        public bool KeepDirectory { get; set; }
+        public void CopyFolder(string sourcePath) { }
+        public void Dispose() { }
+        public string GetFullPath(string relativePath) { }
+        public void MakeReadOnly() { }
+        public static NGitLab.Mock.TemporaryDirectory Create() { }
+        public static void DeleteDirectory(string path) { }
+        public static void DeleteFile(string path) { }
+    }
+    public sealed class TextFile : NGitLab.Mock.File
+    {
+        public TextFile(string path, string content) { }
+        public TextFile(string path, string content, System.Text.Encoding encoding) { }
+        public override byte[] Content { get; }
+        public System.Text.Encoding Encoding { get; }
+        public string TextContent { get; }
+    }
+    public sealed class User : NGitLab.Mock.GitLabObject
+    {
+        public User(string userName) { }
+        public string AvatarUrl { get; set; }
+        public bool Bot { get; }
+        public System.DateTime CreatedAt { get; set; }
+        public string Email { get; set; }
+        public long Id { get; set; }
+        public NGitLab.Models.Identity[] Identities { get; set; }
+        public bool IsAdmin { get; set; }
+        public string Name { get; set; }
+        public NGitLab.Mock.Group Namespace { get; }
+        public NGitLab.Mock.UserState State { get; set; }
+        public string UserName { get; }
+        public string WebUrl { get; }
+        public NGitLab.Models.Session ToClientSession() { }
+        public NGitLab.Models.User ToClientUser() { }
+        public override string ToString() { }
+    }
+    public sealed class UserCollection : NGitLab.Mock.Collection<NGitLab.Mock.User>
+    {
+        public UserCollection(NGitLab.Mock.GitLabObject container) { }
+        public override void Add(NGitLab.Mock.User user) { }
+        public NGitLab.Mock.User Add(string userName) { }
+        public NGitLab.Mock.User AddNew(string name = null) { }
+        public NGitLab.Mock.User GetById(long id) { }
+        public NGitLab.Mock.User GetById(string id) { }
+    }
+    public sealed class UserRef
+    {
+        public UserRef(NGitLab.Mock.User user) { }
+        public string Email { get; }
+        public long Id { get; }
+        public string Name { get; }
+        public string UserName { get; }
+        public NGitLab.Models.Assignee ToClientAssignee() { }
+        public NGitLab.Models.Author ToClientAuthor() { }
+        public NGitLab.Models.User ToUserClient() { }
+        public static NGitLab.Mock.UserRef op_Implicit(NGitLab.Mock.User user) { }
+    }
+    public enum UserState
+    {
+        active = 0,
+        blocked = 1,
+        deactivated = 2,
+    }
+}
+namespace NGitLab.Mock.Clients
+{
+    public static class LibGit2SharpExtensions
+    {
+        public static NGitLab.Models.Branch ToBranchClient(this LibGit2Sharp.Branch branch, NGitLab.Mock.Project project) { }
+        public static NGitLab.Models.Commit ToCommitClient(this LibGit2Sharp.Commit commit, NGitLab.Mock.Project project) { }
+        public static NGitLab.Models.CommitInfo ToCommitInfo(this LibGit2Sharp.Commit commit) { }
+    }
+}
+namespace NGitLab.Mock.Config
+{
+    public abstract class GitLabCollection<TItem> : System.Collections.ObjectModel.Collection<TItem>
+        where TItem : NGitLab.Mock.Config.GitLabObject
+    {
+        protected GitLabCollection(object parent) { }
+        protected override void InsertItem(int index, TItem item) { }
+        protected override void SetItem(int index, TItem item) { }
+    }
+    public abstract class GitLabCollection<TItem, TParent> : NGitLab.Mock.Config.GitLabCollection<TItem>
+        where TItem : NGitLab.Mock.Config.GitLabObject<TParent>
+    {
+        protected GitLabCollection(TParent parent) { }
+    }
+    public class GitLabComment : NGitLab.Mock.Config.GitLabObject
+    {
+        public GitLabComment() { }
+        public string Author { get; set; }
+        public System.DateTime? CreatedAt { get; set; }
+        public string Message { get; set; }
+        public bool Resolvable { get; set; }
+        public bool Resolved { get; set; }
+        public bool System { get; set; }
+        public string Thread { get; set; }
+        public System.DateTime? UpdatedAt { get; set; }
+    }
+    public class GitLabCommentsCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabComment> { }
+    public class GitLabCommit : NGitLab.Mock.Config.GitLabObject<NGitLab.Mock.Config.GitLabProject>
+    {
+        public GitLabCommit() { }
+        public string Alias { get; set; }
+        public bool DeleteSourceBranch { get; set; }
+        public System.Collections.Generic.IList<NGitLab.Mock.Config.GitLabFileDescriptor> Files { get; }
+        public string FromBranch { get; set; }
+        public string Message { get; set; }
+        public string SourceBranch { get; set; }
+        public System.Collections.Generic.IList<NGitLab.Mock.Config.GitLabSubModuleDescriptor> SubModules { get; }
+        public System.Collections.Generic.IList<string> Tags { get; }
+        public string TargetBranch { get; set; }
+        public string User { get; set; }
+    }
+    public class GitLabCommitsCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabCommit, NGitLab.Mock.Config.GitLabProject> { }
+    public class GitLabConfig
+    {
+        public GitLabConfig() { }
+        public string DefaultBranch { get; set; }
+        public string DefaultUser { get; set; }
+        public NGitLab.Models.VisibilityLevel DefaultVisibility { get; set; }
+        public NGitLab.Mock.Config.GitLabGroupsCollection Groups { get; }
+        public NGitLab.Mock.Config.GitLabProjectsCollection Projects { get; }
+        public string Url { get; set; }
+        public NGitLab.Mock.Config.GitLabUsersCollection Users { get; }
+        public string Serialize() { }
+        public static NGitLab.Mock.Config.GitLabConfig Deserialize(string content) { }
+    }
+    public class GitLabContainerRepositoriesCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabContainerRepository> { }
+    public class GitLabContainerRepository : NGitLab.Mock.Config.GitLabObject
+    {
+        public GitLabContainerRepository() { }
+        public string Name { get; set; }
+        public System.Collections.Generic.List<string> Tags { get; }
+    }
+    public class GitLabFileDescriptor
+    {
+        public GitLabFileDescriptor() { }
+        public string Content { get; set; }
+        public string Path { get; set; }
+    }
+    public class GitLabGroup : NGitLab.Mock.Config.GitLabObject<NGitLab.Mock.Config.GitLabConfig>
+    {
+        public GitLabGroup() { }
+        public string Description { get; set; }
+        public NGitLab.Mock.Config.GitLabLabelsCollection Labels { get; }
+        public NGitLab.Mock.Config.GitLabMilestonesCollection Milestones { get; }
+        public string Name { get; set; }
+        public string Namespace { get; set; }
+        public string Path { get; set; }
+        public NGitLab.Mock.Config.GitLabPermissionsCollection Permissions { get; }
+        public NGitLab.Models.VisibilityLevel? Visibility { get; set; }
+    }
+    public class GitLabGroupsCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabGroup, NGitLab.Mock.Config.GitLabConfig> { }
+    public static class GitLabHelpers
+    {
+        public static NGitLab.Mock.Config.GitLabUser AsDefaultUser(this NGitLab.Mock.Config.GitLabUser user) { }
+        public static NGitLab.IGitLabClient BuildClient(this NGitLab.Mock.Config.GitLabConfig config, string? username = null) { }
+        public static NGitLab.Mock.GitLabServer BuildServer(this NGitLab.Mock.Config.GitLabConfig config) { }
+        public static NGitLab.Mock.Config.GitLabCommit Configure(this NGitLab.Mock.Config.GitLabCommit commit, System.Action<NGitLab.Mock.Config.GitLabCommit> configure) { }
+        public static NGitLab.Mock.Config.GitLabConfig Configure(this NGitLab.Mock.Config.GitLabConfig config, System.Action<NGitLab.Mock.Config.GitLabConfig> configure) { }
+        public static NGitLab.Mock.Config.GitLabGroup Configure(this NGitLab.Mock.Config.GitLabGroup group, System.Action<NGitLab.Mock.Config.GitLabGroup> configure) { }
+        public static NGitLab.Mock.Config.GitLabIssue Configure(this NGitLab.Mock.Config.GitLabIssue issue, System.Action<NGitLab.Mock.Config.GitLabIssue> configure) { }
+        public static NGitLab.Mock.Config.GitLabMergeRequest Configure(this NGitLab.Mock.Config.GitLabMergeRequest mergeRequest, System.Action<NGitLab.Mock.Config.GitLabMergeRequest> configure) { }
+        public static NGitLab.Mock.Config.GitLabPipeline Configure(this NGitLab.Mock.Config.GitLabPipeline pipeline, System.Action<NGitLab.Mock.Config.GitLabPipeline> configure) { }
+        public static NGitLab.Mock.Config.GitLabProject Configure(this NGitLab.Mock.Config.GitLabProject project, System.Action<NGitLab.Mock.Config.GitLabProject> configure) { }
+        public static NGitLab.Mock.Config.GitLabUser Configure(this NGitLab.Mock.Config.GitLabUser user, System.Action<NGitLab.Mock.Config.GitLabUser> configure) { }
+        public static NGitLab.IGitLabClient CreateClient(this NGitLab.Mock.GitLabServer server, string? username = null) { }
+        public static NGitLab.Mock.Config.GitLabConfig SetDefaultBranch(this NGitLab.Mock.Config.GitLabConfig config, string branchName) { }
+        public static NGitLab.Mock.Config.GitLabConfig SetDefaultUser(this NGitLab.Mock.Config.GitLabConfig config, string username) { }
+        public static NGitLab.Mock.Config.GitLabConfig SetDefaultVisibility(this NGitLab.Mock.Config.GitLabConfig config, NGitLab.Models.VisibilityLevel visibility) { }
+        public static NGitLab.Mock.Config.GitLabConfig ToConfig(this NGitLab.Mock.GitLabServer server) { }
+        public static NGitLab.Mock.Config.GitLabMergeRequest WithApprover(this NGitLab.Mock.Config.GitLabMergeRequest mergeRequest, string approver) { }
+        public static NGitLab.Mock.Config.GitLabIssue WithComment(this NGitLab.Mock.Config.GitLabIssue issue, string? message, System.Action<NGitLab.Mock.Config.GitLabComment> configure) { }
+        public static NGitLab.Mock.Config.GitLabMergeRequest WithComment(this NGitLab.Mock.Config.GitLabMergeRequest mergeRequest, string? message, System.Action<NGitLab.Mock.Config.GitLabComment> configure) { }
+        public static NGitLab.Mock.Config.GitLabIssue WithComment(this NGitLab.Mock.Config.GitLabIssue issue, string? message = null, long id = 0, string? author = null, bool system = false, System.DateTime? createdAt = default, System.DateTime? updatedAt = default, string? thread = null, bool resolvable = false, bool resolved = false, System.Action<NGitLab.Mock.Config.GitLabComment>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabMergeRequest WithComment(this NGitLab.Mock.Config.GitLabMergeRequest mergeRequest, string? message = null, long id = 0, string? author = null, bool system = false, System.DateTime? createdAt = default, System.DateTime? updatedAt = default, string? thread = null, bool resolvable = false, bool resolved = false, System.Action<NGitLab.Mock.Config.GitLabComment>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabProject WithCommit(this NGitLab.Mock.Config.GitLabProject project, string? message, string? user, System.Action<NGitLab.Mock.Config.GitLabCommit> configure) { }
+        public static NGitLab.Mock.Config.GitLabProject WithCommit(this NGitLab.Mock.Config.GitLabProject project, string? message = null, string? user = null, string? sourceBranch = null, string? targetBranch = null, string? fromBranch = null, System.Collections.Generic.IEnumerable<string>? tags = null, string? alias = null, System.Action<NGitLab.Mock.Config.GitLabCommit>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabProject WithContainerRepository(this NGitLab.Mock.Config.GitLabProject project, string name, System.Collections.Generic.IEnumerable<string>? tags = null) { }
+        public static NGitLab.Mock.Config.GitLabCommit WithFile(this NGitLab.Mock.Config.GitLabCommit commit, string relativePath, string content = "") { }
+        public static NGitLab.Mock.Config.GitLabConfig WithGroup(this NGitLab.Mock.Config.GitLabConfig config, string? name, System.Action<NGitLab.Mock.Config.GitLabGroup> configure) { }
+        public static NGitLab.Mock.Config.GitLabConfig WithGroup(this NGitLab.Mock.Config.GitLabConfig config, string? name = null, long id = 0, string? namespace = null, string? description = null, NGitLab.Models.VisibilityLevel? visibility = default, bool addDefaultUserAsMaintainer = false, System.Action<NGitLab.Mock.Config.GitLabGroup>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabConfig WithGroupOfFullPath(this NGitLab.Mock.Config.GitLabConfig config, string fullPath, string? name = null, long id = 0, string? description = null, NGitLab.Models.VisibilityLevel? visibility = default, bool addDefaultUserAsMaintainer = false, System.Action<NGitLab.Mock.Config.GitLabGroup>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabGroup WithGroupPermission(this NGitLab.Mock.Config.GitLabGroup grp, string groupName, NGitLab.Models.AccessLevel level) { }
+        public static NGitLab.Mock.Config.GitLabProject WithGroupPermission(this NGitLab.Mock.Config.GitLabProject project, string groupName, NGitLab.Models.AccessLevel level) { }
+        public static NGitLab.Mock.Config.GitLabProject WithIssue(this NGitLab.Mock.Config.GitLabProject project, string? title, string? author, System.Action<NGitLab.Mock.Config.GitLabIssue> configure) { }
+        public static NGitLab.Mock.Config.GitLabProject WithIssue(this NGitLab.Mock.Config.GitLabProject project, string? title = null, long id = 0, string? description = null, string? author = null, string? assignee = null, string? milestone = null, System.DateTime? createdAt = default, System.DateTime? updatedAt = default, System.DateTime? closedAt = default, System.Collections.Generic.IEnumerable<string>? labels = null, System.Action<NGitLab.Mock.Config.GitLabIssue>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabPipeline WithJob(this NGitLab.Mock.Config.GitLabPipeline pipeline, string? name = null, string? stage = null, NGitLab.JobStatus status = 0, System.DateTime? createdAt = default, System.DateTime? startedAt = default, System.DateTime? finishedAt = default, bool allowFailure = false, NGitLab.Mock.Config.GitLabPipeline? downstreamPipeline = null, System.Action<NGitLab.Mock.Config.GitLabJob>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabIssue WithLabel(this NGitLab.Mock.Config.GitLabIssue issue, string label) { }
+        public static NGitLab.Mock.Config.GitLabMergeRequest WithLabel(this NGitLab.Mock.Config.GitLabMergeRequest mergeRequest, string label) { }
+        public static NGitLab.Mock.Config.GitLabGroup WithLabel(this NGitLab.Mock.Config.GitLabGroup group, string name, string? color = null, string? description = null) { }
+        public static NGitLab.Mock.Config.GitLabProject WithLabel(this NGitLab.Mock.Config.GitLabProject project, string name, string? color = null, string? description = null) { }
+        public static NGitLab.Mock.Config.GitLabProject WithMergeCommit(this NGitLab.Mock.Config.GitLabProject project, string sourceBranch, string? targetBranch = null, string? user = null, bool deleteSourceBranch = false, System.Collections.Generic.IEnumerable<string>? tags = null, System.Action<NGitLab.Mock.Config.GitLabCommit>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabProject WithMergeRequest(this NGitLab.Mock.Config.GitLabProject project, string? sourceBranch, string? title, string? author, System.Action<NGitLab.Mock.Config.GitLabMergeRequest> configure) { }
+        public static NGitLab.Mock.Config.GitLabProject WithMergeRequest(
+                    this NGitLab.Mock.Config.GitLabProject project,
+                    string? sourceBranch = null,
+                    string? title = null,
+                    long id = 0,
+                    string? targetBranch = null,
+                    string? description = null,
+                    string? author = null,
+                    string? assignee = null,
+                    System.DateTime? createdAt = default,
+                    System.DateTime? updatedAt = default,
+                    System.DateTime? closedAt = default,
+                    System.DateTime? mergedAt = default,
+                    System.Collections.Generic.IEnumerable<string>? approvers = null,
+                    System.Collections.Generic.IEnumerable<string>? labels = null,
+                    string? milestone = null,
+                    System.Action<NGitLab.Mock.Config.GitLabMergeRequest>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabGroup WithMilestone(this NGitLab.Mock.Config.GitLabGroup group, string title, System.Action<NGitLab.Mock.Config.GitLabMilestone> configure) { }
+        public static NGitLab.Mock.Config.GitLabProject WithMilestone(this NGitLab.Mock.Config.GitLabProject project, string title, System.Action<NGitLab.Mock.Config.GitLabMilestone> configure) { }
+        public static NGitLab.Mock.Config.GitLabGroup WithMilestone(this NGitLab.Mock.Config.GitLabGroup group, string title, long id = 0, string? description = null, System.DateTime? dueDate = default, System.DateTime? startDate = default, System.DateTime? createdAt = default, System.DateTime? updatedAt = default, System.DateTime? closedAt = default, System.Action<NGitLab.Mock.Config.GitLabMilestone>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabProject WithMilestone(this NGitLab.Mock.Config.GitLabProject project, string title, long id = 0, string? description = null, System.DateTime? dueDate = default, System.DateTime? startDate = default, System.DateTime? createdAt = default, System.DateTime? updatedAt = default, System.DateTime? closedAt = default, System.Action<NGitLab.Mock.Config.GitLabMilestone>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabProject WithPipeline(this NGitLab.Mock.Config.GitLabProject project, string @ref, System.Action<NGitLab.Mock.Config.GitLabPipeline> configure) { }
+        public static NGitLab.Mock.Config.GitLabConfig WithProject(this NGitLab.Mock.Config.GitLabConfig config, string? name, System.Action<NGitLab.Mock.Config.GitLabProject> configure) { }
+        public static NGitLab.Mock.Config.GitLabConfig WithProject(this NGitLab.Mock.Config.GitLabConfig config, string? name = null, long id = 0, string? namespace = null, string? description = null, string? defaultBranch = null, NGitLab.Models.VisibilityLevel visibility = 10, bool initialCommit = false, bool addDefaultUserAsMaintainer = false, string? clonePath = null, string? cloneParameters = null, System.Action<NGitLab.Mock.Config.GitLabProject>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabConfig WithProjectOfFullPath(this NGitLab.Mock.Config.GitLabConfig config, string? fullPath, string? name = null, long id = 0, string? description = null, string? defaultBranch = null, NGitLab.Models.VisibilityLevel visibility = 10, bool initialCommit = false, bool addDefaultUserAsMaintainer = false, string? clonePath = null, string? cloneParameters = null, System.Action<NGitLab.Mock.Config.GitLabProject>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabProject WithRelease(this NGitLab.Mock.Config.GitLabProject project, string author, string tagName, System.DateTime? createdAt = default, System.DateTime? releasedAt = default) { }
+        public static NGitLab.Mock.Config.GitLabCommit WithSubModule(this NGitLab.Mock.Config.GitLabCommit commit, string projectName) { }
+        public static NGitLab.Mock.Config.GitLabIssue WithSystemComment(this NGitLab.Mock.Config.GitLabIssue issue, string? message = null, string? innerHtml = null, long id = 0, string? author = null, System.DateTime? createdAt = default, System.DateTime? updatedAt = default) { }
+        public static NGitLab.Mock.Config.GitLabMergeRequest WithSystemComment(this NGitLab.Mock.Config.GitLabMergeRequest mergeRequest, string? message = null, string? innerHtml = null, long id = 0, string? author = null, System.DateTime? createdAt = default, System.DateTime? updatedAt = default) { }
+        public static NGitLab.Mock.Config.GitLabCommit WithTag(this NGitLab.Mock.Config.GitLabCommit commit, string name) { }
+        public static NGitLab.Mock.Config.GitLabConfig WithUser(this NGitLab.Mock.Config.GitLabConfig config, string username, System.Action<NGitLab.Mock.Config.GitLabUser> configure) { }
+        public static NGitLab.Mock.Config.GitLabConfig WithUser(this NGitLab.Mock.Config.GitLabConfig config, string username, string? name = null, string? email = null, string? avatarUrl = null, bool isAdmin = false, bool isDefault = false, System.Action<NGitLab.Mock.Config.GitLabUser>? configure = null) { }
+        public static NGitLab.Mock.Config.GitLabGroup WithUserPermission(this NGitLab.Mock.Config.GitLabGroup group, string user, NGitLab.Models.AccessLevel level) { }
+        public static NGitLab.Mock.Config.GitLabProject WithUserPermission(this NGitLab.Mock.Config.GitLabProject project, string user, NGitLab.Models.AccessLevel level) { }
+    }
+    public class GitLabIssue : NGitLab.Mock.Config.GitLabObject<NGitLab.Mock.Config.GitLabProject>
+    {
+        public GitLabIssue() { }
+        public string Assignee { get; set; }
+        public string Author { get; set; }
+        public System.DateTime? ClosedAt { get; set; }
+        public NGitLab.Mock.Config.GitLabCommentsCollection Comments { get; }
+        public System.DateTime? CreatedAt { get; set; }
+        public string Description { get; set; }
+        public System.Collections.Generic.IList<string> Labels { get; }
+        public string Milestone { get; set; }
+        public string Title { get; set; }
+        public System.DateTime? UpdatedAt { get; set; }
+    }
+    public class GitLabIssuesCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabIssue, NGitLab.Mock.Config.GitLabProject> { }
+    public class GitLabJob : NGitLab.Mock.Config.GitLabObject<NGitLab.Mock.Config.GitLabPipeline>
+    {
+        public GitLabJob() { }
+        public bool AllowFailure { get; set; }
+        public System.DateTime? CreatedAt { get; set; }
+        public NGitLab.Mock.Config.GitLabPipeline DownstreamPipeline { get; set; }
+        public System.DateTime? FinishedAt { get; set; }
+        public string Name { get; set; }
+        public string Stage { get; set; }
+        public System.DateTime? StartedAt { get; set; }
+        public NGitLab.JobStatus Status { get; set; }
+        public string[] TagList { get; set; }
+    }
+    public class GitLabJobsCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabJob, NGitLab.Mock.Config.GitLabPipeline> { }
+    public class GitLabLabel : NGitLab.Mock.Config.GitLabObject
+    {
+        public GitLabLabel() { }
+        public string Color { get; set; }
+        public string Description { get; set; }
+        public string Name { get; set; }
+    }
+    public class GitLabLabelsCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabLabel> { }
+    public class GitLabMergeRequest : NGitLab.Mock.Config.GitLabObject<NGitLab.Mock.Config.GitLabProject>
+    {
+        public GitLabMergeRequest() { }
+        public System.Collections.Generic.IList<string> Approvers { get; }
+        public string Assignee { get; set; }
+        public string Author { get; set; }
+        public System.DateTime? ClosedAt { get; set; }
+        public NGitLab.Mock.Config.GitLabCommentsCollection Comments { get; }
+        public System.DateTime? CreatedAt { get; set; }
+        public string Description { get; set; }
+        public System.Collections.Generic.IList<string> Labels { get; }
+        public System.DateTime? MergedAt { get; set; }
+        public string Milestone { get; set; }
+        public string SourceBranch { get; set; }
+        public string TargetBranch { get; set; }
+        public string Title { get; set; }
+        public System.DateTime? UpdatedAt { get; set; }
+    }
+    public class GitLabMergeRequestsCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabMergeRequest, NGitLab.Mock.Config.GitLabProject> { }
+    public class GitLabMilestone : NGitLab.Mock.Config.GitLabObject
+    {
+        public GitLabMilestone() { }
+        public System.DateTime? ClosedAt { get; set; }
+        public System.DateTime? CreatedAt { get; set; }
+        public string Description { get; set; }
+        public System.DateTime? DueDate { get; set; }
+        public System.DateTime? StartDate { get; set; }
+        public string Title { get; set; }
+        public System.DateTime? UpdatedAt { get; set; }
+    }
+    public class GitLabMilestonesCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabMilestone> { }
+    public abstract class GitLabObject
+    {
+        protected GitLabObject() { }
+        public long Id { get; set; }
+        [YamlDotNet.Serialization.YamlIgnore]
+        public object ParentObject { get; }
+    }
+    public abstract class GitLabObject<TParent> : NGitLab.Mock.Config.GitLabObject
+    {
+        protected GitLabObject() { }
+        [YamlDotNet.Serialization.YamlIgnore]
+        public TParent Parent { get; }
+    }
+    public class GitLabPermission : NGitLab.Mock.Config.GitLabObject
+    {
+        public GitLabPermission() { }
+        public string Group { get; set; }
+        public NGitLab.Models.AccessLevel Level { get; set; }
+        public string User { get; set; }
+    }
+    public class GitLabPermissionsCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabPermission> { }
+    public class GitLabPipeline : NGitLab.Mock.Config.GitLabObject<NGitLab.Mock.Config.GitLabProject>
+    {
+        public GitLabPipeline() { }
+        public GitLabPipeline(NGitLab.Mock.Config.GitLabProject project) { }
+        public string Commit { get; set; }
+        public NGitLab.Mock.Config.GitLabJobsCollection Jobs { get; }
+    }
+    public class GitLabPipelinesCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabPipeline, NGitLab.Mock.Config.GitLabProject> { }
+    public class GitLabProject : NGitLab.Mock.Config.GitLabObject<NGitLab.Mock.Config.GitLabConfig>
+    {
+        public GitLabProject() { }
+        public string CloneParameters { get; set; }
+        public string ClonePath { get; set; }
+        public NGitLab.Mock.Config.GitLabCommitsCollection Commits { get; }
+        public NGitLab.Mock.Config.GitLabContainerRepositoriesCollection ContainerRepositories { get; }
+        public string DefaultBranch { get; set; }
+        public string Description { get; set; }
+        public NGitLab.Models.RepositoryAccessLevel ForkingAccessLevel { get; set; }
+        public NGitLab.Mock.Config.GitLabIssuesCollection Issues { get; }
+        public NGitLab.Mock.Config.GitLabLabelsCollection Labels { get; }
+        public NGitLab.Mock.Config.GitLabMergeRequestsCollection MergeRequests { get; }
+        public NGitLab.Mock.Config.GitLabMilestonesCollection Milestones { get; }
+        public string Name { get; set; }
+        public string Namespace { get; set; }
+        public string Path { get; set; }
+        public NGitLab.Mock.Config.GitLabPermissionsCollection Permissions { get; }
+        public NGitLab.Mock.Config.GitLabPipelinesCollection Pipelines { get; }
+        public NGitLab.Mock.Config.GitLabReleaseInfoCollection Releases { get; }
+        public NGitLab.Models.VisibilityLevel? Visibility { get; set; }
+    }
+    public class GitLabProjectsCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabProject, NGitLab.Mock.Config.GitLabConfig> { }
+    public class GitLabReleaseInfo : NGitLab.Mock.Config.GitLabObject<NGitLab.Mock.Config.GitLabProject>
+    {
+        public GitLabReleaseInfo() { }
+        public string Author { get; set; }
+        public System.DateTime CreatedAt { get; set; }
+        public System.DateTime ReleasedAt { get; set; }
+        public string TagName { get; set; }
+    }
+    public class GitLabReleaseInfoCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabReleaseInfo, NGitLab.Mock.Config.GitLabProject> { }
+    public class GitLabSubModuleDescriptor
+    {
+        public GitLabSubModuleDescriptor() { }
+        public string ProjectName { get; init; }
+    }
+    public class GitLabUser : NGitLab.Mock.Config.GitLabObject<NGitLab.Mock.Config.GitLabConfig>
+    {
+        public GitLabUser() { }
+        public string AvatarUrl { get; set; }
+        public string Email { get; set; }
+        public bool IsAdmin { get; set; }
+        public string Name { get; set; }
+        public string Username { get; set; }
+    }
+    public class GitLabUsersCollection : NGitLab.Mock.Config.GitLabCollection<NGitLab.Mock.Config.GitLabUser, NGitLab.Mock.Config.GitLabConfig> { }
+}

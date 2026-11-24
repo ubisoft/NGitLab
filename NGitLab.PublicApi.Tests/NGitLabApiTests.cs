@@ -28,7 +28,7 @@ public class NGitLabApiTests
 
         var verifySettings = new VerifySettings();
         verifySettings.UseDirectory("snapshots");
-        verifySettings.UniqueForTargetFrameworkAndVersion(); // The public API differs from one target framework to another (e.g. net6.0 uses the netstandard2.0 build)
+        verifySettings.UniqueForTargetFrameworkAndVersion(); // The public API may differ from one TFM to another
 
         // RepositoryUrl is derived from the git remote / CI environment (with or without ".git"),
         // so it differs between local machines and CI. It is not part of the public API.
