@@ -107,4 +107,9 @@ public class MergeRequestQuery
     /// Filter merge requests against their wip status. yes to return only WIP merge requests, no to return non WIP merge requests
     /// </summary>
     public bool? Wip { get; set; }
+
+    /// <summary>
+    /// Listing merge requests might not proactively update <see cref="MergeRequest.MergeStatus"/> (which also affects <see cref="MergeRequest.HasConflicts"/>), as this can be an expensive operation. If you need the value of these fields from this endpoint, set this parameter to true.
+    /// </summary>
+    public bool? WithMergeStatusRecheck { get; set; }
 }
