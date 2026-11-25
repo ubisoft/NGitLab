@@ -18,14 +18,7 @@
     </PackageReference>
     <PackageReference Include="PublicApiGenerator" />
     <PackageReference Include="Verify.NUnit" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' != 'net6.0'">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit3TestAdapter" />
-  </ItemGroup>
-  <!-- NUnit 5, NUnit3TestAdapter 6 and Microsoft.NET.Test.Sdk 18 dropped net6.0, so use the last versions that support it on that target -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <!-- NUnit 5, NUnit3TestAdapter 6 and Microsoft.NET.Test.Sdk 18 dropped net6.0, so use the last versions that support that target -->
     <PackageReference Include="Microsoft.NET.Test.Sdk" VersionOverride="17.12.0" />
     <PackageReference Include="NUnit" VersionOverride="4.6.1" />
     <PackageReference Include="NUnit3TestAdapter" VersionOverride="5.2.0" />
