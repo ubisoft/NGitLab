@@ -19,8 +19,13 @@ updates:
         patterns:
           - "*"
 
+  # NGitLab.PublicApi.Tests is handled by its own entry below (it pins some packages with VersionOverride)
   - package-ecosystem: "nuget"
-    directory: "/"
+    directories:
+      - "/NGitLab"
+      - "/NGitLab.Mock"
+      - "/NGitLab.Mock.Tests"
+      - "/NGitLab.Tests"
     schedule:
       interval: "weekly"
       day: "monday"
@@ -81,3 +86,21 @@ updates:
           - "Microsoft.NET.Test.Sdk"
           - "NSubstitute"
           - "*NUnit*"
+
+  # NGitLab.PublicApi.Tests pins Microsoft.NET.Test.Sdk, NUnit and NUnit3TestAdapter with VersionOverride on purpose.
+  # The project is thus excluded from the entry above and handled here instead, with an allow-list so only packages
+  # used solely by this project are updated. Every other package it references is also referenced by a project covered
+  # by the entry above; those updates change the shared Directory.Packages.props, so they must not be proposed twice.
+  - package-ecosystem: "nuget"
+    directory: "/NGitLab.PublicApi.Tests"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "05:00"
+      timezone: "America/Montreal"
+    allow:
+      - dependency-name: "PublicApiGenerator"
+    rebase-strategy: auto
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"

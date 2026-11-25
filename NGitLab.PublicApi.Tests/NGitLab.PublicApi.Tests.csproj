@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net8.0;net10.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <!-- Run the net6.0 / net8.0 test hosts on the latest installed runtime (e.g. only .NET 10 in CI). -->
+    <RollForward>Major</RollForward>
+    <!-- Don't promote to errors assessments such as: Package 'System.Net.Http' 4.3.0 has a known high severity vulnerability -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1903</WarningsNotAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NGitLab\NGitLab.csproj" />
+    <ProjectReference Include="..\NGitLab.Mock\NGitLab.Mock.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="PublicApiGenerator" />
+    <PackageReference Include="Verify.NUnit" />
+    <!-- NUnit 5, NUnit3TestAdapter 6 and Microsoft.NET.Test.Sdk 18 dropped net6.0, so use the last versions that support that target -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" VersionOverride="17.12.0" />
+    <PackageReference Include="NUnit" VersionOverride="4.6.1" />
+    <PackageReference Include="NUnit3TestAdapter" VersionOverride="5.2.0" />
+  </ItemGroup>
+</Project>
