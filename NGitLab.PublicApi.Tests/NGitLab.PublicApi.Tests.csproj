@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>net6.0;net8.0;net10.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
-    <!-- Run the net6.0 / net8.0 test hosts on the latest installed runtime (e.g. only .NET 10 in CI). The tests only inspect assembly metadata, and the assembly under test is still the one built for each target framework. -->
+    <!-- Run the net6.0 / net8.0 test hosts on the latest installed runtime (e.g. only .NET 10 in CI). -->
     <RollForward>Major</RollForward>
     <!-- Don't promote to errors assessments such as: Package 'System.Net.Http' 4.3.0 has a known high severity vulnerability -->
     <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1903</WarningsNotAsErrors>
