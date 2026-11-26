@@ -270,6 +270,29 @@ public class RepositoryClientTests
         Assert.That(treeObjects, Is.Not.Empty);
     }
 
+    [Test]
+    [NGitLabRetry]
+    public async Task GetAllTreeObjectsAcrossMultiplePages()
+    {
+        const int commitCount = 5;
+        using var context = await RepositoryClientTestsContext.CreateAsync(commitCount);
+
+        // PerPage smaller than the number of entries forces several (keyset) pages
+        var options = new RepositoryGetTreeOptions { Path = string.Empty, Recursive = true, PerPage = 2 };
+
+        var treeObjects = context.RepositoryClient.GetTree(options).ToList();
+        Assert.That(treeObjects.Count(t => t.Type == ObjectType.blob), Is.EqualTo(commitCount));
+        Assert.That(treeObjects.Select(t => t.Path).Distinct(StringComparer.Ordinal).Count(), Is.EqualTo(treeObjects.Count));
+
+        var asyncTreeObjects = new List<Tree>();
+        await foreach (var item in context.RepositoryClient.GetTreeAsync(options))
+        {
+            asyncTreeObjects.Add(item);
+        }
+
+        Assert.That(asyncTreeObjects.Select(t => t.Path), Is.EquivalentTo(treeObjects.Select(t => t.Path)));
+    }
+
     /// <remarks>
     /// See <see href="https://docs.gitlab.com/update/deprecations/#gitlab-177"/>.
     /// </remarks>
